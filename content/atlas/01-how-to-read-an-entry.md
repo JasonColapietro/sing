@@ -2,7 +2,7 @@
 title: "How to read an entry"
 part: "How to read a voice"
 order: 1
-summary: "The anatomy of an atlas entry — what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how far to trust those claims."
+summary: "The anatomy of an atlas entry: what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how far to trust those claims."
 ---
 
 Every entry in this atlas has the same skeleton: a name, a voice type, a cited range, sometimes a full-voice ceiling, occasionally a whistle flag, a signature song, and two short paragraphs — one on what the voice sounds like, one on how it works and how to practice toward it. This chapter is the key to that skeleton. Read it once and every one of the hundreds of entries after it becomes legible.

@@ -58,7 +58,7 @@ const RANGE_ACTIONS = {
     width: "min-w-[10rem]",
   },
   compare: {
-    label: "Compare my range — free test →",
+    label: "Compare my range · free test →",
     saved: "See how your range compares ↓",
     width: "min-w-[16.5rem]",
   },
@@ -134,9 +134,9 @@ export function CompareWithMe({ s }: { s: SingerRangeProps }) {
             className="text-ink underline decoration-line underline-offset-2 hover:text-violet-ink"
           >
             free 2-minute range test
-          </Link>{" "}
-          — your mic finds your lowest and
-          highest notes, then compare your measured notes with {s.name}&rsquo;s
+          </Link>
+          . Your mic finds your lowest and
+          highest notes; then compare them with {s.name}&rsquo;s
           reported reference span. Matching endpoints does not establish the same
           voice type or technique.
         </p>

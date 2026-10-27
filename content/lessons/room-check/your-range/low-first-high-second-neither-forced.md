@@ -33,7 +33,7 @@ Warm up first, for about four minutes with the [Morning reset](/warmups?routine=
 
 ### Name the target: Range scan and voice type
 
-Comfortable, not extreme. The number we want is one you can repeat next month. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Comfortable, not extreme. The number we want is one you can repeat next month. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
@@ -61,7 +61,7 @@ I tried a comfortable low and high note without forcing either end and noted the
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Low First, High Second, Neither Forced.”
 - 45s: Isolate the range scan and voice type target in short, comfortable examples.
-- 60s: Practise or record the complete “Low First, High Second, Neither Forced” task, resetting between attempts.
+- 60s: Practice or record the complete “Low First, High Second, Neither Forced” task, resetting between attempts.
 - 45s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

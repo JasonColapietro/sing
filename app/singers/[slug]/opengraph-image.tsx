@@ -131,7 +131,7 @@ export default async function Image({
             color: "#8a8272",
           }}
         >
-          suede sing — test your own range free
+          suede sing · test your own range free
         </div>
       </div>
     ),

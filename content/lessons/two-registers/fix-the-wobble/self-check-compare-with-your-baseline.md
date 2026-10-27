@@ -29,7 +29,7 @@ Choose a short, comfortable phrase at moderate volume. Record the relaxed baseli
 
 ### Name the target: Breathiness, nasality, tension
 
-Use the same short phrase for the relaxed baseline and the changed example, then compare both in the same recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Use the same short phrase for the relaxed baseline and the changed example, then compare both in the same recording. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.
 - Listen: Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap.
@@ -57,7 +57,7 @@ I compared a relaxed baseline with a later example in the same recording and des
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Compare With Your Baseline.”
 - 75s: Isolate the breathiness, nasality, tension target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Compare With Your Baseline” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Compare With Your Baseline” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

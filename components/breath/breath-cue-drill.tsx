@@ -313,7 +313,7 @@ export function BreathCueDrill({
     phase === "breath"
       ? gated
         ? cutShort
-          ? `That note stopped before ${holdSec} seconds. Breathe in again — the rep starts once the mic hears it.`
+          ? `That note stopped before ${holdSec} seconds. Breathe in again. The rep starts once the mic hears it.`
           : "Take an easy breath in. The note counts once the mic hears it."
         : "Breathe in now…"
       : phase === "ready"
@@ -449,7 +449,7 @@ export function BreathCueDrill({
               htmlFor="cue-sensitivity"
               className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]"
             >
-              Sensitivity — the note counts above the marker
+              Sensitivity: the note counts above the marker
             </label>
             <input
               id="cue-sensitivity"

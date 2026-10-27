@@ -3,7 +3,7 @@ title: "Pop women: the moderns"
 part: "Pop"
 order: 8
 group: pop-women-modern
-summary: "The current and recent generation of pop leads — whisper-pop, fry onsets, whistle flexes and conversational belts — and how the microphone rewrote what counts as power."
+summary: "The current and recent generation of pop leads (whisper-pop, fry onsets, whistle flexes and conversational belts) and how the microphone rewrote what counts as power."
 ---
 
 The defining fact of modern pop singing is that the microphone finally won. Once every listener is six inches from the singer's mouth, intimacy scales better than volume, and this chapter documents the consequences: fry onsets as rhythm, whisper-verses as default, breathiness as an instrument rather than a flaw, and belts that arrive as *events* inside otherwise conversational performances. The whisper-pop generation — the entries here built on air and closeness — is not a decline from the founders' power; it is a different instrument optimized for a different playback device.

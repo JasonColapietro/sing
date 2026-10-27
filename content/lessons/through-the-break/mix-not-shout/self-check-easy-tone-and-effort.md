@@ -29,7 +29,7 @@ Work only after an easy warm-up, on a pitch below the top of your comfortable ra
 
 ### Name the target: Comfortable mixed-voice coordination
 
-Hold six comfortable seconds, then report effort and stop on any warning sign. The app does not verify strain. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Hold six comfortable seconds, then report effort and stop on any warning sign. The app does not verify strain. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
@@ -57,7 +57,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Easy Tone and Effort.”
 - 75s: Isolate the comfortable mixed-voice coordination target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Easy Tone and Effort” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Easy Tone and Effort” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

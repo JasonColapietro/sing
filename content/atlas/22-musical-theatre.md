@@ -3,7 +3,7 @@ title: "Musical theatre"
 part: "The trained voice"
 order: 22
 group: musical-theatre
-summary: "Eight shows a week — the belt as a certified skill, legit versus contemporary technique, and why theatre singers are the book's masters of sustainable intensity."
+summary: "Eight shows a week: the belt as a certified skill, legit versus contemporary technique, and why theater singers are the book's masters of sustainable intensity."
 ---
 
 Musical theatre is where the belt became a licensed profession. The women and men in this chapter deliver climactic full-voice singing on a schedule no other genre attempts — eight shows a week, months at a stretch — and that schedule is the invisible author of every technique their entries describe. Theatre belting is mix engineering under another name: chest-quality brightness carried on head-voice efficiency, narrow vowels at the top, intensity that reads as maximum while spending far less than maximum. When an entry here describes a famous eleven-o'clock note, it is describing a note designed to be repeatable, which is a different and harder achievement than a note designed to be recorded once.

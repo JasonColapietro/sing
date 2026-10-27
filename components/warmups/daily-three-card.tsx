@@ -141,7 +141,7 @@ function DailyThreeIntro({ children }: { children?: ReactNode }) {
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
-        <h2 id="daily-three-heading" className="text-base leading-none">
+        <h2 id="daily-three-heading" className="text-base">
           <SectionLabel>Today&apos;s three</SectionLabel>
         </h2>
         {children}

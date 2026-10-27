@@ -22,7 +22,7 @@ const ACCOUNTS_OPEN = accountsReady();
 
 const TITLE = "Suede Sing Changelog: What's New in 4.0";
 /** The day 4.0 shipped: the record head's <time> and the page's dateModified. */
-const RELEASE_DATE = "2026-10-24";
+export const RELEASE_DATE = "2026-10-24";
 const DESCRIPTION =
   "Suede Sing changelog for 4.0: the original design is back, and reference notes now play from recordings of a real grand piano.";
 
@@ -47,13 +47,13 @@ export const metadata: Metadata = {
   },
 };
 
-// py-0.5 is not decoration: these are standalone calls to action in a row of
+// min-h-11 is not decoration: these are standalone calls to action in a row of
 // their own, not links inside a sentence, so WCAG 2.5.8's inline exception does
-// not cover them and a 20px line box is under the 24px minimum. The padding
-// raises the press target to 24px; the underline sits on the text and does not
-// move with it.
+// not cover them, and a 20px line box measured about 24px even with padding.
+// The 44px box matches the site's other tap targets; the underline sits on the
+// text and does not move with it.
 const linkClass =
-  "inline-block py-0.5 text-sm text-ink underline decoration-line2 underline-offset-4 transition-colors hover:decoration-ink";
+  "inline-flex min-h-11 items-center text-sm text-ink underline decoration-line2 underline-offset-4 transition-colors hover:decoration-ink";
 
 type Story = {
   label: string;
@@ -126,7 +126,7 @@ const PREVIOUS_STORIES: Story[] = [
   {
     label: "Lessons",
     title: "A voice curriculum, 102 lessons deep",
-    body: "The full Suede voice course now lives here: 7 stages, 34 modules and 102 lessons, from posture and breath through the passaggio to style and performance. Every module links to a room to practise it in. Where that room measures part of the skill, such as pitch within 50 cents of the target in the warmups and songs, how long a sustain lasts, or the two ends of your range, the lesson says what that number does and does not show. A new Learn hub maps the whole path, with a 20-minute session template and a seven-day starter plan.",
+    body: "The full Suede Sing voice course now lives here: 7 stages, 34 modules and 102 lessons, from posture and breath through the passaggio to style and performance. Every module links to a room to practice it in. Where that room measures part of the skill, such as pitch within 50 cents of the target in the warmups and songs, how long a sustain lasts, or the two ends of your range, the lesson says what that number does and does not show. A new Learn hub maps the whole path, with a 20-minute session template and a seven-day starter plan.",
     links: [
       { href: "/learn/voice", text: "Start the course" },
       { href: "/learn", text: "Open the Learn hub" },
@@ -162,7 +162,7 @@ const PREVIOUS_STORIES: Story[] = [
   {
     label: "Daily practice",
     title: "A plan for today, and a report for the week",
-    body: "Today's three picks three warmups a day, weighted by your recent scores, each at a starting tempo those scores set. Routines run themselves, full-screen, across warmups, ear training and breath. On your first visit of a new week, a card sums up the week you just practised. And Note Catcher joins ear training: steer with your voice and hold on each target for 0.4 to 0.6 seconds, by difficulty, to catch it, including chases built from the songbook.",
+    body: "Today's three picks three warmups a day, weighted by your recent scores, each at a starting tempo those scores set. Routines run themselves, full-screen, across warmups, ear training and breath. On your first visit of a new week, a card sums up the week you just practiced. And Note Catcher joins ear training: steer with your voice and hold on each target for 0.4 to 0.6 seconds, by difficulty, to catch it, including chases built from the songbook.",
     links: [
       { href: "/warmups", text: "See today's three" },
       { href: "/ear-training", text: "Play Note Catcher" },
@@ -175,7 +175,7 @@ const STORIES: Story[] = [
   {
     label: "Warmups",
     title: "Warmups that sing with you",
-    body: "Press start and the guide sounds under your voice — taught once, then continuous — with a real breath and a two-click count-in before every rep. Ladders climb a semitone each rep, walk back down, and keep going. And the score follows the phrase you actually sang.",
+    body: "Press start and the guide sounds under your voice (taught once, then continuous) with a real breath and a two-click count-in before every rep. Ladders climb a semitone each rep, walk back down, and keep going. And the score follows the phrase you actually sang.",
     links: [{ href: "/warmups", text: "Open the warmups" }],
   },
   {
@@ -184,14 +184,14 @@ const STORIES: Story[] = [
     // With accounts closed, "until now this browser held the only copy" would
     // be contradicted a sentence later, so that deployment gets its own body.
     body: ACCOUNTS_OPEN
-      ? "Until now this browser held the only copy of your sessions, streaks and range history. A free account backs that record up and restores it on any device you sign into. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine."
-      : "v2 built an account backup for your sessions, streaks and range history, restored on any device you sign into. Accounts are not open on this site yet; until they are, your record stays in this browser (Pro's cloud sync also backs it up) and can be exported from Progress. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine.",
+      ? "Until now this browser held the only copy of your sessions, streaks and range history. A free account backs that record up and restores it on any device you sign into. The backup carries your numbers, never your audio: pitch analysis still runs entirely on your own machine."
+      : "v2 built an account backup for your sessions, streaks and range history, restored on any device you sign into. Accounts are not open on this site yet; until they are, your record stays in this browser (Pro's cloud sync also backs it up) and can be exported from Progress. The backup carries your numbers, never your audio: pitch analysis still runs entirely on your own machine.",
     links: [{ href: "/progress", text: "See your progress" }],
   },
   {
     label: "Library",
     title: "A deeper reference shelf",
-    body: `The singers library now holds ${SINGERS.length} famous voices — every range drawn on one keyboard, with records pages for the widest, highest and lowest. The Voice Atlas joined The Measured Voice as the second book, both open their first chapters free, and a vocal glossary sits underneath. The song section adds real songs with guided, scored melodies.`,
+    body: `The singers library now holds ${SINGERS.length} famous voices: every range drawn on one keyboard, with records pages for the widest, highest and lowest. The Voice Atlas joined The Measured Voice as the second book, both open their first chapters free, and a vocal glossary sits underneath. The song section adds real songs with guided, scored melodies.`,
     links: [
       { href: "/singers", text: "Browse the singers" },
       { href: "/book", text: "Read the books" },
@@ -210,7 +210,7 @@ const STORIES: Story[] = [
   {
     label: "Design",
     title: "A calmer room",
-    body: "v2 rebuilt the site's voice: an editorial serif for the headings, a real type scale beneath it, and one meaning for violet — gold now only ever marks Pro. Ten focused tabs replace thirteen, and cards lift when they are clickable. A practice room is a console, and it finally reads like one.",
+    body: "v2 rebuilt the site's voice: an editorial serif for the headings, a real type scale beneath it, and one meaning for violet. Gold now only ever marks Pro. Ten focused tabs replace thirteen, and cards lift when they are clickable. A practice room is a console, and it finally reads like one.",
     links: [{ href: "/studio", text: "Step into the studio" }],
   },
 ];
@@ -345,7 +345,7 @@ const LOG: Array<{
       { day: "24", note: "Early Access plans open: $4.99 a month or $79 for life." },
       {
         day: "23",
-        note: "Warmups sing with you — a continuous guide under your voice, scored against the phrase you actually sang.",
+        note: "Warmups sing with you: a continuous guide under your voice, scored against the phrase you actually sang.",
       },
       { day: "22", note: "Pick which microphone the studio listens to." },
       {
@@ -364,7 +364,7 @@ const LOG: Array<{
       },
       {
         day: "19",
-        note: "Ten focused tabs — Recorder and Analyze join Tools; the books share a shelf.",
+        note: "Ten focused tabs: Recorder and Analyze join Tools; the books share a shelf.",
       },
       {
         day: "17",
@@ -372,7 +372,7 @@ const LOG: Array<{
       },
       {
         day: "16",
-        note: "The range test asks for notes your microphone can measure — and says when it hears too little.",
+        note: "The range test asks for notes your microphone can measure, and says when it hears too little.",
       },
       { day: "15", note: "Both books open their first chapters, free." },
       {
@@ -458,19 +458,27 @@ export default function ChangelogPage() {
         />
         <V2TraceGlyph className="shrink-0 text-cool" />
         <span className="text-ink">4.0</span>
-        <span aria-hidden className="text-line2">
-          ·
+        {/* Each item carries the dot before it and never breaks inside, so a
+            wrap cannot leave a dot alone at the end of a line. */}
+        <span className="flex items-center gap-x-3 whitespace-nowrap">
+          <span aria-hidden className="text-line2">
+            ·
+          </span>
+          <time dateTime={RELEASE_DATE}>Shipped Oct 2026</time>
         </span>
-        <time dateTime={RELEASE_DATE}>Shipped Oct 2026</time>
-        <span aria-hidden className="text-line2">
-          ·
+        <span className="flex items-center gap-x-3 whitespace-nowrap">
+          <span aria-hidden className="text-line2">
+            ·
+          </span>
+          <span className="tabular">{RELEASE_STORIES.length} stories</span>
         </span>
-        <span className="tabular">{RELEASE_STORIES.length} stories</span>
-        <span aria-hidden className="text-line2">
-          ·
+        <span className="flex items-center gap-x-3 whitespace-nowrap">
+          <span aria-hidden className="text-line2">
+            ·
+          </span>
+          {/* The whole log, since July, not 4.0's share of it. */}
+          <span className="tabular">{entriesLogged} log entries since July</span>
         </span>
-        {/* The whole log, since July, not 4.0's share of it. */}
-        <span className="tabular">{entriesLogged} log entries since July</span>
       </div>
 
       {/* Each release is one section with an h2 that names it and its stories

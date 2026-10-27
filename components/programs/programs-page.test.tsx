@@ -62,7 +62,7 @@ describe("a program's own view", () => {
 });
 
 describe("free-plan notes a Pro singer never sees", () => {
-  it("are hidden from Pro before hydration, on the program's view and the list", async () => {
+  it("are hidden from Pro before hydration on the program's view", async () => {
     // The prerender cannot know who is Pro; without the marker a Pro
     // singer's view lost these lines at hydration and moved up under them.
     const html = await view("measured-voice-12w");
@@ -74,9 +74,24 @@ describe("free-plan notes a Pro singer never sees", () => {
     const pace = await view("foundations-2w");
     expect(pace).toContain("On the free plan.</span>");
     expect(paintedFor(pace, { plan: "pro" })).not.toContain("On the free plan.</span>");
+  });
+
+  it("are said once on the list, in its lede, rather than on all six cards", () => {
     const list = renderToStaticMarkup(<ProgramsListPage />);
-    expect(list).toContain("On the free plan&#x27;s five guided minutes a day");
-    expect(paintedFor(list, { plan: "pro" })).not.toContain("On the free plan&#x27;s five guided minutes a day");
+    expect(list).toContain("on the free plan guided practice is five minutes a day");
+    expect(list).not.toContain("On the free plan&#x27;s five guided minutes a day");
+  });
+});
+
+describe("a program's own view, above the fold", () => {
+  it("drops the list's lede, and does not repeat the how-it-works paragraph under the start button", async () => {
+    const html = await view("foundations-2w");
+    expect(html).not.toContain("Vocal training programs from one week to twelve");
+    // Once, in the section below the page, not twice.
+    expect(html.split("A day ticks itself off once the practice log shows").length - 1).toBe(1);
+    expect(html.split("Miss a day and the program waits").length - 1).toBe(1);
+    expect(html.split("Your place is kept in this browser only").length - 1).toBe(1);
+    expect(renderToStaticMarkup(<ProgramsListPage />)).toContain("Vocal training programs from one week to twelve");
   });
 });
 

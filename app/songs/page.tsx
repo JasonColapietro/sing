@@ -69,12 +69,12 @@ export default function SongsPage() {
           <SectionLabel className="mb-4">Every song</SectionLabel>
           <h2 className="max-w-3xl text-2xl sm:text-3xl">The songbook, one page each</h2>
           <p className="mt-4 max-w-3xl text-mut">
-            Every melody here is public domain, and every page says why — plus
+            Every melody here is public domain, and every page says why. Each also gives
             the phrase you sing, the tonic it is transcribed on, its tempo, and
             its note span.
           </p>
 
-          <h3 className="mt-10 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+          <h3 className="mt-10 font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-dim">
             Free to sing ({SONGS.length})
           </h3>
           <div className="mt-4">
@@ -83,7 +83,7 @@ export default function SongsPage() {
 
           {PRO_SONGS.length > 0 && (
             <>
-              <h3 className="mt-10 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              <h3 className="mt-10 font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-dim">
                 Pro songbook ({PRO_SONGS.length})
               </h3>
               <div className="mt-4">

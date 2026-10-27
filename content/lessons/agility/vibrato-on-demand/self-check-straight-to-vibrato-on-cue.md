@@ -29,7 +29,7 @@ Choose a comfortable sustained note and establish three easy seconds of straight
 
 ### Name the target: Vibrato control
 
-Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.
@@ -57,7 +57,7 @@ I compared straight tone with naturally occurring vibrato, without shaking the j
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Straight to Vibrato on Cue.”
 - 90s: Isolate the vibrato control target in short, comfortable examples.
-- 135s: Practise or record the complete “Self-Check: Straight to Vibrato on Cue” task, resetting between attempts.
+- 135s: Practice or record the complete “Self-Check: Straight to Vibrato on Cue” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

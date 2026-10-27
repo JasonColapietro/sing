@@ -142,7 +142,7 @@ describe("the coach's range retest", () => {
     expect(early.map((i) => i.title)).not.toContain("Retake the range test");
     const due = buildPlan(withRange(RANGE_RETEST_DAYS), NOW).items.find((i) => i.title === "Retake the range test");
     expect(due?.reason).toBe(
-      `Your range was last measured ${RANGE_RETEST_DAYS} days ago — a fresh test adds a current point to your range over time.`,
+      `Your range was last measured ${RANGE_RETEST_DAYS} days ago. A fresh test adds a current point to your range over time.`,
     );
     expect(due?.reason).not.toMatch(/growth/i);
   });
@@ -231,7 +231,7 @@ describe("the coach during Recovery week", () => {
     const plan = buildPlan(withRange(49), NOW, RECOVERY, null, RECOVERY);
     expect(plan.banner).toBeNull();
     expect(plan.restNote).toBe(
-      `Today is a rest day in ${RECOVERY}, and the program counts it as done. Nothing below is required. Your streak counts only days you practise, so if you rest today it starts again from 1 at your next session.`,
+      `Today is a rest day in ${RECOVERY}, and the program counts it as done. Nothing below is required. Your streak counts only days you practice, so if you rest today it starts again from 1 at your next session.`,
     );
     expect(plan.rangeNote).toBe(`Your range was last measured 49 days ago. ${LINE}`);
   });
@@ -272,7 +272,7 @@ describe("the coach's accuracy lines", () => {
     expect(weak?.reason).toContain("Ladder through it slowly.");
     const songs = items.find((i) => i.title === "Sing a song");
     expect(songs?.reason).toBe(
-      "Finish on real music — you're within 50 cents of the target 40% of the scored time lately, and songs are where that shows.",
+      "Finish on real music: you're within 50 cents of the target 40% of the scored time lately, and songs are where that shows.",
     );
     for (const i of items) expect(i.reason, i.title).not.toMatch(/in tune/i);
   });
@@ -325,7 +325,7 @@ describe("the coach's accuracy lines", () => {
     for (const i of items) expect(i.reason, i.title).not.toMatch(/weakest note/);
     const warmups = items.find((i) => i.title === "Warmups");
     expect(warmups?.reason).toBe(
-      "No stand-out weak note in the last two weeks — a general ladder keeps the whole range honest.",
+      "No stand-out weak note in the last two weeks, so a general ladder keeps the whole range honest.",
     );
     // A note under the floor is still named, alone.
     const shaky = buildPlan(
@@ -338,7 +338,7 @@ describe("the coach's accuracy lines", () => {
       },
       NOW,
     ).items.find((i) => i.reason.includes("weakest note"));
-    expect(shaky?.reason).toMatch(/^E4 is your weakest note right now — E4 lands within 50 cents of the target just 70% of the time/);
+    expect(shaky?.reason).toMatch(/^E4 is your weakest note right now: E4 lands within 50 cents of the target just 70% of the time/);
   });
 
   it("says a weak note outside the measured range is outside it, not that the siren keeps clear", () => {

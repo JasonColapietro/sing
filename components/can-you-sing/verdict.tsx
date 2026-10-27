@@ -84,14 +84,14 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
     return (
       <div className="flex flex-col" {...prepaintMarker(hydrated, { slot: "song-verdict" })}>
         <Card className="flex-1">
-          <SectionLabel>Can you sing it?</SectionLabel>
+          <SectionLabel>Your fit</SectionLabel>
           <p className="mt-3 text-sm text-mut">
             This song asks for {popRangeLabel(song)}. Take the free range test
-            and this page will tell you whether it sits inside your voice — and
+            and this page will tell you whether it sits inside your voice, and
             by how much when it does not.
           </p>
           <div className="mt-4">
-            <LinkButton href={rangeTestFor(song)}>
+            <LinkButton href={rangeTestFor(song)} variant="outline">
               {/* Quoted: several titles are styled lowercase ("vampire", "drop dead"). */}
               See if “{song.title}” fits my voice
             </LinkButton>
@@ -178,11 +178,11 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
     other: string,
   ) =>
     fit.offsetSemis === 12
-      ? `${opening}${octaveNote}${roomToCentre && centring > 12 ? ` ${lead(shift(verb, centring, false))} centres it in your range.` : ""}`
+      ? `${opening}${octaveNote}${roomToCentre && centring > 12 ? ` ${lead(shift(verb, centring, false))} centers it in your range.` : ""}`
       : `${opening} ${lead(shift(verb, fit.offsetSemis, false))} would bring it inside, ${landing}${
           // A centring shift of exactly twelve is the octave octaveNote names.
           roomToCentre && centring > fit.offsetSemis && centring !== 12
-            ? `; ${shift(verb, centring, true)} centres it in your range`
+            ? `; ${shift(verb, centring, true)} centers it in your range`
             : ""
         }.${other}${octaveNote}`;
 
@@ -191,9 +191,9 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
       ? headroom <= 1 && footroom <= 1
         ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"} and its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect both ends of this song to be work.`
         : headroom <= 1
-          ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"}. ${limitsNote}, so expect the top of this song to be work.${roomToCentre && -centre >= 1 ? ` ${lead(shift("dropping", -centre, false))} centres it in your range.` : ""}`
+          ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"}. ${limitsNote}, so expect the top of this song to be work.${roomToCentre && -centre >= 1 ? ` ${lead(shift("dropping", -centre, false))} centers it in your range.` : ""}`
           : footroom <= 1
-            ? `As written, every note of ${name} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` ${lead(shift("raising", centre, false))} centres it in your range.` : ""}`
+            ? `As written, every note of ${name} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` ${lead(shift("raising", centre, false))} centers it in your range.` : ""}`
             : `As written, ${name} sits inside your range. The top of the song leaves you ${headroom} semitones of headroom.`
       : fit.verdict === "high"
         ? outside(
@@ -215,7 +215,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
 
   return (
     <Card>
-      <SectionLabel>Can you sing it?</SectionLabel>
+      <SectionLabel>Your fit</SectionLabel>
       <p className="mt-3 text-sm text-ink">{message}</p>
       <p className="mt-2 text-xs text-mut">
         Your saved range: {yours}. Song as written: {popRangeLabel(song)}.

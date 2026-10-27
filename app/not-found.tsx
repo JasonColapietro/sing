@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { EmptyState, LinkButton, PageShell } from "@/components/ui";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { NOINDEX_FOLLOW } from "@/lib/robots-meta";
 import { rangeTestHref } from "@/lib/site";
 
@@ -20,18 +22,30 @@ export default function NotFound() {
   return (
     <PageShell kicker="404" title="That page isn't here">
       <EmptyState
-        title="Nothing at this address"
+        title="Try one of these"
         hint="The page may have moved, or the link had a typo. The range test, the song lookup and the pitch studio are each one tap away."
         action={
-          <div className="flex flex-wrap justify-center gap-3">
-            <LinkButton href={rangeTestHref()}>Find your vocal range</LinkButton>
-            <LinkButton href="/can-you-sing" variant="outline">
-              Look up a song&apos;s key and range
-            </LinkButton>
-            <LinkButton href="/studio" variant="ghost">
-              Open the pitch studio
-            </LinkButton>
-          </div>
+          <>
+            <div className="flex flex-wrap justify-center gap-3">
+              <LinkButton href={rangeTestHref()}>Find your vocal range</LinkButton>
+              <LinkButton href="/can-you-sing" variant="outline">
+                Look up a song&apos;s key and range
+              </LinkButton>
+              <LinkButton href="/studio" variant="outline">
+                Open the pitch studio
+              </LinkButton>
+            </div>
+            {/* One quiet line below the practice links: the free tools stay
+                the recovery, and the paid tier is named once, with its price
+                read from the pricing code. */}
+            <p className="mt-4 text-sm text-mut">
+              Or see{" "}
+              <Link href="/pro" className="text-violet-ink underline underline-offset-4">
+                what Suede Pro adds
+              </Link>
+              , {formatPrice(PRICING.lifetime.amount)} once.
+            </p>
+          </>
         }
       />
     </PageShell>

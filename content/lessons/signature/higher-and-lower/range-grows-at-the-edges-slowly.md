@@ -33,7 +33,7 @@ Warm up in the comfortable middle, then confirm today's repeatable low and high 
 
 ### Name the target: Range extension
 
-Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
@@ -61,7 +61,7 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Range Grows at the Edges, Slowly.”
 - 75s: Isolate the range extension target in short, comfortable examples.
-- 120s: Practise or record the complete “Range Grows at the Edges, Slowly” task, resetting between attempts.
+- 120s: Practice or record the complete “Range Grows at the Edges, Slowly” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

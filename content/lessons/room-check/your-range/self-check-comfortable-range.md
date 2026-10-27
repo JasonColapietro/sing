@@ -29,7 +29,7 @@ Warm up first, for about four minutes with the [Morning reset](/warmups?routine=
 
 ### Name the target: Range scan and voice type
 
-An estimated voice type and both ends of your range, to fit every later exercise to. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+An estimated voice type and both ends of your range, to fit every later exercise to. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
@@ -57,7 +57,7 @@ I tried a comfortable low and high note without forcing either end and noted the
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Comfortable Range.”
 - 60s: Isolate the range scan and voice type target in short, comfortable examples.
-- 90s: Practise or record the complete “Self-Check: Comfortable Range” task, resetting between attempts.
+- 90s: Practice or record the complete “Self-Check: Comfortable Range” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

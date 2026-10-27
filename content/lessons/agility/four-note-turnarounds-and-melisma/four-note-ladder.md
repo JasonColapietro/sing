@@ -29,7 +29,7 @@ Establish one easy vowel on the starting note, then sing the four-note pattern s
 
 ### Name the target: Melisma
 
-Four-note patterns across the scale, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Four-note patterns across the scale, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.
 - Listen: One syllable carries all four notes with clear centers and no swallowed middle pitches.
@@ -57,7 +57,7 @@ I sang the supplied four-note descent on one syllable, then listened for four se
 
 - 60s: Open the practice material. Prepare the room, body, and safe baseline for “Four-Note Ladder.”
 - 105s: Isolate the melisma target in short, comfortable examples.
-- 165s: Practise or record the complete “Four-Note Ladder” task, resetting between attempts.
+- 165s: Practice or record the complete “Four-Note Ladder” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

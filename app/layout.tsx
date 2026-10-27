@@ -46,11 +46,19 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
   display: "swap",
 });
+/**
+ * Not preloaded. The mono face sets the small tape labels and readouts, never
+ * the largest thing on first paint, yet its three weights were three of the
+ * six font files every page preloaded ahead of its own content. With
+ * display: "swap" a label paints in the fallback mono and swaps when the file
+ * arrives. Manrope and Instrument Serif (body and headings) stay preloaded.
+ */
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-plex-mono",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {

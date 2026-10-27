@@ -29,7 +29,7 @@ Choose a short mid-range phrase and establish it first on a neutral, easy vowel.
 
 ### Name the target: Vowel shapes and placement
 
-Same melody, five vowels, tone matched across all of them. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Same melody, five vowels, tone matched across all of them. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.
 - Listen: Each vowel remains intelligible while the phrase keeps a related tone and pitch center.
@@ -57,7 +57,7 @@ I sang the same short pattern on five vowels and compared the resulting tone by 
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Phrase on Five Vowels.”
 - 90s: Isolate the vowel shapes and placement target in short, comfortable examples.
-- 135s: Practise or record the complete “Phrase on Five Vowels” task, resetting between attempts.
+- 135s: Practice or record the complete “Phrase on Five Vowels” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

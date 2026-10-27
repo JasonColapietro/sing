@@ -49,7 +49,7 @@ export function generateStaticParams(): Params[] {
  */
 function answerSentence(song: PopSong): string {
   const span = song.highMidi - song.lowMidi;
-  const opening = `“${song.title}” by ${song.artist} is in ${song.key}, and the commonly cited lead-vocal range is ${popRangeLabel(song)} — ${span} semitones`;
+  const opening = `“${song.title}” by ${song.artist} is in ${song.key}, and the commonly cited lead-vocal range is ${popRangeLabel(song)}, ${span} semitones`;
   const rating = popDifficulty(song).toLowerCase();
   const reason = popDifficultyReason(song);
   if (reason === "override") {
@@ -58,7 +58,7 @@ function answerSentence(song: PopSong): string {
   if (reason === "top") {
     return `${opening}. Its top note, ${popNoteLabel(song, song.highMidi)}, rates it ${rating} for an untrained voice.`;
   }
-  return `${opening} — which, on span and top note, rates ${rating} for an untrained voice.`;
+  return `${opening}, which on span and top note rates ${rating} for an untrained voice.`;
 }
 
 export async function generateMetadata({
@@ -170,12 +170,12 @@ export default async function CanYouSingSongPage({
         <div className="space-y-6">
           <Card>
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-5">
-              <Stat label="Key" value={song.key} tone="violet" />
+              <Stat label="Key" value={song.key} tone="ink" />
               {/* Spelled for the key, as the cited source spells them (Ab3, not G#3). */}
               <Stat label="Low note" value={popNoteLabel(song, song.lowMidi)} tone="cool" />
               <Stat label="High note" value={popNoteLabel(song, song.highMidi)} tone="cool" />
               <Stat label="Span" value={span} sub="semitones" tone="ink" />
-              <Stat label="Difficulty" value={popDifficulty(song)} tone="rec" />
+              <Stat label="Difficulty" value={popDifficulty(song)} tone="ink" />
             </div>
           </Card>
 
@@ -203,7 +203,7 @@ export default async function CanYouSingSongPage({
                   {song.sourceNote}
                 </a>
               ) : song.sourceNote}), not lab measurements. No
-              lyrics or melody are reproduced here — this page is about what
+              lyrics or melody are reproduced here; this page is about what
               the song demands of a voice.
             </p>
           </Card>
@@ -230,7 +230,7 @@ export default async function CanYouSingSongPage({
                       {s.name}&apos;s catalog range
                     </Link>
                     <span className="text-mut">
-                      {" "}— reported {rangeLabel(s)}
+                      : reported {rangeLabel(s)}
                       {getSingerReviewStatus(s.slug) === "reviewed"
                         ? ` (${s.voiceType})`
                         : ` · ${singerReviewLabel(s.slug)}`}
@@ -240,7 +240,7 @@ export default async function CanYouSingSongPage({
               </ul>
               <p className="mt-3 text-xs text-mut">
                 A song&apos;s written range and a singer&apos;s reported
-                catalog range are different facts — the catalog page explains
+                catalog range are different facts. The catalog page explains
                 what is and is not verified.
               </p>
             </Card>
@@ -258,7 +258,7 @@ export default async function CanYouSingSongPage({
                       className="text-violet-ink underline-offset-4 hover:underline"
                       href={`/can-you-sing/${r.slug}`}
                     >
-                      {r.title} — {r.artist} ({popRangeLabel(r)})
+                      {r.title} by {r.artist} ({popRangeLabel(r)})
                     </Link>
                   </li>
                 ))}

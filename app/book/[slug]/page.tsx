@@ -264,7 +264,7 @@ export default async function ChapterPage({
                     <Link href={`/book/${c.slug}`} className="text-violet-ink hover:underline">
                       {c.title}
                     </Link>
-                    {c.summary && <span> — {c.summary}</span>}
+                    {c.summary && <span>: {c.summary}</span>}
                   </li>
                 ))}
               </ul>
@@ -276,9 +276,9 @@ export default async function ChapterPage({
             <Card>
               <p className="max-w-2xl text-sm text-mut">
                 That was one of {freeCount} free chapters. The remaining {gated}{" "}
-                — the rest of how the voice works, how to read the numbers your
+                (the rest of how the voice works, how to read the numbers your
                 own sessions produce, the twelve-week program, and choosing songs
-                that fit the voice you have today — come with Suede Pro, along
+                that fit the voice you have today) come with Suede Pro, along
                 with a PDF of the whole book.
               </p>
               {next && (

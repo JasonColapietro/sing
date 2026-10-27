@@ -143,7 +143,7 @@ const PRO_JSON_LD = {
       // free tier's node on the homepage and the rest of the Suede estate.
       "@type": "SoftwareApplication",
       "@id": `${SITE_URL}/pro#product`,
-      name: "Suede Sing Pro",
+      name: "Suede Pro",
       description:
         // Song scores and their trend are free on every song summary, so the
         // paid tier is not described by them. The free plan shows the first

@@ -160,7 +160,7 @@ describe("range result voice type", () => {
     expect(html).not.toContain(" or <span");
     expect(html).not.toContain("describe full voice");
     expect(html).not.toContain("lean a category high");
-    expect(html).toContain("treat this as a starting point, not a box.");
+    expect(html).toContain("Treat this as a starting point, not a box.");
   });
 
   it("does not say it under a female band, which already takes in head voice", () => {
@@ -201,7 +201,7 @@ describe("range result voice type", () => {
     expect(html).toContain('href="/singers/voice-type/contralto"');
     expect(html).not.toContain(" or <span");
     expect(html).not.toContain("lean a category low");
-    expect(html).toContain("treat this as a starting point, not a box.");
+    expect(html).toContain("Treat this as a starting point, not a box.");
     // E3–E5, a semitone under the contralto band's floor, is the same case.
     expect(render(52, 76)).toContain('href="/singers/voice-type/contralto"');
     expect(render(52, 76)).not.toContain("lean a category low");

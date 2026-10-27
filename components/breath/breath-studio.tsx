@@ -9,7 +9,7 @@ import { liveStreak } from "@/components/account/save-state";
 import { useCallback, useEffect, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { getState, localDay, useProgress } from "@/lib/progress";
-import { Card, PageShell, SectionHeading } from "@/components/ui";
+import { Button, Card, PageShell, SectionHeading } from "@/components/ui";
 import {
   ContinueCard,
   PathList,
@@ -325,13 +325,16 @@ export function BreathStudio() {
                   <span className="mx-2 text-line2">·</span>~
                   {breathRoutineMinutes(r)} min
                 </p>
-                <button
+                {/* Outline, so the routine card's rust "Start breathing" above
+                    stays the one primary action on the page. */}
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => start({ kind: "routine", routine: r })}
-                  className="mt-4 min-h-11 rounded-full bg-violet-ink px-5 text-sm font-medium text-white transition-colors hover:bg-violet"
+                  className="mt-4"
                 >
                   Start {r.name.toLowerCase()}
-                </button>
+                </Button>
               </Card>
             );
           })}

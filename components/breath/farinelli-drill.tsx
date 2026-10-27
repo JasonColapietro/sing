@@ -279,7 +279,7 @@ export function FarinelliDrill({
                   Ready
                 </div>
                 <p className="max-w-xs text-sm text-[var(--s-mut)]">
-                  Exhale fully — the inhale starts on the first count.
+                  Exhale fully. The inhale starts on the first count.
                 </p>
               </div>
             )}
@@ -288,7 +288,7 @@ export function FarinelliDrill({
           <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-5 py-6 text-center">
             <p className="max-w-sm text-sm text-[var(--s-mut)]">
               Inhale for four counts, hold for four with the ribs and throat
-              open, exhale for four — then add a count each round. Counts tick
+              open, exhale for four, then add a count each round. Counts tick
               at one a second. No microphone needed.
             </p>
             <div className="w-full max-w-sm text-left">
@@ -296,7 +296,7 @@ export function FarinelliDrill({
                 htmlFor="farinelli-cap-session"
                 className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]"
               >
-                Top count — the drill climbs from 4 to here
+                Top count: the drill climbs from 4 to here
               </label>
               <div className="mt-2 flex items-center gap-3">
                 <input
@@ -353,7 +353,7 @@ export function FarinelliDrill({
             htmlFor="farinelli-cap"
             className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
           >
-            Top count — the drill climbs from 4 to here
+            Top count: the drill climbs from 4 to here
           </label>
           <div className="mt-2 flex items-center gap-3">
             <input
@@ -477,7 +477,7 @@ export function FarinelliDrill({
             aria-live="polite"
           >
             <div className="text-2xl text-ink">Ready&hellip;</div>
-            <p className="text-sm text-mut">Exhale fully — inhale starts on the first count.</p>
+            <p className="text-sm text-mut">Exhale fully. Inhale starts on the first count.</p>
           </div>
         )}
 

@@ -3,7 +3,7 @@ title: "Country"
 part: "Country, folk and jazz"
 order: 18
 group: country
-summary: "Twang as technology, the accent as instrument, and storytelling tessitura — country's vocal toolkit from honky-tonk cries to stadium baritones."
+summary: "Twang as technology, the accent as instrument, and storytelling tessitura make up country's vocal toolkit, from honky-tonk cries to stadium baritones."
 ---
 
 Country is the most misunderstood technique chapter in the book, because its defining sound — twang — gets heard as an accent when it is actually an acoustic technology. That bright, narrow, penetrating buzz is what let unamplified voices cut through honky-tonk noise, and the modern genre kept it as identity: the entries here describe voices getting *louder by getting narrower*, from the classic criers to the current stadium baritones. The related signature, the break — that quick flip into falsetto and back, the yodel's descendant — turns up across generations as country's preferred emotional punctuation, always placed, never accidental.

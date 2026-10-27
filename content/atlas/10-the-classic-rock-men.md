@@ -3,7 +3,7 @@ title: "The classic rock men"
 part: "Rock, metal and alternative"
 order: 10
 group: rock-men
-summary: "The wailers, shouters and art-rock baritones of rock's imperial decades — where the famous highs really came from, and the era's quiet lesson about sustainable volume."
+summary: "The wailers, shouters and art-rock baritones of rock's imperial decades: where the famous highs really came from, and the era's quiet lesson about sustainable volume."
 ---
 
 No genre generated more range mythology than classic rock, and no chapter of this atlas asks for more care in reading its figures. The wailers here — the multi-octave figures fans argue about at pub volume — earned their reputations with real, documented extremes, but the entries are careful about *mechanism*: a great deal of rock's famous altitude is reinforced falsetto, head voice driven hard, or one-off screams captured live, not chest voice defying physics. Where an entry gives a full-voice ceiling, it tells you which was which; many entries give none, and for those the technique paragraph is the better guide.

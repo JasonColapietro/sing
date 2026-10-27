@@ -134,8 +134,8 @@ export function MinutesBarChart({ sessions }: { sessions: SessionLog[] }) {
             <g key={d.key}>
               <title>
                 {d.sec > 0
-                  ? `${d.label} — ${fmtDur(d.sec)}`
-                  : `${d.label} — no practice`}
+                  ? `${d.label}: ${fmtDur(d.sec)}`
+                  : `${d.label}: no practice`}
               </title>
               <rect
                 x={padL + band * i}
@@ -303,7 +303,7 @@ export function ScoreTrendChart({ sessions }: { sessions: SessionLog[] }) {
         {weeks.map((w, i) =>
           w.avg === null ? null : (
             <g key={i}>
-              <title>{`Week of ${w.label} — avg ${Math.round(w.avg)} across ${w.n} scored ${w.n === 1 ? "session" : "sessions"}`}</title>
+              <title>{`Week of ${w.label}: avg ${Math.round(w.avg)} across ${w.n} scored ${w.n === 1 ? "session" : "sessions"}`}</title>
               <circle cx={x(i)} cy={y(w.avg)} r={10} fill="transparent" />
               <circle
                 cx={x(i)}
@@ -356,7 +356,7 @@ export function PracticeMixChart({ sessions }: { sessions: SessionLog[] }) {
   if (rows.length === 0) {
     return (
       <p className="rounded-xl border border-dashed border-line2 px-4 py-8 text-center text-sm text-mut">
-        Nothing to mix yet — every activity you finish shows up here.
+        Nothing to mix yet. Every activity you finish shows up here.
       </p>
     );
   }
@@ -387,7 +387,7 @@ export function PracticeMixChart({ sessions }: { sessions: SessionLog[] }) {
           const yTop = i * rowH + (rowH - barH) / 2;
           return (
             <g key={r.type}>
-              <title>{`${TYPE_META[r.type].label} — ${fmtDur(r.sec)} total`}</title>
+              <title>{`${TYPE_META[r.type].label}: ${fmtDur(r.sec)} total`}</title>
               <rect x={0} y={i * rowH} width={W} height={rowH} fill="transparent" />
               <text
                 x={labelW - 8}

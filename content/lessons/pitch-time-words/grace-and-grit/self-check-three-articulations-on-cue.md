@@ -29,7 +29,7 @@ Choose a short comfortable phrase and establish a neutral version first. Keep pi
 
 ### Name the target: Grace notes, staccato, accent
 
-Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
 - Listen: The three versions are distinguishable in playback without one simply being much louder than the others.
@@ -57,7 +57,7 @@ I used one supplied phrase to compare connected, detached, and gently accented a
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Articulations on Cue.”
 - 75s: Isolate the grace notes, staccato, accent target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Three Articulations on Cue” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Three Articulations on Cue” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

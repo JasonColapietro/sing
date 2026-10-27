@@ -18,14 +18,14 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
   Bass: {
     summary:
       "the lowest male category, built on weight and depth rather than reach",
-    body: "A bass carries more vocal-fold mass than any other category, which is what gives the bottom of the range its size — notes that another singer can technically hit but not fill. The trade is at the top: where a baritone still has room, a bass is already working hard, so the repertoire tends to sit low and move slowly.",
+    body: "A bass carries more vocal-fold mass than any other category, which is what gives the bottom of the range its size: notes that another singer can technically hit but not fill. The trade is at the top: where a baritone still has room, a bass is already working hard, so the repertoire tends to sit low and move slowly.",
     challenge:
       "Basses are among the rarest categories in recorded popular music, and the figures collected here reflect that: a handful of voices against more than two hundred tenors.",
   },
   "Bass-baritone": {
     summary:
       "a bass's bottom with a baritone's working middle, common in storytelling styles",
-    body: "Bass-baritone describes a voice that reaches genuine bass depth but spends most of its time in baritone territory, which is why the label shows up so often around country and folk. The bottom notes are real but used as colour, not as the home key.",
+    body: "Bass-baritone describes a voice that reaches genuine bass depth but spends most of its time in baritone territory, which is why the label shows up so often around country and folk. The bottom notes are real but used as color, not as the home key.",
     challenge:
       "The category blurs at both edges, so the same singer is often filed as bass on one source and baritone on another.",
   },
@@ -39,7 +39,7 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
   Tenor: {
     summary:
       "the highest standard male category, and the default voice of recorded popular music",
-    body: "Tenor is by far the largest group in this library, partly because the category is genuinely common and partly because the last seventy years of popular songwriting has been pitched for it. The interest in a tenor is usually not the top note but the transition — how a singer negotiates the passage out of chest voice around D4 to G4.",
+    body: "Tenor is by far the largest group in this library, partly because the category is genuinely common and partly because the last seventy years of popular songwriting has been pitched for it. The interest in a tenor is usually not the top note but the transition: how a singer negotiates the passage out of chest voice around D4 to G4.",
     challenge:
       "Because so much repertoire sits right at that transition, tenors carry the most audible strain when they are singing tired or in the wrong key.",
   },
@@ -53,7 +53,7 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
   Contralto: {
     summary:
       "the lowest female category, prized for weight and darkness in the low middle",
-    body: "A contralto's value is in the bottom third of the range, where the tone stays full instead of thinning out. Many singers filed here in popular music are really low mezzos with a distinctive dark colour, since true contralto is rare.",
+    body: "A contralto's value is in the bottom third of the range, where the tone stays full instead of thinning out. Many singers filed here in popular music are really low mezzos with a distinctive dark color, since true contralto is rare.",
     challenge:
       "The category is chronically over-assigned to any woman with a low speaking voice, so treat contralto labels in circulation with more caution than the notes themselves.",
   },
@@ -69,7 +69,7 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
       "the highest female category, with the most headroom above the staff",
     body: "Sopranos carry the lightest fold mass and the most usable range above middle C, so the highest written repertoire sits with them. In this library the soprano group holds more of the extreme top figures than any other category, and most of the whistle-register entries.",
     challenge:
-      "A soprano's cited top note is usually the least representative number about them — it is a one-off recorded moment, not where the voice actually works.",
+      "A soprano's cited top note is usually the least representative number about them. It is a one-off recorded moment, not where the voice actually works.",
   },
 };
 
@@ -137,7 +137,7 @@ export const VOICE_TYPE_PASSAGGIO: Record<VoiceKind, VoiceTypePassaggio> = {
     low: 55,
     high: 60, // G3–C4
     caveat:
-      "A countertenor's working transition is the crossing out of full voice into the falsetto-family register the voice then sings above — a different event from the shifts listed for the other categories, and the one figure here that varies most from singer to singer.",
+      "A countertenor's working transition is the crossing out of full voice into the falsetto-family register the voice then sings above. That is a different event from the shifts listed for the other categories, and the one figure here that varies most from singer to singer.",
   },
   Contralto: { low: 67, high: 71 }, // G4–B4
   "Mezzo-soprano": { low: 69, high: 72 }, // A4–C5

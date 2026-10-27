@@ -3,7 +3,7 @@ title: "What your voice actually is"
 searchTitle: "How your singing voice works"
 part: "How the voice works"
 order: 1
-summary: "Breath as the power, the folds as the vibrator, the throat and mouth as the filter — the three-part model the rest of this book runs on."
+summary: "Breath as the power, the folds as the vibrator, the throat and mouth as the filter: the three-part model the rest of this book runs on."
 ---
 
 Your voice is not an instrument you own. It is one you assemble, freshly, every time you make a sound. Nothing about it is stored. There is no reed, no string, no fixed tube of brass — just moving air, a pair of small folds of tissue that get in its way, and a shaped space above them that colours whatever comes out. That is the whole machine.

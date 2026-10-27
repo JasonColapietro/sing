@@ -29,7 +29,7 @@ Work only after an easy warm-up, on a pitch below the top of your comfortable ra
 
 ### Name the target: Comfortable mixed-voice coordination
 
-A short supplied pattern that crosses your transition zone — pick the key that puts it there. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+A short supplied pattern that crosses your transition zone — pick the key that puts it there. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
@@ -57,7 +57,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “An Easy Pattern Through Your Transition.”
 - 90s: Isolate the comfortable mixed-voice coordination target in short, comfortable examples.
-- 135s: Practise or record the complete “An Easy Pattern Through Your Transition” task, resetting between attempts.
+- 135s: Practice or record the complete “An Easy Pattern Through Your Transition” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

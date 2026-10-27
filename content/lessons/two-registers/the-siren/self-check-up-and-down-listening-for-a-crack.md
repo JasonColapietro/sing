@@ -29,7 +29,7 @@ Start with a lip trill, hum, or narrow vowel across an easy five-note span befor
 
 ### Name the target: Register blending
 
-Three vowels, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Three vowels, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
@@ -57,7 +57,7 @@ I followed a comfortable portion of the siren up and down and listened for conti
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Up and Down, Listening for a Crack.”
 - 75s: Isolate the register blending target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Up and Down, Listening for a Crack” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Up and Down, Listening for a Crack” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

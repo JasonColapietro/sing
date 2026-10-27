@@ -208,19 +208,19 @@ function pick(type: ActivityType) {
  * template: "You didn't open Song last week … Open Song".
  */
 const ROOM_WORDS: Record<ActivityType, { name: string; scored: string; open: string; practise: string }> = {
-  warmup: { name: "the warmups", scored: "the warmups", open: "Open the warmups", practise: "Practise a warmup" },
+  warmup: { name: "the warmups", scored: "the warmups", open: "Open the warmups", practise: "Practice a warmup" },
   // Pitch sessions come from the pitch meter on the range page as well as the
   // studio, and only the studio scores them.
   pitch: {
     name: "the pitch meter or pitch studio",
     scored: "the pitch studio",
     open: "Open the pitch studio",
-    practise: "Practise in the pitch studio",
+    practise: "Practice in the pitch studio",
   },
   range: { name: "the range test", scored: "the range test", open: "Open the range test", practise: "Open the range test" },
-  ear: { name: "ear training", scored: "ear training", open: "Open ear training", practise: "Practise ear training" },
-  breath: { name: "breath training", scored: "breath training", open: "Open breath training", practise: "Practise breathing" },
-  song: { name: "song practice", scored: "song practice", open: "Open song practice", practise: "Practise a song" },
+  ear: { name: "ear training", scored: "ear training", open: "Open ear training", practise: "Practice ear training" },
+  breath: { name: "breath training", scored: "breath training", open: "Open breath training", practise: "Practice breathing" },
+  song: { name: "song practice", scored: "song practice", open: "Open song practice", practise: "Practice a song" },
   recording: { name: "the take recorder", scored: "the take recorder", open: "Open the recorder", practise: "Record a take" },
   tools: { name: "the practice tools", scored: "the practice tools", open: "Open the tools", practise: "Open the tools" },
   analyze: { name: "the voice analyzer", scored: "the voice analyzer", open: "Open the analyzer", practise: "Open the analyzer" },
@@ -245,7 +245,7 @@ export function suggestionWords(s: WeeklySuggestion): { text: string; link: { hr
       };
     case "more-days":
       return {
-        text: `You practised on ${plural(s.days, "day")}. Aim for one more this week; a short session counts.`,
+        text: `You practiced on ${plural(s.days, "day")}. Aim for one more this week; a short session counts.`,
         link: { href: "/warmups", label: "Start a warmup" },
       };
     case "keep-going":

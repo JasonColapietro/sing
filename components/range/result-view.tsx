@@ -190,7 +190,7 @@ export function singleBandCopy(voice: VoiceType, lowMidi: number): string {
     : shortTopCanLower(voice, lowMidi)
       ? ` ${SHORT_TOP_NOTE}`
       : "";
-  return `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.${caveat}`;
+  return `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories. Treat this as a starting point, not a box.${caveat}`;
 }
 
 /**
@@ -416,7 +416,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   // Big readout
   ctx.fillStyle = INK;
   ctx.font = `700 124px ${mono}`;
-  ctx.fillText(`${midiToLabel(lowMidi)} — ${midiToLabel(highMidi)}`, W / 2, 268);
+  ctx.fillText(`${midiToLabel(lowMidi)}–${midiToLabel(highMidi)}`, W / 2, 268);
 
   // Voice type + span. This is the copy of the result that leaves the site,
   // so it carries the same "closest fit" hedge as the page: a voice type from
@@ -486,7 +486,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   // Footer
   ctx.fillStyle = DIM;
   ctx.font = `500 22px ${mono}`;
-  ctx.fillText("sing.suedeai.ai — online singing practice", W / 2, H - 52);
+  ctx.fillText("sing.suedeai.ai · online singing practice", W / 2, H - 52);
 
   return canvas.toDataURL("image/png");
 }
@@ -616,7 +616,7 @@ export function ResultView({
             <SectionLabel>Your range</SectionLabel>
             <div className="tabular mt-3 font-mono text-5xl font-bold sm:text-7xl">
               {midiToLabel(lowMidi)}
-              <span className="text-dim"> — </span>
+              <span className="text-dim">–</span>
               {midiToLabel(highMidi)}
             </div>
           </div>
@@ -763,7 +763,7 @@ export function ResultView({
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Warm up
             </span>
-            <h3 className="mt-2 text-base font-semibold">{warmup.title}</h3>
+            <h3 className="mt-2 text-base">{warmup.title}</h3>
             <p className="mt-1.5 text-sm text-mut">{warmup.why}</p>
             <div className="mt-4">
               {/* ?exercise= is the warmup room's deep-link contract; an
@@ -784,7 +784,7 @@ export function ResultView({
             </span>
             {/* Counted in the key each song opens in, the same judgement as
                 the songbook's "Fits your range" badge one tap later. */}
-            <h3 className="mt-2 text-base font-semibold">{songCopy.heading}</h3>
+            <h3 className="mt-2 text-base">{songCopy.heading}</h3>
             <p className="mt-1.5 text-sm text-mut">{songCopy.body}</p>
             <div className="mt-4">
               {/* Plain /songs, no filter param: the library seeds its browse
@@ -1041,7 +1041,7 @@ function RangeOverTime({
             bottom of whatever it wraps, and a caption there would be buried. */}
         {!hasHistory && (
           <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Sample — three tests about six weeks apart
+            Sample: three tests about six weeks apart
           </p>
         )}
         <RangeHistoryChart

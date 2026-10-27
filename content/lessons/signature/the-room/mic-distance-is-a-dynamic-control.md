@@ -33,7 +33,7 @@ Rehearse the displayed melody alone. Record two short examples in one take at di
 
 ### Name the target: Performance and mic technique
 
-Working the mic, monitors, and what changes when there is an audience. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Working the mic, monitors, and what changes when there is an audience. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The displayed study contains one melody line. Keep the microphone position consistent within each comparison.
 - Listen: The phrase remains understandable from its first entry to its final release.
@@ -61,7 +61,7 @@ I rehearsed the supplied study arrangement and compared microphone distance or p
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Mic Distance Is a Dynamic Control.”
 - 75s: Isolate the performance and mic technique target in short, comfortable examples.
-- 120s: Practise or record the complete “Mic Distance Is a Dynamic Control” task, resetting between attempts.
+- 120s: Practice or record the complete “Mic Distance Is a Dynamic Control” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -99,7 +99,7 @@ describe("the singer page's way back from the range test", () => {
       expect(after, kind).toEqual(before);
     }
     state.range = {};
-    expect(action("compare")).toContain("Compare my range — free test →");
+    expect(action("compare")).toContain("Compare my range · free test →");
     expect(action("test")).toContain("Test my range →");
   });
 

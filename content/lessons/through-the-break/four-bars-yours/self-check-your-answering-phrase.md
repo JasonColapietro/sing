@@ -29,7 +29,7 @@ Choose Pentatonic run in the practice material on this page and hear its 8–6�
 
 ### Name the target: Four-bar improvisation
 
-Keep a tapped four-beat pulse through four bars, including your rests. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Keep a tapped four-beat pulse through four bars, including your rests. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.
 - Listen: The take sounds like an answer to the call and returns convincingly to the tonal center.
@@ -57,7 +57,7 @@ I used notes from the supplied pattern to invent a short answer with a clear beg
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Answering Phrase.”
 - 75s: Isolate the four-bar improvisation target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Your Answering Phrase” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Your Answering Phrase” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -33,7 +33,7 @@ Do not learn a growl, scream, distortion, or other new effect from written direc
 
 ### Name the target: Effects safety and a stop plan
 
-The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.
 - Listen: Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.

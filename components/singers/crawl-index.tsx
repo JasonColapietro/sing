@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SINGERS, type Singer } from "@/lib/singers";
 
 function singersByInitial(singers: readonly Singer[]) {
@@ -33,21 +32,19 @@ export function SingerCrawlIndex({ singers = SINGERS }: { singers?: readonly Sin
       <div className="mt-5 grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
         {singersByInitial(singers).map(([initial, group]) => (
           <div key={initial}>
-            <h3 className="font-mono text-xs uppercase tracking-[0.14em] text-dim">{initial}</h3>
-            <ul className="mt-2 columns-2 gap-x-4 text-sm">
+            <h3 className="font-mono text-xs font-normal uppercase tracking-[0.14em] text-dim">{initial}</h3>
+            {/* The row and link styles live once on the list, not on each of
+                the 600-plus rows: written per link they were a 112-character
+                class string repeated in the HTML and again in the inline
+                payload. Block and py-0.5: a one-letter name like "V" was an
+                8x19 target with rows 1px apart on a phone. Plain <a>, not
+                next/link: prefetch was already off (the default fetched a
+                page payload for every name as it scrolled into view), so
+                next/link only added a client component per row to hydrate. */}
+            <ul className="mt-2 columns-2 gap-x-4 text-sm [&>li]:break-inside-avoid [&_a]:block [&_a]:py-0.5 [&_a]:text-mut [&_a]:underline [&_a]:decoration-line [&_a]:underline-offset-4 [&_a]:hover:text-violet-ink [&_a]:hover:decoration-violet">
               {group.map((singer) => (
-                <li key={singer.slug} className="break-inside-avoid">
-                  {/* Block and py-0.5: a one-letter name like "V" was an 8x19
-                      target with rows 1px apart on a phone. prefetch off:
-                      the default fetched a page payload for every one of
-                      these 600-plus names as it scrolled into view. */}
-                  <Link
-                    href={`/singers/${singer.slug}`}
-                    prefetch={false}
-                    className="block py-0.5 text-mut underline decoration-line underline-offset-4 hover:text-violet-ink hover:decoration-violet"
-                  >
-                    {singer.name}
-                  </Link>
+                <li key={singer.slug}>
+                  <a href={`/singers/${singer.slug}`}>{singer.name}</a>
                 </li>
               ))}
             </ul>

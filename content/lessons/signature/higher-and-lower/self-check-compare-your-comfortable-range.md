@@ -29,7 +29,7 @@ Warm up in the comfortable middle, then confirm today's repeatable low and high 
 
 ### Name the target: Range extension
 
-Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
@@ -57,7 +57,7 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Compare Your Comfortable Range.”
 - 90s: Isolate the range extension target in short, comfortable examples.
-- 135s: Practise or record the complete “Self-Check: Compare Your Comfortable Range” task, resetting between attempts.
+- 135s: Practice or record the complete “Self-Check: Compare Your Comfortable Range” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

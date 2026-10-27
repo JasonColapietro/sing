@@ -29,7 +29,7 @@ Do not learn a growl, scream, distortion, or other new effect from written direc
 
 ### Name the target: Effects safety and a stop plan
 
-Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.
 - Listen: Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.

@@ -61,13 +61,22 @@ const nextConfig: NextConfig = {
       {
         // The image files in public/ (icons, badges, screenshots, the
         // portrait) were served `max-age=0, must-revalidate`, so every page
-        // view re-asked for each one. None of them changes in place: a new
-        // picture gets a new file name. Files that do change at a fixed URL
-        // (the IndexNow key, llms.txt, the sitemaps, the audio) are other
-        // types and keep Next's default.
+        // view re-asked for each one. A day fresh and a week of
+        // stale-while-revalidate, not a year of `immutable`: some of these
+        // files do change in place (the studio screenshots were replaced at
+        // the same name twice in one week), and Vercel's image optimizer
+        // copies this header onto /_next/image responses for these sources,
+        // 400 errors included, so a year-long immutable header pinned stale
+        // and failed variants in browsers. The optimizer's own cache stays on
+        // images.minimumCacheTTL above. Files that change at a fixed URL more
+        // often (the IndexNow key, llms.txt, the sitemaps, the audio) are
+        // other types and keep Next's default.
         source: "/:path*.(png|jpg|jpeg|webp|svg|ico|woff2)",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
         ],
       },
     ];

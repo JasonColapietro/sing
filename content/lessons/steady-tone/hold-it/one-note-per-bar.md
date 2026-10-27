@@ -29,7 +29,7 @@ Use a comfortable pitch and moderate volume. Let the reference stop before singi
 
 ### Name the target: Sustained tone
 
-Use the supplied sustained reference for short holds, resting between them. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Use the supplied sustained reference for short holds, resting between them. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.
@@ -57,7 +57,7 @@ I matched the sustained reference, released comfortably, and listened for a stea
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “One Note Per Bar.”
 - 75s: Isolate the sustained tone target in short, comfortable examples.
-- 120s: Practise or record the complete “One Note Per Bar” task, resetting between attempts.
+- 120s: Practice or record the complete “One Note Per Bar” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

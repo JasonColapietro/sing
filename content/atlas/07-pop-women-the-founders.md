@@ -3,7 +3,7 @@ title: "Pop women: the founders"
 part: "Pop"
 order: 7
 group: pop-women-classic
-summary: "The women who defined what a pop lead vocal is — from torch-song discipline through the belt arms race — and what their entries teach about power built to last."
+summary: "The women who defined what a pop lead vocal is, from torch-song discipline through the belt arms race, and what their entries teach about power built to last."
 ---
 
 This chapter collects the women who built the job description "pop lead vocalist" — voices that defined eras before and just as the microphone era gave way to the streaming one. Reading their entries in sequence is watching an arms race unfold: each generation found a new way to make a chorus feel bigger, from orchestral restraint to gospel-fired melisma to the industrial-strength belt, and each new weapon became the next generation's entry requirement.

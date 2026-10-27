@@ -33,7 +33,7 @@ Start with a lip trill, hum, or narrow vowel across an easy five-note span befor
 
 ### Name the target: Register blending
 
-A crack is a gear change you did not plan. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+A crack is a gear change you did not plan. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
@@ -61,7 +61,7 @@ I followed a comfortable portion of the siren up and down and listened for conti
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Slide Through, Do Not Jump Over.”
 - 60s: Isolate the register blending target in short, comfortable examples.
-- 90s: Practise or record the complete “Slide Through, Do Not Jump Over” task, resetting between attempts.
+- 90s: Practice or record the complete “Slide Through, Do Not Jump Over” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

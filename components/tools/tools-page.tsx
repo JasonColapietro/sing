@@ -113,7 +113,7 @@ export default function ToolsClient() {
         <Piano onActive={onPianoActive} />
       </div>
       <p className="mt-6 text-xs text-dim">
-        Time spent with a tool running counts toward your practice XP — sessions
+        Time spent with a tool running counts toward your practice XP. Sessions
         log automatically every 5 minutes and when you leave the page.
       </p>
     </PageShell>

@@ -29,7 +29,7 @@ Transpose the supplied study so its low and high phrases both fit, then mark the
 
 ### Name the target: Two-register repertoire
 
-Rehearse the supplied phrase through and compare the connection by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Rehearse the supplied phrase through and compare the connection by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
@@ -57,7 +57,7 @@ I rehearsed the supplied Deep River phrase in a comfortable key and marked where
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Connected Wider Phrase.”
 - 75s: Isolate the two-register repertoire target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: A Connected Wider Phrase” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: A Connected Wider Phrase” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

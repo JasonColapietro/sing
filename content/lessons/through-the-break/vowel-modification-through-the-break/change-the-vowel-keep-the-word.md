@@ -33,7 +33,7 @@ Choose a word whose vowel crosses your transition zone and sing it first below t
 
 ### Name the target: Vowel modification
 
-Small shape adjustments that keep the crossing smooth and the lyric intelligible. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Small shape adjustments that keep the crossing smooth and the lyric intelligible. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.
 - Listen: The pitch remains connected and the lyric is still understandable across all three vowels.
@@ -61,7 +61,7 @@ I compared three vowels on a comfortable fifth slide and noted which small adjus
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Change the Vowel, Keep the Word.”
 - 60s: Isolate the vowel modification target in short, comfortable examples.
-- 90s: Practise or record the complete “Change the Vowel, Keep the Word” task, resetting between attempts.
+- 90s: Practice or record the complete “Change the Vowel, Keep the Word” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

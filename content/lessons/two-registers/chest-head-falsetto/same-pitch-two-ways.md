@@ -29,7 +29,7 @@ Choose one easy pitch that can be produced lightly in more than one way. Keep at
 
 ### Name the target: Register identification
 
-One note, switched deliberately between mechanisms. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+One note, switched deliberately between mechanisms. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.
 - Listen: Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.
@@ -57,7 +57,7 @@ I compared two easy productions of the same pitch and could describe the audible
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Same Pitch, Two Ways.”
 - 75s: Isolate the register identification target in short, comfortable examples.
-- 120s: Practise or record the complete “Same Pitch, Two Ways” task, resetting between attempts.
+- 120s: Practice or record the complete “Same Pitch, Two Ways” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

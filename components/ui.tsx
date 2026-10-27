@@ -9,15 +9,29 @@ function cn(...parts: Array<string | false | null | undefined>) {
 
 /** Small mono uppercase label, styled like a console tape label. */
 const LABEL_CLASS =
-  "inline-block rounded border border-violet/35 bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-violet-ink";
+  "inline-block rounded border bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em]";
+
+/*
+ * The label's colour is a prop rather than a className override: cn() does
+ * not merge, so a passed text-rec sat beside the base text-violet-ink and
+ * whichever Tailwind emitted later won (violet, on the guide's "Vocal health").
+ * violet is the default voice; rec marks health and safety, as the mic and
+ * recording states do.
+ */
+const LABEL_TONES = {
+  violet: "border-violet/35 text-violet-ink",
+  rec: "border-rec/40 text-rec",
+} as const;
 
 export function SectionLabel({
   children,
   className,
   heading,
+  tone = "violet",
 }: {
   children: ReactNode;
   className?: string;
+  tone?: keyof typeof LABEL_TONES;
   /**
    * Also announce the label as an h2 to assistive tech, for a section whose
    * only visible title is this label. The visual stays the same span.
@@ -28,7 +42,7 @@ export function SectionLabel({
     return (
       <>
         <h2 className="sr-only">{children}</h2>
-        <span aria-hidden="true" className={cn(LABEL_CLASS, className)}>
+        <span aria-hidden="true" className={cn(LABEL_CLASS, LABEL_TONES[tone], className)}>
           {children}
         </span>
       </>
@@ -36,7 +50,7 @@ export function SectionLabel({
   }
   return (
     <span
-      className={cn(LABEL_CLASS, className)}
+      className={cn(LABEL_CLASS, LABEL_TONES[tone], className)}
     >
       {children}
     </span>
@@ -126,7 +140,9 @@ export function SectionHeading({
   return (
     <div className={cn("max-w-2xl", className)}>
       {label && <SectionLabel className="mb-4">{label}</SectionLabel>}
-      <Heading id={id} className="text-2xl sm:text-3xl">
+      {/* An h3 takes the card-title face by default; this one is the same
+          editorial tier as the h2, so it says so. */}
+      <Heading id={id} className={level === 3 ? "font-display text-2xl font-normal sm:text-3xl" : "text-2xl sm:text-3xl"}>
         {children}
       </Heading>
       {lede && <p className="mt-3 text-mut">{lede}</p>}
@@ -406,7 +422,7 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line2 px-6 py-14 text-center">
-      <div className="text-xl font-bold">{title}</div>
+      <div className="font-display text-xl font-normal">{title}</div>
       {hint && <p className="mt-2 max-w-sm text-sm text-mut">{hint}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>

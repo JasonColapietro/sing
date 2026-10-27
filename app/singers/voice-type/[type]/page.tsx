@@ -152,7 +152,7 @@ export default async function VoiceTypePage({
             "@type": "ListItem",
             position: i + 1,
             url: `${SITE_URL}/singers/${s.slug}`,
-            name: `${s.name} — ${rangeLabel(s)}`,
+            name: `${s.name}: ${rangeLabel(s)}`,
           })),
         },
       },
@@ -262,7 +262,7 @@ export default async function VoiceTypePage({
           <p className="mt-3 max-w-3xl text-mut">{note.body}</p>
           <p className="mt-3 max-w-3xl text-sm text-mut">{note.challenge}</p>
 
-          <h3 className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+          <h3 className="mt-7 font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-dim">
             What the {pluralVoice(lower)} here show
           </h3>
           <ul className="mt-3 max-w-3xl space-y-2 text-sm text-mut">
@@ -322,7 +322,7 @@ export default async function VoiceTypePage({
                   <LinkedNames singers={stats.lowestAll} />
                   ) and ends at {midiToLabel(stats.highest.highMidi)} (
                   <LinkedNames singers={stats.highestAll} />
-                  ) — {stats.highest.highMidi - stats.lowest.lowMidi} semitones
+                  ), a span of {stats.highest.highMidi - stats.lowest.lowMidi} semitones
                   from the floor of the category to its ceiling.
                 </>
               )}
@@ -334,7 +334,7 @@ export default async function VoiceTypePage({
               conventional {lower} band.
             </li>
           </ul>
-          <p className="mt-5 text-xs text-dim">
+          <p className="mt-5 max-w-prose text-xs text-dim">
             Voice categories are guides borrowed from choral and operatic
             practice. Most artist labels and endpoints in this catalog await
             individual evidence review; open a profile for its source status.
@@ -354,12 +354,12 @@ export default async function VoiceTypePage({
             the FAQPage markup above. */}
         <Card>
           <h2 className="text-xl">
-            How high — and how low — {pluralVoice(lower)} sing
+            How high and how low {pluralVoice(lower)} sing
           </h2>
           <div className="mt-4 max-w-3xl space-y-5">
             {faq.map((f) => (
               <div key={f.q}>
-                <h3 className="text-sm font-semibold">{f.q}</h3>
+                <h3 className="text-sm">{f.q}</h3>
                 <p className="mt-1 text-sm text-mut">{f.a}</p>
               </div>
             ))}

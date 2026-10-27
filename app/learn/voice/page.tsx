@@ -72,7 +72,7 @@ export default function VoiceCoursePage() {
     <PageShell
       kicker="Free voice course"
       title="Free voice lessons, one small skill at a time"
-      subtitle={`A free singing course of ${CATALOG_LESSON_COUNT} short voice lessons in ${COURSE.length} stages and ${COURSE.reduce((n, s) => n + s.modules.length, 0)} modules, from finding your range to registers, agility and style. Each lesson tells you what to practise, what to listen for, and which Suede Sing room to do it in.`}
+      subtitle={`A free singing course of ${CATALOG_LESSON_COUNT} short voice lessons in ${COURSE.length} stages and ${COURSE.reduce((n, s) => n + s.modules.length, 0)} modules, from finding your range to registers, agility and style. Each lesson tells you what to practice, what to listen for, and which Suede Sing room to do it in.`}
       actions={
         firstLesson?.href ? (
           <LinkButton href={firstLesson.href} size="lg">
@@ -196,7 +196,7 @@ export default function VoiceCoursePage() {
                       <ol className="mt-3 space-y-1 text-sm">
                         {module.lessons.map((lesson) => (
                           <li key={lesson.catalog.id} className="flex gap-2">
-                            <span className="font-mono text-xs text-dim">
+                            <span className="shrink-0 whitespace-nowrap font-mono text-xs text-dim">
                               {lesson.catalog.minutes} min
                             </span>
                             {lesson.href ? (

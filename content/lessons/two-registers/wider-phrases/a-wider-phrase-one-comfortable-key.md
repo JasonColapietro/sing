@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody right onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing that crossing the way you practised the siren, quieter and on a narrow vowel, rather than pushing the upper notes.
+A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody right onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing that crossing the way you practiced the siren, quieter and on a narrow vowel, rather than pushing the upper notes.
 
 ## Steps
 
@@ -33,7 +33,7 @@ Transpose the supplied study so its low and high phrases both fit, then mark the
 
 ### Name the target: Two-register repertoire
 
-Why this song needs the siren you just built. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Why this song needs the siren you just built. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
@@ -61,7 +61,7 @@ I rehearsed the supplied Deep River phrase in a comfortable key and marked where
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “A Wider Phrase, One Comfortable Key.”
 - 60s: Isolate the two-register repertoire target in short, comfortable examples.
-- 90s: Practise or record the complete “A Wider Phrase, One Comfortable Key” task, resetting between attempts.
+- 90s: Practice or record the complete “A Wider Phrase, One Comfortable Key” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

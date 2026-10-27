@@ -29,7 +29,7 @@ Once you have taken the range test, song practice opens the study fitted to your
 
 ### Name the target: Extended-range repertoire
 
-Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.
 - Listen: The full take keeps the authored melody recognizable and the planned ornaments audible.
@@ -57,7 +57,7 @@ I rehearsed the supplied phrase and study arrangement in a comfortable key, isol
 
 - 60s: Open the practice material. Prepare the room, body, and safe baseline for “Phrase and Ornament Study.”
 - 120s: Isolate the extended-range repertoire target in short, comfortable examples.
-- 180s: Practise or record the complete “Phrase and Ornament Study” task, resetting between attempts.
+- 180s: Practice or record the complete “Phrase and Ornament Study” task, resetting between attempts.
 - 120s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

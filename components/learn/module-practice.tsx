@@ -130,10 +130,10 @@ export function ModulePractice({
       <div className="space-y-4" data-module-practice={moduleId}>
         <SectionLabel>Practice</SectionLabel>
         <div className="max-w-2xl space-y-2">
-          <h2 className="text-xl">Where to practise</h2>
+          <h2 className="text-xl">Where to practice</h2>
           {lessonRoom && (
             <p className="text-sm text-mut" data-lesson-room={lessonRoom.room}>
-              You practise this lesson in {companionLabel(lessonRoom)}, the button
+              You practice this lesson in {companionLabel(lessonRoom)}, the button
               at the top of the page; {companionLabel(companion)} below is for the
               module&apos;s self-check.
             </p>

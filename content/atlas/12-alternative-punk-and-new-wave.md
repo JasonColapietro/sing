@@ -3,7 +3,7 @@ title: "Alternative, punk and new wave"
 part: "Rock, metal and alternative"
 order: 12
 group: grunge-alt
-summary: "From post-punk monotone to grunge catharsis — the chapter where refusing to sing beautifully became its own technique, and what that refusal actually requires."
+summary: "Refusing to sing beautifully became its own technique, from post-punk monotone to grunge catharsis. This chapter covers what that refusal actually requires."
 ---
 
 This chapter documents the great rebellion against pretty singing, and its central irony: refusing conventional beauty turned out to require its own exacting techniques. The post-punk baritones stripped away vibrato, ornament and warmth until a semitone of movement carried a song — and discovered that controlled affectlessness is harder than emoting. The new wave croons rebuilt theatrical singing out of irony and synthesizers. And the grunge generation weaponized the break itself — yarls, cracks, howls from clean to distorted inside one phrase — turning what classical training spends years erasing into the genre's most copied gesture.

@@ -111,7 +111,7 @@ export default async function StagePage({ params }: { params: Promise<Params> })
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-xl">
                     {module.href ? (
-                      <Link href={module.href} className="hover:text-violet-ink">
+                      <Link href={module.href} className="inline-flex min-h-11 items-center hover:text-violet-ink">
                         {module.catalog.name}
                       </Link>
                     ) : (
@@ -123,18 +123,21 @@ export default async function StagePage({ params }: { params: Promise<Params> })
                 <p className="mt-2 text-sm text-mut">
                   Outcome: I {module.catalog.promise}
                 </p>
-                <ol className="mt-3 space-y-1 text-sm">
+                {/* Each lesson row is a 44px target, so the rows carry their
+                    own spacing; the minutes stay on one line beside a title
+                    that wraps. */}
+                <ol className="mt-2 text-sm">
                   {module.lessons.map((lesson) => (
-                    <li key={lesson.catalog.id} className="flex gap-2">
-                      <span className="font-mono text-xs text-dim">
+                    <li key={lesson.catalog.id} className="flex items-baseline gap-2">
+                      <span className="shrink-0 whitespace-nowrap font-mono text-xs text-dim">
                         {lesson.catalog.minutes} min
                       </span>
                       {lesson.href ? (
-                        <Link href={lesson.href} className="text-violet-ink hover:underline">
+                        <Link href={lesson.href} className="inline-flex min-h-11 items-center text-violet-ink hover:underline">
                           {lesson.catalog.title}
                         </Link>
                       ) : (
-                        <span className="text-mut">{lesson.catalog.title}</span>
+                        <span className="inline-flex min-h-11 items-center text-mut">{lesson.catalog.title}</span>
                       )}
                     </li>
                   ))}

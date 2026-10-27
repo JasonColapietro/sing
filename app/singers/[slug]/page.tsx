@@ -119,7 +119,7 @@ function queryAlignedTitle(s: SingerRecord): string {
     "reba-mcentire": "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
     "alex-warren": "Alex Warren Vocal Range & Voice Type: No Definitive Type",
     "sam-smith": "Sam Smith Vocal Range & Voice Type: Baritone-to-Tenor",
-    "arijit-singh": "Arijit Singh Vocal Range: Reported C3–C5 — Compare Yours",
+    "arijit-singh": "Arijit Singh Vocal Range: Reported C3–C5 · Compare Yours",
   };
   if (hasReviewedVoiceTypeCorrection(s)) return reviewedTitles[s.slug];
   const answer = `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
@@ -391,7 +391,7 @@ export default async function SingerPage({
       subtitle={queryAlignedDescription(s)}
       actions={
         <>
-          {/* "Compare my range — free test →" on the CTR pilot's pages,
+          {/* "Compare my range · free test →" on the CTR pilot's pages,
               "Test my range →" elsewhere; the labels live with the swap
               they must stay the width of (components/singers/singer-actions.tsx). */}
           <SingerRangeAction
@@ -447,7 +447,7 @@ export default async function SingerPage({
               <SectionLabel>Reported reference span</SectionLabel>
               <div className="tabular mt-3 font-mono text-5xl font-bold sm:text-6xl">
                 {midiToLabel(s.lowMidi)}
-                <span className="text-dim"> — </span>
+                <span className="text-dim">–</span>
                 {midiToLabel(s.highMidi)}
               </div>
             </div>
@@ -558,7 +558,7 @@ export default async function SingerPage({
               <div className="mt-5 space-y-5">
                 {groupEvidenceSources(evidence.sources).map((group) => (
                   <section key={group.label}>
-                    <h3 className="text-sm font-semibold">{group.label}</h3>
+                    <h3 className="text-sm">{group.label}</h3>
                     {group.performance && (
                       <p className="mt-1 text-xs text-dim">Performance: {group.performance}</p>
                     )}
@@ -601,7 +601,7 @@ export default async function SingerPage({
               )}
               {evidence.sources.length > 0 && (
                 <div className="mt-5 space-y-3">
-                  <h3 className="text-sm font-semibold">Source context awaiting individual review</h3>
+                  <h3 className="text-sm">Source context awaiting individual review</h3>
                   <p className="text-xs text-dim">
                     These sources support only the claims named below. They do not verify
                     the catalog&apos;s range endpoints or complete the individual review.
@@ -654,7 +654,7 @@ export default async function SingerPage({
             </div>
           </dl>
           <p className="mt-5 text-xs text-dim">
-            Reported catalog figures, not lab measurements — an endpoint may be
+            Reported catalog figures, not lab measurements. An endpoint may be
             an isolated performance and does not describe an everyday singing range.
           </p>
         </Card>
@@ -676,7 +676,7 @@ export default async function SingerPage({
               .filter((f) => intent !== "voice-type" || f.q !== VOICE_TYPE_QUESTION(s))
               .map((f) => (
               <div key={f.q}>
-                <h3 className="text-sm font-semibold">{f.q}</h3>
+                <h3 className="text-sm">{f.q}</h3>
                 <p className="mt-1 text-sm text-mut">{f.a}</p>
               </div>
             ))}

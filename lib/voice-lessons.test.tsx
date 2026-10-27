@@ -1093,7 +1093,7 @@ describe("the pages", () => {
       const own = p.lessonCompanion[l.id];
       if (own) {
         expect(html, l.id).toContain(`data-lesson-room="${own.room}"`);
-        expect(html, l.id).toContain(`You practise this lesson in ${companionLabel(own)}`);
+        expect(html, l.id).toContain(`You practice this lesson in ${companionLabel(own)}`);
       } else {
         expect(html, l.id).not.toContain("data-lesson-room");
       }

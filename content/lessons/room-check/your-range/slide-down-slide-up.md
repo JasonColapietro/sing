@@ -29,14 +29,14 @@ Warm up first, for about four minutes with the [Morning reset](/warmups?routine=
 
 ### Name the target: Range scan and voice type
 
-Slide to your lowest comfortable note, then your highest. Stop before strain, every time. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Slide to your lowest comfortable note, then your highest. Stop before strain, every time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practise these slides in the recorder, as this module's first lesson does. Then repeat each slide once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end: nothing you sing or record in either room replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.
+Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practice these slides in the recorder, as this module's first lesson does. Then repeat each slide once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end: nothing you sing or record in either room replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
@@ -57,7 +57,7 @@ I tried a comfortable low and high note without forcing either end and noted the
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Slide Down, Slide Up.”
 - 75s: Isolate the range scan and voice type target in short, comfortable examples.
-- 120s: Practise or record the complete “Slide Down, Slide Up” task, resetting between attempts.
+- 120s: Practice or record the complete “Slide Down, Slide Up” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

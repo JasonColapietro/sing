@@ -60,7 +60,7 @@ export default function GlobalError({
           </h1>
           <p style={{ color: "#5c564d", margin: "16px 0 0" }}>
             Something went wrong before the page could load. Reloading usually
-            fixes it. Nothing you have practiced is affected — it is stored on
+            fixes it. Nothing you have practiced is affected; it is stored on
             this device.
           </p>
           <div

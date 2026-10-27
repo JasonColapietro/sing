@@ -521,13 +521,16 @@ function PathRow({
           {item.locked && <Pill tone="violet">Pro</Pill>}
         </span>
         {/* Neither line truncates: at 375 the meta lost its last tag
-            ("G…" for Glide) and a pack's description its second clause. */}
+            ("G…" for Glide) and a pack's description its second clause. A
+            two-line clamp clipped the breath and pro-pack descriptions to a
+            third of their text at 100% zoom, and at 200% (WCAG 1.4.4) to a
+            few words, so the description wraps in full like the meta. */}
         {secondary && (
           <span
-            className={`mt-0.5 text-dim ${
+            className={`mt-0.5 block text-dim ${
               item.meta
-                ? "block font-mono text-[11px] uppercase tracking-[0.14em]"
-                : "line-clamp-2 text-sm"
+                ? "font-mono text-[11px] uppercase tracking-[0.14em]"
+                : "text-sm"
             }`}
           >
             {secondary}

@@ -99,14 +99,14 @@ export function buildPlan(
     !practicedToday && state.streak.current > 0 && state.streak.lastDay === yesterdayKey;
   const banner =
     restDayOf === null && streakAtRisk && now.getHours() >= 12
-      ? `Keep your ${state.streak.current}-day streak alive — one short session today keeps the tape rolling.`
+      ? `Keep your ${state.streak.current}-day streak alive: one short session today keeps the tape rolling.`
       : null;
   const restNote =
     restDayOf === null
       ? null
       : `Today is a rest day in ${restDayOf}, and the program counts it as done. Nothing below is required.${
           streakAtRisk
-            ? " Your streak counts only days you practise, so if you rest today it starts again from 1 at your next session."
+            ? " Your streak counts only days you practice, so if you rest today it starts again from 1 at your next session."
             : ""
         }`;
 
@@ -174,7 +174,7 @@ export function buildPlan(
       href: rangeTestHref(),
       minutes: 3,
       reason:
-        "You haven't measured your range yet — it anchors every other exercise to your voice.",
+        "You haven't measured your range yet. It anchors every other exercise to your voice.",
     });
   } else if (
     recovering === null &&
@@ -187,7 +187,7 @@ export function buildPlan(
       title: "Retake the range test",
       href: rangeTestHref(),
       minutes: 3,
-      reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test adds a current point to your range over time.`,
+      reason: `Your range was last measured ${rangeAgeDays} days ago. A fresh test adds a current point to your range over time.`,
     });
   }
   // Recovery week's note says why the test the plan would have led with is
@@ -207,7 +207,7 @@ export function buildPlan(
     href: "/breath",
     minutes: heavyYesterday ? 4 : 2,
     reason: heavyYesterday
-      ? `Yesterday was a heavy one (${Math.round(yesterdaySec / 60)} min) — start slow and give the voice time to settle.`
+      ? `Yesterday was a heavy one (${Math.round(yesterdaySec / 60)} min), so start slow and give the voice time to settle.`
       : "Low, steady breaths set up the rest of the session.",
   });
 
@@ -269,7 +269,7 @@ export function buildPlan(
       minutes: 6,
       reason: `${names} ${weak.length > 1 ? "are" : "is"} your weakest ${
         weak.length > 1 ? "notes" : "note"
-      } right now — ${midiToLabel(worst.midi)} lands within ${TOLERANCE_CENTS} cents of the target just ${worst.accuracy}% of the time${
+      } right now: ${midiToLabel(worst.midi)} lands within ${TOLERANCE_CENTS} cents of the target just ${worst.accuracy}% of the time${
         worst.cents !== null ? `, off by ~${Math.round(worst.cents)} cents` : ""
       }. ${reach}`,
     };
@@ -287,7 +287,7 @@ export function buildPlan(
       reason:
         accuracy === null
           ? "Sing one scored warmup with the mic on and tomorrow's plan starts reading your actual notes."
-          : "No stand-out weak note in the last two weeks — a general ladder keeps the whole range honest.",
+          : "No stand-out weak note in the last two weeks, so a general ladder keeps the whole range honest.",
     });
   }
 
@@ -298,21 +298,21 @@ export function buildPlan(
         title: "Ear training",
         href: TYPE_META.ear.href,
         minutes: 5,
-        reason: `Your ear scores averaged ${avg} over the last two weeks — the lowest of your scored areas.`,
+        reason: `Your ear scores averaged ${avg} over the last two weeks, the lowest of your scored areas.`,
       });
     } else if (weakestArea.type === "song") {
       items.push({
         title: "Song practice",
         href: TYPE_META.song.href,
         minutes: 5,
-        reason: `Your song scores averaged ${avg} recently — a focused pass will lift them.`,
+        reason: `Your song scores averaged ${avg} recently. A focused pass will lift them.`,
       });
     } else {
       items.push({
         title: "Pitch practice",
         href: "/studio",
         minutes: 5,
-        reason: `Your warmup scores averaged ${avg} — slow pitch work in the studio tightens accuracy.`,
+        reason: `Your warmup scores averaged ${avg}. Slow pitch work in the studio tightens accuracy.`,
       });
     }
   } else {
@@ -320,7 +320,7 @@ export function buildPlan(
       title: "Ear training",
       href: TYPE_META.ear.href,
       minutes: 5,
-      reason: "Not enough recent scores to compare areas — a scored round sets your baseline.",
+      reason: "Not enough recent scores to compare areas yet. A scored round sets your baseline.",
     });
   }
 
@@ -331,7 +331,7 @@ export function buildPlan(
       minutes: 3,
       reason:
         accuracy !== null
-          ? `Finish on real music — you're within ${TOLERANCE_CENTS} cents of the target ${accuracy}% of the scored time lately, and songs are where that shows.`
+          ? `Finish on real music: you're within ${TOLERANCE_CENTS} cents of the target ${accuracy}% of the scored time lately, and songs are where that shows.`
           : "Finish by putting the work into real music.",
     });
   }
@@ -344,8 +344,14 @@ export function CoachCard({
   restDayOf = null,
   programRange = null,
   recovering = null,
+  hideProNudge = false,
 }: {
   state: ProgressState;
+  /**
+   * Another ask owns this screen (the program card's day-unlock, just below),
+   * so the card leaves out its own Pro line rather than stack a second one.
+   */
+  hideProNudge?: boolean;
   /** The running program's name when today is one of its rest days. */
   restDayOf?: string | null;
   /** The running program's next scheduled range test, which the coach leaves to it. */
@@ -451,7 +457,7 @@ export function CoachCard({
         )}
       </ol>
       <p className="mt-4 text-xs text-dim">
-        Built from your scored notes, range tests, and recent practice — no AI,
+        Built from your scored notes, range tests, and recent practice. No AI,
         just the numbers.
       </p>
       {/* The plan can run past the free allowance, so say so here rather than
@@ -465,10 +471,12 @@ export function CoachCard({
       )}
       {/* Not before the first session: a singer with nothing logged has not
           yet seen the plan read their numbers, which is what the line sells. */}
-      {state.sessions.length > 0 && (
+      {state.sessions.length > 0 && !hideProNudge && (
         <div className="mt-3">
+          {/* At the cap the card has just said today's free minutes are used,
+              so the line names the limit Pro removes, not the plan. */}
           <ProInlineNudge>
-            Pro unlocks the full daily plan
+            {cap.capped ? "Pro has no daily limit" : "Pro unlocks the full daily plan"}
           </ProInlineNudge>
         </div>
       )}

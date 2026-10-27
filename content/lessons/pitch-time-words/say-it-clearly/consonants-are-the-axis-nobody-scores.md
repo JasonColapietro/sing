@@ -33,7 +33,7 @@ Speak the lyric in rhythm at an easy tempo. Mark the vowel that carries each pit
 
 ### Name the target: Diction and intelligible words
 
-Pitch and time get all the attention. Words are where amateur performances actually fail. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Pitch and time get all the attention. Words are where amateur performances actually fail. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.
 - Listen: A listener can write down the words from the recording without seeing the lyric.
@@ -61,7 +61,7 @@ I spoke and sang the displayed lyric slowly enough for each word to remain under
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Consonants Are the Axis Nobody Scores.”
 - 60s: Isolate the clear, intelligible diction target in short, comfortable examples.
-- 90s: Practise or record the complete “Consonants Are the Axis Nobody Scores” task, resetting between attempts.
+- 90s: Practice or record the complete “Consonants Are the Axis Nobody Scores” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

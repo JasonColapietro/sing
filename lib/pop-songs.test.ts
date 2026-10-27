@@ -325,7 +325,7 @@ describe("crawl path", () => {
     // names both of the rule's inputs: the songbook's scale reads span and
     // leaps, so a bare "rates medium" read as the same scale.
     expect(await page("unchained-melody")).toContain(
-      "— 21 semitones — which, on span and top note, rates medium for an untrained voice.",
+      ", 21 semitones, which on span and top note rates medium for an untrained voice.",
     );
   });
 
@@ -337,7 +337,7 @@ describe("crawl path", () => {
     expect(popDifficultyReason(babe)).toBe("top");
     const html = await page("good-luck-babe");
     expect(html).toContain("semitones. Its top note, F#5, rates it hard for an untrained voice.");
-    expect(html).not.toContain("— 21 semitones — which");
+    expect(html).not.toContain(", 21 semitones, which");
   });
 
   it("never credits one span with two ratings across the catalog", async () => {
@@ -347,7 +347,7 @@ describe("crawl path", () => {
         await CanYouSingSongPage({ params: Promise.resolve({ slug: song.slug }) }),
       );
       const reason = popDifficultyReason(song);
-      const match = /— (\d+) semitones — which, on span and top note, rates (\w+)/.exec(html);
+      const match = /, (\d+) semitones, which on span and top note rates (\w+)/.exec(html);
       expect(Boolean(match), song.slug).toBe(reason === "span");
       if (!match) continue;
       const span = Number(match[1]);

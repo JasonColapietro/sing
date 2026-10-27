@@ -29,7 +29,7 @@ Choose a comfortable sustained note and establish three easy seconds of straight
 
 ### Name the target: Vibrato control
 
-Start straight, introduce vibrato deliberately, stop it again. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Start straight, introduce vibrato deliberately, stop it again. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.
@@ -57,7 +57,7 @@ I compared straight tone with naturally occurring vibrato, without shaking the j
 
 - 60s: Open the practice material. Prepare the room, body, and safe baseline for “Straight Then Vibrato.”
 - 105s: Isolate the vibrato control target in short, comfortable examples.
-- 165s: Practise or record the complete “Straight Then Vibrato” task, resetting between attempts.
+- 165s: Practice or record the complete “Straight Then Vibrato” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
 import { AUTHOR_NODE } from "@/lib/author";
+import { NotPro } from "@/components/pro/gate";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { ROUTINES, routineMinutes } from "@/components/warmups/routines";
 import { ORG_NODE } from "@/lib/organization";
@@ -306,19 +307,23 @@ export default function Home() {
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 {/* The priced button lands on the buy card; the quieter link
                     is for the reader who wants the whole page first. */}
-                <LinkButton href="/pro#buy" variant="violet" size="lg">
-                  {`Go Pro: ${PRO_PRICE} once`}
-                </LinkButton>
+                {/* Never sold to an owner: NotPro hides the priced asks
+                    for a Pro browser before the first paint. */}
+                <NotPro>
+                  <LinkButton href="/pro#buy" variant="violet" size="lg">
+                    {`Go Pro: ${PRO_PRICE} once`}
+                  </LinkButton>
+                </NotPro>
                 <LinkButton href="/pro" variant="ghost" size="lg">
                   See everything Pro adds
                 </LinkButton>
               </div>
               {/* The price used to appear nowhere on this page. One line: the
                   sold-out monthly plan and its footnotes belong on /pro. */}
-              <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
+              <NotPro as="p" className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
                 {PRO_PRICE_LINE}
                 <span className="mx-2 text-line2">·</span>Never renews
-              </p>
+              </NotPro>
             </div>
             <ProVisual />
           </div>
@@ -355,7 +360,7 @@ export default function Home() {
               Browse warmups
             </LinkButton>
           </div>
-          <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
+          <NotPro as="p" className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
             Ready for the coach?{" "}
             <Link
               href="/pro#buy"
@@ -363,7 +368,7 @@ export default function Home() {
             >
               {`Suede Pro is ${PRO_PRICE} once`}
             </Link>
-          </p>
+          </NotPro>
         </div>
       </section>
     </main>

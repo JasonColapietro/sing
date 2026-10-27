@@ -33,7 +33,7 @@ Begin at a comfortable middle pitch with a straw in air or a loose lip trill. Ke
 
 ### Name the target: Semi-occluded warm-up
 
-Explore how a straw or lip trill changes the feeling of a gentle sound; comfort is your cue to continue. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Explore how a straw or lip trill changes the feeling of a gentle sound; comfort is your cue to continue. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.
 - Listen: The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound.
@@ -61,7 +61,7 @@ I tried the straw or lip-trill pattern gently, with an easy breath and a full re
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Back Pressure Does the Work.”
 - 45s: Isolate the semi-occluded warm-up target in short, comfortable examples.
-- 60s: Practise or record the complete “Back Pressure Does the Work” task, resetting between attempts.
+- 60s: Practice or record the complete “Back Pressure Does the Work” task, resetting between attempts.
 - 45s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

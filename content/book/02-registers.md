@@ -2,7 +2,7 @@
 title: "Registers, and why they exist"
 part: "How the voice works"
 order: 2
-summary: "What physically changes between chest, head, mix, falsetto and whistle — and why teachers give the same sounds different names."
+summary: "What physically changes between chest, head, mix, falsetto and whistle, and why teachers give the same sounds different names."
 ---
 
 Ask ten singers which register they were in on a given note and you will get several answers, each delivered with confidence. That is not carelessness. The words arrived from different rooms — opera studios, church choirs, tracking booths, voice clinics — and nobody ever sat down to reconcile them.

@@ -29,7 +29,7 @@ Choose a word whose vowel crosses your transition zone and sing it first below t
 
 ### Name the target: Vowel modification
 
-Modified and unmodified, heard side by side. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Modified and unmodified, heard side by side. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.
 - Listen: The pitch remains connected and the lyric is still understandable across all three vowels.
@@ -57,7 +57,7 @@ I compared three vowels on a comfortable fifth slide and noted which small adjus
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Crossing on Three Vowels.”
 - 90s: Isolate the vowel modification target in short, comfortable examples.
-- 135s: Practise or record the complete “Crossing on Three Vowels” task, resetting between attempts.
+- 135s: Practice or record the complete “Crossing on Three Vowels” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

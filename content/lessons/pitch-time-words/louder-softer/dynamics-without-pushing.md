@@ -33,7 +33,7 @@ Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. 
 
 ### Name the target: Dynamics without pushing
 
-Loud from resonance, quiet from support, neither from the throat. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Loud from resonance, quiet from support, neither from the throat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
 - Listen: The four levels in your take form an audible progression while pitch stays centered.
@@ -61,7 +61,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Dynamics Without Pushing.”
 - 60s: Isolate the dynamics without pushing target in short, comfortable examples.
-- 90s: Practise or record the complete “Dynamics Without Pushing” task, resetting between attempts.
+- 90s: Practice or record the complete “Dynamics Without Pushing” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

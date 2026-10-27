@@ -189,7 +189,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
 
         {guide.safety && (
           <aside className="mt-8 max-w-3xl rounded-2xl border border-rec/30 bg-panel p-5 sm:p-6">
-            <SectionLabel className="mb-3 border-rec/40 text-rec">
+            <SectionLabel tone="rec" className="mb-3">
               Vocal health
             </SectionLabel>
             <h3 className="text-xl">{guide.safety.heading}</h3>
@@ -213,7 +213,9 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
         {guide.howTo && (
           <div className="mt-12">
             <SectionLabel className="mb-4">How to do it</SectionLabel>
-            <h3 className="max-w-3xl text-2xl">{guide.howTo.name}</h3>
+            {/* Directly under the guide's serif h2, so the same editorial
+                face rather than the h3 card-title sans. */}
+            <h3 className="max-w-3xl font-display text-2xl font-normal">{guide.howTo.name}</h3>
             <p className="mt-3 max-w-3xl text-mut">{guide.howTo.intro}</p>
             <ol className="mt-6 grid gap-4 sm:grid-cols-2">
               {guide.howTo.steps.map((step, i) => (

@@ -330,7 +330,7 @@ export function BoxBreathing({
               dot="var(--s-voice)"
             />
             <p className="max-w-sm text-sm text-[var(--s-mut)]">
-              Breathe around the square: inhale, hold, exhale, hold — equal
+              Breathe around the square: inhale, hold, exhale, hold, with equal
               counts on every side. No microphone needed.
             </p>
             <div className="w-full max-w-sm space-y-5 text-left">
@@ -405,7 +405,7 @@ export function BoxBreathing({
           <div>
             <h3 className="text-xl">Box breathing</h3>
             <p className="mt-2 max-w-sm text-sm text-mut">
-              Breathe around the square: inhale, hold, exhale, hold — equal
+              Breathe around the square: inhale, hold, exhale, hold, with equal
               counts on every side. A calm way to settle nerves before you
               sing. No microphone needed.
             </p>

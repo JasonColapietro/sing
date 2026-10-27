@@ -687,3 +687,15 @@ CONTRACT_WRITE=1 npx vitest run contracts/glossary.test.ts
 The term counts are pinned — in total, per domain and per publisher — so adding a
 word to the shared vocabulary is a line in a review rather than a number nobody
 looked at.
+
+### Copy pass, 2026-10-27 (values only, no version bump)
+
+A house-style pass took em dashes and British spellings out of the glossary
+definitions, the warmup exercise copy and the voice-type descriptions, so
+`glossary.json` and `suede-vocal.json` changed values and were regenerated.
+Under the versioning rule above that is a changed file, not a new version:
+consumers that vendor either file (`Suede-AI/suede-voice`, the native apps,
+`suede-guitar-hub`) re-sync both and should expect their equality checks to
+fail until they do. One identifier moved with it: the glossary section
+`colour-tuning-and-timing` is now `color-tuning-and-timing`, and the Tone
+alias "Colour" is now "Color". Nothing in this repo linked the old anchor.

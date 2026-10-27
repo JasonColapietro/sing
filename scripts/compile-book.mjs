@@ -94,7 +94,7 @@ for (const c of chapters) {
 const header = `/**
  * GENERATED FILE — edit content/book/*.md and re-run scripts/compile-book.mjs.
  *
- * "The Measured Voice", the book included with Suede Sing Pro. Chapter bodies
+ * "The Measured Voice", the book included with Suede Pro. Chapter bodies
  * live here but are only ever sent to a verified subscriber: the reader fetches
  * them through /api/book, which checks the subscription with Stripe first. The
  * exception is a chapter flagged \`free\`, which renders server-side on its own
@@ -121,7 +121,7 @@ export interface BookChapter {
 
 export const BOOK_TITLE = "The Measured Voice";
 export const BOOK_SUBTITLE =
-  "A practical guide to building a voice you can measure — included with Suede Sing Pro.";
+  "A practical guide to building a voice you can measure, included with Suede Pro.";
 
 export const BOOK: BookChapter[] = `;
 

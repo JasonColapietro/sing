@@ -33,7 +33,7 @@ Start from the key the song opens in: fitted to your measured range if you have 
 
 ### Name the target: First repertoire
 
-The song moves to you. This is the singing equivalent of a capo. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+The song moves to you. This is the singing equivalent of a capo. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.
 - Listen: The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.
@@ -61,7 +61,7 @@ I rehearsed the supplied Amazing Grace phrase and study arrangement in a key tha
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Your Key, Not the Record's Key.”
 - 45s: Isolate the first repertoire target in short, comfortable examples.
-- 60s: Practise or record the complete “Your Key, Not the Record's Key” task, resetting between attempts.
+- 60s: Practice or record the complete “Your Key, Not the Record's Key” task, resetting between attempts.
 - 45s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

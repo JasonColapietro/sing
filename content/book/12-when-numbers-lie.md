@@ -3,7 +3,7 @@ title: "When the numbers lie to you"
 searchTitle: "Why pitch readings go wrong"
 part: "Reading your own voice"
 order: 12
-summary: "How room noise, mic placement, headphone bleed and a rough day distort your readings — and how to catch a bad session before you act on it."
+summary: "Room noise, mic placement, headphone bleed and a rough day distort your readings. Here is how to catch a bad session before you act on it."
 ---
 
 Every number the app shows you measures two things at once: your singing, and the conditions you sang in. Usually the second is quiet enough to ignore. Sometimes it is louder than the first, and you end up reading the room instead of your voice.

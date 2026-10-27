@@ -29,7 +29,7 @@ Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo sl
 
 ### Name the target: Rhythm and subdivision
 
-Checked against your tapped pulse by ear. Onset timing is not automatically scored. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Checked against your tapped pulse by ear. Onset timing is not automatically scored. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
@@ -57,7 +57,7 @@ I counted and clapped the displayed rhythm before singing it, then reviewed wher
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Count, Clap, Sing.”
 - 75s: Isolate the rhythm and subdivision target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Count, Clap, Sing” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Count, Clap, Sing” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

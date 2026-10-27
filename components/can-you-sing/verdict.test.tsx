@@ -106,7 +106,7 @@ describe("song comparison to first practice", () => {
     expect(html).toContain("not your comfortable band");
     expect(html).not.toContain("of headroom");
     // Centring G3–A4 in D3–A4 drops it round(59.5 - 62) = 2.
-    expect(html).toContain("Dropping the key by 2 centres it in your range.");
+    expect(html).toContain("Dropping the key by 2 centers it in your range.");
     state.range = { lowMidi: 50, highMidi: 70 };
     html = render();
     expect(html).toContain("one semitone under your tested ceiling");
@@ -114,7 +114,7 @@ describe("song comparison to first practice", () => {
     html = render();
     expect(html).toContain("leaves you 3 semitones of headroom");
     expect(html).not.toContain("comfortable band");
-    expect(html).not.toContain("centres it");
+    expect(html).not.toContain("centers it");
   });
 
   it("treats the tested floor as a limit too", () => {
@@ -124,7 +124,7 @@ describe("song comparison to first practice", () => {
     let html = render();
     expect(html).toContain("its lowest note is your tested floor");
     expect(html).toContain("expect the bottom of this song to be work");
-    expect(html).toContain("Raising the key by 3 centres it in your range.");
+    expect(html).toContain("Raising the key by 3 centers it in your range.");
     expect(html).not.toContain("of headroom");
     state.range = { lowMidi: 54, highMidi: 74 };
     html = render();
@@ -135,13 +135,13 @@ describe("song comparison to first practice", () => {
     expect(html).toContain("its top note is your tested ceiling");
     expect(html).toContain("its lowest note is your tested floor");
     expect(html).toContain("expect both ends of this song to be work");
-    expect(html).not.toContain("centres it");
+    expect(html).not.toContain("centers it");
     // Three semitones of slack in all: any shift leaves an end within one
     // semitone of a limit, so no move is suggested.
     state.range = { lowMidi: 54, highMidi: 71 };
     html = render();
     expect(html).toContain("one semitone above your tested floor");
-    expect(html).not.toContain("centres it");
+    expect(html).not.toContain("centers it");
   });
 
   it("names the shift that centres a song, not only the one that parks it on a limit", () => {
@@ -149,7 +149,7 @@ describe("song comparison to first practice", () => {
     // centring drops it by round(55 - 62) = 7.
     state.range = { lowMidi: 45, highMidi: 65 };
     let html = render();
-    expect(html).toContain("Dropping the key by 4 would bring it inside, with the top note on that ceiling; dropping it by 7 centres it in your range.");
+    expect(html).toContain("Dropping the key by 4 would bring it inside, with the top note on that ceiling; dropping it by 7 centers it in your range.");
     // A range exactly as wide as the song: the minimum shift is the centred
     // one, and it parks the other end on the opposite limit too.
     state.range = { lowMidi: 51, highMidi: 65 };
@@ -162,7 +162,7 @@ describe("song comparison to first practice", () => {
     state.range = { lowMidi: 59, highMidi: 74 };
     html = render();
     expect(html).toContain("Raising the key by 4 would bring it inside, with the bottom note on that floor. That also puts its top note one semitone under your tested ceiling, so expect both ends of the song to be work.");
-    expect(html).not.toContain("centres it");
+    expect(html).not.toContain("centers it");
   });
 
   it("names the ceiling when the advised shift puts a song as wide as the range on both limits", () => {
@@ -235,7 +235,7 @@ describe("song comparison to first practice", () => {
     // A song already inside a very wide range centres an octave up.
     state.range = { lowMidi: 55, highMidi: 92 };
     html = renderToStaticMarkup(<CanYouSingVerdict song={song} />);
-    expect(html).toContain("so expect the bottom of this song to be work. Singing it an octave higher centres it in your range.");
+    expect(html).toContain("so expect the bottom of this song to be work. Singing it an octave higher centers it in your range.");
   });
 
   it("spells the saved range in the song's key, beside the song's own notes", () => {

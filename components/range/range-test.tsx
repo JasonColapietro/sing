@@ -415,7 +415,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
                     <SectionLabel>Saved result</SectionLabel>
                     <div className="tabular mt-2 font-mono text-3xl font-bold">
                       {midiToLabel(savedRange.lowMidi)}
-                      <span className="text-dim"> — </span>
+                      <span className="text-dim">–</span>
                       {midiToLabel(savedRange.highMidi)}
                     </div>
                     <p className="mt-1 text-sm text-mut">
@@ -455,7 +455,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
                 Slide down gradually. Each note you hold clearly counts toward
                 your lowest.
               </li>
-              <li>Slide up the same way — falsetto counts.</li>
+              <li>Slide up the same way. Falsetto counts.</li>
               <li>
                 Get your range, a voice-type estimate, and how you compare to
                 famous singers.
@@ -503,7 +503,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
             Sing a comfortable note
           </h2>
           <p className="mt-2 max-w-xl text-sm text-mut">
-            Any easy pitch — an “ahh”, sung out as if to someone across the
+            Any easy pitch: an “ahh”, sung out as if to someone across the
             room. A note at talking volume is often too quiet to measure. Hold
             it steady for two seconds to lock in your starting register.
           </p>
@@ -525,7 +525,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
                 tone="violet"
               />
               <p className="mt-1.5 font-mono text-[11px] text-dim">
-                Hold steady — {Math.max(0, ((WARM_HOLD_MS - holdMs) / 1000)).toFixed(1)}s
+                Hold steady: {Math.max(0, ((WARM_HOLD_MS - holdMs) / 1000)).toFixed(1)}s
                 to go
               </p>
             </div>

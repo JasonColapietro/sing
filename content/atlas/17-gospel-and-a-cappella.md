@@ -3,7 +3,7 @@ title: "Gospel and a cappella"
 part: "Soul, R&B and gospel"
 order: 17
 group: gospel
-summary: "The source tradition and the ensemble athletes — where the runs, the shout and the squall come from, plus the a cappella specialists who turned blend itself into virtuosity."
+summary: "The source tradition and the ensemble athletes: where the runs, the shout and the squall come from, plus the a cappella specialists who turned blend itself into virtuosity."
 ---
 
 Everything the soul chapters borrowed, this chapter owns outright. Gospel is the source code: the run grammar that resolves like harmony, the shout built in waves, the squall — that controlled, ecstatic break at the top of a climb — and the dynamic arc that takes a room from silence to shaking in four minutes. The entries here describe the tradition's specialists at full strength, and the technical headline is stamina-with-abandon: these are the book's most demanding sustained sings, delivered weekly for decades, which is only possible because the abandon rides on ferocious, invisible support.

@@ -29,7 +29,7 @@ Silence reference playback, lower speaker volume below halfway, and use wired he
 
 ### Name the target: Room setup and clean input
 
-A take with only your voice in it, with nothing else playing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+A take with only your voice in it, with nothing else playing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.
 - Listen: Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.
@@ -57,7 +57,7 @@ I compared a quiet recording with my initial room setup and could hear my voice 
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Clear Recording.”
 - 60s: Isolate the room setup and clean input target in short, comfortable examples.
-- 90s: Practise or record the complete “Self-Check: A Clear Recording” task, resetting between attempts.
+- 90s: Practice or record the complete “Self-Check: A Clear Recording” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check
@@ -66,7 +66,7 @@ I compared a quiet recording with my initial room setup and could hear my voice 
 - Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: A recording made with playback stopped holds only your voice, with no reference tone, echo or clipping, on the device and in the room you will practise in.
+Ready when: A recording made with playback stopped holds only your voice, with no reference tone, echo or clipping, on the device and in the room you will practice in.
 
 If not ready: If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

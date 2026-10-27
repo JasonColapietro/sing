@@ -89,7 +89,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "The letter-and-number way of naming one exact pitch, where C4 is middle C and the number ticks over at every C rather than at every A.",
         where:
-          "Every range figure in the app is written this way — your own low and high notes, and every singer's cited span.",
+          "Every range figure in the app is written this way: your own low and high notes, and every singer's cited span.",
         href: "/range",
         domain: "music",
       },
@@ -127,7 +127,7 @@ export const GLOSSARY: GlossarySection[] = [
       {
         term: "Octave",
         definition:
-          "The distance between a note and the next note with the same letter name — twelve semitones, at double the frequency.",
+          "The distance between a note and the next note with the same letter name: twelve semitones, at double the frequency.",
         where:
           "Your range test reports the span in octaves, and the keyboard on the result marks each one.",
         href: "/range",
@@ -156,7 +156,7 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Harmonic",
         aka: ["Overtone", "Partial"],
         definition:
-          "One of the whole-number multiples of the fundamental that sound above every sung note and decide its colour.",
+          "One of the whole-number multiples of the fundamental that sound above every sung note and decide its color.",
         where:
           "The spectrogram draws one sung note as a stack of lines: the fundamental, then its harmonics.",
         href: "/analyze",
@@ -182,7 +182,7 @@ export const GLOSSARY: GlossarySection[] = [
       {
         term: "Register",
         definition:
-          "A way of setting up the vocal folds — length, thickness and how firmly they close — that handles one band of pitches well and gives out above it.",
+          "A way of setting up the vocal folds (length, thickness and how firmly they close) that handles one band of pitches well and gives out above it.",
         where:
           "The range test's climb crosses at least one register change, and the singers chart shades the reach above a voice's cited full-voice ceiling, where falsetto, head voice or whistle take over.",
         href: "/range",
@@ -221,9 +221,9 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Mix",
         aka: ["Mixed voice"],
         definition:
-          "The middle ground between chest and head — part fold setup, part vowel and resonance — where the transition can be crossed without a seam.",
+          "The middle ground between chest and head (part fold setup, part vowel and resonance) where the transition can be crossed without a seam.",
         where:
-          "Slide slowly through your transition in the pitch studio and the trace shows whether the pitch glides across it or jumps; the Mix, Not Shout lessons practise crossing it without shouting.",
+          "Slide slowly through your transition in the pitch studio and the trace shows whether the pitch glides across it or jumps; the Mix, Not Shout lessons practice crossing it without shouting.",
         href: "/studio",
         domain: "voice",
       },
@@ -242,7 +242,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "The rattling, popping sound the folds make below the bottom of a sung range, with no steady pitch to it.",
         where:
-          "The range test asks you not to count fry as your low note — the floor is the lowest note you can hold clearly.",
+          "The range test asks you not to count fry as your low note: the floor is the lowest note you can hold clearly.",
         href: "/range",
         drill: "fry-onset",
         domain: "voice",
@@ -287,7 +287,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "Where a voice sits comfortably for most of a song, which is a different claim from the range it can reach.",
         where:
-          "Song fit is checked against your whole range, so a song can sit inside it and still spend every chorus in a part of the voice you would rather not live in — that is tessitura, and transposing is the fix.",
+          "Song fit is checked against your whole range, so a song can sit inside it and still spend every chorus in a part of the voice you would rather not live in. That is tessitura, and transposing is the fix.",
         href: "/songs",
         domain: "voice",
       },
@@ -320,7 +320,7 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Breath support",
         aka: ["Support"],
         definition:
-          "Keeping the air pressure under the folds steady while the lungs empty — a management job rather than a strength one.",
+          "Keeping the air pressure under the folds steady while the lungs empty: a management job rather than a strength one.",
         where:
           "The sustain test scores steadiness alongside duration, because a long note that wobbles is not a supported one.",
         href: "/breath",
@@ -341,7 +341,7 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Resonance",
         aka: ["The vocal tract", "The filter"],
         definition:
-          "The throat and mouth shaping the buzz from the folds into a vowel and a colour, without changing the pitch.",
+          "The throat and mouth shaping the buzz from the folds into a vowel and a color, without changing the pitch.",
         where:
           "Hold one note and change vowel: on the spectrogram the stack of lines stays at the same heights while the brightness shifts between them.",
         href: "/analyze",
@@ -352,7 +352,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A concentration of energy around 3 kHz found in many trained classical voices, and the standard explanation for carrying over an orchestra unamplified.",
         where:
-          "The tone panel draws that band as a gold column and reports its share of the plotted energy — a number to compare against your own takes, not a target.",
+          "The tone panel draws that band as a gold column and reports its share of the plotted energy: a number to compare against your own takes, not a target.",
         href: "/analyze",
         domain: "voice",
       },
@@ -390,7 +390,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "Blowing air through loosely closed lips so they flutter while you sing, which makes clear tone cheap for a cold voice.",
         where:
-          "Several warmups run on lip trills, and they are hard to blast through — the trill stops if you push.",
+          "Several warmups run on lip trills, and they are hard to blast through, because the trill stops if you push.",
         href: "/warmups",
         drill: "lip-trill-scale",
         domain: "voice",
@@ -429,7 +429,7 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Onset",
         aka: ["Attack"],
         definition:
-          "How a note starts — breath before tone, breath and tone together, or a click as the folds release.",
+          "How a note starts: breath before tone, breath and tone together, or a click as the folds release.",
         where:
           "In the studio the pitch trace arrives a moment late on a breathy onset, hooks up into the note on a scoop, and starts on the note from the first moment on a balanced onset sung on its pitch.",
         href: "/studio",
@@ -438,7 +438,7 @@ export const GLOSSARY: GlossarySection[] = [
       {
         term: "Vowel",
         definition:
-          "The shape of the vocal tract that sets which frequencies a note is loudest at, colouring it without changing its pitch.",
+          "The shape of the vocal tract that sets which frequencies a note is loudest at, coloring it without changing its pitch.",
         where:
           "Most warmups name the vowel or sound a pattern is sung on, because the same scale on ee and on ah asks different things of the tract.",
         href: "/warmups",
@@ -447,15 +447,15 @@ export const GLOSSARY: GlossarySection[] = [
     ],
   },
   {
-    heading: "Colour, tuning and timing",
+    heading: "Color, tuning and timing",
     blurb:
       "The musical words neither instrument owns, defined once for both.",
     entries: [
       {
         term: "Tone",
-        aka: ["Timbre", "Colour"],
+        aka: ["Timbre", "Color"],
         definition:
-          "The colour of a sound — which frequencies it is loudest at — as distinct from how high it is or how loud.",
+          "The color of a sound (which frequencies it is loudest at), as distinct from how high it is or how loud.",
         where:
           "The spectrogram is a picture of tone: two takes of one note at the same pitch and the same volume draw different stacks.",
         href: "/analyze",
@@ -543,7 +543,7 @@ export const GLOSSARY: GlossarySection[] = [
       {
         term: "Register",
         definition:
-          "A region of the neck and of pitch — the low strings, the middle of the board, the high frets — rather than a mechanism that switches.",
+          "A region of the neck and of pitch (the low strings, the middle of the board, the high frets) rather than a mechanism that switches.",
         where:
           "Lessons name the register a phrase sits in, and the same shape moved up the neck is the same chord in a higher one.",
         href: "/learn",
@@ -691,7 +691,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A short repeated figure that identifies a song, usually played rather than sung.",
         where:
-          "The riff lessons build a recognisable song out of one figure repeated, which is the fastest route to playing something someone else knows.",
+          "The riff lessons build a recognizable song out of one figure repeated, which is the fastest route to playing something someone else knows.",
         href: "/learn",
         domain: "guitar",
       },

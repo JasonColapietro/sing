@@ -99,7 +99,7 @@ export default function WeeklyReportCard() {
   const stats: Array<[string, string]> = [
     ["Practice time", fmtDur(report.durationSec)],
     ["Sessions", String(report.sessions)],
-    ["Days practised", `${report.daysPractised} of 7`],
+    ["Days practiced", `${report.daysPractised} of 7`],
     ["Longest streak", plural(report.bestRun, "day")],
     ["Best score", scored ? `${report.bestScore}%` : "—"],
     ["Average score", scored ? `${report.averageScore}%` : "—"],
@@ -135,7 +135,12 @@ export default function WeeklyReportCard() {
           ))}
         </dl>
 
-        <Suggestion suggestion={report.suggestion} isPro={isPro} onFollow={close} />
+        <Suggestion
+          suggestion={report.suggestion}
+          isPro={isPro}
+          onFollow={close}
+          proLink={!GUIDED_ROOMS.some((room) => pathname === room || pathname?.startsWith(`${room}/`))}
+        />
 
         {pathname !== "/progress" && (
           <Link
@@ -184,14 +189,24 @@ export default function WeeklyReportCard() {
  * Exported for its render test: the card itself only opens after an effect
  * reads localStorage, which a static render never runs.
  */
+/** The rooms on the free plan's daily allowance, each with its own allowance line. */
+const GUIDED_ROOMS = ["/warmups", "/ear-training", "/breath", "/songs"];
+
 export function Suggestion({
   suggestion: s,
   isPro,
   onFollow,
+  proLink = true,
 }: {
   suggestion: WeeklySuggestion;
   isPro: boolean;
   onFollow: () => void;
+  /**
+   * Whether the free-plan line ends on the way past the limit. Off in the four
+   * guided rooms, whose own allowance line sits just below the card with the
+   * same link.
+   */
+  proLink?: boolean;
 }) {
   const { text, link } = suggestionWords(s);
   // Rooms on the free plan's daily allowance; the habit steps open a warmup.
@@ -213,6 +228,19 @@ export function Suggestion({
         <p className="mt-1 text-xs text-mut">
           On the free plan, warmups, ear training, breath and songs share{" "}
           {FREE_DAILY_MINUTES} guided minutes a day.
+          {proLink && (
+            <>
+              {" "}
+              <Link
+                href="/pro#buy"
+                onClick={onFollow}
+                className="text-violet-ink underline decoration-violet/50 underline-offset-2 hover:decoration-violet"
+              >
+                Pro has no daily limit
+              </Link>
+              .
+            </>
+          )}
         </p>
       )}
     </>

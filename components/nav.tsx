@@ -333,7 +333,7 @@ export default function Nav() {
                 </span>
                 <span className="mt-1 block text-sm text-mut">
                   {proActive
-                    ? "Gold channel active — manage your plan"
+                    ? "Gold channel active · manage your plan"
                     : "The coach on top of the studio"}
                 </span>
               </Link>
@@ -515,7 +515,7 @@ export default function Nav() {
                 <span className="sr-only">
                   {streak === "banked"
                     ? `, ${p.streak.current} day streak, practiced today`
-                    : `, ${p.streak.current} day streak, at risk — nothing practiced today`}
+                    : `, ${p.streak.current} day streak, at risk, nothing practiced today`}
                 </span>
               </span>
             )}

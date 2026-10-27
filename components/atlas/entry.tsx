@@ -12,7 +12,7 @@ export function AtlasEntryCard({ entry }: { entry: AtlasEntry }) {
   return (
     <article className="rounded-xl border border-line bg-bg p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h3 className="text-lg font-semibold">
+        <h3 className="text-lg">
           {/* No prefetch: a genre chapter holds up to seventy entries, and
               each name scrolling into view would fetch a singer page. */}
           <Link

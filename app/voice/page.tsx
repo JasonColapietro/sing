@@ -91,7 +91,7 @@ export default function VoicePage() {
               the singing app for iPhone and Android
             </span>
           </h1>
-          <p className="mt-4 text-xl text-violet-ink sm:text-2xl">Find your range. Know what to practice.</p>
+          <p className="mt-4 text-xl text-ink sm:text-2xl">Find your range. Know what to practice.</p>
           {/* The install, on a phone's first screen. Below lg the store card
               stacks after both intro paragraphs, a screen and a half down on
               the device the app is for; from lg up it sits beside the hero,
@@ -118,14 +118,20 @@ export default function VoicePage() {
           <h2 className="text-2xl">Get the official app</h2>
           <p className="mt-2 text-sm text-mut">Both listings are named Suede Voice: Vocal Range Test and list Jason Colapietro as the developer.</p>
           <div id="ios" className="mt-6 scroll-mt-28">
-            <h3 className="font-semibold">iPhone</h3>
-            <p className="mb-3 mt-1 text-sm text-mut">iOS 17 or later. Free download with optional in-app purchases.</p>
-            <LinkButton href={APP_STORE_URL} className="w-full">Download on the App Store</LinkButton>
+            <h3>iPhone</h3>
+            <p className="mt-1 text-sm text-mut">iOS 17 or later. Free download with optional in-app purchases.</p>
+            {/* Below lg the hero row above carries both store buttons on the
+                first screen, so the card's pair would be the same two again. */}
+            <div className="mt-3 hidden lg:block">
+              <LinkButton href={APP_STORE_URL} className="w-full">Download on the App Store</LinkButton>
+            </div>
           </div>
           <div id="android" className="mt-6 scroll-mt-28 border-t border-line pt-6">
-            <h3 className="font-semibold">Android</h3>
-            <p className="mb-3 mt-1 text-sm text-mut">Free download on Google Play. Check the listing for device compatibility.</p>
-            <LinkButton href={PLAY_STORE_URL} variant="outline" className="w-full">Get it on Google Play</LinkButton>
+            <h3>Android</h3>
+            <p className="mt-1 text-sm text-mut">Free download on Google Play. Check the listing for device compatibility.</p>
+            <div className="mt-3 hidden lg:block">
+              <LinkButton href={PLAY_STORE_URL} variant="outline" className="w-full">Get it on Google Play</LinkButton>
+            </div>
           </div>
           <p className="mt-5 text-xs text-dim">Features and purchase options can differ between platforms. Each store lists the current details.</p>
         </div>
@@ -136,7 +142,7 @@ export default function VoicePage() {
         <div className="mt-7 grid gap-8 sm:grid-cols-3">
           {FEATURES.map(({ title, body }) => (
             <div key={title}>
-              <h3 className="text-lg font-semibold">{title}</h3>
+              <h3 className="text-lg">{title}</h3>
               <p className="mt-2 leading-relaxed text-mut">{body}</p>
             </div>
           ))}

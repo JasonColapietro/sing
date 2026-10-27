@@ -166,20 +166,18 @@ export default function SingersPage() {
         Go there for how the voice does it.
       </p>
 
+      {/* No button of its own: the hero's "Test my vocal range" sits just
+          above, and a second and third copy of the same ask before the
+          chart read as three competing primary actions. */}
       <Card className="mt-8 border-violet/40">
-        <div className="flex flex-wrap items-center justify-between gap-5">
-          <div className="max-w-2xl">
-            <SectionLabel>Compare your voice</SectionLabel>
-            <h2 className="mt-3 text-2xl">Can you sing it?</h2>
-            <p className="mt-2 text-sm text-mut">
-              Find your lowest and highest notes in about two minutes, then open
-              any singer to see exactly how your range overlaps theirs. Free in
-              your browser, nothing to install.
-            </p>
-          </div>
-          <LinkButton href={rangeTestHref()} size="lg">
-            Test my vocal range →
-          </LinkButton>
+        <div className="max-w-2xl">
+          <SectionLabel>Compare your voice</SectionLabel>
+          <h2 className="mt-3 text-2xl">Can you sing it?</h2>
+          <p className="mt-2 text-sm text-mut">
+            Find your lowest and highest notes in about two minutes, then open
+            any singer to see exactly how your range overlaps theirs. Free in
+            your browser, nothing to install.
+          </p>
         </div>
       </Card>
 
@@ -317,7 +315,7 @@ export default function SingersPage() {
         <div className="mt-4 max-w-2xl space-y-5">
           {faq.map((f) => (
             <div key={f.q}>
-              <h3 className="text-sm font-medium">{f.q}</h3>
+              <h3 className="text-sm">{f.q}</h3>
               <p className="mt-1 text-sm text-mut">{f.a}</p>
             </div>
           ))}

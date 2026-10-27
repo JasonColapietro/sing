@@ -157,7 +157,7 @@ export default function V2Banner() {
             {/* The version is the headline. The hidden words give it its
                 full name for a screen reader and the page's outline; the
                 eye gets the numerals alone. */}
-            <h2 className="text-[clamp(4.5rem,14vw,8rem)] leading-[0.85] tracking-[-0.03em] text-white">
+            <h2 className="text-[clamp(4.5rem,14vw,8rem)] text-white">
               <span className="sr-only">Suede Sing </span>v4.0
             </h2>
             <span className="mb-1 flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white sm:mb-2 sm:size-20">

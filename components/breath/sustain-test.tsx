@@ -708,7 +708,7 @@ export function SustainTest({
                 htmlFor="sustain-sensitivity-session"
                 className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]"
               >
-                Sensitivity — the timer runs above the marker
+                Sensitivity: the timer runs above the marker
               </label>
               <input
                 id="sustain-sensitivity-session"
@@ -804,11 +804,11 @@ export function SustainTest({
                 aria-live="polite"
               >
                 {phase === "breath"
-                  ? "Breathe in — the attempt starts once the mic hears it."
+                  ? "Breathe in. The attempt starts once the mic hears it."
                   : phase === "armed"
                     ? heardSec !== null
-                      ? `Breath heard (${heardSec.toFixed(1)} s) — begin whenever you're ready.`
-                      : "Listening — begin whenever you're ready."
+                      ? `Breath heard (${heardSec.toFixed(1)} s). Begin whenever you're ready.`
+                      : "Listening. Begin whenever you're ready."
                     : "Keep it steady. The timer stops after a moment of silence."}
               </p>
               {phase === "breath" && (
@@ -874,7 +874,7 @@ export function SustainTest({
             htmlFor="sustain-sensitivity"
             className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
           >
-            Sensitivity — timer runs above the marker
+            Sensitivity: timer runs above the marker
           </label>
           <div className="mt-2 flex items-center gap-3">
             <span className="text-xs text-mut">quiet room</span>

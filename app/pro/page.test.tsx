@@ -34,6 +34,9 @@ describe("/pro Early Access offers", () => {
     // Google's Merchant listings report, which demands shipping fields that
     // do not exist for a subscription.
     expect(app?.["@type"]).toBe("SoftwareApplication");
+    // One name for the paid tier: the page, its OG card and llms.txt all say
+    // "Suede Pro"; this node used to say "Suede Sing Pro".
+    expect(app?.name).toBe("Suede Pro");
     const offers = app?.offers as Array<{
       name: string;
       price: string;

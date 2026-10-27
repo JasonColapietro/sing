@@ -6,6 +6,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { PRICING, formatPrice } from "@/lib/pro-shared";
+import { NotPro } from "@/components/pro/gate";
 import { rangeTestHref } from "@/lib/site";
 
 /**
@@ -31,7 +32,12 @@ import { rangeTestHref } from "@/lib/site";
  * people actually go to next.
  */
 
-type FooterLink = { href: string; label: string };
+type FooterLink = {
+  href: string;
+  label: string;
+  /** A price clause after the label, hidden for a Pro browser (NotPro). */
+  price?: string;
+};
 
 const REFERENCE: FooterLink[] = [
   { href: "/learn", label: "Learn to sing" },
@@ -71,7 +77,10 @@ const PRACTICE: FooterLink[] = [
   { href: "/extension", label: "Chrome extension vocal coach" },
   // Priced, as every ask that leads to the offer is; the amount is read from
   // the one place it is written down, never typed here.
-  { href: "/pro", label: `Suede Pro vocal coach, ${formatPrice(PRICING.lifetime.amount)} once` },
+  // Priced, as every ask that leads to the offer is, and to the buy card like
+  // every priced ask. The amount is read from the one place it is written
+  // down, and the clause is hidden from an owner, who has nothing to buy.
+  { href: "/pro#buy", label: "Suede Pro vocal coach", price: `, ${formatPrice(PRICING.lifetime.amount)} once` },
 ];
 
 /**
@@ -89,6 +98,14 @@ const MORE_FROM_SUEDE: FooterLink[] = [
 
 const linkClass =
   "text-mut transition-colors hover:text-ink hover:underline underline-offset-4";
+
+/* Links that stand on their own (the columns, the legal row): at least 24px
+   tall (WCAG 2.5.8) where the plain inline link measured 19px. Inline links
+   inside running text keep linkClass, which wraps with the sentence. */
+const navLinkClass = `${linkClass} inline-flex min-h-6 items-center`;
+
+/** How many genre hubs a phone lists before the "All genres" link. */
+const PHONE_GENRES = 8;
 
 /** Column heading: the 12px label tier from the type scale, not a one-off 11px. */
 const headingClass = "font-mono text-label uppercase tracking-[0.14em] text-dim";
@@ -116,12 +133,13 @@ function Column({
             {/* next/link is for in-app routes; a sibling property is a plain
                 anchor so it is not prefetched as a local route. */}
             {l.href.startsWith("http") ? (
-              <a href={l.href} className={linkClass}>
+              <a href={l.href} className={navLinkClass}>
                 {l.label}
               </a>
             ) : (
-              <Link href={l.href} prefetch={false} className={linkClass}>
+              <Link href={l.href} prefetch={false} className={navLinkClass}>
                 {l.label}
+                {l.price && <NotPro>{l.price}</NotPro>}
               </Link>
             )}
           </li>
@@ -141,7 +159,7 @@ export default function SiteFooter() {
         >
           <Column heading="Reference" links={REFERENCE} />
           <Column heading="Practice" links={PRACTICE} />
-          <Column heading="More from Suede" links={MORE_FROM_SUEDE} />
+          <Column heading="More from Suede AI" links={MORE_FROM_SUEDE} />
 
           {/* Every voice-type hub, one click from any page. */}
           <div>
@@ -154,7 +172,7 @@ export default function SiteFooter() {
                   <Link
                     href={`/singers/voice-type/${voiceTypeSlug(v)}`}
                     prefetch={false}
-                    className={linkClass}
+                    className={navLinkClass}
                   >
                     {v} voices
                   </Link>
@@ -168,32 +186,42 @@ export default function SiteFooter() {
             <h2 className={headingClass}>
               By genre
             </h2>
+            {/* Every hub stays in the HTML (the crawl path), but a phone shows
+                the first few and a way to the rest: thirty links made the
+                footer over two screens tall on every page. */}
             <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm sm:gap-y-2">
-              {HUB_GENRES.map((g) => (
-                <li key={g}>
+              {HUB_GENRES.map((g, i) => (
+                <li key={g} className={i >= PHONE_GENRES ? "max-sm:hidden" : undefined}>
                   <Link
                     href={`/singers/genre/${genreSlug(g)}`}
                     prefetch={false}
-                    className={linkClass}
+                    className={navLinkClass}
                   >
                     {g} vocal ranges
                   </Link>
                 </li>
               ))}
+              {HUB_GENRES.length > PHONE_GENRES && (
+                <li className="sm:hidden">
+                  <Link href="/singers" prefetch={false} className={navLinkClass}>
+                    All genres
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </nav>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 font-mono text-xs text-dim">
-          <span className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+          {/* Spaced, not dotted: a wrapped row put a separator at the start or end
+              of a line. */}
+          <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span>SUEDE SING</span>
-            <span aria-hidden>·</span>
             {/* The durable inbound link to /changelog: the release banner will
                 retire one day, and the crawl path must not retire with it. */}
-            <Link href="/changelog" prefetch={false} className={linkClass}>
+            <Link href="/changelog" prefetch={false} className={navLinkClass}>
               4.0: what we&apos;ve changed
             </Link>
-            <span aria-hidden>·</span>
             {/* Both pages were already live and neither was linked from
                 anywhere on the site. An app that asks for a microphone should
                 put its policy one click from every page. */}
@@ -203,28 +231,25 @@ export default function SiteFooter() {
                 and /terms here still 308 there for the app-store and Chrome
                 Web Store listings that declared them. Plain anchors: a <Link>
                 to another origin buys nothing but a prefetch. */}
-            <a href="https://suedeai.org/privacy/" className={linkClass}>
+            <a href="https://suedeai.org/privacy/" className={navLinkClass}>
               Privacy
             </a>
-            <span aria-hidden>·</span>
-            <a href="https://suedeai.org/terms/" className={linkClass}>
+            <a href="https://suedeai.org/terms/" className={navLinkClass}>
               Terms
             </a>
-            <span aria-hidden>·</span>
             {/* A plain anchor: /ai-instructions is a static file behind a
                 vercel.json rewrite, not an app route, so there is nothing for
                 next/link to prefetch. It used to sit in a stray nav of its own
                 below the footer on every page. */}
-            <a href="/ai-instructions" className={linkClass}>
+            <a href="/ai-instructions" className={navLinkClass}>
               AI instructions
             </a>
-            <span aria-hidden>·</span>
             {/* CC BY 3.0 asks for a credit where the samples are used. */}
-            <a href="/audio/piano/CREDITS.txt" className={linkClass}>
+            <a href="/audio/piano/CREDITS.txt" className={navLinkClass}>
               Piano: Salamander Grand by Alexander Holm, CC BY
             </a>
           </span>
-          <span>practice loud — your voice never leaves this device</span>
+          <span>practice loud: your voice never leaves this device</span>
         </div>
 
         {/* Estate attribution. The open-source record is the same claim the
