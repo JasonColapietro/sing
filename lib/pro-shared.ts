@@ -42,7 +42,11 @@ export const ENTITLING_STATUSES = ["active", "trialing", "past_due"] as const;
 export interface Entitlement {
   active: boolean;
   plan: ProPlan | null;
-  /** Raw Stripe subscription status, so the UI can flag payment trouble. */
+  /**
+   * Raw Stripe status, so the UI can flag payment trouble: a subscription's
+   * status, a lifetime payment's, or, for a Checkout Session nobody paid,
+   * the session's own ("open", "expired").
+   */
   status: string | null;
   subscriptionId: string | null;
   paymentIntentId: string | null;

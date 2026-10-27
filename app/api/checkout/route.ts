@@ -89,7 +89,10 @@ export async function POST(request: Request) {
     if (!session.url) {
       throw new Error("Stripe returned a session without a redirect URL.");
     }
-    return NextResponse.json({ url: session.url });
+    // The id goes back too: the browser parks it before leaving for Stripe,
+    // so a return that never arrives (a tab closed on the receipt page, a
+    // phone asleep) can still be resolved on the next visit to /pro.
+    return NextResponse.json({ url: session.url, id: session.id });
   } catch (error) {
     if (
       error instanceof PriceNotConfiguredError ||

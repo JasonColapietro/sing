@@ -112,3 +112,30 @@ that were acted on are listed below.
   inside the image; needs a re-export.
 - lib/organization.ts alternateName includes "Suede Labs" for entity
   reconciliation; left as is.
+
+## Round two, 2026-10-27: checkout recovery and the screenshot
+
+Branch `checkout-recovery` off `main` at `e543c4b` (the merged funnel polish).
+
+- **Lost-redirect recovery.** `/api/checkout` now returns the session id with
+  the URL. `startCheckout` parks it under `suede-sing:pro:started-checkout`
+  before leaving for Stripe. Stripe's return parks the real id as before
+  (`rememberPendingCheckout`, which clears the started one) and the cancel
+  address clears it. A plain visit to /pro with a started id and nothing else
+  asks Stripe once (`resolveStartedCheckout`): paid unlocks Pro with the usual
+  welcome; "open" or "processing" waits for the next visit; anything else,
+  an expired session above all, is forgotten without a word. A success
+  address that lost its id is confirmed from the started one. `/api/entitlement`
+  reports an unpaid session's own status (open, expired) and a not-yet-ours
+  payment's status (processing), instead of a bare inactive. The confirm
+  path treats "processing" as retryable rather than definitive.
+- **Screenshot.** `public/shot-01-start-the-session.png`: the app's own
+  footer line ("A Suede Labs ...") that was cut off at the bottom edge is
+  painted over with the screen background (rows 575 to 581 copied from row
+  568). Same size, so no layout change.
+- **Not done, needs the owner.** The Stripe receipt email is a Dashboard-only
+  setting (Settings, Emails, Successful payments); there is no API for it.
+  The intake-only webhook, if registered in the Dashboard, should be
+  unregistered or intake enabled.
+- Tests: app/api/checkout/route.test.ts, app/api/entitlement/route.test.ts,
+  lib/pro.test.ts, components/pro/pro-client.test.tsx cover the new paths.
