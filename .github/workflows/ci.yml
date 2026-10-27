@@ -171,6 +171,7 @@ jobs:
 
           case "$SING_SUITE" in
             journeys)
+              run_check checkout-recovery node e2e/checkout-recovery.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check share-cards node scripts/audit-share-cards.mjs "$SING_BASE_URL"
               run_check navigation node e2e/navigation.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check navigation-inputs node e2e/navigation-inputs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"

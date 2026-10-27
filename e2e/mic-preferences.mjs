@@ -53,8 +53,8 @@ try {
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
       await page.goto(`${base}${room.path}`, { waitUntil: "networkidle" });
-      await page.locator("summary").filter({ hasText: "Audio setup" }).click();
       const input = page.getByLabel("Microphone", { exact: true });
+      await page.locator("details").filter({ has: input }).locator("summary").click();
       await input.selectOption("qa-a");
       await page.getByRole("button", { name: room.start, exact: true }).click();
       await page.waitForFunction(() => window.__micPreferences().requests.length === 1);

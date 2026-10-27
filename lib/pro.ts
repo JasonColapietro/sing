@@ -402,9 +402,10 @@ export async function resolveStartedCheckout(sessionId: string): Promise<ProStat
  * Retries a transient failure rather than surfacing it, because the singer
  * has already paid by the time this runs: the difference between one attempt
  * and three is the difference between a support email and a working account.
- * A definitive answer from Stripe — including "not active" — returns on the
- * first pass and is never retried. So does a definitive refusal from the
- * server (isDefinitiveRejection), which throws at once and unparks the id:
+ * An entitlement response returns on the first pass. An inactive payment
+ * still processing keeps its parked id for a reload or later visit; a paid
+ * purchase or definitive inactive result clears it. A definitive refusal
+ * from the server (isDefinitiveRejection) throws at once and unparks the id:
  * a reload would only be refused again.
  */
 export async function confirmCheckout(
@@ -418,7 +419,9 @@ export async function confirmCheckout(
     }
     try {
       const state = apply(await post<Entitlement>("/api/entitlement", { sessionId }));
-      clearPendingCheckout();
+      // /pro has already stripped the return URL and cleared the started id.
+      // Keep the only remaining reference until a processing payment settles.
+      if (state.active || state.status !== "processing") clearPendingCheckout();
       return state;
     } catch (error) {
       if (isDefinitiveRejection(error)) {
