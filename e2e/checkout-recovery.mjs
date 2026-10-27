@@ -38,10 +38,12 @@ async function stored(page) {
 async function fixture(browser) {
   const context = await browser.newContext({ serviceWorkers: "block" });
   const wire = { status: "processing", httpStatus: 200, confirmations: [], purchases: 0, errors: [] };
-  await context.addInitScript(() => {
+  await context.addInitScript((origin) => {
+    // A new page starts at about:blank, where storage is unavailable.
+    if (location.origin !== origin) return;
     localStorage.setItem("suede-sing:progress-cloud:v1", JSON.stringify({ paused: true, generation: "checkout-test" }));
     localStorage.setItem("suede-sing:coach-intro:v1", new Date().toISOString());
-  });
+  }, base.origin);
   await context.route("**/*", async (route) => {
     const request = route.request();
     const url = new URL(request.url());
