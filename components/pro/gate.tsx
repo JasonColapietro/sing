@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { proHeadline } from "@/lib/pro-shared";
+import { proMomentSeen } from "@/lib/pro-signal";
 import { useProgress } from "@/lib/progress";
 import { ProChip, UpgradeCard } from "./ui";
 
@@ -48,7 +49,7 @@ export function ProWhisper({ className = "" }: { className?: string }) {
     >
       Free ·{" "}
       <Link
-        href="/pro#plans"
+        href="/pro#buy"
         className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
       >
         Pro
@@ -79,14 +80,17 @@ export function ProCrescendoNudge({
   const ready = useProReady();
   const sessionCount = useProgress().sessions.length;
   if (!ready || isPro) return null;
-  if (sessionCount === 0 || sessionCount % 2 === 1) {
+  // Until the one-time modal (components/pro/moments.tsx) has been shown and
+  // closed, keep to the quiet line: the modal opens over a result, and a
+  // full card under it would make that moment two sales pitches at once.
+  if (sessionCount === 0 || sessionCount % 2 === 1 || !proMomentSeen()) {
     return <ProInlineNudge>{line}</ProInlineNudge>;
   }
   return (
     <UpgradeCard
       title={title}
       body={body}
-      cta={`Go Pro — ${proHeadline()}`}
+      cta={`Go Pro: ${proHeadline()}`}
       context={context}
     />
   );
@@ -106,7 +110,7 @@ export function ProInlineNudge({ children }: { children: string }) {
       <ProChip />
       <span>{children}</span>
       <Link
-        href="/pro#plans"
+        href="/pro#buy"
         className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
       >
         Go Pro

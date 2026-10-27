@@ -18,6 +18,11 @@ export const metadata = withCanonicalOpenGraph({
   title: PRO_TITLE,
   description: `Online vocal coach for singers: the full adaptive plan, per-note analytics, take analysis and two books on top of the free studio. ${formatPrice(PRICING.lifetime.amount)} once, for life.`,
   alternates: { canonical: `${SITE_URL}/pro` },
+  // Declared, with no `images`: the helper then leaves the sitewide card out
+  // and Next attaches the route's own opengraph-image.tsx beside this file
+  // (versioned URL, alt, size and type), copying it to twitter:image. Title
+  // and description still come from the helper.
+  openGraph: { type: "website" },
 });
 
 function offerFor(plan: CheckoutPlan) {
@@ -93,6 +98,16 @@ const PRO_JSON_LD = {
     // reading one page on its own resolved the pointer to nothing.
     ORG_PUBLISHER_NODE,
     {
+      // The site the WebPage below says it is part of. Only the homepage
+      // defined this node, so a crawler reading /pro on its own resolved the
+      // pointer to nothing. Same shape as app/page.tsx's.
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: "Suede Sing",
+      publisher: { "@id": "https://suedeai.ai/#organization" },
+    },
+    {
       "@type": "WebPage",
       "@id": `${SITE_URL}/pro#webpage`,
       url: `${SITE_URL}/pro`,
@@ -106,6 +121,19 @@ const PRO_JSON_LD = {
       author: { "@id": AUTHOR_ID },
     },
     AUTHOR_NODE,
+    {
+      // The free studio the paid tier is part of: the identifying properties
+      // of the homepage's WebApplication node, so the `isPartOf` below
+      // resolves on this page. The full node (feature list, the free offer)
+      // stays on the homepage, as ORG_PUBLISHER_NODE does for the publisher.
+      "@type": "WebApplication",
+      "@id": `${SITE_URL}/#app`,
+      name: "Suede Sing",
+      url: `${SITE_URL}/`,
+      applicationCategory: "EducationalApplication",
+      operatingSystem: "Web Browser",
+      publisher: { "@id": "https://suedeai.ai/#organization" },
+    },
     {
       // SoftwareApplication, not Product. A subscription is not a shippable
       // good: typing it Product is what enrols the page in Google's Merchant

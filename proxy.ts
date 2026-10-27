@@ -40,10 +40,19 @@ export default proxy;
 export const config: ProxyConfig = {
   // Auth state is useful on pages and /api alike. The explicit API matcher is
   // Clerk's documented pattern and prevents framework matcher changes from
-  // silently dropping route-handler coverage. Static assets and build output
-  // do not need the check.
+  // silently dropping route-handler coverage.
+  //
+  // The first entry is Clerk's documented matcher, which skips Next's build
+  // output and any path with a static file extension, plus txt and xml: the
+  // old `_next/static|_next/image|favicon.ico` list ran Clerk on robots.txt,
+  // sitemap.xml, llms.txt, the manifest and every icon. It also skips the
+  // generated share cards (`opengraph-image` and `twitter-image`, bare or
+  // with a version segment): Next reserves those names, no page can live at
+  // them, and a picture needs no session. The icons are static files here
+  // (icon.png, apple-icon.png, favicon.ico), covered by the extension list.
+  // proxy.test.ts compiles this the way Next does and checks both lists.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|txt|xml|mp3|m4a|wav|ogg)|(?:[^?]*/)?(?:opengraph-image|twitter-image)(?:[/?]|$)).*)",
     "/(api|trpc)(.*)",
   ],
 };

@@ -60,11 +60,12 @@ describe("Pro purchase choices", () => {
     // No scarcity claim the checkout does not enforce.
     expect(html).not.toContain("first 10 members");
     expect(html).not.toContain("Founding offer");
-    // "Sold out" beside the struck Monthly option; the name repeats only
-    // from sm up and for screen readers.
-    expect(html).toMatch(/<span class="sr-only sm:not-sr-only">Monthly: <\/span>Sold out/);
-    const monthly = html.match(/<button[^>]*disabled[^>]*>(.*?)<\/button>/)?.[1] ?? "";
-    expect(monthly.replace(/<[^>]+>/g, "")).toBe("Monthly · $4.99/mo");
+    // Monthly is named once, as sold out, in the plans blurb. It is never a
+    // control: a struck-through option beside the one plan on sale read as a
+    // broken toggle, so nothing on the page offers a disabled option.
+    expect(html).toContain("The $4.99 monthly plan is sold out");
+    expect(html).not.toContain('aria-label="Purchase option"');
+    expect(html).not.toMatch(/<button[^>]*disabled[^>]*>[^<]*Monthly/);
     expect(html).toContain("Get lifetime Pro: $79 once");
     expect(html).not.toContain("Go Pro: $4.99/month");
     expect(html).not.toContain("Keep the $4.99 monthly price");
@@ -417,7 +418,7 @@ describe("Pro sales copy on the page", () => {
     expect(button).toBeGreaterThan(-1);
     expect(wrapper).toBeGreaterThan(-1);
     expect(html.slice(wrapper, button)).toContain("sm:order-2");
-    expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Suede Pro is the vocal coaching layer/);
+    expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Suede Pro is the coach on top/);
   });
 });
 
@@ -454,24 +455,6 @@ describe("after the purchase", () => {
     expect(key).toContain(`Lost it? Email ${SUPPORT_EMAIL}.`);
     const restore = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
     expect(restore).toContain(`Lost it? Email ${SUPPORT_EMAIL} and we'll send a new one.`);
-  });
-});
-
-describe("the purchase options on a phone", () => {
-  beforeEach(() => {
-    proState.current = state();
-  });
-
-  it("stacks each option's name over its price below sm, with no separator left dangling", () => {
-    // At 375px the labels broke after "Monthly ·", and at 320px a lone "·"
-    // sat on a line of its own.
-    const html = renderToStaticMarkup(<ProClient />);
-    const group = html.slice(html.indexOf('aria-label="Purchase option"'));
-    for (const [name, price] of [["Monthly", "$4.99/mo"], ["Lifetime", "$79 once"]]) {
-      expect(group).toContain(`<span class="block sm:inline">${name}</span>`);
-      expect(group).toContain(`<span class="block whitespace-nowrap sm:inline">${price}</span>`);
-    }
-    expect(group).toMatch(/<span aria-hidden="true" class="hidden sm:inline">·<\/span>/);
   });
 });
 

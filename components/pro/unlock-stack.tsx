@@ -3,18 +3,7 @@
 import Link from "next/link";
 import { ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
 import { BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
-import {
-  BOOKS,
-  GLOSSARY_COUNT,
-  PRO_EXERCISES,
-  PRO_PACK_COUNT,
-  ROOM_COUNT,
-  SINGER_COUNT,
-  SONG_COUNT,
-  TOTAL_CHAPTERS,
-  TOTAL_WORDS,
-  UNLOCK_TILES,
-} from "@/lib/pro-inventory";
+import { BOOKS, UNLOCK_TILES } from "@/lib/pro-inventory";
 import { useProReady, useProState } from "@/lib/pro";
 import { SectionLabel } from "@/components/ui";
 
@@ -58,9 +47,8 @@ export function UnlockStack() {
             : "Everything below opens the second you upgrade"}
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
-          No drip feed, no unlock schedule, no chapter that arrives in month
-          four. Both books open in full, both PDFs download, and the pro packs
-          are in the warmup list on your next session.
+          Nothing is drip-fed: both books open in full, both PDFs download,
+          and the pro packs appear in your warmup list on your next session.
         </p>
 
         {/* --- the numbers ------------------------------------------------ */}
@@ -101,31 +89,15 @@ export function UnlockStack() {
         </div>
 
         <p className="mt-8 text-sm text-mut">
-          {TOTAL_CHAPTERS} chapters, {TOTAL_WORDS.toLocaleString("en-US")} words.
-          The unlocked ones are readable right now — start with{" "}
+          Start with the free chapter{" "}
           <Link
             href="/book/when-numbers-lie"
             className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
           >
             When the numbers lie to you
           </Link>
-          , which is free and is the chapter that decides whether any
-          measurement on this site is worth anything.
+          : it decides whether any measurement on this site is worth anything.
         </p>
-
-        {/* --- and the part that was always free -------------------------- */}
-        <div className="mt-10 rounded-2xl border border-line bg-panel2/60 p-5 sm:p-6">
-          <h3 className="text-lg">Already yours, without paying</h3>
-          <p className="mt-2 text-sm text-mut">
-            {ROOM_COUNT} practice rooms, {SONG_COUNT} songs, {SINGER_COUNT}{" "}
-            singer range profiles, {GLOSSARY_COUNT} glossary terms and the range test
-            are free and stay free; guided practice (warmups, ear training,
-            breath and songs) shares five minutes a day. Pro removes that daily
-            limit and adds {PRO_EXERCISES} exercises across {PRO_PACK_COUNT}{" "}
-            packs, both books in full, pitch analysis on every take, and
-            a per-note accuracy chart and your range over time.
-          </p>
-        </div>
       </div>
     </section>
   );
@@ -154,42 +126,10 @@ function BookContents({
 }) {
   const meta = BOOKS.find((b) => b.href === href);
   const free = entries.filter((e) => e.free).length;
-
-  return (
-    <div>
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        {/* The book's own hub, by name: this page sells the book and was the
-            one place on the site that never linked to it. */}
-        <h3 className="text-xl text-ink">
-          <Link
-            href={href}
-            prefetch={href === "/atlas" ? false : undefined}
-            className="outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
-          >
-            {title}
-          </Link>
-        </h3>
-        <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          {entries.length} chapters
-          <span className="mx-1.5 text-line2">·</span>
-          {meta?.words.toLocaleString("en-US")} words
-          {meta ? (
-            <>
-              <span className="mx-1.5 text-line2">·</span>
-              {meta.pdfMb} MB PDF
-            </>
-          ) : null}
-        </span>
-      </div>
-      <p className="mt-1.5 text-xs text-mut">
-        {owned
-          ? `All ${entries.length} chapters are open to you; the PDF downloads from the book's page.`
-          : `${free} readable now, ${entries.length - free} with Pro.`}
-      </p>
-
-      <ol className="mt-4 divide-y divide-line border-y border-line">
-        {entries.map((entry) => (
-          <li key={entry.slug}>
+  const visible = owned ? entries : entries.filter((e) => e.free);
+  const locked = owned ? [] : entries.filter((e) => !e.free);
+  const row = (entry: ContentsEntry) => (
+    <li key={entry.slug}>
             {entry.free || owned ? (
               /* For an owner every row is a link, every chapter of both
                  books: about 1 MB of payload fetched in the background as the
@@ -226,9 +166,58 @@ function BookContents({
                 <LockGlyph />
               </div>
             )}
-          </li>
-        ))}
+    </li>
+  );
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        {/* The book's own hub, by name: this page sells the book and was the
+            one place on the site that never linked to it. */}
+        <h3 className="text-xl text-ink">
+          <Link
+            href={href}
+            prefetch={href === "/atlas" ? false : undefined}
+            className="outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
+          >
+            {title}
+          </Link>
+        </h3>
+        <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+          {entries.length} chapters
+          <span className="mx-1.5 text-line2">·</span>
+          {meta?.words.toLocaleString("en-US")} words
+          {meta ? (
+            <>
+              <span className="mx-1.5 text-line2">·</span>
+              {meta.pdfMb} MB PDF
+            </>
+          ) : null}
+        </span>
+      </div>
+      <p className="mt-1.5 text-xs text-mut">
+        {owned
+          ? `All ${entries.length} chapters are open to you; the PDF downloads from the book's page.`
+          : `${free} readable now, ${entries.length - free} with Pro.`}
+      </p>
+
+      <ol className="mt-4 divide-y divide-line border-y border-line">
+        {visible.map(row)}
       </ol>
+      {/* A free reader's locked titles fold away: two full tables of
+          contents ran to about two phone screens between the buy card and
+          the comparison table. The count and the fold say what Pro opens;
+          the titles are one tap away. An owner's list is their own, in full. */}
+      {locked.length > 0 && (
+        <details className="mt-2">
+          <summary className="inline-flex min-h-11 cursor-pointer list-none items-center font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet [&::-webkit-details-marker]:hidden">
+            See the {locked.length} chapters Pro opens
+          </summary>
+          <ol className="mt-2 divide-y divide-line border-y border-line">
+            {locked.map(row)}
+          </ol>
+        </details>
+      )}
     </div>
   );
 }

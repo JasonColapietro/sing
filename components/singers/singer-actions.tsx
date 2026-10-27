@@ -128,15 +128,26 @@ export function CompareWithMe({ s }: { s: SingerRangeProps }) {
         <SectionLabel>You vs {s.name}</SectionLabel>
         <h2 className="mt-3 text-xl">Can you sing it?</h2>
         <p className="mt-3 max-w-xl text-sm text-mut">
-          Take the free 2-minute range test — your mic finds your lowest and
+          Take the{" "}
+          <Link
+            href={rangeTestHref({ compare: s.slug })}
+            className="text-ink underline decoration-line underline-offset-2 hover:text-violet-ink"
+          >
+            free 2-minute range test
+          </Link>{" "}
+          — your mic finds your lowest and
           highest notes, then compare your measured notes with {s.name}&rsquo;s
           reported reference span. Matching endpoints does not establish the same
           voice type or technique.
         </p>
+        {/* The header's "Test my range →" is this card's action; the button
+            that repeated it a screen below is gone, and the prose link keeps
+            the card's own way into the test (the September 27 funnel audit).
+            This is the one Pro line on a singer page until a range is saved;
+            the saved-range branch below carries its own, so the two never
+            render together. Self-hides for Pro. */}
         <div className="mt-4">
-          <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
-            Take the free range test →
-          </LinkButton>
+          <ProInlineNudge>Pro charts your range tests over time and removes the guided-practice limit</ProInlineNudge>
         </div>
       </Card>
     );

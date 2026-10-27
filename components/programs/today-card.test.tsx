@@ -41,6 +41,12 @@ import {
 import type { ActiveProgram } from "@/components/programs/use-program";
 import { FREE_WEEKS, itemSteps, programById } from "@/lib/programs";
 import type { ProgramReading, ProgramToday } from "@/lib/programs";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
+
+/** The unlock button to the offer, priced; the `$` is escaped for the pattern. */
+const UNLOCK = new RegExp(
+  `<a[^>]*href="/pro#buy"[^>]*>Unlock with Pro: ${formatPrice(PRICING.lifetime.amount).replace("$", "\\$")} once</a>`,
+);
 
 function active(
   id: string,
@@ -104,7 +110,7 @@ describe("the program entry card on a day that needs Pro", () => {
       <ProgramTodayCard active={active("measured-voice-12w", firstPaid)} onBrowse={null} />,
     );
     expect(html).toContain("needs Pro");
-    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Unlock with Pro<\/a>/);
+    expect(html).toMatch(UNLOCK);
   });
 });
 
@@ -189,7 +195,7 @@ describe("the rest day that ends a Pro program's free week", () => {
       const card = renderToStaticMarkup(<ProgramTodayCard active={active(id, lastFree, view)} onBrowse={null} />);
       expect(card, id).toContain(`Day ${lastFree + 2} onward needs Pro`);
       expect(card, id).not.toContain("opens tomorrow");
-      expect(card, id).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Unlock with Pro<\/a>/);
+      expect(card, id).toMatch(UNLOCK);
       const entry = renderToStaticMarkup(<ProgramEntryCard active={active(id, lastFree, view)} />);
       expect(entry, id).toContain(`Day ${lastFree + 1}: rest day. Day ${lastFree + 2} onward needs Pro; week 1 was free.`);
       expect(entry, id).not.toContain("opens tomorrow");

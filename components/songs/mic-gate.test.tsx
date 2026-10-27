@@ -181,6 +181,9 @@ describe("songs mic gate", () => {
     // Shared with warmups, ear training and breath, so it is not called song time.
     const html = renderToStaticMarkup(<SongsMicGate />);
     expect(html).toContain("5 minutes of guided practice a day");
-    expect(html).toContain("Pro has no daily limit");
+    // The whisper under the audio setup is the gate's one ask; the sentence
+    // states the allowance and no longer carries a second one.
+    expect(html).not.toContain("Pro has no daily limit");
+    expect(html).toContain("adds the coach");
   });
 });

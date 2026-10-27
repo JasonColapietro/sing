@@ -192,7 +192,7 @@ export function CapSlide({ cap, onExit }: { cap: FreeCap; onExit: () => void }) 
         <p className="mt-3 max-w-md text-[var(--s-mut)]">
           What you sang is saved and today counts toward your streak. A fresh{" "}
           {CAP_MIN} minutes opens at midnight; the pitch studio and the range
-          test stay open now. Pro practises without a clock.
+          test stay open now. Pro practices without a clock.
         </p>
         <Link
           href={PRO_RESTORE_HREF}

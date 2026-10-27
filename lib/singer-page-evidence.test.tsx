@@ -87,7 +87,7 @@ describe("singer-page evidence and provenance", () => {
     expect(html).not.toMatch(/review is pending|review awaiting/i);
     expect(html).toContain("reported reference span, not an independently verified physiological limit");
     expect(html).toContain("Reported reference span");
-    expect(page.dateModified).toBe("2026-10-24");
+    expect(page.dateModified).toBe(getSingerPageLastModified("rihanna"));
     expect(page).not.toHaveProperty("lastReviewed");
     expect(page).not.toHaveProperty("reviewedBy");
     expect(page).not.toHaveProperty("citation");
@@ -112,7 +112,7 @@ describe("singer-page evidence and provenance", () => {
     expect(html).toContain("Catalog review confirmed 2026-10-24");
     expect(html).toContain("not an independently verified physiological limit");
     expect(page).not.toHaveProperty("reviewedBy");
-    expect(page.dateModified).toBe("2026-10-24");
+    expect(page.dateModified).toBe(getSingerPageLastModified(slug));
     expect(page.lastReviewed).toBeUndefined();
     expect(page.citation).toEqual(expect.arrayContaining([expect.objectContaining({ url })]));
   });
@@ -179,7 +179,7 @@ describe("singer-page evidence and provenance", () => {
     expect(page.description).not.toMatch(/pending/i);
     expect(page).not.toHaveProperty("reviewedBy");
     expect(page.lastReviewed).toBeUndefined();
-    expect(page.dateModified).toBe("2026-10-24");
+    expect(page.dateModified).toBe(getSingerPageLastModified(slug));
     const sources = getSingerEvidence(slug).sources;
     if (sources.length) expect(page.citation).toHaveLength(sources.length);
     else expect(page).not.toHaveProperty("citation");

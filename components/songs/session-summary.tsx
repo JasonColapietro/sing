@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import { LinkButton } from "@/components/ui";
 
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { ProCrescendoNudge } from "@/components/pro/gate";
+import { emitProResult } from "@/lib/pro-signal";
 import { MicAlert } from "@/components/mic-alert";
 import { IconMic } from "./icons";
 import { useProgress, type SessionLog } from "@/lib/progress";
@@ -156,6 +158,12 @@ export function SessionSummary({
     topMultiplier,
   } = data;
   const progress = useProgress();
+  // A completed result is on screen (the session is logged before this
+  // renders): the one-time Pro moment listens for this and decides for
+  // itself whether to open. A listen-only run is not a result.
+  useEffect(() => {
+    if (!listenMode) emitProResult();
+  }, [listenMode]);
   // Read just after the session logged, so it is today's streak — but read
   // live anyway, so a summary never names a streak that has lapsed.
   const streak = liveStreak(progress.streak);

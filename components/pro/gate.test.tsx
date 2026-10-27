@@ -24,7 +24,7 @@ describe("ProWhisper before hydration", () => {
 
   it("is in the server HTML, so a free singer's gate has its full height from the first paint", () => {
     expect(html).toContain("adds the coach");
-    expect(html).toContain('href="/pro#plans"');
+    expect(html).toContain('href="/pro#buy"');
   });
 
   it("carries the not-pro marker, so the pre-paint state hides it from a Pro singer", () => {

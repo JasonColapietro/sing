@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useProReady, useProState } from "@/lib/pro";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { BOOK_CONTENTS, type BookContentsEntry } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
@@ -107,8 +108,8 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
   // runs — the loading line never resolves and there is no way through to Pro.
   const ctas = (
     <div className="mt-5 flex flex-wrap gap-3">
-      <LinkButton href="/pro" size="sm">
-        See Suede Pro
+      <LinkButton href="/pro#buy" size="sm">
+        {`See Suede Pro, ${formatPrice(PRICING.lifetime.amount)} once`}
       </LinkButton>
       {sample && (
         <LinkButton href={`/book/${sample.slug}`} variant="outline" size="sm">

@@ -2,9 +2,9 @@ import { rangeTestHref } from "@/lib/site";
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/ui";
-import { APP_NAME, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { AUTHOR_NAME } from "@/lib/author";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { formatPrice, PRICING } from "@/lib/pro-shared";
 
 /** The original paper-and-portrait presentation with current product copy. */
 export function HeroSplit() {
@@ -95,18 +95,23 @@ export function HeroSplit() {
           warmups, and songs in your key. Hear a note, sing it back, and see
           where your voice lands.
         </p>
+        {/* The price sits beside the one limit the free plan has, on the
+            first screen: it used to appear nowhere above the Pro teaser in
+            section seven. The phone companion has its own band below. */}
         <p className="mt-5 max-w-xl text-sm text-mut">
           The pitch meter and range test are free with no time limit. Guided
-          practice includes {FREE_DAILY_MINUTES} free minutes a day. Audio stays
-          on your device.
-        </p>
-        <p className="mt-3 max-w-xl text-sm text-mut">
-          Want a phone companion? Explore <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">{APP_NAME}</Link> for
-          deeper on-device voice analysis.
+          practice includes {FREE_DAILY_MINUTES} free minutes a day;{" "}
+          <Link
+            href="/pro#buy"
+            className="text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
+          >
+            Pro removes the limit, {formatPrice(PRICING.lifetime.amount)} once
+          </Link>
+          . Audio stays on your device.
         </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-          On-device analysis
-          <span className="mx-2 text-line2">·</span>Free web studio
+          No install
+          <span className="mx-2 text-line2">·</span>No ads
           <span className="mx-2 text-line2">·</span>
           <Link
             href="/singers"

@@ -1,7 +1,6 @@
 import { rangeTestHref } from "@/lib/site";
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 /**
  * Two starting paths, placed above the practice-room grid.
@@ -33,7 +32,7 @@ const PATHS: Path[] = [
     kicker: "If you've never had a lesson",
     heading: "Start with what your voice already does",
     intro:
-      "You don't need to know your voice type, read music, or own anything but a microphone. Three rooms in this order answer the questions beginners actually arrive with.",
+      "You don't need to know your voice type, read music, or own anything but a microphone. Three rooms in this order answer the questions beginners arrive with.",
     steps: [
       {
         href: rangeTestHref(),
@@ -48,7 +47,7 @@ const PATHS: Path[] = [
       {
         href: "/studio",
         label: "Watch your pitch live",
-        note: "See the note you're singing against the note you meant — which is how off-key becomes fixable.",
+        note: "See the note you're singing against the note you meant. That is how off-key becomes fixable.",
       },
     ],
     payoff:
@@ -56,13 +55,13 @@ const PATHS: Path[] = [
   },
   {
     kicker: "If you already sing",
-    heading: "Go straight to what's actually limiting you",
+    heading: "Go straight to what's limiting you",
     intro:
       "Look beyond the extremes: where your pitch drifts on a held note, which intervals need work, and how the same phrase sounds across takes.",
     steps: [
       {
         href: "/studio",
-        label: "Hunt the drift",
+        label: "Watch a held note for drift",
         note: "Sustain a comfortable note and watch whether your pitch rises or falls. The trace shows the drift, not its cause.",
       },
       {
@@ -90,23 +89,19 @@ export function StartingPaths() {
     <section className="border-t border-line">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
         <SectionLabel className="mb-4">Where to start</SectionLabel>
-        <h2 className="max-w-2xl text-2xl sm:text-3xl">
-          Two ways in, depending on where you&apos;re starting
-        </h2>
+        <h2 className="max-w-2xl text-2xl sm:text-3xl">Two ways in</h2>
+        {/* The free plan's limit and the price are stated once, in the hero;
+            this line only points at the two guided sequences. */}
         <p className="mt-3 max-w-2xl text-mut">
-          The range test, pitch studio, and recorder are free without a practice
-          timer. Guided rooms share {FREE_DAILY_MINUTES} minutes a day on the free plan;
-          {" "}<Link href="/pro" className="text-violet-ink underline underline-offset-4">Pro</Link>{" "}
-          removes that cap. For a suggested sequence, the free {" "}
+          Prefer a sequence? The free{" "}
           <Link href="/learn" className="text-violet-ink hover:underline">
-            learn-to-sing and vocal training guide
+            learn-to-sing guide
           </Link>{" "}
-          offers an adaptable practice session and a seven-day plan,
-          and the{" "}
+          has a seven-day plan, and the free{" "}
           <Link href="/learn/voice" className="text-violet-ink hover:underline">
-            free voice lessons
+            voice lessons
           </Link>{" "}
-          take you through seven stages, one small skill at a time.
+          go one small skill at a time.
         </p>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">

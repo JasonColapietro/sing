@@ -7,6 +7,7 @@ import { TOOLS_GUIDE } from "@/lib/guides";
 import { SectionLabel } from "@/components/ui";
 import { AnalyzeGlyph, RecorderGlyph } from "@/components/landing/glyphs";
 import { routeKeywords } from "@/lib/keywords";
+import { ProWhisper } from "@/components/pro/gate";
 
 // The title and description used to enumerate the recorder and the spectrogram
 // analyzer, which are rooms with pages of their own. A hub that advertises its
@@ -105,6 +106,11 @@ export default function ToolsPage() {
               </li>
             ))}
           </ul>
+          {/* The tab's one ask, after the room cards and well below the
+              console's controls: the quiet line the mic gates use, since a
+              page that needs no mic and no account has nothing louder to
+              say. A client component; it self-hides for Pro. */}
+          <ProWhisper className="mt-8" />
         </div>
       </section>
       <ToolGuide guide={TOOLS_GUIDE} />

@@ -392,7 +392,7 @@ export function PitchMatchGame({
           disabled={!replayAllowed}
           title={
             phase === "sing" && !replayAllowed
-              ? "Replaying through speakers would play the answer into your mic. Switch to headphones in Audio setup to use this while singing."
+              ? "Replaying through speakers would play the answer into your mic. Switch to headphones under Audio to use this while singing."
               : undefined
           }
           onClick={() => target !== null && playTone(target, { dur: 1.1, gain: 0.25 })}

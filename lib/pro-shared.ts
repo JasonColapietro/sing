@@ -153,29 +153,25 @@ export function proHeadlineLong(
 export const PRO_FAQ: Array<{ q: string; a: string }> = [
   {
     q: "Does the free studio stay free?",
-    a: "Yes — permanently. All ten rooms stay open on the free plan. Live pitch feedback, the range test and the recorder have no daily limit; guided practice (warmups, ear training, breath and songs) shares five free minutes a day. Pro removes that limit and adds things that don't exist on the free plan.",
+    a: "Yes. All ten rooms stay open on the free plan. Live pitch feedback, the range test and the recorder have no daily limit; guided practice (warmups, ear training, breath and songs) shares five free minutes a day. Pro removes that limit.",
   },
   {
     q: "Do I need Pro to get better?",
-    a: "Not to practice — the studio and the range test are free with no daily limit, and guided practice (warmups, ear training, breath and songs) is free for five minutes a day. Pro is for the singer who wants the record: range tests charted over time, every take analysed, and the two books that explain what the numbers mean.",
+    a: "Not to practice. Pro is for the singer who wants the record: range tests charted over time, every take analyzed, and the two books that explain what the numbers mean.",
   },
   {
     q: "Is my voice uploaded?",
-    a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers — scores, streaks, range — never audio.",
+    a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers (scores, streaks, range), never audio.",
   },
   {
     q: "What do I get the moment I upgrade?",
     // Built from the inventory, never typed: this answer is also FAQPage
     // markup, and a hard-coded count here once drifted ~21,000 words behind
     // the figure the rest of the page printed.
-    a: `No daily limit on guided practice, and both books in full — ${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas — plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
+    a: `No daily limit on guided practice, and both books in full (${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas), plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
   },
   {
     q: "How does billing work?",
     a: `Lifetime is a single ${formatPrice(PRICING.lifetime.amount)} payment with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing subscribers keep renewing at the price they signed up at and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
-  },
-  {
-    q: "Why does a free app sell anything?",
-    a: "Suede Sing is built by one musician. Pro is what keeps the free studio free — instead of ads, trackers, or selling your data. One tier, and the price is on this page.",
   },
 ];

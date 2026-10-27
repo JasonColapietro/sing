@@ -24,6 +24,54 @@ const nextConfig: NextConfig = {
   // changed, leaving the card's data ID unchanged. This is independent of
   // Next's private metadata source hash and is never generated per request.
   env: { SING_OG_RENDER_REVISION: randomUUID() },
+  images: {
+    // The optimizer re-fetched every /_next/image variant after four hours
+    // (Next's default). The sources are files in public/ that change only by
+    // deploy, and the `dpl` query Vercel appends already moves the URL per
+    // deploy, so a month costs nothing in freshness.
+    minimumCacheTTL: 2592000,
+  },
+  async headers() {
+    return [
+      {
+        // Every response, pages and /api alike. Production carried only
+        // strict-transport-security (Vercel's). No Content-Security-Policy
+        // yet: the inline JSON-LD, pre-paint and Stripe scripts make that a
+        // project of its own.
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            // The studio, range test and recorder open the microphone, so
+            // it stays allowed on this origin. Nothing uses a camera or
+            // location.
+            key: "Permissions-Policy",
+            value: "microphone=(self), camera=(), geolocation=()",
+          },
+          {
+            // Nothing embeds this site in a frame: the Chrome extension runs
+            // its own analysis in a side panel, Stripe Checkout is hosted
+            // (not embedded), and the native apps are separate builds.
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+        ],
+      },
+      {
+        // The image files in public/ (icons, badges, screenshots, the
+        // portrait) were served `max-age=0, must-revalidate`, so every page
+        // view re-asked for each one. None of them changes in place: a new
+        // picture gets a new file name. Files that do change at a fixed URL
+        // (the IndexNow key, llms.txt, the sitemaps, the audio) are other
+        // types and keep Next's default.
+        source: "/:path*.(png|jpg|jpeg|webp|svg|ico|woff2)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
   turbopack: {
     root: path.join(__dirname),
     ...(ACCOUNTS_OFF ? { resolveAlias: { [CLERK_SHELL]: CLERK_SHELL_OFF } } : {}),
