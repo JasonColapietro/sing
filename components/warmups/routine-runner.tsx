@@ -6,6 +6,7 @@ import { formatClock, useFreeCap } from "@/lib/free-cap";
 
 import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
+import { useIdleMicRelease } from "@/lib/audio/use-idle-mic-release";
 import type { VocalRange } from "@/lib/progress";
 import { SESSION_FOCUS, SessionShell } from "@/components/practice/session-shell";
 import { ExercisePlayer } from "./exercise-player";
@@ -233,6 +234,15 @@ export function RoutineRunner({
       : remainingSeconds(routine, stepIndex, range),
     cap.isPro ? null : cap.leftSec,
   );
+  // The cap slide ends the run, so nothing after it needs the microphone.
+  // The room holds it for the whole routine (warmups-client.tsx); here it
+  // closes after the usual idle wait instead of staying lit behind the slide.
+  useIdleMicRelease({
+    listening: pitch.listening,
+    hold: !(capped && phase.kind === "intro"),
+    stop: pitch.stop,
+  });
+
   // Steps before a `?step=` link's first one weren't part of this run, so
   // they get no "skipped" chip; the warm-in, sung just before it, does.
   const afterWarmIn = warmInFirst && !warming && stepIndex === firstStep;
@@ -436,7 +446,14 @@ function StepIntro({
             <span
               className="tabular font-mono"
               style={{
-                color: prev.score === null ? "var(--s-dim)" : "var(--s-ok)",
+                // Green only for a score worth calling good; "0%" in
+                // success green read as a pass.
+                color:
+                  prev.score === null
+                    ? "var(--s-dim)"
+                    : prev.score >= 50
+                      ? "var(--s-ok)"
+                      : "var(--s-mut)",
               }}
             >
               {prev.score === null ? "skipped" : `${prev.score}%`}

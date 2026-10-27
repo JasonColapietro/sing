@@ -27,18 +27,6 @@ export function HeroSplit() {
         <div className="absolute inset-0 bg-gradient-to-b from-bg/15 to-ink/30" />
       </div>
 
-      {/* Identify the founder in the portrait using the current canonical bio.
-          The focus ring sits inside the pill: outside it, it would land on the
-          photo, where the red ring measured 2.7:1. */}
-      <p className="pointer-events-none absolute bottom-5 right-4 z-10 hidden sm:block sm:right-6">
-        <a
-          href="https://suedeai.ai/founder"
-          rel="author"
-          className="pointer-events-auto rounded-full border border-line/60 bg-panel/80 px-3 py-1.5 font-mono text-label uppercase tracking-[0.14em] text-mut backdrop-blur-sm transition-colors hover:border-violet/50 hover:text-violet-ink focus-visible:-outline-offset-4"
-        >
-          Built by {AUTHOR_NAME}
-        </a>
-      </p>
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(247,240,231,0.98)_0%,rgba(247,240,231,0.94)_58%,rgba(247,240,231,0.54)_78%,rgba(247,240,231,0.20)_100%)] max-sm:bg-[linear-gradient(180deg,rgba(247,240,231,0.72)_0%,rgba(247,240,231,0.94)_46%,rgba(247,240,231,0.99)_70%)]"
@@ -128,6 +116,21 @@ export function HeroSplit() {
           </Link>
         </p>
       </div>
+
+      {/* Identify the founder in the portrait using the current canonical bio.
+          The focus ring sits inside the pill: outside it, it would land on the
+          photo, where the red ring measured 2.7:1. After the content in the
+          source, though drawn over the portrait: first, it was the first Tab
+          stop in main, ahead of the heading and the start buttons. */}
+      <p className="pointer-events-none absolute bottom-5 right-4 z-10 hidden sm:block sm:right-6">
+        <a
+          href="https://suedeai.ai/founder"
+          rel="author"
+          className="pointer-events-auto rounded-full border border-line/60 bg-panel/80 px-3 py-1.5 font-mono text-label uppercase tracking-[0.14em] text-mut backdrop-blur-sm transition-colors hover:border-violet/50 hover:text-violet-ink focus-visible:-outline-offset-4"
+        >
+          Built by {AUTHOR_NAME}
+        </a>
+      </p>
     </section>
   );
 }

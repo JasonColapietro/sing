@@ -218,6 +218,24 @@ describe("POST /api/entitlement", () => {
     expect(stripe.entitlementFromLifetime).not.toHaveBeenCalled();
   });
 
+  it("keeps an open session with a payment attempt but no customer yet reporting as open", async () => {
+    // A declined card or a pending 3D Secure step: Stripe's page is still
+    // open, so the browser that began the checkout must not forget it.
+    stripe.retrieveSession.mockResolvedValue({
+      subscription: null,
+      status: "open",
+      payment_intent: { id: "pi_attempt", status: "requires_action", customer: null, latest_charge: null },
+      customer: null,
+      customer_details: null,
+    });
+
+    const response = await entitlement({ sessionId: "cs_attempt" });
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ active: false, status: "open" });
+    expect(stripe.entitlementFromLifetime).not.toHaveBeenCalled();
+  });
+
   it("reports a payment still processing as inactive with its status, not as a refusal", async () => {
     stripe.isOurLifetimePayment.mockReturnValue(false);
     stripe.retrieveSession.mockResolvedValue({

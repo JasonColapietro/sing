@@ -535,7 +535,7 @@ export function BoxBreathing({
         </div>
 
         <div className="w-full max-w-sm">
-          <ProgressBar value={(elapsed / target) * 100} tone="cool" />
+          <ProgressBar value={(elapsed / target) * 100} label="Session time" tone="cool" />
           <div className="tabular mt-1.5 flex justify-between font-mono text-xs text-dim">
             <span>{mmss(elapsed)}</span>
             <span>{mmss(target)}</span>

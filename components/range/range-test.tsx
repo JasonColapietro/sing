@@ -10,7 +10,7 @@ import {
   useProgress,
   type Achievement,
 } from "@/lib/progress";
-import { emitProResult } from "@/lib/pro-signal";
+import { useProResultOnLeave } from "@/lib/use-pro-result-on-leave";
 import {
   Button,
   Card,
@@ -152,6 +152,8 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     lowMidi: number;
     highMidi: number;
     save?: SaveSummary;
+    /** Leaving this result may open the one-time Pro moment. */
+    offerPro?: boolean;
   } | null>(null);
 
   /** "I can't go higher" was pressed on a span too narrow to save. */
@@ -318,6 +320,11 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     focusIfDropped(stageHeadingRef.current);
   }, [stage]);
 
+  // The result sits in the page, so the one-time Pro moment hears about it
+  // when the singer leaves it (Start over, or another page) rather than over
+  // the readout they came for.
+  useProResultOnLeave(stage === "result" && result?.offerPro === true);
+
   const advanceToHigh = () => {
     resetHunt();
     setStage("high");
@@ -353,9 +360,9 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
       lowMidi: low,
       highMidi: high,
       save: { xpGained: r1.xpGained + r2.xpGained, newAchievements: achievements },
+      offerPro,
     });
     setStage("result");
-    if (offerPro) emitProResult();
   };
 
   const retake = () => {
@@ -522,6 +529,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
             <div className="flex-1 pb-2">
               <ProgressBar
                 value={(holdMs / WARM_HOLD_MS) * 100}
+                label="Hold time"
                 tone="violet"
               />
               <p className="mt-1.5 font-mono text-[11px] text-dim">
@@ -609,6 +617,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
             <div className="min-w-40 flex-1 pb-2">
               <ProgressBar
                 value={dwell ? Math.min(100, (dwell.ms / DWELL_MS) * 100) : 0}
+                label="Hold time on this note"
                 tone={dwell && dwell.ms >= DWELL_MS ? "ok" : "violet"}
               />
               <p className="mt-1.5 font-mono text-[11px] text-dim">

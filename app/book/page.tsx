@@ -93,7 +93,7 @@ export default function BookPage() {
             <a
               href="https://jasoncolapietro.com"
               rel="author"
-              className="text-violet-ink hover:underline"
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
             >
               {AUTHOR_NAME}
             </a>
@@ -161,7 +161,7 @@ export default function BookPage() {
             Pro includes two books. <em>The Voice Atlas</em> is the reference:
             the range, tone and technique of every voice in the singer library,
             with the songs where the extreme notes happened.{" "}
-            <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
+            <Link href="/atlas" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               Its full contents are free
             </Link>
             .

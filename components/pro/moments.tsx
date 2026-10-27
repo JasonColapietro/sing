@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProChip } from "./ui";
@@ -76,17 +76,29 @@ export default function ProMoments() {
   }
   const dismissedRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  useModalFocus(show, dialogRef);
+  // The dialog is named by its heading and described by its first paragraph,
+  // so a screen reader announces what is on screen rather than "Go Pro".
+  const titleId = useId();
+  const descId = useId();
+  // Where focus goes when the modal closes and what had it is gone. The
+  // result this follows usually took its own button with it (Continue, Back
+  // to library), so focus had fallen to <body> and closing the modal left a
+  // keyboard user at the top of the document. The page's content, the skip
+  // link's target, is the next best place.
+  const contentRef = useRef<HTMLElement | null>(null);
+  useModalFocus(show, dialogRef, contentRef);
 
   useEffect(() => {
     // Set while a result waits for a full-screen results screen to let go of
     // the scroll lock (see the scroll-lock refusal below).
     let waiting: MutationObserver | null = null;
+    // The frame the open is waiting on (see `settled` below); 0 when none.
+    let frame = 0;
     const stopWaiting = () => {
       waiting?.disconnect();
       waiting = null;
     };
-    const gate = () => {
+    const gate = (settled = false) => {
       try {
         if (dismissedRef.current) return;
         if (getProState().active) return;
@@ -139,11 +151,28 @@ export default function ProMoments() {
           return;
         }
         stopWaiting();
+        // Two frames on, then every check again. A results screen that just
+        // let go of the lock hands the page back in that commit and the
+        // effects after it: the room under it puts back its scroll and its
+        // focus. Opened inside that commit, the modal locked the page first
+        // and took <body> as the place to return focus to, so closing it
+        // dropped a keyboard user at the top of the document.
+        if (!settled) {
+          if (frame) return;
+          frame = requestAnimationFrame(() => {
+            frame = requestAnimationFrame(() => {
+              frame = 0;
+              gate(true);
+            });
+          });
+          return;
+        }
         // Opening from an effect (rather than from render) is deliberate:
         // localStorage is client-only, so deciding after hydration is what
         // avoids a server/client mismatch. No `react-hooks/set-state-in-effect`
         // disable is needed now that this sits inside `gate` — adding one back
         // would only report as an unused directive.
+        contentRef.current = document.getElementById("content");
         setShow(true);
       } catch {
         // storage unavailable — never show rather than show repeatedly
@@ -152,15 +181,16 @@ export default function ProMoments() {
     // The mount pass is for /progress only: a returning singer hard-loading
     // their dashboard is looking at their results, which is what this sells.
     // On any other cold load (the homepage, a practice room) there is no
-    // result on screen, and a dialog headed "Your result is in" over it was an
+    // result on screen, and a dialog selling "this result" over it was an
     // interruption that claimed something false. Every later result signal
     // still runs the gate on any route. The early returns above skip OPENING,
     // never subscribing.
     if (window.location.pathname === "/progress") gate();
-    const unsubscribe = subscribeProResult(gate);
+    const unsubscribe = subscribeProResult(() => gate());
     return () => {
       unsubscribe();
       stopWaiting();
+      cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -227,7 +257,8 @@ export default function ProMoments() {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label="Go Pro"
+        aria-labelledby={titleId}
+        aria-describedby={descId}
         // outline-none: useModalFocus focuses the dialog itself, and the
         // global focus ring drew a red box around the whole card.
         className="animate-fadeup relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-violet bg-panel p-6 outline-none sm:p-8"
@@ -239,23 +270,25 @@ export default function ProMoments() {
         <div className="flex items-center gap-2">
           <ProChip />
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Your result is in
+            Result saved
           </span>
         </div>
-        <h2 className="mt-4 text-2xl sm:text-3xl">Turn this result into a plan</h2>
+        <h2 id={titleId} className="mt-4 text-2xl sm:text-3xl">
+          Turn this result into a plan
+        </h2>
         {/* The free plan already builds a daily plan from recent scores and
             puts a weak note first (components/progress/coach.tsx); it shows
             two steps. So the modal sells the rest of the plan, not planning. */}
-        <p className="mt-3 text-sm text-mut sm:text-base">
-          Suede Pro turns your numbers into the full daily plan, every step of
-          it, with your accuracy note by note and your range tests charted
-          over time.
+        <p id={descId} className="mt-3 text-sm text-mut sm:text-base">
+          Pro reads results like this one and lays out what to sing next: the
+          full daily plan, every step of it, with your accuracy note by note
+          and your range tests charted over time.
         </p>
         <ul className="mt-4 space-y-2">
           {[
             "No daily limit on guided practice",
             "The full daily coach plan, not just its first two steps",
-            "Per-note accuracy and range history",
+            "Both books in full, with PDFs to keep",
             "Pitch analysis on every recorded take",
           ].map((line) => (
             <li

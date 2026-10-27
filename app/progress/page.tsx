@@ -30,16 +30,20 @@ export default function ProgressPage() {
       {/* The dashboard is client-only, so without this the server HTML for the
           page that owns "singing progress tracker" was an H1, a subtitle and a
           skeleton. This says what is tracked and where it comes from. */}
-      <section className="border-t border-line">
+      {/* A labelled region: it sits after the dashboard's <main>, and
+          without a name it was content outside every landmark. */}
+      <section aria-labelledby="progress-records-heading" className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl">What the singing progress tracker records</h2>
+          <h2 id="progress-records-heading" className="text-2xl sm:text-3xl">
+            What the singing progress tracker records
+          </h2>
           <p className="mt-3 max-w-3xl text-mut">
             Sessions from the warmups, ear-training games, breath drills, song
             practice, the range test, the pitch studio, the take recorder, the
             tools and the analyzer are logged here. Each logged session earns XP,
-            with a bonus when a scored exercise goes well, and practising on
+            with a bonus when a scored exercise goes well, and practicing on
             consecutive days builds your streak. The calendar shows the days you
-            practised, and your latest range test result is kept as your saved
+            practiced, and your latest range test result is kept as your saved
             range.
           </p>
           <p className="mt-3 max-w-3xl text-mut">

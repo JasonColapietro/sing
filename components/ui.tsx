@@ -195,10 +195,13 @@ type ButtonSize = "sm" | "md" | "lg";
  * shadow, so both are transitioned with the fill; otherwise those two snapped
  * while the colour faded. The press scale is a small movement, but movement
  * all the same, and is dropped under prefers-reduced-motion. A disabled
- * control does not press.
+ * control does not press. `aria-disabled="true"` looks the same as
+ * `disabled`: a button that must keep focus while it is busy (a buy button
+ * whose checkout can fail and be retried) uses it, and its click handler
+ * ignores the press itself.
  */
 const buttonBase =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out-quint active:scale-[0.98] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out-quint active:scale-[0.98] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:active:scale-100";
 const buttonVariants: Record<ButtonVariant, string> = {
   rec: "bg-rec text-panel hover:bg-rec-hover",
   violet: "bg-violet-ink text-panel hover:bg-violet-hover",
@@ -376,10 +379,17 @@ export function Pill({
 
 export function ProgressBar({
   value,
+  label,
   tone = "neutral",
   className,
 }: {
   value: number; // 0..100
+  /**
+   * The bar's accessible name, read with its value ("Loop 2 score, 64%").
+   * Required: a role="progressbar" with no name is announced as a bare
+   * number.
+   */
+  label: string;
   /**
    * `neutral` is the default because a progress bar is almost never a paid
    * surface, and violet has to mean one thing. Pass "violet" deliberately on Pro
@@ -399,6 +409,7 @@ export function ProgressBar({
     <div
       className={cn("h-1.5 w-full overflow-hidden rounded-full bg-panel2", className)}
       role="progressbar"
+      aria-label={label}
       aria-valuenow={Math.round(value)}
       aria-valuemin={0}
       aria-valuemax={100}

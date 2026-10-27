@@ -200,7 +200,9 @@ export function ResultsScreen({
                     <span className="tabular w-5 shrink-0 font-mono text-xs text-[var(--s-dim)]">
                       {i + 1}
                     </span>
-                    <span className="w-28 shrink-0 truncate text-sm text-[var(--s-ink)] sm:w-44">
+                    {/* Wraps instead of truncating: "Small three-not…" hid
+                        which exercise a row was. */}
+                    <span className="w-28 shrink-0 text-sm leading-snug text-[var(--s-ink)] sm:w-44">
                       {r.label}
                     </span>
                     <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--s-over)]">
@@ -212,7 +214,7 @@ export function ResultsScreen({
                         }}
                       />
                     </span>
-                    <span className="tabular w-16 shrink-0 text-right font-mono text-xs text-[var(--s-mut)]">
+                    <span className="tabular w-20 shrink-0 whitespace-nowrap text-right font-mono text-xs text-[var(--s-mut)]">
                       {r.score === null ? (r.note ?? "—") : `${r.score}%`}
                     </span>
                   </li>

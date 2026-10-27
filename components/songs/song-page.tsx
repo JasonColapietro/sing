@@ -183,7 +183,7 @@ export function LyricSheet({ song }: { song: Song }) {
     <Card>
       <SectionLabel>{label}</SectionLabel>
       <h2 className="mt-3 text-xl">
-        {song.title} lyrics{partial ? ", as transcribed here" : ""}
+        {song.title} lyrics and notes{partial ? ", as transcribed here" : ""}
       </h2>
       <ol className="mt-5 max-w-2xl space-y-3">
         {lines.map((l) => (
@@ -194,7 +194,14 @@ export function LyricSheet({ song }: { song: Song }) {
             >
               {l.index + 1}
             </span>
-            <span className="text-lg leading-relaxed text-ink">{l.text}</span>
+            <span>
+              <span className="block text-lg leading-relaxed text-ink">{l.text}</span>
+              {/* The melody's notes for the line, in the written key: the
+                  one thing on the page a reader cannot get from the lyrics. */}
+              <span className="tabular block font-mono text-xs text-dim">
+                {l.noteIndices.map((i) => midiToLabel(song.notes[i].midi)).join(" ")}
+              </span>
+            </span>
           </li>
         ))}
       </ol>

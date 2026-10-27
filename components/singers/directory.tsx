@@ -287,11 +287,6 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
   // dashed and unfilled, never as full voice to the top.
   const beltPct = fullVoicePct(s);
   const semis = s.highMidi - s.lowMidi;
-  const ariaBits = [
-    `${s.name}, ${s.voiceType}`,
-    `cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`,
-    ...rangeBarWords(s),
-  ];
 
   return (
     // Pagination bounds this rich list (48 initially). Its rows must use real
@@ -303,7 +298,6 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
       <Link
         href={`/singers/${s.slug}`}
         prefetch={false}
-        aria-label={ariaBits.join(", ")}
         className={`group block scroll-mt-32 rounded-xl px-2 py-2.5 transition-colors hover:bg-panel ${ROW_GRID}`}
       >
         <span className="flex items-baseline justify-between gap-2 sm:block">
@@ -348,6 +342,10 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
           </span>
           <span className="tabular block">{spanOctaves(semis)} oct</span>
         </span>
+        {/* The link's name is its visible text (name, voice type, year,
+            range, span) so a spoken "click" on what is shown finds it (WCAG
+            2.5.3); the drawn bar is hidden, so what it shows is added here. */}
+        <span className="sr-only">, {rangeBarWords(s).join(", ")}</span>
       </Link>
     </li>
   );

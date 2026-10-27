@@ -119,7 +119,7 @@ export default function RootLayout({
           accounts are live: with them off it has nothing to do. */}
       {accountsReady() && <AccountBackupSync />}
       <ProMoments />
-      <div id="content" className="min-h-[70dvh]">
+      <div id="content" tabIndex={-1} className="min-h-[70dvh] outline-none">
         {/* The Monday summary. Inside #content so the skip link lands on it,
             and in the flow rather than over it so it never blocks a room. */}
         <WeeklyReportCard />

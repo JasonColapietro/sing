@@ -453,7 +453,12 @@ export function ProgramTodayCard({
           </span>
           {program.pro && <ProChip />}
         </div>
-        <ProgressBar value={pct} tone="ok" className="mt-3 max-w-md" />
+        <ProgressBar
+          value={pct}
+          label={`${program.name}: days done`}
+          tone="ok"
+          className="mt-3 max-w-md"
+        />
 
         {view.status === "finished" && (
           <div className="mt-4">

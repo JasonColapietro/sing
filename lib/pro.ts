@@ -384,16 +384,25 @@ export async function resolveStartedCheckout(sessionId: string): Promise<ProStat
   } catch (error) {
     // A refusal says the id is useless. Offline, or a busy shared address,
     // says nothing about it: ask again next time.
-    if (isDefinitiveRejection(error)) clearStartedCheckout();
+    if (isDefinitiveRejection(error)) forgetStarted(sessionId);
     return null;
   }
   if (reply.active) {
     const state = apply(reply);
-    clearStartedCheckout();
+    forgetStarted(sessionId);
     return state;
   }
-  if (reply.status !== "open" && reply.status !== "processing") clearStartedCheckout();
+  if (reply.status !== "open" && reply.status !== "processing") forgetStarted(sessionId);
   return null;
+}
+
+/**
+ * Clears the started checkout only if it is still the one that was asked
+ * about: a Buy tapped while that question was in flight parks a newer id,
+ * and the old answer must not wipe it.
+ */
+function forgetStarted(sessionId: string): void {
+  if (startedCheckout() === sessionId) clearStartedCheckout();
 }
 
 /**

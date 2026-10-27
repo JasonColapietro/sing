@@ -196,7 +196,7 @@ export function GoalRing({
       className="relative shrink-0"
       style={{ width: size, height: size }}
       role="img"
-      aria-label={`${doneMin} of ${goalMin} minutes practised today`}
+      aria-label={`${doneMin} of ${goalMin} minutes practiced today`}
     >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
         <circle cx={mid} cy={mid} r={r} fill="none" stroke="var(--color-line)" strokeWidth={stroke} />
@@ -560,7 +560,9 @@ function PathRow({
 
   if (item.locked && item.href) {
     return (
-      <Link href={item.href} className={rowClass} aria-label={`${item.title} — Suede Pro`}>
+      // No aria-label: the visible title, "Pro" pill and description are the
+      // name, so nothing shown is hidden from a screen reader (WCAG 2.5.3).
+      <Link href={item.href} className={rowClass}>
         {body}
       </Link>
     );

@@ -94,7 +94,7 @@ describe("the routine summary", () => {
     expect(html).toContain("That&#x27;s today&#x27;s 5 free minutes of guided practice.");
     expect(html).toContain("opens at midnight");
     // The way out names the limit just reached, as ear and breath's notes do.
-    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Pro has no daily limit<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Keep practicing today with Pro, \$79 once<\/a>/);
   });
 
   it("shows no lapsed streak as alive when nothing was logged", () => {
@@ -192,6 +192,6 @@ describe("a routine the free minutes stopped", () => {
     const html = render(stopped, true);
     expect(html).toContain(`ran out before the last ${routine.steps.length - 1} steps of this run.`);
     expect(html).not.toContain("That&#x27;s today&#x27;s 5 free minutes");
-    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Pro has no daily limit<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Keep practicing today with Pro, \$79 once<\/a>/);
   });
 });

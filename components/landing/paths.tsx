@@ -94,11 +94,11 @@ export function StartingPaths() {
             this line only points at the two guided sequences. */}
         <p className="mt-3 max-w-2xl text-mut">
           Prefer a sequence? The free{" "}
-          <Link href="/learn" className="text-violet-ink hover:underline">
+          <Link href="/learn" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
             learn-to-sing guide
           </Link>{" "}
           has a seven-day plan, and the free{" "}
-          <Link href="/learn/voice" className="text-violet-ink hover:underline">
+          <Link href="/learn/voice" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
             voice lessons
           </Link>{" "}
           go one small skill at a time.

@@ -36,8 +36,14 @@ describe("Pro moment after a range test", () => {
     const check = body.indexOf("offersProMomentAfterRangeTest(progress.rangeHistory)");
     expect(check).toBeGreaterThan(-1);
     expect(check).toBeLessThan(body.indexOf("setVocalRange("));
-    expect(body.match(/emitProResult\(/g)).toHaveLength(1);
-    expect(body).toMatch(/if \(offerPro\) emitProResult\(\);/);
+    // The answer rides on the result, and the signal goes out when the
+    // singer leaves it: the result sits in the page, so a modal sent with it
+    // covered the readout before it was read.
+    expect(body).toMatch(/setResult\(\{[\s\S]*\n\s+offerPro,\n\s+\}\);/);
+    expect(body).not.toMatch(/emitProResult\(/);
+    expect(src).toMatch(
+      /useProResultOnLeave\(stage === "result" && result\?\.offerPro === true\);/,
+    );
   });
 });
 
@@ -99,7 +105,7 @@ describe("a range too narrow to save", () => {
     const body = src.slice(start, src.indexOf("\n  };", start));
     const guard = body.indexOf("if (!savable) {");
     expect(guard).toBeGreaterThan(-1);
-    for (const effect of ["stop();", "setVocalRange(", "logSession(", "emitProResult("]) {
+    for (const effect of ["stop();", "setVocalRange(", "logSession(", "offerPro,"]) {
       expect(body.indexOf(effect), effect).toBeGreaterThan(guard);
     }
   });

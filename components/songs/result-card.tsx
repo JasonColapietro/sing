@@ -146,7 +146,9 @@ export function ShareableResult({
   }
 
   return (
-    <Card className="border-violet/30">
+    // text-ink: on the dark results screens the card inherited the stage's
+    // near-white text on its cream ground, and the title and score vanished.
+    <Card className="border-violet/30 text-ink">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <SectionLabel>Suede Sing</SectionLabel>

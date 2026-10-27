@@ -633,6 +633,8 @@ export function ProClient() {
   // Which buy button was pressed, so a failed start is answered beside the
   // button that failed rather than beside every buy button on the page.
   const [buySpot, setBuySpot] = useState<BuySpot>("card");
+  // Names the #buy card, which takes focus when a buy link jumps to it.
+  const buyHeadingId = useId();
 
   // A 30-day pass is a trialing subscription that ends on its own (see
   // app/api/redeem). It is not a plan with renewals or anything to cancel,
@@ -807,7 +809,12 @@ export function ProClient() {
     return () => window.removeEventListener("pageshow", onShow);
   }, []);
 
+  // The buy buttons stay focusable while busy (aria-disabled, not disabled):
+  // a disabled button drops focus to the page, so after a failed start the
+  // next Tab skipped the retry. The press is ignored here instead.
+  const buyBusy = opening || checkout.kind === "working";
   const goPro = useCallback(async (from: BuySpot = "card") => {
+    if (buyBusy) return;
     setBuySpot(from);
     setOpening(true);
     setCheckout({ kind: "idle" });
@@ -821,7 +828,7 @@ export function ProClient() {
         message: messageOf(error, "Could not start checkout."),
       });
     }
-  }, [billing]);
+  }, [billing, buyBusy]);
 
   /**
    * The buy button and what sits under it, for a free singer, a pass holder
@@ -844,7 +851,7 @@ export function ProClient() {
           size="md"
           className="w-full"
           onClick={() => goPro("card")}
-          disabled={opening || checkout.kind === "working"}
+          aria-disabled={buyBusy || undefined}
         >
           {opening
             ? "Opening Stripe…"
@@ -892,6 +899,16 @@ export function ProClient() {
           </a>
         )}
       </p>
+      {/* The questions a buyer still has at the button (does it work on my
+          phone, where does my voice go), answered where every priced link
+          on the site lands, from facts the page already states below. */}
+      {!pro.active && (
+        <p className="mt-2 text-center text-xs text-mut">
+          Pro opens here the moment you pay, and your Pro key opens it in a
+          browser on your phone or another computer. Recordings never leave
+          your device.
+        </p>
+      )}
     </>
   );
 
@@ -1004,8 +1021,11 @@ export function ProClient() {
                   <p className="order-2 mt-5 max-w-xl text-lg text-mut sm:order-1 sm:mt-4">
                     Suede Pro is the coach on top of the free studio: no daily
                     practice limit, the full daily plan, per-note accuracy,
-                    pitch analysis on every take, and both books. The pitch
-                    meter, range test and recorder stay free, with no clock.
+                    pitch analysis on every take, and both books, for{" "}
+                    {formatPrice(PRICING.lifetime.amount)} once with no renewal.
+                    The plan is built from your own scores, range tests and
+                    practice. The pitch meter, range test and recorder stay
+                    free, with no clock.
                   </p>
                   <div className="order-1 mt-6 flex flex-wrap items-center gap-3 sm:order-2 sm:mt-7">
                     {/* Straight to the buy card, with the price on the button:
@@ -1164,8 +1184,18 @@ export function ProClient() {
                 on the right, a desktop's Tab went right before left. */}
             <div
               id="buy"
-              className="relative flex scroll-mt-20 flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:px-8 sm:py-7"
+              tabIndex={-1}
+              role="group"
+              aria-labelledby={buyHeadingId}
+              className="relative flex scroll-mt-20 flex-col overflow-hidden rounded-2xl outline-none border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:px-8 sm:py-7"
             >
+              <span id={buyHeadingId} className="sr-only">
+                {pro.active
+                  ? "Your Suede Pro access"
+                  : lifetimePurchase
+                    ? "Suede Pro lifetime"
+                    : "Suede Pro monthly"}
+              </span>
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet via-violet to-violet"
@@ -1441,7 +1471,7 @@ export function ProClient() {
               <a
                 href="https://jasoncolapietro.com"
                 rel="author"
-                className="text-violet-ink hover:underline"
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
               >
                 Jason Colapietro
               </a>
@@ -1488,7 +1518,7 @@ export function ProClient() {
                 variant="violet"
                 size="lg"
                 onClick={() => goPro("end")}
-                disabled={opening || checkout.kind === "working"}
+                aria-disabled={buyBusy || undefined}
               >
                 {opening
                   ? "Opening Stripe…"

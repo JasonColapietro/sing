@@ -79,6 +79,8 @@ describe("response headers", () => {
       "/opengraph-image",
       "/pro/opengraph-image/abc",
       "/_next/image",
+      "/_next/static/media/7ebf22b5a21034f8-s.p.woff2",
+      "/_next/static/chunks/x.png",
       "/79cdb9d5873525c71a296b9d7c494bf9.txt",
       "/manifest.webmanifest",
       "/llms.txt",

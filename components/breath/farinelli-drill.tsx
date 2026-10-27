@@ -482,7 +482,7 @@ export function FarinelliDrill({
         )}
 
         <div className="w-full max-w-sm">
-          <ProgressBar value={progress} tone="cool" />
+          <ProgressBar value={progress} label="Drill progress" tone="cool" />
         </div>
       </div>
     </Card>

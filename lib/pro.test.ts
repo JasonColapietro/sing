@@ -356,6 +356,13 @@ describe("a checkout this browser began and may never return from", () => {
     }
   });
 
+  it("never lets an old answer wipe a newer checkout begun while it was asked", async () => {
+    const stored = stubStorage({ [STARTED]: "cs_test_newer" });
+    vi.stubGlobal("fetch", answer(200, { ...paid, active: false, proKey: null, status: "expired" }));
+    expect(await resolveStartedCheckout("cs_test_older")).toBeNull();
+    expect(stored.get(STARTED)).toBe("cs_test_newer");
+  });
+
   it("forgets a refused id, and keeps one Stripe could not be asked about", async () => {
     let stored = stubStorage({ [STARTED]: "cs_test_refused" });
     vi.stubGlobal("fetch", answer(400, { error: "Provide a checkout session id." }));

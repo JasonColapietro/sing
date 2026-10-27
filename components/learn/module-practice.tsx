@@ -163,7 +163,7 @@ export function ModulePractice({
               The exercises and songs play synthesized reference pitches: they
               supply the notes, not a recording of a singer demonstrating a
               technique. Record your takes in{" "}
-              <Link href="/recorder" className="text-violet-ink hover:underline">
+              <Link href="/recorder" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 the recorder
               </Link>
               .
