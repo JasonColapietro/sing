@@ -15,6 +15,7 @@ import {
 } from "./glyphs";
 import {
   clearPendingCheckout,
+  clearStartedCheckout,
   confirmCheckout,
   getProState,
   isCheckoutSessionId,
@@ -25,9 +26,11 @@ import {
   PRO_PERKS,
   redeemCode,
   rememberPendingCheckout,
+  resolveStartedCheckout,
   restorePro,
   revalidatePro,
   startCheckout,
+  startedCheckout,
   useProState,
   type ProState,
 } from "@/lib/pro";
@@ -162,11 +165,14 @@ function openRestore() {
 export type CheckoutLanding =
   | { kind: "portal" }
   | { kind: "confirm"; sessionId: string; fromUrl: boolean; marked: boolean }
+  /** A checkout this browser began and never returned from: resolved quietly. */
+  | { kind: "started"; sessionId: string; marked: boolean }
   | { kind: "cancelled" | "unreferenced" | "none"; marked: boolean };
 
 export function readCheckoutLanding(
   search: string,
   parked: string | null,
+  started: string | null = null,
 ): CheckoutLanding {
   const params = new URLSearchParams(search);
   if (params.get(PORTAL_RETURN_PARAM)) return { kind: "portal" };
@@ -181,7 +187,20 @@ export function readCheckoutLanding(
   }
   if (outcome === "cancelled") return { kind: "cancelled", marked };
   if (outcome === "success" || fromUrl !== null) {
+    // A success address that lost its id, from a browser that began a
+    // checkout: that is the id. Confirmed like one the address carried, so
+    // it is parked properly (`fromUrl` means "arrived with this visit").
+    if (isCheckoutSessionId(started)) {
+      return { kind: "confirm", sessionId: started, fromUrl: true, marked };
+    }
     return { kind: "unreferenced", marked };
+  }
+  // A plain visit after a checkout this browser began and never came back
+  // from. Resolved without a word (resolveStartedCheckout) unless Stripe
+  // says it was paid: the buyer may be on Stripe's page in another tab, or
+  // may have simply closed it.
+  if (isCheckoutSessionId(started)) {
+    return { kind: "started", sessionId: started, marked };
   }
   return { kind: "none", marked };
 }
@@ -667,7 +686,11 @@ export function ProClient() {
   // retries, and a confirmed purchase, which that browser cannot store either,
   // confirms again rather than coming back as a $79 button.
   useEffect(() => {
-    const landing = readCheckoutLanding(window.location.search, pendingCheckout());
+    const landing = readCheckoutLanding(
+      window.location.search,
+      pendingCheckout(),
+      startedCheckout(),
+    );
     const clearAddress = () => window.history.replaceState({}, "", "/pro");
     // Back from the Stripe billing portal: a cancellation or a card update
     // just changed the subscription, so re-check now rather than within the
@@ -681,8 +704,23 @@ export function ProClient() {
     // Stripe returns to the top of the page, where the hero's buttons lead
     // away, while every message about the purchase renders in the plans
     // section several screens down: revealPlans at each of those moments.
+    // A checkout this browser began and never returned from: one quiet
+    // question to Stripe. Nothing on the page changes unless it was paid,
+    // in which case Pro arrives with the same welcome a return gets.
+    if (landing.kind === "started") {
+      void resolveStartedCheckout(landing.sessionId).then((state) => {
+        if (!state?.active) return;
+        setWelcome("purchase");
+        revealPlans();
+      });
+      return;
+    }
+
     if (landing.kind !== "confirm") {
       if (landing.marked) clearAddress();
+      // Stripe's cancel address: the buyer backed out, so the checkout this
+      // browser began is over.
+      if (landing.kind === "cancelled") clearStartedCheckout();
       if (landing.kind === "none") return;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- the checkout outcome only exists in the URL, so it can only be read after hydration
       setReturnNote(landing.kind);
@@ -700,6 +738,18 @@ export function ProClient() {
         if (state.active) {
           setCheckout({ kind: "idle" });
           setWelcome("purchase");
+          revealPlans();
+          return;
+        }
+        if (state.status === "processing") {
+          // The card is still being processed: not a refusal, not yet a
+          // purchase. The id stays parked, and the note says what a reload
+          // does, the same as for a check Stripe could not answer.
+          setCheckout({
+            kind: "error",
+            message: confirmFailureMessage(new Error("processing"), parked).message,
+            ref: sessionId,
+          });
           revealPlans();
           return;
         }

@@ -196,6 +196,46 @@ describe("POST /api/entitlement", () => {
     expect(stripe.entitlementFromLifetime).not.toHaveBeenCalled();
   });
 
+  it("reports an unpaid Checkout Session by its own status, so the browser that began it can forget it", async () => {
+    // No PaymentIntent on a payment-mode session: nobody paid. The status
+    // ("open" while Stripe's page can still take a card, "expired" after)
+    // is what lets resolveStartedCheckout drop an abandoned one quietly.
+    stripe.retrieveSession.mockResolvedValue({
+      subscription: null,
+      payment_intent: null,
+      status: "expired",
+      customer: null,
+      customer_details: null,
+    });
+
+    const response = await entitlement({ sessionId: "cs_abandoned" });
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ active: false, status: "expired", proKey: null });
+    expect(stripe.entitlementFromLifetime).not.toHaveBeenCalled();
+  });
+
+  it("reports a payment still processing as inactive with its status, not as a refusal", async () => {
+    stripe.isOurLifetimePayment.mockReturnValue(false);
+    stripe.retrieveSession.mockResolvedValue({
+      subscription: null,
+      payment_intent: {
+        id: "pi_slow",
+        status: "processing",
+        customer: { id: "cus_owner" },
+        latest_charge: null,
+      },
+      customer: { id: "cus_owner" },
+      customer_details: { email: "singer@example.com" },
+    });
+
+    const response = await entitlement({ sessionId: "cs_slow" });
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ active: false, status: "processing" });
+    expect(stripe.entitlementFromLifetime).not.toHaveBeenCalled();
+  });
+
   it("rejects a refunded or disputed lifetime payment during revalidation", async () => {
     stripe.retrievePaymentIntent.mockResolvedValue({
       id: "pi_lifetime",

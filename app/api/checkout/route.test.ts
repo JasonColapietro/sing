@@ -34,6 +34,7 @@ beforeEach(() => {
     plan === "lifetime" ? "price_lifetime" : "price_monthly",
   );
   stripe.createSession.mockReset().mockResolvedValue({
+    id: "cs_live_should_not_exist",
     url: "https://checkout.stripe.com/c/pay/cs_live_should_not_exist",
   });
 });
@@ -65,6 +66,12 @@ describe("POST /api/checkout", () => {
     const response = await checkout("lifetime");
 
     expect(response.status).toBe(200);
+    // The id too: the browser parks it before leaving, so a return that
+    // never arrives can still be resolved (lib/pro.ts resolveStartedCheckout).
+    expect(await response.json()).toEqual({
+      url: "https://checkout.stripe.com/c/pay/cs_live_should_not_exist",
+      id: "cs_live_should_not_exist",
+    });
     expect(stripe.resolvePriceId).toHaveBeenCalledWith("lifetime");
     expect(stripe.createSession).toHaveBeenCalledWith(
       expect.objectContaining({

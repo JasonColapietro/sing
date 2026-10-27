@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  clearStartedCheckout,
   confirmCheckout,
   isCheckoutSessionId,
   isDefinitiveRejection,
@@ -11,8 +12,11 @@ import {
   ProApiError,
   redeemCode,
   rememberPendingCheckout,
+  rememberStartedCheckout,
+  resolveStartedCheckout,
   restorePro,
   startCheckout,
+  startedCheckout,
 } from "./pro";
 import { PRICING as SHARED_PRICING } from "./pro-shared";
 import { ATLAS_CONTENTS } from "./atlas-data";
@@ -249,5 +253,123 @@ describe("the checkout session id parked between Stripe and Pro", () => {
       expect(isDefinitiveRejection(new ProApiError("not about the id", status)), String(status)).toBe(false);
     }
     expect(isDefinitiveRejection(new ProApiError("Expected a JSON body.", 400))).toBe(true);
+  });
+});
+
+describe("a checkout this browser began and may never return from", () => {
+  const STARTED = "suede-sing:pro:started-checkout";
+  const PENDING = "suede-sing:pro:pending-checkout";
+
+  function stubStorage(initial: Record<string, string> = {}) {
+    const stored = new Map(Object.entries(initial));
+    vi.stubGlobal("window", {
+      location: { href: "" },
+      localStorage: {
+        getItem: (key: string) => stored.get(key) ?? null,
+        setItem: (key: string, value: string) => void stored.set(key, value),
+        removeItem: (key: string) => void stored.delete(key),
+      },
+    });
+    return stored;
+  }
+
+  function answer(status: number, body: Record<string, unknown>) {
+    return () => Promise.resolve(new Response(JSON.stringify(body), { status }));
+  }
+
+  const paid = {
+    active: true,
+    plan: "lifetime",
+    status: "succeeded",
+    subscriptionId: null,
+    paymentIntentId: "pi_paid",
+    customerId: "cus_paid",
+    email: "singer@example.com",
+    currentPeriodEnd: null,
+    cancelAtPeriodEnd: false,
+    proKey: "suede-pro_paid",
+  };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("parks the session id before leaving for Stripe", async () => {
+    const stored = stubStorage();
+    vi.stubGlobal(
+      "fetch",
+      answer(200, { url: "https://checkout.stripe.com/c/pay/cs_test_go", id: "cs_test_go" }),
+    );
+    await startCheckout("lifetime");
+    expect(stored.get(STARTED)).toBe("cs_test_go");
+    expect(window.location.href).toBe("https://checkout.stripe.com/c/pay/cs_test_go");
+  });
+
+  it("parks nothing from a reply without a usable id, and still leaves", async () => {
+    const stored = stubStorage();
+    vi.stubGlobal("fetch", answer(200, { url: "https://checkout.stripe.com/c/pay/x", id: "bogus" }));
+    await startCheckout("lifetime");
+    expect(stored.has(STARTED)).toBe(false);
+    expect(window.location.href).toBe("https://checkout.stripe.com/c/pay/x");
+  });
+
+  it("is handed over when Stripe's return parks the real id", () => {
+    const stored = stubStorage({ [STARTED]: "cs_test_go" });
+    expect(rememberPendingCheckout("cs_test_go")).toBe(true);
+    expect(stored.get(PENDING)).toBe("cs_test_go");
+    expect(stored.has(STARTED)).toBe(false);
+  });
+
+  it("drops a value that is not a session id instead of asking Stripe about it", () => {
+    const stored = stubStorage({ [STARTED]: "bogus123" });
+    expect(startedCheckout()).toBeNull();
+    expect(stored.has(STARTED)).toBe(false);
+    rememberStartedCheckout("cs_test_kept");
+    expect(startedCheckout()).toBe("cs_test_kept");
+    clearStartedCheckout();
+    expect(startedCheckout()).toBeNull();
+  });
+
+  it("unlocks Pro from a paid session the browser never came back from", async () => {
+    const stored = stubStorage({ [STARTED]: "cs_test_paid" });
+    const fetch = vi.fn(answer(200, paid));
+    vi.stubGlobal("fetch", fetch);
+    const state = await resolveStartedCheckout("cs_test_paid");
+    expect(state?.active).toBe(true);
+    expect(state?.proKey).toBe("suede-pro_paid");
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(stored.has(STARTED)).toBe(false);
+  });
+
+  it("keeps an open or processing session for the next visit, and forgets any other", async () => {
+    for (const [status, kept] of [
+      ["open", true],
+      ["processing", true],
+      ["expired", false],
+      ["canceled", false],
+      [null, false],
+    ] as const) {
+      const stored = stubStorage({ [STARTED]: "cs_test_wait" });
+      vi.stubGlobal("fetch", answer(200, { ...paid, active: false, proKey: null, status }));
+      expect(await resolveStartedCheckout("cs_test_wait"), String(status)).toBeNull();
+      expect(stored.has(STARTED), String(status)).toBe(kept);
+    }
+  });
+
+  it("forgets a refused id, and keeps one Stripe could not be asked about", async () => {
+    let stored = stubStorage({ [STARTED]: "cs_test_refused" });
+    vi.stubGlobal("fetch", answer(400, { error: "Provide a checkout session id." }));
+    expect(await resolveStartedCheckout("cs_test_refused")).toBeNull();
+    expect(stored.has(STARTED)).toBe(false);
+    for (const status of [429, 502]) {
+      stored = stubStorage({ [STARTED]: "cs_test_busy" });
+      vi.stubGlobal("fetch", answer(status, { error: "Try again in a moment." }));
+      expect(await resolveStartedCheckout("cs_test_busy"), String(status)).toBeNull();
+      expect(stored.get(STARTED), String(status)).toBe("cs_test_busy");
+    }
+    stored = stubStorage({ [STARTED]: "cs_test_offline" });
+    vi.stubGlobal("fetch", () => Promise.reject(new TypeError("Failed to fetch")));
+    expect(await resolveStartedCheckout("cs_test_offline")).toBeNull();
+    expect(stored.get(STARTED)).toBe("cs_test_offline");
   });
 });

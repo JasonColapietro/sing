@@ -246,7 +246,13 @@ function apply(
 
 /** Hands the singer off to Stripe Checkout. Only returns if the redirect fails. */
 export async function startCheckout(plan: CheckoutPlan): Promise<void> {
-  const { url } = await post<{ url: string }>("/api/checkout", { plan });
+  const { url, id } = await post<{ url: string; id?: unknown }>("/api/checkout", { plan });
+  // Parked before leaving. Stripe's return used to be the only place the
+  // session id existed, so a return that never arrived (a tab closed on the
+  // receipt page, a phone asleep, a dropped redirect) left a paid singer with
+  // a $79 button and a support address. The next visit to /pro can now ask
+  // Stripe about this session itself (resolveStartedCheckout).
+  if (isCheckoutSessionId(id)) rememberStartedCheckout(id);
   window.location.href = url;
 }
 
@@ -272,6 +278,8 @@ const PENDING_KEY = "suede-sing:pro:pending-checkout";
  * return address is then the only copy, so /pro keeps it in the address bar.
  */
 export function rememberPendingCheckout(sessionId: string): boolean {
+  // Stripe's return carries the id, so the copy parked before leaving is done.
+  clearStartedCheckout();
   try {
     window.localStorage.setItem(PENDING_KEY, sessionId);
     return true;
@@ -321,6 +329,71 @@ export function clearPendingCheckout(): void {
   } catch {
     // nothing parked, or storage unavailable
   }
+}
+
+/* ------------------------------------------------------ started checkout */
+
+/**
+ * Where the id of a checkout this browser began waits. Stripe's return parks
+ * the id properly (rememberPendingCheckout, which clears this); a return that
+ * never comes leaves it here for the next visit to /pro to resolve.
+ */
+const STARTED_KEY = "suede-sing:pro:started-checkout";
+
+export function rememberStartedCheckout(sessionId: string): void {
+  try {
+    window.localStorage.setItem(STARTED_KEY, sessionId);
+  } catch {
+    // storage unavailable: the return address is then the only way back
+  }
+}
+
+/** The id of a checkout this browser began and never returned from, if any. */
+export function startedCheckout(): string | null {
+  let started: string | null;
+  try {
+    started = window.localStorage.getItem(STARTED_KEY);
+  } catch {
+    return null;
+  }
+  if (started === null || isCheckoutSessionId(started)) return started;
+  clearStartedCheckout();
+  return null;
+}
+
+export function clearStartedCheckout(): void {
+  try {
+    window.localStorage.removeItem(STARTED_KEY);
+  } catch {
+    // nothing to clear, or storage unavailable
+  }
+}
+
+/**
+ * Resolves a checkout this browser began but never returned from: one
+ * question to Stripe, no retries and no words to the singer. A paid session
+ * unlocks Pro here, the same as a confirmed return. One still open (the buyer
+ * may be on Stripe's page in another tab) or a card still processing waits
+ * for the next visit. Anything else, an expired session above all, is
+ * forgotten. Returns the state when Pro arrived, else null.
+ */
+export async function resolveStartedCheckout(sessionId: string): Promise<ProState | null> {
+  let reply: Entitlement;
+  try {
+    reply = await post<Entitlement>("/api/entitlement", { sessionId });
+  } catch (error) {
+    // A refusal says the id is useless. Offline, or a busy shared address,
+    // says nothing about it: ask again next time.
+    if (isDefinitiveRejection(error)) clearStartedCheckout();
+    return null;
+  }
+  if (reply.active) {
+    const state = apply(reply);
+    clearStartedCheckout();
+    return state;
+  }
+  if (reply.status !== "open" && reply.status !== "processing") clearStartedCheckout();
+  return null;
 }
 
 /**

@@ -120,16 +120,25 @@ export async function POST(request: Request) {
 
       const payment = session.payment_intent;
       if (!payment || typeof payment === "string") {
-        return NextResponse.json(INACTIVE);
+        // A payment-mode session with no PaymentIntent is one nobody paid:
+        // still open on Stripe's page, or expired unpaid. The session's
+        // status rides along so the browser that began the checkout can
+        // tell the two apart and forget an abandoned one without a word.
+        return NextResponse.json({
+          ...INACTIVE,
+          status: typeof session.status === "string" ? session.status : null,
+        });
       }
       const sessionCustomerId = customerIdOf(session.customer);
       const paymentCustomerId = customerIdOf(payment.customer);
-      if (
-        !sessionCustomerId ||
-        sessionCustomerId !== paymentCustomerId ||
-        !isOurLifetimePayment(payment)
-      ) {
+      if (!sessionCustomerId || sessionCustomerId !== paymentCustomerId) {
         return NextResponse.json(INACTIVE);
+      }
+      if (!isOurLifetimePayment(payment)) {
+        // Not, or not yet, a completed purchase of ours. The payment's status
+        // says whether that is final (refunded, canceled) or a card still
+        // processing, which a later check can confirm.
+        return NextResponse.json({ ...INACTIVE, status: payment.status ?? null });
       }
       const email =
         session.customer_details?.email ?? emailOf(session.customer);

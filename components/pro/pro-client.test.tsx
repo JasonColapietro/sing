@@ -535,6 +535,40 @@ describe("the address /pro opens with", () => {
     expect(readCheckoutLanding("?portal=1", "cs_test_parked")).toEqual({ kind: "portal" });
   });
 
+  it("resolves a checkout this browser began and never returned from, quietly and only on a plain visit", () => {
+    expect(readCheckoutLanding("", null, "cs_test_started")).toEqual({
+      kind: "started",
+      sessionId: "cs_test_started",
+      marked: false,
+    });
+    // The return's own id, or a parked one, always wins.
+    expect(readCheckoutLanding("?checkout=success&session_id=cs_test_a1", null, "cs_test_started")).toMatchObject({
+      kind: "confirm",
+      sessionId: "cs_test_a1",
+    });
+    expect(readCheckoutLanding("", "cs_test_parked", "cs_test_started")).toMatchObject({
+      kind: "confirm",
+      sessionId: "cs_test_parked",
+    });
+    // A success address that lost its id is confirmed from the started one,
+    // and parked like an id the address carried.
+    expect(readCheckoutLanding("?checkout=success", null, "cs_test_started")).toEqual({
+      kind: "confirm",
+      sessionId: "cs_test_started",
+      fromUrl: true,
+      marked: true,
+    });
+    // Stripe's cancel address, or junk, never resolves it.
+    expect(readCheckoutLanding("?checkout=cancelled", null, "cs_test_started")).toEqual({
+      kind: "cancelled",
+      marked: true,
+    });
+    expect(readCheckoutLanding("", null, "bogus")).toEqual({ kind: "none", marked: false });
+    // The cancel address also ends the checkout this browser began.
+    const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
+    expect(src).toContain('if (landing.kind === "cancelled") clearStartedCheckout();');
+  });
+
   it("says nothing cancelled or confirmable on a success address without a usable id", () => {
     const html = renderToStaticMarkup(<ProClient />);
     const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
