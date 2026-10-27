@@ -70,8 +70,13 @@ that were acted on are listed below.
 
 ## Commit and push state
 
-- Committed on `funnel-polish` as `90af45e` (author Jason Colapietro),
-  63 files, full suite green (3412 passed), tsc, lint and build clean.
+- Committed on `funnel-polish`: `90af45e` (the polish, 63 files), `9f43b35`
+  (this handoff), then the Pro hero's secondary link as an outline button.
+  Author Jason Colapietro. Full suite green (3412 passed), tsc, lint and
+  build clean; the built site was served locally and screenshotted at 375
+  and 1280 (hero price at y=555 on a phone, the buy card's button inside
+  the first screen after the #buy jump, homepage 11.7k px tall on a phone,
+  down from 16.8k).
 - `git push -u origin funnel-polish` returned 403 from the session's git
   proxy: the repository is not in this session's authorized sources
   (attaching it was denied by the permission classifier). The same commit is

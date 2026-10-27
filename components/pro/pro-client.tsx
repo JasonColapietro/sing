@@ -970,7 +970,9 @@ export function ProClient() {
                     >
                       {`Get lifetime Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
                     </LinkButton>
-                    <LinkButton href="/studio" variant="ghost" size="lg">
+                    {/* Outlined, not a bare link: a ghost label floated under
+                        the priced button with nothing to anchor it. */}
+                    <LinkButton href="/studio" variant="outline" size="lg">
                       Keep practicing free
                     </LinkButton>
                   </div>
