@@ -166,7 +166,7 @@ export default function AnalyzeClient() {
               Stop
             </Button>
           ) : (
-            <Button onClick={onStart}>Enable microphone</Button>
+            <Button variant="rec" onClick={onStart}>Enable microphone</Button>
           )}
         </div>
       }
@@ -202,7 +202,7 @@ export default function AnalyzeClient() {
             sampleRate={sampleRate}
             className="block h-[260px] w-full sm:h-[320px]"
           />
-          <p className="border-t border-line px-4 py-3 text-xs text-mut">
+          <p className="max-w-prose border-t border-line px-4 py-3 text-xs text-mut">
             Time runs left to right, pitch bottom to top. Stacked lines are the
             harmonics of one note; the stack jumping is a register change, and a
             steady ripple is vibrato.
@@ -228,7 +228,7 @@ export default function AnalyzeClient() {
               The gold column is the singer&rsquo;s formant, the cluster around
               3 kHz that lets a trained voice sit on top of an orchestra playing
               louder than it. The percentage is that band&rsquo;s share of the
-              plotted energy — compare it against your own takes rather than
+              plotted energy. Compare it against your own takes rather than
               against a target.
             </p>
           </Card>
@@ -248,7 +248,7 @@ export default function AnalyzeClient() {
       </div>
 
       <p className="mt-6 text-xs text-dim">
-        Time spent listening counts toward your practice XP — sessions log
+        Time spent listening counts toward your practice XP. Sessions log
         automatically every 5 minutes and when you leave the page.
       </p>
       {everListened && (

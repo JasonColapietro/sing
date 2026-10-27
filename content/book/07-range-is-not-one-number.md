@@ -2,7 +2,7 @@
 title: "Your range is not one number"
 part: "Reading your own voice"
 order: 7
-summary: "Your voice has three ranges — absolute, comfortable, and performable — and the one people quote is the least useful of the three."
+summary: "Your voice has three ranges (absolute, comfortable, and performable), and the one people quote is the least useful of the three."
 ---
 
 Ask a singer what their range is and you get a single answer. Three octaves. E2 to C6. Two and a half, maybe three on a good day. It sounds like a fact about a person, the way height is a fact about a person.

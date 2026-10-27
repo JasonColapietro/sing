@@ -33,7 +33,7 @@ Work only after an easy warm-up, on a pitch below the top of your comfortable ra
 
 ### Name the target: Comfortable mixed-voice coordination
 
-Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
@@ -61,7 +61,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “The Difference You Can Hear.”
 - 60s: Isolate the comfortable mixed-voice coordination target in short, comfortable examples.
-- 90s: Practise or record the complete “The Difference You Can Hear” task, resetting between attempts.
+- 90s: Practice or record the complete “The Difference You Can Hear” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

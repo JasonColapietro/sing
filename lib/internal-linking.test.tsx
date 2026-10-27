@@ -140,9 +140,13 @@ describe("footer wires every hub into every page", () => {
    * The money page's only sitewide inbound anchor was the header pill's
    * three-letter "Pro", which says nothing about what the page is.
    */
-  it("links /pro with descriptive, priced anchor text", () => {
-    const anchor = html.match(/<a[^>]*href="\/pro"[^>]*>([^<]*)<\/a>/);
-    expect(anchor?.[1]).toBe(`Suede Pro vocal coach, ${formatPrice(PRICING.lifetime.amount)} once`);
+  it("links /pro with descriptive, priced anchor text, landing on the buy card", () => {
+    const anchor = html.match(/<a[^>]*href="\/pro#buy"[^>]*>(.*?)<\/a>/);
+    expect(anchor?.[1].replace(/<[^>]+>/g, "")).toBe(
+      `Suede Pro vocal coach, ${formatPrice(PRICING.lifetime.amount)} once`,
+    );
+    // The price clause carries the not-pro marker, so an owner never sees it.
+    expect(anchor?.[1]).toMatch(/<span data-prepaint-plan="not-pro">, \$\d+ once<\/span>/);
   });
 
   /**

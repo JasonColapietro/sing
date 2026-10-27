@@ -13,7 +13,8 @@ import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { paintedFor } from "@/components/prepaint.testing";
-import { ProWhisper } from "./gate";
+import { crescendoCount, NotPro, ProWhisper } from "./gate";
+import { MAX_SESSIONS } from "@/lib/progress-shape";
 
 describe("ProWhisper before hydration", () => {
   const html = renderToStaticMarkup(
@@ -41,5 +42,49 @@ describe("ProWhisper before hydration", () => {
     expect(body).toContain('prepaintMarker(hydrated, { plan: "not-pro" })');
     // Not held back on the entitlement cache: that is what mounted it late.
     expect(body).not.toContain("useProReady");
+  });
+});
+
+describe("the session nudge's cadence", () => {
+  const sessions = (n: number, id = (i: number) => `${1_790_000_000_000 + i}-${i}`) =>
+    Array.from({ length: n }, (_, i) => ({ id: id(i) }));
+
+  it("alternates on the session count below the cap", () => {
+    for (const n of [0, 1, 2, 7, MAX_SESSIONS - 1]) expect(crescendoCount(sessions(n))).toBe(n);
+  });
+
+  it("keeps alternating past the cap instead of showing the full card every time", () => {
+    // At the cap the count is stuck at an even MAX_SESSIONS; the newest
+    // session's id is read instead, and over many results both parities come up.
+    const parities = new Set<number>();
+    for (let k = 0; k < 40; k++) {
+      const full = sessions(MAX_SESSIONS);
+      full[0] = { id: `${1_790_000_000_000 + k * 977}-${(k * 7919) % 1_000_000}` };
+      parities.add(crescendoCount(full) % 2);
+    }
+    expect([...parities].sort()).toEqual([0, 1]);
+  });
+});
+
+describe("NotPro, the wrapper that keeps shared sales copy from an owner", () => {
+  it("is in the server HTML with its copy, behind the not-pro marker", () => {
+    const html = renderToStaticMarkup(
+      <p>
+        Five minutes a day<NotPro>; Pro removes the limit</NotPro>.
+      </p>,
+    );
+    // Crawlers and free visitors get the words from the first paint; the
+    // pre-paint rule html[data-sing-plan="pro"] [data-prepaint-plan="not-pro"]
+    // hides them for an owner before anything is painted.
+    expect(html).toContain('<span data-prepaint-plan="not-pro">; Pro removes the limit</span>');
+  });
+
+  it("renders the element it is asked for, with its class", () => {
+    const html = renderToStaticMarkup(
+      <NotPro as="p" className="mt-5">
+        $79 once
+      </NotPro>,
+    );
+    expect(html).toBe('<p class="mt-5" data-prepaint-plan="not-pro">$79 once</p>');
   });
 });

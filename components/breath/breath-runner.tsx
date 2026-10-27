@@ -2,6 +2,7 @@
 
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { ProCrescendoNudge } from "@/components/pro/gate";
+import { emitProResult } from "@/lib/pro-signal";
 import { denseStepResults, withStepResult } from "@/components/practice/step-results";
 import { useFreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
@@ -169,7 +170,7 @@ function StepIntro({
           {stepIndex === 0 ? "First up" : "Up next"} · Step {stepIndex + 1} of{" "}
           {stepCount}
         </span>
-        <h2 className="font-display text-[clamp(2rem,7vw,3rem)] leading-none">
+        <h2 className="font-display text-[clamp(2rem,7vw,3rem)]">
           {breathStepTitle(step)}
         </h2>
         <p className="max-w-md text-[var(--s-mut)]">
@@ -391,6 +392,12 @@ export function BreathRunResults({
         scored.reduce((a, r) => a + (r.score ?? 0), 0) / scored.length,
       )
     : null;
+  // A completed result: the one-time Pro moment listens for this, and waits
+  // for this full-screen screen to close (components/pro/moments.tsx).
+  const finished = doneSteps > 0;
+  useEffect(() => {
+    if (finished) emitProResult();
+  }, [finished]);
   return (
     <ResultsScreen
       title={routine.name}
@@ -579,6 +586,12 @@ export function BreathDrillSession({
           : drill === "cue"
             ? { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC }
             : { drill: "sustain", attempts: 1 };
+
+  // A finished drill is a result; the one-time Pro moment waits for this
+  // screen to close before it can open (components/pro/moments.tsx).
+  useEffect(() => {
+    if (result) emitProResult();
+  }, [result]);
 
   if (result) {
     return (

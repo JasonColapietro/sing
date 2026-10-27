@@ -3,7 +3,7 @@ title: "Modern R&B"
 part: "Soul, R&B and gospel"
 order: 16
 group: rnb-modern
-summary: "The streaming era's R&B — falsetto confessions, whisper-runs, baritone outliers and produced nonchalance — and how the genre traded the shout for the microphone's trust."
+summary: "The streaming era's R&B (falsetto confessions, whisper-runs, baritone outliers and produced nonchalance) and how the genre traded the shout for the microphone's trust."
 ---
 
 Modern R&B is soul rebuilt for headphones. The church lineage is intact — listen to the harmony stacks and the run grammar — but the delivery contract changed: where the classic tradition projected to the back pew, this generation confides at six inches, and the entries here document the consequences. Falsetto became the lead register rather than the special effect. Runs learned to decay into breath. Nonchalance became a produced aesthetic, sloppiness engineered with studio precision. And a counter-movement of baritones planted flags in the cellar, proving the genre had been renting only the top half of the male voice for a generation.

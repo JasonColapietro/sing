@@ -2,7 +2,7 @@
 title: "Notes, octaves and the keyboard"
 part: "How to read a voice"
 order: 2
-summary: "Scientific pitch notation in five minutes — what C4 means, why F#5 and Gb5 are the same note, how octave spans are counted, and why identical voices get different figures."
+summary: "Scientific pitch notation in five minutes: what C4 means, why F#5 and Gb5 are the same note, how octave spans are counted, and why identical voices get different figures."
 ---
 
 Every range in this book is written in scientific pitch notation: a letter, maybe a sharp or flat, and a number. The system takes five minutes to learn and then never leaves you, and without it the atlas is a wall of code. Here is the whole thing.

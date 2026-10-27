@@ -79,6 +79,13 @@ export default function ProMoments() {
   useModalFocus(show, dialogRef);
 
   useEffect(() => {
+    // Set while a result waits for a full-screen results screen to let go of
+    // the scroll lock (see the scroll-lock refusal below).
+    let waiting: MutationObserver | null = null;
+    const stopWaiting = () => {
+      waiting?.disconnect();
+      waiting = null;
+    };
     const gate = () => {
       try {
         if (dismissedRef.current) return;
@@ -113,9 +120,25 @@ export default function ProMoments() {
         // step onto the path ("/sign-in/factor-one") and the match has to
         // travel with it.
         if (/^\/sign-(in|up)(\/|$)/.test(p)) return;
-        // Another surface owns the scroll lock. Decline this pass and leave
-        // every flag untouched so a later result can still open.
-        if (document.body.style.overflow === "hidden") return;
+        // Another surface owns the scroll lock. Every ear game, warmup
+        // routine and breath set ends on a full-screen results screen that
+        // holds it, so declining outright dropped those results for good. Wait
+        // for the lock to be let go (the singer closes the results), then run
+        // the whole gate again; a lock that is never released, the stale case
+        // this check exists for, simply never opens, as before. Play again
+        // takes the lock straight back, so the wait carries on.
+        if (document.body.style.overflow === "hidden") {
+          if (!waiting && typeof MutationObserver !== "undefined") {
+            waiting = new MutationObserver(() => {
+              if (document.body.style.overflow === "hidden") return;
+              stopWaiting();
+              gate();
+            });
+            waiting.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+          }
+          return;
+        }
+        stopWaiting();
         // Opening from an effect (rather than from render) is deliberate:
         // localStorage is client-only, so deciding after hydration is what
         // avoids a server/client mismatch. No `react-hooks/set-state-in-effect`
@@ -134,7 +157,11 @@ export default function ProMoments() {
     // still runs the gate on any route. The early returns above skip OPENING,
     // never subscribing.
     if (window.location.pathname === "/progress") gate();
-    return subscribeProResult(gate);
+    const unsubscribe = subscribeProResult(gate);
+    return () => {
+      unsubscribe();
+      stopWaiting();
+    };
   }, []);
 
   const markSeen = () => {
@@ -201,7 +228,9 @@ export default function ProMoments() {
         role="dialog"
         aria-modal="true"
         aria-label="Go Pro"
-        className="animate-fadeup relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-violet bg-panel p-6 sm:p-8"
+        // outline-none: useModalFocus focuses the dialog itself, and the
+        // global focus ring drew a red box around the whole card.
+        className="animate-fadeup relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-violet bg-panel p-6 outline-none sm:p-8"
       >
         <div
           aria-hidden
@@ -224,6 +253,7 @@ export default function ProMoments() {
         </p>
         <ul className="mt-4 space-y-2">
           {[
+            "No daily limit on guided practice",
             "The full daily coach plan, not just its first two steps",
             "Per-note accuracy and range history",
             "Pitch analysis on every recorded take",

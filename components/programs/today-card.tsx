@@ -445,7 +445,7 @@ export function ProgramTodayCard({
     <Card>
       <section aria-labelledby="program-today-heading" data-program-day={view.index} data-status={view.status}>
         <div className="flex flex-wrap items-center gap-2">
-          <h2 id="program-today-heading" className="text-base leading-none">
+          <h2 id="program-today-heading" className="text-base">
             <SectionLabel>Today · {program.name}</SectionLabel>
           </h2>
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -676,7 +676,7 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
       <section aria-labelledby="program-entry-heading" data-program-day={view.index} data-status={view.status}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <h2 id="program-entry-heading" className="text-base leading-none">
+            <h2 id="program-entry-heading" className="text-base">
               <SectionLabel>Your program: day {Math.min(view.index + 1, program.days.length)}</SectionLabel>
             </h2>
             <p className="mt-2 font-medium">{program.name}</p>
@@ -686,8 +686,10 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
           </div>
           {locked ? (
             <div className="flex flex-wrap items-center gap-3">
-              <LinkButton href={PRO_BUY_HREF} variant="outline">
-                Unlock day {view.index + 1} with Pro
+              {/* Priced and violet, like the wall in the program's own view
+                  (UNLOCK_LABEL): the same moment, the same offer. */}
+              <LinkButton href={PRO_BUY_HREF}>
+                {`Unlock day ${view.index + 1} with Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
               </LinkButton>
               <a
                 href={calendarHref}

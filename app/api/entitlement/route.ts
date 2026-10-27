@@ -12,6 +12,25 @@ import {
 } from "@/lib/stripe";
 import type Stripe from "stripe";
 
+/**
+ * Every answer from this route is for one buyer's browser only: a success can
+ * carry the buyer's email and Pro key. So no shared cache (Vercel's edge, a
+ * proxy, a CDN) may keep it, and the browser must not reuse it either. With
+ * no Cache-Control of its own, the platform sent `public, max-age=0,
+ * must-revalidate`. Errors and the rate limit's 429 get the same header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
 function customerIdOf(
   customer: { id: string } | string | null | undefined,
 ): string | null {
@@ -29,7 +48,7 @@ function isMissingStripeResource(error: unknown): boolean {
 }
 
 function invalidBillingReference() {
-  return NextResponse.json(
+  return json(
     {
       error:
         "Provide a checkout session id, subscription id, or payment intent id.",
@@ -59,7 +78,7 @@ export async function POST(request: Request) {
     limit: 40,
     windowMs: 60_000,
   });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   let sessionId: unknown;
   let subscriptionId: unknown;
@@ -74,7 +93,7 @@ export async function POST(request: Request) {
     subscriptionId = body?.subscriptionId;
     paymentIntentId = body?.paymentIntentId;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   const validSessionId = isStripeId(sessionId, "cs_") ? sessionId : null;
@@ -106,14 +125,14 @@ export async function POST(request: Request) {
       const sub = session.subscription;
       if (sub) {
         if (typeof sub === "string") {
-          return NextResponse.json(INACTIVE);
+          return json(INACTIVE);
         }
         if (!isOurSubscription(sub as Stripe.Subscription)) {
-          return NextResponse.json(INACTIVE);
+          return json(INACTIVE);
         }
         const email =
           session.customer_details?.email ?? emailOf(session.customer);
-        return NextResponse.json(
+        return json(
           entitlementFrom(sub as Stripe.Subscription, email),
         );
       }
@@ -124,7 +143,7 @@ export async function POST(request: Request) {
         // still open on Stripe's page, or expired unpaid. The session's
         // status rides along so the browser that began the checkout can
         // tell the two apart and forget an abandoned one without a word.
-        return NextResponse.json({
+        return json({
           ...INACTIVE,
           status: typeof session.status === "string" ? session.status : null,
         });
@@ -132,17 +151,17 @@ export async function POST(request: Request) {
       const sessionCustomerId = customerIdOf(session.customer);
       const paymentCustomerId = customerIdOf(payment.customer);
       if (!sessionCustomerId || sessionCustomerId !== paymentCustomerId) {
-        return NextResponse.json(INACTIVE);
+        return json(INACTIVE);
       }
       if (!isOurLifetimePayment(payment)) {
         // Not, or not yet, a completed purchase of ours. The payment's status
         // says whether that is final (refunded, canceled) or a card still
         // processing, which a later check can confirm.
-        return NextResponse.json({ ...INACTIVE, status: payment.status ?? null });
+        return json({ ...INACTIVE, status: payment.status ?? null });
       }
       const email =
         session.customer_details?.email ?? emailOf(session.customer);
-      return NextResponse.json(entitlementFromLifetime(payment, email));
+      return json(entitlementFromLifetime(payment, email));
     }
 
     if (validSubscriptionId) {
@@ -150,7 +169,7 @@ export async function POST(request: Request) {
         expand: ["customer"],
       });
       if (!isOurSubscription(sub)) {
-        return NextResponse.json(INACTIVE);
+        return json(INACTIVE);
       }
       // Status only. A subscription id is not proof of ownership: it is a
       // bearer string sitting in plaintext localStorage, and this branch exists
@@ -171,7 +190,7 @@ export async function POST(request: Request) {
       // credentials it already earned at checkout — see `apply` in lib/pro.ts,
       // which preserves them across a revalidation rather than blanking them.
       const status = entitlementFrom(sub, null);
-      return NextResponse.json({
+      return json({
         ...status,
         customerId: null,
         proKey: null,
@@ -184,10 +203,10 @@ export async function POST(request: Request) {
         expand: ["customer", "latest_charge"],
       });
       if (!isOurLifetimePayment(payment)) {
-        return NextResponse.json(INACTIVE);
+        return json(INACTIVE);
       }
       const status = entitlementFromLifetime(payment, null);
-      return NextResponse.json({
+      return json({
         ...status,
         customerId: null,
         proKey: null,
@@ -199,10 +218,10 @@ export async function POST(request: Request) {
   } catch (error) {
     // A deleted or unknown id is a legitimate "not a member" answer.
     if (isMissingStripeResource(error)) {
-      return NextResponse.json(INACTIVE);
+      return json(INACTIVE);
     }
     console.error("[api/entitlement]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not check your Pro access. Try again in a moment." },
       { status: 502 },
     );

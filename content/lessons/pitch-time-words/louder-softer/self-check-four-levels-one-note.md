@@ -29,7 +29,7 @@ Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. 
 
 ### Name the target: Dynamics without pushing
 
-Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
 - Listen: The four levels in your take form an audible progression while pitch stays centered.
@@ -57,7 +57,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Levels, One Note.”
 - 75s: Isolate the dynamics without pushing target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Four Levels, One Note” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Four Levels, One Note” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

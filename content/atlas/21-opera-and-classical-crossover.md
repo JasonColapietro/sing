@@ -3,7 +3,7 @@ title: "Opera and classical crossover"
 part: "The trained voice"
 order: 21
 group: opera
-summary: "The unamplified athletes — what filling a hall without a microphone actually requires, why opera ranges look modest, and what every amplified singer can steal from the fach system."
+summary: "The unamplified athletes: what filling a hall without a microphone actually requires, why opera ranges look modest, and what every amplified singer can steal from the fach system."
 ---
 
 Opera is the control group of this atlas. Every other chapter documents voices shaped by the microphone; this one documents what the human voice does when it must fill a three-thousand-seat hall over an orchestra with no help at all. The answer is a technology — squillo, the resonance cluster that lets a voice knife through eighty instruments — and a discipline of breath, vowel and register unification that takes a decade to install. The entries here describe its results: voices even and intentional from bottom to top, projection as a trained acoustic trick rather than effort.

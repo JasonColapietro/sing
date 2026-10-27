@@ -29,7 +29,7 @@ Speak the lyric in rhythm at an easy tempo. Mark the vowel that carries each pit
 
 ### Name the target: Diction and intelligible words
 
-Dense text at rising tempo without losing the vowel line. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Dense text at rising tempo without losing the vowel line. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.
 - Listen: A listener can write down the words from the recording without seeing the lyric.
@@ -57,7 +57,7 @@ I spoke and sang the displayed lyric slowly enough for each word to remain under
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Consonant Sprint.”
 - 90s: Isolate the clear, intelligible diction target in short, comfortable examples.
-- 135s: Practise or record the complete “Consonant Sprint” task, resetting between attempts.
+- 135s: Practice or record the complete “Consonant Sprint” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

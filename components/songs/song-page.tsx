@@ -111,10 +111,10 @@ export function SongStats({ song }: { song: Song }) {
           <SectionLabel>Written range</SectionLabel>
           <div className="tabular mt-3 font-mono text-4xl font-bold sm:text-5xl">
             {f.lowLabel}
-            <span className="text-dim"> — </span>
+            <span className="text-dim">–</span>
             {f.highLabel}
           </div>
-          <p className="mt-2 text-sm text-mut">
+          <p className="mt-2 max-w-prose text-sm text-mut">
             {f.rangeSemis} semitones as transcribed. Once you have taken the
             range test, the practice room opens it fitted to your range, and
             you can shift it by semitones from there. Without a saved range it
@@ -150,7 +150,7 @@ export function SongStats({ song }: { song: Song }) {
             A full session
           </dt>
           <dd className="tabular mt-1 text-sm">
-            {formatMinSec(f.sessionSec)} — {f.loops}{" "}
+            {formatMinSec(f.sessionSec)} · {f.loops}{" "}
             {f.loops === 1 ? "pass" : "passes"}
           </dd>
         </div>
@@ -239,8 +239,8 @@ export function PublicDomainNote({ song }: { song: Song }) {
       </dl>
       <p className="mt-5 max-w-3xl text-xs text-dim">
         Every melody in the songbook is public domain, which is why the whole
-        thing can be sung in a browser without a licence. A specific recording
-        or arrangement of the same tune can still be under copyright — this is
+        thing can be sung in a browser without a license. A specific recording
+        or arrangement of the same tune can still be under copyright; this is
         our own transcription of the melody.
       </p>
     </Card>

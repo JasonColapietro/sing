@@ -122,7 +122,7 @@ describe("singer editorial trust routes", () => {
 
     expect(faq.mainEntity.length).toBeGreaterThan(0);
     for (const item of faq.mainEntity) {
-      expect(visible).toContain(`<h3 class="text-sm font-medium">${item.name}</h3>`);
+      expect(visible).toContain(`<h3 class="text-sm">${item.name}</h3>`);
       expect(visible).toContain(item.acceptedAnswer.text);
     }
   });

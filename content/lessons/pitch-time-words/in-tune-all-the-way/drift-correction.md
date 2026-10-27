@@ -29,7 +29,7 @@ Use a mid-range note or phrase at moderate volume. Hear the target once, stop pl
 
 ### Name the target: Sustained intonation
 
-Hear the sustained reference, sing from silence, then compare another fresh attempt by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Hear the sustained reference, sing from silence, then compare another fresh attempt by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change.
@@ -57,7 +57,7 @@ I compared my Amazing Grace study with the note reference and identified one pit
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Drift Correction.”
 - 90s: Isolate the sustained intonation target in short, comfortable examples.
-- 135s: Practise or record the complete “Drift Correction” task, resetting between attempts.
+- 135s: Practice or record the complete “Drift Correction” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

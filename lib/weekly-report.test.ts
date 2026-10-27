@@ -238,7 +238,7 @@ describe("weekInReview", () => {
       expect(report.suggestion).toEqual({ kind: "keep-going", days: 3 });
     });
 
-    it("asks for another day when fewer than three were practised", () => {
+    it("asks for another day when fewer than three were practiced", () => {
       const report = weekInReview([session("2026-09-14"), session("2026-09-14")], WED)!;
       expect(report.suggestion).toEqual({ kind: "more-days", days: 1 });
     });
@@ -262,7 +262,7 @@ describe("suggestionWords", () => {
     expect(dropped.text).toContain("You didn't open the pitch meter or pitch studio last week");
     const weak = suggestionWords({ kind: "weakest", type: "pitch", label: "Pitch", href: "/studio", average: 40, overall: 63 });
     expect(weak.text).toBe("Scores in the pitch studio averaged 40% against 63% across your week, the widest gap of any room.");
-    expect(weak.link.label).toBe("Practise in the pitch studio");
+    expect(weak.link.label).toBe("Practice in the pitch studio");
   });
 
   it("reads as a sentence for every room the log can name", () => {
@@ -275,7 +275,7 @@ describe("suggestionWords", () => {
         const { text, link } = suggestionWords(s);
         // No pill label in the sentence, and no "Your the warmups" or "Open Song".
         expect(text, type).not.toMatch(/\bX\b|\b(?:open|in) [A-Z]|\bYour the\b/);
-        expect(link.label, type).toMatch(/^(?:Open|Practise|Record) [a-z]/);
+        expect(link.label, type).toMatch(/^(?:Open|Practice|Record) [a-z]/);
         expect(link.href).toBe("/x");
       }
     }
@@ -283,7 +283,7 @@ describe("suggestionWords", () => {
 
   it("links the habit steps to a warmup", () => {
     expect(suggestionWords({ kind: "more-days", days: 1 })).toEqual({
-      text: "You practised on 1 day. Aim for one more this week; a short session counts.",
+      text: "You practiced on 1 day. Aim for one more this week; a short session counts.",
       link: { href: "/warmups", label: "Start a warmup" },
     });
     expect(suggestionWords({ kind: "keep-going", days: 4 }).text).toBe(

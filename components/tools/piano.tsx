@@ -157,6 +157,21 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
     return { keys: list, totalWidth: whiteIndex * WHITE_W };
   }, []);
 
+  // Three octaves are 968px of keys, so below about 1000px the row scrolls.
+  // A fade on the right edge says there is more until the scroll reaches C6.
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [moreRight, setMoreRight] = useState(false);
+  const measureScroll = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setMoreRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  }, []);
+  useEffect(() => {
+    measureScroll();
+    window.addEventListener("resize", measureScroll);
+    return () => window.removeEventListener("resize", measureScroll);
+  }, [measureScroll]);
+
   const showLabel = (midi: number) =>
     labelMode === "always" || (labelMode === "press" && active.has(midi));
 
@@ -253,17 +268,31 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
         </span>
       </div>
 
-      {/* Keys */}
-      <div className="no-scrollbar overflow-x-auto rounded-xl border border-line bg-panel2 p-3">
+      {/* Keys. On a phone the scrollbar stays: with it hidden the row read
+          as a keyboard that ended at B3 on a half-cut key. From sm up it is
+          hidden as before, and the fade alone marks the overflow. */}
+      <div className="relative">
         <div
-          className="relative"
-          style={{ width: totalWidth, height: WHITE_H }}
-          role="group"
-          aria-label="Piano keys, C3 to C6"
+          ref={scrollerRef}
+          onScroll={measureScroll}
+          className="overflow-x-auto rounded-xl border border-line bg-panel2 p-3 sm:[scrollbar-width:none] sm:[&::-webkit-scrollbar]:hidden"
         >
-          {keys.filter((k) => !k.black).map(keyButton)}
-          {keys.filter((k) => k.black).map(keyButton)}
+          <div
+            className="relative"
+            style={{ width: totalWidth, height: WHITE_H }}
+            role="group"
+            aria-label="Piano keys, C3 to C6"
+          >
+            {keys.filter((k) => !k.black).map(keyButton)}
+            {keys.filter((k) => k.black).map(keyButton)}
+          </div>
         </div>
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-y-px right-px w-10 rounded-r-xl bg-linear-to-l from-panel2 to-transparent transition-opacity duration-200 ${
+            moreRight ? "opacity-100" : "opacity-0"
+          }`}
+        />
       </div>
 
       {/* Controls */}

@@ -29,7 +29,7 @@ Start from the key the song opens in: fitted to your measured range if you have 
 
 ### Name the target: First repertoire
 
-Rehearse the supplied Amazing Grace phrase and study arrangement. Choose a comfortable key before singing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Rehearse the supplied Amazing Grace phrase and study arrangement. Choose a comfortable key before singing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.
 - Listen: The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.
@@ -57,7 +57,7 @@ I rehearsed the supplied Amazing Grace phrase and study arrangement in a key tha
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Amazing Grace: Phrase to Study.”
 - 90s: Isolate the first repertoire target in short, comfortable examples.
-- 135s: Practise or record the complete “Amazing Grace: Phrase to Study” task, resetting between attempts.
+- 135s: Practice or record the complete “Amazing Grace: Phrase to Study” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

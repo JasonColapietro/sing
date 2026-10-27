@@ -33,7 +33,7 @@ Use one short phrase in an easy range and sing a plain version first. Keep the u
 
 ### Name the target: Ornament vocabulary
 
-Naming them is what turns habits into choices. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Naming them is what turns habits into choices. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.
 - Listen: The four versions are recognizably different and the underlying words and melody remain intact.
@@ -61,7 +61,7 @@ I named and compared small pitch gestures in one comfortable phrase, using the w
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Four Ornaments, Named.”
 - 60s: Isolate the ornament vocabulary target in short, comfortable examples.
-- 90s: Practise or record the complete “Four Ornaments, Named” task, resetting between attempts.
+- 90s: Practice or record the complete “Four Ornaments, Named” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

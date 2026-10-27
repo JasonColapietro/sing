@@ -91,11 +91,11 @@ const FAQ = [
   },
   {
     q: "Does Suede Sing use my voice to train AI?",
-    a: "No. Suede Sing contains no machine learning model: pitch is measured with an autocorrelation algorithm running locally in the browser. The Chrome extension discards each audio frame as soon as it is analysed, and on the website any take you choose to record stays on your device. No audio leaves your device, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
+    a: "No. Suede Sing contains no machine learning model: pitch is measured with an autocorrelation algorithm running locally in the browser. The Chrome extension discards each audio frame as soon as it is analyzed, and on the website any take you choose to record stays on your device. No audio leaves your device, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
   },
   {
     q: "Does the extension record or upload my voice?",
-    a: "No. The extension analyses each audio frame in your browser and discards it immediately. Nothing is recorded, nothing is uploaded, the extension has no account or server, and it contains no analytics or tracking scripts. Practice history is stored locally in Chrome and can be cleared at any time.",
+    a: "No. The extension analyzes each audio frame in your browser and discards it immediately. Nothing is recorded, nothing is uploaded, the extension has no account or server, and it contains no analytics or tracking scripts. Practice history is stored locally in Chrome and can be cleared at any time.",
   },
   {
     q: "What does pitch accuracy in cents mean?",
@@ -211,7 +211,7 @@ export default function ExtensionPage() {
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {FEATURES.map((f) => (
             <Card key={f.name}>
-              <h3 className="text-base font-semibold text-ink">{f.name}</h3>
+              <h3 className="text-base text-ink">{f.name}</h3>
               <p className="mt-1 text-sm text-mut">{f.detail}</p>
             </Card>
           ))}
@@ -221,19 +221,19 @@ export default function ExtensionPage() {
       <section className="mt-12">
         <SectionLabel heading>Your voice stays on your computer</SectionLabel>
         <Card className="mt-4">
-          <p className="text-sm text-mut">
-            The extension analyses each audio frame in your browser and throws
+          <p className="max-w-prose text-sm text-mut">
+            The extension analyzes each audio frame in your browser and throws
             it away immediately. Nothing is recorded. Nothing is uploaded. There is
             no account, no sign-in, no server, and no analytics or tracking
             script anywhere in the extension.
           </p>
-          <p className="mt-3 text-sm text-mut">
+          <p className="mt-3 max-w-prose text-sm text-mut">
             Your voice is never used to train anything. Measurement is signal
             processing on your own machine, not a model in someone else&rsquo;s
             cloud, so there is no training set to opt out of. Suede AI
             builds tools that measure rather than harvest.
           </p>
-          <p className="mt-3 text-sm text-mut">
+          <p className="mt-3 max-w-prose text-sm text-mut">
             The details are in the{" "}
             <a
               href="https://suedeai.org/voice/privacy/"
@@ -255,8 +255,8 @@ export default function ExtensionPage() {
         <div className="mt-4 space-y-6">
           {FAQ.map((item) => (
             <div key={item.q}>
-              <h3 className="font-semibold text-ink">{item.q}</h3>
-              <p className="mt-1 text-sm text-mut">
+              <h3 className="text-ink">{item.q}</h3>
+              <p className="mt-1 max-w-prose text-sm text-mut">
                 <FaqAnswer text={item.a} link={item.link} />
               </p>
             </div>

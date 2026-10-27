@@ -29,7 +29,7 @@ Stand or sit tall without locking the ribs. Let the shoulders remain quiet while
 
 ### Name the target: Low breath and rib expansion
 
-Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.
 - Listen: The hiss stays even rather than surging at the start and fading to almost nothing at the end.
@@ -57,7 +57,7 @@ I counted an even hiss, kept my shoulders quiet, and released before running out
 
 - 30s: Open the sustain test. Prepare the room, body, and safe baseline for “Self-Check: An Even Hiss.”
 - 60s: Isolate the low breath and rib expansion target in short, comfortable examples.
-- 90s: Practise or record the complete “Self-Check: An Even Hiss” task, resetting between attempts.
+- 90s: Practice or record the complete “Self-Check: An Even Hiss” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

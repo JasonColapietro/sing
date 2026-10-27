@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Vibrato is a small, regular swing in pitch around the note's center, with three separate dials: rate is how many times a second the pitch swings, from a fast flutter to a slow wave; extent is how far above and below the center it moves, from a narrow shimmer to a wide wobble; and onset is when it starts, straight away or after a stretch of straight tone. What separates vibrato from an unsteady note is regularity, an even rate and extent around a steady center. The Vibrato hold warm-up shows how fast and how wide your pitch moved after each hold, but nothing times the onset, so that dial is yours to judge. It is also the easiest one to practise first, because it begins from a plain, straight note.
+Vibrato is a small, regular swing in pitch around the note's center, with three separate dials: rate is how many times a second the pitch swings, from a fast flutter to a slow wave; extent is how far above and below the center it moves, from a narrow shimmer to a wide wobble; and onset is when it starts, straight away or after a stretch of straight tone. What separates vibrato from an unsteady note is regularity, an even rate and extent around a steady center. The Vibrato hold warm-up shows how fast and how wide your pitch moved after each hold, but nothing times the onset, so that dial is yours to judge. It is also the easiest one to practice first, because it begins from a plain, straight note.
 
 ## Steps
 
@@ -33,7 +33,7 @@ Choose a comfortable sustained note and establish three easy seconds of straight
 
 ### Name the target: Vibrato control
 
-Vibrato has three parameters. Controlling them is what separates it from a wobble. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Vibrato has three parameters. Controlling them is what separates it from a wobble. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.
@@ -61,7 +61,7 @@ I compared straight tone with naturally occurring vibrato, without shaking the j
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Rate, Extent, Onset.”
 - 75s: Isolate the vibrato control target in short, comfortable examples.
-- 120s: Practise or record the complete “Rate, Extent, Onset” task, resetting between attempts.
+- 120s: Practice or record the complete “Rate, Extent, Onset” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

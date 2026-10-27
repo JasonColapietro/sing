@@ -33,7 +33,7 @@ Once you have taken the range test, song practice opens the study fitted to your
 
 ### Name the target: Extended-range repertoire
 
-Range and agility at the same time, which is the actual difficulty. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Range and agility at the same time, which is the actual difficulty. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.
 - Listen: The full take keeps the authored melody recognizable and the planned ornaments audible.
@@ -61,7 +61,7 @@ I rehearsed the supplied phrase and study arrangement in a comfortable key, isol
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Range and Ornaments in a Short Phrase.”
 - 60s: Isolate the extended-range repertoire target in short, comfortable examples.
-- 90s: Practise or record the complete “Range and Ornaments in a Short Phrase” task, resetting between attempts.
+- 90s: Practice or record the complete “Range and Ornaments in a Short Phrase” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

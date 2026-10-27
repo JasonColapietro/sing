@@ -39,13 +39,21 @@ describe("response headers", () => {
     }
   });
 
-  it("caches the image files in public/ for a year, and nothing that changes in place", async () => {
+  it("caches the image files in public/ for a day, revalidating in the background for a week", async () => {
     const rules = (await nextConfig.headers?.()) ?? [];
     const cache = rules.filter((r) => r.headers.some((h) => h.key === "Cache-Control"));
     expect(cache).toHaveLength(1);
     expect(cache[0].headers).toEqual([
-      { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+      { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
     ]);
+    // Vercel's optimizer copies this header onto /_next/image responses
+    // (errors included), and some of these files change in place, so the
+    // rule must never claim a year or `immutable`.
+    const value = cache[0].headers[0].value;
+    expect(value).not.toMatch(/immutable/);
+    expect(Number(/max-age=(\d+)/.exec(value)?.[1])).toBeLessThanOrEqual(24 * 60 * 60);
+    // No separate rule for the optimizer path: it keeps minimumCacheTTL.
+    expect(rules.some((r) => r.source.startsWith("/_next/image"))).toBe(false);
     const pattern = compileSource(cache[0].source);
     for (const p of [
       "/icon-192.png",

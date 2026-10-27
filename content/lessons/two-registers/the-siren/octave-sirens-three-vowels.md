@@ -29,7 +29,7 @@ Start with a lip trill, hum, or narrow vowel across an easy five-note span befor
 
 ### Name the target: Register blending
 
-Slow slides. Speed hides the break instead of fixing it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Slow slides. Speed hides the break instead of fixing it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
@@ -57,7 +57,7 @@ I followed a comfortable portion of the siren up and down and listened for conti
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Octave Sirens, Three Vowels.”
 - 90s: Isolate the register blending target in short, comfortable examples.
-- 135s: Practise or record the complete “Octave Sirens, Three Vowels” task, resetting between attempts.
+- 135s: Practice or record the complete “Octave Sirens, Three Vowels” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

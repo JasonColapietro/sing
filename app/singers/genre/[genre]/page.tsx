@@ -54,11 +54,12 @@ export async function generateMetadata({
   // The keyword lead stays in front; what follows it is this genre's own, so no
   // two hubs share a title or a description (lib/singer-hub-copy.test.tsx).
   const title = `${g === "Singer-Songwriter" ? "Singer-Songwriters'" : `${g} Singers'`} Vocal Ranges: ${copy.titleTag}`;
-  // Short enough that fitDescription never drops it: the longest hub comes to
-  // 150 characters. A longer sentence was cut whole on ten hubs, leaving a
-  // snippet with no singer count and no note span.
+  // The count and note span lead, so a snippet never loses them, and the whole
+  // stays short enough that fitDescription keeps the summary too: the longest
+  // hub comes to 153 characters. A longer sentence was cut whole on ten hubs,
+  // leaving a snippet with no singer count and no note span.
   const description = stats
-    ? `${copy.summary} ${list.length} ${genreSingers(g)}' catalog ranges, ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`
+    ? `Catalog ranges for ${list.length} ${genreSingers(g)}, ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}. ${copy.summary}`
     : copy.summary;
   return withCanonicalOpenGraph({
     title: { absolute: title },
@@ -137,7 +138,7 @@ export default async function GenrePage({
         "@type": "ListItem",
         position: i + 1,
         url: `${SITE_URL}/singers/${s.slug}`,
-        name: `${s.name} — ${rangeLabel(s)}`,
+        name: `${s.name}: ${rangeLabel(s)}`,
       })),
     },
   };
@@ -207,7 +208,7 @@ export default async function GenrePage({
           <ul className="mt-4 max-w-3xl space-y-2 text-sm text-mut">
             <li>
               The median reported catalog span across these profiles is{" "}
-              {stats.medianSpanSemitones} semitones —{" "}
+              {stats.medianSpanSemitones} semitones,{" "}
               {vsLibrary === 0
                 ? "level with the library as a whole"
                 : vsLibrary > 0
@@ -241,7 +242,7 @@ export default async function GenrePage({
               .
             </li>
           </ul>
-          <p className="mt-5 text-xs text-dim">
+          <p className="mt-5 max-w-prose text-xs text-dim">
             These comparisons use reported catalog values, not verified physiological
             limits. Open a singer profile for its review status and available
             source evidence.

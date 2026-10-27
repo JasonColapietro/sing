@@ -33,7 +33,7 @@ Silence reference playback, lower speaker volume below halfway, and use wired he
 
 ### Name the target: Room setup and clean input
 
-Reference sound can enter the microphone along with your voice. Compare your setup with playback stopped. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Reference sound can enter the microphone along with your voice. Compare your setup with playback stopped. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.
 - Listen: Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.
@@ -61,7 +61,7 @@ I compared a quiet recording with my initial room setup and could hear my voice 
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Why Loud Playback Ruins Pitch.”
 - 45s: Isolate the room setup and clean input target in short, comfortable examples.
-- 60s: Practise or record the complete “Why Loud Playback Ruins Pitch” task, resetting between attempts.
+- 60s: Practice or record the complete “Why Loud Playback Ruins Pitch” task, resetting between attempts.
 - 45s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

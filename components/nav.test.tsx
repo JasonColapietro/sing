@@ -173,7 +173,7 @@ describe("the header progress pill", () => {
     expect(shown(inner)).toBe("LV 18" + "123d");
     // A screen reader still hears the XP and that today is not banked yet.
     expect(inner).toContain(", 12345 XP");
-    expect(inner).toContain("123 day streak, at risk — nothing practiced today");
+    expect(inner).toContain("123 day streak, at risk, nothing practiced today");
   });
 
   it("shows the level alone to a fresh visitor", () => {

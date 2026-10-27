@@ -94,7 +94,7 @@ describe("the free chapters", () => {
       expect(html).toContain(AUTHOR_NAME);
       expect(html).toContain("Try this now");
       expect(html).toMatch(/href="\/(studio|range\?mode=range#start)"/);
-      expect(html).toContain("Free lessons that use this chapter");
+      expect(html).toContain("Lessons that use this chapter");
       expect(html).toMatch(/href="\/learn\/voice\/[^"]+\/[^"]+"/);
       // Markdown link syntax never reaches the page raw.
       expect(html).not.toMatch(/\]\(\//);
@@ -154,7 +154,7 @@ describe("a locked chapter", () => {
 
   it("lists the free lessons that cite it, as a free chapter does", async () => {
     const html = await page("registers");
-    expect(html).toContain("Free lessons that use this chapter");
+    expect(html).toContain("Lessons that use this chapter");
     expect(html).toMatch(/href="\/learn\/voice\/[^"]+\/[^"]+"/);
   });
 });
@@ -198,7 +198,7 @@ describe("a locked atlas chapter", () => {
     ["how-to-borrow-a-voice", "/learn/voice/signature/style-rooms"],
   ])("%s lists the free lessons that cite it", async (slug, href) => {
     const html = await atlasPage(slug);
-    expect(html).toContain("Free lessons that use this chapter");
+    expect(html).toContain("Lessons that use this chapter");
     expect(html).toContain(`href="${href}"`);
   });
 
@@ -282,13 +282,15 @@ describe("the contents page", () => {
     expect(html).not.toMatch(/subscription/i);
   });
 
-  it("offers the free chapter in the header, once, above the stats card", () => {
+  it("offers the free chapter in the header, above the stats card, and again after the contents", () => {
     const html = renderToStaticMarkup(<BookPage />);
     const cta = html.indexOf("Read a free chapter");
     expect(cta).toBeGreaterThan(html.indexOf("</h1>"));
     // The first card opens with the chapter count; the button now precedes it.
     expect(cta).toBeLessThan(html.indexOf(">Chapters<"));
-    expect(html.split("Read a free chapter").length - 1).toBe(1);
+    // The contents end on the same pair, after "The other book".
+    expect(html.split("Read a free chapter").length - 1).toBe(2);
+    expect(html.lastIndexOf("Read a free chapter")).toBeGreaterThan(html.indexOf("The other book"));
   });
 
   it("sends pain, lasting hoarseness and blood to a doctor who can examine the folds", () => {

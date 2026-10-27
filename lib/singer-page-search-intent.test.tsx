@@ -92,7 +92,7 @@ const ARTIST_INTENT_CASES = [
     slug: "arijit-singh",
     name: "Arijit Singh",
     opening: "A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label. The displayed range of C3 to C5 is a reported reference span, not an independently verified physiological limit.",
-    title: "Arijit Singh Vocal Range: Reported C3–C5 — Compare Yours",
+    title: "Arijit Singh Vocal Range: Reported C3–C5 · Compare Yours",
     heading: "Arijit Singh Vocal Range: Reported C3–C5",
   },
   {
@@ -276,7 +276,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
         );
         expect(html).toContain(opening);
         expect(html).toContain(`href="/range?compare=${singer.slug}#start"`);
-        expect(html).toContain(COMPARISON_SNIPPETS[singer.slug] ? "Compare my range — free test" : "Test my range");
+        expect(html).toContain(COMPARISON_SNIPPETS[singer.slug] ? "Compare my range · free test" : "Test my range");
       }
     },
     30_000,
@@ -306,7 +306,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     expect(metadata.description).not.toMatch(/pending/i);
     expect(metadata.alternates?.canonical).toBe(`${SITE_URL}/singers/${slug}`);
     const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug }) }));
-    expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}#start"[^>]*>Compare my range — free test →</a>`));
+    expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}#start"[^>]*>Compare my range · free test →</a>`));
     expect(html).toContain("Catalog label");
     expect(html).not.toContain("Can You Sing It?");
     expect(html).not.toContain("Full voice to");

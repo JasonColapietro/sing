@@ -13,7 +13,9 @@ const stripe = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
+// null lets every request through; a test that needs the 429 sets it.
+const rate = vi.hoisted(() => ({ limited: null as Response | null }));
+vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => rate.limited }));
 vi.mock("@/lib/stripe", () => ({
   getStripe: stripe.getStripe,
   isStripeId: (value: unknown, prefix: string) =>
@@ -77,6 +79,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  rate.limited = null;
   vi.restoreAllMocks();
 });
 
@@ -290,5 +293,35 @@ describe("POST /api/entitlement", () => {
     await expect(response.json()).resolves.toEqual({
       error: "Could not check your Pro access. Try again in a moment.",
     });
+  });
+
+  it("marks every answer private and no-store: success, error and rate limit", async () => {
+    // A success can carry the buyer's email and Pro key; no shared cache may
+    // keep one, and the platform default was `public, max-age=0`.
+    stripe.retrieveSession.mockResolvedValue({
+      subscription: null,
+      payment_intent: { id: "pi_lifetime", customer: { id: "cus_owner" }, latest_charge: { id: "ch_lifetime" } },
+      customer: { id: "cus_owner", email: "singer@example.com" },
+      customer_details: { email: "singer@example.com" },
+    });
+    const success = await entitlement({ sessionId: "cs_lifetime" });
+    expect(success.status).toBe(200);
+    expect(await success.json()).toMatchObject({ email: "singer@example.com", proKey: "suede-pro_lifetime" });
+    expect(success.headers.get("cache-control")).toBe("private, no-store");
+
+    const invalid = await entitlement({});
+    expect(invalid.status).toBe(400);
+    expect(invalid.headers.get("cache-control")).toBe("private, no-store");
+
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    stripe.retrievePaymentIntent.mockRejectedValue(new Error("network"));
+    const failed = await entitlement({ paymentIntentId: "pi_lifetime" });
+    expect(failed.status).toBe(502);
+    expect(failed.headers.get("cache-control")).toBe("private, no-store");
+
+    rate.limited = Response.json({ error: "Too many requests." }, { status: 429 });
+    const limited = await entitlement({ sessionId: "cs_lifetime" });
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("cache-control")).toBe("private, no-store");
   });
 });

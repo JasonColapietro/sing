@@ -6,7 +6,9 @@ const stripe = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
+// null lets every request through; a test that needs the 429 sets it.
+const rate = vi.hoisted(() => ({ limited: null as Response | null }));
+vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => rate.limited }));
 vi.mock("@/lib/stripe", () => ({
   getStripe: () => ({
     checkout: { sessions: { create: stripe.createSession } },
@@ -30,6 +32,7 @@ function checkout(plan: unknown) {
 }
 
 beforeEach(() => {
+  rate.limited = null;
   stripe.resolvePriceId.mockReset().mockImplementation(async (plan: string) =>
     plan === "lifetime" ? "price_lifetime" : "price_monthly",
   );
@@ -106,5 +109,25 @@ describe("POST /api/checkout", () => {
     expect(body.error).toBe("Choose the lifetime plan.");
     expect(stripe.resolvePriceId).not.toHaveBeenCalled();
     expect(stripe.createSession).not.toHaveBeenCalled();
+  });
+
+  it("marks every answer private and no-store: success, error and rate limit", async () => {
+    // A success carries a one-time Checkout URL; no shared cache may keep it.
+    const success = await checkout("lifetime");
+    expect(success.status).toBe(200);
+    expect(success.headers.get("cache-control")).toBe("private, no-store");
+
+    const soldOut = await checkout("monthly");
+    expect(soldOut.status).toBe(409);
+    expect(soldOut.headers.get("cache-control")).toBe("private, no-store");
+
+    const invalid = await checkout("weekly");
+    expect(invalid.status).toBe(400);
+    expect(invalid.headers.get("cache-control")).toBe("private, no-store");
+
+    rate.limited = Response.json({ error: "Too many requests." }, { status: 429 });
+    const limited = await checkout("lifetime");
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("cache-control")).toBe("private, no-store");
   });
 });

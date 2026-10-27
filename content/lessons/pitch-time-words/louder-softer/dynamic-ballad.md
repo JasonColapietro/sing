@@ -29,7 +29,7 @@ Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. 
 
 ### Name the target: Dynamics without pushing
 
-A song that lives or dies on its dynamic arc. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+A song that lives or dies on its dynamic arc. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
 - Listen: The second phrase is audibly fuller than the first while the pitch stays centered.
@@ -57,7 +57,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Dynamic Ballad.”
 - 90s: Isolate the dynamics without pushing target in short, comfortable examples.
-- 135s: Practise or record the complete “Dynamic Ballad” task, resetting between attempts.
+- 135s: Practice or record the complete “Dynamic Ballad” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

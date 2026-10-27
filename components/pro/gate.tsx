@@ -7,6 +7,7 @@ import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { proHeadline } from "@/lib/pro-shared";
 import { proMomentSeen } from "@/lib/pro-signal";
 import { useProgress } from "@/lib/progress";
+import { MAX_SESSIONS } from "@/lib/progress-shape";
 import { ProChip, UpgradeCard } from "./ui";
 
 /**
@@ -24,6 +25,34 @@ export function FreeOnly({ children }: { children: ReactNode }) {
   const ready = useProReady();
   if (!ready || isPro) return null;
   return <>{children}</>;
+}
+
+/**
+ * Sales copy on a page every visitor shares (the homepage's priced asks, the
+ * footer's price). In the server HTML for everyone, so crawlers and free
+ * visitors have it from the first paint, behind the pre-paint "not-pro"
+ * marker, so a Pro owner's pre-paint hides it before it is seen; from
+ * hydration on it renders from the real entitlement. The same shape as
+ * ProWhisper below. `as` picks the element, so a block of copy keeps its
+ * paragraph and an inline clause stays inline.
+ */
+export function NotPro({
+  children,
+  as: Tag = "span",
+  className,
+}: {
+  children: ReactNode;
+  as?: "span" | "div" | "p";
+  className?: string;
+}) {
+  const isPro = useIsPro();
+  const hydrated = useHydrated();
+  if (hydrated && isPro) return null;
+  return (
+    <Tag className={className} {...prepaintMarker(hydrated, { plan: "not-pro" })}>
+      {children}
+    </Tag>
+  );
 }
 
 /**
@@ -60,6 +89,24 @@ export function ProWhisper({ className = "" }: { className?: string }) {
 }
 
 /**
+ * The number ProCrescendoNudge alternates on.
+ *
+ * Below the cap it is the session count, so results alternate between the
+ * quiet line and the full card. The record keeps only the latest
+ * MAX_SESSIONS sessions, though, so for a singer past the cap the count stops
+ * moving: it sat at an even 500 and every summary got the full card, for
+ * good, for exactly the most loyal free singers. There it reads the newest
+ * session's id instead (a timestamp and a random number), which lands odd or
+ * even about half the time, the same share of cards as before the cap.
+ */
+export function crescendoCount(sessions: ReadonlyArray<{ id: string }>): number {
+  if (sessions.length < MAX_SESSIONS) return sessions.length;
+  let sum = 0;
+  for (const ch of sessions[0]?.id ?? "") sum += ch.charCodeAt(0);
+  return sum;
+}
+
+/**
  * Recurring conversion offer for end-of-session summaries. The first result
  * gets the one-time modal; after that, even-numbered sessions get the full
  * priced card and odd-numbered sessions keep the compact nudge. Self-hides for
@@ -78,7 +125,7 @@ export function ProCrescendoNudge({
 }) {
   const isPro = useIsPro();
   const ready = useProReady();
-  const sessionCount = useProgress().sessions.length;
+  const sessionCount = crescendoCount(useProgress().sessions);
   if (!ready || isPro) return null;
   // Until the one-time modal (components/pro/moments.tsx) has been shown and
   // closed, keep to the quiet line: the modal opens over a result, and a

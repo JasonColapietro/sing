@@ -516,7 +516,7 @@ export default function VocalRangeByVoiceTypePage() {
           <div className="mt-5 max-w-3xl space-y-6">
             {FAQ.map((f) => (
               <div key={f.q}>
-                <h3 className="font-medium text-ink">{f.q}</h3>
+                <h3 className="text-ink">{f.q}</h3>
                 <p className="mt-1.5 text-sm text-mut">{f.a}</p>
               </div>
             ))}

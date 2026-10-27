@@ -2,7 +2,7 @@
 title: "Weeks 5 and 6: through the break"
 part: "The twelve-week program"
 order: 16
-summary: "Two weeks of quiet sirens, slides and vowel work across your transition — how to run the sessions, and what to do when they go badly."
+summary: "Two weeks of quiet sirens, slides and vowel work across your transition: how to run the sessions, and what to do when they go badly."
 ---
 
 For four weeks you have worked where your voice already agrees with you. Weeks 5 and 6 move to the place where it does not.

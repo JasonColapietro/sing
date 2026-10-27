@@ -33,7 +33,7 @@ Use one mid-range phrase at moderate volume and establish a neutral baseline. Us
 
 ### Name the target: Weight and mode switching
 
-Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.
 - Listen: Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.
@@ -61,7 +61,7 @@ I compared comfortable production choices in one short phrase and returned to an
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Neutral, Restrained, Driven, Edged.”
 - 90s: Isolate the weight and mode switching target in short, comfortable examples.
-- 135s: Practise or record the complete “Neutral, Restrained, Driven, Edged” task, resetting between attempts.
+- 135s: Practice or record the complete “Neutral, Restrained, Driven, Edged” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

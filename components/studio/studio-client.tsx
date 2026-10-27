@@ -340,7 +340,7 @@ export function StudioClient() {
                   key={name}
                   className="rounded-xl border border-line bg-panel2 p-4"
                 >
-                  <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
+                  <h3 className="font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-violet-ink">
                     {name}
                   </h3>
                   <p className="mt-2 text-sm text-mut">{desc}</p>

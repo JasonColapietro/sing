@@ -196,7 +196,7 @@ describe("hub snippets, next steps and structured data", () => {
       // fitDescription drops a whole trailing sentence once the total passes
       // 155 characters, which used to leave 14 hubs with only their summary.
       for (const [href, page] of await allHubs()) {
-        expect(page.description, href).toMatch(/\bcatalog ranges\b/);
+        expect(page.description, href).toMatch(/\bcatalog ranges\b/i);
         expect(page.description, href).toMatch(/\b\d+ (famous )?[A-Za-z&-]+/);
         expect(page.description, href).toMatch(/\b[A-G]#?\d\b/);
         expect(page.description.length, href).toBeLessThanOrEqual(155);

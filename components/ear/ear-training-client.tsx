@@ -252,7 +252,10 @@ export default function EarTrainingClient() {
 
       <div className="mt-6 flex flex-wrap items-center gap-4">
         <GoalRing doneSec={goalDoneSec} goalSec={goalSec} />
-        <StreakChip days={streakDays} best={progress.streak.best} />
+        {/* The continue card above already says "Start a streak today" (or
+            the lapsed best) whenever there is no live streak, so the chip
+            here only names a streak that exists. */}
+        {streakDays >= 1 && <StreakChip days={streakDays} best={progress.streak.best} />}
       </div>
 
       <section className="mt-10">

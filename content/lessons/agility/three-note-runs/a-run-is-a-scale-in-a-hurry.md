@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practised fast learns the smear along with the notes. The route to a clean fast run is to sing the pattern slowly enough that every note lands, then raise the tempo in small steps and drop back the moment a middle note blurs into a slide.
+A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practiced fast learns the smear along with the notes. The route to a clean fast run is to sing the pattern slowly enough that every note lands, then raise the tempo in small steps and drop back the moment a middle note blurs into a slide.
 
 ## Steps
 
@@ -33,7 +33,7 @@ Choose Small three-note climb (1–2–3–2–1), the three-note turn in the pr
 
 ### Name the target: Melodic agility
 
-Why slow practice is the only route to fast runs. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Why slow practice is the only route to fast runs. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.
 - Listen: Three separate pitches remain audible; the middle note does not smear into a slide.
@@ -61,7 +61,7 @@ I isolated the existing agility pattern slowly and connected its notes without r
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “A Run Is a Scale in a Hurry.”
 - 60s: Isolate the melodic agility target in short, comfortable examples.
-- 90s: Practise or record the complete “A Run Is a Scale in a Hurry” task, resetting between attempts.
+- 90s: Practice or record the complete “A Run Is a Scale in a Hurry” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

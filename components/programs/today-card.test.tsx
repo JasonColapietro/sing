@@ -81,7 +81,7 @@ describe("the program entry card on a day that needs Pro", () => {
     expect(html).toContain(`Day ${firstPaid + 1} needs Pro.`);
     expect(html).toContain("your place is kept");
     expect(html).toContain('href="/pro#buy"');
-    expect(html).toContain(`Unlock day ${firstPaid + 1} with Pro`);
+    expect(html).toContain(`Unlock day ${firstPaid + 1} with Pro: ${formatPrice(PRICING.lifetime.amount)} once`);
     expect(html).toContain('href="/programs?program=mix-4w"');
     expect(html).toContain("See the calendar");
     expect(html).not.toContain("Open today’s plan");

@@ -61,7 +61,7 @@ I counted and clapped the displayed rhythm before singing it, then reviewed wher
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Swing, Triplet, Straight.”
 - 60s: Isolate the rhythm and subdivision target in short, comfortable examples.
-- 90s: Practise or record the complete “Swing, Triplet, Straight” task, resetting between attempts.
+- 90s: Practice or record the complete “Swing, Triplet, Straight” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -33,7 +33,7 @@ Hear Minor five-note scale in a comfortable key and remember its first note (1),
 
 ### Name the target: Eight-bar improvisation
 
-Blue thirds and sevenths, and how they resolve toward the tonic. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Blue thirds and sevenths, and how they resolve toward the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
@@ -61,7 +61,7 @@ I used the supplied minor and pentatonic patterns to make my own short answering
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “The Notes That Sound Like Feeling.”
 - 60s: Isolate the eight-bar improvisation target in short, comfortable examples.
-- 90s: Practise or record the complete “The Notes That Sound Like Feeling” task, resetting between attempts.
+- 90s: Practice or record the complete “The Notes That Sound Like Feeling” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

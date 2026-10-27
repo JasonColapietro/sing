@@ -11,6 +11,26 @@ import {
 } from "@/lib/stripe";
 
 /**
+ * Every answer from this route is for one buyer's browser only: a success
+ * carries a one-time Stripe Checkout URL and session id. So no shared cache
+ * (Vercel's edge, a proxy, a CDN) may keep it, and the browser must not reuse
+ * it either. With no Cache-Control of its own, the platform sent `public,
+ * max-age=0, must-revalidate`. Errors and the rate limit's 429 get the same
+ * header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
+/**
  * Starts a Stripe Checkout Session for a Pro purchase and hands the
  * hosted URL back to the client. Hosted Checkout (rather than embedded)
  * means Stripe owns card entry, SCA, and receipts — no card data ever
@@ -18,20 +38,20 @@ import {
  */
 export async function POST(request: Request) {
   const limited = rateLimit(request, "checkout", { limit: 8, windowMs: 60_000 });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   let plan: unknown;
   try {
     const body = (await request.json()) as { plan?: unknown };
     plan = body?.plan;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   // Annual remains a valid legacy entitlement, but it must never begin a new
   // sale. Keep this guard ahead of every Stripe lookup and client call.
   if (plan === "annual") {
-    return NextResponse.json(
+    return json(
       {
         error:
           "The yearly plan is no longer on sale. Choose lifetime.",
@@ -44,14 +64,14 @@ export async function POST(request: Request) {
   // cancellation) never pass through here; this only stops new sales. Keep
   // this ahead of every Stripe lookup too.
   if (plan === "monthly") {
-    return NextResponse.json(
+    return json(
       { error: "The monthly plan is no longer on sale." },
       { status: 409 },
     );
   }
 
   if (!isCheckoutPlan(plan)) {
-    return NextResponse.json(
+    return json(
       { error: "Choose the lifetime plan." },
       { status: 400 },
     );
@@ -92,7 +112,7 @@ export async function POST(request: Request) {
     // The id goes back too: the browser parks it before leaving for Stripe,
     // so a return that never arrives (a tab closed on the receipt page, a
     // phone asleep) can still be resolved on the next visit to /pro.
-    return NextResponse.json({ url: session.url, id: session.id });
+    return json({ url: session.url, id: session.id });
   } catch (error) {
     if (
       error instanceof PriceNotConfiguredError ||
@@ -108,7 +128,7 @@ export async function POST(request: Request) {
       // Under a card that says "$79 once", a bare "not on sale" is a dead
       // end: name the way out, since nothing the buyer does will fix a
       // price that disagrees with Stripe.
-      return NextResponse.json(
+      return json(
         {
           error: `That plan can't be sold right now. Email ${SUPPORT_EMAIL} and we'll fix it.`,
         },
@@ -116,7 +136,7 @@ export async function POST(request: Request) {
       );
     }
     console.error("[api/checkout]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not reach Stripe. Try again in a moment." },
       { status: 502 },
     );

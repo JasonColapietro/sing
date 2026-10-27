@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { CappedAgainNote } from "@/components/practice/free-cap";
 import { MicAlert } from "@/components/mic-alert";
@@ -9,6 +9,7 @@ import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { liveStreak } from "@/components/account/save-state";
 import { useProgress, type Achievement } from "@/lib/progress";
 import { SITE_URL } from "@/lib/site";
+import { emitProResult } from "@/lib/pro-signal";
 import type { RoutineSummaryData } from "./routine-runner";
 import { routineMinutes, stepExercise } from "./routines";
 
@@ -111,6 +112,14 @@ export function RoutineSummary({
 
     return { sungCount: sung.length, score, xp, achievements, weakestId: weakest?.ex.id ?? null };
   }, [steps]);
+
+  // A completed result: the one-time Pro moment listens for this. This screen
+  // holds the scroll lock, so the moment waits for the singer to close it
+  // (components/pro/moments.tsx). A run where nothing was sung is no result.
+  const sung = sungCount > 0;
+  useEffect(() => {
+    if (sung) emitProResult();
+  }, [sung]);
 
   const subtitle = `${routine.steps.length} exercises · ~${routineMinutes(routine)} min${
     completed ? "" : " · ended early"

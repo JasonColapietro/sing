@@ -926,7 +926,7 @@ export function ProClient() {
             </SectionLabel>
             {pro.active ? (
               <>
-                <h1 className="text-4xl leading-tight sm:text-5xl">
+                <h1 className="text-4xl sm:text-5xl">
                   You&apos;re on the
                   <br />
                   gold channel.
@@ -989,7 +989,7 @@ export function ProClient() {
               </>
             ) : (
               <>
-                <h1 className="text-4xl leading-tight sm:text-5xl">
+                <h1 className="text-4xl sm:text-5xl">
                   Keep the free studio.{" "}
                   <br />
                   Add an online vocal coach.

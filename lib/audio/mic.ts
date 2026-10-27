@@ -40,11 +40,11 @@ function micErrorMessage(cause: unknown): string {
       return "Microphone access is blocked. Allow the mic in your browser's site settings, then try again.";
     case "NotFoundError":
     case "DevicesNotFoundError":
-      return "No microphone found. Plug one in — or if you're on a laptop, check it isn't disabled in your system sound settings.";
+      return "No microphone found. Plug one in, or if you're on a laptop, check it isn't disabled in your system sound settings.";
     case "NotReadableError":
     case "TrackStartError":
     case "AbortError":
-      return "Your microphone is busy. Close anything else using it — a call, a recorder, another tab — and try again.";
+      return "Your microphone is busy. Close anything else using it (a call, a recorder, another tab) and try again.";
     case "OverconstrainedError":
     case "ConstraintNotSatisfiedError":
       return "That microphone couldn't be opened for recording. Pick a different input, or check your system sound settings.";
@@ -170,7 +170,7 @@ export async function openMic(
       error:
         window.isSecureContext === false
           ? "Your browser only allows microphone access over a secure connection. Open this page on https and try again."
-          : "This browser can't reach a microphone. Chrome, Safari, Edge and Firefox all work — the practice rooms need one of those.",
+          : "This browser can't reach a microphone. The practice rooms need Chrome, Safari, Edge or Firefox.",
     };
   }
 

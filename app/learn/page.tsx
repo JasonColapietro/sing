@@ -95,7 +95,7 @@ const WEEK = [
   {
     day: "Day 7",
     focus: "Rest and review",
-    body: "Rest from demanding singing. Review the week's scores and recordings, then choose one skill—not five—to carry into the next week, or start a multi-week program that plans the next weeks day by day.",
+    body: "Rest from demanding singing. Review the week's scores and recordings, then choose one skill, not five, to carry into the next week, or start a multi-week program that plans the next weeks day by day.",
     links: [
       { href: "/progress", label: "Practice progress" },
       { href: "/programs", label: "Multi-week practice programs" },
@@ -106,7 +106,7 @@ const WEEK = [
 const FUNDAMENTALS = [
   {
     title: "Range is not voice type",
-    body: "Vocal range is the distance between your lowest and highest repeatable notes. Voice type also considers where the voice is comfortable—its tessitura—plus timbre, weight, and transition points. The range test gives you a useful estimate; the voice-type guide explains why the label stays provisional.",
+    body: "Vocal range is the distance between your lowest and highest repeatable notes. Voice type also considers where the voice is comfortable (its tessitura), plus timbre, weight, and transition points. The range test gives you a useful estimate; the voice-type guide explains why the label stays provisional.",
     links: [
       { href: rangeTestHref(), label: "Measure your range" },
       {
@@ -231,17 +231,6 @@ export default function LearnPage() {
 
       <div className="space-y-8">
         <Card>
-          <h2 className="text-xl">What is free?</h2>
-          <p className="mt-3 max-w-3xl text-mut">
-            The range test, pitch studio, recorder, and tools are free without a
-            practice timer. Guided practice includes {FREE_DAILY_MINUTES} minutes a day
-            shared across warmups, ear training, breath, and song practice.
-            {" "}<Link href="/pro" className="text-violet-ink underline underline-offset-4">Pro</Link>{" "}
-            removes that guided-practice cap. This guide and all{" "}
-            {CATALOG_LESSON_COUNT} voice lessons are free to read.
-          </p>
-        </Card>
-        <Card>
           <SectionLabel>Start here</SectionLabel>
           <h2 className="mt-3 text-2xl">Choose the problem you want to solve</h2>
           <p className="mt-3 max-w-3xl text-mut">
@@ -249,6 +238,12 @@ export default function LearnPage() {
             Each path below opens the part of Suede Sing built for that job, so
             a beginner can move from explanation to a real exercise without
             hunting through the site.
+          </p>
+          {/* The cap is disclosed before the exercise links; the full "What is
+              free?" answer sits below the map, out of the first screen. */}
+          <p className="mt-2 max-w-3xl text-sm text-dim">
+            Guided practice includes {FREE_DAILY_MINUTES} minutes a day free; the
+            range test, pitch studio, recorder, and tools have no practice timer.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {VOCAL_LEARNING_PATHS.map((path) => (
@@ -269,6 +264,18 @@ export default function LearnPage() {
               </Link>
             ))}
           </div>
+        </Card>
+
+        <Card>
+          <h2 className="text-xl">What is free?</h2>
+          <p className="mt-3 max-w-3xl text-mut">
+            The range test, pitch studio, recorder, and tools are free without a
+            practice timer. Guided practice includes {FREE_DAILY_MINUTES} minutes a day
+            shared across warmups, ear training, breath, and song practice.
+            {" "}<Link href="/pro" className="text-violet-ink underline underline-offset-4">Pro</Link>{" "}
+            removes that guided-practice cap. This guide and all{" "}
+            {CATALOG_LESSON_COUNT} voice lessons are free to read.
+          </p>
         </Card>
 
         <Card>

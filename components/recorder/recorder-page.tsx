@@ -74,7 +74,7 @@ function nextTakeName(takes: TakeRecord[]): string {
     if (m) maxN = Math.max(maxN, Number(m[1]));
   }
   const date = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  return `Take ${maxN + 1} — ${date}`;
+  return `Take ${maxN + 1} · ${date}`;
 }
 
 function extForMime(mime: string): string {
@@ -924,7 +924,7 @@ export default function RecorderPageClient() {
                 <SectionLabel>Quick self-review</SectionLabel>
                 <span className="tabular font-mono text-xs text-mut">{reviewTake.name}</span>
               </div>
-              <p className="mb-3 text-sm text-mut">How did that take feel? Optional — be honest.</p>
+              <p className="mb-3 text-sm text-mut">How did that take feel? Optional, and honest is best.</p>
               <div
                 className="mb-3 flex items-center gap-1"
                 role="radiogroup"
@@ -951,7 +951,7 @@ export default function RecorderPageClient() {
                 value={reviewNote}
                 onChange={(e) => setReviewNote(e.target.value)}
                 maxLength={120}
-                placeholder="One-line note — what worked, what to fix"
+                placeholder="One-line note: what worked, what to fix"
                 aria-label="Self-review note"
                 className="mb-4 w-full rounded-xl border border-line bg-panel2 px-3 py-2 text-sm text-ink placeholder:text-dim"
               />
@@ -1150,7 +1150,7 @@ export default function RecorderPageClient() {
                 )
               ) : (
                 <p className="mt-4 text-sm text-mut">
-                  Select a take to see its pitch trace — every note you held,
+                  Select a take to see its pitch trace: every note you held,
                   drawn over time.
                 </p>
               )}
@@ -1253,7 +1253,7 @@ export default function RecorderPageClient() {
 
             {persistent === false && (
               <p className="mb-3 rounded-xl border border-rec/30 bg-panel2 px-3 py-2 text-xs text-mut">
-                Browser storage is unavailable — takes are kept in memory only and will be lost when
+                Browser storage is unavailable, so takes are kept in memory only and will be lost when
                 you close this tab. Download anything you want to keep.
               </p>
             )}
@@ -1316,7 +1316,7 @@ export default function RecorderPageClient() {
               <p role="status" className="py-6 text-sm text-mut">Loading your takes…</p>
             ) : takes.length === 0 && !loadError ? (
               <EmptyState
-                title="No takes yet — hit record"
+                title="No takes yet. Hit record"
                 hint="Your takes will show up here with playback, stars, and downloads. They stay on this device."
               />
             ) : (
@@ -1354,9 +1354,13 @@ export default function RecorderPageClient() {
               ) : (
                 <span>Takes are stored locally in your browser.</span>
               )}
-              <div className="mt-2">
-                <ProInlineNudge>Pro analyzes the pitch of every take</ProInlineNudge>
-              </div>
+              {/* Only once there is a take to analyze: before that, the locked
+                  take-analysis panel above already makes this ask. */}
+              {takes.length > 0 && (
+                <div className="mt-2">
+                  <ProInlineNudge>Pro analyzes the pitch of every take</ProInlineNudge>
+                </div>
+              )}
             </div>
           </Card>
         </div>

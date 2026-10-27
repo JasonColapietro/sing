@@ -115,8 +115,8 @@ export default function GlossaryPage() {
             Vocal teaching runs on borrowed words. Half of them arrived from
             three different traditions that never agreed with each other, and
             the rest describe a sensation rather than a mechanism. This page
-            takes the {SING_GLOSSARY_TERMS.length} that turn up in this app — on the
-            range result, in the studio readout, across the singer pages — and
+            takes the {SING_GLOSSARY_TERMS.length} that turn up in this app (on the
+            range result, in the studio readout, across the singer pages) and
             gives each one a single sentence, plus the place it shows up so the
             definition has somewhere to land.
           </p>
@@ -141,7 +141,7 @@ export default function GlossaryPage() {
               <a
                 key={section.heading}
                 href={`#${termId(section.heading)}`}
-                className="rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-violet/50 hover:text-violet-ink"
+                className="inline-flex min-h-11 items-center rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-violet/50 hover:text-violet-ink"
               >
                 {section.heading}
               </a>
@@ -166,7 +166,7 @@ export default function GlossaryPage() {
                     className="scroll-mt-20 py-4 first:pt-0 last:pb-0"
                   >
                     <div className="flex flex-wrap items-baseline gap-x-3">
-                      <h3 className="text-lg font-extrabold text-ink">
+                      <h3 className="text-lg text-ink">
                         {entry.term}
                       </h3>
                       {entry.aka && (
@@ -185,7 +185,7 @@ export default function GlossaryPage() {
                         prefetch={entry.href === "/singers" ? false : undefined}
                         className="text-violet-ink hover:underline"
                       >
-                        Open {roomLabel(entry.href)} →
+                        Open {roomLabel(entry.href)}{"\u00a0→"}
                       </Link>
                       {drill && (
                         <>
@@ -194,7 +194,7 @@ export default function GlossaryPage() {
                             href={`/warmups?exercise=${drill.id}`}
                             className="text-violet-ink hover:underline"
                           >
-                            Try it: {drill.title} →
+                            Try it: {drill.title}{"\u00a0→"}
                           </Link>
                         </>
                       )}
@@ -205,7 +205,7 @@ export default function GlossaryPage() {
                             href={entry.tryIt.href}
                             className="text-violet-ink hover:underline"
                           >
-                            Try it: {entry.tryIt.label} →
+                            Try it: {entry.tryIt.label}{"\u00a0→"}
                           </Link>
                         </>
                       )}
@@ -216,7 +216,7 @@ export default function GlossaryPage() {
                             href={lessons.href}
                             className="text-violet-ink hover:underline"
                           >
-                            Free lessons: {lessons.name} →
+                            Free lessons: {lessons.name}{"\u00a0→"}
                           </Link>
                         </>
                       )}
@@ -244,7 +244,7 @@ export default function GlossaryPage() {
                 >
                   {c.title}
                 </Link>
-                {c.summary && <span> — {c.summary}</span>}
+                {c.summary && <span>: {c.summary}</span>}
               </li>
             ))}
           </ul>
@@ -252,8 +252,8 @@ export default function GlossaryPage() {
             <Link href="/book" className="text-violet-ink hover:underline">
               The Measured Voice
             </Link>{" "}
-            takes the same ground from the other side — how the voice works,
-            then how to read your own numbers — and {freeBookChapters.length} of
+            takes the same ground from the other side (how the voice works,
+            then how to read your own numbers) and {freeBookChapters.length} of
             its chapters are free to read:
           </p>
           <ul className="mt-4 space-y-2">
@@ -265,7 +265,7 @@ export default function GlossaryPage() {
                 >
                   {c.title}
                 </Link>
-                {c.summary && <span> — {c.summary}</span>}
+                {c.summary && <span>: {c.summary}</span>}
               </li>
             ))}
           </ul>

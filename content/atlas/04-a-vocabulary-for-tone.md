@@ -2,7 +2,7 @@
 title: "A vocabulary for tone"
 part: "How to read a voice"
 order: 4
-summary: "The working lexicon behind every entry — weight, placement, vibrato, onset, grit, breathiness, twang, cry and their friends, each defined by ear with exemplars from the atlas."
+summary: "The working lexicon behind every entry (weight, placement, vibrato, onset, grit, breathiness, twang, cry and their friends), each defined by ear with exemplars from the atlas."
 ---
 
 Range is easy to write down. Tone is where description usually collapses into perfume copy — "velvety," "angelic," "smoky" — words that sound like meaning and pin down nothing. The entries in this atlas avoid that by leaning on a small technical vocabulary, maybe fifteen words, each of which names something you can actually hear and, more usefully, something you can practice. This chapter defines them once, with singers from these pages as the reference recordings. Learn the words and every entry doubles in resolution; so does your ear.

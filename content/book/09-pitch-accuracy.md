@@ -2,7 +2,7 @@
 title: "What pitch accuracy actually measures"
 part: "Reading your own voice"
 order: 9
-summary: "How to read an accuracy score honestly: what a cent is, why dead centre isn't the goal, and how drift, scoops and vibrato differ."
+summary: "How to read an accuracy score honestly: what a cent is, why dead center isn't the goal, and how drift, scoops and vibrato differ."
 ---
 
 A number appears at the end of a warmup. Ninety-one percent. Eighty-four. You feel something about it before you understand it, and what you feel is usually wrong, because almost nobody is told what the number is counting.

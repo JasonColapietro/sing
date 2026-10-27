@@ -2,7 +2,7 @@
 title: "Resonance, placement and the vowel"
 part: "How the voice works"
 order: 5
-summary: "How the throat and mouth shape one buzzy fold vibration into vowels, brightness and carrying power — and how to change tone without changing effort."
+summary: "How the throat and mouth shape one buzzy fold vibration into vowels, brightness and carrying power, and how to change tone without changing effort."
 ---
 
 Your folds make one sound, and it is not a nice one. Heard raw, before it travels anywhere, it is a thin buzzy rasp — closer to a duck call than to singing. Everything you recognise as your voice happens after that buzz leaves the folds. The vowels, the warmth, the edge, the sense that this is you and not someone else: all of it gets added on the way out, in the corridor between your folds and your lips.

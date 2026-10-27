@@ -29,7 +29,7 @@ Warm up gently, then choose a narrow range that crosses a place where production
 
 ### Name the target: Locating your own transition zone
 
-Located by ear, then crossed in both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Located by ear, then crossed in both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: You can anticipate the change and cross the same general area in both directions without forcing the endpoints.
@@ -57,7 +57,7 @@ I listened for my own transition during a small comfortable slide and noted wher
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Cross It On Cue.”
 - 75s: Isolate the locating your own transition zone target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Cross It On Cue” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Cross It On Cue” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

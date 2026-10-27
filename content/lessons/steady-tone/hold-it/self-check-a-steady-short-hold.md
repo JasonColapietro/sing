@@ -29,7 +29,7 @@ Use a comfortable pitch and moderate volume. Let the reference stop before singi
 
 ### Name the target: Sustained tone
 
-Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.
@@ -57,7 +57,7 @@ I matched the sustained reference, released comfortably, and listened for a stea
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Steady Short Hold.”
 - 60s: Isolate the sustained tone target in short, comfortable examples.
-- 90s: Practise or record the complete “Self-Check: A Steady Short Hold” task, resetting between attempts.
+- 90s: Practice or record the complete “Self-Check: A Steady Short Hold” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

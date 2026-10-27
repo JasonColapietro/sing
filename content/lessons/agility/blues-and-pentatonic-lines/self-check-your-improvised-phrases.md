@@ -29,7 +29,7 @@ Hear Minor five-note scale in a comfortable key and remember its first note (1),
 
 ### Name the target: Eight-bar improvisation
 
-An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
@@ -57,7 +57,7 @@ I used the supplied minor and pentatonic patterns to make my own short answering
 
 - 60s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Improvised Phrases.”
 - 105s: Isolate the eight-bar improvisation target in short, comfortable examples.
-- 165s: Practise or record the complete “Self-Check: Your Improvised Phrases” task, resetting between attempts.
+- 165s: Practice or record the complete “Self-Check: Your Improvised Phrases” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

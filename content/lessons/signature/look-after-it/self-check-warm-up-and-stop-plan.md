@@ -29,7 +29,7 @@ Check how the voice feels before making sound. Choose only drills that have prev
 
 ### Name the target: Vocal health
 
-Assemble a short warm-up with rests and write down the warning signs that would make you stop, before you move on to effects. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Assemble a short warm-up with rests and write down the warning signs that would make you stop, before you move on to effects. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.
@@ -57,7 +57,7 @@ I assembled a short warm-up with rests and wrote the warning signs that would ma
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Warm-Up and Stop Plan.”
 - 90s: Isolate the vocal health target in short, comfortable examples.
-- 135s: Practise or record the complete “Self-Check: Warm-Up and Stop Plan” task, resetting between attempts.
+- 135s: Practice or record the complete “Self-Check: Warm-Up and Stop Plan” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

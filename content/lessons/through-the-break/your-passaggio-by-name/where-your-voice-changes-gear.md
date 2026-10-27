@@ -33,7 +33,7 @@ Warm up gently, then choose a narrow range that crosses a place where production
 
 ### Name the target: Locating your own transition zone
 
-Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: You can anticipate the change and cross the same general area in both directions without forcing the endpoints.
@@ -61,7 +61,7 @@ I listened for my own transition during a small comfortable slide and noted wher
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Where Your Voice Changes Gear.”
 - 60s: Isolate the locating your own transition zone target in short, comfortable examples.
-- 90s: Practise or record the complete “Where Your Voice Changes Gear” task, resetting between attempts.
+- 90s: Practice or record the complete “Where Your Voice Changes Gear” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

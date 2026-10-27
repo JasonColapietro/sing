@@ -101,24 +101,38 @@ body {
 /*
  * h1 and h2 are the editorial tier and take the serif. h3 is a card title —
  * it lives inside instruments and dense lists, so it stays on the UI face.
+ *
+ * In @layer base for the reason the :focus-visible rule below gives: outside
+ * any layer these beat every utility, so a heading's font-mono, font-*,
+ * tracking-* and leading-* classes were thrown away (the footer's mono column
+ * heads rendered in the serif, /changelog's month heads in bold sans). They
+ * are defaults now, and a class on the heading wins.
  */
-h1,
-h2 {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  line-height: 1.08;
-  /* Display lines broke greedily, so a two-line heading often ended on a
-     single orphaned word ("...you already / know"). Balance evens the lines;
-     it never changes the line count, so nothing below moves. */
-  text-wrap: balance;
-}
+@layer base {
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.08;
+    /* A text-* size utility sets line-height to var(--tw-leading, <its own>),
+       and almost every h1 and h2 carries one. Unlayered, 1.08 beat it; layered,
+       the size's own 1.2-1.5 would win and open up every display heading on
+       the site. Setting the variable keeps 1.08 under a size class, while a
+       leading-* class still wins because it sets both. */
+    --tw-leading: 1.08;
+    /* Display lines broke greedily, so a two-line heading often ended on a
+       single orphaned word ("...you already / know"). Balance evens the lines;
+       it never changes the line count, so nothing below moves. */
+    text-wrap: balance;
+  }
 
-h3 {
-  font-family: var(--font-body);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
+  h3 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
 }
 
 /*

@@ -29,7 +29,7 @@ Use one mid-range phrase at moderate volume and establish a neutral baseline. Us
 
 ### Name the target: Weight and mode switching
 
-Same phrase, same pitch, different weight. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Same phrase, same pitch, different weight. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.
 - Listen: Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.
@@ -57,7 +57,7 @@ I compared comfortable production choices in one short phrase and returned to an
 
 - 60s: Open the practice material. Prepare the room, body, and safe baseline for “One Phrase, Three Weights.”
 - 105s: Isolate the weight and mode switching target in short, comfortable examples.
-- 165s: Practise or record the complete “One Phrase, Three Weights” task, resetting between attempts.
+- 165s: Practice or record the complete “One Phrase, Three Weights” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

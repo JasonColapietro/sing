@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { RELEASE_DATE as CHANGELOG_RELEASE_DATE } from "@/app/changelog/page";
 import { SONGS } from "@/components/songs/data";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { BOOK_CONTENTS } from "@/lib/book-data";
@@ -7,12 +8,38 @@ import {
   SINGERS,
   VOICE_KINDS,
   genreSlug,
+  singersByGenre,
+  singersByVoiceType,
   voiceTypeSlug,
+  type Singer,
 } from "@/lib/singers";
 import { POP_SONGS } from "@/lib/pop-songs";
 import { getSingerPageLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 import { VOICE_LEARN_PATH, coursePaths } from "@/lib/voice-lessons";
+
+/**
+ * A hub's lastmod: the latest page date among the singers it lists, since a
+ * hub changes when one of its rows does. Each date is the hand-set content
+ * date getSingerPageLastModified returns ("YYYY-MM-DD", so the string sort is
+ * the date sort), never the build time.
+ */
+function latestSingerPageDate(singers: readonly Singer[]): string | undefined {
+  return singers.map((s) => getSingerPageLastModified(s.slug)).sort().at(-1);
+}
+
+/**
+ * Dated pages outside the singer catalog, by their own recorded content date.
+ * Every other static page, song, can-you-sing and course page has no such
+ * date yet, so it is listed without a lastmod rather than with an invented
+ * one. /singers/methodology is prose that lists no singers, so the catalog's
+ * dates say nothing about when it changed.
+ */
+const PAGE_LAST_MODIFIED: Readonly<Record<string, string | undefined>> = {
+  // /singers lists every profile in its chart and A-Z index.
+  "/singers": latestSingerPageDate(SINGERS),
+  "/changelog": CHANGELOG_RELEASE_DATE,
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [
@@ -57,21 +84,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
         : path === "/learn" || path === "/singers" || path === "/atlas"
           ? 0.9
           : 0.7,
+    ...(PAGE_LAST_MODIFIED[path] ? { lastModified: PAGE_LAST_MODIFIED[path] } : {}),
   }));
 
   // Hubs sit above the leaves in priority: they are the pages that gather the
   // 357 and the ones worth crawling first.
+  // Each is dated by the singers it lists. The records page ranks every
+  // profile against the whole catalog (its ranks and counts move when any
+  // profile does), so it takes the catalog's latest date.
   const hubs = [
-    { url: `${SITE_URL}/singers/records`, priority: 0.8 },
+    { url: `${SITE_URL}/singers/records`, priority: 0.8, singers: SINGERS },
     ...VOICE_KINDS.map((v) => ({
       url: `${SITE_URL}/singers/voice-type/${voiceTypeSlug(v)}`,
       priority: 0.8,
+      singers: singersByVoiceType(v),
     })),
     ...HUB_GENRES.map((g) => ({
       url: `${SITE_URL}/singers/genre/${genreSlug(g)}`,
       priority: 0.7,
+      singers: singersByGenre(g),
     })),
-  ].map((h) => ({ ...h, changeFrequency: "monthly" as const }));
+  ].map(({ singers, ...h }) => {
+    const lastModified = latestSingerPageDate(singers);
+    return {
+      ...h,
+      changeFrequency: "monthly" as const,
+      ...(lastModified ? { lastModified } : {}),
+    };
+  });
 
   // All public singer profiles are indexable. Each page keeps its evidence
   // status and caveats visible while the sitemap uses its actual content date.

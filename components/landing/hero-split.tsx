@@ -5,6 +5,7 @@ import { LinkButton } from "@/components/ui";
 import { AUTHOR_NAME } from "@/lib/author";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { formatPrice, PRICING } from "@/lib/pro-shared";
+import { NotPro } from "@/components/pro/gate";
 
 /** The original paper-and-portrait presentation with current product copy. */
 export function HeroSplit() {
@@ -100,13 +101,18 @@ export function HeroSplit() {
             section seven. The phone companion has its own band below. */}
         <p className="mt-5 max-w-xl text-sm text-mut">
           The pitch meter and range test are free with no time limit. Guided
-          practice includes {FREE_DAILY_MINUTES} free minutes a day;{" "}
-          <Link
-            href="/pro#buy"
-            className="text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
-          >
-            Pro removes the limit, {formatPrice(PRICING.lifetime.amount)} once
-          </Link>
+          practice includes {FREE_DAILY_MINUTES} free minutes a day
+          {/* A Pro owner has no limit to remove: the clause goes, the
+              sentence still ends cleanly. */}
+          <NotPro>
+            ;{" "}
+            <Link
+              href="/pro#buy"
+              className="text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
+            >
+              Pro removes the limit, {formatPrice(PRICING.lifetime.amount)} once
+            </Link>
+          </NotPro>
           . Audio stays on your device.
         </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">

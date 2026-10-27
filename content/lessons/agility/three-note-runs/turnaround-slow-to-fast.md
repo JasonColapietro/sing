@@ -29,7 +29,7 @@ Choose Small three-note climb (1–2–3–2–1), the three-note turn in the pr
 
 ### Name the target: Melodic agility
 
-Rehearse slowly and move on only when you can hear separate, repeatable notes. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Rehearse slowly and move on only when you can hear separate, repeatable notes. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.
 - Listen: Three separate pitches remain audible; the middle note does not smear into a slide.
@@ -57,7 +57,7 @@ I isolated the existing agility pattern slowly and connected its notes without r
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Turnaround, Slow to Fast.”
 - 90s: Isolate the melodic agility target in short, comfortable examples.
-- 135s: Practise or record the complete “Turnaround, Slow to Fast” task, resetting between attempts.
+- 135s: Practice or record the complete “Turnaround, Slow to Fast” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -151,7 +151,7 @@ function answerSentence(song: Song): string {
   const transcription = !isPhrase(song) && song.arrangementOf
     ? "are transcribed here with their"
     : "is transcribed here with its";
-  return `${what} ${transcription} tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones, with ${leapPhrase(f.leaps)} — and the span and leaps together rate it ${f.difficulty.toLowerCase()} to sing; a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
+  return `${what} ${transcription} tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} (${f.rangeSemis} semitones, with ${leapPhrase(f.leaps)}), and the span and leaps together rate it ${f.difficulty.toLowerCase()} to sing; a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
 }
 
 export async function generateMetadata({
@@ -371,7 +371,7 @@ export default async function SongPage({
               the link whatever band the song sits in (songs-client.tsx).
             */}
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <LinkButton href={`/songs?song=${song.slug}`} size="lg">
+              <LinkButton href={`/songs?song=${song.slug}`} variant="outline" size="lg">
                 Sing this song
               </LinkButton>
               <span className="text-xs text-dim">

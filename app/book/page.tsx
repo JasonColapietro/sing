@@ -7,7 +7,7 @@ import {
   BOOK_TITLE,
   BOOK_WORDS,
 } from "@/lib/book-data";
-import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
+import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { PROGRAMME_PART } from "@/lib/programme-exit-tests";
 import { SITE_URL } from "@/lib/site";
@@ -80,7 +80,7 @@ export default function BookPage() {
       <div className="space-y-6">
         <Card>
           <div className="flex flex-wrap gap-8">
-            <Stat label="Chapters" value={BOOK_CONTENTS.length} tone="violet" />
+            <Stat label="Chapters" value={BOOK_CONTENTS.length} tone="ink" />
             <Stat
               label="Words"
               value={BOOK_WORDS.toLocaleString("en-US")}
@@ -96,8 +96,8 @@ export default function BookPage() {
               className="text-violet-ink hover:underline"
             >
               {AUTHOR_NAME}
-            </a>{" "}
-            ({AUTHOR_ALIAS}). Published by Suede AI.
+            </a>
+            . Published by Suede AI.
           </p>
           <p className="mt-5 max-w-2xl text-mut">
             Twenty-three chapters on how the voice works, how to read the
@@ -106,7 +106,7 @@ export default function BookPage() {
             you have today. Written for the reading you do between sessions.
           </p>
           <p className="mt-3 max-w-2xl text-sm text-mut">
-            The contents below are free, and so are {FREE_COUNT} chapters — read
+            The contents below are free, and so are {FREE_COUNT} chapters. Read
             them before you decide whether the writing is worth paying for. Pro
             unlocks the other {BOOK_CONTENTS.filter((c) => !c.free).length} and
             the PDF.
@@ -130,10 +130,10 @@ export default function BookPage() {
                       {String(c.order).padStart(2, "0")}
                     </span>
                     <span className="min-w-0">
-                      <span className="flex flex-wrap items-baseline gap-x-3 text-sm font-medium text-ink">
+                      <span className="flex items-baseline gap-x-3 text-sm font-medium text-ink">
                         {c.title}
                         {c.free && (
-                          <span className="rounded-full border border-violet/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-violet-ink">
+                          <span className="shrink-0 rounded-full border border-violet/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-violet-ink">
                             free
                           </span>
                         )}
@@ -158,7 +158,7 @@ export default function BookPage() {
         <Card>
           <SectionLabel>The other book</SectionLabel>
           <p className="mt-3 max-w-2xl text-sm text-mut">
-            Pro includes two books. <em>The Voice Atlas</em> is the reference —
+            Pro includes two books. <em>The Voice Atlas</em> is the reference:
             the range, tone and technique of every voice in the singer library,
             with the songs where the extreme notes happened.{" "}
             <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
@@ -168,11 +168,14 @@ export default function BookPage() {
           </p>
         </Card>
 
+        {/* The contents end on a next step: the header's pair again. */}
+        <BookCta />
+
         <p className="max-w-2xl text-xs text-dim">
           This book is about practice, not medicine. Nothing here diagnoses or
           treats anything. If singing hurts, if you are hoarse and it will not
           clear, or if you ever see blood, that is a question for a doctor who
-          can examine the vocal folds, such as an ENT or laryngologist — there
+          can examine the vocal folds, such as an ENT or laryngologist. There
           is no waiting period, and you do not need to be sure it is serious
           before you go.
         </p>

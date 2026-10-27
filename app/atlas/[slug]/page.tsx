@@ -204,8 +204,8 @@ export default async function AtlasChapterPage({
             <Card>
               <p className="max-w-2xl text-sm text-mut">
                 That was one of the {free.length} free chapters. The rest of the
-                atlas — the remaining method chapters, every genre chapter with
-                its entry notes, and the appendices — is included with Suede
+                atlas (the remaining method chapters, every genre chapter with
+                its entry notes, and the appendices) is included with Suede
                 Pro, along with a PDF of the whole book.
               </p>
               {nextFree && (

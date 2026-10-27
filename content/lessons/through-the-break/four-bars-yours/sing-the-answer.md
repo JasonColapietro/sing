@@ -29,7 +29,7 @@ Choose Pentatonic run in the practice material on this page and hear its 8–6�
 
 ### Name the target: Four-bar improvisation
 
-Call and response before free improvisation. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Call and response before free improvisation. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.
 - Listen: The take sounds like an answer to the call and returns convincingly to the tonal center.
@@ -57,7 +57,7 @@ I used notes from the supplied pattern to invent a short answer with a clear beg
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Sing the Answer.”
 - 90s: Isolate the four-bar improvisation target in short, comfortable examples.
-- 135s: Practise or record the complete “Sing the Answer” task, resetting between attempts.
+- 135s: Practice or record the complete “Sing the Answer” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

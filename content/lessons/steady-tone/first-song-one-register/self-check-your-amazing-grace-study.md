@@ -29,7 +29,7 @@ Start from the key the song opens in: fitted to your measured range if you have 
 
 ### Name the target: First repertoire
 
-Sing the supplied study arrangement through after hearing its reference; note any place you stopped. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Sing the supplied study arrangement through after hearing its reference; note any place you stopped. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.
 - Listen: The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.
@@ -57,7 +57,7 @@ I rehearsed the supplied Amazing Grace phrase and study arrangement in a key tha
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Amazing Grace Study.”
 - 75s: Isolate the first repertoire target in short, comfortable examples.
-- 120s: Practise or record the complete “Self-Check: Your Amazing Grace Study” task, resetting between attempts.
+- 120s: Practice or record the complete “Self-Check: Your Amazing Grace Study” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

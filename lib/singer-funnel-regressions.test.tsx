@@ -65,7 +65,11 @@ describe("singer evidence and comparison regressions", () => {
     const learn = renderToStaticMarkup(<LearnPage />).replace(/<!--.*?-->/g, "");
     expect(learn).toContain("An example 20-minute practice plan");
     expect(learn).toContain("5 minutes a day");
-    expect(learn.indexOf("5 minutes a day")).toBeLessThan(learn.indexOf("Choose the problem"));
+    // Before the first of the map's exercise links; the full "What is free?"
+    // card now sits below the map, so the map's intro carries the cap.
+    const firstPath = learn.indexOf('href="/learn/voice"', learn.indexOf("Choose the problem"));
+    expect(firstPath).toBeGreaterThan(-1);
+    expect(learn.indexOf("5 minutes a day")).toBeLessThan(firstPath);
     expect(learn).toContain('href="/pro"');
     expect(learn).not.toContain("Twenty focused minutes beats");
   });

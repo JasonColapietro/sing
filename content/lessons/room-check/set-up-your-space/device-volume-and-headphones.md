@@ -29,7 +29,7 @@ Silence reference playback, lower speaker volume below halfway, and use wired he
 
 ### Name the target: Room setup and clean input
 
-Turn playback down, decide on headphones, and give the mic a quiet room. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Turn playback down, decide on headphones, and give the mic a quiet room. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.
 - Listen: Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.
@@ -57,7 +57,7 @@ I compared a quiet recording with my initial room setup and could hear my voice 
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Device Volume and Headphones.”
 - 60s: Isolate the room setup and clean input target in short, comfortable examples.
-- 90s: Practise or record the complete “Device Volume and Headphones” task, resetting between attempts.
+- 90s: Practice or record the complete “Device Volume and Headphones” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

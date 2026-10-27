@@ -2,7 +2,7 @@
 title: "How the twelve weeks work"
 part: "The twelve-week program"
 order: 13
-summary: "The shape of the twelve weeks — four blocks, short sessions, and the rules for skipping, repeating, and going back."
+summary: "The shape of the twelve weeks: four blocks, short sessions, and the rules for skipping, repeating, and going back."
 ---
 
 The next seven chapters are a plan you can actually run: twelve weeks, four blocks of three weeks each, three or four sessions a week, twenty minutes a session.

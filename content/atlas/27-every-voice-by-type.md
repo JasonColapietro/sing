@@ -3,7 +3,7 @@ title: "Every voice by type"
 part: "Appendices"
 order: 27
 appendix: voice-types
-summary: "The whole library shelved by classification, basses to sopranos, with each voice's cited range — the shopping index for borrowing along your own shelf."
+summary: "The whole library shelved by classification, basses to sopranos, with each voice's cited range. It is the shopping index for borrowing along your own shelf."
 ---
 
 The method chapters recommend borrowing first from voices built like yours; this appendix is the shelving system that makes it practical. Every entry in the atlas appears below exactly once, grouped by voice type and ordered low to high — basses first, sopranos last — with the cited range beside each name so you can scan a whole shelf at a glance.

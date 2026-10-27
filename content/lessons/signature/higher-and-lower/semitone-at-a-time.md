@@ -29,7 +29,7 @@ Warm up in the comfortable middle, then confirm today's repeatable low and high 
 
 ### Name the target: Range extension
 
-Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.

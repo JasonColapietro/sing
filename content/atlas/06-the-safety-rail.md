@@ -2,7 +2,7 @@
 title: "The safety rail"
 part: "The borrower's method"
 order: 6
-summary: "The four expensive things in this book — whistle notes, extreme lows, distortion and sustained belting — what makes each risky to chase, and the warning signs that mean stop."
+summary: "The four expensive things in this book (whistle notes, extreme lows, distortion and sustained belting), what makes each risky to chase, and the warning signs that mean stop."
 ---
 
 Most of this atlas is safe to use. Phrasing, placement, vibrato behavior, vowel color, timing — you can borrow any of it at conversational volume in your comfortable range and the worst possible outcome is sounding silly in your practice room. But the book also documents extremes, because the extremes are real and people search for them, and four of them are expensive to chase without preparation. This chapter is the price list. It is short, it is not medical advice, and the entries assume you have read it.

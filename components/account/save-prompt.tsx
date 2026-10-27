@@ -276,7 +276,7 @@ export function AccountSavePrompt({
       <section aria-labelledby={headingId} className={className}>
         <Card className="animate-fadeup">
           <SectionLabel>{context}</SectionLabel>
-          <h2 id={headingId} className="mt-3 text-xl font-extrabold text-ink">
+          <h2 id={headingId} className="mt-3 text-xl text-ink">
             Keep a copy of your progress
           </h2>
           {downloaded ? (
@@ -319,7 +319,7 @@ export function AccountSavePrompt({
         <SectionLabel>{context}</SectionLabel>
         <h2
           id={headingId}
-          className="mt-3 text-xl font-extrabold text-ink"
+          className="mt-3 text-xl text-ink"
         >
           Keep a copy of your progress
         </h2>

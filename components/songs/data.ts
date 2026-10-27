@@ -297,7 +297,7 @@ export const SONGS: Song[] = [
     title: "Home on the Range",
     origin: "Poem “My Western Home” by Dr. Brewster Higley, 1873; melody by Daniel E. Kelley, 1873",
     publicDomain:
-      "Higley’s poem and Kelley’s melody were both published in 1873; Higley died in 1911 and Kelley in 1905 — long out of copyright.",
+      "Higley’s poem and Kelley’s melody were both published in 1873; Higley died in 1911 and Kelley in 1905. Both are long out of copyright.",
     bpm: 96,
     beatsPerBar: 3,
     defaultKeyRootMidi: 60,
@@ -328,7 +328,7 @@ export const SONGS: Song[] = [
     title: "Home on the Range (Opening Lines)",
     origin: "Poem “My Western Home” by Dr. Brewster Higley, 1873; melody by Daniel E. Kelley, 1873",
     publicDomain:
-      "Higley’s poem and Kelley’s melody were both published in 1873; Higley died in 1911 and Kelley in 1905 — long out of copyright.",
+      "Higley’s poem and Kelley’s melody were both published in 1873; Higley died in 1911 and Kelley in 1905. Both are long out of copyright.",
     bpm: 96,
     beatsPerBar: 3,
     defaultKeyRootMidi: 60,
@@ -809,7 +809,7 @@ export const SONGS: Song[] = [
     title: "Amazing Grace (Opening Lines, Verses 1 & 2)",
     origin: "Traditional tune “New Britain” (American shape-note, printed 1829); words by John Newton, 1779",
     publicDomain:
-      "John Newton’s hymn text — including this second stanza — was published in his 1779 Olney Hymns; the “New Britain” tune it is now sung to first appeared in an 1829 shape-note tunebook. Both are centuries out of copyright.",
+      "John Newton’s hymn text, including this second stanza, was published in his 1779 Olney Hymns; the “New Britain” tune it is now sung to first appeared in an 1829 shape-note tunebook. Both are centuries out of copyright.",
     bpm: 70,
     beatsPerBar: 3,
     defaultKeyRootMidi: 60,

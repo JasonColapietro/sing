@@ -104,7 +104,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Room setup and clean input",
-        "body": "Reference sound can enter the microphone along with your voice. Compare your setup with playback stopped. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Reference sound can enter the microphone along with your voice. Compare your setup with playback stopped. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.",
         "listen": "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment."
       },
@@ -142,7 +142,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Practise or record the complete “Why Loud Playback Ruins Pitch” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Why Loud Playback Ruins Pitch” task, resetting between attempts."
       },
       {
         "seconds": 45,
@@ -195,7 +195,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Room setup and clean input",
-        "body": "Turn playback down, decide on headphones, and give the mic a quiet room. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Turn playback down, decide on headphones, and give the mic a quiet room. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.",
         "listen": "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment."
       },
@@ -233,7 +233,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Device Volume and Headphones” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Device Volume and Headphones” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -286,7 +286,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Room setup and clean input",
-        "body": "A take with only your voice in it, with nothing else playing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A take with only your voice in it, with nothing else playing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.",
         "listen": "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment."
       },
@@ -324,7 +324,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Self-Check: A Clear Recording” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: A Clear Recording” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -337,7 +337,7 @@ export const LESSONS: Lesson[] = [
         "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
-      "readyWhen": "A recording made with playback stopped holds only your voice, with no reference tone, echo or clipping, on the device and in the room you will practise in.",
+      "readyWhen": "A recording made with playback stopped holds only your voice, with no reference tone, echo or clipping, on the device and in the room you will practice in.",
       "ifNotReady": "If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared a quiet recording with my initial room setup and could hear my voice clearly. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem."
@@ -377,7 +377,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "Comfortable, not extreme. The number we want is one you can repeat next month. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Comfortable, not extreme. The number we want is one you can repeat next month. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -415,7 +415,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Practise or record the complete “Low First, High Second, Neither Forced” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Low First, High Second, Neither Forced” task, resetting between attempts."
       },
       {
         "seconds": 45,
@@ -468,13 +468,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "Slide to your lowest comfortable note, then your highest. Stop before strain, every time. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Slide to your lowest comfortable note, then your highest. Stop before strain, every time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practise these slides in the recorder, as this module's first lesson does. Then repeat each slide once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end: nothing you sing or record in either room replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practice these slides in the recorder, as this module's first lesson does. Then repeat each slide once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end: nothing you sing or record in either room replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -506,7 +506,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Slide Down, Slide Up” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Slide Down, Slide Up” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -559,7 +559,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "An estimated voice type and both ends of your range, to fit every later exercise to. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "An estimated voice type and both ends of your range, to fit every later exercise to. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -597,7 +597,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Self-Check: Comfortable Range” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Comfortable Range” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -650,7 +650,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "What to move and what to leave alone. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "What to move and what to leave alone. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -688,7 +688,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Practise or record the complete “Ribs Out, Shoulders Still” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Ribs Out, Shoulders Still” task, resetting between attempts."
       },
       {
         "seconds": 45,
@@ -741,7 +741,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -779,7 +779,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Hiss for Twelve” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Hiss for Twelve” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -832,7 +832,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -870,7 +870,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Self-Check: An Even Hiss” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: An Even Hiss” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -923,7 +923,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Semi-occluded warm-up",
-        "body": "Explore how a straw or lip trill changes the feeling of a gentle sound; comfort is your cue to continue. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Explore how a straw or lip trill changes the feeling of a gentle sound; comfort is your cue to continue. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -961,7 +961,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Practise or record the complete “Back Pressure Does the Work” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Back Pressure Does the Work” task, resetting between attempts."
       },
       {
         "seconds": 45,
@@ -1014,7 +1014,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Semi-occluded warm-up",
-        "body": "Sirens through a straw, top to bottom, no break. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Sirens through a straw, top to bottom, no break. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -1052,7 +1052,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Straw Slides” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Straw Slides” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -1105,7 +1105,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Semi-occluded warm-up",
-        "body": "An easy straw or lip-trill pattern across a comfortable span. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "An easy straw or lip-trill pattern across a comfortable span. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -1143,7 +1143,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Self-Check: An Easy Straw Pattern” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: An Easy Straw Pattern” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -1196,7 +1196,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Onset and pitch matching",
-        "body": "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1234,7 +1234,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Practise or record the complete “Onset Without the Click” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Onset Without the Click” task, resetting between attempts."
       },
       {
         "seconds": 45,
@@ -1287,7 +1287,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Onset and pitch matching",
-        "body": "Arrive on the note, do not slide up to it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Arrive on the note, do not slide up to it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1325,7 +1325,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Match Five, No Scoop” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Match Five, No Scoop” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -1378,7 +1378,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Onset and pitch matching",
-        "body": "Hear the supplied five-note scale, then sing from silence. Compare the pitches by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Hear the supplied five-note scale, then sing from silence. Compare the pitches by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1416,7 +1416,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Self-Check: Match the Five-Note Pattern” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Match the Five-Note Pattern” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -1469,13 +1469,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained tone",
-        "body": "Listen for drift on a short, comfortable hold and change one thing at a time. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Listen for drift on a short, comfortable hold and change one thing at a time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
       {
         "title": "Hear the distinction",
-        "body": "Hear Sustained hold once and stop the reference. Then, in the [recorder](/recorder), record two holds on the same comfortable note in one take, with a quiet breath between them: the first for a slow count of eight, the second for a count of four. The length is the only thing that changes. Play both back and compare how each one ends: if the longer hold sags flat or thins at the end while the shorter one ends on the pitch it started on, practise at the shorter length and add a count only once its end matches its start. Aim for one centered pitch and an even release. Judge it by ear, not by the display.",
+        "body": "Hear Sustained hold once and stop the reference. Then, in the [recorder](/recorder), record two holds on the same comfortable note in one take, with a quiet breath between them: the first for a slow count of eight, the second for a count of four. The length is the only thing that changes. Play both back and compare how each one ends: if the longer hold sags flat or thins at the end while the shorter one ends on the pitch it started on, practice at the shorter length and add a count only once its end matches its start. Aim for one centered pitch and an even release. Judge it by ear, not by the display.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1507,7 +1507,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Practise or record the complete “Steady Is a Skill, Not a Talent” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Steady Is a Skill, Not a Talent” task, resetting between attempts."
       },
       {
         "seconds": 45,
@@ -1560,7 +1560,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained tone",
-        "body": "Use the supplied sustained reference for short holds, resting between them. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Use the supplied sustained reference for short holds, resting between them. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1598,7 +1598,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “One Note Per Bar” task, resetting between attempts."
+        "instruction": "Practice or record the complete “One Note Per Bar” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -1651,7 +1651,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained tone",
-        "body": "Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1689,7 +1689,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Self-Check: A Steady Short Hold” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: A Steady Short Hold” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -1742,7 +1742,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: First repertoire",
-        "body": "The song moves to you. This is the singing equivalent of a capo. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "The song moves to you. This is the singing equivalent of a capo. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },
@@ -1780,7 +1780,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Practise or record the complete “Your Key, Not the Record's Key” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Your Key, Not the Record's Key” task, resetting between attempts."
       },
       {
         "seconds": 45,
@@ -1833,7 +1833,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: First repertoire",
-        "body": "Rehearse the supplied Amazing Grace phrase and study arrangement. Choose a comfortable key before singing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied Amazing Grace phrase and study arrangement. Choose a comfortable key before singing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },
@@ -1871,7 +1871,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Amazing Grace: Phrase to Study” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Amazing Grace: Phrase to Study” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -1924,7 +1924,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: First repertoire",
-        "body": "Sing the supplied study arrangement through after hearing its reference; note any place you stopped. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Sing the supplied study arrangement through after hearing its reference; note any place you stopped. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },
@@ -1962,7 +1962,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Your Amazing Grace Study” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Your Amazing Grace Study” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2015,7 +2015,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register identification",
-        "body": "What actually changes inside, and what each one is for. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "What actually changes inside, and what each one is for. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.",
         "listen": "Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference."
       },
@@ -2053,7 +2053,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Registers: Different Ways to Make a Sound” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Registers: Different Ways to Make a Sound” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2106,7 +2106,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register identification",
-        "body": "One note, switched deliberately between mechanisms. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "One note, switched deliberately between mechanisms. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.",
         "listen": "Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference."
       },
@@ -2144,7 +2144,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Same Pitch, Two Ways” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Same Pitch, Two Ways” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2197,7 +2197,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register identification",
-        "body": "Before recording, roll a die six times and write the order (odd = fuller, even = lighter); switch on each cue in that order, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Before recording, roll a die six times and write the order (odd = fuller, even = lighter); switch on each cue in that order, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.",
         "listen": "Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference."
       },
@@ -2235,7 +2235,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Switch on Cue” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Switch on Cue” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2288,7 +2288,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register blending",
-        "body": "A crack is a gear change you did not plan. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A crack is a gear change you did not plan. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2326,7 +2326,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Slide Through, Do Not Jump Over” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Slide Through, Do Not Jump Over” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2379,7 +2379,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register blending",
-        "body": "Slow slides. Speed hides the break instead of fixing it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Slow slides. Speed hides the break instead of fixing it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2417,7 +2417,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Octave Sirens, Three Vowels” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Octave Sirens, Three Vowels” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -2470,7 +2470,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register blending",
-        "body": "Three vowels, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Three vowels, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2508,7 +2508,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Up and Down, Listening for a Crack” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Up and Down, Listening for a Crack” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2561,7 +2561,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel shapes and placement",
-        "body": "Why some vowels feel free and others close the throat. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why some vowels feel free and others close the throat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -2599,7 +2599,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Five Shapes, One Tone” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Five Shapes, One Tone” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2652,7 +2652,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel shapes and placement",
-        "body": "Same melody, five vowels, tone matched across all of them. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Same melody, five vowels, tone matched across all of them. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -2690,7 +2690,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Phrase on Five Vowels” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Phrase on Five Vowels” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -2743,7 +2743,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel shapes and placement",
-        "body": "Judged by your own ear against your own recording. No vowel or formant tracking exists to score this for you. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Judged by your own ear against your own recording. No vowel or formant tracking exists to score this for you. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -2781,7 +2781,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Tone Across Five Vowels” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Tone Across Five Vowels” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2811,7 +2811,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why this song needs the siren you just built.",
-    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody right onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing that crossing the way you practised the siren, quieter and on a narrow vowel, rather than pushing the upper notes.",
+    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody right onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing that crossing the way you practiced the siren, quieter and on a narrow vowel, rather than pushing the upper notes.",
     "prerequisites": [
       "v-l3-m3-07"
     ],
@@ -2834,7 +2834,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Two-register repertoire",
-        "body": "Why this song needs the siren you just built. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why this song needs the siren you just built. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
@@ -2872,7 +2872,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “A Wider Phrase, One Comfortable Key” task, resetting between attempts."
+        "instruction": "Practice or record the complete “A Wider Phrase, One Comfortable Key” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -2925,7 +2925,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Two-register repertoire",
-        "body": "Pick a key so the register change lands where yours is. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Pick a key so the register change lands where yours is. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
@@ -2963,7 +2963,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Deep River: A Wider Phrase” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Deep River: A Wider Phrase” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -3016,7 +3016,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Two-register repertoire",
-        "body": "Rehearse the supplied phrase through and compare the connection by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied phrase through and compare the connection by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
@@ -3054,7 +3054,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: A Connected Wider Phrase” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: A Connected Wider Phrase” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -3107,7 +3107,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Breathiness, nasality, tension",
-        "body": "Three different problems that get called the same thing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Three different problems that get called the same thing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.",
         "listen": "Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap."
       },
@@ -3145,7 +3145,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Breathy, Nasal, Tight: Tell Them Apart” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Breathy, Nasal, Tight: Tell Them Apart” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -3198,7 +3198,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Breathiness, nasality, tension",
-        "body": "Targeted release before targeted effort. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Targeted release before targeted effort. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.",
         "listen": "Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap."
       },
@@ -3236,7 +3236,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Release the Jaw and Tongue” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Release the Jaw and Tongue” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -3289,7 +3289,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Breathiness, nasality, tension",
-        "body": "Use the same short phrase for the relaxed baseline and the changed example, then compare both in the same recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Use the same short phrase for the relaxed baseline and the changed example, then compare both in the same recording. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.",
         "listen": "Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap."
       },
@@ -3327,7 +3327,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Compare With Your Baseline” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Compare With Your Baseline” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -3380,7 +3380,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained intonation",
-        "body": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change."
       },
@@ -3418,7 +3418,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Hear the Pitch Before You Sing” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Hear the Pitch Before You Sing” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -3471,7 +3471,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained intonation",
-        "body": "Hear the sustained reference, sing from silence, then compare another fresh attempt by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Hear the sustained reference, sing from silence, then compare another fresh attempt by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change."
       },
@@ -3509,7 +3509,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Drift Correction” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Drift Correction” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -3562,7 +3562,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained intonation",
-        "body": "Choose one note from the supplied study to improve, then compare a fresh attempt by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Choose one note from the supplied study to improve, then compare a fresh attempt by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change."
       },
@@ -3600,7 +3600,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Intonation by Listening” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Intonation by Listening” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -3691,7 +3691,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Swing, Triplet, Straight” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Swing, Triplet, Straight” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -3744,7 +3744,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Rhythm and subdivision",
-        "body": "Rhythm without pitch first. Pitch hides timing errors. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rhythm without pitch first. Pitch hides timing errors. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
@@ -3782,7 +3782,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Clap It, Then Sing It” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Clap It, Then Sing It” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -3835,7 +3835,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Rhythm and subdivision",
-        "body": "Checked against your tapped pulse by ear. Onset timing is not automatically scored. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Checked against your tapped pulse by ear. Onset timing is not automatically scored. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
@@ -3873,7 +3873,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Count, Clap, Sing” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Count, Clap, Sing” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -3926,7 +3926,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Diction and intelligible words",
-        "body": "Pitch and time get all the attention. Words are where amateur performances actually fail. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Pitch and time get all the attention. Words are where amateur performances actually fail. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.",
         "listen": "A listener can write down the words from the recording without seeing the lyric."
       },
@@ -3964,7 +3964,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Consonants Are the Axis Nobody Scores” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Consonants Are the Axis Nobody Scores” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -4017,7 +4017,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Diction and intelligible words",
-        "body": "Dense text at rising tempo without losing the vowel line. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Dense text at rising tempo without losing the vowel line. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.",
         "listen": "A listener can write down the words from the recording without seeing the lyric."
       },
@@ -4055,7 +4055,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Consonant Sprint” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Consonant Sprint” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -4108,7 +4108,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Diction and intelligible words",
-        "body": "Listen to the recording for understandable words; clarity is your own judgment. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Listen to the recording for understandable words; clarity is your own judgment. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.",
         "listen": "A listener can write down the words from the recording without seeing the lyric."
       },
@@ -4146,7 +4146,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Clear Words in a Phrase” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Clear Words in a Phrase” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -4199,7 +4199,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Grace notes, staccato, accent",
-        "body": "Three ways to attack the same note. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Three ways to attack the same note. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.",
         "listen": "The three versions are distinguishable in playback without one simply being much louder than the others."
       },
@@ -4237,7 +4237,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Grace Notes, Staccato, Accent” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Grace Notes, Staccato, Accent” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -4290,7 +4290,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Grace notes, staccato, accent",
-        "body": "Switch articulation without switching pitch or tempo. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Switch articulation without switching pitch or tempo. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.",
         "listen": "The three versions are distinguishable in playback without one simply being much louder than the others."
       },
@@ -4328,7 +4328,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Same Phrase, Three Ways” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Same Phrase, Three Ways” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -4381,7 +4381,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Grace notes, staccato, accent",
-        "body": "Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.",
         "listen": "The three versions are distinguishable in playback without one simply being much louder than the others."
       },
@@ -4419,7 +4419,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Three Articulations on Cue” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Three Articulations on Cue” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -4472,7 +4472,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Dynamics without pushing",
-        "body": "Loud from resonance, quiet from support, neither from the throat. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Loud from resonance, quiet from support, neither from the throat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
         "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
@@ -4510,7 +4510,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Dynamics Without Pushing” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Dynamics Without Pushing” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -4563,7 +4563,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Dynamics without pushing",
-        "body": "A song that lives or dies on its dynamic arc. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A song that lives or dies on its dynamic arc. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
         "listen": "The second phrase is audibly fuller than the first while the pitch stays centered."
       },
@@ -4601,7 +4601,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Dynamic Ballad” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Dynamic Ballad” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -4654,7 +4654,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Dynamics without pushing",
-        "body": "Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
         "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
@@ -4692,7 +4692,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Four Levels, One Note” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Four Levels, One Note” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -4745,7 +4745,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Locating your own transition zone",
-        "body": "Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4783,7 +4783,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Where Your Voice Changes Gear” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Where Your Voice Changes Gear” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -4836,7 +4836,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Locating your own transition zone",
-        "body": "Approach each from below and above until you can hear the shift coming. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Approach each from below and above until you can hear the shift coming. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4874,7 +4874,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Find Your Zone” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Find Your Zone” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -4927,7 +4927,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Locating your own transition zone",
-        "body": "Located by ear, then crossed in both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Located by ear, then crossed in both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4965,7 +4965,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Cross It On Cue” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Cross It On Cue” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5018,7 +5018,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel modification",
-        "body": "Small shape adjustments that keep the crossing smooth and the lyric intelligible. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Small shape adjustments that keep the crossing smooth and the lyric intelligible. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -5056,7 +5056,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Change the Vowel, Keep the Word” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Change the Vowel, Keep the Word” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5109,7 +5109,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel modification",
-        "body": "Modified and unmodified, heard side by side. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Modified and unmodified, heard side by side. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -5147,7 +5147,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Crossing on Three Vowels” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Crossing on Three Vowels” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -5200,7 +5200,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel modification",
-        "body": "Both directions across the zone. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Both directions across the zone. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -5238,7 +5238,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Three Vowels Through the Break” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Three Vowels Through the Break” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5291,7 +5291,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Resonance over force",
-        "body": "Where carrying power actually comes from, and why pressed phonation is the costly way to fake it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Where carrying power actually comes from, and why pressed phonation is the costly way to fake it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5329,7 +5329,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Louder by Resonance, Not by Force” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Louder by Resonance, Not by Force” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5382,7 +5382,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Resonance over force",
-        "body": "More carrying power without more push. Ring is a change of resonance, not a change of effort. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "More carrying power without more push. Ring is a change of resonance, not a change of effort. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5420,7 +5420,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Ring Without Pressing” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Ring Without Pressing” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -5473,7 +5473,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Resonance over force",
-        "body": "The second example sounds brighter, not just louder, at the same microphone distance. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "The second example sounds brighter, not just louder, at the same microphone distance. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5511,7 +5511,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Brightness Without Pushing” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Brightness Without Pushing” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5564,7 +5564,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5602,7 +5602,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “The Difference You Can Hear” task, resetting between attempts."
+        "instruction": "Practice or record the complete “The Difference You Can Hear” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5655,7 +5655,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "A short supplied pattern that crosses your transition zone — pick the key that puts it there. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A short supplied pattern that crosses your transition zone — pick the key that puts it there. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5693,7 +5693,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “An Easy Pattern Through Your Transition” task, resetting between attempts."
+        "instruction": "Practice or record the complete “An Easy Pattern Through Your Transition” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -5746,7 +5746,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "Hold six comfortable seconds, then report effort and stop on any warning sign. The app does not verify strain. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Hold six comfortable seconds, then report effort and stop on any warning sign. The app does not verify strain. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5784,7 +5784,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Easy Tone and Effort” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Easy Tone and Effort” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5837,7 +5837,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Four-bar improvisation",
-        "body": "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5875,7 +5875,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Improvising Is Answering” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Improvising Is Answering” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -5928,7 +5928,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Four-bar improvisation",
-        "body": "Call and response before free improvisation. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Call and response before free improvisation. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5966,7 +5966,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Sing the Answer” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Sing the Answer” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -6019,7 +6019,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Four-bar improvisation",
-        "body": "Keep a tapped four-beat pulse through four bars, including your rests. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Keep a tapped four-beat pulse through four bars, including your rests. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -6057,7 +6057,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Self-Check: Your Answering Phrase” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Your Answering Phrase” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -6087,7 +6087,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why slow practice is the only route to fast runs.",
-    "explanation": "A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practised fast learns the smear along with the notes. The route to a clean fast run is to sing the pattern slowly enough that every note lands, then raise the tempo in small steps and drop back the moment a middle note blurs into a slide.",
+    "explanation": "A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practiced fast learns the smear along with the notes. The route to a clean fast run is to sing the pattern slowly enough that every note lands, then raise the tempo in small steps and drop back the moment a middle note blurs into a slide.",
     "prerequisites": [
       "v-l5-m5-07"
     ],
@@ -6110,7 +6110,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melodic agility",
-        "body": "Why slow practice is the only route to fast runs. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why slow practice is the only route to fast runs. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6148,7 +6148,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “A Run Is a Scale in a Hurry” task, resetting between attempts."
+        "instruction": "Practice or record the complete “A Run Is a Scale in a Hurry” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -6201,7 +6201,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melodic agility",
-        "body": "Rehearse slowly and move on only when you can hear separate, repeatable notes. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse slowly and move on only when you can hear separate, repeatable notes. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6239,7 +6239,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Turnaround, Slow to Fast” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Turnaround, Slow to Fast” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -6292,7 +6292,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melodic agility",
-        "body": "Every note landing, not smeared. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Every note landing, not smeared. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6330,7 +6330,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Self-Check: A Clear Agility Pattern” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: A Clear Agility Pattern” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -6383,7 +6383,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melisma",
-        "body": "Melisma, and why it needs a stable vowel underneath. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Melisma, and why it needs a stable vowel underneath. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6421,7 +6421,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “One Syllable, Many Notes” task, resetting between attempts."
+        "instruction": "Practice or record the complete “One Syllable, Many Notes” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -6474,7 +6474,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melisma",
-        "body": "Four-note patterns across the scale, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Four-note patterns across the scale, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6512,7 +6512,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “Four-Note Ladder” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Four-Note Ladder” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -6565,7 +6565,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melisma",
-        "body": "Listen for each of the four displayed pitches; this is a self-check without an automatic score. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Listen for each of the four displayed pitches; this is a self-check without an automatic score. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6603,7 +6603,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Self-Check: Four Notes on One Syllable” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Four Notes on One Syllable” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -6633,7 +6633,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Vibrato has three parameters. Controlling them is what separates it from a wobble.",
-    "explanation": "Vibrato is a small, regular swing in pitch around the note's center, with three separate dials: rate is how many times a second the pitch swings, from a fast flutter to a slow wave; extent is how far above and below the center it moves, from a narrow shimmer to a wide wobble; and onset is when it starts, straight away or after a stretch of straight tone. What separates vibrato from an unsteady note is regularity, an even rate and extent around a steady center. The Vibrato hold warm-up shows how fast and how wide your pitch moved after each hold, but nothing times the onset, so that dial is yours to judge. It is also the easiest one to practise first, because it begins from a plain, straight note.",
+    "explanation": "Vibrato is a small, regular swing in pitch around the note's center, with three separate dials: rate is how many times a second the pitch swings, from a fast flutter to a slow wave; extent is how far above and below the center it moves, from a narrow shimmer to a wide wobble; and onset is when it starts, straight away or after a stretch of straight tone. What separates vibrato from an unsteady note is regularity, an even rate and extent around a steady center. The Vibrato hold warm-up shows how fast and how wide your pitch moved after each hold, but nothing times the onset, so that dial is yours to judge. It is also the easiest one to practice first, because it begins from a plain, straight note.",
     "prerequisites": [
       "v-l6-m2-08"
     ],
@@ -6656,7 +6656,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vibrato control",
-        "body": "Vibrato has three parameters. Controlling them is what separates it from a wobble. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Vibrato has three parameters. Controlling them is what separates it from a wobble. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6694,7 +6694,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Rate, Extent, Onset” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Rate, Extent, Onset” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -6747,7 +6747,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vibrato control",
-        "body": "Start straight, introduce vibrato deliberately, stop it again. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Start straight, introduce vibrato deliberately, stop it again. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6785,7 +6785,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “Straight Then Vibrato” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Straight Then Vibrato” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -6838,7 +6838,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vibrato control",
-        "body": "Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6876,7 +6876,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Self-Check: Straight to Vibrato on Cue” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Straight to Vibrato on Cue” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -6929,7 +6929,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Ornament vocabulary",
-        "body": "Naming them is what turns habits into choices. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Naming them is what turns habits into choices. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
         "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
       },
@@ -6967,7 +6967,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Four Ornaments, Named” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Four Ornaments, Named” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -7020,7 +7020,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Ornament vocabulary",
-        "body": "Choose and say the ornament yourself before the next phrase; there is no automatic spoken cue. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Choose and say the ornament yourself before the next phrase; there is no automatic spoken cue. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
         "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
       },
@@ -7058,7 +7058,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “Ornament on Cue” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Ornament on Cue” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -7111,7 +7111,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Ornament vocabulary",
-        "body": "All four, placed where you marked them before singing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "All four, placed where you marked them before singing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
         "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
       },
@@ -7149,7 +7149,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Self-Check: Four Ornaments, One Phrase” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Four Ornaments, One Phrase” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -7202,7 +7202,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "Blue thirds and sevenths, and how they resolve toward the tonic. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Blue thirds and sevenths, and how they resolve toward the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7240,7 +7240,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “The Notes That Sound Like Feeling” task, resetting between attempts."
+        "instruction": "Practice or record the complete “The Notes That Sound Like Feeling” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -7293,7 +7293,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "Bend into them deliberately rather than arriving flat. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Bend into them deliberately rather than arriving flat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7331,7 +7331,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “Blue Thirds and Sevenths” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Blue Thirds and Sevenths” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -7384,7 +7384,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7422,7 +7422,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “Self-Check: Your Improvised Phrases” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Your Improvised Phrases” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -7475,7 +7475,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Extended-range repertoire",
-        "body": "Range and agility at the same time, which is the actual difficulty. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Range and agility at the same time, which is the actual difficulty. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.",
         "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
       },
@@ -7513,7 +7513,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Practise or record the complete “Range and Ornaments in a Short Phrase” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Range and Ornaments in a Short Phrase” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -7566,7 +7566,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Extended-range repertoire",
-        "body": "Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.",
         "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
       },
@@ -7604,7 +7604,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 180,
-        "instruction": "Practise or record the complete “Phrase and Ornament Study” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Phrase and Ornament Study” task, resetting between attempts."
       },
       {
         "seconds": 120,
@@ -7657,7 +7657,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Extended-range repertoire",
-        "body": "Review your supplied study and describe which small ornament stayed clear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Review your supplied study and describe which small ornament stayed clear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.",
         "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
       },
@@ -7695,7 +7695,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “Self-Check: Your Ornamented Study” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Your Ornamented Study” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -7748,7 +7748,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vocal health",
-        "body": "Whispering is on the harmful list. So is talking over noise. Neither is obvious. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Whispering is on the harmful list. So is talking over noise. Neither is obvious. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7786,7 +7786,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Hydration, Humidity, and Why Whispering Hurts” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Hydration, Humidity, and Why Whispering Hurts” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -7839,7 +7839,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vocal health",
-        "body": "Assemble a routine from the drills you already own, ordered correctly. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Assemble a routine from the drills you already own, ordered correctly. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7877,7 +7877,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 180,
-        "instruction": "Practise or record the complete “Build Your Own Warm-Up” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Build Your Own Warm-Up” task, resetting between attempts."
       },
       {
         "seconds": 120,
@@ -7930,7 +7930,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vocal health",
-        "body": "Assemble a short warm-up with rests and write down the warning signs that would make you stop, before you move on to effects. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Assemble a short warm-up with rests and write down the warning signs that would make you stop, before you move on to effects. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7968,7 +7968,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Self-Check: Warm-Up and Stop Plan” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Warm-Up and Stop Plan” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -8021,7 +8021,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Genre choices",
-        "body": "Onset, vibrato, diction, and placement, decided per genre. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Onset, vibrato, diction, and placement, decided per genre. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
         "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
       },
@@ -8059,7 +8059,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Style Is a Set of Choices, Not a Sound” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Style Is a Set of Choices, Not a Sound” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -8112,7 +8112,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Genre choices",
-        "body": "One melody, two complete stylistic treatments. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "One melody, two complete stylistic treatments. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
         "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
       },
@@ -8150,7 +8150,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 180,
-        "instruction": "Practise or record the complete “Same Song, Two Rooms” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Same Song, Two Rooms” task, resetting between attempts."
       },
       {
         "seconds": 120,
@@ -8203,7 +8203,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Genre choices",
-        "body": "Both recognisable, both yours. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Both recognisable, both yours. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
         "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
       },
@@ -8241,7 +8241,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “Self-Check: One Song, Two Styles” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: One Song, Two Styles” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -8294,7 +8294,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Weight and mode switching",
-        "body": "Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
         "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
       },
@@ -8332,7 +8332,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Neutral, Restrained, Driven, Edged” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Neutral, Restrained, Driven, Edged” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -8385,7 +8385,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Weight and mode switching",
-        "body": "Same phrase, same pitch, different weight. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Same phrase, same pitch, different weight. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
         "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
       },
@@ -8423,7 +8423,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 165,
-        "instruction": "Practise or record the complete “One Phrase, Three Weights” task, resetting between attempts."
+        "instruction": "Practice or record the complete “One Phrase, Three Weights” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -8476,7 +8476,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Weight and mode switching",
-        "body": "Before recording, draw the order from slips marked neutral, restrained and driven, with a return to easy neutral voice between attempts. Strain is not measured. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Before recording, draw the order from slips marked neutral, restrained and driven, with a return to easy neutral voice between attempts. Strain is not measured. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
         "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
       },
@@ -8514,7 +8514,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Self-Check: Three Modes on Cue” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Three Modes on Cue” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -8568,7 +8568,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Effects safety and a stop plan",
-        "body": "The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
@@ -8659,7 +8659,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Effects safety and a stop plan",
-        "body": "Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
@@ -8750,7 +8750,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Effects safety and a stop plan",
-        "body": "Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
@@ -8841,7 +8841,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range extension",
-        "body": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
@@ -8879,7 +8879,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Range Grows at the Edges, Slowly” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Range Grows at the Edges, Slowly” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -8932,7 +8932,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range extension",
-        "body": "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
@@ -9023,7 +9023,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range extension",
-        "body": "Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
@@ -9061,7 +9061,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Practise or record the complete “Self-Check: Compare Your Comfortable Range” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Compare Your Comfortable Range” task, resetting between attempts."
       },
       {
         "seconds": 90,
@@ -9114,7 +9114,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Performance and mic technique",
-        "body": "Working the mic, monitors, and what changes when there is an audience. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Working the mic, monitors, and what changes when there is an audience. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
@@ -9152,7 +9152,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 120,
-        "instruction": "Practise or record the complete “Mic Distance Is a Dynamic Control” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Mic Distance Is a Dynamic Control” task, resetting between attempts."
       },
       {
         "seconds": 60,
@@ -9205,7 +9205,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Performance and mic technique",
-        "body": "Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
@@ -9243,7 +9243,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 210,
-        "instruction": "Practise or record the complete “Microphone and Phrase Rehearsal” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Microphone and Phrase Rehearsal” task, resetting between attempts."
       },
       {
         "seconds": 120,
@@ -9296,7 +9296,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Performance and mic technique",
-        "body": "Rehearse the supplied study arrangement and compare microphone distance or phrasing on separate takes. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied study arrangement and compare microphone distance or phrasing on separate takes. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
@@ -9334,7 +9334,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 240,
-        "instruction": "Practise or record the complete “Self-Check: Your Performance Study” task, resetting between attempts."
+        "instruction": "Practice or record the complete “Self-Check: Your Performance Study” task, resetting between attempts."
       },
       {
         "seconds": 120,

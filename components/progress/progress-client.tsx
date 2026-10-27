@@ -291,7 +291,7 @@ export function HeaderRow({
           </p>
         ) : lapsed ? (
           <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Ended — practice starts a new one
+            Ended. Practice starts a new one
           </p>
         ) : null}
         <p className="tabular mt-1.5 font-mono text-[11px] text-dim">
@@ -402,7 +402,7 @@ function SessionLogTable({
     return (
       <EmptyState
         title="No sessions logged yet"
-        hint="Every exercise you finish — a warmup, a range test, an ear-training round — shows up here."
+        hint="Every exercise you finish shows up here: a warmup, a range test, an ear-training round."
       />
     );
   }
@@ -678,7 +678,7 @@ export function FreshStart() {
   return (
     <EmptyState
       title="Nothing logged yet"
-      hint="Finish any exercise — a warmup, a range test, an ear-training round — and it starts filling in your XP, streak, and charts below."
+      hint="Finish any exercise (a warmup, a range test, an ear-training round) and it starts filling in your XP, streak, and charts below."
       action={
         <div>
           <div className="flex flex-wrap justify-center gap-2.5">
@@ -886,7 +886,13 @@ export function ProgressClient() {
         {activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
         <section aria-label="Today's coached session">
-          <CoachCard state={state} restDayOf={programRestDay} programRange={programRange} recovering={recovering} />
+          <CoachCard
+            state={state}
+            restDayOf={programRestDay}
+            programRange={programRange}
+            recovering={recovering}
+            hideProNudge={programPaywalled}
+          />
         </section>
 
         {activeProgram && programPaywalled && <ProgramEntryCard active={activeProgram} />}
@@ -912,7 +918,7 @@ export function ProgressClient() {
               nothing the empty state above has not, and it is 350px tall. */}
           {!isFresh && (
             <Card>
-              <SectionLabel>Minutes / day — last 14 days</SectionLabel>
+              <SectionLabel>Minutes / day · last 14 days</SectionLabel>
               <div className="mt-4">
                 <MinutesBarChart sessions={state.sessions} />
               </div>
@@ -920,7 +926,7 @@ export function ProgressClient() {
           )}
           <div className="grid gap-4 lg:grid-cols-2">
             <Card>
-              <SectionLabel>Score trend — by week</SectionLabel>
+              <SectionLabel>Score trend · by week</SectionLabel>
               <div className="mt-4">
                 <ScoreTrendChart sessions={state.sessions} />
               </div>
@@ -999,7 +1005,7 @@ export function ProgressClient() {
             <FreeOnly>
               {state.sessions.length > FREE_SESSION_LOG && (
                 <ProInlineNudge>
-                  {`${state.sessions.length - FREE_SESSION_LOG} older sessions are stored — Pro shows all of them`}
+                  {`${state.sessions.length - FREE_SESSION_LOG} older sessions are stored; Pro shows all of them`}
                 </ProInlineNudge>
               )}
             </FreeOnly>

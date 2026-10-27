@@ -205,7 +205,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("D5"),
     sourceNote: "Musicnotes original-key arrangement, A3–D5 in D major",
     blurb:
-      "Whispered dynamics over a steady pulse, with a late climb to sustained head-voice notes at the top of the staff — the loudest moment of the song is also its highest and most exposed. The challenge is producing a clear, supported tone at very low volume for three minutes, then opening up without the seams showing.",
+      "Whispered dynamics over a steady pulse, with a late climb to sustained head-voice notes at the top of the staff. The loudest moment of the song is also its highest and most exposed. The challenge is producing a clear, supported tone at very low volume for three minutes, then opening up without the seams showing.",
   },
   {
     slug: "good-luck-babe",
@@ -248,7 +248,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, E3–A4 in A minor",
     blurb:
-      "A disco-tinged strut that lives low: the verses sit down near E3 in a smoky chest register most sopranos never use, and the chorus only rises to A4. The rasp and weight of the original are stylistic, not required — but the low tessitura is, and it is exactly where lighter voices lose all their color.",
+      "A disco-tinged strut that lives low: the verses sit down near E3 in a smoky chest register most sopranos never use, and the chorus only rises to A4. The rasp and weight of the original are stylistic, not required. The low tessitura is not optional, and it is exactly where lighter voices lose all their color.",
   },
   {
     slug: "as-it-was",
@@ -262,7 +262,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, written E4–A5, sounding E3–A4 in A major",
     blurb:
-      "A bright, running eighth-note melody that barely pauses for breath — the difficulty is the treadmill tempo and the airy, forward tone, not the notes. The chorus taps A4 lightly rather than sitting on it, so the song rewards agility and breath planning over power.",
+      "A bright, running eighth-note melody that barely pauses for breath. The difficulty is the treadmill tempo and the airy, forward tone, not the notes. The chorus taps A4 lightly rather than sitting on it, so the song rewards agility and breath planning over power.",
   },
   {
     slug: "vampire",
@@ -335,7 +335,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("F5"),
     sourceNote: "Musicnotes original-key arrangement, written F4–F6, sounding F3–F5 in Bb major",
     blurb:
-      "A quiet folk-pop opening that detonates into a demanding chorus: two octaves of range topping out at a screamed-belt F5 that even trained tenors treat with respect. The dynamic whiplash is the point — the song is engineered around the jump from a whisper to that note.",
+      "A quiet folk-pop opening that detonates into a demanding chorus: two octaves of range topping out at a screamed-belt F5 that even trained tenors treat with respect. The dynamic whiplash is the point: the song is engineered around the jump from a whisper to that note.",
   },
   {
     slug: "i-will-always-love-you",
@@ -364,7 +364,7 @@ export const POP_SONGS: PopSong[] = [
     sourceNote:
       "Musicnotes original-key arrangement, sounding C3–B4 in E minor; some range sites cite a low growl near E2",
     blurb:
-      "A slow gospel-blues build that lives in the baritone's strongest octave, then leans on a sustained, full-voiced B4 in the choruses — a note above the conventional baritone band, so even a high baritone is working at the top of the voice. The difficulty is stamina, not acrobatics: the chorus top repeats over and over at full volume.",
+      "A slow gospel-blues build that lives in the baritone's strongest octave, then leans on a sustained, full-voiced B4 in the choruses. That note sits above the conventional baritone band, so even a high baritone is working at the top of the voice. The difficulty is stamina, not acrobatics: the chorus top repeats over and over at full volume.",
   },
   {
     slug: "someone-you-loved",
@@ -378,7 +378,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("Bb4"),
     sourceNote: "Musicnotes original-key arrangement, sounding Eb3–Bb4 in Db major",
     blurb:
-      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is only an octave and a fifth, but the tessitura of the chorus parks a male voice at or above the top of its passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
+      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is only an octave and a fifth, but the tessitura of the chorus parks a male voice at or above the top of its passaggio and keeps it there, which is the classic reason it feels so much harder than its range suggests.",
     // Span 19 reads Medium, but the chorus holds full-voice Ab4–Bb4.
     difficulty: "Hard",
   },
@@ -394,7 +394,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("D5"),
     sourceNote: "Musicnotes original-key arrangement, Bb3–D5 in C minor",
     blurb:
-      "A stomping mid-tempo that never asks for extreme notes but asks for relentless chest-voice power. The chorus hammers C5 and D5 in full belt, phrase after phrase, and the backing-vocal stabs tempt singers into pushing. It rewards a settled mixed belt far more than raw volume — the range is modest, the workload is not.",
+      "A stomping mid-tempo that never asks for extreme notes but asks for relentless chest-voice power. The chorus hammers C5 and D5 in full belt, phrase after phrase, and the backing-vocal stabs tempt singers into pushing. It rewards a settled mixed belt far more than raw volume: the range is modest, the workload is not.",
   },
   {
     slug: "uptown-funk",
@@ -409,7 +409,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("D5"),
     sourceNote: "Commonly cited lead-vocal figure A3–D5 in D minor; the published full arrangement folds in bass and falsetto backing parts",
     blurb:
-      "Rhythm first, range second: the lead line is a percussive tenor patter that has to stay light, precise and behind the beat, with quick jumps up to D5 that land as accents rather than held belts. Most of the difficulty is diction and groove at speed — sung heavy, it drags instantly.",
+      "Rhythm first, range second: the lead line is a percussive tenor patter that has to stay light, precise and behind the beat, with quick jumps up to D5 that land as accents rather than held belts. Most of the difficulty is diction and groove at speed. Sung heavy, it drags instantly.",
   },
   {
     slug: "creep",
@@ -424,7 +424,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("B4"),
     sourceNote: "Musicnotes original-key arrangement, sounding B2–B4 in G major",
     blurb:
-      "Two octaves exactly, from a muttered low B up to the falsetto-or-full B4 wail before the last chorus. The verses ask for almost nothing technically, which is the trap — the dynamic explosion has to arrive out of that stillness, and the top can be taken in falsetto or full voice depending on what the singer has.",
+      "Two octaves exactly, from a muttered low B up to the falsetto-or-full B4 wail before the last chorus. The verses ask for almost nothing technically, which is the trap: the dynamic explosion has to arrive out of that stillness, and the top can be taken in falsetto or full voice depending on what the singer has.",
   },
   {
     slug: "hallelujah",
@@ -469,7 +469,7 @@ export const POP_SONGS: PopSong[] = [
     sourceNote:
       "Musicnotes original-key duet arrangement in A major: notated lead line G#3 to about E5; harmonized falsetto ad-libs take the combined voice range to C#6",
     blurb:
-      "A retro-soul duet whose combined range looks terrifying on paper — the C#6 ceiling belongs to the harmonized falsetto ad-libs, while the lead melody itself crests around E5. Sung solo it demands both a warm low verse register and a committed belt; sung as written it needs two voices trading and stacking.",
+      "A retro-soul duet whose combined range looks terrifying on paper: the C#6 ceiling belongs to the harmonized falsetto ad-libs, while the lead melody itself crests around E5. Sung solo it demands both a warm low verse register and a committed belt; sung as written it needs two voices trading and stacking.",
   },
   {
     slug: "stick-season",
@@ -532,6 +532,6 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("D5"),
     sourceNote: "Musicnotes original-key arrangement, F#3–D5 in F# minor",
     blurb:
-      "A talk-sung dance-pop verse that lives low in the alto register, then flips into a breathy hook with quick touches of D5. Nothing is sustained for long — the challenge is the constant switching between spoken-adjacent delivery, light head voice and short belted accents while keeping the rhythm pocket-tight.",
+      "A talk-sung dance-pop verse that lives low in the alto register, then flips into a breathy hook with quick touches of D5. Nothing is sustained for long. The challenge is the constant switching between spoken-adjacent delivery, light head voice and short belted accents while keeping the rhythm pocket-tight.",
   },
 ];

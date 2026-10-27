@@ -78,7 +78,7 @@ export function HubChart({
         >
           <h3
             id={`singer-chart-group-${groupIndex}`}
-            className="font-mono text-[10px] uppercase tracking-[0.14em] text-dim"
+            className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-dim"
           >
             Singers {group[0].name} through {group[group.length - 1].name}
           </h3>

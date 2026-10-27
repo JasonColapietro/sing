@@ -20,7 +20,7 @@ import {
   shownRowCountFromParam,
   visibleRichSingerRows,
 } from "@/lib/singer-directory-pagination";
-import { Button, EmptyState, FIELD_CLASS_NAME, LinkButton } from "@/components/ui";
+import { Button, EmptyState, FIELD_CLASS_NAME } from "@/components/ui";
 import { rangeTestHref } from "@/lib/site";
 import {
   FULL_VOICE_FILL_CLASS,
@@ -648,8 +648,10 @@ export function SingersDirectory() {
         )}
       </div>
 
-      {/* First visit: the offer that makes this chart personal deserves a real
-          button, not 11px of legend text. */}
+      {/* First visit: the offer that makes this chart personal, at body size
+          rather than 11px of legend text. A quiet link rather than a button:
+          the page's own "Test my vocal range" is the primary ask, and a
+          second filled button here competed with it. */}
       {!hasYou && (
         <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-violet/40 bg-panel px-4 py-3">
           <span className="text-sm text-mut">
@@ -658,9 +660,12 @@ export function SingersDirectory() {
             Your own range can sit on this chart: the test takes about two
             minutes, and your audio never leaves your device.
           </span>
-          <LinkButton href={rangeTestHref()} size="sm" className="ml-auto">
+          <Link
+            href={rangeTestHref()}
+            className="ml-auto inline-flex min-h-11 items-center text-sm font-medium text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
+          >
             Find my range
-          </LinkButton>
+          </Link>
         </div>
       )}
 

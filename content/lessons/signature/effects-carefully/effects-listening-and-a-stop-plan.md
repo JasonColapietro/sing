@@ -29,7 +29,7 @@ Do not learn a growl, scream, distortion, or other new effect from written direc
 
 ### Name the target: Effects safety and a stop plan
 
-Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.
 - Listen: Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.

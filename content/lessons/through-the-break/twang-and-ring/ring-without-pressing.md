@@ -29,7 +29,7 @@ Record an easy baseline phrase in the recorder at fixed microphone distance and 
 
 ### Name the target: Resonance over force
 
-More carrying power without more push. Ring is a change of resonance, not a change of effort. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+More carrying power without more push. Ring is a change of resonance, not a change of effort. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.
 - Listen: The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone.
@@ -57,7 +57,7 @@ I compared two easy tones on the same pitch and described a change in brightness
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Ring Without Pressing.”
 - 90s: Isolate the resonance over force target in short, comfortable examples.
-- 135s: Practise or record the complete “Ring Without Pressing” task, resetting between attempts.
+- 135s: Practice or record the complete “Ring Without Pressing” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -3,7 +3,7 @@ title: "The pop men"
 part: "Pop"
 order: 9
 group: pop-men
-summary: "From crooners to falsetto-forward streaming stars — why the male pop lead keeps climbing, and what the tenor arms race costs the baritones who enter it."
+summary: "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it."
 ---
 
 Male pop singing has spent seventy years migrating upward. The crooners in this chapter worked at speech pitch and made softness a technology; the soul-influenced generations pushed the tessitura into high tenor territory; and the streaming era's leads live above the staff half the night, in mixes and falsettos their grandfathers' genre would have considered exotic.

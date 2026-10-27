@@ -29,7 +29,7 @@ Choose a target near the middle of your comfortable range. Hear it once, stop th
 
 ### Name the target: Onset and pitch matching
 
-Arrive on the note, do not slide up to it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Arrive on the note, do not slide up to it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide.
@@ -57,7 +57,7 @@ I heard the five-note scale reference, sang the pattern from silence, and compar
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Match Five, No Scoop.”
 - 75s: Isolate the onset and pitch matching target in short, comfortable examples.
-- 120s: Practise or record the complete “Match Five, No Scoop” task, resetting between attempts.
+- 120s: Practice or record the complete “Match Five, No Scoop” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

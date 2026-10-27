@@ -33,7 +33,7 @@ Choose one well-learned song in a comfortable key so pitch and words do not cons
 
 ### Name the target: Genre choices
 
-Onset, vibrato, diction, and placement, decided per genre. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Onset, vibrato, diction, and placement, decided per genre. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Each treatment has written choices rather than a vague instruction to sound like a particular artist.
 - Listen: A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.
@@ -61,7 +61,7 @@ I compared two stylistic choices in the same supplied phrase and could explain w
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Style Is a Set of Choices, Not a Sound.”
 - 75s: Isolate the genre choices target in short, comfortable examples.
-- 120s: Practise or record the complete “Style Is a Set of Choices, Not a Sound” task, resetting between attempts.
+- 120s: Practice or record the complete “Style Is a Set of Choices, Not a Sound” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -171,7 +171,7 @@ export const BREATH_ROUTINES: BreathRoutine[] = [
     id: "builder",
     name: "Breath builder",
     tagline:
-      "Longer sides, a higher count, notes started on a breath, then three sustains — the set that stretches the breath rather than settling it.",
+      "Longer sides, a higher count, notes started on a breath, then three sustains: the set that stretches the breath rather than settling it.",
     steps: [
       { drill: "box", side: 5, minutes: 3 },
       { drill: "farinelli", cap: 10 },
@@ -303,7 +303,7 @@ export function breathStepSummary(step: BreathStep): string {
 export function breathDrillDesc(drill: BreathDrillId): string {
   switch (drill) {
     case "box":
-      return "Breathe around the square — inhale, hold, exhale, hold, equal counts on every side. Keep each hold soft and open, a pause rather than a locked throat, and shorten the sides if you feel short of air. It settles the nerves and evens out the airflow before you sing.";
+      return "Breathe around the square: inhale, hold, exhale, hold, with equal counts on every side. Keep each hold soft and open, a pause rather than a locked throat, and shorten the sides if you feel short of air. It settles the nerves and evens out the airflow before you sing.";
     case "farinelli":
       return "Inhale, hold and exhale for the same count, then add one count each round. Hold by keeping the ribs open, not by shutting your throat. Breathe low and quietly, keep the shoulders still, and stop at the count you can do without gasping.";
     case "cue":

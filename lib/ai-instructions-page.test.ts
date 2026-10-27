@@ -9,7 +9,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
-import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { ORG_NODE, ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { PRICING, SOLD_OUT_PLANS, formatPrice, proHeadline } from "@/lib/pro-shared";
 
 const html = readFileSync(new URL("../public/ai-instructions.html", import.meta.url), "utf8");
 const sitemap = readFileSync(
@@ -64,7 +66,32 @@ describe("/ai-instructions static page", () => {
     expect(page.url).toBe(PAGE_URL);
     expect(page.isPartOf).toEqual({ "@id": "https://sing.suedeai.ai/#website" });
     expect(page.about).toEqual({ "@id": "https://sing.suedeai.ai/#app" });
-    expect(page.publisher).toEqual(ORG_PUBLISHER_NODE);
+    // The shared publisher node, plus the canonical node's alternate names:
+    // this is the page that tells an assistant what the company is called.
+    expect(page.publisher).toEqual({ ...ORG_PUBLISHER_NODE, alternateName: ORG_NODE.alternateName });
+  });
+
+  /** Visible text, tags stripped. */
+  const text = html
+    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ");
+
+  it("names Suede AI as the company and Suede Labs as its older name, as llms.txt does", () => {
+    expect(text).toContain("Suede AI is the company");
+    expect(text).toContain("Older profiles may say Suede Labs; it is the same company.");
+  });
+
+  // A static file cannot import lib/pro-shared.ts, so these hold its literal
+  // prices to the code every other surface reads them from.
+  it("states the free tier and the Suede Pro offer, matching the pricing code", () => {
+    expect(text).toContain("The pitch studio, the vocal range test and the recorder are free with no limit.");
+    expect(text).toContain(`has ${FREE_DAILY_MINUTES} free minutes a day`);
+    expect(text).toContain(`Suede Pro is ${proHeadline()}`);
+    expect(SOLD_OUT_PLANS).toContain("monthly");
+    expect(text).toContain(`the ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out`);
+    expect(html).toMatch(/<a href="https:\/\/sing\.suedeai\.ai\/pro">[^<]+<\/a>/);
+    expect(html).not.toContain("\u2014");
   });
 
   it("states the same modified date in the footer, the JSON-LD and the sitemap", () => {

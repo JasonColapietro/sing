@@ -77,9 +77,6 @@ function ProgramCard({
   finished: boolean;
   onOpen: (id: string) => void;
 }) {
-  const isPro = useIsPro();
-  const hydrated = useHydrated();
-  const freeWeeks = freePlanWeeks(program);
   return (
     <Card tone="raised" className="flex flex-col">
       {/* At least a pill's height (22px), so the running program's pill,
@@ -96,14 +93,8 @@ function ProgramCard({
         {restDayCount(program) === 1 ? "day" : "days"}
         {program.pro && ` · ${freeLabel()} free`}
       </p>
-      {/* Not for Pro, which the prerender cannot know: until hydration the
-          pre-paint state hides it from a Pro singer (components/prepaint.tsx). */}
-      {!isPro && freeWeeks !== null && (
-        <p className="mt-1 text-xs text-dim" {...prepaintMarker(hydrated, { plan: "not-pro" })}>
-          On the free plan&apos;s five guided minutes a day, this takes about {freeWeeks} weeks. Pro
-          runs it as written.
-        </p>
-      )}
+      {/* No free-plan pace line on the card: the page's lede says it once
+          for all six, and each program's own view gives its weeks. */}
       <p className="mt-3 text-sm text-mut">{program.tagline}</p>
       {/* What each plan measures, on the list itself: the list's own page,
           /programs, carries no program's calendar. */}
@@ -375,17 +366,19 @@ function ProgramDetail({
             </Button>
           )}
         </div>
+        {/* Only what this program and this run add. How a day ticks off, that
+            a missed day waits and that the place is kept in this browser are
+            in "How a singing practice program works" below the page
+            (components/programs/programs-page.tsx), word for word. */}
         <p className="mt-3 max-w-2xl text-xs text-dim">
-          {running ? "A restart makes today day 1 again." : "Day 1 is today."} A day ticks itself off
-          once the practice log shows each of its items, one program day per calendar day at most.
-          Your place is kept in this browser only.
+          {running ? "A restart makes today day 1 again." : "Day 1 is today."}
           {running
             ? finished
               ? " You finished it; a restart begins a new run."
               : program.chapters
                 ? ` Taking a break? The next day waits. Back after two weeks or more away, or stuck on a fortnight whose “Move on when” check has not passed? Chapter 13's rule is to go back rather than forward${goBacks.length > 0 ? ": the buttons above restart this fortnight or go back to the one before" : ""}.`
                 : " Taking a break? You don't need to stop: the next day waits until you sing it."
-            : " Miss a day and the program waits: the next day is there when you come back."}
+            : null}
         </p>
       </Card>
       <Calendar
@@ -444,7 +437,13 @@ export function ProgramsClient({ initialProgram = null }: { initialProgram?: str
     <PageShell
       kicker="Programs"
       title="Singing practice programs"
-      subtitle="Vocal training programs from one week to twelve, worked a day at a time: warmups, breath and range check-ins, with rest days built in. Four are free to follow; on the free plan guided practice is five minutes a day, so a longer day can be spread over several. Pro removes the cap."
+      // A program's own view drops the list's lede, which pushed "Start this
+      // program" below the fold on a phone.
+      subtitle={
+        program
+          ? undefined
+          : "Vocal training programs from one week to twelve, worked a day at a time: warmups, breath and range check-ins, with rest days built in. Four are free to follow; on the free plan guided practice is five minutes a day, so a longer day can be spread over several. Pro removes the cap."
+      }
     >
       <div className="space-y-8">
         {/* The running program is read from this browser's storage, so the

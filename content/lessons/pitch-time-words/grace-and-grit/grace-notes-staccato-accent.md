@@ -33,7 +33,7 @@ Choose a short comfortable phrase and establish a neutral version first. Keep pi
 
 ### Name the target: Grace notes, staccato, accent
 
-Three ways to attack the same note. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Three ways to attack the same note. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
 - Listen: The three versions are distinguishable in playback without one simply being much louder than the others.
@@ -61,7 +61,7 @@ I used one supplied phrase to compare connected, detached, and gently accented a
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Grace Notes, Staccato, Accent.”
 - 60s: Isolate the grace notes, staccato, accent target in short, comfortable examples.
-- 90s: Practise or record the complete “Grace Notes, Staccato, Accent” task, resetting between attempts.
+- 90s: Practice or record the complete “Grace Notes, Staccato, Accent” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check

@@ -3,7 +3,7 @@ title: "The records"
 part: "Appendices"
 order: 26
 appendix: records
-summary: "The atlas's extremes in one place — lowest floors, highest ceilings, widest spans and the whistle club, each with the recording where the note happened when one is famously known."
+summary: "The atlas's extremes in one place (lowest floors, highest ceilings, widest spans and the whistle club), each with the recording where the note happened when one is famously known."
 ---
 
 This appendix gathers the edges of the whole atlas: the lowest cited floors, the highest cited ceilings, the widest spans, and the short roster of voices with a documented whistle register. The tables that follow are generated from the same data as every entry, so they update as the library does, and where an extreme is famously tied to one recording, it is listed with the note.

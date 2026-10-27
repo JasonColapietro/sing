@@ -7,12 +7,13 @@ import {
   ATLAS_TITLE,
   ATLAS_WORDS,
 } from "@/lib/atlas-data";
-import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
+import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { balancedChunks } from "@/lib/singers-core";
 import { SINGERS_LITE } from "@/lib/singers-lite";
 import { AtlasCta } from "@/components/atlas/cta";
+import { RosterFold } from "@/components/atlas/roster-fold";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -21,6 +22,9 @@ const DESCRIPTION =
 
 /** Leads with the book's name and the query it owns; the range chart owns "famous singers' vocal ranges". */
 const TITLE = `${ATLAS_TITLE}: How Famous Singers Sing`;
+
+/** Chapters readable without Pro, counted from the contents rather than stated. */
+const ATLAS_FREE_COUNT = ATLAS_CONTENTS.filter((c) => c.free).length;
 
 /** Every singer the chapters cover, counted once. */
 const ATLAS_SINGER_COUNT = new Set(
@@ -104,16 +108,16 @@ function ChapterSingerIndex({
 }) {
   if (singers.length <= MAX_SINGERS_PER_CHAPTER_SECTION) {
     return (
-      <div className="mt-2">
+      <RosterFold count={singers.length}>
         <SingerLinks singers={singers} />
-      </div>
+      </RosterFold>
     );
   }
 
   const groups = balancedChunks(singers, MAX_SINGERS_PER_CHAPTER_SECTION);
 
   return (
-    <div className="mt-2">
+    <RosterFold count={singers.length}>
       {groups.map((group, index) => {
         const headingId = `${chapterSlug}-singers-${index + 1}`;
         return (
@@ -134,7 +138,7 @@ function ChapterSingerIndex({
           </section>
         );
       })}
-    </div>
+    </RosterFold>
   );
 }
 
@@ -165,7 +169,7 @@ export default function AtlasPage() {
 
   return (
     <PageShell
-      kicker="Included with Pro · first 3 chapters free"
+      kicker={`Included with Pro · ${ATLAS_FREE_COUNT} chapters free`}
       title={`${ATLAS_TITLE}: how famous singers sing, voice by voice`}
       subtitle={`${ATLAS_TITLE} is a ${ATLAS_CONTENTS.length}-chapter book on the range, tone and technique of ${ATLAS_SINGER_COUNT} singers: who sings what, how it sounds, and how to borrow it safely. The contents and the first three chapters are free.`}
       // In the header, so the free chapter the subtitle promises is one tap
@@ -180,7 +184,7 @@ export default function AtlasPage() {
       <div className="space-y-6">
         <Card>
           <div className="flex flex-wrap gap-8">
-            <Stat label="Chapters" value={ATLAS_CONTENTS.length} tone="violet" />
+            <Stat label="Chapters" value={ATLAS_CONTENTS.length} tone="ink" />
             <Stat
               label="Words"
               value={ATLAS_WORDS.toLocaleString("en-US")}
@@ -196,8 +200,8 @@ export default function AtlasPage() {
               className="text-violet-ink hover:underline"
             >
               {AUTHOR_NAME}
-            </a>{" "}
-            ({AUTHOR_ALIAS}). Published by Suede AI.
+            </a>
+            . Published by Suede AI.
           </p>
           <p className="mt-5 max-w-3xl text-mut">
             This is the written study rather than the chart. The numbers on one
@@ -211,11 +215,11 @@ export default function AtlasPage() {
           </p>
           <p className="mt-5 max-w-3xl text-mut">
             One book for the question every singer eventually types into a
-            search bar: <em>what is their vocal range — and how do they do
+            search bar: <em>what is their vocal range, and how do they do
             that?</em> Six method chapters teach you to read a range claim,
             decode tonal quality, and borrow technique without hurting
             yourself. The genre chapters then work through the library voice by
-            voice — cited range, where the extreme notes happened on record,
+            voice: cited range, where the extreme notes happened on record,
             what the voice sounds like, and what to practice if you want some
             of it. Two generated appendices collect the records and shelve
             every voice by type.
@@ -232,7 +236,7 @@ export default function AtlasPage() {
             reference puts all eight voice types in one table.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            The contents below list every chapter and every singer covered —
+            The contents below list every chapter and every singer covered. They are
             free, along with the first three chapters and each singer&rsquo;s{" "}
             <Link href="/singers" prefetch={false} className="text-violet-ink hover:underline">
               range page
@@ -261,10 +265,10 @@ export default function AtlasPage() {
                       {String(c.order).padStart(2, "0")}
                     </span>
                     <span className="min-w-0">
-                      <h3 className="flex flex-wrap items-baseline gap-x-3 text-sm font-medium text-ink">
+                      <h3 className="flex items-baseline gap-x-3 text-sm text-ink">
                         {c.title}
                         {c.free && (
-                          <span className="rounded-full border border-violet/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-violet-ink">
+                          <span className="shrink-0 rounded-full border border-violet/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-violet-ink">
                             free
                           </span>
                         )}
@@ -292,7 +296,7 @@ export default function AtlasPage() {
           <SectionLabel>The other book</SectionLabel>
           <p className="mt-3 max-w-2xl text-sm text-mut">
             Pro includes two books. <em>The Measured Voice</em> is the training
-            manual — how the voice works, how to read your own measurements,
+            manual: how the voice works, how to read your own measurements,
             and a twelve-week program.{" "}
             <Link href="/book" className="text-violet-ink hover:underline">
               Its contents are free too
@@ -305,7 +309,7 @@ export default function AtlasPage() {
           Ranges are commonly cited figures compiled from recordings and public
           discussion, not lab measurements, and the extremes are one-off
           recorded moments rather than anyone&rsquo;s everyday voice. The
-          technique notes describe how voices sound on record — nothing here is
+          technique notes describe how voices sound on record. Nothing here is
           medical advice, and a voice that hurts, stays hoarse, or loses easy
           notes is a question for a doctor who can examine the vocal folds,
           such as an ENT or laryngologist, not a practice plan.

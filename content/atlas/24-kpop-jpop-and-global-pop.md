@@ -3,7 +3,7 @@ title: "K-pop, J-pop and global pop"
 part: "The world's voices"
 order: 24
 group: global-pop
-summary: "The idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers — precision singing at industrial standards."
+summary: "Precision singing at industrial standards: the idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers."
 ---
 
 The center of this chapter is the idol system's product: singers trained from adolescence to dance at full output while delivering studio-grade vocals, auditioned annually against thousands, and drilled in ensemble discipline — hitting your line in a seven-way harmony after sprint choreography is a skill no Western tradition certifies. The main-vocal entries here describe the results: immaculate pitch under cardio load, mixed belts engineered for nightly repetition, and an agility standard set by survival shows where a shaky run ends a career. Alongside them, the ballad specialists of the Korean tradition sustain climactic belts that draw directly on trot and gospel lineages.

@@ -361,11 +361,11 @@ describe("the answer sentence's reason for a rating", () => {
   it("names the span and the leaps the rating comes from", async () => {
     const loch = await render("loch-lomond");
     expect(loch).toContain(
-      "9 semitones, with 1 leap of a major third or more — and the span and leaps together rate it medium to sing",
+      "9 semitones, with 1 leap of a major third or more), and the span and leaps together rate it medium to sing",
     );
     const valley = await render("down-in-the-valley");
     expect(valley).toContain(
-      "9 semitones, with 3 leaps of a major third or more — and the span and leaps together rate it hard to sing",
+      "9 semitones, with 3 leaps of a major third or more), and the span and leaps together rate it hard to sing",
     );
     for (const song of SONGS) {
       const html = await render(song.slug);

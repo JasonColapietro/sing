@@ -67,7 +67,7 @@ export default function Error({
       <p className="mx-auto mt-4 max-w-md text-mut">
         {offline
           ? "Part of this room did not download, which usually means the connection dropped. Once you are back online, try this room again."
-          : "Not your microphone and not your practice — an error in the page itself. Trying again usually clears it, since most causes are momentary."}
+          : "Not your microphone and not your practice: an error in the page itself. Trying again usually clears it, since most causes are momentary."}
       </p>
       <p className="mx-auto mt-3 max-w-md text-sm text-mut">
         Everything you have logged is stored on this device and is untouched by

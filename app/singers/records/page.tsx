@@ -128,7 +128,7 @@ export default function RecordsPage() {
         holders.widest.length === 1
           ? `the largest reported span is ${w.name}'s ${rangeLabel(w)}`
           : `the largest reported span is shared by ${joinNames(holders.widest.map(withRange))}`
-      } — about ${spanOctaves(span(w))} octaves. Individual endpoint evidence must be checked before treating that as a verified performance.`,
+      }, about ${spanOctaves(span(w))} octaves. Individual endpoint evidence must be checked before treating that as a verified performance.`,
     },
     {
       q: "What is the highest note ever sung?",
@@ -162,7 +162,7 @@ export default function RecordsPage() {
             "@type": "ListItem",
             position: spanRank(s),
             url: `${SITE_URL}/singers/${s.slug}`,
-            name: `${s.name} — ${spanOctaves(span(s))} octaves`,
+            name: `${s.name}: ${spanOctaves(span(s))} octaves`,
           })),
         },
       },
@@ -269,7 +269,7 @@ export default function RecordsPage() {
           <div className="mt-4 max-w-3xl space-y-5">
             {faq.map((f) => (
               <div key={f.q}>
-                <h3 className="text-sm font-semibold">{f.q}</h3>
+                <h3 className="text-sm">{f.q}</h3>
                 <p className="mt-1 text-sm text-mut">{f.a}</p>
               </div>
             ))}
@@ -283,7 +283,7 @@ export default function RecordsPage() {
           <p className="mt-3 max-w-3xl text-sm text-mut">
             None of these numbers is a target. The useful comparison is your own
             measured range against singers whose repertoire you actually want to
-            sing — which the range test and the main chart do together.
+            sing. The range test and the main chart show you that together.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <LinkButton href={rangeTestHref()} size="sm">

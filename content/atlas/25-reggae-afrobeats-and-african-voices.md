@@ -3,7 +3,7 @@ title: "Reggae, Afrobeats and African voices"
 part: "The world's voices"
 order: 25
 group: afro
-summary: "Groove-first singing — patois phrasing, Afrobeats' melodic economy, amapiano's smoothness and the continent's great griot and mbalax voices."
+summary: "Groove-first singing, from patois phrasing and Afrobeats' melodic economy to amapiano's smoothness and the continent's great griot and mbalax voices."
 ---
 
 Every tradition in this chapter starts from the same premise: the groove is the lead instrument, and the voice's first job is to sit inside it correctly. Reggae's founders phrase against the one-drop with a horn section's patience, patois vowels rounding the tone; the toasters and dancehall deejays turn the voice fully percussive. Afrobeats' modern stars work by melodic economy — short cells, repeated and mutated, placed with producer-level precision against log drums and shakers — and the entries describe high, bright placements engineered to cut through dense percussion at streaming loudness rather than stage volume. The amapiano-adjacent voices go the other way, gliding breath-soft over the drums. And the elder statesmen of the continent's traditions — griot lineages, mbalax, Afro-jazz — contribute some of the book's most distinctive tonal signatures: keening, reedy, ecstatic colors carrying centuries of technique with no conservatory paperwork.

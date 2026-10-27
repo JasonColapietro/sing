@@ -23,7 +23,7 @@ const DATA = "data/singers";
 
 export const ATLAS_TITLE = "The Voice Atlas";
 export const ATLAS_SUBTITLE =
-  "Who sings what, how it sounds, and how to borrow it — the range, tone and technique of every voice in the library.";
+  "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.";
 
 /* ---------------------------------------------------------------- singers */
 
@@ -552,7 +552,7 @@ const out = `/**
  * GENERATED FILE — edit content/atlas/*.md and data/singers/*.json, then run
  * scripts/compile-singers.mjs and scripts/compile-atlas.mjs.
  *
- * "The Voice Atlas", the second book included with Suede Sing Pro. Chapter
+ * "The Voice Atlas", the second book included with Suede Pro. Chapter
  * bodies and entry prose are served only through /api/book (which verifies the
  * subscription with Stripe), except the chapters flagged \`free\`, which render
  * server-side on their own pages; the contents metadata — including each
@@ -594,7 +594,7 @@ export interface AtlasChapter {
 
 export const ATLAS_TITLE = "The Voice Atlas";
 export const ATLAS_SUBTITLE =
-  "Who sings what, how it sounds, and how to borrow it — the range, tone and technique of every voice in the library.";
+  "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.";
 
 export const ATLAS: AtlasChapter[] = ${JSON.stringify(chapters, null, 2)};
 
