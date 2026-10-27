@@ -108,10 +108,12 @@ that were acted on are listed below.
 - The Stripe webhook route is intake-only and answers 503 unless intake env
   vars are set; if it is registered in the Dashboard, Stripe will log it as
   failing.
-- Suede Voice screenshot /shot-01-start-the-session.png shows "Suede Labs"
-  inside the image; needs a re-export.
-- lib/organization.ts alternateName includes "Suede Labs" for entity
-  reconciliation; left as is.
+- Naming rule (owner, 2026-10-27): Suede AI is the primary name and Suede
+  Labs stays as the alternate, always. Never scrub Suede Labs out; keep it
+  where it already works as the alternate: `alternateName` in
+  lib/organization.ts, the "Older profiles may say Suede Labs" line in
+  lib/llms-txt.ts, the sameAs profile URLs, and the Suede Voice app's own
+  credit line in /shot-01-start-the-session.png.
 
 ## Round two, 2026-10-27: checkout recovery and the screenshot
 
@@ -129,10 +131,10 @@ Branch `checkout-recovery` off `main` at `e543c4b` (the merged funnel polish).
   reports an unpaid session's own status (open, expired) and a not-yet-ours
   payment's status (processing), instead of a bare inactive. The confirm
   path treats "processing" as retryable rather than definitive.
-- **Screenshot.** `public/shot-01-start-the-session.png`: the app's own
-  footer line ("A Suede Labs ...") that was cut off at the bottom edge is
-  painted over with the screen background (rows 575 to 581 copied from row
-  568). Same size, so no layout change.
+- **Screenshot.** #257 painted over the app's own credit line ("A Suede
+  Labs ...") at the bottom of `public/shot-01-start-the-session.png`. That
+  was reverted on 2026-10-27 (branch `restore-suede-labs-credit`): the
+  original capture is back, byte for byte, under the naming rule above.
 - **Not done, needs the owner.** The Stripe receipt email is a Dashboard-only
   setting (Settings, Emails, Successful payments); there is no API for it.
   The intake-only webhook, if registered in the Dashboard, should be
