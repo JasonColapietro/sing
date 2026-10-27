@@ -68,19 +68,28 @@ that were acted on are listed below.
 - Ear-game hint reworded to "under Audio" after the audio panel's collapsed
   label became "Audio".
 
+## Commit and push state
+
+- Committed on `funnel-polish` as `90af45e` (author Jason Colapietro),
+  63 files, full suite green (3412 passed), tsc, lint and build clean.
+- `git push -u origin funnel-polish` returned 403 from the session's git
+  proxy: the repository is not in this session's authorized sources
+  (attaching it was denied by the permission classifier). The same commit is
+  saved as a patch at /home/user/funnel-polish.patch (and in the session
+  scratchpad). From any clone: `git checkout -b funnel-polish origin/main &&
+  git am /path/to/funnel-polish.patch`, then push and open the PR.
+
 ## Still to do
 
-1. Confirm the full suite is green, then commit as Jason Colapietro
-   (scripts/git-identity.sh is applied; the commit-msg hook strips AI trailers).
-2. Push needs the repo attached to the session (add_repo was denied by the
-   permission classifier; git push returns 403 from the proxy). If it stays
-   blocked, write the patch to the scratchpad and tell the owner.
-3. Optional follow-up, not started: pre-park the checkout session id before
+1. Push the branch once the repository is attached to a session, or apply
+   the patch locally; open a PR against main (CI runs typecheck, lint, tests,
+   build and the browser suites).
+2. Optional follow-up, not started: pre-park the checkout session id before
    the Stripe redirect so a lost redirect can still unlock Pro (needs
    /api/checkout to return the id, a separate "started" storage key, and
    /api/entitlement to report the session status so an abandoned checkout is
    cleared quietly).
-4. Optional: the proxy matcher could also skip `icon`/`apple-icon` metadata
+3. Optional: the proxy matcher could also skip `icon`/`apple-icon` metadata
    routes if those ever become generated instead of static files.
 
 ## Flagged for the owner, not changed
