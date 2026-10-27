@@ -177,7 +177,7 @@ export default async function ChapterPage({
             </p>
             <p className="text-sm text-mut">
               The evidence comes from{" "}
-              <Link href={exit.room === "range" ? rangeTestHref() : exit.roomPath} className="text-violet-ink hover:underline">
+              <Link href={exit.room === "range" ? rangeTestHref() : exit.roomPath} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 {exit.roomLabel}
               </Link>
               , which is where this app measures it.
@@ -211,12 +211,12 @@ export default async function ChapterPage({
                 <a
                   href="https://jasoncolapietro.com"
                   rel="author"
-                  className="text-violet-ink hover:underline"
+                  className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                 >
                   {AUTHOR_NAME}
                 </a>{" "}
                 · Chapter {chapter.order} of{" "}
-                <Link href="/book" className="text-violet-ink hover:underline">
+                <Link href="/book" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                   {BOOK_TITLE}
                 </Link>
               </p>
@@ -261,7 +261,7 @@ export default async function ChapterPage({
               <ul className="mt-3 space-y-2">
                 {otherFree.map((c) => (
                   <li key={c.slug} className="text-sm text-mut">
-                    <Link href={`/book/${c.slug}`} className="text-violet-ink hover:underline">
+                    <Link href={`/book/${c.slug}`} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                       {c.title}
                     </Link>
                     {c.summary && <span>: {c.summary}</span>}
@@ -286,7 +286,7 @@ export default async function ChapterPage({
                   Next up:{" "}
                   <Link
                     href={`/book/${next.slug}`}
-                    className="text-violet-ink hover:underline"
+                    className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                   >
                     {next.title}
                   </Link>

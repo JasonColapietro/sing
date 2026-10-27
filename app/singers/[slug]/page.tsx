@@ -31,6 +31,7 @@ import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
+import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
   CompareWithMe,
@@ -144,7 +145,10 @@ function queryAlignedDescription(s: SingerRecord): string {
   if (isPending(s)) {
     return `Our catalog reports ${s.name} at ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(s.highMidi - s.lowMidi)} octaves). Individual endpoint review is pending. Compare your range free.`;
   }
-  return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
+  // The answer first, in a sentence that names the singer: the opening an
+  // answer engine lifts for "<name> vocal range". The caveat follows it.
+  const semis = s.highMidi - s.lowMidi;
+  return `${s.name}’s reported vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, about ${spanOctaves(semis)} octaves (${semis} semitones). That is a reported reference span, not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
 }
 
 /**
@@ -213,7 +217,7 @@ function answerSentence(s: SingerRecord): string {
   if (isPending(s)) {
     return `Our catalog reports ${s.name} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, a reference span of about ${spanOctaves(semis)} octaves (${semis} semitones). Individual endpoint review is pending; these are not verified physiological limits.`;
   }
-  return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
+  return `${s.name}’s reported vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, about ${spanOctaves(semis)} octaves (${semis} semitones). That is a reported reference span, not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
 }
 
 const VOICE_TYPE_QUESTION = (s: SingerRecord) => `What voice type is ${s.name}?`;
@@ -284,6 +288,9 @@ export default async function SingerPage({
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = answerSentence(s);
   const faq = singerFaq(s);
+  // The atlas chapter that profiles this singer, if any (chapter rosters are
+  // public metadata; the entry prose itself stays behind Pro).
+  const atlasChapter = ATLAS_CONTENTS.find((c) => c.singers.some((row) => row.slug === s.slug));
   const intent = searchIntentFor(s.slug);
   const evidence = getSingerEvidence(s.slug);
   const reviewed = isSingerReviewed(s.slug);
@@ -681,6 +688,21 @@ export default async function SingerPage({
               </div>
             ))}
           </div>
+          {/* Where the full entry lives. The chapter rosters are public
+              metadata; the chapter page carries the offer when it is paid. */}
+          {atlasChapter && (
+            <p className="mt-5 max-w-3xl text-sm text-mut">
+              {s.name}&rsquo;s full entry (range, tone and technique) is in The
+              Voice Atlas, chapter {atlasChapter.order}:{" "}
+              <Link
+                href={`/atlas/${atlasChapter.slug}`}
+                className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+              >
+                {atlasChapter.title}
+              </Link>
+              {atlasChapter.free ? ", free to read." : ", included with Pro."}
+            </p>
+          )}
         </Card>
 
         {/* Who else touches the same extremes — the pages a reader who cares

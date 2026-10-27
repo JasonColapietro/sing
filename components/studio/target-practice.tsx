@@ -61,60 +61,84 @@ function MiniKeyboard({
   const blacks = midis.filter((m) => midiToName(m).includes("#"));
   const wCount = whites.length;
   const blackW = (100 / wCount) * 0.62;
+  const scroller = useRef<HTMLDivElement>(null);
+
+  // On a narrow screen the keyboard scrolls sideways (below), so a target set
+  // by Shuffle or an octave shift can land off screen: bring it into view.
+  // Only scrollLeft moves, so the page itself never jumps mid-phrase.
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el || targetMidi === null || el.scrollWidth <= el.clientWidth) return;
+    const key = el.querySelector<HTMLElement>(`[data-midi="${targetMidi}"]`);
+    if (!key) return;
+    const left = key.offsetLeft;
+    const right = left + key.offsetWidth;
+    if (left >= el.scrollLeft && right <= el.scrollLeft + el.clientWidth) return;
+    el.scrollLeft = left + key.offsetWidth / 2 - el.clientWidth / 2;
+  }, [targetMidi, baseMidi]);
 
   return (
-    <div className="relative h-28 select-none">
-      <div className="flex h-full gap-[2px]">
-        {whites.map((m) => {
+    // Every key keeps a 24px minimum width (WCAG 2.5.8): the black keys are
+    // 62% of a white one, so the keyboard needs about 600px. Narrower than
+    // that (a phone, the md column) it scrolls sideways instead of shrinking
+    // the keys to 12-18px. The padding keeps the focus ring from being
+    // clipped by the scroll box.
+    <div ref={scroller} className="-m-1 overflow-x-auto p-1">
+      <div className="relative h-28 min-w-[37.5rem] select-none">
+        <div className="flex h-full gap-[2px]">
+          {whites.map((m) => {
+            const selected = m === targetMidi;
+            return (
+              <button
+                key={m}
+                type="button"
+                onClick={() => onPick(m)}
+                data-midi={m}
+                aria-label={`Set target ${midiToLabel(m)}`}
+                aria-pressed={selected}
+                className={`flex flex-1 items-end justify-center rounded-b-md border border-line pb-1 transition-colors ${
+                  selected
+                    ? locked
+                      ? "bg-ok"
+                      : "bg-violet"
+                    : "bg-key-white hover:bg-key-white-hover"
+                }`}
+              >
+                {/* Only the C keys are lettered. mut reads on the ivory key but
+                    washes out on the violet or green one it becomes when picked. */}
+                <span
+                  className={`font-mono text-[10px] ${selected ? "text-ink" : "text-mut"}`}
+                >
+                  {midiToName(m) === "C" ? midiToLabel(m) : ""}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {blacks.map((m) => {
+          const idx = whites.filter((w) => w < m).length;
+          const left = (idx / wCount) * 100 - blackW / 2;
           const selected = m === targetMidi;
           return (
             <button
               key={m}
               type="button"
               onClick={() => onPick(m)}
+              data-midi={m}
               aria-label={`Set target ${midiToLabel(m)}`}
               aria-pressed={selected}
-              className={`flex flex-1 items-end justify-center rounded-b-md border border-line pb-1 transition-colors ${
+              style={{ left: `${left}%`, width: `${blackW}%` }}
+              className={`absolute top-0 z-10 h-[58%] rounded-b-md border border-key-black transition-colors ${
                 selected
                   ? locked
                     ? "bg-ok"
                     : "bg-violet"
-                  : "bg-key-white hover:bg-key-white-hover"
+                  : "bg-key-black hover:bg-key-black-hover"
               }`}
-            >
-              {/* Only the C keys are lettered. mut reads on the ivory key but
-                  washes out on the violet or green one it becomes when picked. */}
-              <span
-                className={`font-mono text-[10px] ${selected ? "text-ink" : "text-mut"}`}
-              >
-                {midiToName(m) === "C" ? midiToLabel(m) : ""}
-              </span>
-            </button>
+            />
           );
         })}
       </div>
-      {blacks.map((m) => {
-        const idx = whites.filter((w) => w < m).length;
-        const left = (idx / wCount) * 100 - blackW / 2;
-        const selected = m === targetMidi;
-        return (
-          <button
-            key={m}
-            type="button"
-            onClick={() => onPick(m)}
-            aria-label={`Set target ${midiToLabel(m)}`}
-            aria-pressed={selected}
-            style={{ left: `${left}%`, width: `${blackW}%` }}
-            className={`absolute top-0 z-10 h-[58%] rounded-b-md border border-key-black transition-colors ${
-              selected
-                ? locked
-                  ? "bg-ok"
-                  : "bg-violet"
-                : "bg-key-black hover:bg-key-black-hover"
-            }`}
-          />
-        );
-      })}
     </div>
   );
 }
@@ -366,8 +390,9 @@ export function TargetPractice({
             <Button
               variant="ghost"
               size="sm"
-              aria-label="Shift keyboard down an octave"
-              disabled={baseMidi <= BASE_MIN}
+              // aria-disabled, not disabled: a disabled button drops keyboard
+              // focus to <body> the moment it reaches the end of the keyboard.
+              aria-disabled={baseMidi <= BASE_MIN}
               onClick={() => setBaseMidi((b) => Math.max(BASE_MIN, b - 12))}
             >
               <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
@@ -381,8 +406,7 @@ export function TargetPractice({
             <Button
               variant="ghost"
               size="sm"
-              aria-label="Shift keyboard up an octave"
-              disabled={baseMidi >= BASE_MAX}
+              aria-disabled={baseMidi >= BASE_MAX}
               onClick={() => setBaseMidi((b) => Math.min(BASE_MAX, b + 12))}
             >
               Octave up

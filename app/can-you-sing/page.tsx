@@ -126,7 +126,7 @@ export default function CanYouSingHub() {
           list. For what the artists themselves can do beyond one song, see
           the{" "}
           <Link
-            className="text-violet-ink underline-offset-4 hover:underline"
+            className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
             href="/singers"
             prefetch={false}
           >

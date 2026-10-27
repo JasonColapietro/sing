@@ -52,7 +52,7 @@ describe("a workout the free minutes stopped", () => {
     const html = render(true);
     expect(html).not.toContain("Play again");
     expect(html).toContain("free minutes of guided practice");
-    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Pro has no daily limit<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Keep practicing today with Pro, \$79 once<\/a>/);
   });
 
   it("keeps Play again, and no cap note, while the allowance is open", () => {

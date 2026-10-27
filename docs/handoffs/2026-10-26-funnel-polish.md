@@ -328,3 +328,115 @@ Open, for the owner:
   buttons indented when stacked.
 - Stripe Dashboard: receipt emails on; the intake-only webhook either
   unregistered or intake enabled.
+
+## Round four, 2026-10-27: third fleet pass
+
+Branch `fleet-pass-4` off `main` at `94193d4` (#259 merged and deployed;
+Vercel shows the production deployment READY and no runtime errors since).
+The environment's network policy now denies sing.suedeai.ai, so this round
+audits a local production build of the same commit served at
+http://localhost:3400 (stop it when the round ends). Fewer agents than round
+three, which hit the usage limit with seven running at once.
+
+Audits launched (read-only), each on ground no earlier round covered:
+1. Bug review of #256-#259 (moments wait, NotPro, checkout recovery, buy
+   card, heading layer, crawl index, sitemap, headers, proxy matcher,
+   result signals, progress gating).
+2. Accessibility: axe-core (WCAG 2.2 A/AA) on 25 routes at two widths, plus
+   keyboard and screen-reader checks (tab order, menu drawer, Pro dialog,
+   headings, landmarks, keyboard path to the buy button).
+3. In-session experience with Chrome's fake microphone: routine to results,
+   single exercise summary, ear and breath results, the cap slide mid-session,
+   range test first and second results, the Pro moment after closing results.
+4. Offer and answer-first review: /pro, cap wall, modal copy (facts already on
+   the site only; anything new goes to the owner as a question) and the
+   first 40-60 words of the top landing templates.
+
+If a limit stops the round: each auditor's report arrives as a message; fixes
+have not started until this section says so.
+
+### Round four progress
+
+Done (main lane, committed as WIP snapshots on fleet-pass-4):
+- Bug-review fixes: a "processing" card on return keeps its parked checkout
+  id (main fixed this first in #260, which this round keeps as merged);
+  an old answer from resolveStartedCheckout cannot wipe a newer started id;
+  /api/entitlement reports an open session's status when the payment attempt
+  has no customer yet; the footer Pro link is one span (it had split into
+  two columns); the static image cache rule skips /_next/ so hashed build
+  fonts keep Next's immutable header.
+- Offer copy: hero names the price and what the coach is built from; a line
+  under the buy button answers phone, other computers and recordings; FAQ
+  "How much does Suede Pro cost?" and "Can I use Pro on my phone and my
+  computer?"; cap button "Keep practicing today with Pro: $79 once"; cap
+  slide and modal copy (modal bullet: both books).
+- Answer-first: singer pages open "<Name>’s reported vocal range is X to Y,
+  about N octaves (S semitones)." and link their Atlas chapter
+  (SINGER_PAGE_REVISED 2026-10-27, fingerprints re-pinned; a real content
+  change); warmups, studio and range openings; "Is “<song>” hard to sing?"
+  heading on song-range pages; song pages list each line's notes.
+
+Accessibility lane and in-session fixes: done (see "Round four, final").
+
+Needs the owner (from the offer review): is there a refund policy for the
+$79 lifetime purchase and may /pro state it; does web Pro unlock anything in
+the Suede Voice app; may /pro say Pro needs no sign-in (a test currently
+forbids that line); what "lifetime" covers; is the Stripe receipt email on;
+does Early Access have a planned end.
+
+### Round four, final (2026-10-27)
+
+All lanes finished. Squashed into one commit on `fleet-pass-4` off
+`94193d4` and handed to the owner as `fleet-pass-4.patch` (push from this
+environment is still refused).
+
+Also in the commit, beyond "Round four progress" above:
+- Accessibility (15 items): focus after a failed checkout and on #buy and
+  #content, underlined prose links, ProgressBar names, label and name
+  mismatches, session-stage dim text contrast, locked achievement contrast,
+  studio piano key size, guides as labelled regions, homepage and banner
+  focus order, the Pro dialog named by its heading, nav logo and menu names.
+- In-session fixes from the fake-microphone audit: result cards and ear
+  wrong answers pass contrast; no second unpriced Pro ask under a capped
+  result; breath drill stars follow the score on screen; step chips only
+  turn green from 50; result rows keep their labels and "not reached" on
+  one line.
+- Pro moment timing: page-style results (single warmup, song, range retest)
+  now send the result signal when the singer leaves them
+  (lib/use-pro-result-on-leave.ts), so the modal no longer covers a score
+  nobody has read; it opens two frames after a results screen lets go, and
+  returns focus to the page content when its opener is gone. Kicker reads
+  "Result saved".
+- The microphone closes after the idle wait on breath results and on both
+  cap slides (it stayed live behind them).
+- Session header on a 375px phone: the title column keeps half the row, the
+  right-hand slot wraps, and the subtitle truncates before the title loses a
+  letter ("Morning reset" in full, was "M…").
+- Octave buttons in the studio use aria-disabled so focus stays put at the
+  ends of the keyboard.
+
+Verification on the squashed tree: `npx tsc --noEmit` clean, `npm run lint`
+clean, `npm test` 3449 passed (plus 12 node tests), production build OK
+(974 pages). axe-core WCAG 2.2 A/AA: zero violations on 25 routes at 375
+and 1280. Fake-microphone journeys rerun: the cap slide releases the mic
+after 15 s, the modal waits on a single-exercise summary and opens on
+"Back to library", the modal opens after a capped routine's Continue.
+The local server on :3400 is stopped.
+
+QA scripts note: the journey scripts in the session scratchpad look for a
+dialog named "Go Pro"; the dialog is now named by its heading ("Turn this
+result into a plan"), so update that locator before reusing them.
+
+Rebased onto `5378079` (#260). Its confirmCheckout keeps a processing
+payment parked and applies the inactive "processing" reply; this round's
+throw-and-retry version was dropped in its favor, and the /pro processing
+message it relies on is kept. One edge left for the owner: applying that
+reply replaces whatever this browser held, so a 30-day pass or ending plan
+holder who buys while a slow payment method is still processing loses the
+pass (and its stored Pro key) here until the payment settles.
+
+Still open for the owner (unchanged): the six offer questions above;
+programs order; the v4.0 pill and card; em dashes in chapter bodies; contract
+consumers re-sync; Stripe Dashboard settings; allowing sing.suedeai.ai in
+this environment's network policy; deleting the stale remote
+`funnel-polish` branch.

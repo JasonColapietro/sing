@@ -30,7 +30,7 @@ export function BookProgramNote({
     <p className={className}>
       The app runs this {scope} day by day in{" "}
       {/* A plain anchor, not next/link: see lib/program-ids.ts programViewHref. */}
-      <a href={BOOK_PROGRAM_HREF} className="text-violet-ink hover:underline">
+      <a href={BOOK_PROGRAM_HREF} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
         {BOOK_PROGRAM_NAME}
       </a>
       , a Suede Pro program. Its first week is free, and each day of that week

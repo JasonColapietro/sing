@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import { LinkButton } from "@/components/ui";
 
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { ProCrescendoNudge } from "@/components/pro/gate";
-import { emitProResult } from "@/lib/pro-signal";
+import { useProResultOnLeave } from "@/lib/use-pro-result-on-leave";
 import { MicAlert } from "@/components/mic-alert";
 import { IconMic } from "./icons";
 import { useProgress, type SessionLog } from "@/lib/progress";
@@ -158,12 +157,11 @@ export function SessionSummary({
     topMultiplier,
   } = data;
   const progress = useProgress();
-  // A completed result is on screen (the session is logged before this
-  // renders): the one-time Pro moment listens for this and decides for
-  // itself whether to open. A listen-only run is not a result.
-  useEffect(() => {
-    if (!listenMode) emitProResult();
-  }, [listenMode]);
+  // A completed result (the session is logged before this renders): the
+  // one-time Pro moment listens for this and decides for itself whether to
+  // open. Sent when the singer leaves this summary, so the modal never
+  // covers a grade they have not read. A listen-only run is not a result.
+  useProResultOnLeave(!listenMode);
   // Read just after the session logged, so it is today's streak — but read
   // live anyway, so a summary never names a streak that has lapsed.
   const streak = liveStreak(progress.streak);
@@ -274,7 +272,7 @@ export function SessionSummary({
                 <span className="tabular w-14 shrink-0 font-mono text-xs text-dim">
                   loop {i + 1}
                 </span>
-                <ProgressBar value={s} tone={scoreTone(s)} className="flex-1" />
+                <ProgressBar value={s} label={`Loop ${i + 1} score`} tone={scoreTone(s)} className="flex-1" />
                 <span className="tabular w-12 shrink-0 text-right font-mono text-xs">{s}%</span>
               </div>
             ))}
@@ -297,7 +295,12 @@ export function SessionSummary({
                 <span className="w-24 shrink-0 truncate font-mono text-xs text-dim">
                   {s.label}
                 </span>
-                <ProgressBar value={s.score} tone={scoreTone(s.score)} className="flex-1" />
+                <ProgressBar
+                  value={s.score}
+                  label={`${s.label} score`}
+                  tone={scoreTone(s.score)}
+                  className="flex-1"
+                />
                 <span className="tabular w-12 shrink-0 text-right font-mono text-xs">
                   {s.score}%
                 </span>
@@ -317,7 +320,12 @@ export function SessionSummary({
               return (
                 <div key={j} className="flex items-center gap-3">
                   <span className="w-16 shrink-0 font-mono text-xs capitalize text-dim">{j}</span>
-                  <ProgressBar value={pct} tone={JUDGMENT_TONE[j]} className="flex-1" />
+                  <ProgressBar
+                    value={pct}
+                    label={`Share of notes judged ${j}`}
+                    tone={JUDGMENT_TONE[j]}
+                    className="flex-1"
+                  />
                   <span className="tabular w-10 shrink-0 text-right font-mono text-xs">{count}</span>
                 </div>
               );

@@ -17,7 +17,7 @@ const CAP_MIN = Math.round(FREE_DAILY_SEC / 60);
  * price, so the first pricing fact they read is not that something sold out.
  */
 const PRO_BUY_HREF = "/pro#buy";
-const GO_PRO_LABEL = `Go Pro: no daily limit, ${formatPrice(PRICING.lifetime.amount)} once`;
+const GO_PRO_LABEL = `Keep practicing today with Pro: ${formatPrice(PRICING.lifetime.amount)} once`;
 
 /**
  * Pro unlocks per browser, so an owner who opens the app in a second browser,
@@ -192,8 +192,15 @@ export function CapSlide({ cap, onExit }: { cap: FreeCap; onExit: () => void }) 
         <p className="mt-3 max-w-md text-[var(--s-mut)]">
           What you sang is saved and today counts toward your streak. A fresh{" "}
           {CAP_MIN} minutes opens at midnight; the pitch studio and the range
-          test stay open now. Pro practices without a clock.
+          test stay open now. Pro has no daily limit, so you can keep going today.
         </p>
+        {/* What still works, as a way there and not only a sentence. */}
+        <Link
+          href="/studio"
+          className={`mt-4 inline-flex min-h-11 items-center text-sm text-[var(--s-ink)] underline underline-offset-4 ${SESSION_FOCUS}`}
+        >
+          Open the free studio
+        </Link>
         <Link
           href={PRO_RESTORE_HREF}
           className={`mt-4 inline-flex min-h-11 items-center text-sm text-[var(--s-mut)] underline underline-offset-4 hover:text-[var(--s-ink)] ${SESSION_FOCUS}`}
@@ -230,7 +237,7 @@ export function CappedAgainNote({ notReached = 0 }: { notReached?: number }) {
         href={PRO_BUY_HREF}
         className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
       >
-        Pro has no daily limit
+        {`Keep practicing today with Pro, ${formatPrice(PRICING.lifetime.amount)} once`}
       </Link>
       .
     </p>

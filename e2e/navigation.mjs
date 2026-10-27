@@ -104,8 +104,25 @@ try {
           assert.equal(await nav.getByRole("link").count(), 10, "drawer exposes all ten destinations");
         }
         await clickTo(page, nav.getByRole("link", { name, exact: true }), `${width < SM ? "drawer" : "header"} ${name}`, path, width, hash, search);
-        if (width < SM) assert.equal((await trigger.innerText()).trim(), name, "phone trigger names the current room");
-        else {
+        if (width < SM) {
+          // The visible label is the room. Words for screen readers follow it
+          // in the same span (", open menu"), so they are left out here and
+          // checked as part of the button's name instead.
+          const label = await trigger.locator("span.truncate").evaluate((el) =>
+            [...el.childNodes]
+              .filter((n) => !(n.nodeType === 1 && n.classList.contains("sr-only")))
+              .map((n) => n.textContent)
+              .join("")
+              .trim(),
+          );
+          assert.equal(label, name, "phone trigger names the current room");
+          const spoken = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*,\\s*open menu$`);
+          assert.equal(
+            await page.locator("header").getByRole("button", { name: spoken }).count(),
+            1,
+            "phone trigger says what it does",
+          );
+        } else {
           const current = nav.locator('a[aria-current="page"]');
           assert.equal(await current.count(), 1, "header announces one current page");
           assert.equal((await current.textContent()).trim(), name);

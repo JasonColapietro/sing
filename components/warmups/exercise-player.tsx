@@ -1093,6 +1093,7 @@ export function ExercisePlayer({
             ? (results.length / bounds.reps) * 100
             : ladderHeightPct(ladderIndex, roots.length)
         }
+        label={bounds ? "Step progress" : "Height in the ladder"}
         tone="violet"
       />
 

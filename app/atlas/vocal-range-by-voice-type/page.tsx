@@ -321,12 +321,12 @@ export default function VocalRangeByVoiceTypePage() {
             <a
               href={AUTHOR_NODE.url}
               rel="author"
-              className="text-violet-ink hover:underline"
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
             >
               {AUTHOR_NAME}
             </a>{" "}
             · a free reference from{" "}
-            <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
+            <Link href="/atlas" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               The Voice Atlas
             </Link>
           </p>
@@ -529,7 +529,7 @@ export default function VocalRangeByVoiceTypePage() {
             <li>
               <Link
                 href="/atlas/voice-types-in-the-wild"
-                className="text-violet-ink hover:underline"
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
               >
                 Voice types in the wild
               </Link>{" "}
@@ -538,14 +538,14 @@ export default function VocalRangeByVoiceTypePage() {
               a teacher. Free.
             </li>
             <li>
-              <Link href={rangeTestHref()} className="text-violet-ink hover:underline">
+              <Link href={rangeTestHref()} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 The free range test
               </Link>{" "}
               — about two minutes in the browser gives you your own two numbers to
               read this table with.
             </li>
             <li>
-              <Link href="/singers" prefetch={false} className="text-violet-ink hover:underline">
+              <Link href="/singers" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 All {SINGERS.length} singers
               </Link>{" "}
               — or jump to{" "}
@@ -555,7 +555,7 @@ export default function VocalRangeByVoiceTypePage() {
                   <Link
                     href={`/singers/voice-type/${row.slug}`}
                     prefetch={false}
-                    className="text-violet-ink hover:underline"
+                    className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                   >
                     {pluralVoice(row.lower)}
                   </Link>
@@ -564,7 +564,7 @@ export default function VocalRangeByVoiceTypePage() {
               .
             </li>
             <li>
-              <Link href="/glossary" className="text-violet-ink hover:underline">
+              <Link href="/glossary" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 The glossary
               </Link>{" "}
               — passaggio, tessitura, belt and the rest, defined.

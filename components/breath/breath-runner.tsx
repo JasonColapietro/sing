@@ -10,6 +10,7 @@ import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
+import { useIdleMicRelease } from "@/lib/audio/use-idle-mic-release";
 import { useProgress, type Achievement } from "@/lib/progress";
 import { SessionShell } from "@/components/practice/session-shell";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
@@ -431,7 +432,8 @@ export function BreathRunResults({
       notice={capped ? <CappedAgainNote notReached={notReached} /> : undefined}
     >
       {shortHold !== null && <ShortSustainNote held={shortHold} />}
-      <BreathProNudge />
+      {/* At the cap the notice carries the priced ask; one is enough. */}
+      {!capped && <BreathProNudge />}
     </ResultsScreen>
   );
 }
@@ -479,6 +481,16 @@ export function BreathRunner({
       setPhase({ kind: "done" });
     } else onExit();
   }
+
+  // The studio holds one stream for the whole set and closed it only on the
+  // way back to the room, so the results screen and the cap slide kept the
+  // recording light on for as long as they stayed up. Out of a drill it now
+  // closes after the usual idle wait; a drill that needs it asks again.
+  useIdleMicRelease({
+    listening: pitch.listening,
+    hold: phase.kind === "play" || (phase.kind === "intro" && !capped),
+    stop: pitch.stop,
+  });
 
   function again() {
     setResults([]);
@@ -593,6 +605,10 @@ export function BreathDrillSession({
     if (result) emitProResult();
   }, [result]);
 
+  // On the results screen the microphone closes after the usual idle wait,
+  // as it does in every other room; Play again opens it from the drill.
+  useIdleMicRelease({ listening: pitch.listening, hold: result === null, stop: pitch.stop });
+
   if (result) {
     return (
       <ResultsScreen
@@ -601,7 +617,10 @@ export function BreathDrillSession({
         // line — the sustain's hold and the breath heard before it — goes here.
         subtitle={result.score !== null ? `Breath · ${result.label}` : "Breath"}
         score={result.score}
-        stars={starsForDrillResult(drill, result)}
+        // Stars follow the number on screen: a scored drill (the sustain's
+        // steadiness) is starred by its score, as the legend beside it says;
+        // only the unscored drills are starred by how far they were taken.
+        stars={result.score !== null ? starsForScore(result.score) : starsForDrillResult(drill, result)}
         xp={result.logged?.xpGained ?? 0}
         streakDays={liveStreak(progress.streak)}
         goal={{ doneSec: goalDoneSec, goalSec }}
@@ -625,7 +644,7 @@ export function BreathDrillSession({
       >
         {/* Why "Play again" is gone, and when it comes back. */}
         {capped && <CappedAgainNote />}
-        <BreathProNudge />
+        {!capped && <BreathProNudge />}
       </ResultsScreen>
     );
   }

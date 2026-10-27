@@ -170,9 +170,14 @@ function Prose({ children }: { children: string }) {
   return <p className="mt-4 max-w-3xl text-mut">{children}</p>;
 }
 
+/** One ToolGuide per page, so a fixed id is unique. */
+const GUIDE_HEADING_ID = "tool-guide-heading";
+
 export function ToolGuide({ guide }: { guide: GuideContent }) {
   return (
-    <section className="mt-16 border-t border-line">
+    // A labelled region: rooms render the guide after PageShell's <main>,
+    // and an unnamed section left it outside every landmark.
+    <section aria-labelledby={GUIDE_HEADING_ID} className="mt-16 border-t border-line">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -181,7 +186,9 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
       />
       <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
         <SectionLabel className="mb-4">The short version</SectionLabel>
-        <h2 className="max-w-3xl text-3xl">{guide.heading}</h2>
+        <h2 id={GUIDE_HEADING_ID} className="max-w-3xl text-3xl">
+          {guide.heading}
+        </h2>
         <p className="mt-4 max-w-3xl text-lg text-ink">{guide.answer}</p>
         {guide.body.map((para) => (
           <Prose key={para.slice(0, 40)}>{para}</Prose>

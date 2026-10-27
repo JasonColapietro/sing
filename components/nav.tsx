@@ -280,9 +280,10 @@ export default function Nav() {
                 className="flex items-center gap-2"
                 onClick={() => setMenuOpen(false)}
               >
+                {/* Decorative: the link already says "Suede Sing". */}
                 <Image
                   src="/suede-logo.png"
-                  alt="Suede Sing logo"
+                  alt=""
                   width={22}
                   height={22}
                   className="rounded-full"
@@ -409,9 +410,11 @@ export default function Nav() {
             href="/"
             className="flex min-h-11 shrink-0 items-center gap-2"
           >
+            {/* Decorative: the link already says "Suede Sing", and the alt
+                text made its name "Suede Sing logo Suede Sing". */}
             <Image
               src="/suede-logo.png"
-              alt="Suede Sing logo"
+              alt=""
               width={22}
               height={22}
               className="rounded-full"
@@ -474,6 +477,10 @@ export default function Nav() {
                 for a page that isn't there. */}
             <span className="truncate sm:hidden" suppressHydrationWarning>
               {currentLabel}
+              {/* The visible label is the room; the hidden words say what the
+                  button does: "Warmups, open menu". Inside the label's span,
+                  so no stray space lands before the comma. */}
+              <span className="sr-only">, open menu</span>
             </span>
             <span className="hidden sm:inline">Menu</span>
           </button>
@@ -504,8 +511,13 @@ export default function Nav() {
             href="/progress"
             className="hidden min-h-11 shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs transition-colors hover:border-line2 hover:bg-panel2 sm:flex"
           >
-            <span className="text-violet-ink">LV {lvl.level}</span>
-            <span className="sr-only">, {p.xp} XP</span>
+            {/* Heard as "Level 6, 1230 XP": "LV" read as two letters, and
+                the XP in its own span put a stray space before the comma. */}
+            <span className="text-violet-ink">
+              <span aria-hidden="true">LV</span>
+              <span className="sr-only">Level</span> {lvl.level}
+              <span className="sr-only">, {p.xp} XP</span>
+            </span>
             {streak !== "none" && (
               <span className="flex items-center gap-1 text-rec">
                 <FlameIcon filled={streak === "banked"} />

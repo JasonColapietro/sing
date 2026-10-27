@@ -20,7 +20,7 @@ export function LessonList({
       <ul className="mt-3 space-y-2">
         {lessons.map((l) => (
           <li key={l.href} className="text-sm text-mut">
-            <Link href={l.href} className="text-violet-ink hover:underline">
+            <Link href={l.href} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               {l.name}
             </Link>
             : {l.skill}

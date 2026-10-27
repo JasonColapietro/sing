@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo } from "react";
+import { useId, useMemo } from "react";
 import Link from "next/link";
 import { ALL_EXERCISES, EXERCISES } from "./exercises";
 import { useIsPro } from "@/lib/pro";
@@ -9,7 +9,7 @@ import type { DailyPick, DailyThree } from "@/lib/daily-three";
 import { liveStreak } from "@/components/account/save-state";
 import { Button, Card, LinkButton, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
-import { emitProResult } from "@/lib/pro-signal";
+import { useProResultOnLeave } from "@/lib/use-pro-result-on-leave";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   ladderBreak,
@@ -144,13 +144,11 @@ export function SessionSummary({
   const { guidePct } = useWarmupPrefs();
   const heard: GuideHeard = data.guide ?? (guidePct > 0 ? "on" : "off");
   const cappedId = useId();
-  // A completed result is on screen: the one-time Pro moment
-  // (components/pro/moments.tsx) listens for this and decides for itself
-  // whether to open. The session is already logged by the time this
-  // renders, so the signal never lands over an exercise in progress.
-  useEffect(() => {
-    emitProResult();
-  }, []);
+  // A completed result: the one-time Pro moment (components/pro/moments.tsx)
+  // listens for this and decides for itself whether to open. Sent when the
+  // singer leaves this summary, not as it appears: it sits in the page, so a
+  // modal opened now would cover the score before it was read.
+  useProResultOnLeave(true);
   // Read just after the session logged, so it is today's streak — but read
   // live anyway, so a summary never names a streak that has lapsed.
   const streak = liveStreak(useProgress().streak);
@@ -275,7 +273,12 @@ export function SessionSummary({
               <span className="tabular w-12 shrink-0 font-mono text-xs text-mut">
                 {midiToLabel(r.root)}
               </span>
-              <ProgressBar value={r.score} tone={scoreTone(r.score)} className="flex-1" />
+              <ProgressBar
+                value={r.score}
+                label={`Rep ${hidden + i + 1} score, on ${midiToLabel(r.root)}`}
+                tone={scoreTone(r.score)}
+                className="flex-1"
+              />
               <span className="tabular w-12 shrink-0 text-right font-mono text-xs">
                 {r.skipped ? "skip" : `${r.score}%`}
               </span>

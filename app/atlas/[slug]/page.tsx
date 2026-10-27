@@ -158,12 +158,12 @@ export default async function AtlasChapterPage({
                 <a
                   href="https://jasoncolapietro.com"
                   rel="author"
-                  className="text-violet-ink hover:underline"
+                  className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                 >
                   {AUTHOR_NAME}
                 </a>{" "}
                 · Chapter {chapter.order} of{" "}
-                <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
+                <Link href="/atlas" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                   {ATLAS_TITLE}
                 </Link>
               </p>
@@ -213,7 +213,7 @@ export default async function AtlasChapterPage({
                   Also free:{" "}
                   <Link
                     href={`/atlas/${nextFree.slug}`}
-                    className="text-violet-ink hover:underline"
+                    className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                   >
                     {nextFree.title}
                   </Link>

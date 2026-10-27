@@ -106,7 +106,7 @@ export default function GlossaryPage() {
             <a
               href={AUTHOR_NODE.url}
               rel="author"
-              className="text-violet-ink hover:underline"
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
             >
               {AUTHOR_NAME}
             </a>
@@ -122,11 +122,11 @@ export default function GlossaryPage() {
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             Definitions only. The exercises live in the{" "}
-            <Link href="/warmups" className="text-violet-ink hover:underline">
+            <Link href="/warmups" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               warmups
             </Link>{" "}
             and the{" "}
-            <Link href={RANGE_TEST_HREF} className="text-violet-ink hover:underline">
+            <Link href={RANGE_TEST_HREF} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               range test
             </Link>
             ; where a free warmup or breath drill trains a term, its entry
@@ -183,7 +183,7 @@ export default function GlossaryPage() {
                       <Link
                         href={entry.href === "/range" ? RANGE_TEST_HREF : entry.href}
                         prefetch={entry.href === "/singers" ? false : undefined}
-                        className="text-violet-ink hover:underline"
+                        className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                       >
                         Open {roomLabel(entry.href)}{"\u00a0→"}
                       </Link>
@@ -192,7 +192,7 @@ export default function GlossaryPage() {
                           {" · "}
                           <Link
                             href={`/warmups?exercise=${drill.id}`}
-                            className="text-violet-ink hover:underline"
+                            className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                           >
                             Try it: {drill.title}{"\u00a0→"}
                           </Link>
@@ -203,7 +203,7 @@ export default function GlossaryPage() {
                           {" · "}
                           <Link
                             href={entry.tryIt.href}
-                            className="text-violet-ink hover:underline"
+                            className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                           >
                             Try it: {entry.tryIt.label}{"\u00a0→"}
                           </Link>
@@ -214,7 +214,7 @@ export default function GlossaryPage() {
                           {" · "}
                           <Link
                             href={lessons.href}
-                            className="text-violet-ink hover:underline"
+                            className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                           >
                             Free lessons: {lessons.name}{"\u00a0→"}
                           </Link>
@@ -240,7 +240,7 @@ export default function GlossaryPage() {
               <li key={c.slug} className="max-w-3xl text-sm text-mut">
                 <Link
                   href={`/atlas/${c.slug}`}
-                  className="text-violet-ink hover:underline"
+                  className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                 >
                   {c.title}
                 </Link>
@@ -249,7 +249,7 @@ export default function GlossaryPage() {
             ))}
           </ul>
           <p className="mt-4 max-w-3xl text-sm text-mut">
-            <Link href="/book" className="text-violet-ink hover:underline">
+            <Link href="/book" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               The Measured Voice
             </Link>{" "}
             takes the same ground from the other side (how the voice works,
@@ -261,7 +261,7 @@ export default function GlossaryPage() {
               <li key={c.slug} className="max-w-3xl text-sm text-mut">
                 <Link
                   href={`/book/${c.slug}`}
-                  className="text-violet-ink hover:underline"
+                  className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                 >
                   {c.title}
                 </Link>

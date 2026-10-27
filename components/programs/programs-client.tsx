@@ -305,7 +305,7 @@ function ProgramDetail({
             {program.readFirst?.map((r) => (
               <Fragment key={r.slug}>
                 Before {r.before}, read{" "}
-                <Link href={`/book/${r.slug}`} className="text-violet-ink underline-offset-4 hover:underline">
+                <Link href={`/book/${r.slug}`} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                   {r.title}
                 </Link>
                 : {r.why}.{" "}

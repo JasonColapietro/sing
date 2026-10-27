@@ -262,7 +262,11 @@ export function HeaderRow({
           <span className="text-3xl text-violet-ink">{lvl.level}</span>
           <span className="text-mut">{lvl.title}</span>
         </div>
-        <ProgressBar value={lvl.progress * 100} className="mt-3" />
+        <ProgressBar
+          value={lvl.progress * 100}
+          label={`Progress through level ${lvl.level}`}
+          className="mt-3"
+        />
         <p className="tabular mt-1.5 font-mono text-[11px] text-dim">
           {lvl.intoLevel.toLocaleString()} / {(lvl.intoLevel + lvl.toNext).toLocaleString()} XP
           {" · "}
@@ -306,7 +310,12 @@ export function HeaderRow({
           sub={goalLine}
           tone={goalMet ? "ok" : "ink"}
         />
-        <ProgressBar value={goalPct} tone={goalMet ? "ok" : "rec"} className="mt-3" />
+        <ProgressBar
+          value={goalPct}
+          label="Daily practice goal"
+          tone={goalMet ? "ok" : "rec"}
+          className="mt-3"
+        />
       </Card>
 
       <Card>
@@ -345,16 +354,22 @@ function AchievementsGallery({ unlocked }: { unlocked: string[] }) {
         {ACHIEVEMENTS.map((a) => {
           const isUnlocked = unlockedSet.has(a.id);
           return (
+            // A locked tile keeps its text at full contrast: fading the whole
+            // tile put it at 2.06:1. The dashed border, the dimmed icon and
+            // the "Locked" label carry the state instead.
             <div
               key={a.id}
               className={
                 isUnlocked
                   ? "rounded-xl border border-violet/40 bg-panel2 p-3"
-                  : "rounded-xl border border-line p-3 opacity-45"
+                  : "rounded-xl border border-dashed border-line2 p-3"
               }
             >
               <div className="flex items-start gap-2.5">
-                <span className="text-xl leading-none" aria-hidden="true">
+                <span
+                  className={`text-xl leading-none ${isUnlocked ? "" : "opacity-40 grayscale"}`}
+                  aria-hidden="true"
+                >
                   {a.icon}
                 </span>
                 <div className="min-w-0">
@@ -366,6 +381,11 @@ function AchievementsGallery({ unlocked }: { unlocked: string[] }) {
                     {a.title}
                   </div>
                   <p className="mt-0.5 text-xs text-mut">{a.desc}</p>
+                  {!isUnlocked && (
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
+                      Locked
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -408,7 +428,14 @@ function SessionLogTable({
   }
 
   return (
-    <div className="-mx-5 overflow-x-auto sm:-mx-6">
+    // Focusable and named, so a keyboard can scroll the table sideways on a
+    // phone, where it is wider than the screen.
+    <div
+      tabIndex={0}
+      role="region"
+      aria-label="Recent sessions"
+      className="-mx-5 overflow-x-auto sm:-mx-6 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet-ink"
+    >
       <table className="w-full min-w-[640px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-line text-left">

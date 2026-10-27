@@ -71,7 +71,9 @@ const nextConfig: NextConfig = {
         // images.minimumCacheTTL above. Files that change at a fixed URL more
         // often (the IndexNow key, llms.txt, the sitemaps, the audio) are
         // other types and keep Next's default.
-        source: "/:path*.(png|jpg|jpeg|webp|svg|ico|woff2)",
+        // Public files only: the lookahead leaves /_next/ (hashed build
+        // fonts and chunks) to Next's own immutable header.
+        source: "/:file((?!_next/)[^?]*\\.(?:png|jpg|jpeg|webp|svg|ico|woff2))",
         headers: [
           {
             key: "Cache-Control",

@@ -142,7 +142,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 {terms.map((t, i) => (
                   <span key={t.term}>
                     {i > 0 && ", "}
-                    <Link href={t.href} className="text-violet-ink hover:underline">
+                    <Link href={t.href} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                       {t.term}
                     </Link>
                   </span>

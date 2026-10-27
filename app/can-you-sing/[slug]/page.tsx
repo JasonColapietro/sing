@@ -191,7 +191,7 @@ export default async function CanYouSingSongPage({
           </div>
 
           <Card>
-            <SectionLabel heading>What the voice is asked to do</SectionLabel>
+            <SectionLabel heading>{`Is “${song.title}” hard to sing?`}</SectionLabel>
             <p className="mt-3 max-w-prose text-sm text-mut">{song.blurb}</p>
             <p className="mt-4 text-xs text-dim">
               Figures are the cited key and lead-vocal range ({song.sourceUrl ? (
@@ -223,7 +223,7 @@ export default async function CanYouSingSongPage({
                 {singers.map((s) => (
                   <li key={s.slug} className="text-sm">
                     <Link
-                      className="text-violet-ink underline-offset-4 hover:underline"
+                      className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
                       href={`/singers/${s.slug}`}
                       prefetch={false}
                     >

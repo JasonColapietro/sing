@@ -202,7 +202,8 @@ export function AnswerButton({
   const tones = {
     idle: "border-[var(--s-line2)] bg-[var(--s-elev)] text-[var(--s-ink)] hover:bg-[var(--s-over)]",
     correct: "border-transparent bg-[var(--s-ok)] text-[oklch(0.16_0.03_155)]",
-    wrong: "border-transparent bg-[var(--s-rec)] text-[oklch(0.98_0.01_25)]",
+    // Dark text: near-white on the red fill measured about 2.5:1.
+    wrong: "border-transparent bg-[var(--s-rec)] text-[oklch(0.16_0.03_25)]",
     muted: "border-[var(--s-line)] bg-transparent text-[var(--s-dim)]",
   } as const;
   return (

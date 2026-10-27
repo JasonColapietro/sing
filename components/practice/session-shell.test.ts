@@ -45,13 +45,29 @@ function toLinearRgb(value: string): [number, number, number] {
 const luminance = ([r, g, b]: [number, number, number]) =>
   0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-/** Source-over composite of a translucent token onto an opaque ground. */
+/** Linear light to the gamma-encoded sRGB value a pixel stores (0..1). */
+const encode = (v: number) => (v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055);
+/** Gamma-encoded sRGB back to linear light, for luminance. */
+const decode = (v: number) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+
+/**
+ * Source-over composite of a translucent token onto an opaque ground, the way
+ * a browser paints it: the mix happens on gamma-encoded sRGB values, and only
+ * the result is turned back into linear light. Blending in linear light
+ * instead reads a translucent white far brighter than what is on screen
+ * (--s-dim at 0.42 alpha came out 9.0:1 that way and measured 4.0:1 in a
+ * browser).
+ */
 function over(
   fg: [number, number, number],
   alpha: number,
   bg: [number, number, number],
 ): [number, number, number] {
-  return fg.map((v, i) => v * alpha + bg[i] * (1 - alpha)) as [number, number, number];
+  return fg.map((v, i) => decode(encode(v) * alpha + encode(bg[i]) * (1 - alpha))) as [
+    number,
+    number,
+    number,
+  ];
 }
 
 function contrast(fgToken: string, bgToken: string): number {

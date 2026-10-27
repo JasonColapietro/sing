@@ -162,8 +162,9 @@ function VoiceTestContent({
             Vocal range test &amp; pitch meter
           </h1>
           <p className="mt-2 max-w-prose text-mut">
-            Find your vocal range in about two minutes: the range test listens
-            as you slide down and up, then shows your lowest and highest notes,
+            Find your vocal range free in about two minutes: this vocal range
+            test listens in your browser as you slide down and up, then shows
+            your lowest and highest notes,
             octave span and a voice-type estimate. Choose Range test to start,
             or Pitch to check a single note live.
           </p>

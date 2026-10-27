@@ -72,7 +72,7 @@ describe("the free-practice wall", () => {
     const html = wall();
     expect(html).toContain('id="free-cap"');
     expect(html).toContain('href="/pro#buy"');
-    expect(html).toContain("Go Pro: no daily limit, $79 once");
+    expect(html).toContain("Keep practicing today with Pro: $79 once");
     expect(html).not.toContain('href="/pro"');
   });
 
@@ -165,7 +165,7 @@ describe("the free-practice wall on a phone", () => {
   it("keeps the order to phones and leaves DOM order alone", () => {
     expect(html.match(/class="contents sm:block sm:max-w-xl"/g)).toHaveLength(1);
     expect(html).toContain('class="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-6"');
-    expect(html.indexOf("The free plan includes")).toBeLessThan(html.indexOf("Go Pro: no daily limit"));
+    expect(html.indexOf("The free plan includes")).toBeLessThan(html.indexOf("Keep practicing today with Pro"));
   });
 });
 

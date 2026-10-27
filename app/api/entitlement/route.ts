@@ -150,7 +150,16 @@ export async function POST(request: Request) {
       }
       const sessionCustomerId = customerIdOf(session.customer);
       const paymentCustomerId = customerIdOf(payment.customer);
-      if (!sessionCustomerId || sessionCustomerId !== paymentCustomerId) {
+      if (!sessionCustomerId) {
+        // A payment attempt with no customer yet: a declined card or a 3D
+        // Secure step still pending on Stripe's page. Report the session's
+        // own status so the browser that began it keeps it while it is open.
+        return json({
+          ...INACTIVE,
+          status: typeof session.status === "string" ? session.status : null,
+        });
+      }
+      if (sessionCustomerId !== paymentCustomerId) {
         return json(INACTIVE);
       }
       if (!isOurLifetimePayment(payment)) {

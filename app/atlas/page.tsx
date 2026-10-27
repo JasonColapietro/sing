@@ -197,7 +197,7 @@ export default function AtlasPage() {
             <a
               href="https://jasoncolapietro.com"
               rel="author"
-              className="text-violet-ink hover:underline"
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
             >
               {AUTHOR_NAME}
             </a>
@@ -206,7 +206,7 @@ export default function AtlasPage() {
           <p className="mt-5 max-w-3xl text-mut">
             This is the written study rather than the chart. The numbers on one
             keyboard, searchable and with your own range overlaid, are the{" "}
-            <Link href="/singers" prefetch={false} className="text-violet-ink hover:underline">
+            <Link href="/singers" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               famous vocal ranges chart
             </Link>
             ; this book is where the same voices are explained voice by voice.
@@ -229,7 +229,7 @@ export default function AtlasPage() {
             rather than a particular singer? The free{" "}
             <Link
               href="/atlas/vocal-range-by-voice-type"
-              className="text-violet-ink hover:underline"
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
             >
               vocal range by voice type
             </Link>{" "}
@@ -238,12 +238,12 @@ export default function AtlasPage() {
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The contents below list every chapter and every singer covered. They are
             free, along with the first three chapters and each singer&rsquo;s{" "}
-            <Link href="/singers" prefetch={false} className="text-violet-ink hover:underline">
+            <Link href="/singers" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               range page
             </Link>
             . Pro unlocks the chapter text, the entry notes and the PDF, and
             the{" "}
-            <Link href={rangeTestHref()} className="text-violet-ink hover:underline">
+            <Link href={rangeTestHref()} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               range test
             </Link>{" "}
             gives you your own numbers to read it with.
@@ -298,7 +298,7 @@ export default function AtlasPage() {
             Pro includes two books. <em>The Measured Voice</em> is the training
             manual: how the voice works, how to read your own measurements,
             and a twelve-week program.{" "}
-            <Link href="/book" className="text-violet-ink hover:underline">
+            <Link href="/book" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               Its contents are free too
             </Link>
             .

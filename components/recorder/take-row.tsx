@@ -189,7 +189,7 @@ export function TakeRow({
 
       {progress > 0 && (
         <div className="mt-2 pl-12">
-          <ProgressBar value={progress * 100} tone="violet" />
+          <ProgressBar value={progress * 100} label={`Playback of ${take.name}`} tone="violet" />
         </div>
       )}
 

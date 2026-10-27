@@ -101,8 +101,14 @@ const linkClass =
 
 /* Links that stand on their own (the columns, the legal row): at least 24px
    tall (WCAG 2.5.8) where the plain inline link measured 19px. Inline links
-   inside running text keep linkClass, which wraps with the sentence. */
+   inside running text use proseLinkClass, which wraps with the sentence. */
 const navLinkClass = `${linkClass} inline-flex min-h-6 items-center`;
+
+/* A link inside a sentence carries a resting underline: in the dim
+   attribution line, color alone (mut against dim) did not mark it as a link
+   (WCAG 1.4.1). */
+const proseLinkClass =
+  "text-mut underline decoration-dim underline-offset-2 transition-colors hover:text-ink hover:decoration-ink";
 
 /** How many genre hubs a phone lists before the "All genres" link. */
 const PHONE_GENRES = 8;
@@ -138,8 +144,12 @@ function Column({
               </a>
             ) : (
               <Link href={l.href} prefetch={false} className={navLinkClass}>
-                {l.label}
-                {l.price && <NotPro>{l.price}</NotPro>}
+                {/* One span: the link is a flex box, and a bare label beside
+                    the price clause became two columns. */}
+                <span>
+                  {l.label}
+                  {l.price && <NotPro>{l.price}</NotPro>}
+                </span>
               </Link>
             )}
           </li>
@@ -257,15 +267,15 @@ export default function SiteFooter() {
             the one canonical receipt, so the number is verified in one place
             rather than drifting per surface. */}
         <p className="mt-4 max-w-3xl text-xs leading-relaxed text-dim">
-          A <a href="https://suedeai.ai" className={linkClass}>Suede AI</a>{" "}
+          A <a href="https://suedeai.ai" className={proseLinkClass}>Suede AI</a>{" "}
           product, built by{" "}
-          <a href="https://suedeai.ai/founder" className={linkClass}>
+          <a href="https://suedeai.ai/founder" className={proseLinkClass}>
             Jason Colapietro
           </a>
           , an{" "}
           <a
             href="https://seo.suedeai.ai/evidence#open-source"
-            className={linkClass}
+            className={proseLinkClass}
           >
             open-source contributor with 54 pull requests merged across 46
             external repositories through GitHub, plus one public Linux kernel

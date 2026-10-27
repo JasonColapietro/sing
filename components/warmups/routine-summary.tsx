@@ -182,6 +182,9 @@ export function RoutineSummary({
           ground rather than a dark-mode fork of the Pro components. */}
       {/* `empty:hidden` because the nudge self-hides for Pro members — without it
           they would get a blank cream block where the pitch used to be. */}
+      {/* At the cap the notice above already carries the priced way past
+          the limit; a second, unpriced ask under it was noise. */}
+      {!capped && (
       <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
         <ProCrescendoNudge
           line="Pro shows the full daily coach plan, not just its first two steps"
@@ -190,6 +193,7 @@ export function RoutineSummary({
           context="Warmups"
         />
       </div>
+      )}
     </ResultsScreen>
   );
 }

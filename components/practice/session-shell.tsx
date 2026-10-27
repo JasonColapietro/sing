@@ -18,10 +18,13 @@ import { createPortal } from "react-dom";
  * laws: surfaces at OKLCH lightness 13–20 tinted toward the brand's warm hue,
  * border-based layering instead of shadows, chroma pulled back on accents.
  *
- * Measured against --s-bg: --s-ink 17.9:1, --s-mut 12.9:1, --s-dim 9.0:1, so
- * the two text tokens clear 7:1 and 4.5:1 with room to spare and the dim token
- * is safe for the mono kickers it carries. session-shell.test.ts holds the
- * arithmetic so a token nudged for looks cannot quietly drop below the law.
+ * Measured against --s-bg the way a browser paints them (a translucent token
+ * is blended with the ground in gamma-encoded sRGB, not in linear light):
+ * --s-ink 17.9:1, --s-mut 7.8:1, --s-dim 5.7:1, and no lower than 15.8, 7.4
+ * and 5.6 on the raised grounds. So ink and mut clear 7:1, and dim clears
+ * 4.5:1 for the 11-12px mono kickers it carries. At 0.42 alpha it painted
+ * 4.0:1 while a linear-light blend claimed 9.0:1. session-shell.test.ts holds
+ * the arithmetic so a token nudged for looks cannot quietly drop below the law.
  */
 export const SESSION_TOKENS: Record<string, string> = {
   "--s-bg": "oklch(0.13 0.012 70)",
@@ -31,7 +34,7 @@ export const SESSION_TOKENS: Record<string, string> = {
   "--s-line2": "oklch(1 0 0 / 0.14)",
   "--s-ink": "oklch(0.96 0.01 80)",
   "--s-mut": "oklch(1 0 0 / 0.62)",
-  "--s-dim": "oklch(1 0 0 / 0.42)",
+  "--s-dim": "oklch(1 0 0 / 0.52)",
   "--s-ok": "oklch(0.78 0.15 155)",
   "--s-ok-soft": "oklch(0.78 0.15 155 / 0.22)",
   "--s-voice": "oklch(0.82 0.09 195)",
@@ -199,11 +202,16 @@ export function SessionShell({
             <path d="M6 6l12 12M18 6 6 18" />
           </svg>
         </button>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-baseline gap-2">
-            <span className="truncate text-sm font-semibold">{title}</span>
+        <div className="min-w-[50%] flex-1">
+          {/* The title keeps its room first. On a 375px phone the subtitle
+              and the slot on the right never gave way, so the title alone did
+              ("M…" for Morning reset). This column now keeps half the row, the
+              slot on the right wraps instead, and the subtitle gives way
+              before the title loses a letter. */}
+          <div className="flex min-w-0 items-baseline gap-2">
+            <span className="max-w-full shrink-0 truncate text-sm font-semibold">{title}</span>
             {subtitle && (
-              <span className="shrink-0 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
+              <span className="min-w-0 truncate font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
                 {subtitle}
               </span>
             )}
@@ -222,7 +230,7 @@ export function SessionShell({
             />
           </div>
         </div>
-        {topRight && <div className="shrink-0 pl-1">{topRight}</div>}
+        {topRight && <div className="pl-1 text-right">{topRight}</div>}
       </div>
 
       {/* The instrument. */}

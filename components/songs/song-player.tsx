@@ -1536,7 +1536,11 @@ export function SongPlayer({
           </Button>
         </div>
 
-        <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="violet" />
+        <ProgressBar
+          value={phase === "idle" ? 0 : progressPct}
+          label="Song progress"
+          tone="violet"
+        />
 
         <div className="flex flex-1 flex-col justify-center gap-6 py-4">
           {lyricBand}
@@ -1590,7 +1594,11 @@ export function SongPlayer({
           {loopPill}
         </div>
       </div>
-      <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="violet" />
+      <ProgressBar
+        value={phase === "idle" ? 0 : progressPct}
+        label="Song progress"
+        tone="violet"
+      />
 
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-4">

@@ -144,6 +144,44 @@ export default function V2Banner() {
         className="relative my-6 rounded-3xl bg-violet-ink text-white sm:my-8"
         suppressHydrationWarning
       >
+        {/* The drawer-close pattern from nav.tsx: a 44px square hit region
+            around a small glyph, pinned to the top-right corner so it stays
+            put however the card wraps. First in the source, as it is first
+            on screen (top right, above the message): last, Tab reached it
+            after "See what's new", below it. */}
+        <button
+          type="button"
+          onClick={(event) => {
+            // Unmounting the card would drop keyboard focus to <body>. Hand it
+            // to the first heading of the section that follows, where the
+            // reader would be had the card never been there.
+            const next = event.currentTarget
+              .closest("#v2-banner")
+              ?.parentElement?.nextElementSibling?.querySelector<HTMLElement>("h2, h3");
+            dismissBanner();
+            if (next) {
+              next.tabIndex = -1;
+              next.focus();
+            }
+          }}
+          aria-label="Dismiss the 4.0 announcement"
+          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-white sm:right-3 sm:top-3"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M3.5 3.5l7 7m0-7l-7 7"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
         {/* White on --color-violet-ink is 7.1:1 and the message's white/85
             5.5:1, so everything here reads at a glance. The lockup and the
             message share a wrapping row: side by side where the message
@@ -197,42 +235,6 @@ export default function V2Banner() {
             </Link>
           </div>
         </div>
-        {/* The drawer-close pattern from nav.tsx: a 44px square hit region
-            around a small glyph, pinned to the top-right corner so it stays
-            put however the card wraps. */}
-        <button
-          type="button"
-          onClick={(event) => {
-            // Unmounting the card would drop keyboard focus to <body>. Hand it
-            // to the first heading of the section that follows, where the
-            // reader would be had the card never been there.
-            const next = event.currentTarget
-              .closest("#v2-banner")
-              ?.parentElement?.nextElementSibling?.querySelector<HTMLElement>("h2, h3");
-            dismissBanner();
-            if (next) {
-              next.tabIndex = -1;
-              next.focus();
-            }
-          }}
-          aria-label="Dismiss the 4.0 announcement"
-          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-white sm:right-3 sm:top-3"
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M3.5 3.5l7 7m0-7l-7 7"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
       </section>
       {!isClientMount && (
         <script

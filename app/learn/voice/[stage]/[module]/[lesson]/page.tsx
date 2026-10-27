@@ -210,7 +210,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
             {prerequisites.map((p, i) => (
               <span key={p.id}>
                 {i > 0 && ", "}
-                <Link href={lessonHref(p)} className="text-violet-ink hover:underline">
+                <Link href={lessonHref(p)} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                   {p.title}
                 </Link>
               </span>

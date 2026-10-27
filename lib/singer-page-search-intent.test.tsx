@@ -14,91 +14,91 @@ const ARTIST_INTENT_CASES = [
   {
     slug: "celine-dion",
     name: "Celine Dion",
-    opening: "The catalog lists Celine Dion as a soprano; this is a reported reference classification. The displayed range of A#2 to C6 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Celine Dion’s reported vocal range is A#2 to C6, about 3.2 octaves (38 semitones). That is a reported reference span, not an independently verified physiological limit. The catalog lists Celine Dion as a soprano; this is a reported reference classification.",
     title: "Celine Dion Vocal Range & Voice Type | Compare Yours",
     heading: "Celine Dion Vocal Range: Reported A#2–C6",
   },
   {
     slug: "peter-steele",
     name: "Peter Steele",
-    opening: "A MetalSucks memorial describes Peter Steele's singing voice as baritone; it does not establish a definitive bass-baritone classification or range endpoints. The displayed range of F1 to G5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Peter Steele’s reported vocal range is F1 to G5, about 4.2 octaves (50 semitones). That is a reported reference span, not an independently verified physiological limit. A MetalSucks memorial describes Peter Steele's singing voice as baritone; it does not establish a definitive bass-baritone classification or range endpoints.",
     title: "Peter Steele Vocal Range & Voice Type | Compare Yours",
     heading: "Peter Steele Vocal Range: Reported F1–G5",
   },
   {
     slug: "michael-jackson",
     name: "Michael Jackson",
-    opening: "The catalog lists Michael Jackson as a tenor; this is a reported reference classification. The displayed range of D#2 to F6 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Michael Jackson’s reported vocal range is D#2 to F6, about 4.2 octaves (50 semitones). That is a reported reference span, not an independently verified physiological limit. The catalog lists Michael Jackson as a tenor; this is a reported reference classification.",
     title: "Michael Jackson Vocal Range & Voice Type | Compare Yours",
     heading: "Michael Jackson Vocal Range: Reported D#2–F6",
   },
   {
     slug: "bruno-mars",
     name: "Bruno Mars",
-    opening: "The catalog lists Bruno Mars as a tenor; this is a reported reference classification. The displayed range of G2 to D6 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Bruno Mars’s reported vocal range is G2 to D6, about 3.6 octaves (43 semitones). That is a reported reference span, not an independently verified physiological limit. The catalog lists Bruno Mars as a tenor; this is a reported reference classification.",
     title: "Bruno Mars Vocal Range: Reported G2–D6, Tenor | Suede Sing",
     heading: "Bruno Mars Vocal Range: Reported G2–D6",
   },
   {
     slug: "taylor-swift",
     name: "Taylor Swift",
-    opening: "The catalog lists Taylor Swift as a mezzo-soprano; this is a reported reference classification. The displayed range of A2 to A#5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Taylor Swift’s reported vocal range is A2 to A#5, about 3.1 octaves (37 semitones). That is a reported reference span, not an independently verified physiological limit. The catalog lists Taylor Swift as a mezzo-soprano; this is a reported reference classification.",
     title: "Taylor Swift Vocal Range: Reported A2–A#5, Mezzo-soprano",
     heading: "Taylor Swift Vocal Range: Reported A2–A#5",
   },
   {
     slug: "jeff-buckley",
     name: "Jeff Buckley",
-    opening: "Jeff Buckley's official FAQ describes him as a tenor with a four-octave range; it does not verify this catalog's exact E2–D6 endpoints. The displayed range of E2 to D6 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Jeff Buckley’s reported vocal range is E2 to D6, about 3.8 octaves (46 semitones). That is a reported reference span, not an independently verified physiological limit. Jeff Buckley's official FAQ describes him as a tenor with a four-octave range; it does not verify this catalog's exact E2–D6 endpoints.",
     title: "Jeff Buckley Vocal Range: Reported E2–D6, Tenor | Suede Sing",
     heading: "Jeff Buckley Vocal Range: Reported E2–D6",
   },
   {
     slug: "billie-eilish",
     name: "Billie Eilish",
-    opening: "The catalog lists Billie Eilish as a mezzo-soprano; this is a reported reference classification. The displayed range of A2 to B5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Billie Eilish’s reported vocal range is A2 to B5, about 3.2 octaves (38 semitones). That is a reported reference span, not an independently verified physiological limit. The catalog lists Billie Eilish as a mezzo-soprano; this is a reported reference classification.",
     title: "Billie Eilish Vocal Range: Reported A2–B5, Mezzo-soprano",
     heading: "Billie Eilish Vocal Range: Reported A2–B5",
   },
   {
     slug: "olivia-rodrigo",
     name: "Olivia Rodrigo",
-    opening: "Olivia Rodrigo's voice type is disputed in the reviewed sources; this review does not establish a definitive classical classification. The displayed range of B2 to A#5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Olivia Rodrigo’s reported vocal range is B2 to A#5, about 2.9 octaves (35 semitones). That is a reported reference span, not an independently verified physiological limit. Olivia Rodrigo's voice type is disputed in the reviewed sources; this review does not establish a definitive classical classification.",
     title: "Olivia Rodrigo Vocal Range & Voice Type | Test Yours",
     heading: "Olivia Rodrigo Voice Type and Vocal Range",
   },
   {
     slug: "reba-mcentire",
     name: "Reba McEntire",
-    opening: "Reba McEntire's own lesson describes a peak-career span of about three octaves, wider than this catalog's listed span, but gives no endpoints; the reviewed sources do not establish a definitive classical voice type. The displayed range of E3 to F5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Reba McEntire’s reported vocal range is E3 to F5, about 2.1 octaves (25 semitones). That is a reported reference span, not an independently verified physiological limit. Reba McEntire's own lesson describes a peak-career span of about three octaves, wider than this catalog's listed span, but gives no endpoints; the reviewed sources do not establish a definitive classical voice type.",
     title: "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
     heading: "Reba McEntire Voice Type and Vocal Range",
   },
   {
     slug: "alex-warren",
     name: "Alex Warren",
-    opening: "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints. The displayed range of G2 to A4 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Alex Warren’s reported vocal range is G2 to A4, about 2.2 octaves (26 semitones). That is a reported reference span, not an independently verified physiological limit. Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints.",
     title: "Alex Warren Vocal Range & Voice Type: No Definitive Type",
     heading: "Alex Warren Voice Type and Vocal Range",
   },
   {
     slug: "sam-smith",
     name: "Sam Smith",
-    opening: "Sam Smith's long-time coach describes baritone-to-tenor territory; the reviewed sources do not establish a definitive countertenor classification. The displayed range of G2 to C6 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Sam Smith’s reported vocal range is G2 to C6, about 3.4 octaves (41 semitones). That is a reported reference span, not an independently verified physiological limit. Sam Smith's long-time coach describes baritone-to-tenor territory; the reviewed sources do not establish a definitive countertenor classification.",
     title: "Sam Smith Vocal Range & Voice Type: Baritone-to-Tenor",
     heading: "Sam Smith Voice Type and Vocal Range",
   },
   {
     slug: "arijit-singh",
     name: "Arijit Singh",
-    opening: "A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label. The displayed range of C3 to C5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Arijit Singh’s reported vocal range is C3 to C5, about 2.0 octaves (24 semitones). That is a reported reference span, not an independently verified physiological limit. A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label.",
     title: "Arijit Singh Vocal Range: Reported C3–C5 · Compare Yours",
     heading: "Arijit Singh Vocal Range: Reported C3–C5",
   },
   {
     slug: "adele",
     name: "Adele",
-    opening: "Reviewed expert analysis describes Adele as a mezzo-soprano, with chest mix to E5. The displayed range of C3 to A#5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Adele’s reported vocal range is C3 to A#5, about 2.8 octaves (34 semitones). That is a reported reference span, not an independently verified physiological limit. Reviewed expert analysis describes Adele as a mezzo-soprano, with chest mix to E5.",
     title: "Adele Vocal Range: Reported C3–A#5, Mezzo-soprano",
     heading: "Adele Vocal Range: Reported C3–A#5",
   },
@@ -268,7 +268,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
           : `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`;
         const defaultOpening = !isSingerReviewed(singer.slug)
           ? `Our catalog reports ${singer.name} at ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(singer.highMidi - singer.lowMidi)} octaves). Individual endpoint review is pending. Compare your range free.`
-          : `${voiceTypeEvidenceCopy(singer)} The displayed range of ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
+          : `${singer.name}’s reported vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}, about ${spanOctaves(singer.highMidi - singer.lowMidi)} octaves (${singer.highMidi - singer.lowMidi} semitones). That is a reported reference span, not an independently verified physiological limit. ${voiceTypeEvidenceCopy(singer)}`;
         const opening = SPECIAL_TITLE_CASES[singer.slug]?.opening ?? defaultOpening;
 
         expect(html).toContain(

@@ -47,16 +47,16 @@ async function pageFingerprint(slug: string): Promise<string> {
  * then update the fingerprint and the date here together.
  */
 const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
-  // 2026-10-26: the shared comparison card dropped its duplicate range-test
-  // button for a Pro line, so SINGER_PAGE_REVISED moved with it.
+  // 2026-10-27: the opening now leads with "<name>’s reported vocal range is"
+  // and the voice card links the Atlas chapter, so SINGER_PAGE_REVISED moved.
   // 2026-10-27: re-pinned for punctuation only (em dashes out of the shared
   // template); no content change, so the lastmod stays.
-  "olivia-rodrigo": { fingerprint: "aefe06b55552995d", lastModified: "2026-10-26" },
-  "reba-mcentire": { fingerprint: "666407a86a3c59c1", lastModified: "2026-10-26" },
-  "alex-warren": { fingerprint: "924700c6ad4bf624", lastModified: "2026-10-26" },
-  "sam-smith": { fingerprint: "6a45c8bcaca8769a", lastModified: "2026-10-26" },
-  "arijit-singh": { fingerprint: "07ae52944979c203", lastModified: "2026-10-26" },
-  adele: { fingerprint: "21e38649866268de", lastModified: "2026-10-26" },
+  "olivia-rodrigo": { fingerprint: "8d13c982ab571843", lastModified: "2026-10-27" },
+  "reba-mcentire": { fingerprint: "519b9f407a1249d6", lastModified: "2026-10-27" },
+  "alex-warren": { fingerprint: "79cb8bf98f7458b0", lastModified: "2026-10-27" },
+  "sam-smith": { fingerprint: "61fe8889d9efb215", lastModified: "2026-10-27" },
+  "arijit-singh": { fingerprint: "5d5167bceea438d9", lastModified: "2026-10-27" },
+  adele: { fingerprint: "c5436e7219c6c973", lastModified: "2026-10-27" },
 };
 
 describe("reviewed singer page freshness", () => {

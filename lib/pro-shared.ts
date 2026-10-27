@@ -168,6 +168,10 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
     a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers (scores, streaks, range), never audio.",
   },
   {
+    q: "Can I use Pro on my phone and my computer?",
+    a: "Yes, in a browser. Pro opens in the browser where you buy it, and the Pro key shown after checkout opens it in any other browser, on a phone or a computer. Cloud sync carries your sessions, streaks, scores and range between them; recordings stay on the device that made them. The Suede Voice app for iPhone and Android is a separate download; features and purchase options can differ there, and each store lists the current details.",
+  },
+  {
     q: "What do I get the moment I upgrade?",
     // Built from the inventory, never typed: this answer is also FAQPage
     // markup, and a hard-coded count here once drifted ~21,000 words behind
@@ -175,7 +179,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
     a: `No daily limit on guided practice, and both books in full (${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas), plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
   },
   {
-    q: "How does billing work?",
-    a: `Lifetime is a single ${formatPrice(PRICING.lifetime.amount)} payment with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing subscribers keep renewing at the price they signed up at and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
+    q: "How much does Suede Pro cost?",
+    a: `Suede Pro is a single ${formatPrice(PRICING.lifetime.amount)} payment for lifetime access, with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing subscribers keep renewing at the price they signed up at and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
   },
 ];
