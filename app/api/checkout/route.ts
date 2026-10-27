@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { SUPPORT_EMAIL } from "@/lib/organization";
 import { isCheckoutPlan, LIFETIME_OFFER } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
 import {
@@ -101,9 +102,12 @@ export async function POST(request: Request) {
         error.plan,
         error.message,
       );
+      // Under a card that says "$79 once", a bare "not on sale" is a dead
+      // end: name the way out, since nothing the buyer does will fix a
+      // price that disagrees with Stripe.
       return NextResponse.json(
         {
-          error: "That plan isn't on sale right now.",
+          error: `That plan can't be sold right now. Email ${SUPPORT_EMAIL} and we'll fix it.`,
         },
         { status: 409 },
       );

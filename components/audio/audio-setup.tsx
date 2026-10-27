@@ -76,9 +76,11 @@ export function AudioSetup({
       className={`group rounded-2xl border border-line bg-panel2/60 ${className}`}
     >
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm text-mut outline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-violet">
+        {/* One word: beside the readout, "Audio setup" broke across two
+            lines at 375 in every room. The open panel keeps the full labels. */}
         <span className="flex items-center gap-2">
           <MicGlyph />
-          Audio setup
+          Audio
         </span>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           {labelFor(inputs, inputId)}
@@ -172,12 +174,15 @@ export function AudioSetup({
   );
 }
 
-/** The summary line needs a name for the current input before the list loads. */
+/** The summary line needs a name for the current input before the list loads.
+ *  The system default is just "Mic": "Default mic" beside "Headphones" was
+ *  the width that wrapped the row at 375. The select still says "System
+ *  default". */
 function labelFor(
   inputs: Array<{ deviceId: string; label: string }>,
   id: string,
 ): string {
-  if (!id) return "Default mic";
+  if (!id) return "Mic";
   const found = inputs.find((d) => d.deviceId === id);
   return found ? found.label : "Chosen mic";
 }

@@ -69,14 +69,19 @@ export function DailyThreeCard({
                     {sung ? "✓" : i + 1}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="flex flex-wrap items-center gap-2">
+                    <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <span className="font-medium">{p.exercise.title}</span>
                       <span className="sr-only">{sung ? "(done today)" : "(not done yet)"}</span>
-                      <Pill tone={p.role === "confidence" ? "ok" : "mut"}>{KIND_LABELS[p.kind]}</Pill>
-                      <Pill tone={p.step === "up" ? "violet" : p.step === "down" ? "cool" : "mut"}>
-                        <span className="sr-only">Starting tempo </span>
-                        {tempoLabel(p)}
-                      </Pill>
+                      {/* One flex item, so the pair wraps under the title
+                          together: on a phone the title kept the kind chip
+                          and pushed the tempo chip onto a line of its own. */}
+                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <Pill tone={p.role === "confidence" ? "ok" : "mut"}>{KIND_LABELS[p.kind]}</Pill>
+                        <Pill tone={p.step === "up" ? "violet" : p.step === "down" ? "cool" : "mut"}>
+                          <span className="sr-only">Starting tempo </span>
+                          {tempoLabel(p)}
+                        </Pill>
+                      </span>
                     </span>
                     <span className="mt-1 block text-sm text-dim">{p.why}</span>
                   </span>

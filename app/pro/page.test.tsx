@@ -70,14 +70,40 @@ describe("/pro Early Access offers", () => {
   });
 });
 
+describe("/pro structured data references", () => {
+  it("defines every node its isPartOf pointers name, so each resolves on this page alone", () => {
+    const data = jsonLdFrom(renderToStaticMarkup(<ProPage />));
+    const ids = new Set(data["@graph"].map((node) => node["@id"]));
+    const pointers = data["@graph"].flatMap((node) => {
+      const ref = node.isPartOf as { "@id"?: string } | undefined;
+      return ref?.["@id"] ? [ref["@id"]] : [];
+    });
+    // The page, the paid tier and the FAQ each point at something.
+    expect(pointers.length).toBeGreaterThanOrEqual(3);
+    for (const id of pointers) expect(ids, id).toContain(id);
+    // Both site-level nodes carry the homepage's @ids and names.
+    const site = data["@graph"].find((n) => n["@id"] === "https://sing.suedeai.ai/#website");
+    const app = data["@graph"].find((n) => n["@id"] === "https://sing.suedeai.ai/#app");
+    expect(site).toMatchObject({ "@type": "WebSite", name: "Suede Sing" });
+    expect(app).toMatchObject({
+      "@type": "WebApplication",
+      name: "Suede Sing",
+      applicationCategory: "EducationalApplication",
+    });
+  });
+});
+
 describe("homepage Pro teaser", () => {
-  it("states the lifetime price and that monthly is sold out", () => {
+  it("states the lifetime price, and leaves the sold-out monthly plan to /pro", () => {
     const html = renderToStaticMarkup(<Home />);
 
     expect(html).toContain("Early Access: $79 once for lifetime access");
-    expect(html).toContain("Monthly ($4.99/mo): sold out");
-    expect(html).toContain("Existing subscribers keep their price");
-    expect(html).toContain("Lifetime never renews");
+    expect(html).toContain("Go Pro: $79 once");
+    expect(html).toContain('href="/pro#buy"');
+    // The first pricing fact a visitor reads is the price, never that
+    // something sold out; the monthly plan is named only on /pro.
+    expect(html).not.toMatch(/sold out/i);
+    expect(html).toContain("Never renews");
     expect(html).not.toContain("Cancel in one click");
   });
 });

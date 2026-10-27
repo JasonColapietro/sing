@@ -9,6 +9,7 @@ import { Markdown } from "@/lib/markdown";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { AtlasChapterNav, AtlasChapterReader } from "@/components/atlas/reader";
@@ -220,8 +221,8 @@ export default async function AtlasChapterPage({
                 </p>
               )}
               <div className="mt-4 flex flex-wrap gap-3">
-                <LinkButton href="/pro" size="md">
-                  See what Pro includes
+                <LinkButton href="/pro#buy" size="md">
+                  {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
                 </LinkButton>
                 <LinkButton href="/atlas" prefetch={false} variant="outline" size="md">
                   Back to contents

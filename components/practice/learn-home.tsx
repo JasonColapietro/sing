@@ -230,17 +230,21 @@ export function GoalRing({
  * are coming back to beat.
  */
 export function StreakChip({ days, best = 0 }: { days: number; best?: number }) {
+  // Pill's shape and tones, in the kicker's tape style: under "Start here"
+  // a sans pill read as a second label in a different voice.
+  const chip =
+    "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em]";
   if (days < 1) {
     return (
-      <Pill tone="mut">
+      <span className={`${chip} border-line text-mut`}>
         {best >= 2 ? `Best streak ${best} days, start a new one today` : "Start a streak today"}
-      </Pill>
+      </span>
     );
   }
   return (
-    <Pill tone="ok">
+    <span className={`${chip} border-ok/40 text-ok-ink`}>
       <span aria-hidden="true">🔥</span> {days}-day streak
-    </Pill>
+    </span>
   );
 }
 
@@ -516,12 +520,14 @@ function PathRow({
           {item.recent && <Pill tone="ok">Done recently</Pill>}
           {item.locked && <Pill tone="violet">Pro</Pill>}
         </span>
+        {/* Neither line truncates: at 375 the meta lost its last tag
+            ("G…" for Glide) and a pack's description its second clause. */}
         {secondary && (
           <span
-            className={`mt-0.5 block truncate text-dim ${
+            className={`mt-0.5 text-dim ${
               item.meta
-                ? "font-mono text-[11px] uppercase tracking-[0.14em]"
-                : "text-sm"
+                ? "block font-mono text-[11px] uppercase tracking-[0.14em]"
+                : "line-clamp-2 text-sm"
             }`}
           >
             {secondary}

@@ -5,6 +5,7 @@ import { Fragment, useEffect, useState, type MouseEvent } from "react";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { localDay } from "@/lib/progress";
 import {
   FREE_WEEKS,
@@ -23,6 +24,11 @@ import { beginProgram, leaveProgram } from "./store";
 import { DayItems, ProgramTodayCard, goBackTo, leaveQuestion, stopQuestion } from "./today-card";
 import { useActiveProgram, type ActiveProgram } from "./use-program";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
+
+/** Where a "needs Pro" link goes: the offer itself, as the day card's unlock button does. */
+const PRO_BUY_HREF = "/pro#buy";
+/** "$79 once", beside each mention of Pro that asks for it; read, never typed. */
+const PRO_PRICE_ONCE = `${formatPrice(PRICING.lifetime.amount)} once`;
 
 function minutesLabel(p: Program): string {
   const { min, max } = programMinutesRange(p);
@@ -335,15 +341,15 @@ function ProgramDetail({
               {freeLabel().replace(/^w/, "W")} is free.
             </span>{" "}
             It uses only free exercises, and each day&apos;s guided practice fits the free plan&apos;s five minutes. Day{" "}
-            {FREE_WEEKS * 7 + 1} onward needs <Link href="/pro" className="underline">Pro</Link>.
+            {FREE_WEEKS * 7 + 1} onward needs <Link href={PRO_BUY_HREF} className="underline">Pro</Link> ({PRO_PRICE_ONCE}).
           </p>
         )}
         {freeWeeks !== null && (
           <p className="mt-4 max-w-2xl text-sm text-mut" {...prepaintMarker(hydrated, { plan: "not-pro" })}>
             <span className="font-medium text-ink">On the free plan.</span> Its days run longer than
             the five guided minutes a day, so each spreads over a few calendar days and the whole
-            program takes about {freeWeeks} weeks. <Link href="/pro" className="underline">Pro</Link>{" "}
-            removes the cap{hasRangeTest(program) ? "; the range test is always free" : ""}.
+            program takes about {freeWeeks} weeks. <Link href={PRO_BUY_HREF} className="underline">Pro</Link>{" "}
+            ({PRO_PRICE_ONCE}) removes the cap{hasRangeTest(program) ? "; the range test is always free" : ""}.
           </p>
         )}
         <div className="mt-5 flex flex-wrap items-center gap-2">

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { MicAlert } from "@/components/mic-alert";
+import { ProInlineNudge } from "@/components/pro/gate";
 import { logSession } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { useAnalyser, type AnalyserFrame } from "@/lib/audio/use-analyser";
@@ -83,6 +84,13 @@ export default function AnalyzeClient() {
   const { latest, listening, error, sampleRate, start, stop } = useAnalyser({
     onFrame,
   });
+
+  // Whether the mic has run at all this visit. The nudge at the foot waits
+  // for it: until then the only press worth making is the mic button, and an
+  // offer on the same screen competes with the permission. Set during the
+  // render that first sees `listening`, so it stays set once the mic stops.
+  const [everListened, setEverListened] = useState(false);
+  if (listening && !everListened) setEverListened(true);
 
   const showNote = useCallback((xp: number) => {
     setXpNote(`+${xp} XP · 5 min of analysis logged`);
@@ -243,6 +251,13 @@ export default function AnalyzeClient() {
         Time spent listening counts toward your practice XP — sessions log
         automatically every 5 minutes and when you leave the page.
       </p>
+      {everListened && (
+        <div className="mt-3">
+          <ProInlineNudge>
+            Pro analyzes the pitch of every recorded take and removes the guided-practice limit
+          </ProInlineNudge>
+        </div>
+      )}
     </PageShell>
   );
 }

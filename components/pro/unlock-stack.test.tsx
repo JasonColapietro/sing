@@ -39,12 +39,18 @@ describe("the unlock stack on /pro", () => {
     expect(freeLabels).toBeLessThan(freeChapters);
   });
 
-  it("sells Pro's per-note chart as one chart, not a view over time", () => {
-    // The chart is one tally across every kept session (pro-charts.tsx);
-    // only the range has a history. Same wording as lib/pro.ts and /progress.
-    const html = render();
-    expect(html).toContain("a per-note accuracy chart and your range over time.");
-    expect(html).not.toMatch(/per-note accuracy and range over time|charts of your per-note/);
+  it("folds a free reader's locked chapters away, and unfolds them for an owner", () => {
+    // Two full tables of contents ran to about two phone screens between the
+    // buy card and the comparison table; the free rows stay in view and the
+    // locked ones sit behind a details element that names what Pro opens.
+    const locked = BOOK_CONTENTS.filter((e) => !e.free).length;
+    let html = render();
+    expect(html).toContain(`See the ${locked} chapters Pro opens`);
+    expect(html.indexOf("<details")).toBeLessThan(html.indexOf('aria-label="Included with Pro"'));
+    state.active = true;
+    html = render();
+    expect(html).not.toContain("<details");
+    expect(html).not.toContain("chapters Pro opens");
   });
 
   it("prerenders the sales version until the entitlement is read", () => {

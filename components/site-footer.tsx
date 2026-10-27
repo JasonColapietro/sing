@@ -5,6 +5,7 @@ import {
   genreSlug,
   voiceTypeSlug,
 } from "@/lib/singers";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { rangeTestHref } from "@/lib/site";
 
 /**
@@ -68,7 +69,9 @@ const PRACTICE: FooterLink[] = [
   { href: "/analyze", label: "Voice analyzer" },
   { href: "/progress", label: "Your progress" },
   { href: "/extension", label: "Chrome extension vocal coach" },
-  { href: "/pro", label: "Suede Pro online vocal coach" },
+  // Priced, as every ask that leads to the offer is; the amount is read from
+  // the one place it is written down, never typed here.
+  { href: "/pro", label: `Suede Pro vocal coach, ${formatPrice(PRICING.lifetime.amount)} once` },
 ];
 
 /**

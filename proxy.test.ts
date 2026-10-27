@@ -1,5 +1,19 @@
+import { tryToParsePath } from "next/dist/lib/try-to-parse-path";
 import { NextRequest, type NextFetchEvent } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+/**
+ * A matcher entry compiled the way Next compiles it at build time
+ * (path-to-regexp via next/dist/lib/try-to-parse-path), then tested against
+ * the request pathname as getMiddlewareRouteMatcher does. Next also wraps
+ * the source with its data-route affixes (`_next/data`, `.rsc`); those add
+ * paths, never remove any, so the bare source is the stricter check.
+ */
+function compileMatcher(source: string): RegExp {
+  const { regexStr, error } = tryToParsePath(source);
+  if (!regexStr) throw error ?? new Error(`Next cannot parse matcher "${source}"`);
+  return new RegExp(regexStr);
+}
 
 const mocks = vi.hoisted(() => ({
   accountsReady: true,
@@ -41,6 +55,41 @@ describe("proxy Clerk integration", () => {
   it("explicitly covers API routes in Clerk's matcher", async () => {
     const { config } = await loadProxy(true);
     expect(config.matcher).toContain("/(api|trpc)(.*)");
+  });
+
+  it("runs on pages and /api, never on static files or the generated share cards", async () => {
+    const { config } = await loadProxy(true);
+    const [pages] = Array.isArray(config.matcher) ? config.matcher : [config.matcher];
+    expect(typeof pages).toBe("string");
+    const matcher = compileMatcher(pages as string);
+    for (const p of ["/", "/pro", "/singers/adele", "/api/checkout", "/learn/x/y", "/sign-in"]) {
+      expect(matcher.test(p), p).toBe(true);
+    }
+    // The old list (`_next/static|_next/image|favicon.ico`) sent all of these
+    // through Clerk, and on a development instance its handshake redirect
+    // bounced robots.txt and sitemap.xml off the domain.
+    for (const p of [
+      "/robots.txt",
+      "/sitemap.xml",
+      "/llms.txt",
+      "/llms-full.txt",
+      "/manifest.webmanifest",
+      "/icon.png",
+      "/apple-icon.png",
+      "/favicon.ico",
+      "/app-store-badge.svg",
+      "/ai-instructions.html",
+      "/ai-instructions-sitemap.xml",
+      "/79cdb9d5873525c71a296b9d7c494bf9.txt",
+      "/_next/image",
+      "/_next/image?x",
+      "/_next/static/chunks/a.js",
+      "/opengraph-image",
+      "/pro/opengraph-image",
+      "/singers/adele/opengraph-image/abc",
+    ]) {
+      expect(matcher.test(p), p).toBe(false);
+    }
   });
 
   it("sends account backup requests through the exported Clerk proxy", async () => {

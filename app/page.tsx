@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
+import { AUTHOR_NODE } from "@/lib/author";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
-import { SONGS } from "@/components/songs/data";
 import { ROUTINES, routineMinutes } from "@/components/warmups/routines";
-import { SINGERS } from "@/lib/singers";
 import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
@@ -29,7 +28,6 @@ import {
   WarmupGlyph,
 } from "@/components/landing/glyphs";
 import { routeKeywords } from "@/lib/keywords";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 /**
  * The span of the free warmup routines, read from the routines themselves so
@@ -41,7 +39,7 @@ const WARMUP_SPAN = `${Math.min(...WARMUP_MINUTES)} to ${Math.max(...WARMUP_MINU
 
 /** The complete Early Access offer, shared with every other sales surface. */
 const PRO_PRICE_LINE = proHeadlineLong();
-const PRO_MONTHLY_PRICE = formatPrice(PRICING.monthly.amount);
+const PRO_PRICE = formatPrice(PRICING.lifetime.amount);
 
 const FEATURES = [
   {
@@ -71,7 +69,7 @@ const FEATURES = [
   {
     href: "/singers",
     label: "Famous ranges",
-    desc: "Famous voices on one keyboard — see whose range matches yours.",
+    desc: "Famous voices on one keyboard. See whose range matches yours.",
     Glyph: SingersGlyph,
     // The directory's payload is its whole chart; a visible card would fetch
     // it in the background (lib/singer-link-prefetch.test.ts).
@@ -92,7 +90,7 @@ const FEATURES = [
   {
     href: "/songs",
     label: "Song practice",
-    desc: "Once you've taken the range test, songs open fitted to your measured range, and you can shift any song by semitones. Without a range they open in the written key and are scored in either octave.",
+    desc: "Once you've taken the range test, songs open fitted to your measured range. Without one they open in the written key and are scored in either octave.",
     Glyph: SongGlyph,
   },
   {
@@ -112,24 +110,6 @@ const FEATURES = [
     label: "Progress",
     desc: "XP, streaks, achievements, and a coach that plans your practice.",
     Glyph: ProgressGlyph,
-  },
-];
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Enable your mic",
-    desc: "Grant mic access once. Audio is analyzed on your device and never leaves it.",
-  },
-  {
-    n: "02",
-    title: "Sing the guided exercises",
-    desc: "Follow the note lanes in warmups, ear training, and songs. Scoring is instant.",
-  },
-  {
-    n: "03",
-    title: "Watch your numbers grow",
-    desc: "Range, accuracy, and streaks build session by session on your progress page.",
   },
 ];
 
@@ -171,6 +151,9 @@ const HOME_JSON_LD = {
       publisher: { "@id": "https://suedeai.ai/#organization" },
     },
     ORG_NODE,
+    // The organization's founder pointer resolves on this page, not only on
+    // suedeai.ai: a crawler reading the homepage alone found a dangling @id.
+    AUTHOR_NODE,
     {
       "@type": "WebApplication",
       "@id": `${SITE_URL}/#app`,
@@ -224,25 +207,28 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Singing practice tools"
-            lede="No install required, no ads. Open any room and sing — the browser studio does live pitch feedback, range testing, warmups, ear training, breath work and song practice."
+            lede="Open any room and sing. Live pitch feedback, range testing, warmups, ear training, breath work and song practice, all in the browser."
           >
-            Everything a practice session needs, one tab over
+            Every practice room, in your browser
           </SectionHeading>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Two columns on a phone, with the descriptions held back until
+              sm: eleven single-column cards ran to nearly three phone
+              screens of a page that is a directory, not a pitch. */}
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {FEATURES.map(({ href, label, desc, Glyph, prefetch }) => (
               <Link
                 key={href}
                 href={href}
                 prefetch={prefetch}
-                className="lift group rounded-2xl border border-line bg-panel p-5 hover:border-violet/50 sm:p-6"
+                className="lift group rounded-2xl border border-line bg-panel p-4 hover:border-violet/50 sm:p-6"
               >
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-violet-ink">
                   <Glyph />
                 </span>
-                <span className="mt-4 block text-xl text-ink group-hover:text-violet-ink">
+                <span className="mt-3 block text-lg text-ink group-hover:text-violet-ink sm:mt-4 sm:text-xl">
                   {label}
                 </span>
-                <span className="mt-1 block text-sm text-mut">{desc}</span>
+                <span className="mt-1 hidden text-sm text-mut sm:block">{desc}</span>
               </Link>
             ))}
           </div>
@@ -262,9 +248,9 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Side by side"
-            lede={`Suede Sing brings the toolkit to the web: the pitch studio and range test free without limits, ${FREE_DAILY_MINUTES} free minutes of guided practice a day, and unlimited practice on Pro.`}
+            lede="The free studio beside the apps you would compare it to, row by row."
           >
-            The whole toolkit, in one tab
+            How Suede Sing compares
           </SectionHeading>
           <div className="mt-8">
             <ComparisonTable />
@@ -272,30 +258,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7 — How practice works */}
-      <section className="border-t border-line">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading label="How practice works">
-            Three steps, no setup
-          </SectionHeading>
-          <ol className="mt-8 grid gap-4 md:grid-cols-3">
-            {STEPS.map((step) => (
-              <li
-                key={step.n}
-                className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
-              >
-                <span className="tabular font-mono text-sm text-violet-ink">
-                  {step.n}
-                </span>
-                <h3 className="mt-3 text-xl">{step.title}</h3>
-                <p className="mt-2 text-sm text-mut">{step.desc}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* 8 — Pro teaser */}
+      {/* 7 — Pro teaser. The old "How practice works" section sat here:
+              three steps the hero sentence and the beginner path already
+              walk through, and a fourth on-device claim. */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
@@ -306,18 +271,16 @@ export default function Home() {
               <h2 className="max-w-xl text-2xl sm:text-3xl">
                 The coach on top of the studio
               </h2>
+              {/* One sentence, with the price in it: what Pro is and costs,
+                  before the bullets itemize it. */}
               <p className="mt-3 max-w-xl text-mut">
-                The pitch meter, the range test and {SINGERS.length} famous singer ranges
-                are free. The free plan includes {FREE_DAILY_MINUTES} minutes of guided
-                practice a day across warmups, ear training, breath and all{" "}
-                {SONGS.length} songs. Pro removes the clock and adds the library
-                and the long memory: both books in full, pitch analysis on
-                every take, and your range charted over months rather than one
-                test at a time.
+                Suede Pro is the coach on top of the free studio, {PRO_PRICE} once
+                for life: no daily practice limit, the full daily plan, per-note
+                accuracy, pitch analysis on every take, and both books.
               </p>
               <ul className="mt-5 space-y-2.5">
                 {[
-                  `Both books open at once — ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
+                  `Both books in full: ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
                   // The free plan is built the same way and shows its first
                   // two steps, the weak-note siren first unless a range test
                   // is due (lib/pro.ts PRO_PERKS "coach"): Pro's part is the
@@ -341,17 +304,20 @@ export default function Home() {
                 ))}
               </ul>
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                <LinkButton href="/pro" variant="violet" size="lg">
-                  See Suede Pro
+                {/* The priced button lands on the buy card; the quieter link
+                    is for the reader who wants the whole page first. */}
+                <LinkButton href="/pro#buy" variant="violet" size="lg">
+                  {`Go Pro: ${PRO_PRICE} once`}
+                </LinkButton>
+                <LinkButton href="/pro" variant="ghost" size="lg">
+                  See everything Pro adds
                 </LinkButton>
               </div>
-              {/* The price used to appear nowhere on this page — a visitor had
-                  to click into /pro to learn what Pro costs. The privacy strip below covers where the voice goes. */}
+              {/* The price used to appear nowhere on this page. One line: the
+                  sold-out monthly plan and its footnotes belong on /pro. */}
               <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
                 {PRO_PRICE_LINE}
-                <span className="mx-2 text-line2">·</span>Monthly ({PRO_MONTHLY_PRICE}/mo): sold out
-                <span className="mx-2 text-line2">·</span>Existing subscribers keep their price
-                <span className="mx-2 text-line2">·</span>Lifetime never renews
+                <span className="mx-2 text-line2">·</span>Never renews
               </p>
             </div>
             <ProVisual />
@@ -367,10 +333,6 @@ export default function Home() {
             analysis runs on this device. No audio is uploaded, and there are
             no ads.
           </p>
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            On-device analysis<span className="mx-2 text-line2">·</span>No audio
-            uploaded<span className="mx-2 text-line2">·</span>No ads
-          </p>
         </div>
       </section>
 
@@ -385,8 +347,9 @@ export default function Home() {
             singing. Or start a guided warmup and follow the notes on screen.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <LinkButton href={rangeTestHref({ mode: "pitch" })} variant="rec" size="lg">
-              Start singing — free
+            {/* Violet, like the hero's: rust marks "mic on" everywhere else. */}
+            <LinkButton href={rangeTestHref({ mode: "pitch" })} variant="violet" size="lg">
+              Start singing free
             </LinkButton>
             <LinkButton href="/warmups" variant="ghost" size="lg">
               Browse warmups
@@ -395,10 +358,10 @@ export default function Home() {
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
             Ready for the coach?{" "}
             <Link
-              href="/pro"
+              href="/pro#buy"
               className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
             >
-              See Suede Pro
+              {`Suede Pro is ${PRO_PRICE} once`}
             </Link>
           </p>
         </div>

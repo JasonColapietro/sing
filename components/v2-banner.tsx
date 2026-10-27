@@ -179,9 +179,8 @@ export default function V2Banner() {
                 daily free minutes (#212, the 10th), read from the same
                 constant the hero quotes so the two cannot disagree. */}
             <p className="mt-2 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-              The original Suede Sing homepage and navigation are back.
-              Guided practice now includes {FREE_DAILY_MINUTES} free minutes
-              a day.
+              The original homepage and navigation are back, and guided
+              practice now includes {FREE_DAILY_MINUTES} free minutes a day.
             </p>
             {/* A solid white pill: the card's one call to action, in the
                 fill's own ink (violet-ink on white is 7.1:1). It recedes to

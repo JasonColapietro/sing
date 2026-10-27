@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { LinkButton } from "@/components/ui";
+import { proHeadline } from "@/lib/pro-shared";
 
 /**
  * Shared Pro visual language: gold console-tape labels, one quiet gold
@@ -86,11 +87,13 @@ export function UpgradeCard({
       </div>
       <p className="mt-1.5 max-w-xl text-sm text-mut">{body}</p>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href="/pro#plans" variant="violet" size="sm">
+        <LinkButton href="/pro#buy" variant="violet" size="sm">
           {cta}
         </LinkButton>
+        {/* The price, not the sold-out monthly plan: in a practice room this
+            line is the first pricing fact a free singer reads. */}
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Monthly plan sold out · Lifetime never renews
+          {proHeadline()} · Never renews
         </span>
       </div>
     </div>
@@ -123,7 +126,9 @@ export function LockedPanel({
         </span>
         <ProChip />
       </div>
-      <div aria-hidden className="pointer-events-none select-none opacity-60">
+      {/* pb-16 keeps the preview clear of the lock row pinned over its
+          bottom edge: an empty-state box inside ran under the button. */}
+      <div aria-hidden className="pointer-events-none select-none pb-16 opacity-60">
         {children}
       </div>
       <div
@@ -135,7 +140,7 @@ export function LockedPanel({
           <LockGlyph />
           Pro preview
         </span>
-        <LinkButton href="/pro#plans" variant="violet" size="sm">
+        <LinkButton href="/pro#buy" variant="violet" size="sm">
           {cta}
         </LinkButton>
       </div>

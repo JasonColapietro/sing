@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo } from "react";
+import { useEffect, useId, useMemo } from "react";
 import Link from "next/link";
 import { ALL_EXERCISES, EXERCISES } from "./exercises";
 import { useIsPro } from "@/lib/pro";
@@ -9,6 +9,7 @@ import type { DailyPick, DailyThree } from "@/lib/daily-three";
 import { liveStreak } from "@/components/account/save-state";
 import { Button, Card, LinkButton, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
+import { emitProResult } from "@/lib/pro-signal";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   ladderBreak,
@@ -143,6 +144,13 @@ export function SessionSummary({
   const { guidePct } = useWarmupPrefs();
   const heard: GuideHeard = data.guide ?? (guidePct > 0 ? "on" : "off");
   const cappedId = useId();
+  // A completed result is on screen: the one-time Pro moment
+  // (components/pro/moments.tsx) listens for this and decides for itself
+  // whether to open. The session is already logged by the time this
+  // renders, so the signal never lands over an exercise in progress.
+  useEffect(() => {
+    emitProResult();
+  }, []);
   // Read just after the session logged, so it is today's streak — but read
   // live anyway, so a summary never names a streak that has lapsed.
   const streak = liveStreak(useProgress().streak);

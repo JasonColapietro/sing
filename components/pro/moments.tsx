@@ -7,10 +7,8 @@ import { ProChip } from "./ui";
 import { getProState, subscribePro } from "@/lib/pro";
 import { proHeadline } from "@/lib/pro-shared";
 import { getState as getProgressState } from "@/lib/progress";
-import { subscribeProResult } from "@/lib/pro-signal";
+import { PRO_MOMENT_SEEN_KEY as SEEN_KEY, subscribeProResult } from "@/lib/pro-signal";
 import { useModalFocus } from "@/lib/use-modal-focus";
-
-const SEEN_KEY = "suede-sing:coach-intro:v1";
 
 /**
  * One-time full-screen sales moment after a completed result other than a
@@ -250,9 +248,11 @@ export default function ProMoments() {
           </Button>
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Monthly plan sold out
+          One payment
           <span className="mx-2 text-line2">·</span>
-          Lifetime never renews
+          Never renews
+          <span className="mx-2 text-line2">·</span>
+          Voice stays on device
         </p>
       </div>
     </div>

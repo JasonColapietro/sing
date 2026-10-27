@@ -89,10 +89,9 @@ export function FamousVoices() {
             {/* No count of reviewed profiles here: VOICES re-sorts as reviews
                 land, and a number in this sentence would go stale with them. */}
             <p className="mt-3 text-mut">
-              Every range below is the span a singer is commonly cited as
-              covering, low note to high. Open a profile to see its review status, available source evidence,
-              and the span drawn on a keyboard, then run the range test and
-              put your own voice beside it.
+              Each range is the span a singer is commonly cited as covering.
+              Open a profile for its available source evidence and the span on
+              a keyboard, then run the range test and put your voice beside it.
             </p>
           </div>
           <Link
@@ -120,9 +119,12 @@ export function FamousVoices() {
           </Link>
         </div>
 
+        {/* Eight on a phone: the full list ran to two and a half screens, and
+            "Browse every voice" above it reaches the rest. Hidden, not cut,
+            so the links a crawler reads are unchanged. */}
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {VOICES.map(({ singer, reviewed, evidenceCopy }) => (
-            <li key={singer.slug}>
+          {VOICES.map(({ singer, reviewed, evidenceCopy }, i) => (
+            <li key={singer.slug} className={i >= 8 ? "max-sm:hidden" : undefined}>
               {/* A reviewed singer carries a sentence of evidence and a longer
                   range label. Side by side, the shrink-0 label left that
                   sentence a column a few words wide — fourteen lines tall on a

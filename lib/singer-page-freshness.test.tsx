@@ -47,12 +47,14 @@ async function pageFingerprint(slug: string): Promise<string> {
  * then update the fingerprint and the date here together.
  */
 const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
-  "olivia-rodrigo": { fingerprint: "d74b9532f9a88e60", lastModified: "2026-10-12" },
-  "reba-mcentire": { fingerprint: "a16870d64f5304ef", lastModified: "2026-10-13" },
-  "alex-warren": { fingerprint: "54ec3392da773ad5", lastModified: "2026-10-13" },
-  "sam-smith": { fingerprint: "6e2419a0f21aa129", lastModified: "2026-10-13" },
-  "arijit-singh": { fingerprint: "e13ace0757b66a48", lastModified: "2026-10-13" },
-  adele: { fingerprint: "3f82d560df4720d4", lastModified: "2026-10-12" },
+  // 2026-10-26: the shared comparison card dropped its duplicate range-test
+  // button for a Pro line, so SINGER_PAGE_REVISED moved with it.
+  "olivia-rodrigo": { fingerprint: "e716948464cc29e9", lastModified: "2026-10-26" },
+  "reba-mcentire": { fingerprint: "8cd7977a3df9604c", lastModified: "2026-10-26" },
+  "alex-warren": { fingerprint: "283b92d0fd7b4623", lastModified: "2026-10-26" },
+  "sam-smith": { fingerprint: "a3f7bc2aecd37b33", lastModified: "2026-10-26" },
+  "arijit-singh": { fingerprint: "a807e50dd7d0b5dc", lastModified: "2026-10-26" },
+  adele: { fingerprint: "827334e511ccfe6d", lastModified: "2026-10-26" },
 };
 
 describe("reviewed singer page freshness", () => {

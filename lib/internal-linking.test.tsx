@@ -22,6 +22,7 @@ vi.mock("server-only", () => ({}));
 import SingerPage from "@/app/singers/[slug]/page";
 import SingersPage from "@/app/singers/page";
 import SiteFooter from "@/components/site-footer";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import {
   HUB_GENRES,
   SINGERS,
@@ -139,8 +140,9 @@ describe("footer wires every hub into every page", () => {
    * The money page's only sitewide inbound anchor was the header pill's
    * three-letter "Pro", which says nothing about what the page is.
    */
-  it("links /pro with descriptive anchor text", () => {
-    expect(html).toMatch(/<a[^>]*href="\/pro"[^>]*>Suede Pro online vocal coach<\/a>/);
+  it("links /pro with descriptive, priced anchor text", () => {
+    const anchor = html.match(/<a[^>]*href="\/pro"[^>]*>([^<]*)<\/a>/);
+    expect(anchor?.[1]).toBe(`Suede Pro vocal coach, ${formatPrice(PRICING.lifetime.amount)} once`);
   });
 
   /**

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 const SHOTS = [
   {
@@ -46,23 +45,24 @@ export function IosBand() {
   return (
     <section id="app" className="border-t border-line bg-panel/40">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <SectionLabel className="mb-4">{APP_NAME} — optional iPhone companion</SectionLabel>
+        <SectionLabel className="mb-4">{APP_NAME} · iPhone companion</SectionLabel>
         <h2 className="max-w-2xl text-2xl sm:text-3xl">
           Keep the browser studio. Add deeper analysis on iPhone.
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
           The web studio gives you live pitch and range testing with no daily
-          clock, plus {FREE_DAILY_MINUTES} free minutes of guided practice a day.
-          No install is required. {APP_NAME}, the optional phone companion,
-          has its own practice tools; the iPhone app adds register analysis.
+          clock. {APP_NAME}, the optional phone companion, has its own
+          practice tools; the iPhone app adds register analysis.
         </p>
 
         {/* The source captures are 268x582; rendering them any larger just
             upscales a small PNG into a blurry one, so they cap at native size. */}
+        {/* One frame on a phone (three ran to over two screens); the
+            panel2 ground stands in for the lazily loaded capture. */}
         <ul className="mt-8 grid justify-items-center gap-6 sm:grid-cols-3">
-          {SHOTS.map((s) => (
-            <li key={s.src} className="w-full max-w-[268px]">
-              <div className="overflow-hidden rounded-2xl border border-line bg-panel">
+          {SHOTS.map((s, i) => (
+            <li key={s.src} className={`w-full max-w-[268px] ${i > 0 ? "max-sm:hidden" : ""}`}>
+              <div className="overflow-hidden rounded-2xl border border-line bg-panel2">
                 <Image
                   src={s.src}
                   alt={s.alt}
@@ -106,10 +106,6 @@ export function IosBand() {
               alt="Download on the App Store"
             />
           </a>
-          <p className="max-w-sm text-xs text-dim">
-            The phone companion is optional. Keep practicing in the browser,
-            or explore the app&apos;s own tools and purchase options.
-          </p>
         </div>
       </div>
     </section>

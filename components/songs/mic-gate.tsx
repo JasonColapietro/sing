@@ -122,7 +122,7 @@ export function SongsMicGate({
         real time. Audio never leaves your browser. Without a mic, listen
         mode still plays the guide melody, just without scoring. Song
         practice counts toward the free plan&apos;s {FREE_DAILY_MINUTES}{" "}
-        minutes of guided practice a day; Pro has no daily limit.
+        minutes of guided practice a day.
       </p>
       <a
         href="#songbook"
@@ -131,6 +131,8 @@ export function SongsMicGate({
         Or browse the songbook first ↓
       </a>
       <AudioSetup className="mt-6 max-w-md" />
+      {/* The gate's one ask. The sentence above states the allowance and
+          leaves the offer to this line, so the two never sit 16px apart. */}
       <ProWhisper className="mt-4" />
     </Card>
   );

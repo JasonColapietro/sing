@@ -327,7 +327,7 @@ export function getSingerLastModified(slug: string): string | undefined {
  * A fixed, hand-set date, bumped only when the shared singer template's
  * content actually changes, never a build timestamp.
  */
-export const SINGER_PAGE_REVISED = "2026-10-12";
+export const SINGER_PAGE_REVISED = "2026-10-26";
 
 /**
  * Days a reviewed singer page's own words changed after SINGER_PAGE_REVISED

@@ -160,10 +160,13 @@ describe("singer sitemap editorial freshness", () => {
       expect(entry.lastModified).toBe(dataRevised && dataRevised > floor ? dataRevised : floor);
     }
     // Round 8 moved Alex Warren's range (A2–F#4 → G2–A4) and, with it, catalog
-    // facts on three other reviewed pages; Adele's and Olivia Rodrigo's pages
-    // did not change that day.
+    // facts on three other reviewed pages (SINGER_DATA_REVISED, 2026-10-13).
+    // The shared template's words changed again on 2026-10-26 (the comparison
+    // card), which is later than every data revision, so today the template
+    // date is every reviewed page's lastmod. The data dates stay recorded.
     for (const slug of ["alex-warren", "reba-mcentire", "sam-smith", "arijit-singh"]) {
-      expect(getSingerPageLastModified(slug)).toBe("2026-10-13");
+      expect(SINGER_DATA_REVISED[slug]).toBe("2026-10-13");
+      expect(getSingerPageLastModified(slug)).toBe(SINGER_PAGE_REVISED);
     }
     for (const slug of ["adele", "olivia-rodrigo"]) {
       expect(getSingerPageLastModified(slug)).toBe(SINGER_PAGE_REVISED);
@@ -172,12 +175,15 @@ describe("singer sitemap editorial freshness", () => {
       expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
     // Status reconciliation changes these pages on the confirmation date,
-    // while leaving the unknown original review date unset.
+    // while leaving the unknown original review date unset. A later change
+    // to the shared template (SINGER_PAGE_REVISED) moves them again.
     for (const singer of confirmed) {
       const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
       expect(getSingerLastModified(singer.slug)).toBeUndefined();
       expect(entry.lastModified).toBe(getSingerPageLastModified(singer.slug));
-      expect(entry.lastModified).toBe(getSingerEvidence(singer.slug).reviewConfirmation?.confirmedAt);
+      const confirmedAt = getSingerEvidence(singer.slug).reviewConfirmation?.confirmedAt ?? "";
+      expect(confirmedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(entry.lastModified).toBe(confirmedAt > SINGER_PAGE_REVISED ? confirmedAt : SINGER_PAGE_REVISED);
     }
 
     const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");

@@ -55,7 +55,7 @@ describe("the empty progress page", () => {
 
   // Clearing a browser takes Pro with it, so a Pro owner whose record is in
   // the cloud lands here reading as free. Every Pro link on the page sold
-  // Pro again at /pro#plans; restoring the key is what brings the record back.
+  // Pro again at /pro#buy; restoring the key is what brings the record back.
   it("offers a Pro owner on a cleared browser the key unlock, after the import pointer", () => {
     expect(html).toMatch(/<a[^>]*href="\/pro#restore"[^>]*>Unlock it in this browser<\/a>/);
     expect(html.indexOf("/pro#restore")).toBeGreaterThan(html.indexOf("#your-data"));
@@ -67,7 +67,7 @@ describe("the backup card for a browser that reads as free", () => {
   it("puts the way back to Pro next to the nudge that sells it", () => {
     pro.active = false;
     const html = renderToStaticMarkup(<DataControls />);
-    const nudge = html.indexOf('href="/pro#plans"');
+    const nudge = html.indexOf('href="/pro#buy"');
     const restore = html.search(/<a[^>]*href="\/pro#restore"[^>]*>Unlock it in this browser<\/a>/);
     expect(nudge).toBeGreaterThan(-1);
     expect(restore).toBeGreaterThan(nudge);

@@ -525,7 +525,12 @@ export function WarmupsClient() {
   const gateStart = (
     <>
       <div className="mt-5">
-        <Button variant="rec" size="lg" onClick={startFromGate}>
+        {/* Outlined unless a link is waiting on it: the start card above
+            already carries the room's one rust action, and a second rust
+            button a screen and a half down competed with it. A deep link
+            brings the singer here to press this one, so then it keeps the
+            rust. */}
+        <Button variant={deepLinkPending ? "rec" : "outline"} size="lg" onClick={startFromGate}>
           <IconMic /> {deepLinkPending ? "Enable mic and start" : "Enable microphone"}
         </Button>
       </div>

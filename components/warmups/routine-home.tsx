@@ -64,7 +64,9 @@ function StepStrip({ routine, max = STRIP_MAX }: { routine: Routine; max?: numbe
   const shown = titles.slice(0, max);
   const more = titles.length - shown.length;
   return (
-    <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="Exercises in this routine">
+    // Desktop only: on a phone the thirteen cards each carried stars, a
+    // status, a two-line meta row and this strip, and the grid ran long.
+    <ol className="mt-4 hidden flex-wrap gap-1.5 sm:flex" aria-label="Exercises in this routine">
       {shown.map((t, i) => (
         <li key={`${t}-${i}`}>
           <Pill tone="mut">{t}</Pill>

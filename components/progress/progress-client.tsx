@@ -467,7 +467,12 @@ function SessionLogTable({
 /* ------------------------------------------------------------------ */
 
 
-export function DataControls() {
+export function DataControls({
+  fresh = false,
+}: {
+  /** True for a record with nothing in it yet, when there is nothing to sell sync for. */
+  fresh?: boolean;
+} = {}) {
   const isPro = useIsPro();
   const { paused } = useProgressCloudState();
   const { isLoaded, isSignedIn } = useAccountAuth();
@@ -575,10 +580,14 @@ export function DataControls() {
           <div className="mt-3 space-y-3">
             {accountBackup && <AccountBackupControls />}
             {/* Still worth saying to a signed-in free user: a snapshot they
-                take is not the live mirror Pro pays for. */}
-            <ProInlineNudge>
-              Pro syncs progress across devices automatically
-            </ProInlineNudge>
+                take is not the live mirror Pro pays for. Not on an empty
+                record, though: there is nothing to sync yet, and a page with
+                no sessions should not open on a row of asks. */}
+            {!fresh && (
+              <ProInlineNudge>
+                Pro syncs progress across devices automatically
+              </ProInlineNudge>
+            )}
             {/* Pro lives in this browser's storage, so a cleared or second
                 browser reads as free here while the record waits in the
                 cloud. The nudge above sells Pro; this is the way back. Not
@@ -899,12 +908,16 @@ export function ProgressClient() {
 
         <section aria-label="Practice charts" className="space-y-4">
           <h2 className="text-lg">Trends</h2>
-          <Card>
-            <SectionLabel>Minutes / day — last 14 days</SectionLabel>
-            <div className="mt-4">
-              <MinutesBarChart sessions={state.sessions} />
-            </div>
-          </Card>
+          {/* Not on an empty record: a fortnight of bare gridlines says
+              nothing the empty state above has not, and it is 350px tall. */}
+          {!isFresh && (
+            <Card>
+              <SectionLabel>Minutes / day — last 14 days</SectionLabel>
+              <div className="mt-4">
+                <MinutesBarChart sessions={state.sessions} />
+              </div>
+            </Card>
+          )}
           <div className="grid gap-4 lg:grid-cols-2">
             <Card>
               <SectionLabel>Score trend — by week</SectionLabel>
@@ -940,24 +953,30 @@ export function ProgressClient() {
                 </div>
               </Card>
             </div>
-          ) : (
+          ) : !isFresh ? (
             <LockedPanel label="Accuracy by note" className="mt-4">
               {/* Real chart as the preview: faded and inert under the panel,
-                  but it is the singer's own data doing the selling. */}
+                  but it is the singer's own data doing the selling. With no
+                  sessions there is none to do it, so the panel waits for the
+                  first one. */}
               <div className="p-4 sm:p-5">
                 <NoteAccuracyChart tallies={noteTallies} />
               </div>
             </LockedPanel>
-          )}
+          ) : null}
         </section>
 
         <section aria-label="Your voice">
           <VoiceCard range={state.range} />
         </section>
 
-        <section aria-label="Achievements">
-          <AchievementsGallery unlocked={state.achievements} />
-        </section>
+        {/* Sixteen greyed-out badges are not a start; the gallery waits for
+            the first session, when there is something to count toward. */}
+        {!isFresh && (
+          <section aria-label="Achievements">
+            <AchievementsGallery unlocked={state.achievements} />
+          </section>
+        )}
 
         <section aria-label="Session log">
           <Card pad>
@@ -989,7 +1008,7 @@ export function ProgressClient() {
 
         <section id="your-data" aria-label="Data controls" className="scroll-mt-24">
           <h2 className="mb-3 text-lg">Your data</h2>
-          <DataControls />
+          <DataControls fresh={isFresh} />
         </section>
       </div>
     </PageShell>

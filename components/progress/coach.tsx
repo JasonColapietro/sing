@@ -463,11 +463,15 @@ export function CoachCard({
           pitch studio have no clock.
         </p>
       )}
-      <div className="mt-3">
-        <ProInlineNudge>
-          Pro unlocks the full daily plan
-        </ProInlineNudge>
-      </div>
+      {/* Not before the first session: a singer with nothing logged has not
+          yet seen the plan read their numbers, which is what the line sells. */}
+      {state.sessions.length > 0 && (
+        <div className="mt-3">
+          <ProInlineNudge>
+            Pro unlocks the full daily plan
+          </ProInlineNudge>
+        </div>
+      )}
     </Card>
   );
 }

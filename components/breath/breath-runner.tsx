@@ -1,8 +1,10 @@
 "use client";
 
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
+import { ProCrescendoNudge } from "@/components/pro/gate";
 import { denseStepResults, withStepResult } from "@/components/practice/step-results";
 import { useFreeCap } from "@/lib/free-cap";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useState } from "react";
@@ -308,6 +310,27 @@ function ShortSustainNote({ held }: { held: number }) {
 }
 
 /**
+ * The offer at the end of a breath set, after the results and the tone link
+ * and never over a control that starts the next drill. On the paper ground
+ * the warmup summary gives it (routine-summary.tsx): the nudge is built from
+ * the site's paper tokens and the results screen is dark. `empty:hidden`
+ * because the nudge self-hides for Pro members, who would otherwise get a
+ * blank cream block.
+ */
+function BreathProNudge() {
+  return (
+    <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
+      <ProCrescendoNudge
+        line="Pro removes the daily limit and shows your full coach plan"
+        title="Keep the breath work going"
+        body={`Breath sets share the free plan's ${FREE_DAILY_MINUTES} guided minutes a day. Pro removes the limit and lays out the full daily plan.`}
+        context="Breath"
+      />
+    </div>
+  );
+}
+
+/**
  * The results screen's subtitle. A `?step=` link (a program row carrying on
  * from the step the free minutes stopped at) runs the set from `firstStep`,
  * so the steps before it were sung in an earlier run, not skipped in this
@@ -400,9 +423,8 @@ export function BreathRunResults({
       // "Not reached" rows rather than under them, below a phone's fold.
       notice={capped ? <CappedAgainNote notReached={notReached} /> : undefined}
     >
-      {/* Only when there is something to say: the results screen wraps any
-          children in a spaced block, and an empty one is a gap. */}
       {shortHold !== null && <ShortSustainNote held={shortHold} />}
+      <BreathProNudge />
     </ResultsScreen>
   );
 }
@@ -590,6 +612,7 @@ export function BreathDrillSession({
       >
         {/* Why "Play again" is gone, and when it comes back. */}
         {capped && <CappedAgainNote />}
+        <BreathProNudge />
       </ResultsScreen>
     );
   }

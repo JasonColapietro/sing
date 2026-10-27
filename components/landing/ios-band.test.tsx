@@ -8,7 +8,6 @@ import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { IosBand } from "./ios-band";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 /** Rendered markup with tags stripped, so assertions read the prose a visitor reads. */
 const prose = renderToStaticMarkup(<IosBand />)
@@ -26,7 +25,8 @@ describe("the iOS band", () => {
 
   it("keeps the browser studio's own capabilities to what it measures", () => {
     expect(prose).toMatch(/web studio gives you live pitch and range testing with no daily clock/i);
-    expect(prose).toContain(`${FREE_DAILY_MINUTES} free minutes of guided practice a day`);
+    // The free plan's daily minutes are stated once, in the hero.
+    expect(prose).not.toContain("free minutes of guided practice a day");
   });
 
   it("does not revive clinical, fixed-threshold or unsupported passaggio claims", () => {

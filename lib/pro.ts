@@ -169,6 +169,13 @@ export function isDefinitiveRejection(error: unknown): boolean {
   return error instanceof ProApiError && error.status === 400;
 }
 
+/**
+ * How long a request may hang before it is treated as a dropped connection.
+ * Without it a stalled checkout left the buy button on "Opening Stripe…",
+ * disabled, until the platform gave up on the socket.
+ */
+const REQUEST_TIMEOUT_MS = 20_000;
+
 async function post<T>(path: string, body: unknown): Promise<T> {
   let res: Response;
   try {
@@ -176,8 +183,11 @@ async function post<T>(path: string, body: unknown): Promise<T> {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
   } catch {
+    // The browser's own TypeError, or the timeout's AbortError: either way
+    // the buyer needs the same plain sentence.
     throw new Error(NETWORK_ERROR_MESSAGE);
   }
   const data = (await res.json().catch(() => null)) as
@@ -507,7 +517,7 @@ export const PRO_PERKS: ProPerk[] = [
     // per-note tallies feed the Pro-only "Accuracy by note" chart on
     // /progress. No cadence promise: the catalog is a checked-in array, so "new
     // songs every week" is a claim only a weekly deploy could keep.
-    desc: `All ${SONG_COUNT} songs are free to sing in your ${FREE_DAILY_MINUTES} free minutes a day, and each song's personal best and score trend are free too. Pro lifts that limit and adds every note you sing to your per-note accuracy report.`,
+    desc: `All ${SONG_COUNT} songs are free, with a personal best and score trend for each, inside the free plan's ${FREE_DAILY_MINUTES} free minutes a day. Pro lifts that limit and feeds every scored note into your per-note accuracy chart.`,
   },
   {
     id: "warmups",

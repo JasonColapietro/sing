@@ -6,6 +6,7 @@ import { ProChip } from "@/components/pro/ui";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { FREE_DAILY_SEC, useFreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   FREE_WEEKS,
@@ -38,6 +39,8 @@ import type { ActiveProgram } from "./use-program";
 
 /** Where an unlock button goes: the offer itself, as every cap surface links it. */
 const PRO_BUY_HREF = "/pro#buy";
+/** What it says: priced, so the wall names the one payment before the click. */
+const UNLOCK_LABEL = `Unlock with Pro: ${formatPrice(PRICING.lifetime.amount)} once`;
 
 /** "Week 1 was free" / "weeks 1–2 were free", for the free week's end. */
 function freeWeeksWere(capital: boolean): string {
@@ -486,7 +489,7 @@ export function ProgramTodayCard({
             </p>
             {nextLocked && (
               <div className="mt-3">
-                <LinkButton href={PRO_BUY_HREF} size="sm">Unlock with Pro</LinkButton>
+                <LinkButton href={PRO_BUY_HREF} size="sm">{UNLOCK_LABEL}</LinkButton>
               </div>
             )}
           </div>
@@ -514,7 +517,7 @@ export function ProgramTodayCard({
                   {view.index + 1} once it is unlocked.
                 </p>
                 <div className="mt-3">
-                  <LinkButton href={PRO_BUY_HREF} size="sm">Unlock with Pro</LinkButton>
+                  <LinkButton href={PRO_BUY_HREF} size="sm">{UNLOCK_LABEL}</LinkButton>
                 </div>
               </div>
             ) : (
