@@ -9,8 +9,8 @@ type SaveState = "idle" | "saving" | "saved" | "failed";
 
 /**
  * The singer's own take from the run just finished: play it back, keep it in
- * the Recordings room, or leave it. Nothing is stored unless they save, and a
- * saved take stays on this device like every other recording.
+ * the recorder, or leave it. Nothing is stored unless they save, and a saved
+ * take stays on this device like every other recording.
  */
 export function TakeReview({ take: state }: { take: TakeState }) {
   const take = typeof state === "object" ? state : null;
@@ -52,11 +52,11 @@ export function TakeReview({ take: state }: { take: TakeState }) {
           <audio controls src={take.url} className="mt-3 w-full" aria-label={`Your take of ${take.songTitle}`} />
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <Button size="sm" variant="outline" onClick={keep} disabled={save === "saving" || save === "saved"}>
-              {save === "saved" ? "Saved to Recordings" : save === "saving" ? "Saving…" : "Save to Recordings"}
+              {save === "saved" ? "Saved to the recorder" : save === "saving" ? "Saving…" : "Save to the recorder"}
             </Button>
             {save === "saved" && (
               <a href="/recorder" className="text-sm text-violet-ink underline underline-offset-2">
-                Open Recordings
+                Open the recorder
               </a>
             )}
             {save === "failed" && (

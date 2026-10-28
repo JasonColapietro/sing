@@ -21,7 +21,7 @@ export default function RecorderPage() {
       <RecorderPageClient />
       <section className="mx-auto max-w-4xl px-4 py-8" aria-label="What this room is">
         <p className="rounded-2xl border border-line bg-panel p-5 leading-relaxed text-mut">
-          This is the take recorder: one room with one job, which is cutting a
+          This is the recorder: one room with one job, which is cutting a
           take, comparing two of them and keeping the ones worth keeping. It is
           not the console.{" "}
           <Link href="/tools" className="text-violet-ink underline underline-offset-4">

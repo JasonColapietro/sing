@@ -21,6 +21,7 @@ import {
 } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
+import { FigureFrame, RangeFigure } from "@/components/figures";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { PianoStrip } from "./piano-strip";
@@ -474,6 +475,12 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
             <p className="mt-2 max-w-xl text-sm text-rec">
               Use a comfortable volume. Stop if a note causes pain or strain.
             </p>
+            {/* The result shape above the start button; the saved card above already draws a real one. */}
+            {(savedRange.lowMidi === undefined || savedRange.highMidi === undefined) && (
+              <FigureFrame className="mt-5 max-w-xl" caption="What the test draws for you">
+                <RangeFigure />
+              </FigureFrame>
+            )}
             <div className="mt-5">
               <Button variant="rec" size="lg" onClick={() => beginFrom("intro")}>
                 Start free range test
@@ -701,10 +708,17 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
         </>
       )}
 
+      {/* Through MicAlert, so it scrolls into view, and with the button it names. */}
       {stage !== "intro" && stage !== "result" && !listening && (
-        <p className="mt-4 text-sm text-rec" role="alert">
-          The microphone stopped. Press start over and enable it again.
-        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <MicAlert
+            message="The microphone stopped. Press start over and enable it again."
+            className="text-sm text-rec"
+          />
+          <Button variant="outline" size="sm" onClick={retake}>
+            Start over
+          </Button>
+        </div>
       )}
     </>,
   );

@@ -314,12 +314,12 @@ try {
     const audio = main.getByLabel("Your take of Silent Night");
     await audio.waitFor({ timeout: 10_000 });
     assert.match(await audio.getAttribute("src"), /^blob:/);
-    await main.getByRole("button", { name: "Save to Recordings", exact: true }).click();
-    await main.getByRole("button", { name: "Saved to Recordings", exact: true }).waitFor();
-    await main.getByRole("link", { name: "Open Recordings", exact: true }).click();
+    await main.getByRole("button", { name: "Save to the recorder", exact: true }).click();
+    await main.getByRole("button", { name: "Saved to the recorder", exact: true }).waitFor();
+    await main.getByRole("link", { name: "Open the recorder", exact: true }).click();
     await page.getByText(/^Silent Night — /).first().waitFor({ timeout: 15_000 });
     assert.deepEqual(errors, []);
-    console.log("PASS take: recorded run, playable take in the summary, saved to Recordings");
+    console.log("PASS take: recorded run, playable take in the summary, saved to the recorder");
     await context.close();
   }
 

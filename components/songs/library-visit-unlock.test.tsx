@@ -93,6 +93,14 @@ describe("a song opened by a page link during this visit", () => {
     expect(select).toHaveBeenCalledExactlyOnceWith(locked);
   });
 
+  it("opens a card's Sing straight into the count-in, and every other start on Ready", () => {
+    // One tap fewer before the first note; the dice and the setlist still open on Play.
+    const { select } = render(locked.id);
+    fixture.buttons.find((button) => button.label === "Sing")!.click!();
+    expect(select).toHaveBeenCalledOnce();
+    expect(select).toHaveBeenCalledWith(expect.objectContaining({ id: expect.any(String) }), { autoStart: true });
+  });
+
   it("lets the dice start the linked song when the search selects it", () => {
     const { select } = render(locked.id, locked.title);
     fixture.buttons.find((button) => button.label === "Surprise me")!.click!();

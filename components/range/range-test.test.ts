@@ -134,7 +134,8 @@ describe("a retake from the result when the mic fails", () => {
     // Above the result, so it is seen before the readout, not after it.
     expect(alert).toBeLessThan(result.indexOf("<ResultView"));
     // One alert at a time: the intro's sits in its own exclusive branch.
-    expect(src.match(/<MicAlert/g)).toHaveLength(2);
+    // Two intro/result alerts, plus the mid-test "microphone stopped" line.
+    expect(src.match(/<MicAlert/g)).toHaveLength(3);
   });
 });
 
@@ -157,7 +158,8 @@ describe("a mic refusal from the intro", () => {
       /\{\(micFrom === "intro" \|\|\s*savedRange\.lowMidi === undefined \|\|\s*savedRange\.highMidi === undefined\) &&\s*introAlert\}/,
     );
     // One alert element, rendered in one place at a time.
-    expect(src.match(/<MicAlert/g)).toHaveLength(2);
+    // Two intro/result alerts, plus the mid-test "microphone stopped" line.
+    expect(src.match(/<MicAlert/g)).toHaveLength(3);
   });
 });
 
@@ -170,6 +172,8 @@ describe("a mic that stops mid-test", () => {
     expect(src.match(/\{listening && inputHint && <InputHint hint=\{inputHint\} \/>\}/g)).toHaveLength(2);
     expect(src).not.toMatch(/\{inputHint && <InputHint/);
     expect(src).toContain("The microphone stopped. Press start over and enable it again.");
+    // Shown through MicAlert, which scrolls it into view, with the button it names beside it.
+    expect(src).toMatch(/<MicAlert\s+message="The microphone stopped[^"]*"[\s\S]{0,200}?onClick=\{retake\}>\s*Start over/);
   });
 });
 

@@ -15,6 +15,7 @@ import { createPracticeClock } from "@/lib/practice-clock";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { Button, Card, LinkButton, MicGate, SectionLabel } from "@/components/ui";
+import { FigureFrame, RangeFigure } from "@/components/figures";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { LevelMeter } from "@/components/studio/level-meter";
 import { staleRangeProgramNote } from "@/components/practice/program-range-note";
@@ -546,6 +547,12 @@ export function PitchMeter({
             programNote={programNote}
             programDayHref={programDayHref}
           />
+        )}
+        {/* The result shape before the prompt: a first visit has nothing held yet. */}
+        {low === null && (
+          <FigureFrame className="mx-auto mb-6 max-w-2xl" caption="What the range test draws for you">
+            <RangeFigure />
+          </FigureFrame>
         )}
         <MicGate
           title="See your pitch"

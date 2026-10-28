@@ -105,8 +105,24 @@ describe("songs mic gate", () => {
   it("prerenders the whole gate, so the box is the right size before hydration", () => {
     const html = renderToStaticMarkup(<SongsMicGate />);
     expect(html).toContain("Enable microphone");
-    expect(html).toContain("Continue without a mic");
+    expect(html).toContain("Pick a song first");
     expect(html).toContain("Sing along and see every note you hit");
+  });
+
+  it("offers picking a song as the way in without a mic, unless a link named one", () => {
+    // The player asks for the mic at Play, so a cold visit need not answer the prompt before a song is on screen.
+    const html = renderToStaticMarkup(<SongsMicGate />);
+    expect(html).toContain("Pick a song first");
+    expect(html).not.toContain("Continue without a mic");
+    const linked = renderToStaticMarkup(<SongsMicGate heading="Enable your microphone to sing “Ode to Joy”" />);
+    expect(linked).toContain("Continue without a mic");
+    expect(linked).not.toContain("Pick a song first");
+  });
+
+  it("draws the piano roll as an example before the mic is on", () => {
+    const html = renderToStaticMarkup(<SongsMicGate />);
+    expect(html).toMatch(/aria-label="Example of the song piano roll/);
+    expect(html).toContain(">EXAMPLE</text>");
   });
 
   it("carries the hub's <h1>, which its static HTML previously had nowhere", () => {
@@ -135,7 +151,7 @@ describe("songs mic gate", () => {
     // landed 59px below the fold (e2e/audits/80-states.mjs on mobile-375).
     const html = renderToStaticMarkup(<SongsMicGate error="No microphone found. Plug one in." />);
     const alert = html.indexOf('role="alert"');
-    expect(alert).toBeGreaterThan(html.indexOf("Continue without a mic"));
+    expect(alert).toBeGreaterThan(html.indexOf("Pick a song first"));
     expect(alert).toBeLessThan(html.indexOf('href="#songbook"'));
   });
 
@@ -155,7 +171,7 @@ describe("songs mic gate", () => {
     // the md size and the subtitle's second sentence is left off (it stays in
     // the HTML); from sm up both are as before.
     const html = renderToStaticMarkup(<SongsMicGate />);
-    for (const label of ["Enable microphone", "Continue without a mic"]) {
+    for (const label of ["Enable microphone", "Pick a song first"]) {
       const button = html.match(new RegExp(`<button class="([^"]*)">(?:(?!</button>).)*${label}</button>`));
       expect(button?.[1], label).toContain("px-5 py-2.5 text-sm sm:px-7 sm:py-3.5 sm:text-base");
     }

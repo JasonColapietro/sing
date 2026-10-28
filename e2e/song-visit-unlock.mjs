@@ -50,7 +50,8 @@ try {
   assert.deepEqual(errors, []);
   console.log("PASS visit link: card after Exit, sibling lock, queued next song and filtered dice");
   await page.goto(`${base}/songs`, { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Continue without a mic", exact: true }).click();
+  // With no song named, the gate's way in without a mic is picking one.
+  await page.getByRole("button", { name: "Pick a song first", exact: true }).click();
   await linkedCard.getByRole("button", { name: "Locked", exact: true }).waitFor();
   assert.deepEqual(errors, []);
   console.log("PASS fresh visit: linked song returns to its normal mastery gate");

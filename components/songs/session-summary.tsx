@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { LinkButton } from "@/components/ui";
 
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
@@ -124,6 +125,7 @@ export function SessionSummary({
   take,
   onEnableMic,
   micError,
+  againUnavailable,
 }: {
   data: SessionSummaryData;
   /** The recorded take; undefined when the singer didn't record this run. */
@@ -141,7 +143,10 @@ export function SessionSummary({
   onEnableMic?: () => void;
   /** Why the microphone failed to start, shown under that control. */
   micError?: string | null;
+  /** Why "Sing again" and "Next" cannot start a run today (the free cap); they demote to outline. */
+  againUnavailable?: string;
 }) {
+  const unavailableId = useId();
   const {
     song,
     score,
@@ -431,15 +436,30 @@ export function SessionSummary({
         */}
         {nextInSetlist && onNext ? (
           <>
-            <Button variant="violet" onClick={onNext}>
+            <Button
+              variant={againUnavailable ? "outline" : "violet"}
+              onClick={onNext}
+              aria-disabled={againUnavailable ? true : undefined}
+              aria-describedby={againUnavailable ? unavailableId : undefined}
+            >
               Next: {nextInSetlist}
             </Button>
-            <Button variant="outline" onClick={onAgain}>
+            <Button
+              variant="outline"
+              onClick={onAgain}
+              aria-disabled={againUnavailable ? true : undefined}
+              aria-describedby={againUnavailable ? unavailableId : undefined}
+            >
               Sing again
             </Button>
           </>
         ) : (
-          <Button variant="violet" onClick={onAgain}>
+          <Button
+            variant={againUnavailable ? "outline" : "violet"}
+            onClick={onAgain}
+            aria-disabled={againUnavailable ? true : undefined}
+            aria-describedby={againUnavailable ? unavailableId : undefined}
+          >
             Sing again
           </Button>
         )}
@@ -449,6 +469,12 @@ export function SessionSummary({
         <LinkButton href="/analyze" variant="ghost">
           See your tone
         </LinkButton>
+        {/* The press still scrolls to the wall below; this says why before it is pressed. */}
+        {againUnavailable && (
+          <p id={unavailableId} className="w-full text-sm text-mut">
+            {againUnavailable}
+          </p>
+        )}
       </div>
     </div>
   );
