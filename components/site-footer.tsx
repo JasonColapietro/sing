@@ -237,12 +237,21 @@ export default function SiteFooter() {
           <span>practice loud: your voice never leaves this device</span>
         </div>
 
-        {/* Estate attribution. */}
+        {/* Estate attribution, worded as on the sibling Suede properties. */}
         <p className="mt-4 max-w-3xl text-meta leading-relaxed text-dim">
           A <a href="https://suedeai.ai" className={proseLinkClass}>Suede AI</a>{" "}
           product, built by{" "}
           <a href="https://suedeai.ai/founder" rel="author" className={proseLinkClass}>
             Jason Colapietro
+          </a>
+          , an{" "}
+          <a
+            href="https://seo.suedeai.ai/evidence#open-source"
+            className={proseLinkClass}
+          >
+            open-source contributor with 54 pull requests merged across 46
+            external repositories through GitHub, plus one public Linux kernel
+            USB/IP contribution labeled Public upstream v7, as of September 2026
           </a>
           .
         </p>
