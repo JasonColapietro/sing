@@ -135,7 +135,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Why Loud Playback Ruins Pitch.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
@@ -226,7 +226,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Device Volume and Headphones.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -317,7 +317,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Clear Recording.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -408,7 +408,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Low First, High Second, Neither Forced.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
@@ -499,7 +499,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Slide Down, Slide Up.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -590,7 +590,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Comfortable Range.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -954,7 +954,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Back Pressure Does the Work.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
@@ -1045,7 +1045,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Straw Slides.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -1136,7 +1136,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: An Easy Straw Pattern.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -1227,7 +1227,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Onset Without the Click.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
@@ -1318,7 +1318,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Match Five, No Scoop.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -1409,7 +1409,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Match the Five-Note Pattern.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -1500,7 +1500,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Steady Is a Skill, Not a Talent.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
@@ -1591,7 +1591,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Note Per Bar.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -1682,7 +1682,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Steady Short Hold.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -1773,7 +1773,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Your Key, Not the Record's Key.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
@@ -1864,7 +1864,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Amazing Grace: Phrase to Study.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -1955,7 +1955,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Amazing Grace Study.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -2046,7 +2046,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Registers: Different Ways to Make a Sound.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -2137,7 +2137,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Same Pitch, Two Ways.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -2228,7 +2228,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Switch on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -2319,7 +2319,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Slide Through, Do Not Jump Over.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -2410,7 +2410,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Octave Sirens, Three Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -2501,7 +2501,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Up and Down, Listening for a Crack.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -2592,7 +2592,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Five Shapes, One Tone.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -2683,7 +2683,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Phrase on Five Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -2774,7 +2774,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Tone Across Five Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -2865,7 +2865,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “A Wider Phrase, One Comfortable Key.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -2956,7 +2956,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Deep River: A Wider Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -3047,7 +3047,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Connected Wider Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -3138,7 +3138,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Breathy, Nasal, Tight: Tell Them Apart.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -3229,7 +3229,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Release the Jaw and Tongue.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -3320,7 +3320,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Compare With Your Baseline.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -3411,7 +3411,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Hear the Pitch Before You Sing.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -3502,7 +3502,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Drift Correction.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -3593,7 +3593,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Intonation by Listening.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -3684,7 +3684,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Swing, Triplet, Straight.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -3775,7 +3775,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Clap It, Then Sing It.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -3866,7 +3866,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Count, Clap, Sing.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -3957,7 +3957,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Consonants Are the Axis Nobody Scores.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -4048,7 +4048,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Consonant Sprint.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -4139,7 +4139,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Clear Words in a Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -4230,7 +4230,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Grace Notes, Staccato, Accent.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -4321,7 +4321,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Same Phrase, Three Ways.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -4412,7 +4412,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Articulations on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -4503,7 +4503,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Dynamics Without Pushing.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -4594,7 +4594,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Dynamic Ballad.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -4685,7 +4685,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Levels, One Note.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -4776,7 +4776,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Where Your Voice Changes Gear.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -4867,7 +4867,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Find Your Zone.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -4958,7 +4958,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Cross It On Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -5049,7 +5049,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Change the Vowel, Keep the Word.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -5140,7 +5140,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Crossing on Three Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -5231,7 +5231,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Vowels Through the Break.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -5322,7 +5322,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Louder by Resonance, Not by Force.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -5413,7 +5413,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Ring Without Pressing.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -5504,7 +5504,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Brightness Without Pushing.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -5595,7 +5595,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “The Difference You Can Hear.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -5686,7 +5686,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “An Easy Pattern Through Your Transition.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -5777,7 +5777,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Easy Tone and Effort.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -5868,7 +5868,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Improvising Is Answering.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -5959,7 +5959,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Sing the Answer.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -6050,7 +6050,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Answering Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -6141,7 +6141,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “A Run Is a Scale in a Hurry.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -6232,7 +6232,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Turnaround, Slow to Fast.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -6323,7 +6323,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Clear Agility Pattern.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -6414,7 +6414,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Syllable, Many Notes.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -6505,7 +6505,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Four-Note Ladder.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -6596,7 +6596,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Notes on One Syllable.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -6687,7 +6687,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Rate, Extent, Onset.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -6778,7 +6778,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Straight Then Vibrato.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -6869,7 +6869,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Straight to Vibrato on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -6960,7 +6960,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Four Ornaments, Named.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -7051,7 +7051,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Ornament on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -7142,7 +7142,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Ornaments, One Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -7233,7 +7233,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “The Notes That Sound Like Feeling.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -7324,7 +7324,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Blue Thirds and Sevenths.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -7415,7 +7415,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Improvised Phrases.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -7506,7 +7506,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Range and Ornaments in a Short Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
@@ -7597,7 +7597,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Phrase and Ornament Study.”"
+        "instruction": ""
       },
       {
         "seconds": 120,
@@ -7688,7 +7688,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Ornamented Study.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -7779,7 +7779,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Hydration, Humidity, and Why Whispering Hurts.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -7870,7 +7870,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Build Your Own Warm-Up.”"
+        "instruction": ""
       },
       {
         "seconds": 120,
@@ -7961,7 +7961,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Warm-Up and Stop Plan.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -8052,7 +8052,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Style Is a Set of Choices, Not a Sound.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -8143,7 +8143,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Same Song, Two Rooms.”"
+        "instruction": ""
       },
       {
         "seconds": 120,
@@ -8234,7 +8234,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: One Song, Two Styles.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -8325,7 +8325,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Neutral, Restrained, Driven, Edged.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -8416,7 +8416,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Phrase, Three Weights.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -8507,7 +8507,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Modes on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -8872,7 +8872,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Range Grows at the Edges, Slowly.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -8963,7 +8963,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Semitone at a Time.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
@@ -9054,7 +9054,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Compare Your Comfortable Range.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
@@ -9145,7 +9145,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Mic Distance Is a Dynamic Control.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
@@ -9236,7 +9236,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 75,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Microphone and Phrase Rehearsal.”"
+        "instruction": ""
       },
       {
         "seconds": 135,
@@ -9327,7 +9327,7 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 90,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Performance Study.”"
+        "instruction": ""
       },
       {
         "seconds": 150,

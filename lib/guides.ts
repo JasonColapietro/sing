@@ -142,31 +142,6 @@ export const RANGE_GUIDE: GuideContent = {
       note: "Compare conventional range bands and understand why range alone does not define your voice type.",
     },
     {
-      href: "/warmups",
-      label: "Warmups",
-      note: "Keep your warmup conditions consistent when comparing tests.",
-    },
-    {
-      href: "/singers",
-      label: "Famous ranges",
-      note: "See which well-known voices share your span.",
-    },
-    {
-      href: "/studio",
-      label: "Pitch studio",
-      note: "Practice steady notes within your comfortable range.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Fry, falsetto and tessitura: the words on this result, defined.",
-    },
-    {
-      href: "/atlas/notes-octaves-and-the-keyboard",
-      label: "Scientific pitch notation (free chapter)",
-      note: "What the letter and number on your result mean: C4 is middle C, and a span is counted in semitones.",
-    },
-    {
       href: "/learn/voice/room-check/your-range",
       label: "Your Range lessons",
       note: "Three short free lessons on finding your low and high notes without forcing either end.",
@@ -288,11 +263,6 @@ export const WARMUPS_GUIDE: GuideContent = {
       note: "Test warm for a number that reflects your real range.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Siren, lip trill and passaggio: what these exercises are named after.",
-    },
-    {
       href: "/learn/voice/steady-tone/straw-and-lip-trill",
       label: "Straw and lip-trill lessons",
       note: "Semi-occluded warm-ups, in three short free lessons.",
@@ -401,11 +371,6 @@ export const BREATH_GUIDE: GuideContent = {
       href: "/songs",
       label: "Song practice",
       note: "Apply support to real phrases with real breath points.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Support, steadiness and the rest of the breath vocabulary.",
     },
     {
       href: "/learn/voice/room-check/breathe-low",
@@ -518,11 +483,6 @@ export const EAR_GUIDE: GuideContent = {
       note: "A drone gives you a reference pitch to sing against.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "The units these drills count in: interval, semitone and cent.",
-    },
-    {
       href: "/learn/voice/steady-tone/land-the-note",
       label: "Land the Note lessons",
       note: "Onset and pitch matching, in three short free lessons.",
@@ -626,16 +586,6 @@ export const SONGS_GUIDE: GuideContent = {
       href: "/recorder",
       label: "Recorder",
       note: "Record the take and hear what you can't hear while singing.",
-    },
-    {
-      href: "/breath",
-      label: "Breath control",
-      note: "Fix the phrases that run out of air.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Transposition, tessitura and belt: the words behind song fit.",
     },
     {
       href: "/learn/voice/steady-tone/first-song-one-register",
@@ -753,11 +703,6 @@ export const RECORDER_GUIDE: GuideContent = {
       note: "See pitch live before you commit a take.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Vibrato, resonance and register are names for what you hear back.",
-    },
-    {
       href: "/learn/voice/room-check/set-up-your-space",
       label: "Set Up Your Space lessons",
       note: "Room setup and clean input, in three short free lessons.",
@@ -869,11 +814,6 @@ export const TOOLS_GUIDE: GuideContent = {
       note: "Take the tuned interval into real phrases.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "A440, cents and drone: what these tools are doing.",
-    },
-    {
       href: "/learn/voice/pitch-time-words/on-the-beat",
       label: "On the Beat lessons",
       note: "Rhythm and subdivision, in three short free lessons.",
@@ -976,19 +916,9 @@ export const STUDIO_GUIDE: GuideContent = {
       note: "Scored patterns that apply the same feedback.",
     },
     {
-      href: "/ear-training",
-      label: "Ear training",
-      note: "Fix the target if you can't hear it, not just the production.",
-    },
-    {
       href: rangeTestHref(),
       label: "Range test",
       note: "Measure your lowest and highest notes, then start your pitch work in the middle of them.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "The readout, defined: cents, fundamental, sharp and flat.",
     },
     {
       href: "/book/when-numbers-lie",
@@ -1108,11 +1038,6 @@ export const ANALYZE_GUIDE: GuideContent = {
       href: rangeTestHref(),
       label: "Range test",
       note: "Measure your lowest and highest notes; the transitions between them show up here, on a slow slide.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Harmonic, formant and vocal dose: the spectrogram's vocabulary.",
     },
     {
       href: "/learn/voice/through-the-break/twang-and-ring",

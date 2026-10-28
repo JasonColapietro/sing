@@ -260,6 +260,7 @@ const sentences = (text) => text.split(/(?<=[.!?])\s+(?=[A-Z“"(])/).filter(Boo
 /** The port's block template with the lesson's own title and target blanked, so each counts as one line. */
 function blockShape(instruction, title) {
   return instruction
+    .replaceAll(`“${title}.”`, "“TITLE.”")
     .replaceAll(`“${title}”`, "“TITLE”")
     .replace(/^Isolate the .+ target in short, comfortable examples\.$/, "Isolate the TARGET target in short, comfortable examples.");
 }
