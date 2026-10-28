@@ -137,9 +137,9 @@ export const RANGE_GUIDE: GuideContent = {
   start: { label: "Start the range test", href: "/range?mode=range#content" },
   related: [
     {
-      href: "/atlas/vocal-range-by-voice-type",
-      label: "Vocal ranges by voice type",
-      note: "Compare conventional range bands and understand why range alone does not define your voice type.",
+      href: "/singers",
+      label: "Famous ranges",
+      note: "See which well-known voices share your span.",
     },
     {
       href: "/learn/voice/room-check/your-range",

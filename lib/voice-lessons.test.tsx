@@ -1123,7 +1123,7 @@ describe("the pages", () => {
     const published = new Set([VOICE_LEARN_PATH, ...Object.values(coursePaths()).flat()]);
     const links = hrefs(html).filter((h) => h.startsWith(VOICE_LEARN_PATH));
     expect(links.length).toBeGreaterThan(1);
-    for (const href of links) expect(published.has(href), href).toBe(true);
+    for (const href of links) expect(published.has(href.split("#")[0]), href).toBe(true);
   });
 
   it("say sing measures a module only when the contract says it can", async () => {

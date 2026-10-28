@@ -89,7 +89,7 @@ export default async function StagePage({ params }: { params: Promise<Params> })
     <PageShell
       kicker={`Voice lessons · Stage ${catalog.stage} of ${COURSE.length} · ${stage.modules.length} modules · ${stageLessonCount(stage)} lessons`}
       title={stageHeading(stage)}
-      subtitle={catalog.subtitle}
+      subtitle={`${catalog.subtitle}.`}
     >
       <script
         type="application/ld+json"
