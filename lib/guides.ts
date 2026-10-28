@@ -1,4 +1,5 @@
 import type { GuideContent } from "@/components/guide";
+import { SAFETY_LINE } from "@/components/learn/safety-note";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { rangeTestHref } from "@/lib/site";
 
@@ -33,7 +34,7 @@ export const RANGE_GUIDE: GuideContent = {
   safety: {
     heading: "Test the notes you can sing without forcing",
     body:
-      "Use a comfortable volume and stop if a note causes pain, strain, or persistent hoarseness. Suede Sing is a practice and measurement tool, not a medical assessment. A sudden or lasting loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist.",
+      `Use a comfortable volume and stop if a note causes pain, strain, or persistent hoarseness. Suede Sing is a practice and measurement tool, not a medical assessment. ${SAFETY_LINE}`,
     sources: [
       {
         href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",
@@ -623,7 +624,7 @@ export const SONGS_GUIDE: GuideContent = {
     },
     {
       href: "/recorder",
-      label: "Take recorder",
+      label: "Recorder",
       note: "Record the take and hear what you can't hear while singing.",
     },
     {
@@ -1100,7 +1101,7 @@ export const ANALYZE_GUIDE: GuideContent = {
     },
     {
       href: "/recorder",
-      label: "Take recorder",
+      label: "Recorder",
       note: "Record the phrase you just watched here, then listen back to it.",
     },
     {
@@ -1121,7 +1122,7 @@ export const ANALYZE_GUIDE: GuideContent = {
   ],
   safety: {
     heading: "Vocal load is a practice signal, not a health check",
-    body: "Cycle dose can show that today put your folds through more cycles than yesterday. It cannot tell you what is safe for your voice, because that depends on the individual and on factors no microphone can see. Persistent hoarseness, pain, or a loss of range belongs with a doctor who can examine the vocal folds (an ENT or laryngologist, often working with a voice-specialist speech-language pathologist), not with a number on a screen.",
+    body: `Cycle dose can show that today put your folds through more cycles than yesterday. It cannot tell you what is safe for your voice, because that depends on the individual and on factors no microphone can see. ${SAFETY_LINE}`,
     sources: [
       {
         href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",

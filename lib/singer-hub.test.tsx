@@ -7,7 +7,6 @@ vi.mock("server-only", () => ({}));
 import SingersPage from "@/app/singers/page";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { hasDocumentedSourceReview, singerReviewLabel } from "@/lib/singer-evidence";
-import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { SINGERS, rangeLabel } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
@@ -32,12 +31,6 @@ function reviewedHtml(html: string) {
 }
 
 const REVIEWED_SLUGS = SINGERS.filter((s) => hasDocumentedSourceReview(s.slug)).map((s) => s.slug);
-
-function searchPriorityHtml(html: string) {
-  const match = html.match(/<section[^>]*data-singer-search-priority="true"[^>]*>([\s\S]*?)<\/section>/);
-  if (!match) throw new Error("singer hub emitted no search-priority section");
-  return match[1];
-}
 
 describe("/singers hub schema and crawl discovery", () => {
   const html = renderToStaticMarkup(<SingersPage />);
@@ -91,9 +84,7 @@ describe("/singers hub schema and crawl discovery", () => {
     const allHubSlugs = [...html.matchAll(/href="\/singers\/([a-z0-9-]+)"/g)]
       .map((match) => match[1])
       .filter((slug) => knownSlugs.has(slug));
-    expect(allHubSlugs).toHaveLength(
-      SINGERS.length + VOCAL_RANGE_PRIORITY_SLUGS.length + REVIEWED_SLUGS.length,
-    );
+    expect(allHubSlugs).toHaveLength(SINGERS.length + REVIEWED_SLUGS.length);
   });
 
   it("files accented names under their base letter in the A-Z index", () => {
@@ -117,59 +108,32 @@ describe("/singers hub schema and crawl discovery", () => {
       const singer = SINGERS.find((s) => s.slug === slug)!;
       const link = reviewed.match(new RegExp(`<a[^>]*href="/singers/${slug}"[^>]*>([\\s\\S]*?)</a>`))?.[1];
       expect(link, slug).toBeDefined();
-      expect(link!.replace(/<[^>]+>/g, ""), slug).toContain(`${singer.name} vocal range`);
+      expect(link!.replace(/<[^>]+>/g, ""), slug).toContain(singer.name);
       expect(link, slug).toContain(rangeLabel(singer));
       expect(link, slug).toContain(singerReviewLabel(slug));
     }
   });
 
-  it("keeps search-demand implementation details out of the reader-facing section", () => {
-    expect(searchPriorityHtml(html)).not.toContain("Google");
-  });
-
-  it("gives frequently looked-up singers named exact-answer links", () => {
-    const priority = searchPriorityHtml(html);
-    const links = [...priority.matchAll(/href="\/singers\/([a-z0-9-]+)"[^>]*>([\s\S]*?)<\/a>/g)];
-
-    expect(VOCAL_RANGE_PRIORITY_SLUGS.length).toBeGreaterThanOrEqual(12);
-    expect(VOCAL_RANGE_PRIORITY_SLUGS).toContain("olivia-rodrigo");
-    expect(VOCAL_RANGE_PRIORITY_SLUGS).toContain("michael-jackson");
-    expect(links.map((match) => match[1])).toEqual([...VOCAL_RANGE_PRIORITY_SLUGS]);
-    expect(new Set(VOCAL_RANGE_PRIORITY_SLUGS).size).toBe(VOCAL_RANGE_PRIORITY_SLUGS.length);
-
-    for (const [index, slug] of VOCAL_RANGE_PRIORITY_SLUGS.entries()) {
-      const singer = SINGERS.find((candidate) => candidate.slug === slug);
-      expect(singer, `${slug} must remain in the singer catalog`).toBeDefined();
-      expect(links[index][2].replace(/<[^>]+>/g, "")).toContain(
-        `${singer!.name} vocal range`,
-      );
-      expect(links[index][2]).toContain(rangeLabel(singer!));
+  it("titles each reviewed card by name and span, with a range bar, and no second lookup grid", () => {
+    const reviewed = reviewedHtml(html);
+    for (const slug of REVIEWED_SLUGS) {
+      const singer = SINGERS.find((s) => s.slug === slug)!;
+      expect(reviewed).toContain(`>${singer.name}</span>`);
+      expect(reviewed).toContain(rangeLabel(singer));
     }
-  });
-
-  it("lists the frequently looked-up singers after the chart, not above it", () => {
-    // The chart (SingersDirectory) mounts where the server leaves a
-    // one-screen placeholder, between the voice-type links and this list; on
-    // a phone the list above it put the chart five screens down.
-    const priority = html.indexOf('data-singer-search-priority="true"');
-    expect(priority).toBeGreaterThan(html.indexOf("Browse by voice type"));
-    expect(priority).toBeGreaterThan(html.indexOf('data-singer-reviewed="true"'));
-    expect(priority).toBeLessThan(html.indexOf('data-singer-crawl-index="true"'));
-    // Back from a singer tapped in it returns to that link.
-    expect(
-      readFileSync(new URL("../components/singers/directory.tsx", import.meta.url), "utf8"),
-    ).toContain('"[data-singer-search-priority]"');
+    expect(reviewed).not.toContain("vocal range</span>");
+    expect(reviewed.match(/aria-hidden="true" class="relative block h-2/g)).toHaveLength(REVIEWED_SLUGS.length);
+    expect(html).not.toContain("Popular vocal range lookups");
+    expect(html).not.toContain("data-singer-search-priority");
   });
 
   it("holds one empty screen where the chart mounts, so nothing after it shifts in view", () => {
-    // With no box in the server HTML, a screen taller than about 1,200px
-    // showed the lookups at load and the ~2,500px chart then pushed them down
-    // (layout shift 0.1-0.2 at 1024×1366 and 1440×1300).
+    // Without the box, the ~2,500px chart pushed everything below it down on load.
     const placeholder = '<div aria-hidden="true" class="min-h-screen"></div>';
     const at = html.indexOf(placeholder);
     expect(at, "SingersDirectory renders a one-screen placeholder before mount").toBeGreaterThan(-1);
     expect(at).toBeGreaterThan(html.indexOf("Browse by voice type"));
-    expect(at).toBeLessThan(html.indexOf('data-singer-search-priority="true"'));
+    expect(at).toBeLessThan(html.indexOf('data-singer-crawl-index="true"'));
     expect(html.indexOf(placeholder, at + 1)).toBe(-1);
   });
 

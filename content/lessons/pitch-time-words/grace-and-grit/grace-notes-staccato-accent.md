@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-These are three ways to shape the start or length of a note while its pitch and timing stay where they are written. A grace note is a quick note a step above or below that falls straight into the main note; staccato cuts the note short, with a little silence after it; an accent gives the note a firmer, clearer start from the breath, not a much louder sound or a squeeze in the throat. Each changes how the line feels without changing the tune, which is why they are worth having on cue.
+These are three ways to shape the start or length of a note while its pitch and timing stay as written. A grace note is a quick note a step above or below that falls straight into the main note; staccato cuts the note short, with a little silence after; an accent gives the note a firmer start from the breath, not a louder sound or a squeezed throat. Each changes how the line feels, not the tune.
 
 ## Steps
 

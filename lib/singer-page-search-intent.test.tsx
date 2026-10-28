@@ -324,7 +324,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     const page = await SingerPage({ params: Promise.resolve({ slug: "billie-eilish" }) });
     const html = renderToStaticMarkup(page);
 
-    expect(html).toContain("The catalog has not verified recordings or scores for both endpoints.");
+    expect(html).toContain("no recording or score has been checked for both endpoints");
     expect(html).not.toContain("worked largely in full voice");
   });
 });

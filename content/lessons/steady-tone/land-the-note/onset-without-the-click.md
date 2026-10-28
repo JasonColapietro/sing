@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-An onset is how a note starts, and there are three basic ways to start one. A breathy onset lets air through before the folds meet, so a small “h” comes first; a hard, or glottal, onset closes the folds before the air arrives and releases them with a little click; a balanced onset starts the breath and the sound together. This module trains the balanced one, on its pitch from the first moment, because sliding up into a note from below is a separate habit, a scoop, and onset work is where it gets fixed.
+An onset is how a note starts, and there are three basic ways. A breathy onset lets air through before the folds meet, so a small “h” comes first; a hard, or glottal, onset closes the folds before the air arrives and releases them with a click; a balanced onset starts breath and sound together. This module trains the balanced one, on its pitch from the first moment; sliding up from below is a scoop, and onset work fixes it.
 
 ## Steps
 

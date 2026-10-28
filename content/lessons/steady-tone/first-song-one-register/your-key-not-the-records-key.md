@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A recording's key was chosen for one singer on one set of days, so it is a fact about that session, not about the song, and changing it is ordinary practice. Move the whole song up or down by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the highest note comes without a push and the lowest is still clearly audible. Once you have taken the range test, songs open fitted to your measured range and you can shift them a semitone at a time; without a saved range they open in the written key and are scored in either octave.
+A recording's key was chosen for one singer on one set of days: a fact about that session, not the song, and changing it is ordinary practice. Move the whole song by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the top comes without a push. After a range test, songs open fitted to your range; without one, in the written key.
 
 ## Steps
 

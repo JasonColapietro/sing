@@ -13,6 +13,7 @@ import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { balancedChunks } from "@/lib/singers-core";
 import { SINGERS_LITE } from "@/lib/singers-lite";
 import { AtlasCta } from "@/components/atlas/cta";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { RosterFold } from "@/components/atlas/roster-fold";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -309,11 +310,9 @@ export default function AtlasPage() {
           Ranges are commonly cited figures compiled from recordings and public
           discussion, not lab measurements, and the extremes are one-off
           recorded moments rather than anyone&rsquo;s everyday voice. The
-          technique notes describe how voices sound on record. Nothing here is
-          medical advice, and a voice that hurts, stays hoarse, or loses easy
-          notes is a question for a doctor who can examine the vocal folds,
-          such as an ENT or laryngologist, not a practice plan.
+          technique notes describe how voices sound on record.
         </p>
+        <SafetyLine />
       </div>
     </PageShell>
   );

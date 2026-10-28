@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat and how each phrase is shaped. Genres tend to make those decisions differently; straight tone that lets vibrato in late is common in modern pop and jazz, while vibrato from the start of the note is more usual in opera and much of musical theater. Copy what singers decide rather than what they are made of: your timbre comes from the shape of your own throat and mouth, so the same choices sung in your body sound like you, which is the point.
+A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres decide differently: straight tone that lets vibrato in late is common in pop and jazz; vibrato from the start is usual in opera and musical theatre. Copy what singers decide, not what they are made of; the same choices in your body sound like you.
 
 ## Steps
 

@@ -11,6 +11,7 @@ import {
   type Singer,
 } from "@/lib/singers";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { HUB_FIGURES_NOTE } from "@/lib/singer-hub-copy";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -205,9 +206,8 @@ export default function RecordsPage() {
         <Card className="border-violet/40">
           <h2 className="text-xl">Read these with the most caution</h2>
           <p className="mt-3 max-w-3xl text-mut">
-            These rankings compare catalog values. Many profiles still await
-            individual endpoint review, so a position here is not a verified
-            performance record or a physiological limit.
+            These rankings compare catalog values, so a position here is not a
+            verified performance record or a physiological limit. {HUB_FIGURES_NOTE}
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             Open an artist profile for its source status and scope. A written

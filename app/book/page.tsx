@@ -12,6 +12,7 @@ import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { PROGRAMME_PART } from "@/lib/programme-exit-tests";
 import { SITE_URL } from "@/lib/site";
 import { BookCta } from "@/components/book/cta";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { BookProgramNote } from "@/components/book/program-link";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -171,14 +172,7 @@ export default function BookPage() {
         {/* The contents end on a next step: the header's pair again. */}
         <BookCta />
 
-        <p className="max-w-2xl text-xs text-dim">
-          This book is about practice, not medicine. Nothing here diagnoses or
-          treats anything. If singing hurts, if you are hoarse and it will not
-          clear, or if you ever see blood, that is a question for a doctor who
-          can examine the vocal folds, such as an ENT or laryngologist. There
-          is no waiting period, and you do not need to be sure it is serious
-          before you go.
-        </p>
+        <SafetyLine />
       </div>
     </PageShell>
   );

@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Scoops, falls, bends and slides are four small pitch gestures that decorate a melody without changing it. A scoop starts a little below the note and slides up into it; a fall drops away in pitch off the end of a note; a bend pushes the pitch slightly off the note and brings it back; a slide glides from one written note to the next. An accidental scoop is the voice searching for the note, the habit Stage 2 trained out; a scoop you name and place where you meant it is a choice, and that is the whole difference.
+Scoops, falls, bends and slides are four small pitch gestures that decorate a melody without changing it. A scoop starts below the note and slides up into it; a fall drops away off the end of a note; a bend pushes the pitch slightly off and brings it back; a slide glides from one written note to the next. An accidental scoop is the voice searching for the note. A scoop you name and place is a choice.
 
 ## Steps
 

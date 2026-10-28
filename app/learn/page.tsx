@@ -11,6 +11,7 @@ import {
   VOCAL_LEARNING_FAQ,
   VOCAL_LEARNING_PATHS,
 } from "@/lib/vocal-learning";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -239,12 +240,6 @@ export default function LearnPage() {
             a beginner can move from explanation to a real exercise without
             hunting through the site.
           </p>
-          {/* The cap is disclosed before the exercise links; the full "What is
-              free?" answer sits below the map, out of the first screen. */}
-          <p className="mt-2 max-w-3xl text-sm text-dim">
-            Guided practice includes {FREE_DAILY_MINUTES} minutes a day free; the
-            range test, pitch studio, recorder, and tools have no practice timer.
-          </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {VOCAL_LEARNING_PATHS.map((path) => (
               <Link
@@ -286,11 +281,6 @@ export default function LearnPage() {
             use it in music, and listen back. This is an adaptable example, not a
             required duration or a promise of results. Shorten it to suit your
             experience and comfort; do not push through discomfort to finish a timer.
-          </p>
-          <p className="mt-3 max-w-3xl text-mut">
-            For a free self-directed session, use the pitch studio and recorder
-            after your guided allowance. Continuing with timed guided exercises
-            in the app requires Pro once that shared allowance is used.
           </p>
           <ol className="mt-6 grid gap-4 md:grid-cols-4">
             {[
@@ -400,13 +390,7 @@ export default function LearnPage() {
           </div>
         </Card>
 
-        <p className="max-w-3xl text-xs leading-relaxed text-dim">
-          Vocal training is not medical care. Stop if singing hurts or your
-          voice becomes less coordinated as you continue. Pain, hoarseness that
-          will not clear, a sudden or lasting loss of range, or any blood
-          belongs with a doctor who can examine the vocal folds, such as an ENT
-          or laryngologist, not an online exercise.
-        </p>
+        <SafetyLine />
       </div>
     </PageShell>
   );

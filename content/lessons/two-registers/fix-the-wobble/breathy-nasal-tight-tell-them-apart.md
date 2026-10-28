@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Breathy, nasal and tight all get called a bad tone, but they are three different sounds. Breathy is a haze of air in the tone, usually from vocal folds that are not meeting fully. Nasal is sound colored by the nose, though a pinched, bright tone often only seems nasal: pinch your nose on an “ah”, and if the sound changes, some of it was going through the nose. Tight, or pressed, is more squeeze than the note needs, heard as a hard, effortful tone rather than a louder one. The three can overlap, and the ear cannot always tell what causes them, so this lesson trains you to name the sound you hear before you try to change it.
+Breathy, nasal and tight all get called a bad tone, but they are three different sounds. Breathy is a haze of air in the tone, usually from folds not meeting fully. Nasal is sound coloured by the nose, though a pinched, bright tone often only seems nasal: pinch your nose on an “ah”; if the sound changes, some was going through the nose. Tight, or pressed, is more squeeze than the note needs. Name the sound before you change it.
 
 ## Steps
 

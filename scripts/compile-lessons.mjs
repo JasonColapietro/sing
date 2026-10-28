@@ -3,29 +3,16 @@
  *
  * Usage: node scripts/compile-lessons.mjs [content/lessons] [--check]
  *
- * `--check` writes nothing and fails if lib/lesson-data.ts is stale, which is
- * what lib/voice-lessons.test.tsx runs.
+ * `--check` writes nothing and fails when lib/lesson-data.ts is stale
+ * (lib/voice-lessons.test.tsx runs it). A lesson has fixed sections (steps
+ * with Look/Listen lines, recoveries, timed blocks, a self-check, and for a
+ * concept lesson a leading "## In short" of at most IN_SHORT_MAX_WORDS);
+ * a missing one fails the compile. Directory names are the URL slugs, kept
+ * fixed; identity is the frontmatter `id` from contracts/suede-voice-curriculum.json.
  *
- * The same pattern as the book (content/book → scripts/compile-book.mjs →
- * lib/book-data.ts), with one difference: a lesson is not free prose. Each
- * file has a fixed set of sections (steps with a look and a listen check,
- * recoveries, timed practice blocks and a self-check), and this parses them
- * into fields so the page can lay them out and the tests can read them one by
- * one. A missing or misspelled section fails the compile rather than
- * rendering a half-empty lesson.
- *
- * One more section, `## In short`, is a plain paragraph that answers the
- * question the title asks ("why does whispering hurt?") before the steps tell
- * you what to do about it. A concept lesson must have one; for the other types
- * it is optional. It comes first when present, and the page shows it above the
- * steps.
- *
- * The directory names are the URL slugs: /learn/voice/<stage>/<module>/<lesson>.
- * They were derived from the catalog names once, when the lessons were ported,
- * and are kept fixed so a later catalog rename doesn't move a URL. Identity
- * comes from the frontmatter `id`, which must be a lesson in
- * contracts/suede-voice-curriculum.json, filed under the module and stage the
- * catalog puts it in, with the catalog's title, type and minutes.
+ * Sentences the port repeats on more than half the lessons (step bodies,
+ * block instructions, the self-check's ifNotReady / shows / doesNotShow) are
+ * dropped here; /learn/voice states them once as the course rules.
  */
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -38,6 +25,8 @@ const catalog = JSON.parse(
 
 const problems = [];
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+/** "In short" is the page's answer and its search description; longer than this it is an essay. */
+const IN_SHORT_MAX_WORDS = 80;
 
 function parseFrontmatter(raw, file) {
   const m = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(raw);
@@ -120,12 +109,15 @@ function parseLesson(raw, file) {
   const short = s.get("In short");
   if (short) {
     if ([...s.keys()][0] !== "In short") throw new Error(`${file}: "## In short" must be the first section`);
-    // One plain paragraph: the page prints it as text and the structured data
-    // uses it as the lesson's description, so markdown would show as symbols.
+    // One plain paragraph: it is also the structured-data description.
     if (short.some((l) => /^\s*(?:#|[-*] |\d+\. )|\]\(|\*\*|`/.test(l))) {
       throw new Error(`${file}: "## In short" is one plain paragraph, with no headings, lists, links or emphasis`);
     }
     if (!short.some((l) => l.trim())) throw new Error(`${file}: "## In short" is empty`);
+    const words = short.join(" ").split(/\s+/).filter(Boolean).length;
+    if (words > IN_SHORT_MAX_WORDS) {
+      throw new Error(`${file}: "## In short" is ${words} words; the cap is ${IN_SHORT_MAX_WORDS}`);
+    }
   }
 
   const mistakes = bullets(need("If it goes wrong")).map((b) => {
@@ -196,9 +188,7 @@ for (const stageSlug of dirs(SRC)) {
       if (meta.module !== module.id || meta.stage !== level.id) {
         problems.push(`${file}: filed as ${meta.stage}/${meta.module}, catalog says ${level.id}/${module.id}`);
       }
-      // The module page lists a lesson by its catalog summary and the lesson
-      // page leads with its objective, so the two are one sentence: three had
-      // drifted apart, one promising a Stage 2 recording no lesson asked for.
+      // The module list and the lesson's objective are one catalog sentence.
       for (const [key, catalogKey] of [
         ["title", "title"],
         ["type", "type"],
@@ -221,8 +211,7 @@ for (const stageSlug of dirs(SRC)) {
       }
       if (!parsed.steps.length) problems.push(`${file}: no steps`);
       if (!parsed.selfCheck.criteria.length) problems.push(`${file}: no self-check criteria`);
-      // A concept lesson exists to explain an idea, so it answers its title in
-      // words before any steps; the others may lead with the practice.
+      // A concept lesson answers its title in words before any steps.
       if (meta.type === "concept" && !parsed.explanation) {
         problems.push(`${file}: a concept lesson needs "## In short"`);
       }
@@ -265,6 +254,59 @@ for (const l of lessons) {
   delete l.order;
 }
 
+/** Sentences, split after a terminal mark before a capital or an opening quote. */
+const sentences = (text) => text.split(/(?<=[.!?])\s+(?=[A-Z“"(])/).filter(Boolean);
+
+/** The port's block template with the lesson's own title and target blanked, so each counts as one line. */
+function blockShape(instruction, title) {
+  return instruction
+    .replaceAll(`“${title}”`, "“TITLE”")
+    .replace(/^Isolate the .+ target in short, comfortable examples\.$/, "Isolate the TARGET target in short, comfortable examples.");
+}
+
+/**
+ * Lines repeated word for word on more than half the lessons are scaffolding
+ * from the port, not the lesson; drop them from the fields the page prints
+ * whole. A block whose instruction was the template keeps its seconds and an
+ * empty instruction, and the page draws the four as one timing line.
+ */
+function dropSharedLines(all) {
+  const counts = new Map();
+  const tally = (lines) => {
+    for (const line of new Set(lines)) counts.set(line, (counts.get(line) ?? 0) + 1);
+  };
+  for (const l of all) {
+    tally([
+      ...l.steps.flatMap((s) => s.body.split("\n\n").flatMap(sentences)),
+      ...l.blocks.map((b) => blockShape(b.instruction, l.title)),
+      ...sentences(l.selfCheck.ifNotReady),
+      ...sentences(l.selfCheck.shows),
+      ...sentences(l.selfCheck.doesNotShow),
+    ]);
+  }
+  const shared = (line) => (counts.get(line) ?? 0) > all.length / 2;
+  const keep = (text) =>
+    text
+      .split("\n\n")
+      .map((p) => sentences(p).filter((x) => !shared(x)).join(" "))
+      .filter(Boolean)
+      .join("\n\n");
+  for (const l of all) {
+    l.steps = l.steps.map((s) => ({ ...s, body: keep(s.body) })).filter((s) => s.body);
+    l.blocks = l.blocks.map((b) => ({
+      seconds: b.seconds,
+      instruction: shared(blockShape(b.instruction, l.title)) ? "" : b.instruction,
+    }));
+    l.selfCheck = {
+      ...l.selfCheck,
+      ifNotReady: keep(l.selfCheck.ifNotReady),
+      shows: keep(l.selfCheck.shows),
+      doesNotShow: keep(l.selfCheck.doesNotShow),
+    };
+  }
+}
+dropSharedLines(lessons);
+
 const references = JSON.parse(readFileSync(join(SRC, "references.json"), "utf8"));
 const referenceIds = new Set(references.map((r) => r.id));
 for (const l of lessons) {
@@ -276,9 +318,9 @@ for (const l of lessons) {
 const out = `/**
  * GENERATED FILE — edit the markdown under content/lessons and re-run scripts/compile-lessons.mjs.
  *
- * The voice curriculum's lesson bodies, ported from GuitarHub and keyed to the
- * lesson IDs in contracts/suede-voice-curriculum.json. Every lesson is free to
- * read, so unlike the book there is no gated half.
+ * The voice curriculum's lesson bodies, keyed to the lesson IDs in
+ * contracts/suede-voice-curriculum.json. Lines the port repeated on most
+ * lessons are dropped at compile time; /learn/voice states them once.
  */
 
 export interface LessonStep {
@@ -312,12 +354,13 @@ export interface Lesson {
   references: string[];
   steps: LessonStep[];
   mistakes: Array<{ observation: string; recovery: string }>;
-  /** Timed blocks that add up to \`minutes\`. */
+  /** Timed blocks that add up to \`minutes\`; an empty instruction is the port's template, drawn as timing only. */
   blocks: Array<{ seconds: number; instruction: string }>;
   selfCheck: {
     criteria: string[];
     readyWhen: string;
     ifNotReady: string;
+    /** May be empty once the shared lines are dropped. */
     shows: string;
     doesNotShow: string;
   };
@@ -336,12 +379,7 @@ export const LESSON_REFERENCES: LessonReference[] = ${JSON.stringify(references,
 export const LESSONS: Lesson[] = ${JSON.stringify(lessons, null, 2)};
 `;
 
-/**
- * Where every catalog ID lives on sing, for the side that used to host the
- * lessons. GuitarHub vendors this file and redirects /learn/voice/<lesson-id>
- * from it, so a moved lesson is a changed line in a contract rather than a
- * redirect that quietly 404s.
- */
+/** Where every catalog ID lives on sing; GuitarHub vendors this and redirects from it. */
 const byId = (entries) => Object.fromEntries(entries.sort(([a], [b]) => a.localeCompare(b)));
 const urls = {
   contract: "suede-voice-lesson-urls",
@@ -379,8 +417,7 @@ for (const [target, text] of outputs) {
   }
 }
 if (!CHECK && problems.length) {
-  // Leave the last good output in place: a rejected compile must not become
-  // the generated file someone commits.
+  // Leave the last good output in place.
   console.log("not writing lib/lesson-data.ts or the URL map: the lessons failed validation");
 } else {
   console.log(

@@ -15,7 +15,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { statsFor } from "@/lib/singers-analysis";
-import { GENRE_HUB_COPY, splitContrast } from "@/lib/singer-hub-copy";
+import { GENRE_HUB_COPY, HUB_FIGURES_NOTE, splitContrast } from "@/lib/singer-hub-copy";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
@@ -242,11 +242,7 @@ export default async function GenrePage({
               .
             </li>
           </ul>
-          <p className="mt-5 max-w-prose text-xs text-dim">
-            These comparisons use reported catalog values, not verified physiological
-            limits. Open a singer profile for its review status and available
-            source evidence.
-          </p>
+          <p className="mt-5 max-w-prose text-xs text-dim">{HUB_FIGURES_NOTE}</p>
         </Card>
 
         {/* The question this chart raises, answered by the free tool that

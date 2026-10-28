@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Blue notes are the third and seventh of the scale sung flat of their major-scale pitches, or bent somewhere between the minor and major versions; blues and soul phrasing lives in that space between the written pitches. They sound like feeling because they lean against the tonic, the home note, so a phrase that leans on a flat third or flat seventh and then settles on the tonic sounds like tension let go. What separates a blue note from a flat one is intent: you aim for it and land it, rather than sagging into it.
+Blue notes are the third and seventh of the scale sung flat, or bent between their minor and major pitches; blues and soul phrasing lives in that gap. They sound like feeling because they lean against the tonic, so a phrase that leans on a flat third or seventh and then settles home sounds like tension let go. Intent separates a blue note from a flat one: you aim for it and land it rather than sagging into it.
 
 ## Steps
 

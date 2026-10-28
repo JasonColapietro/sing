@@ -2,13 +2,7 @@ import { midiToLabel } from "@/lib/audio/notes";
 import { SINGERS, pluralVoice, type Singer } from "@/lib/singers";
 import { REFERENCE_BANDS } from "@/lib/singers-analysis";
 
-/**
- * Where one singer's reported span sits among the others, computed only from
- * the catalog's own numeric fields. Nothing here is biography: every sentence
- * is arithmetic over `lowMidi`, `highMidi`, `voiceType`, `genres` and the
- * catalog's own `beltMidi`, `country` and `activeFrom` fields, so it varies
- * from page to page without asserting anything the catalog does not hold.
- */
+/** Where one singer's span sits among the others, from the catalog's numeric fields alone. */
 
 export interface PositionFact {
   id: string;
@@ -37,6 +31,34 @@ function semis(n: number): string {
 function againstBand(delta: number, end: "bottom" | "top"): string {
   if (delta === 0) return `matches the band's ${end} note`;
   return `sits ${semis(Math.abs(delta))} ${delta > 0 ? "above" : "below"} the band's ${end} note`;
+}
+
+export interface SpanHistogram {
+  /** Semitones per bin. */
+  binSize: number;
+  /** Each bin's lowest span (inclusive) and how many singers fall in it. */
+  bins: Array<{ from: number; count: number }>;
+  /** Index into `bins` of the bin holding this singer's span. */
+  singerBin: number;
+  /** The catalog's median span in semitones. */
+  median: number;
+}
+
+/** The catalog's span widths in 2-semitone bins, for the figure under the position facts. */
+export function catalogSpanHistogram(s: Singer, all: Singer[] = SINGERS): SpanHistogram {
+  const binSize = 2;
+  const spans = all.map(span);
+  const lo = Math.floor(Math.min(...spans) / binSize) * binSize;
+  const hi = Math.floor(Math.max(...spans) / binSize) * binSize;
+  const bins: SpanHistogram["bins"] = [];
+  for (let from = lo; from <= hi; from += binSize) bins.push({ from, count: 0 });
+  for (const sp of spans) bins[Math.floor((sp - lo) / binSize)].count += 1;
+  return {
+    binSize,
+    bins,
+    singerBin: Math.floor((span(s) - lo) / binSize),
+    median: median(spans),
+  };
 }
 
 export function catalogPositionFor(

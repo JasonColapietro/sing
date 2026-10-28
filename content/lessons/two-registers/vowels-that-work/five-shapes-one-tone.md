@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A vowel is a shape of the throat and mouth that makes some of the voice's frequencies louder than others; the pitch comes from the folds and stays the same. Each vowel puts its resonances in a different place, so on the same note some shapes sit easily and others fight the pitch, and the closed vowels “ee” and “oo” run out of room first as you go higher. When one vowel tightens, keep the jaw released and the tongue forward and make that shape a little smaller or more open, rather than pushing harder, so the tone stays related from vowel to vowel.
+A vowel is a shape of the throat and mouth that makes some of the voice's frequencies louder than others; the pitch comes from the folds and stays the same. Each vowel puts its resonances in a different place, so on one note some shapes sit easily and others fight the pitch; “ee” and “oo” run out of room first. When one tightens, keep the jaw released and the tongue forward and open the shape a little.
 
 ## Steps
 

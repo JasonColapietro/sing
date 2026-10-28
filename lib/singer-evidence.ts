@@ -322,21 +322,10 @@ export function getSingerLastModified(slug: string): string | undefined {
   return isSingerReviewed(slug) ? evidence.reviewedAt : undefined;
 }
 
-/**
- * The last date every singer page's own content changed (title, snippet, FAQ).
- * A fixed, hand-set date, bumped only when the shared singer template's
- * content actually changes, never a build timestamp.
- */
-export const SINGER_PAGE_REVISED = "2026-10-27";
+/** Hand-set date of the last shared-template content change; never a build timestamp. */
+export const SINGER_PAGE_REVISED = "2026-10-28";
 
-/**
- * Days a reviewed singer page's own words changed after SINGER_PAGE_REVISED
- * because catalog figures moved: its own range, or a rank or "also listed"
- * count that another singer's correction shifted. Not a review date (that is
- * reviewedAt, and re-reading a score is not a review). The fingerprints in
- * lib/singer-page-freshness.test.tsx fail when a reviewed page's content
- * changes, so this map cannot silently fall behind the page again.
- */
+/** Days a reviewed page's words moved after SINGER_PAGE_REVISED because catalog figures moved (not a review date). */
 export const SINGER_DATA_REVISED: Readonly<Record<string, string>> = {
   // Round 8: Alex Warren A2–F#4 → G2–A4 from the cited Musicnotes scores,
   // which moved his own page and three other reviewed pages' catalog facts.
@@ -346,12 +335,7 @@ export const SINGER_DATA_REVISED: Readonly<Record<string, string>> = {
   "arijit-singh": "2026-10-13", // span rank 552 → 553; Pop rank 268 → 269
 };
 
-/**
- * Sitemap lastmod (and JSON-LD dateModified) for a singer page: the latest of
- * its evidence review date, shared page revision, data revision, or visible
- * review-status reconciliation. Never claims a review that did not happen; getSingerLastModified
- * stays the review date alone.
- */
+/** Sitemap lastmod / dateModified: the latest of review, template, data and confirmation dates. */
 export function getSingerPageLastModified(slug: string): string {
   const dates = [SINGER_PAGE_REVISED, getSingerLastModified(slug), SINGER_DATA_REVISED[slug],
     getSingerEvidence(slug).reviewConfirmation?.confirmedAt];

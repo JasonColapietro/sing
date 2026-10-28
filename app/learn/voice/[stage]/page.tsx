@@ -16,7 +16,7 @@ import {
 } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { PracticedMark } from "@/components/learn/practice-count";
-import { VoiceSafetyNote } from "@/components/learn/safety-note";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { Card, PageShell } from "@/components/ui";
 
 interface Params {
@@ -34,11 +34,6 @@ function stageHeading(stage: CourseStage): string {
   return `${stage.catalog.name}: stage ${stage.catalog.stage} of the free voice course`;
 }
 
-/** What the stage is and what it leaves you with, from the catalog alone. */
-function stageAnswer(stage: CourseStage): string {
-  const { catalog } = stage;
-  return `Stage ${catalog.stage} of ${COURSE.length} has ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons, each with a self-check. The goal: ${lowerFirst(catalog.subtitle)}.`;
-}
 
 type Stage = NonNullable<ReturnType<typeof findStage>>;
 
@@ -92,9 +87,9 @@ export default async function StagePage({ params }: { params: Promise<Params> })
 
   return (
     <PageShell
-      kicker={`Voice lessons · Stage ${catalog.stage} of ${COURSE.length}`}
+      kicker={`Voice lessons · Stage ${catalog.stage} of ${COURSE.length} · ${stage.modules.length} modules · ${stageLessonCount(stage)} lessons`}
       title={stageHeading(stage)}
-      subtitle={stageAnswer(stage)}
+      subtitle={catalog.subtitle}
     >
       <script
         type="application/ld+json"
@@ -160,7 +155,7 @@ export default async function StagePage({ params }: { params: Promise<Params> })
             </Link>
           )}
         </nav>
-        <VoiceSafetyNote />
+        <SafetyLine />
       </div>
     </PageShell>
   );

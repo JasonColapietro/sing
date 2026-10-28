@@ -15,7 +15,7 @@ import {
   wikipediaUrl,
 } from "@/lib/singers";
 import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
-import { catalogPositionFor } from "@/lib/singer-catalog-position";
+import { catalogPositionFor, catalogSpanHistogram } from "@/lib/singer-catalog-position";
 import {
   getSingerEvidence,
   getSingerPageLastModified,
@@ -24,7 +24,6 @@ import {
   singerReviewLabel,
   voiceTypeEvidenceCopy,
 } from "@/lib/singer-evidence";
-import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { popRangeLabel, popSongsByArtistSlug } from "@/lib/pop-songs";
 import { fitDescription } from "@/lib/meta-fit";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
@@ -33,6 +32,8 @@ import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
+import { RangeMini } from "@/components/singers/range-mini";
+import { SpanHistogramFigure } from "@/components/singers/span-histogram";
 import {
   CompareWithMe,
   PlayRangeButton,
@@ -54,10 +55,7 @@ type SearchIntent = "voice-type" | "vocal-range";
 
 type SingerRecord = (typeof SINGERS)[number];
 
-/**
- * September 27 CTR pilot; keep these titles stable. (Their snippets dropped the
- * trailing review-status sentence on Sep 30.)
- */
+/** September 27 CTR pilot; keep these titles stable. */
 const COMPARISON_SEARCH_SLUGS: ReadonlySet<string> = new Set([
   "celine-dion",
   "peter-steele",
@@ -91,10 +89,7 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
   ].includes(s.slug);
 }
 
-/**
- * Catalog-position facts that read the catalog voice label (or its register
- * split) as settled; pages with a reviewed voice-type correction omit them.
- */
+/** Position facts that read the catalog voice label as settled; reviewed corrections omit them. */
 const LABEL_DEPENDENT_FACTS: ReadonlySet<string> = new Set([
   "type-rank",
   "band",
@@ -104,17 +99,12 @@ const LABEL_DEPENDENT_FACTS: ReadonlySet<string> = new Set([
 /** Google cuts titles at roughly 60 characters. */
 const TITLE_MAX = 60;
 
-/**
- * "{Singer} Vocal Range" always leads, because that is the query. After it,
- * the longest of these that fits: the reported span plus the catalog voice
- * type and the brand, then without the brand, then without the voice type.
- */
+/** "{Singer} Vocal Range" leads (the query), then the longest tail that fits. */
 function queryAlignedTitle(s: SingerRecord): string {
   if (COMPARISON_SEARCH_SLUGS.has(s.slug)) {
     return `${s.name} Vocal Range & Voice Type | Compare Yours`;
   }
-  // Reviewed voice-type corrections: the sources dispute or qualify the
-  // catalog label, so these titles never print it as settled.
+  // Reviewed corrections dispute the catalog label, so these never print it as settled.
   const reviewedTitles: Record<string, string> = {
     "olivia-rodrigo": "Olivia Rodrigo Vocal Range & Voice Type | Test Yours",
     "reba-mcentire": "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
@@ -145,19 +135,12 @@ function queryAlignedDescription(s: SingerRecord): string {
   if (isPending(s)) {
     return `Our catalog reports ${s.name} at ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(s.highMidi - s.lowMidi)} octaves). Individual endpoint review is pending. Compare your range free.`;
   }
-  // The answer first, in a sentence that names the singer: the opening an
-  // answer engine lifts for "<name> vocal range". The caveat follows it.
+  // The answer first, in a sentence that names the singer; the caveat follows.
   const semis = s.highMidi - s.lowMidi;
   return `${s.name}’s reported vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, about ${spanOctaves(semis)} octaves (${semis} semitones). That is a reported reference span, not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
 }
 
-/**
- * The search snippet, written for the click: the reported span, its size and
- * the catalog voice type, then what the page offers. "Reported" carries the
- * honesty here; the review status and the evidence limits are spelled out in
- * the page body (opening, evidence card and FAQ), where there is room to
- * explain them rather than truncate them into a disclaimer.
- */
+/** The search snippet: span, size and catalog voice type, then the offer; "Reported" carries the caveat. */
 function snippetDescription(s: SingerRecord): string {
   if (s.slug === "olivia-rodrigo") {
     return "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes.";
@@ -166,8 +149,7 @@ function snippetDescription(s: SingerRecord): string {
     return `Explore ${s.name}'s reported vocal range and catalog voice type. Take the free range test to compare yours.`;
   }
   const span = `${s.name}'s reported vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, about ${spanOctaves(s.highMidi - s.lowMidi)} octaves`;
-  // Reviewed corrections: the sources qualify or dispute the catalog label,
-  // so the snippet does not print it.
+  // Reviewed corrections dispute the catalog label, so the snippet omits it.
   if (hasReviewedVoiceTypeCorrection(s)) {
     return `${span}. Reviewed sources don't settle the voice type. See why, then test your own range free.`;
   }
@@ -198,8 +180,7 @@ export async function generateMetadata({
     description,
     keywords: singerKeywords(s),
     alternates: { canonical },
-    // Every public profile is discoverable. Evidence status controls the
-    // page's claims and caveats, not whether search engines may index it.
+    // Every public profile is indexable; evidence status shapes claims, never indexing.
     robots: pageRobots(true),
     openGraph: {
       title,
@@ -212,58 +193,69 @@ export async function generateMetadata({
   };
 }
 
-function answerSentence(s: SingerRecord): string {
-  const semis = s.highMidi - s.lowMidi;
-  if (isPending(s)) {
-    return `Our catalog reports ${s.name} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, a reference span of about ${spanOctaves(semis)} octaves (${semis} semitones). Individual endpoint review is pending; these are not verified physiological limits.`;
-  }
-  return `${s.name}’s reported vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, about ${spanOctaves(semis)} octaves (${semis} semitones). That is a reported reference span, not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
-}
-
 const VOICE_TYPE_QUESTION = (s: SingerRecord) => `What voice type is ${s.name}?`;
 
+interface SingerFaq {
+  /** The shared caveat, said once above the list. */
+  lede: string;
+  items: Array<{ q: string; a: string }>;
+}
+
 /**
- * The other question families searchers type — "what is X's highest note",
- * "what is X's lowest note", "how many octaves can X sing" — answered from the
- * same fields the page renders. One array feeds both the visible section and
- * the FAQPage markup, so the marked-up answer can never drift from the read one.
- * Typographic apostrophes throughout, for the same reason `question` uses one.
+ * The highest-note / lowest-note / octaves questions searchers type, answered
+ * from the fields the page renders. One array feeds the visible section and
+ * the FAQPage markup, so the two cannot drift; each answer carries only its
+ * own clause and the lede carries the shared caveat once.
  */
-function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
+function singerFaq(s: SingerRecord): SingerFaq {
   const semis = s.highMidi - s.lowMidi;
+  const low = midiToLabel(s.lowMidi);
+  const high = midiToLabel(s.highMidi);
   if (isPending(s)) {
-    const referenceSpan = `Our catalog reports ${s.name} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}; individual endpoint review is pending.`;
-    return [
-      { q: `How high can ${s.name} sing?`, a: `${referenceSpan} The upper endpoint is not a verified individual maximum.` },
-      { q: `What is ${s.name}’s highest note?`, a: `${referenceSpan} No reviewed source here establishes the upper endpoint as ${s.name}’s highest note.` },
-      { q: `What is ${s.name}’s lowest note?`, a: `${referenceSpan} No reviewed source here establishes the lower endpoint as ${s.name}’s lowest note.` },
-      { q: `How many octaves can ${s.name} sing?`, a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of ${s.name}’s working range.` },
-      { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
-    ];
+    return {
+      lede: `Our catalog reports ${s.name} from ${low} to ${high}; individual endpoint review is pending.`,
+      items: [
+        { q: `How high can ${s.name} sing?`, a: `Up to ${high} in this catalog; that upper endpoint is not a verified individual maximum.` },
+        { q: `What is ${s.name}’s highest note?`, a: `${high} is the reported ceiling. No reviewed source here establishes it as ${s.name}’s highest note.` },
+        { q: `What is ${s.name}’s lowest note?`, a: `${low} is the reported floor. No reviewed source here establishes it as ${s.name}’s lowest note.` },
+        { q: `How many octaves can ${s.name} sing?`, a: `About ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of ${s.name}’s working range.` },
+        { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
+      ],
+    };
   }
-  const referenceSpan = `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span, not an independently verified physiological limit.`;
   const sourceScope = getSingerEvidence(s.slug).reviewConfirmation
     ? "The catalog record does not independently establish"
     : "The reviewed sources do not independently establish";
-  return [
-    {
-      q: `How high can ${s.name} sing?`,
-      a: `${referenceSpan} Its upper endpoint should not be read as a verified individual maximum.`,
-    },
-    {
-      q: `What is ${s.name}’s highest note?`,
-      a: `${referenceSpan} ${sourceScope} the upper endpoint as an individual highest note.`,
-    },
-    {
-      q: `What is ${s.name}’s lowest note?`,
-      a: `${referenceSpan} ${sourceScope} the lower endpoint as an individual physiological limit.`,
-    },
-    {
-      q: `How many octaves can ${s.name} sing?`,
-      a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer's full working range.`,
-    },
-    { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
-  ];
+  return {
+    lede: `The catalog lists ${low} to ${high} as a reported reference span, not an independently verified physiological limit.`,
+    items: [
+      {
+        q: `How high can ${s.name} sing?`,
+        a: `Up to ${high} in this catalog; that upper endpoint should not be read as a verified individual maximum.`,
+      },
+      {
+        q: `What is ${s.name}’s highest note?`,
+        a: `${high} is the reported ceiling. ${sourceScope} the upper endpoint as an individual highest note.`,
+      },
+      {
+        q: `What is ${s.name}’s lowest note?`,
+        a: `${low} is the reported floor. ${sourceScope} the lower endpoint as an individual physiological limit.`,
+      },
+      {
+        q: `How many octaves can ${s.name} sing?`,
+        a: `About ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer’s full working range.`,
+      },
+      { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
+    ],
+  };
+}
+
+/** One sentence on what the figures are, for the evidence card. */
+function evidenceParagraph(s: SingerRecord, confirmed: boolean): string {
+  const limits = `Read it as a reference for comparison, not as ${s.name}’s limits or everyday range.`;
+  return confirmed
+    ? `The span is the figure that circulates in public discussion, not a measurement: no recording or score has been checked for both endpoints. ${limits}`
+    : `The span is a reported reference figure, not an independently verified physiological limit; the sources below say what each one supports. ${limits}`;
 }
 
 export default async function SingerPage({
@@ -274,22 +266,21 @@ export default async function SingerPage({
   const { slug } = await params;
   const s = singerBySlug(slug);
   if (!s) notFound();
-  // The client components get these four fields and nothing else. Whatever a
-  // server page hands a client component is serialized into the page source,
-  // and the full record carries the blurb and technique notes that are the
-  // Pro atlas's entry prose, which this page does not show.
+  // Client components get four fields: the full record carries the Pro atlas's entry prose.
   const rangeProps = { slug: s.slug, name: s.name, lowMidi: s.lowMidi, highMidi: s.highMidi };
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
-  const lowMates = sharesLow(s).slice(0, 8);
-  const highMates = sharesHigh(s).slice(0, 8);
+  const allLow = sharesLow(s);
+  const allHigh = sharesHigh(s);
+  // Up to eight chips across the two sub-rows.
+  const lowMates = allLow.slice(0, allHigh.length ? 4 : 8);
+  const highMates = allHigh.slice(0, allLow.length ? 4 : 8);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
-  const answer = answerSentence(s);
+  const answer = queryAlignedDescription(s);
   const faq = singerFaq(s);
-  // The atlas chapter that profiles this singer, if any (chapter rosters are
-  // public metadata; the entry prose itself stays behind Pro).
+  // The atlas chapter profiling this singer; rosters are public, entry prose is Pro.
   const atlasChapter = ATLAS_CONTENTS.find((c) => c.singers.some((row) => row.slug === s.slug));
   const intent = searchIntentFor(s.slug);
   const evidence = getSingerEvidence(s.slug);
@@ -298,10 +289,7 @@ export default async function SingerPage({
     { name: "Famous vocal ranges", href: "/singers", url: `${SITE_URL}/singers` },
     { name: s.name, href: `/singers/${s.slug}`, url: pageUrl },
   ];
-  // dateModified follows the sitemap lastmod (the latest of the review, the
-  // shared template revision and this singer's data revision) so the two
-  // freshness signals agree; the review date itself is what schema.org's
-  // lastReviewed is for.
+  // dateModified follows the sitemap lastmod; lastReviewed is the review date itself.
   const reviewedPageFields = reviewed
     ? {
         dateModified: getSingerPageLastModified(s.slug),
@@ -316,18 +304,10 @@ export default async function SingerPage({
         })) } : {}),
       }
     : {};
-  // Rendered below AND used verbatim in the FAQPage markup. Google requires the
-  // marked-up question to match what the reader sees; sharing one string is the
-  // only way that stays true. Note the typographic apostrophe — the heading used
-  // &rsquo;, so a straight quote here would have been a silent mismatch.
-  const question = `What is ${s.name}’s vocal range?`;
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      // The publisher, spelled out rather than pointed at. Every template on
-      // this site referenced this @id without defining it, so a crawler
-      // reading one page on its own resolved the pointer to nothing.
+      // The publisher node itself: a bare @id pointer resolved to nothing on its own.
       ORG_PUBLISHER_NODE,
       {
         "@type": "WebPage",
@@ -336,8 +316,6 @@ export default async function SingerPage({
         url: pageUrl,
         description: answer,
         ...reviewedPageFields,
-        // Joins each singer to the hub and to the estate graph, so a consumer
-        // landing here can resolve the collection and the publisher.
         isPartOf: { "@id": `${SITE_URL}/singers#collection` },
         publisher: { "@id": "https://suedeai.ai/#organization" },
         breadcrumb: {
@@ -358,35 +336,19 @@ export default async function SingerPage({
         jobTitle: "Singer",
         nationality: s.country.split("/").map((name) => ({ "@type": "Country", name })),
         description: voiceTypeEvidenceCopy(s),
-        // Without an external identifier these are hundreds of unresolvable
-        // strings; the Wikipedia URL is the cheapest anchor to the real entity.
-        // Derived via wikipediaUrl() rather than raw name-mangling — 18 singers
-        // have names that mangle onto a disambiguation page, which asserts the
-        // wrong entity instead of failing loudly. Null means no personal
-        // article exists (band-only artists) — then the node carries no sameAs
-        // rather than a wrong one.
+        // wikipediaUrl() avoids disambiguation pages; null (band-only) means no sameAs.
         ...(wikipediaUrl(s) ? { sameAs: wikipediaUrl(s) } : {}),
       },
       {
-        // The page already asks and answers this question in these exact words.
-        // Marking the pair up is what lets an answer engine quote it as an
-        // answer rather than infer one. Not a bid for FAQ rich results — Google
-        // limits those to government and health sites.
+        // The same words the page shows, so an answer engine can quote rather than infer.
         "@type": "FAQPage",
         "@id": `${pageUrl}#faq`,
         isPartOf: { "@id": `${pageUrl}#webpage` },
-        mainEntity: [
-          {
-            "@type": "Question",
-            name: question,
-            acceptedAnswer: { "@type": "Answer", text: answer },
-          },
-          ...faq.map((f) => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        ],
+        mainEntity: faq.items.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
       },
     ],
   };
@@ -398,9 +360,7 @@ export default async function SingerPage({
       subtitle={queryAlignedDescription(s)}
       actions={
         <>
-          {/* "Compare my range · free test →" on the CTR pilot's pages,
-              "Test my range →" elsewhere; the labels live with the swap
-              they must stay the width of (components/singers/singer-actions.tsx). */}
+          {/* "Compare my range · free test →" on the CTR pilot's pages, "Test my range →" elsewhere. */}
           <SingerRangeAction
             s={rangeProps}
             kind={COMPARISON_SEARCH_SLUGS.has(s.slug) ? "compare" : "test"}
@@ -425,9 +385,7 @@ export default async function SingerPage({
                 {index === breadcrumbs.length - 1 ? (
                   <span aria-current="page">{breadcrumb.name}</span>
                 ) : (
-                  // The one linked crumb is the /singers directory: no
-                  // prefetch, as on "← All singers" above, or this crumb
-                  // fetches its whole payload once it is in view.
+                  // No prefetch: the directory payload is heavy.
                   <Link
                     href={breadcrumb.href}
                     prefetch={false}
@@ -472,19 +430,22 @@ export default async function SingerPage({
             <ChromaticStrip
               low={s.lowMidi}
               high={s.highMidi}
+              beltMidi={hasReviewedVoiceTypeCorrection(s) ? null : s.beltMidi}
               label={`Keyboard showing ${s.name}'s reported reference span from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}.`}
             />
           </div>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <PlayRangeButton s={rangeProps} />
+            <dl className="text-sm">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                Signature song
+              </dt>
+              <dd className="mt-1">{s.signatureSong}</dd>
+            </dl>
           </div>
         </Card>
 
-        {/* The profile's unique value is the personal comparison, so it sits
-            directly under the answer rather than below the editorial detail.
-            #you-vs is where the header action and the range result's
-            "Compare with <singer>" land (components/range/result-view.tsx
-            singerCompareHref); scroll-mt clears the sticky header. */}
+        {/* #you-vs: where the header action and the range result's "Compare" land. */}
         <div id="you-vs" className="scroll-mt-20">
           <CompareWithMe s={rangeProps} />
         </div>
@@ -508,18 +469,13 @@ export default async function SingerPage({
           </Card>
         )}
 
-        {/* Computed from the catalog's own numbers only (no biography), so each
-            page says something specific about where this span falls. */}
+        {/* From the catalog's own numbers only, so each page says something specific. */}
         <Card>
           <h2 className="text-xl">
             Where {s.name}&rsquo;s reported span sits in the catalog
           </h2>
           <dl className="mt-4 max-w-3xl space-y-4">
-            {/* A reviewed correction means the sources do not establish the
-                catalog voice label. The facts that measure this singer
-                against that label (group rank, textbook band) or restate the
-                catalog's register split (full-voice ceiling) would put back
-                what the review set aside, so those pages leave them out. */}
+            {/* A reviewed correction set the catalog label aside, so label-dependent facts stay out. */}
             {catalogPositionFor(s)
               .filter(
                 (fact) =>
@@ -535,15 +491,15 @@ export default async function SingerPage({
                 </div>
               ))}
           </dl>
-          <p className="mt-4 text-xs text-dim">
-            Counted from the catalog&rsquo;s reported figures, which are not
-            verified measurements.
-          </p>
+          <SpanHistogramFigure
+            histogram={catalogSpanHistogram(s)}
+            name={s.name}
+            spanSemitones={semis}
+          />
         </Card>
 
         <Card>
-          <SectionLabel>Evidence and review</SectionLabel>
-          <h2 id="evidence" className="mt-3 scroll-mt-24 text-xl">Evidence and review</h2>
+          <h2 id="evidence" className="scroll-mt-24 text-xl">Evidence and review</h2>
           {reviewed ? (
             <>
               <p className="mt-3 max-w-3xl text-sm text-mut">
@@ -552,16 +508,8 @@ export default async function SingerPage({
                   : `Reviewed ${evidence.reviewedAt} · Dataset editor: ${evidence.reviewedBy}`}
               </p>
               <p className="mt-3 max-w-3xl text-sm text-mut">
-                Reported reference span: the displayed catalog range is not an independently
-                verified physiological limit. {voiceTypeEvidenceCopy(s)}
+                {evidenceParagraph(s, Boolean(evidence.reviewConfirmation))}
               </p>
-              {evidence.reviewConfirmation && (
-                <p className="mt-3 max-w-3xl text-sm text-mut">
-                  The catalog has not verified recordings or scores for both endpoints.
-                  These figures cannot establish a repeatable singing range or an absolute
-                  highest or lowest note.
-                </p>
-              )}
               <div className="mt-5 space-y-5">
                 {groupEvidenceSources(evidence.sources).map((group) => (
                   <section key={group.label}>
@@ -597,15 +545,9 @@ export default async function SingerPage({
             <>
               <p className="mt-3 max-w-3xl text-sm text-mut">
                 Individual evidence review is pending. The displayed range is a reported
-                reference span, not an independently verified physiological limit.
+                reference span, not an independently verified physiological limit: no
+                recording or score has been checked for both endpoints.
               </p>
-              {isPending(s) && (
-                <p className="mt-3 max-w-3xl text-sm text-mut">
-                  The catalog has not verified recordings or scores for both endpoints.
-                  These figures cannot establish a repeatable singing range or an absolute
-                  highest or lowest note.
-                </p>
-              )}
               {evidence.sources.length > 0 && (
                 <div className="mt-5 space-y-3">
                   <h3 className="text-sm">Source context awaiting individual review</h3>
@@ -637,7 +579,6 @@ export default async function SingerPage({
               )}
             </>
           )}
-          <p className="mt-3 max-w-3xl text-sm text-mut">{SINGER_RANGE_DISCLAIMER}</p>
           <div className="mt-5 flex flex-wrap gap-3">
             <LinkButton href="/singers/methodology" variant="outline" size="sm">
               Methodology
@@ -648,24 +589,6 @@ export default async function SingerPage({
           </div>
         </Card>
 
-        {/* The answer, in prose a search snippet can lift */}
-        <Card>
-          <h2 className="text-xl">{question}</h2>
-          <p className="mt-3 max-w-3xl text-mut">{answer}</p>
-          <dl className="mt-5">
-            <div>
-              <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                Signature song
-              </dt>
-              <dd className="mt-1 text-sm">{s.signatureSong}</dd>
-            </div>
-          </dl>
-          <p className="mt-5 text-xs text-dim">
-            Reported catalog figures, not lab measurements. An endpoint may be
-            an isolated performance and does not describe an everyday singing range.
-          </p>
-        </Card>
-
         {intent === "voice-type" && (
           <Card>
             <h2 className="text-xl">{VOICE_TYPE_QUESTION(s)}</h2>
@@ -673,13 +596,13 @@ export default async function SingerPage({
           </Card>
         )}
 
-        {/* The highest-note / lowest-note / octaves question families, in the
-            words people search. Same array as the FAQPage markup above. */}
+        {/* The question families people search, in the same words as the FAQPage markup. */}
         <Card>
-          <h2 className="text-xl">More about {s.name}&rsquo;s voice</h2>
+          <h2 className="text-xl">{s.name}&rsquo;s highest note, lowest note and octaves</h2>
+          <p className="mt-2 max-w-3xl text-sm text-mut">{faq.lede}</p>
           <div className="mt-4 max-w-3xl space-y-5">
             {/* On voice-type intent pages that question has its own card above. */}
-            {faq
+            {faq.items
               .filter((f) => intent !== "voice-type" || f.q !== VOICE_TYPE_QUESTION(s))
               .map((f) => (
               <div key={f.q}>
@@ -688,8 +611,7 @@ export default async function SingerPage({
               </div>
             ))}
           </div>
-          {/* Where the full entry lives. The chapter rosters are public
-              metadata; the chapter page carries the offer when it is paid. */}
+          {/* The chapter roster is public; the chapter page carries the offer when paid. */}
           {atlasChapter && (
             <p className="mt-5 max-w-3xl text-sm text-mut">
               {s.name}&rsquo;s full entry (range, tone and technique) is in The
@@ -705,21 +627,47 @@ export default async function SingerPage({
           )}
         </Card>
 
-        {/* Who else touches the same extremes — the pages a reader who cares
-            about one specific note actually wants next. */}
-        {(lowMates.length > 0 || highMates.length > 0) && (
-          <Card>
-            <SectionLabel>Same reported notes, other voices</SectionLabel>
-            <div className="mt-4 grid gap-6 sm:grid-cols-2">
+        {/* Similar voices by type and range centre, then the voices sharing an exact endpoint. */}
+        <Card>
+          <SectionLabel>Similar voices</SectionLabel>
+          <h2 className="mt-3 text-xl">Who else reaches these notes</h2>
+          <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link
+                  href={`/singers/${r.slug}`}
+                  prefetch={false}
+                  className="block rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
+                >
+                  <span className="flex items-baseline justify-between gap-3">
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-medium">
+                        {r.name}
+                      </span>
+                      <span className="block font-mono text-[10px] uppercase tracking-[0.1em] text-dim">
+                        {r.voiceType}
+                      </span>
+                    </span>
+                    <span className="tabular shrink-0 font-mono text-[11px] text-mut">
+                      {rangeLabel(r)}
+                    </span>
+                  </span>
+                  <RangeMini low={r.lowMidi} high={r.highMidi} beltMidi={r.beltMidi} className="mt-2" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {(lowMates.length > 0 || highMates.length > 0) && (
+            <div className="mt-6 grid gap-6 sm:grid-cols-2">
               {lowMates.length > 0 && (
                 <div>
-                  <h2 className="text-base">
+                  <h3 className="text-base">
                     Also listed from {midiToLabel(s.lowMidi)}
-                  </h2>
+                  </h3>
                   <p className="mt-1 text-sm text-mut">
-                    {sharesLow(s).length} other{" "}
-                    {sharesLow(s).length === 1 ? "voice" : "voices"} here{" "}
-                    {sharesLow(s).length === 1 ? "has" : "have"} the same
+                    {allLow.length} other{" "}
+                    {allLow.length === 1 ? "voice" : "voices"} here{" "}
+                    {allLow.length === 1 ? "has" : "have"} the same
                     reported floor in this catalog.
                   </p>
                   <ul className="mt-3 flex flex-wrap gap-2">
@@ -742,13 +690,13 @@ export default async function SingerPage({
               )}
               {highMates.length > 0 && (
                 <div>
-                  <h2 className="text-base">
+                  <h3 className="text-base">
                     Also listed up to {midiToLabel(s.highMidi)}
-                  </h2>
+                  </h3>
                   <p className="mt-1 text-sm text-mut">
-                    {sharesHigh(s).length} other{" "}
-                    {sharesHigh(s).length === 1 ? "voice" : "voices"} here{" "}
-                    {sharesHigh(s).length === 1 ? "has" : "have"} the same
+                    {allHigh.length} other{" "}
+                    {allHigh.length === 1 ? "voice" : "voices"} here{" "}
+                    {allHigh.length === 1 ? "has" : "have"} the same
                     reported ceiling in this catalog.
                   </p>
                   <ul className="mt-3 flex flex-wrap gap-2">
@@ -770,59 +718,28 @@ export default async function SingerPage({
                 </div>
               )}
             </div>
-            <div className="mt-5 flex flex-wrap gap-3">
-              {/* No prefetch on these or the chips above: a hub's payload is
-                  its whole chart (the pop hub's is about 0.5 MB decoded), and
-                  scrolling one profile made 53 background requests for pages
-                  nobody had opened. */}
+          )}
+          {/* No prefetch: a hub's payload is its whole chart. */}
+          <div className="mt-5 flex flex-wrap gap-3">
+            <LinkButton
+              href={`/singers/voice-type/${voiceTypeSlug(s.voiceType)}`}
+              variant="outline"
+              size="sm"
+              prefetch={false}
+            >
+              All {pluralVoice(s.voiceType.toLowerCase())}
+            </LinkButton>
+            {s.genres[0] && (
               <LinkButton
-                href={`/singers/voice-type/${voiceTypeSlug(s.voiceType)}`}
-                variant="outline"
+                href={`/singers/genre/${genreSlug(s.genres[0])}`}
+                variant="ghost"
                 size="sm"
                 prefetch={false}
               >
-                All {pluralVoice(s.voiceType.toLowerCase())}
+                {s.genres[0]} voices
               </LinkButton>
-              {s.genres[0] && (
-                <LinkButton
-                  href={`/singers/genre/${genreSlug(s.genres[0])}`}
-                  variant="ghost"
-                  size="sm"
-                  prefetch={false}
-                >
-                  {s.genres[0]} voices
-                </LinkButton>
-              )}
-            </div>
-          </Card>
-        )}
-
-        {/* Similar voices */}
-        <Card>
-          <SectionLabel>Similar voices</SectionLabel>
-          <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((r) => (
-              <li key={r.slug}>
-                <Link
-                  href={`/singers/${r.slug}`}
-                  prefetch={false}
-                  className="flex items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
-                >
-                  <span className="min-w-0">
-                    <span className="block truncate text-sm font-medium">
-                      {r.name}
-                    </span>
-                    <span className="block font-mono text-[10px] uppercase tracking-[0.1em] text-dim">
-                      {r.voiceType}
-                    </span>
-                  </span>
-                  <span className="tabular shrink-0 font-mono text-[11px] text-mut">
-                    {rangeLabel(r)}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+            )}
+          </div>
         </Card>
       </div>
     </PageShell>

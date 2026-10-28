@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-The highest and lowest notes you can make are set largely by your anatomy, and practice does not redesign anatomy; what it changes is your access to notes that were already there but badly coordinated. The edges follow the middle and rarely lead it, which is why range work comes this late, once the middle is reliable. Add one semitone at a time, count it only when it is comfortable on three separate days, and compare readings over months rather than sessions.
+Your highest and lowest notes are set largely by anatomy, and practice does not redesign anatomy; it changes your access to notes that were already there but badly coordinated. The edges follow the middle and rarely lead it, which is why range work comes this late, once the middle is reliable. Add one semitone at a time, count it only when it is comfortable on three separate days, and compare readings over months rather than sessions.
 
 ## Steps
 

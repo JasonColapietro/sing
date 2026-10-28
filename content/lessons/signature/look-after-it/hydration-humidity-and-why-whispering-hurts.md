@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Water reaches your voice slowly: steady drinking across the day shows up in how singing feels, while a glass just before you sing does little for the next twenty minutes. Dry air counts too, and the NIDCD's Taking Care of Your Voice guidance, listed in the sources below, suggests a humidifier at home, especially in winter or a dry climate. The same guidance names whispering and talking over noise as things to avoid, since both put stress on the voice, and most voice fatigue comes from talking rather than singing, above all talking over noise. So rest your voice with silence rather than a whisper, and count a loud evening of conversation as voice use.
+Water reaches your voice slowly: steady drinking across the day shows up in how singing feels; a glass just before you sing does little. Dry air counts too, so the NIDCD's Taking Care of Your Voice guidance, in the sources below, suggests a humidifier at home. It also says avoid whispering and talking over noise; both stress the voice, and most fatigue comes from talking. Rest with silence, not a whisper, and count a loud evening out as voice use.
 
 ## Steps
 
