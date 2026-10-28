@@ -4,7 +4,7 @@
   --color-bg: #f7f0e7;
   --color-panel: #fffaf2;
   --color-panel2: #efe6d5;
-  --color-line: #ddd4c4;
+  --color-line: #d6cbb7;
   --color-line2: #c9bda0;
   /* Form-field borders. line and line2 are decorative rules at 1.4:1 to
      1.7:1; a field's edge is how someone finds where to type, so it needs
@@ -91,7 +91,12 @@ html {
 
 body {
   overflow-x: clip;
+  /* The ground is paper, so it gets a grain: a tiny inline SVG noise tile
+     at 3.5% opacity over the cream. Panels stay smooth, which is what makes
+     them read as sheets laid on the desk rather than as outlined rectangles.
+     ~500 bytes, no request, static (nothing for reduced motion to stop). */
   background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.28 0 0 0 0 0.23 0 0 0 0 0.12 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 240px 240px,
     radial-gradient(1100px 480px at 50% -12%, rgba(197, 150, 66, 0.08), transparent 60%),
     var(--color-bg);
   color: var(--color-ink);
@@ -173,6 +178,17 @@ body {
   .lift:active {
     transform: none;
   }
+}
+
+/*
+ * A drawn object on the paper: a figure, a book cover, a product shot. Resting
+ * shadow only (nothing to hover), warm like .lift's, so the object sits on
+ * the sheet instead of inside a border.
+ */
+.figure {
+  box-shadow:
+    0 1px 0 rgba(72, 58, 32, 0.06),
+    0 10px 28px -14px rgba(72, 58, 32, 0.22);
 }
 
 /*

@@ -23,14 +23,30 @@ const LABEL_TONES = {
   rec: "border-rec/40 text-rec",
 } as const;
 
+/**
+ * The in-body form of the label: the same mono text with a short gold
+ * hairline before it and no box. A room page stacks eight to twelve
+ * section labels, and as bordered pills they were the most visible thing on
+ * the page; the pill now marks only a page's kicker (PageShell).
+ */
+const HAIRLINE_CLASS =
+  "inline-flex items-center gap-2.5 font-mono text-label uppercase tracking-[0.14em] before:h-px before:w-6 before:shrink-0 before:bg-amber before:content-['']";
+const HAIRLINE_TONES = {
+  violet: "text-violet-ink",
+  rec: "text-rec",
+} as const;
+
 export function SectionLabel({
   children,
   className,
   heading,
+  hairline = false,
   tone = "violet",
 }: {
   children: ReactNode;
   className?: string;
+  /** Mono text with a gold hairline instead of the bordered pill. */
+  hairline?: boolean;
   tone?: keyof typeof LABEL_TONES;
   /**
    * Also announce the label as an h2 to assistive tech, for a section whose
@@ -38,23 +54,20 @@ export function SectionLabel({
    */
   heading?: boolean;
 }) {
+  const classes = hairline
+    ? cn(HAIRLINE_CLASS, HAIRLINE_TONES[tone], className)
+    : cn(LABEL_CLASS, LABEL_TONES[tone], className);
   if (heading) {
     return (
       <>
         <h2 className="sr-only">{children}</h2>
-        <span aria-hidden="true" className={cn(LABEL_CLASS, LABEL_TONES[tone], className)}>
+        <span aria-hidden="true" className={classes}>
           {children}
         </span>
       </>
     );
   }
-  return (
-    <span
-      className={cn(LABEL_CLASS, LABEL_TONES[tone], className)}
-    >
-      {children}
-    </span>
-  );
+  return <span className={classes}>{children}</span>;
 }
 
 /** Standard page container + header. Every app page starts with this. */
@@ -139,7 +152,7 @@ export function SectionHeading({
   const Heading = level === 3 ? "h3" : "h2";
   return (
     <div className={cn("max-w-2xl", className)}>
-      {label && <SectionLabel className="mb-4">{label}</SectionLabel>}
+      {label && <SectionLabel hairline className="mb-4">{label}</SectionLabel>}
       {/* An h3 takes the card-title face by default; this one is the same
           editorial tier as the h2, so it says so. */}
       <Heading id={id} className={level === 3 ? "font-display text-2xl font-normal sm:text-3xl" : "text-2xl sm:text-3xl"}>
