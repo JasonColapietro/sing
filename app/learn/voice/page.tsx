@@ -14,6 +14,7 @@ import {
 import { PracticedMark } from "@/components/learn/practice-count";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
+import { ReferenceFigure, STAGE_FIGURES } from "@/components/learn/reference-figure";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -174,7 +175,8 @@ export default function VoiceCoursePage() {
             data-course-stage={stage.catalog.id}
             className="space-y-4"
           >
-            <div className="max-w-3xl">
+            <div className="flex max-w-3xl items-start justify-between gap-4">
+              <div>
               <SectionLabel>Stage {stage.catalog.stage}</SectionLabel>
               <h2 id={`stage-${stage.catalog.stage}`} className="mt-3 text-2xl">
                 {stage.href ? (
@@ -186,6 +188,10 @@ export default function VoiceCoursePage() {
                 )}
               </h2>
               <p className="mt-2 text-mut">{stage.catalog.subtitle}</p>
+              </div>
+              {STAGE_FIGURES[stage.catalog.id] && (
+                <ReferenceFigure kind={STAGE_FIGURES[stage.catalog.id]} className="mt-1 hidden sm:block" />
+              )}
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {stage.modules.map((module) => {
