@@ -41,9 +41,6 @@ export const metadata: Metadata = withCanonicalOpenGraph({
  */
 const RANGE_TEST_HREF = rangeTestHref();
 
-/** The definition the opening paragraph quotes, so the answer is the page's own. */
-const PASSAGGIO = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");
-
 /**
  * The free warmup an entry names, resolved by id. Only the free catalogue is
  * searched, so a Pro-pack id can never put a locked drill behind "Try it".
@@ -87,11 +84,7 @@ export default function GlossaryPage() {
     <PageShell
       kicker="Free reference"
       title="Singing terms glossary: what each vocal term means"
-      subtitle={`What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each, with the room where you can see each one at work.${
-        PASSAGGIO
-          ? ` Passaggio, for example, is ${PASSAGGIO.definition.charAt(0).toLowerCase()}${PASSAGGIO.definition.slice(1)}`
-          : ""
-      }`}
+      subtitle={`What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each, with the room where you can see each one at work.`}
     >
       <script
         type="application/ld+json"
@@ -111,16 +104,7 @@ export default function GlossaryPage() {
               {AUTHOR_NAME}
             </a>
           </p>
-          <p className="max-w-3xl text-mut">
-            Vocal teaching runs on borrowed words. Half of them arrived from
-            three different traditions that never agreed with each other, and
-            the rest describe a sensation rather than a mechanism. This page
-            takes the {SING_GLOSSARY_TERMS.length} that turn up in this app (on the
-            range result, in the studio readout, across the singer pages) and
-            gives each one a single sentence, plus the place it shows up so the
-            definition has somewhere to land.
-          </p>
-          <p className="mt-3 max-w-3xl text-sm text-mut">
+          <p className="max-w-3xl text-sm text-mut">
             Definitions only. The exercises live in the{" "}
             <Link href="/warmups" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               warmups

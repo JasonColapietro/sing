@@ -144,12 +144,6 @@ export default async function ChapterPage({
       actions={
         <div className="flex flex-col items-start gap-2">
           <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href="/book"
-              className="inline-flex min-h-11 items-center rounded-full border border-line px-4 py-2 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
-            >
-              ← Contents
-            </Link>
             {tryIt?.warmUpFirst && (
               <LinkButton href={RANGE_WARM_UP.href} size="md">
                 {RANGE_WARM_UP.label}
@@ -293,12 +287,9 @@ export default async function ChapterPage({
                   . {next.summary}
                 </p>
               )}
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-4">
                 <LinkButton href="/pro#buy" size="md">
                   {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
-                </LinkButton>
-                <LinkButton href="/book" variant="outline" size="md">
-                  Back to contents
                 </LinkButton>
               </div>
             </Card>
