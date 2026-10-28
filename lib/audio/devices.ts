@@ -98,7 +98,7 @@ export function getAudioPrefs(): Prefs {
   return loadPrefs();
 }
 
-export function subscribeAudioPrefs(cb: () => void): () => void {
+function subscribeAudioPrefs(cb: () => void): () => void {
   listeners.add(cb);
   return () => listeners.delete(cb);
 }
@@ -179,7 +179,7 @@ export function canChooseOutput(): boolean {
  * mic is running wherever possible, and why the fallback label below is
  * positional ("Microphone 2") rather than a lie about what the device is.
  */
-export async function listDevices(): Promise<{
+async function listDevices(): Promise<{
   inputs: AudioDevice[];
   outputs: AudioDevice[];
 }> {

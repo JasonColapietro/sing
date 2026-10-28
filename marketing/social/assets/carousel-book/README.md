@@ -5,6 +5,7 @@ Six finished slides, 1080×1350. This is **Instagram launch grid post 6** in
 works on Facebook as an album for the same audience that shares explainers.
 
 Upload `slide-1.png` … `slide-6.png` in order.
+Render them first: `node marketing/social/assets/carousel-book/render.mjs` (the PNGs are not committed).
 
 | Slide | Does |
 |---|---|

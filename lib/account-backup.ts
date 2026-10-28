@@ -47,7 +47,7 @@ export interface RemoteBackup {
  * out" (401) apart from "the store is down" (502/503) and stay quiet about the
  * first. Signing out is not an error worth showing anyone.
  */
-export class BackupError extends Error {
+class BackupError extends Error {
   readonly status: number;
 
   constructor(message: string, status: number) {
@@ -123,16 +123,10 @@ async function pushBackup(generation: string): Promise<string> {
 
 /**
  * Pull the backup and fold it into local progress. Returns false when the
- * account has nothing stored yet.
- *
- * Safe to call on a device that already has practice on it: the merge unions
- * sessions and achievements and takes the max of every counter, so a restore
- * can add work but never remove it.
+ * account has nothing stored yet. The merge unions sessions and achievements
+ * and takes the max of every counter, so a restore adds work and never
+ * removes it.
  */
-export async function restoreBackup(): Promise<boolean> {
-  return pullBackup(requireProgressCloudGeneration());
-}
-
 async function pullBackup(generation: string): Promise<boolean> {
   assertProgressCloudGeneration(generation);
   const remote = await fetchBackup();

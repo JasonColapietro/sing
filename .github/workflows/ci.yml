@@ -1,20 +1,21 @@
 name: CI
 
-# vercel.json sets an ignoreCommand that kills every non-production build, so
-# no preview deploy ever runs for a PR. That makes this workflow the only
-# pre-merge proof that the app compiles. "Vercel deployed" is a production
-# signal, never a PR signal.
+# vercel.json's ignoreCommand kills every non-production build, so no preview
+# deploy ever runs for a PR: this workflow is the only pre-merge proof that the
+# app compiles. "Vercel deployed" is a production signal, never a PR signal.
 on:
   pull_request:
+  # The static checks and build on main too, so the commit Vercel deploys was
+  # checked as merged, not only as a PR branch that main may have moved under.
+  push:
+    branches: [main]
 
 permissions:
   contents: read
 
-# The pull_request event tests GitHub's synthetic merge commit, so re-running
-# after a squash merge would re-test the same tree at full cost. Only the
-# newest push to a PR branch matters.
+# Only the newest push to a PR branch (or to main) matters.
 concurrency:
-  group: ci-${{ github.event.pull_request.number }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -29,40 +30,40 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          # Matches the Vercel production runtime (24.x). There is no .nvmrc or
-          # engines field to read; if prod moves, move this with it.
-          node-version: '24'
+          # .nvmrc and package.json `engines` track the Vercel production
+          # runtime (24.x); if prod moves, move them.
+          node-version-file: .nvmrc
           cache: 'npm'
 
       - run: npm ci
 
-      # First because it fails in seconds rather than the ~1 minute a build
-      # takes. Not redundant with Build: `next build` only type-checks what the
-      # app graph reaches, so scripts/ is invisible to it.
+      # First because it fails in seconds rather than the minute a build takes.
+      # `next build` only type-checks what the app graph reaches; the tests,
+      # next-config.test.ts, proxy.test.ts and vitest.config.mts are only seen
+      # here.
       - name: Typecheck
         run: npx tsc --noEmit
 
       - name: Lint
         run: npm run lint
 
-      # Covers the pure DSP modules behind /analyze (spectrum maths, vocal-dose
-      # accumulation). Canvas and the mic hook are not unit-tested: against
-      # mocks those tests would only assert the mocks.
+      # The DSP (pitch, breath, vibrato), the mic hooks against a fake stream,
+      # the SEO page renders and the generated-data staleness checks. What
+      # needs a real browser and audio path is the browser matrix below.
       - name: Test
         run: npm test
 
-      # Every env var this app reads (STRIPE_SECRET_KEY, PRO_KEY_SECRET, the
-      # Upstash pair) is resolved lazily inside a function, specifically so a
-      # missing key surfaces as a request-time error instead of breaking the
-      # build. That is what lets CI build with no secrets configured — if a
-      # future change reads an env var at module scope, this step is where it
-      # will start failing.
+      # Every env var is read lazily inside a function, so a missing key is a
+      # request-time error rather than a build failure; that is what lets CI
+      # build with no secrets. A module-scope env read would start failing
+      # here.
       - name: Build
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
 
       - name: Save production build
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: production-build
@@ -75,6 +76,8 @@ jobs:
 
   browser:
     name: Browser (${{ matrix.suite }})
+    # Pull requests only: a push to main has already had its browser run.
+    if: github.event_name == 'pull_request'
     needs: checks
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -82,7 +85,9 @@ jobs:
       # One failed suite must not cancel the independent evidence from others.
       fail-fast: false
       matrix:
-        suite: [journeys, mobile-audit, desktop-audit, audio, layout-shift]
+        # The suites are defined in e2e/suite.mjs; e2e/suite.test.mjs keeps
+        # this list equal to them.
+        suite: [journeys, mobile-audit, desktop-audit, audio, layout-shift, layout-shift-finished]
     env:
       NEXT_TELEMETRY_DISABLED: '1'
       SING_BASE_URL: http://127.0.0.1:3100
@@ -102,7 +107,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '24'
+          node-version-file: .nvmrc
           cache: 'npm'
 
       - run: npm ci
@@ -114,15 +119,38 @@ jobs:
           name: production-build
           path: .next
 
+      # The ~150 MB Chromium download is cached per Playwright version; the
+      # cold install swung between 17 s and 582 s per job on the CDN alone.
+      - name: Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Chromium
+        id: chromium-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
       - name: Install full Chromium
         shell: bash
+        env:
+          CACHE_HIT: ${{ steps.chromium-cache.outputs.cache-hit }}
         run: |
           mkdir -p browser-results
-          npx playwright install --with-deps --no-shell chromium 2>&1 | tee browser-results/browser-install.log
+          # The apt dependencies are not cached and are quick.
+          npx playwright install-deps chromium 2>&1 | tee browser-results/browser-install.log
+          if [ "$CACHE_HIT" != 'true' ]; then
+            npx playwright install --no-shell chromium 2>&1 | tee -a browser-results/browser-install.log
+          fi
           browser_path="$(node --input-type=module -e 'import { chromium } from "playwright"; console.log(chromium.executablePath())')"
           test -x "$browser_path"
           echo "SING_BROWSER_EXECUTABLE=$browser_path" >> "$GITHUB_ENV"
 
+      # e2e/suite.mjs waits for the server, runs every command of the suite
+      # (keeping going after a failure so each one's evidence is captured),
+      # writes the step summary and annotations, and exits non-zero if any
+      # failed. Run the same thing locally with `node e2e/suite.mjs <suite>`.
       - name: Run browser suite
         shell: bash
         env:
@@ -132,123 +160,7 @@ jobs:
           npm start -- --hostname 127.0.0.1 --port 3100 > browser-results/server.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-
-          node --input-type=module <<'NODE'
-          import { setTimeout } from 'node:timers/promises';
-          const deadline = Date.now() + 60_000;
-          while (Date.now() < deadline) {
-            try {
-              const response = await fetch(process.env.SING_BASE_URL, {
-                signal: AbortSignal.timeout(1000),
-              });
-              if (response.ok) process.exit(0);
-            } catch {}
-            await setTimeout(500);
-          }
-          console.error('Local production server did not become ready within 60 seconds.');
-          process.exit(1);
-          NODE
-
-          failed=0
-          # Keep going after a failed command to capture every suite's evidence,
-          # but retain its non-zero status for this matrix job and the ci gate.
-          run_check() {
-            local label="$1"
-            shift
-            if timeout --kill-after=10s 12m "$@" 2>&1 | tee "browser-results/$label.log"; then
-              echo "- PASS: $label" >> "$GITHUB_STEP_SUMMARY"
-            else
-              failed=1
-              echo "- FAIL: $label (see browser-results artifact)" >> "$GITHUB_STEP_SUMMARY"
-              # The log's tail as an annotation, so a failure reads from the
-              # checks view and the API without downloading the artifact.
-              # The FAIL and error lines first: a script that keeps going after
-              # one case fails can push them out of the last lines.
-              tail_msg="$({ grep -E -A12 '^(FAIL|not ok)|Error' "browser-results/$label.log" | head -n 60; echo '...'; tail -n 15 "browser-results/$label.log"; } | sed -e 's/%/%25/g' -e 's/\r/%0D/g' | awk '{ printf "%s%%0A", $0 }')"
-              echo "::error title=FAIL: $label::$tail_msg"
-            fi
-          }
-
-          case "$SING_SUITE" in
-            journeys)
-              run_check checkout-recovery node e2e/checkout-recovery.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check share-cards node scripts/audit-share-cards.mjs "$SING_BASE_URL"
-              run_check navigation node e2e/navigation.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check navigation-inputs node e2e/navigation-inputs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check progress-reset node e2e/progress-reset.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check recorder-recovery node e2e/recorder-recovery.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check voice-tabs node e2e/voice-tabs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check mic-refusal node scripts/audit-mic-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check programs node e2e/programs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/programs.json
-              run_check song-first-practice node e2e/song-first-practice.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check songs-modes node e2e/songs-modes.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check song-visit-unlock node e2e/song-visit-unlock.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              ;;
-            mobile-audit)
-              run_check mobile-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=mobile-375 --json=browser-results/mobile-audit.json
-              ;;
-            desktop-audit)
-              run_check desktop-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1280 --json=browser-results/desktop-audit.json
-              ;;
-            audio)
-              run_check mic-preferences node e2e/mic-preferences.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check mic-startup node e2e/mic-startup.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check ear-mic-interruption node e2e/ear-mic-interruption.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check ear-keyboard node e2e/ear-keyboard.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check mic-release node e2e/mic-release.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check pitch-precision node e2e/pitch-precision.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/pitch-precision.json
-              run_check breath-gate node e2e/breath-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/breath-gate.json
-              run_check vibrato-drill node e2e/vibrato-drill.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/vibrato-drill.json
-              run_check song-loop-scoring node e2e/song-loop-scoring.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              run_check warmup-timing node scripts/audit-warmup-timing.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
-              ;;
-            layout-shift)
-              run_check layout-shift node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=mobile-375
-              # A plain returning singer (a saved range and a practice
-              # history, no cap or program state): the record most visitors
-              # who come back carry, which the fresh run above never seeds.
-              run_check layout-shift-returning node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --returning --viewport=mobile-375 "--json=browser-results/layout-shift-returning-mobile-375.json"
-              # /singers on a tall desktop window, where the section after its
-              # chart is on the first screen when the chart mounts: an empty
-              # chart slot moved it by 0.128 at 1440x1300 while 375 and 1280
-              # read zero.
-              run_check layout-shift-singers-tall node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1440-tall --route=singers-directory "--json=browser-results/layout-shift-singers-tall.json"
-              # The stored states the prerender cannot show (e2e/README.md,
-              # "Layout shift"), each on the routes it reshapes, on a phone and
-              # a desktop: about 72 page loads in all. program-detail and
-              # program-foundations are /programs?program=<id> deep links
-              # (e2e/cls.mjs DEEP_LINKS): another program's view, and the
-              # running program's own, with today's card above it. In the
-              # finished state program-detail is the running program's own
-              # view: the book's program, finished. Each other program's
-              # finished card has its own pre-paint size, so each is measured
-              # on /programs and its own view. saved-range loads the singer
-              # and song pages whose header action and verdict a saved range
-              # swaps after hydration.
-              for spec in \
-                "capped:warmups,breath,ear-training,songs" \
-                "program:programs,program-detail,program-foundations,warmups,progress" \
-                "program-capped:programs,program-detail,program-foundations,warmups,breath,ear-training" \
-                "rest-day:programs,program-detail,warmups,progress" \
-                "finished:programs,program-detail,warmups,progress" \
-                "finished-high-notes:programs,program-high-notes" \
-                "finished-mix:programs,program-mix" \
-                "finished-foundations:programs,program-foundations" \
-                "finished-recovery:programs,program-recovery" \
-                "finished-vibrato:programs,program-vibrato" \
-                "saved-range:singer-adele,singer-celine-dion,song-someone-like-you"; do
-                state="${spec%%:*}"
-                for viewport in mobile-375 desktop-1280; do
-                  run_check "layout-shift-$state-$viewport" node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" "--viewport=$viewport" "--state=$state" "--route=${spec#*:}" "--json=browser-results/layout-shift-$state-$viewport.json"
-                done
-              done
-              ;;
-            *)
-              echo "Unknown browser suite: $SING_SUITE" >&2
-              exit 2
-              ;;
-          esac
-          exit "$failed"
+          node e2e/suite.mjs "$SING_SUITE"
 
       - name: Save browser evidence
         if: always()
@@ -271,6 +183,12 @@ jobs:
         env:
           CHECKS_RESULT: ${{ needs.checks.result }}
           BROWSER_RESULT: ${{ needs.browser.result }}
+          EVENT: ${{ github.event_name }}
         run: |
           test "$CHECKS_RESULT" = success
-          test "$BROWSER_RESULT" = success
+          # The browser matrix is skipped on a push to main, never on a PR.
+          case "$BROWSER_RESULT" in
+            success) ;;
+            skipped) test "$EVENT" = push ;;
+            *) exit 1 ;;
+          esac

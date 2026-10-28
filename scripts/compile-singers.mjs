@@ -1,20 +1,19 @@
 /**
  * Compile researched singer-range JSON batches into lib/singers-data.ts.
  *
- * Usage: node scripts/compile-singers.mjs data/singers
+ * Usage: node scripts/compile-singers.mjs [data/singers] [--check]
  *
  * Each batch is a JSON array of entries with note names ("F2", "Eb3");
  * this script validates, dedupes, converts to midi and emits sorted TS.
+ * `--check` writes nothing and fails if either output is stale, which is
+ * what lib/generated-data.test.ts runs.
  */
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { assertNoReservedSingerSlugs } from "./singer-slugs.mjs";
+import { CHECK, emit } from "./generated-output.mjs";
 
-const SRC = process.argv[2];
-if (!SRC) {
-  console.error("usage: node scripts/compile-singers.mjs <dir>");
-  process.exit(1);
-}
+const SRC = process.argv.slice(2).find((a) => !a.startsWith("--")) ?? "data/singers";
 
 const VOICE_KINDS = new Set([
   "Soprano",
@@ -179,7 +178,7 @@ assertNoReservedSingerSlugs(singers);
 
 const header = `/**
  * GENERATED FILE — edit scripts/compile-singers.mjs + its source batches, not
- * this file directly (hand-fixes are fine for individual corrections).
+ * this file directly.
  *
  * Commonly cited (approximate) vocal ranges of well-known singers. These are
  * the figures fans and journalists circulate — not lab measurements — and the
@@ -219,10 +218,12 @@ export interface Singer {
 
 export const SINGERS: Singer[] = `;
 
-writeFileSync(
-  new URL("../lib/singers-data.ts", import.meta.url),
-  header + JSON.stringify(singers, null, 2) + ";\n",
-);
+const stale = [];
+const write = (file, text) => {
+  const problem = emit(new URL(`../lib/${file}`, import.meta.url), text, "compile-singers.mjs");
+  if (problem) stale.push(problem);
+};
+write("singers-data.ts", header + JSON.stringify(singers, null, 2) + ";\n");
 
 // The client-side projection: everything the /singers directory and the
 // /range result view render, and none of the prose. Blurbs, technique
@@ -270,13 +271,14 @@ const lite = singers.map(
   }),
 );
 
-writeFileSync(
-  new URL("../lib/singers-lite.ts", import.meta.url),
-  liteHeader + JSON.stringify(lite, null, 2) + ";\n",
-);
+write("singers-lite.ts", liteHeader + JSON.stringify(lite, null, 2) + ";\n");
 
-console.log(`wrote ${singers.length} singers from ${files.length} batches`);
+console.log(`${CHECK ? "checked" : "wrote"} ${singers.length} singers from ${files.length} batches`);
 if (problems.length) {
   console.log(`\n${problems.length} rows needed attention:`);
   for (const p of problems) console.log(`  - ${p}`);
+}
+if (stale.length) {
+  for (const s of stale) console.log(`  - ${s}`);
+  process.exitCode = 1;
 }

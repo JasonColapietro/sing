@@ -93,7 +93,7 @@ export function tallyFromScores(scores: readonly NoteScore[]): NoteTallies {
 }
 
 /** Adds `from` into `into`, keeping the cents mean frame-weighted. */
-export function mergeTallies(
+function mergeTallies(
   into: NoteTallies,
   from: NoteTallies | undefined,
 ): NoteTallies {
@@ -145,7 +145,7 @@ export function aggregateNotes(
 }
 
 /** Accuracy for one note, 0..100. */
-export function accuracyOf(tally: NoteTally): number {
+function accuracyOf(tally: NoteTally): number {
   return tally.sec === 0 ? 0 : Math.round((tally.hitSec / tally.sec) * 100);
 }
 

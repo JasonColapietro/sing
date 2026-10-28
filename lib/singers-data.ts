@@ -1,6 +1,6 @@
 /**
  * GENERATED FILE — edit scripts/compile-singers.mjs + its source batches, not
- * this file directly (hand-fixes are fine for individual corrections).
+ * this file directly.
  *
  * Commonly cited (approximate) vocal ranges of well-known singers. These are
  * the figures fans and journalists circulate — not lab measurements — and the

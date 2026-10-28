@@ -32,8 +32,8 @@ import {
  *   detector keeps returning a pitch the whole way through. A siren with an
  *   audible break can score a single unbroken run of its full length, and a
  *   clean siren sung with one quiet catch of breath can score two. Whether the
- *   crossing was smooth is a register-mechanism question, which no measurement
- *   in this app answers.
+ *   crossing was smooth is a question about the laryngeal mechanism, which no
+ *   measurement in this app answers.
  * - It is not proof the singer did not stop. An unvoiced frame is any frame
  *   without a confident pitch, so a whispered or very quiet passage, a long
  *   consonant, or a detector failure on a low note all end a run without the

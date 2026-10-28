@@ -1,16 +1,20 @@
 /**
  * Compile content/book/*.md into lib/book-data.ts.
  *
- * Usage: node scripts/compile-book.mjs content/book
+ * Usage: node scripts/compile-book.mjs [content/book] [--check]
+ *
+ * `--check` writes nothing and fails if lib/book-data.ts is stale, which is
+ * what lib/generated-data.test.ts runs.
  *
  * Chapters are markdown with frontmatter. The body is kept as markdown and
  * rendered at request time; only the metadata is needed to build the contents
  * page, so the free tier never has to download a word of a gated body.
  */
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { CHECK, emit } from "./generated-output.mjs";
 
-const SRC = process.argv[2] ?? "content/book";
+const SRC = process.argv.slice(2).find((a) => !a.startsWith("--")) ?? "content/book";
 
 function parseFrontmatter(raw, file) {
   const m = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(raw);
@@ -157,13 +161,15 @@ export const BOOK_PARTS: Array<{ part: string; chapters: BookContentsEntry[] }> 
 export const BOOK_WORDS = ${chapters.reduce((n, c) => n + c.words, 0)};
 `;
 
-writeFileSync(
+const stale = emit(
   new URL("../lib/book-data.ts", import.meta.url),
   header + JSON.stringify(chapters, null, 2) + ";\n" + footer,
+  "compile-book.mjs",
 );
+if (stale) problems.push(stale);
 
 const total = chapters.reduce((n, c) => n + c.words, 0);
-console.log(`wrote ${chapters.length} chapters, ${total} words`);
+console.log(`${CHECK ? "checked" : "wrote"} ${chapters.length} chapters, ${total} words`);
 if (problems.length) {
   console.log(`\n${problems.length} problems:`);
   for (const p of problems) console.log(`  - ${p}`);

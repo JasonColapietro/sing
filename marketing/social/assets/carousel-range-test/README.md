@@ -1,5 +1,7 @@
 # Carousel: "How to read your range test."
 
+Render the slides first: `node marketing/social/assets/carousel-range-test/render.mjs` (the PNGs are not committed).
+
 Seven slides, 1080x1350. From chapter 8 of *The Measured Voice*, which is
 free and served without an account at `/book/reading-the-range-test`.
 
