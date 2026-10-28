@@ -8,7 +8,7 @@ import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Singer Range Correction Requests";
 const DESCRIPTION =
-  "Send a singer range correction for a Suede Sing vocal range page: the recording, a timestamp and a source. The evidence is reviewed before any change.";
+  "Send a singer range correction for a Suede Sing vocal range page: the recording, a timestamp and a source. We check the evidence before any change.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/contact"),
@@ -31,7 +31,7 @@ export default function ContactPage() {
     <PageShell
       kicker="Corrections"
       title="Suggest a singer range correction"
-      subtitle="Found a singer vocal range that does not match the recording? Email the recording, the timestamp and a source, and the evidence will be reviewed before anything changes."
+      subtitle="Found a singer vocal range that does not match the recording? Send the recording, the timestamp and a source. We check the evidence and update the page when it holds up."
     >
       <script
         type="application/ld+json"
@@ -51,8 +51,7 @@ export default function ContactPage() {
           >
             support@suedeai.ai
           </a>{" "}
-          with the following details. We assess the evidence and update the page when the record
-          warrants it; an email does not guarantee a requested wording will be adopted.
+          with the details below. We check the evidence and update the page when it holds up.
         </p>
         <ul className="mt-5 list-disc space-y-2 pl-5 text-sm text-mut">
           <li>Artist or page URL</li>

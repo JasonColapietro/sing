@@ -3,13 +3,9 @@ import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
 
 /**
- * Two starting paths, placed above the practice-room grid.
- *
- * The grid presents the rooms as equal choices, which is the right shape
- * for someone who already knows what they want and the wrong shape for a first
- * visit — a beginner and a working singer need opposite starting points and
- * neither is obvious from a list of names. This names both, in order, with the
- * payoff stated so the next click is a decision rather than a guess.
+ * Two starting paths, placed above the practice-room grid: a beginner and a
+ * working singer need opposite entry points, and neither is obvious from a
+ * list of room names.
  */
 
 interface Step {
@@ -36,7 +32,7 @@ const PATHS: Path[] = [
     steps: [
       {
         href: rangeTestHref(),
-        label: "Test your range",
+        label: "Find my vocal range",
         note: "After a few easy hums, find the lowest and highest clear notes you can sing today and get a voice-type estimate.",
       },
       {
@@ -50,8 +46,7 @@ const PATHS: Path[] = [
         note: "See the note you're singing against the note you meant. That is how off-key becomes fixable.",
       },
     ],
-    payoff:
-      "Leave with a range measurement and a clearer picture of your pitch. A suggested voice category is a starting point, not a definitive classification.",
+    payoff: "Leave with your range measured and a clearer picture of your pitch.",
   },
   {
     kicker: "If you already sing",
@@ -62,7 +57,7 @@ const PATHS: Path[] = [
       {
         href: "/studio",
         label: "Watch a held note for drift",
-        note: "Sustain a comfortable note and watch whether your pitch rises or falls. The trace shows the drift, not its cause.",
+        note: "Sustain a comfortable note and watch whether your pitch rises or falls.",
       },
       {
         href: "/ear-training",
@@ -75,11 +70,10 @@ const PATHS: Path[] = [
         note: "Same phrase, one variable, back to back. The comparison that shows whether a change helped.",
       },
     ],
-    // What Pro adds, in /pro's terms. The free coach shows the first two
-    // steps of the same plan, the weak-note siren first unless a range test
-    // is due, and the score trend by week is free, so neither is sold here.
+    // /pro's wording: the per-note chart is one tally, only the range is
+    // charted over time (components/landing/pro-claims.test.tsx).
     payoff:
-      "Then let the coach keep score: Pro adds a per-note accuracy chart, charts your range tests over months, and opens the coach's whole daily plan, not just its first two steps.",
+      "Then let the coach keep score: Pro adds a per-note accuracy chart, charts your range tests over months, and the coach's full daily plan: every step, built from your own scores.",
     gold: true,
   },
 ];
@@ -88,10 +82,8 @@ export function StartingPaths() {
   return (
     <section className="border-t border-line">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <SectionLabel className="mb-4">Where to start</SectionLabel>
-        <h2 className="max-w-2xl text-2xl sm:text-3xl">Two ways in</h2>
-        {/* The free plan's limit and the price are stated once, in the hero;
-            this line only points at the two guided sequences. */}
+        <SectionLabel hairline className="mb-4">Where to start</SectionLabel>
+        <h2 className="max-w-2xl text-2xl sm:text-3xl">Start where you are</h2>
         <p className="mt-3 max-w-2xl text-mut">
           Prefer a sequence? The free{" "}
           <Link href="/learn" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">

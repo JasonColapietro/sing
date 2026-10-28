@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
+import { formatPrice, PRICING } from "@/lib/pro-shared";
 import { AUTHOR_NODE } from "@/lib/author";
 import { NotPro } from "@/components/pro/gate";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
@@ -14,7 +15,6 @@ import { IosBand } from "@/components/landing/ios-band";
 import { StartingPaths } from "@/components/landing/paths";
 import ComparisonTable from "@/components/landing/comparison";
 import ProVisual from "@/components/pro/pro-visual";
-import V2Banner from "@/components/v2-banner";
 import {
   AnalyzeGlyph,
   BreathGlyph,
@@ -30,16 +30,10 @@ import {
 } from "@/components/landing/glyphs";
 import { routeKeywords } from "@/lib/keywords";
 
-/**
- * The span of the free warmup routines, read from the routines themselves so
- * a new short routine (the cool-down) or a longer one cannot leave the
- * homepage quoting a range nothing on /warmups matches.
- */
+/** The span of the free warmup routines, read from the routines themselves. */
 const WARMUP_MINUTES = ROUTINES.filter((r) => !r.pro).map(routineMinutes);
 const WARMUP_SPAN = `${Math.min(...WARMUP_MINUTES)} to ${Math.max(...WARMUP_MINUTES)}`;
 
-/** The complete Early Access offer, shared with every other sales surface. */
-const PRO_PRICE_LINE = proHeadlineLong();
 const PRO_PRICE = formatPrice(PRICING.lifetime.amount);
 
 const FEATURES = [
@@ -72,8 +66,7 @@ const FEATURES = [
     label: "Famous ranges",
     desc: "Famous voices on one keyboard. See whose range matches yours.",
     Glyph: SingersGlyph,
-    // The directory's payload is its whole chart; a visible card would fetch
-    // it in the background (lib/singer-link-prefetch.test.ts).
+    // The directory's payload is its whole chart (lib/singer-link-prefetch.test.ts).
     prefetch: false,
   },
   {
@@ -91,12 +84,13 @@ const FEATURES = [
   {
     href: "/songs",
     label: "Song practice",
-    desc: "Once you've taken the range test, songs open fitted to your measured range. Without one they open in the written key and are scored in either octave.",
+    // Both halves of the key rule, as lib/song-page.test.ts pins them.
+    desc: "Real songs, scored line by line. With a range test saved, songs open fitted to your range; without one they open in the written key and are scored in either octave.",
     Glyph: SongGlyph,
   },
   {
     href: "/recorder",
-    label: "Take recorder",
+    label: "Recorder",
     desc: "Record takes, play them back, and hear yourself improve.",
     Glyph: RecorderGlyph,
   },
@@ -114,9 +108,8 @@ const FEATURES = [
   },
 ];
 
-// Homepage-only head additions (audit 2026-08-02: canonical, OG and schema were
-// absent sitewide at the root). Kept here rather than in layout.tsx so routes that
-// set their own canonical (e.g. /singers/[slug]) are not overridden.
+// Homepage-only head additions, kept here so routes with their own canonical
+// are not overridden by layout.tsx.
 const HOME_TITLE = "Online Singing Practice with Live Pitch | Suede Sing";
 const HOME_DESCRIPTION =
   "Online singing practice with live pitch feedback, warmups and songs. The pitch meter and range test are free; guided practice is 5 free minutes a day.";
@@ -152,8 +145,7 @@ const HOME_JSON_LD = {
       publisher: { "@id": "https://suedeai.ai/#organization" },
     },
     ORG_NODE,
-    // The organization's founder pointer resolves on this page, not only on
-    // suedeai.ai: a crawler reading the homepage alone found a dangling @id.
+    // The organization's founder pointer has to resolve on this page alone.
     AUTHOR_NODE,
     {
       "@type": "WebApplication",
@@ -186,6 +178,20 @@ const HOME_JSON_LD = {
   ],
 };
 
+/** Two rooms at phone width, captured from this site (scripts/render-room-shots.mjs). */
+const SESSION_SHOTS = [
+  {
+    src: "/room-studio.png",
+    alt: "The pitch studio on a phone: a live pitch trace against the target note",
+    caption: "Studio: the note you sang, live",
+  },
+  {
+    src: "/room-progress.png",
+    alt: "The progress room on a phone: streak, range card and the coach's plan",
+    caption: "Progress: what to sing tomorrow",
+  },
+];
+
 export default function Home() {
   return (
     <main>
@@ -193,13 +199,10 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_JSON_LD) }}
       />
-      {/* The original portrait presentation with the current pitch/range actions. */}
+      {/* 1 — Hero */}
       <HeroSplit />
-      {/* The 4.0 card, for every visitor until dismissed; keep it after the start buttons. */}
-      <V2Banner />
 
-      {/* 2 — Starting paths, above the grid: equal choices are the wrong
-              shape for a first visit, and a beginner and a working singer
+      {/* 2 — Starting paths, above the grid: a beginner and a working singer
               need opposite entry points. */}
       <StartingPaths />
 
@@ -208,13 +211,12 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Singing practice tools"
-            lede="Open any room and sing. Live pitch feedback, range testing, warmups, ear training, breath work and song practice, all in the browser."
+            lede="Every practice room runs in your browser: live pitch feedback, range testing, warmups, ear training, breath work and song practice."
           >
-            Every practice room, in your browser
+            Open any room and sing
           </SectionHeading>
-          {/* Two columns on a phone, with the descriptions held back until
-              sm: eleven single-column cards ran to nearly three phone
-              screens of a page that is a directory, not a pitch. */}
+          {/* Two columns on a phone, descriptions held back until sm: the
+              grid is a directory, not a pitch. */}
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {FEATURES.map(({ href, label, desc, Glyph, prefetch }) => (
               <Link
@@ -223,8 +225,8 @@ export default function Home() {
                 prefetch={prefetch}
                 className="lift group rounded-2xl border border-line bg-panel p-4 hover:border-violet/50 sm:p-6"
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-violet-ink">
-                  <Glyph />
+                <span className="well inline-flex h-12 w-12 items-center justify-center rounded-xl text-violet-ink">
+                  <Glyph width={32} height={32} strokeWidth={1.25} />
                 </span>
                 <span className="mt-3 block text-lg text-ink group-hover:text-violet-ink sm:mt-4 sm:text-xl">
                   {label}
@@ -236,44 +238,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4 — Head-query singer pages, linked straight from the strongest page
-              on the subdomain. See famous-voices.tsx for why the hubs alone
-              were not enough. */}
-      <FamousVoices />
-
-      {/* 5 — The iOS app, folded in from print.suedeai.ai */}
-      <IosBand />
-
-      {/* 6 — Comparison */}
+      {/* 4 — Pro teaser */}
       <section className="border-t border-line bg-panel/40">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading
-            label="Side by side"
-            lede="The free studio beside the apps you would compare it to, row by row."
-          >
-            How Suede Sing compares
-          </SectionHeading>
-          <div className="mt-8">
-            <ComparisonTable />
-          </div>
-        </div>
-      </section>
-
-      {/* 7 — Pro teaser. The old "How practice works" section sat here:
-              three steps the hero sentence and the beginner path already
-              walk through, and a fourth on-device claim. */}
-      <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
-              <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
+              <SectionLabel hairline className="mb-4">
                 Suede Pro · Early Access
               </SectionLabel>
               <h2 className="max-w-xl text-2xl sm:text-3xl">
-                The coach on top of the studio
+                Know what to sing tomorrow
               </h2>
-              {/* One sentence, with the price in it: what Pro is and costs,
-                  before the bullets itemize it. */}
               <p className="mt-3 max-w-xl text-mut">
                 Suede Pro is the coach on top of the free studio, {PRO_PRICE} once
                 for life: no daily practice limit, the full daily plan, per-note
@@ -282,14 +257,8 @@ export default function Home() {
               <ul className="mt-5 space-y-2.5">
                 {[
                   `Both books in full: ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
-                  // The free plan is built the same way and shows its first
-                  // two steps, the weak-note siren first unless a range test
-                  // is due (lib/pro.ts PRO_PERKS "coach"): Pro's part is the
-                  // rest of the plan.
-                  "The whole daily practice plan, not just the first two steps the free plan shows",
-                  // /pro's wording. The weekly score trend is on the free
-                  // plan; Pro's accuracy chart is one tally per note with no
-                  // time axis, and only the range is charted over time.
+                  "The coach's full daily plan: every step, built from your own scores.",
+                  // /pro's wording: one tally per note, only the range over time.
                   "A per-note accuracy chart, and your range charted over months",
                   "Pitch analysis on every recorded take",
                 ].map((line) => (
@@ -305,10 +274,7 @@ export default function Home() {
                 ))}
               </ul>
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                {/* The priced button lands on the buy card; the quieter link
-                    is for the reader who wants the whole page first. */}
-                {/* Never sold to an owner: NotPro hides the priced asks
-                    for a Pro browser before the first paint. */}
+                {/* NotPro hides the priced ask from a Pro browser before first paint. */}
                 <NotPro>
                   <LinkButton href="/pro#buy" variant="violet" size="lg">
                     {`Go Pro: ${PRO_PRICE} once`}
@@ -318,30 +284,34 @@ export default function Home() {
                   See everything Pro adds
                 </LinkButton>
               </div>
-              {/* The price used to appear nowhere on this page. One line: the
-                  sold-out monthly plan and its footnotes belong on /pro. */}
-              <NotPro as="p" className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                {PRO_PRICE_LINE}
-                <span className="mx-2 text-line2">·</span>Never renews
-              </NotPro>
             </div>
             <ProVisual />
           </div>
         </div>
       </section>
 
-      {/* 9 — Privacy strip */}
-      <section className="border-t border-line bg-panel/40">
-        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
-          <p className="max-w-xl text-sm text-mut">
-            <span className="text-ink">Your voice stays yours.</span> All audio
-            analysis runs on this device. No audio is uploaded, and there are
-            no ads.
-          </p>
+      {/* 5 — Comparison, trimmed to the rows where the columns differ */}
+      <section className="border-t border-line">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <SectionHeading
+            label="Side by side"
+            lede="Suede Sing beside the apps you would compare it to, on the rows where the answers differ."
+          >
+            Where the apps differ
+          </SectionHeading>
+          <div className="mt-8">
+            <ComparisonTable />
+          </div>
         </div>
       </section>
 
-      {/* 10 — Final CTA */}
+      {/* 6 — Famous voices */}
+      <FamousVoices />
+
+      {/* 7 — The iPhone companion */}
+      <IosBand />
+
+      {/* 8 — Final CTA */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl sm:text-4xl">
@@ -360,15 +330,29 @@ export default function Home() {
               Browse warmups
             </LinkButton>
           </div>
-          <NotPro as="p" className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-            Ready for the coach?{" "}
-            <Link
-              href="/pro#buy"
-              className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
-            >
-              {`Suede Pro is ${PRO_PRICE} once`}
-            </Link>
-          </NotPro>
+
+          <figure className="mx-auto mt-14 max-w-2xl">
+            <figcaption className="font-mono text-label uppercase tracking-[0.14em] text-dim">
+              What a session looks like
+            </figcaption>
+            <ul className="mt-5 grid grid-cols-2 gap-4 sm:gap-6">
+              {SESSION_SHOTS.map((shot) => (
+                <li key={shot.src} className="flex flex-col items-center">
+                  <span className="figure block w-full max-w-[220px] overflow-hidden rounded-2xl border border-line bg-panel p-2">
+                    <Image
+                      src={shot.src}
+                      alt={shot.alt}
+                      width={390}
+                      height={844}
+                      sizes="(max-width: 640px) 45vw, 220px"
+                      className="h-auto w-full rounded-xl"
+                    />
+                  </span>
+                  <span className="mt-3 text-sm text-mut">{shot.caption}</span>
+                </li>
+              ))}
+            </ul>
+          </figure>
         </div>
       </section>
     </main>

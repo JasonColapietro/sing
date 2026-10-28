@@ -6,6 +6,17 @@ vi.mock("server-only", () => ({}));
 import { FamousVoices } from "@/components/landing/famous-voices";
 import { hasDocumentedSourceReview } from "@/lib/singer-evidence";
 
+const html = renderToStaticMarkup(<FamousVoices />);
+
+/** Each card's singer slug and the name it shows, in grid order. */
+function cards() {
+  return [
+    ...html.matchAll(
+      /<a[^>]*href="\/singers\/([a-z0-9-]+)"[^>]*>\s*<span[^>]*><span[^>]*>([^<]*)<\/span>/g,
+    ),
+  ].map((m) => ({ slug: m[1], name: m[2].replaceAll("&#x27;", "'") }));
+}
+
 describe("homepage famous voices", () => {
   it.each([
     ["Olivia Rodrigo", "olivia-rodrigo"],
@@ -13,98 +24,38 @@ describe("homepage famous voices", () => {
     ["Alex Warren", "alex-warren"],
     ["Sam Smith", "sam-smith"],
     ["Arijit Singh", "arijit-singh"],
-  ])("links the %s opportunity page from descriptive homepage context", (name, slug) => {
-    const html = renderToStaticMarkup(<FamousVoices />);
-
+  ])("links the %s opportunity page from the homepage", (name, slug) => {
     expect(html).toContain(`href="/singers/${slug}"`);
     expect(html).toContain(`>${name}<`);
   });
 
-  it.each([
-    [
-      "olivia-rodrigo",
-      "Mezzo-soprano",
-      "Olivia Rodrigo's voice type is disputed in the reviewed sources; this review does not establish a definitive classical classification.",
-      "B2–A#5",
-    ],
-    [
-      "reba-mcentire",
-      "Mezzo-soprano",
-      "Reba McEntire's own lesson describes a peak-career span of about three octaves, wider than this catalog's listed span, but gives no endpoints; the reviewed sources do not establish a definitive classical voice type.",
-      "E3–F5",
-    ],
-    [
-      "alex-warren",
-      "Baritone",
-      "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints.",
-      "G2–A4",
-    ],
-    [
-      "sam-smith",
-      "Countertenor",
-      "Sam Smith's long-time coach describes baritone-to-tenor territory; the reviewed sources do not establish a definitive countertenor classification.",
-      "G2–C6",
-    ],
-    [
-      "arijit-singh",
-      "Tenor",
-      "A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label.",
-      "C3–C5",
-    ],
-  ])("uses reviewed copy, not the raw catalog type, for %s", (slug, catalogType, evidenceCopy, range) => {
-    const html = renderToStaticMarkup(<FamousVoices />);
-    const card = html
-      .match(new RegExp(`href="/singers/${slug}">([\\s\\S]*?)</a>`))?.[1]
-      .replaceAll("&#x27;", "'");
-
-    expect(card).toContain(evidenceCopy);
-    expect(card).toContain(`Reported reference span: ${range}`);
-    expect(card).not.toContain(`>${catalogType}<`);
+  it("shows six to eight cards at every width, each a name, a span and a bar", () => {
+    const all = cards();
+    expect(all.length).toBeGreaterThanOrEqual(6);
+    expect(all.length).toBeLessThanOrEqual(8);
+    expect(html).not.toContain("max-sm:hidden");
+    // One range bar per card (RangeMini is aria-hidden; the words carry the notes).
+    expect(html.match(/bg-cool\/30/g)).toHaveLength(all.length);
+    expect(html).toContain("B2–A#5");
   });
 
-  it("labels a voice type without a documented source review as the catalog's", () => {
-    const html = renderToStaticMarkup(<FamousVoices />);
-    const card = (slug: string) =>
-      html.match(new RegExp(`href="/singers/${slug}"[^>]*>([\\s\\S]*?)</a>`))?.[1] ?? "";
-
-    // Confirmed catalog review without cited-source review: keep "Catalog label".
-    expect(hasDocumentedSourceReview("freddie-mercury")).toBe(false);
-    expect(card("freddie-mercury")).toContain(">Catalog label: Baritone<");
-    // Reviewed with no evidence sentence on the card: the label stands bare.
-    expect(hasDocumentedSourceReview("adele")).toBe(true);
-    expect(card("adele")).toContain(">Mezzo-soprano<");
-    expect(card("adele")).not.toContain("Catalog label");
-    // Completed catalog reviews must not still be described as pending.
-    expect(html).not.toContain("still await individual evidence review");
-    expect(html).toContain("available source evidence");
+  it("keeps the evidence status on the profile, not the card", () => {
+    // No voice type at all on the homepage: a catalog label was a hedge on
+    // a card too small to explain it, and a reviewed sentence ran fourteen
+    // lines on a phone. Both stay on /singers/[slug].
+    expect(html).not.toContain("Catalog label");
+    expect(html).not.toContain("Reported reference span");
+    expect(html).not.toContain("available source evidence");
+    expect(html).not.toMatch(/>(?:Soprano|Mezzo-soprano|Contralto|Countertenor|Tenor|Baritone|Bass)</);
+    expect(html).toContain("Open any singer to see their range on a keyboard");
+    // No hub chips: the footer carries those anchors on every page.
+    expect(html).not.toContain('href="/singers/voice-type/contralto"');
+    expect(html).not.toContain('href="/atlas/vocal-range-by-voice-type"');
   });
-
-  it("stacks reviewed rows so the evidence sentence gets the card's full width", () => {
-    const html = renderToStaticMarkup(<FamousVoices />);
-    const anchor = (slug: string) =>
-      html.match(new RegExp(`<a[^>]*href="/singers/${slug}"[^>]*>`))?.[0] ?? "";
-
-    expect(anchor("sam-smith")).toContain("flex-col");
-    expect(anchor("freddie-mercury")).not.toContain("flex-col");
-    expect(anchor("freddie-mercury")).toContain("justify-between");
-  });
-
-  /** Each card's singer slug and the name line it shows, in grid order. */
-  function cards() {
-    const html = renderToStaticMarkup(<FamousVoices />);
-    return [
-      ...html.matchAll(
-        /href="\/singers\/([a-z0-9-]+)"[^>]*>\s*<span class="min-w-0"><span[^>]*>([^<]*)<\/span>/g,
-      ),
-    ].map((m) => ({ slug: m[1], name: m[2].replaceAll("&#x27;", "'") }));
-  }
 
   it("leads with profiles that have documented source reviews", () => {
     const reviewed = cards().map(({ slug }) => hasDocumentedSourceReview(slug));
-
-    expect(reviewed.length).toBeGreaterThan(20);
     expect(reviewed[0]).toBe(true);
-    // Every reviewed card before every pending one, however many of each.
     expect(reviewed).toEqual([...reviewed].sort((a, b) => Number(b) - Number(a)));
   });
 
@@ -112,6 +63,11 @@ describe("homepage famous voices", () => {
     for (const { slug, name } of cards()) {
       expect(name, slug).not.toMatch(/vocal range/i);
     }
-    expect(cards().find((c) => c.slug === "damiano-david")?.name).toBe("Damiano David");
+    expect(cards().find((c) => c.slug === "freddie-mercury")?.name).toBe("Freddie Mercury");
+  });
+
+  it("keeps every card's profile indexable and reachable", () => {
+    expect(html).not.toContain("noindex");
+    expect(html).toContain('href="/singers"');
   });
 });

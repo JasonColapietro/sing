@@ -89,7 +89,7 @@ const RELEASE_STORIES: Story[] = [
     body: "The Range page now has a live pitch meter beside the guided range test: sing, and it shows the note you hit and whether it sits in tune, a little flat or sharp, or plainly off. The Range tab opens the range test, which finds your lowest and highest notes, and the meter is one tap away. A reload or Back keeps your place on the page, and a range result now leads with a warmup as the next step.",
     links: [
       { href: rangeTestHref({ mode: "pitch" }), text: "Open the pitch meter" },
-      { href: rangeTestHref(), text: "Take the range test" },
+      { href: rangeTestHref(), text: "Find my vocal range" },
     ],
   },
   {
@@ -147,7 +147,7 @@ const PREVIOUS_STORIES: Story[] = [
   {
     label: "Measurement",
     title: "Breath and vibrato, measured",
-    body: "The microphone now hears you breathe in. A 2048-point spectral classifier tracks its own adaptive noise floor and marks an unvoiced inhale of 0.25 to 2.5 seconds; the sustain test and a new Breathe and sing drill wait for it. Vibrato drills read the rate in hertz and the width in cents of every hold against a 5 to 7 Hz target band. New drill sets cover vibrato, vocal recovery and high notes, plus a Pro mix set.",
+    body: "The microphone now hears you breathe in: the sustain test and a new Breathe and sing drill wait for your inhale before they start. Vibrato drills show you the rate in hertz and the width in cents of every hold against a 5 to 7 Hz target band. New drill sets cover vibrato, vocal recovery and high notes, plus a Pro mix set. Under the hood, a 2048-point spectral classifier tracks its own noise floor and marks an unvoiced inhale of 0.25 to 2.5 seconds.",
     links: [
       { href: "/breath", text: "Open breath training" },
       { href: "/warmups", text: "Open the warmups" },
@@ -156,7 +156,7 @@ const PREVIOUS_STORIES: Story[] = [
   {
     label: "Pitch engine",
     title: "A sharper pitch engine",
-    body: "The NSDF detector now reads through a 4 kHz low-pass, takes a true median of four readings, and rejects 50 and 60 Hz mains hum and periodic room tone while still hearing quiet voices. On a synthetic A3 vibrato in our precision harness, bias fell from 5.5 cents to 0.7 cents. Every live room gets the upgrade.",
+    body: "The meter holds steadier on a quiet voice and ignores mains hum and room tone: on a synthetic A3 vibrato in our precision harness, bias fell from 5.5 cents to 0.7 cents, and every live room gets the upgrade. Behind it, the NSDF detector now reads through a 4 kHz low-pass, takes a true median of four readings, and rejects 50 and 60 Hz hum and periodic room tone.",
     links: [{ href: "/studio", text: "Step into the studio" }],
   },
   {
@@ -245,7 +245,7 @@ const LOG: Array<{
         // the note claims CPU, not frame rate. Dated by merge day in US Eastern
         // time; change the day if it merges later.
         day: "24",
-        note: "Pitch engine: one FFT autocorrelation now replaces about 700 separate sums per frame, so the detector reads every frame exactly as before at about a twentieth of the CPU, in a noisy room or on a held note.",
+        note: "Pitch engine: every frame reads exactly as before at about a twentieth of the CPU, in a noisy room or on a held note, because one FFT autocorrelation now replaces about 700 separate sums per frame.",
       },
       {
         // Undoes the navigation half of the October 2 entry below, which stays
@@ -440,7 +440,7 @@ export default function ChangelogPage() {
       kicker="Changelog"
       title={
         <>
-          Suede Sing changelog: what we&apos;ve <em>changed</em>
+          Suede Sing changelog: everything new in <em>4.0</em>
         </>
       }
       subtitle="Suede Sing 4.0 brings back the original design and plays reference notes from a recorded grand piano. The stories below cover the rest of what changed since 3.1."

@@ -8,21 +8,9 @@ import { useProReady, useProState } from "@/lib/pro";
 import { SectionLabel } from "@/components/ui";
 
 /**
- * What a subscriber gets the moment the payment clears.
- *
- * The tease this replaced was one line in the buy card — "Two books + PDFs:
- * The Measured Voice and The Voice Atlas" — carrying the largest asset in the
- * product. A stranger cannot weigh that sentence. Fifty chapter titles they
- * can see and cannot open is a different kind of argument, and every one of
- * those titles is already public metadata: `BOOK_CONTENTS` and
- * `ATLAS_CONTENTS` hold the titles and summaries with no chapter bodies, which
- * is exactly why the gated prose can stay on the server while the table of
- * contents ships to everyone.
- *
- * Nothing here is drip-fed and nothing is on a waitlist, so the section says
- * so. That matters more for a yearly plan than a monthly one: the buyer is
- * committing twelve months up front and is entitled to know that the library
- * is not a roadmap.
+ * What a buyer gets the moment the payment clears: every chapter title is
+ * public metadata (BOOK_CONTENTS, ATLAS_CONTENTS hold no chapter bodies), so
+ * the contents ship to everyone while the gated prose stays on the server.
  */
 export function UnlockStack() {
   // A buyer lands back here seconds after paying, and a lifetime owner opens

@@ -10,26 +10,11 @@ import { NotPro } from "@/components/pro/gate";
 import { rangeTestHref } from "@/lib/site";
 
 /**
- * Site-wide footer. A Server Component with no client state, so every link
- * below ships in the raw server-rendered HTML of every page — including all
- * ~636 singer pages and the homepage.
- *
- * This is the estate's hub-and-spoke crawl spine: the singer pages already
- * link to each other, but the *hubs* that gather them (the voice-type and
- * genre indexes, the records page, the atlas) previously had no inbound link
- * from most of the site, so crawl budget never reached them. Putting the hubs
- * in the footer makes every hub reachable in one click from any page, which is
- * how link equity flows to the deep singer inventory Google discovered but was
- * not crawling. Descriptive, self-contained anchor text throughout — no
- * "click here" / "read more".
- *
- * Every internal link here is prefetch={false}. Next prefetches a <Link>'s
- * whole static route when it scrolls into view, and this is secondary
- * navigation on every page: reaching the footer fired dozens of background
- * requests (hundreds on /singers) for pages almost nobody was about to open.
- * The <a href> a crawler reads is identical, and a click still navigates
- * client-side; the header and tab bar keep their prefetch for the rooms
- * people actually go to next.
+ * Site-wide footer: a Server Component, so every link ships in the HTML of
+ * every page. It is the crawl spine that reaches every hub (voice-type and
+ * genre indexes, records, atlas) in one click, with descriptive anchor text.
+ * Every internal link is prefetch={false}: secondary navigation on every page
+ * must not fetch dozens of routes as it scrolls into view.
  */
 
 type FooterLink = {
@@ -67,29 +52,16 @@ const PRACTICE: FooterLink[] = [
   // site-wide internal link.
   { href: "/breath", label: "Breath training" },
   { href: "/tools", label: "Metronome, keyboard and drone" },
-  // No longer header tabs of their own — the footer and /tools carry the
-  // crawl path into these rooms now. "Take recorder" is what the homepage room
-  // card and lib/guides.ts call it; a footer naming the same room differently
-  // splits the anchor text pointing at one URL, and reads as two rooms.
-  { href: "/recorder", label: "Take recorder" },
+  // One name per room, as the homepage card and lib/guides.ts use.
+  { href: "/recorder", label: "Recorder" },
   { href: "/analyze", label: "Voice analyzer" },
   { href: "/progress", label: "Your progress" },
   { href: "/extension", label: "Chrome extension vocal coach" },
-  // Priced, as every ask that leads to the offer is; the amount is read from
-  // the one place it is written down, never typed here.
-  // Priced, as every ask that leads to the offer is, and to the buy card like
-  // every priced ask. The amount is read from the one place it is written
-  // down, and the clause is hidden from an owner, who has nothing to buy.
+  // Priced like every ask that leads to the offer; hidden from an owner.
   { href: "/pro#buy", label: "Suede Pro vocal coach", price: `, ${formatPrice(PRICING.lifetime.amount)} once` },
 ];
 
-/**
- * The voice course, then the sibling Suede properties.
- *
- * The course used to live on GuitarHub and this was the link out to it. Since
- * 2026-09-23 sing hosts the lessons itself at /learn/voice, and GuitarHub
- * redirects its copy here, so the entry is a local route.
- */
+/** The voice course (hosted here since 2026-09-23), then the sibling Suede properties. */
 const MORE_FROM_SUEDE: FooterLink[] = [
   { href: "/learn/voice", label: "Voice lessons" },
   { href: "https://strumly.suedeai.ai/capo", label: "Capo calculator on Strumly" },
@@ -116,10 +88,24 @@ const PHONE_GENRES = 8;
 /** Column heading: the 12px label tier from the type scale, not a one-off 11px. */
 const headingClass = "font-mono text-label uppercase tracking-[0.14em] text-dim";
 
-/* Two-line wrapped labels ("Famous singers' vocal ranges") sat 8px from the
-   next link on a phone, so the rows read as one block; the extra 2px below sm
-   separates them and gives each tap a little more room. */
+/* The extra 2px below sm keeps two-line labels from reading as one block. */
 const listClass = "mt-3 space-y-2.5 text-sm sm:space-y-2";
+
+/* The two hub columns fold into <details> on a phone: the links stay in the
+   HTML for crawlers, and the inline script after the nav opens them from sm
+   up before first paint. The summary hides once the column is open there. */
+const hubDetailsClass = "group";
+const hubSummaryClass = `${headingClass} flex min-h-11 cursor-pointer list-none items-center gap-2 sm:min-h-0 sm:group-open:hidden [&::-webkit-details-marker]:hidden`;
+const HUB_OPEN_SCRIPT =
+  'try{if(matchMedia("(min-width:640px)").matches)for(const d of document.querySelectorAll("details[data-footer-hub]"))d.open=true}catch(e){}';
+
+function HubCaret() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" className="transition-transform group-open:rotate-180">
+      <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 function Column({
   heading,
@@ -172,10 +158,11 @@ export default function SiteFooter() {
           <Column heading="More from Suede AI" links={MORE_FROM_SUEDE} />
 
           {/* Every voice-type hub, one click from any page. */}
-          <div>
-            <h2 className={headingClass}>
-              By voice type
-            </h2>
+          <details data-footer-hub className={hubDetailsClass}>
+            <summary className={hubSummaryClass}>
+              <h2 className="contents">By voice type</h2>
+              <HubCaret />
+            </summary>
             <ul className={listClass}>
               {VOICE_KINDS.map((v) => (
                 <li key={v}>
@@ -189,16 +176,15 @@ export default function SiteFooter() {
                 </li>
               ))}
             </ul>
-          </div>
+          </details>
 
           {/* Every genre hub that clears the singer-count threshold. */}
-          <div className="col-span-2 sm:col-span-1 lg:col-span-2">
-            <h2 className={headingClass}>
-              By genre
-            </h2>
-            {/* Every hub stays in the HTML (the crawl path), but a phone shows
-                the first few and a way to the rest: thirty links made the
-                footer over two screens tall on every page. */}
+          <details data-footer-hub className={`${hubDetailsClass} col-span-2 sm:col-span-1 lg:col-span-2`}>
+            <summary className={hubSummaryClass}>
+              <h2 className="contents">By genre</h2>
+              <HubCaret />
+            </summary>
+            {/* Every hub stays in the HTML; a phone shows the first few and a way to the rest. */}
             <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm sm:gap-y-2">
               {HUB_GENRES.map((g, i) => (
                 <li key={g} className={i >= PHONE_GENRES ? "max-sm:hidden" : undefined}>
@@ -219,38 +205,27 @@ export default function SiteFooter() {
                 </li>
               )}
             </ul>
-          </div>
+          </details>
         </nav>
+        <script dangerouslySetInnerHTML={{ __html: HUB_OPEN_SCRIPT }} />
 
-        <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 font-mono text-xs text-dim">
-          {/* Spaced, not dotted: a wrapped row put a separator at the start or end
-              of a line. */}
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 font-mono text-meta text-dim">
+          {/* Spaced, not dotted: a wrapped row put a separator at a line's edge. */}
           <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span>SUEDE SING</span>
-            {/* The durable inbound link to /changelog: the release banner will
-                retire one day, and the crawl path must not retire with it. */}
+            {/* The durable inbound link to /changelog. */}
             <Link href="/changelog" prefetch={false} className={navLinkClass}>
               4.0: what we&apos;ve changed
             </Link>
-            {/* Both pages were already live and neither was linked from
-                anywhere on the site. An app that asks for a microphone should
-                put its policy one click from every page. */}
-            {/* The company policy and terms cover suedeai.ai and its
-                subdomains, including Stripe purchases, so they govern this
-                site. suedeai.org/voice/* is the mobile app's policy. /privacy
-                and /terms here still 308 there for the app-store and Chrome
-                Web Store listings that declared them. Plain anchors: a <Link>
-                to another origin buys nothing but a prefetch. */}
+            {/* suedeai.org's policy and terms govern this site; plain anchors
+                to another origin. */}
             <a href="https://suedeai.org/privacy/" className={navLinkClass}>
               Privacy
             </a>
             <a href="https://suedeai.org/terms/" className={navLinkClass}>
               Terms
             </a>
-            {/* A plain anchor: /ai-instructions is a static file behind a
-                vercel.json rewrite, not an app route, so there is nothing for
-                next/link to prefetch. It used to sit in a stray nav of its own
-                below the footer on every page. */}
+            {/* A static file behind a vercel.json rewrite, so a plain anchor. */}
             <a href="/ai-instructions" className={navLinkClass}>
               AI instructions
             </a>
@@ -262,24 +237,12 @@ export default function SiteFooter() {
           <span>practice loud: your voice never leaves this device</span>
         </div>
 
-        {/* Estate attribution. The open-source record is the same claim the
-            sibling Suede properties carry, worded identically and pointed at
-            the one canonical receipt, so the number is verified in one place
-            rather than drifting per surface. */}
-        <p className="mt-4 max-w-3xl text-xs leading-relaxed text-dim">
+        {/* Estate attribution. */}
+        <p className="mt-4 max-w-3xl text-meta leading-relaxed text-dim">
           A <a href="https://suedeai.ai" className={proseLinkClass}>Suede AI</a>{" "}
           product, built by{" "}
-          <a href="https://suedeai.ai/founder" className={proseLinkClass}>
+          <a href="https://suedeai.ai/founder" rel="author" className={proseLinkClass}>
             Jason Colapietro
-          </a>
-          , an{" "}
-          <a
-            href="https://seo.suedeai.ai/evidence#open-source"
-            className={proseLinkClass}
-          >
-            open-source contributor with 54 pull requests merged across 46
-            external repositories through GitHub, plus one public Linux kernel
-            USB/IP contribution labeled Public upstream v7, as of September 2026
           </a>
           .
         </p>

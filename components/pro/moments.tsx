@@ -11,58 +11,10 @@ import { PRO_MOMENT_SEEN_KEY as SEEN_KEY, subscribeProResult } from "@/lib/pro-s
 import { useModalFocus } from "@/lib/use-modal-focus";
 
 /**
- * One-time full-screen sales moment after a completed result other than a
- * singer's first range test. That first range result is the moment the app
- * earns its keep, so components/range/range-test.tsx does not emit the result
- * signal for it; any later result can open this. Never fires for Pro members
- * and never repeats after dismissal; recurring selling happens in session
- * summaries.
- *
- * It cannot interrupt an exercise in progress, because it listens for an
- * explicit "a result is on screen" signal (`lib/pro-signal`) rather than
- * subscribing to the progress store. The store fires on every write — XP
- * banked mid-drill, a cross-tab `storage` sync — so a store subscription
- * could drop a full-screen modal over someone who was still singing, or over
- * a second tab that never saw a result at all. Entitlement and progress are
- * read synchronously instead, since both stores hand back their DEFAULT
- * snapshot on the server and the hook forms would flip false->true after
- * hydration on every route.
- *
- * Five refusals guard the open. All are deferrable, not terminal: none sets
- * a flag and none writes the seen key, so the next result signal re-runs the
- * gate and can still open.
- *
- * 1. Checkout return. Stripe sends buyers back to a URL carrying `checkout`
- *    and `session_id` query markers (see app/api/checkout/route.ts:36-37).
- *    On that hard load the entitlement is not live yet — the confirm call
- *    runs in a later effect — so a customer who just paid would be read as
- *    free and sold to. Worse, the resulting Pro unlock auto-closes the modal
- *    and burns their one lifetime impression. Refusing on the markers
- *    themselves keeps the guard tied to the incident rather than to a URL
- *    that may move.
- *
- * 2. The Pro page itself. A full-screen modal whose only CTA pushes to
- *    /pro#buy has nothing to offer someone already reading that page. The
- *    test is exact-segment on purpose: a bare prefix match would also swallow
- *    /progress, which is precisely the page a returning free user with logged
- *    sessions is most likely to hard-load — the cohort the mount pass exists
- *    to reach.
- *
- * 3. The sign-in and sign-up routes. A full-screen upsell over an auth form
- *    hides the form, and its overlay eats the first click meant for the card
- *    beneath it. Prefix-matched, unlike /pro: both are catch-all segments and
- *    Clerk pushes further steps onto the path as the flow advances.
- *
- * 4. Scroll lock. If the body overflow slot is already taken, the modal
- *    declines to open. The check on the mount pass is a documented no-op —
- *    ProMoments renders before {children} in app/layout.tsx, so the slot
- *    reads "" at mount essentially always — and is kept only for symmetry
- *    with the emit pass. The state it actually defends is a non-empty slot at
- *    *emit* time, left stale by the cooperative save/restore of that one slot
- *    across components/nav.tsx and components/songs/stage.tsx.
- *
- * 5. Song-range pages own their contextual Pro path after a saved range. A
- *    comparison is not a completed singing result; leave its free step usable.
+ * One-time full-screen sales moment after a completed result (never a first
+ * range test, never for Pro, never twice). It opens on the explicit result
+ * signal (lib/pro-signal), not on store writes, and each refusal in `gate`
+ * is deferrable: none writes the seen key, so a later result can still open.
  */
 export default function ProMoments() {
   const router = useRouter();
@@ -276,9 +228,7 @@ export default function ProMoments() {
         <h2 id={titleId} className="mt-4 text-2xl sm:text-3xl">
           Turn this result into a plan
         </h2>
-        {/* The free plan already builds a daily plan from recent scores and
-            puts a weak note first (components/progress/coach.tsx); it shows
-            two steps. So the modal sells the rest of the plan, not planning. */}
+        {/* The free plan shows two steps of the same plan; this sells the rest. */}
         <p id={descId} className="mt-3 text-sm text-mut sm:text-base">
           Pro reads results like this one and lays out what to sing next: the
           full daily plan, every step of it, with your accuracy note by note
@@ -287,7 +237,7 @@ export default function ProMoments() {
         <ul className="mt-4 space-y-2">
           {[
             "No daily limit on guided practice",
-            "The full daily coach plan, not just its first two steps",
+            "The coach's full daily plan: every step, built from your own scores.",
             "Both books in full, with PDFs to keep",
             "Pitch analysis on every recorded take",
           ].map((line) => (

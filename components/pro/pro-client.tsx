@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { Button, jumpInPage, LinkButton, SectionLabel } from "@/components/ui";
 import ProVisual from "./pro-visual";
 import { ProChip } from "./ui";
@@ -39,7 +40,6 @@ import {
   PORTAL_RETURN_PARAM,
   PRICING,
   PRO_FAQ,
-  proHeadline,
   type CheckoutPlan,
 } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
@@ -520,7 +520,7 @@ export function WelcomePanel({
           <h2 className="mt-3 text-2xl sm:text-3xl">
             {how === "pass"
               ? "Your 30-day pass is on"
-              : "Welcome to the gold channel"}
+              : "Welcome to Suede Pro"}
           </h2>
           <p className="mx-auto mt-2 max-w-md text-mut">
             {how === "pass"
@@ -671,9 +671,8 @@ export function ProClient() {
   const priceNote = lifetimePurchase
     ? "One payment. Lifetime Pro. No renewal."
     : `Keep the ${formatPrice(PRICING.monthly.amount)} monthly price while your subscription remains active. Cancel anytime.`;
-  // The price, the sold-out monthly plan and the no-renewal line all sit on
-  // the toggle and the card directly below; the blurb only names the offer.
-  const plansBlurb = `Early Access pricing: pay once, keep Pro for life. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out.`;
+  // The price and the no-renewal line sit on the card; the blurb names the offer.
+  const plansBlurb = `Early Access is the lifetime plan. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out.`;
   const periodEnd = longDate(pro.currentPeriodEnd);
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
@@ -872,14 +871,8 @@ export function ProClient() {
           {checkout.message}
         </p>
       )}
-      {/* What a buyer should know before paying, not after: Pro unlocks per
-          browser, and the key is how it follows them. The buy links (this
-          page's hero, the free-practice wall) land here, an owner's too when
-          they hit the wall on a second browser, so while Pro is off here the
-          note opens the unlock form instead of leaving them a second $79
-          button.
-          A pass holder has no unlock form on the page, so for them it stays
-          plain text. */}
+      {/* Pro unlocks per browser; while Pro is off here the note opens the
+          unlock form (a pass holder has none, so for them it is plain text). */}
       <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
         Secure checkout by Stripe
         <span className="mx-1.5 text-line2">·</span>
@@ -899,9 +892,7 @@ export function ProClient() {
           </a>
         )}
       </p>
-      {/* The questions a buyer still has at the button (does it work on my
-          phone, where does my voice go), answered where every priced link
-          on the site lands, from facts the page already states below. */}
+      {/* The two questions a buyer still has at the button, answered once here. */}
       {!pro.active && (
         <p className="mt-2 text-center text-xs text-mut">
           Pro opens here the moment you pay, and your Pro key opens it in a
@@ -943,11 +934,7 @@ export function ProClient() {
             </SectionLabel>
             {pro.active ? (
               <>
-                <h1 className="text-4xl sm:text-5xl">
-                  You&apos;re on the
-                  <br />
-                  gold channel.
-                </h1>
+                <h1 className="text-4xl sm:text-5xl">Pro is on.</h1>
                 <p className="mt-4 max-w-xl text-lg text-mut">
                   Every session now feeds your coach report: per-note accuracy,
                   range history, and tomorrow&apos;s plan.
@@ -1011,26 +998,20 @@ export function ProClient() {
                   <br />
                   Add an online vocal coach.
                 </h1>
-                {/* On a phone the buttons come straight after the headline and
-                    the paragraph follows them. In reading order a four-line
-                    headline and a nine-line paragraph put the price button
-                    under the tab bar on a 375×667 screen. Wider screens
-                    keep the paragraph first; nothing in it is focusable, so
-                    tab order is the same either way. */}
+                {/* On a phone the buttons come straight after the headline;
+                    nothing in the paragraph is focusable, so tab order holds. */}
                 <div className="flex flex-col">
                   <p className="order-2 mt-5 max-w-xl text-lg text-mut sm:order-1 sm:mt-4">
                     Suede Pro is the coach on top of the free studio: no daily
                     practice limit, the full daily plan, per-note accuracy,
-                    pitch analysis on every take, and both books, for{" "}
-                    {formatPrice(PRICING.lifetime.amount)} once with no renewal.
-                    The plan is built from your own scores, range tests and
-                    practice. The pitch meter, range test and recorder stay
-                    free, with no clock.
+                    pitch analysis on every take, and both books. The plan is
+                    built from your own scores, range tests and practice; the
+                    pitch meter, range test and recorder stay free, with no
+                    clock.
                   </p>
-                  <div className="order-1 mt-6 flex flex-wrap items-center gap-3 sm:order-2 sm:mt-7">
-                    {/* Straight to the buy card, with the price on the button:
-                        on a phone the price was otherwise first seen about four
-                        screens down. A plain anchor: see jumpInPage. */}
+                  <div className="order-1 mt-6 flex flex-wrap items-center gap-4 sm:order-2 sm:mt-7">
+                    {/* Straight to the buy card, with the price on the button.
+                        A plain anchor: see jumpInPage. */}
                     <LinkButton
                       href="#buy"
                       fullLoad
@@ -1040,19 +1021,14 @@ export function ProClient() {
                     >
                       {`Get lifetime Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
                     </LinkButton>
-                    {/* Outlined, not a bare link: a ghost label floated under
-                        the priced button with nothing to anchor it. */}
-                    <LinkButton href="/studio" variant="outline" size="lg">
-                      Keep practicing free
-                    </LinkButton>
+                    <Link
+                      href="/studio"
+                      className="inline-flex min-h-11 items-center text-sm text-mut underline decoration-line2 underline-offset-4 hover:text-ink"
+                    >
+                      or keep practicing free
+                    </Link>
                   </div>
                 </div>
-                <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                  {proHeadline()}
-                  <span className="mx-2 text-line2">·</span>Secure checkout by
-                  Stripe<span className="mx-2 text-line2">·</span>Voice stays on
-                  device
-                </p>
               </>
             )}
           </div>
@@ -1065,19 +1041,14 @@ export function ProClient() {
       {/* 2 — Perks */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel className="mb-4">What Pro adds</SectionLabel>
+          <SectionLabel hairline className="mb-4">What Pro adds</SectionLabel>
           <h2 className="max-w-2xl text-2xl sm:text-3xl">
             A coach&apos;s ear on every session
           </h2>
-          {/* "Charts", not "keeps": the free record stores the same sessions
-              and range tests (progress says "older sessions are stored — Pro
-              shows all of them"). What Pro adds is the view across them. The
-              free plan already reads recent scores and shows the first two
-              coach steps (components/progress/coach.tsx), so planning is not
-              sold as something only Pro does: Pro shows the rest of it. */}
+          {/* "Shows", never "keeps": free stores the same record; Pro is the view across it. */}
           <p className="mt-3 max-w-2xl text-mut">
-            Free scores today and plans its first two steps. Pro charts the
-            months behind it and lays out the full daily plan.
+            Free shows you today&apos;s score. Pro shows you the months behind
+            it and plans every step of tomorrow.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {PRO_PERKS.map((perk) => {
@@ -1111,9 +1082,9 @@ export function ProClient() {
           ) : (
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
-                <SectionLabel className="mb-4">Plans</SectionLabel>
+                <SectionLabel hairline className="mb-4">Pricing</SectionLabel>
                 <h2 className="max-w-2xl text-2xl sm:text-3xl">
-                  One plan, one payment.
+                  One plan, for life.
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">{plansBlurb}</p>
               </div>
@@ -1170,18 +1141,9 @@ export function ProClient() {
               Monthly option beside it read as a broken control. The plans
               blurb names the sold-out plan once. */}
           <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
-            {/* Pro — deliberately the louder card: this is the recommendation,
-                not a second option of equal weight. Roomier sides only, so both
-                cards' CTAs still land on the same baseline. First on a phone,
-                and the `#buy` target the buy links land on (this page's hero
-                and final CTA, the free-practice wall, the first-result
-                modal), so the price and its button arrive without scrolling
-                past the Free card. First in the source and first on screen
-                at every width (the left column from sm up), with no CSS
-                order: placed first by order alone, a phone's Tab went from
-                the purchase toggle down to the Free card's button and back
-                up to the buy button, and with the source first but the card
-                on the right, a desktop's Tab went right before left. */}
+            {/* The louder card, first in the source and on screen at every
+                width with no CSS order, so Tab order and screen order agree;
+                every buy link lands on its #buy. */}
             <div
               id="buy"
               tabIndex={-1}
@@ -1201,13 +1163,7 @@ export function ProClient() {
                 className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet via-violet to-violet"
               />
               <span className="mb-3 inline-flex w-fit items-center rounded bg-violet-ink px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-white">
-                {pro.active ? "Your Pro access" : "Early Access"}
-              </span>
-              <span className="flex items-center gap-2">
-                <ProChip />
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
-                  The gold channel
-                </span>
+                {pro.active ? "Your Pro access" : "Suede Pro · Early Access"}
               </span>
               {pro.active ? (
                 <>
@@ -1366,23 +1322,12 @@ export function ProClient() {
       {/* 4 — Free vs Pro table */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel className="mb-4">Side by side</SectionLabel>
+          <SectionLabel hairline className="mb-4">Side by side</SectionLabel>
           <h2 className="max-w-2xl text-2xl sm:text-3xl">Exactly where free ends</h2>
           <p className="mt-3 max-w-2xl text-mut">
             No asterisks. If a row says free, it costs nothing.
           </p>
-          {/*
-            * Below sm this renders as stacked rows, not a scrolling table.
-            *
-            * The table is `min-w-[560px]` inside a `no-scrollbar` scroller, so
-            * on a 375px phone about 217px sat off-screen — the whole Pro
-            * column and part of Free — with the scrollbar suppressed, no fade,
-            * and no swipe cue. The heading directly above it says "Exactly
-            * where free ends" and "No asterisks", while the reader could not
-            * see the column that answers it. A three-column comparison is also
-            * the worst possible thing to ask someone to scroll horizontally:
-            * the label scrolls away with the values.
-            */}
+          {/* Below sm: stacked rows, never a sideways-scrolling three-column table. */}
           <dl className="mt-8 space-y-3 sm:hidden">
             {PLAN_ROWS.map((row) => (
               <div
@@ -1484,7 +1429,7 @@ export function ProClient() {
       {/* 6 — FAQ */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel className="mb-4">Fair questions</SectionLabel>
+          <SectionLabel hairline className="mb-4">Fair questions</SectionLabel>
           <h2 className="max-w-2xl text-2xl sm:text-3xl">Before you decide</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {PRO_FAQ.map((item) => (
@@ -1507,7 +1452,7 @@ export function ProClient() {
             The studio costs nothing. Pro adds the coach.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-mut">
-            Either way, your voice never leaves this device.
+            The pitch meter, range test and recorder stay free, with no clock.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             {showPurchaseOptions && !paidButUnconfirmed ? (
@@ -1543,9 +1488,6 @@ export function ProClient() {
                   : "Go Pro"}
               </LinkButton>
             )}
-            <LinkButton href="/studio" variant="ghost" size="lg">
-              Back to the studio
-            </LinkButton>
           </div>
           {checkout.kind === "error" && !checkout.ref && buySpot === "end" && (
             <p
@@ -1555,13 +1497,21 @@ export function ProClient() {
               {checkout.message}
             </p>
           )}
-          {showPurchaseOptions && (
-            <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              Secure checkout by Stripe
-              <span className="mx-2 text-line2">·</span>One payment
-              <span className="mx-2 text-line2">·</span>Never renews
-            </p>
-          )}
+          <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            {showPurchaseOptions && (
+              <>
+                One payment
+                <span className="mx-2 text-line2">·</span>Never renews
+                <span className="mx-2 text-line2">·</span>
+              </>
+            )}
+            <Link
+              href="/studio"
+              className="underline decoration-line2 underline-offset-4 hover:text-ink"
+            >
+              Back to the studio
+            </Link>
+          </p>
         </div>
       </section>
     </main>

@@ -100,13 +100,14 @@ describe("homepage Pro teaser", () => {
   it("states the lifetime price, and leaves the sold-out monthly plan to /pro", () => {
     const html = renderToStaticMarkup(<Home />);
 
-    expect(html).toContain("Early Access: $79 once for lifetime access");
     expect(html).toContain("Go Pro: $79 once");
     expect(html).toContain('href="/pro#buy"');
     // The first pricing fact a visitor reads is the price, never that
-    // something sold out; the monthly plan is named only on /pro.
+    // something sold out; the monthly plan and the renewal terms are /pro's.
     expect(html).not.toMatch(/sold out/i);
-    expect(html).toContain("Never renews");
+    expect(html).not.toContain("Never renews");
     expect(html).not.toContain("Cancel in one click");
+    // Once on the page: the teaser button; the footer carries the other priced anchor.
+    expect(html.match(/\$79 once/g)).toHaveLength(2);
   });
 });
