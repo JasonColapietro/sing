@@ -5,6 +5,7 @@ import { titlesFor } from "@/components/practice/learn-home";
 import type { ProgressState, SessionLog } from "@/lib/progress";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 import { rangeTestHref } from "@/lib/site";
+import { recoveryRangeLine } from "@/components/practice/program-range-note";
 import type { WarmupExercise, WarmupTier } from "./exercises";
 
 /**
@@ -59,7 +60,19 @@ export function latestRecentSession(
  * either octave of it is scored. A placeholder fitted to nobody, so the copy
  * names the notes rather than calling them anyone's comfortable range.
  */
-export function RangePrompt({ progress }: { progress: ProgressState }) {
+export function RangePrompt({
+  progress,
+  recovering = null,
+}: {
+  progress: ProgressState;
+  /**
+   * Recovery week's name while it runs (components/practice/program-day.ts
+   * recoveryWeekOf), or null. The week asks for no range test, as the
+   * /progress coach and the /range pitch meter say, so the prompt says why
+   * instead of offering one.
+   */
+  recovering?: string | null;
+}) {
   const hasRange =
     progress.range.lowMidi !== undefined && progress.range.highMidi !== undefined;
   if (hasRange) return null;
@@ -70,13 +83,17 @@ export function RangePrompt({ progress }: { progress: ProgressState }) {
           <SectionLabel>No range saved</SectionLabel>
           <p className="mt-2 max-w-md text-sm text-mut">
             Until you take the range test, warmups stay between A2 and E4 (A3
-            and E5 an octave up), and either octave counts. Take the range test
-            and they fit your measured range.
+            and E5 an octave up), and either octave counts.{" "}
+            {recovering
+              ? recoveryRangeLine(recovering)
+              : "Take the range test and they fit your measured range."}
           </p>
         </div>
-        <LinkButton href={rangeTestHref()} variant="outline" size="sm">
-          Take the range test
-        </LinkButton>
+        {!recovering && (
+          <LinkButton href={rangeTestHref()} variant="outline" size="sm">
+            Take the range test
+          </LinkButton>
+        )}
       </div>
     </Card>
   );

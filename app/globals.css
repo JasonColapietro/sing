@@ -342,12 +342,16 @@ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="
  *                      "rest", "locked", "next-locked", "waits", and on a
  *                      finished run "book" or the program's id
  *   data-sing-range    "saved" when the progress record holds a range test
+ *   data-sing-deeplink "breath", "warmups" or "ear" when the address is a
+ *                      deep link that room opens for this singer
+ *                      (/breath?drill=box), until the room has read it
  *
  * Until hydration, the parts of a page that depend on them are in the server
  * HTML with a data-prepaint-* marker (components/prepaint.tsx), and these
  * rules leave only the matching ones on screen. display:none, so what is
  * hidden is hidden from assistive technology too. After hydration the markers
- * are gone and nothing here applies.
+ * are gone and nothing here applies; a room's deep-link markers go one
+ * render later, once the room has read its address.
  *
  *   data-prepaint-plan="free"        the free allowance line
  *   data-prepaint-plan="capped"      the cap wall
@@ -368,6 +372,20 @@ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="
  *                                    held at about the height of the
  *                                    personal answer that replaces it when
  *                                    a range is saved
+ *   data-prepaint-deeplink="<room>"  a room's front page (breath, warmups,
+ *                                    ear), hidden on its own deep link's
+ *                                    load until the room has read its
+ *                                    address: then the session the link
+ *                                    opens covers it (breath, ear), or it
+ *                                    shows with the mic gate named for the
+ *                                    link (warmups). The script takes the
+ *                                    token off a few seconds after load if
+ *                                    no room did, so it is never left hidden
+ *   data-prepaint-slot="deeplink-<room>" the screen-tall empty block
+ *                                    (min-h-screen) that holds the front
+ *                                    page's place on that load only, so the
+ *                                    rail band, the guide and the footer
+ *                                    stay below the first screen
  */
 html:not([data-sing-plan="free"]) [data-prepaint-plan="free"],
 html:not([data-sing-plan="capped"]) [data-prepaint-plan="capped"],
@@ -375,7 +393,13 @@ html[data-sing-plan="capped"] [data-prepaint-plan="not-capped"],
 html[data-sing-plan="pro"] [data-prepaint-plan="not-pro"],
 html:not([data-sing-program]) [data-prepaint-slot|="program"],
 html:not([data-sing-program~="todo"]) [data-prepaint-slot="program-lead"],
-html[data-sing-program~="locked"] [data-prepaint-slot="program-lead"] {
+html[data-sing-program~="locked"] [data-prepaint-slot="program-lead"],
+html[data-sing-deeplink="breath"] [data-prepaint-deeplink="breath"],
+html[data-sing-deeplink="warmups"] [data-prepaint-deeplink="warmups"],
+html[data-sing-deeplink="ear"] [data-prepaint-deeplink="ear"],
+html:not([data-sing-deeplink="breath"]) [data-prepaint-slot="deeplink-breath"],
+html:not([data-sing-deeplink="warmups"]) [data-prepaint-slot="deeplink-warmups"],
+html:not([data-sing-deeplink="ear"]) [data-prepaint-slot="deeplink-ear"] {
   display: none !important;
 }
 

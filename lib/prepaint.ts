@@ -29,6 +29,22 @@
  *                      a range test, absent otherwise: a popular song's
  *                      personal answer (components/can-you-sing/verdict.tsx)
  *                      replaces the range-test pitch at hydration
+ *   data-sing-deeplink the room ("breath", "warmups" or "ear") when the
+ *                      page's address is a deep link that room opens for this
+ *                      singer (/breath?drill=box opens the drill,
+ *                      /ear-training?routine=quick the workout, both over the
+ *                      whole room; /warmups?routine=morning names the set on
+ *                      the room's mic gate and scrolls to it), absent
+ *                      otherwise. A static page cannot read its query, so the
+ *                      room reads it after hydration; until then its front
+ *                      page is hidden and a screen of empty page holds its
+ *                      place (components/prepaint.tsx deepLinkMarker and
+ *                      DeepLinkSlot), so what the link opens arrives as new
+ *                      content instead of replacing a page already painted.
+ *                      The room takes the attribute off once it has read its
+ *                      address, and the script itself a few seconds after
+ *                      load if no room did (PREPAINT_DEEPLINK_FALLBACK_MS);
+ *                      the end of prepaintState says when it is set
  *
  * The server HTML carries every state's version of the affected parts, each
  * marked with a `data-prepaint-*` attribute, and app/globals.css shows the one
@@ -41,7 +57,8 @@
  *
  * Everything here is a best guess at what the stores will say, never a source
  * of truth: a wrong guess costs one layout shift at hydration, which is what
- * every load cost before. The one guess it cannot make is a program day the
+ * every load cost before. (A wrong deep-link guess costs a moment of empty
+ * page: the room shows its front page as soon as it has read its address.) The one guess it cannot make is a program day the
  * log completes on its own (that needs every room's evidence rules); a day
  * finished in a room that does not save the program record shows as still to
  * do until a page that reads the program saves it.
@@ -66,6 +83,9 @@ export const PREPAINT_KEYS = {
   program: "suede-sing:program:v1",
 } as const;
 
+/** The attribute a room's deep link sets on <html>, which the room removes once it has read its address. */
+export const PREPAINT_DEEPLINK_ATTRIBUTE = "data-sing-deeplink";
+
 /** The activities the free cap counts. Restated from lib/free-cap.ts (client-only); the test compares them. */
 export const PREPAINT_CAPPED_TYPES = ["warmup", "ear", "breath", "song"] as const;
 
@@ -85,6 +105,19 @@ export interface PrepaintState {
    * exactly what lib/pop-songs.ts popFit accepts.
    */
   range: boolean;
+  /** The data-sing-deeplink value: the room a deep link opens, or null. */
+  deeplink: string | null;
+}
+
+/**
+ * A room that opens a deep link once hydrated: its token, and per query
+ * parameter the ids it opens, [for any singer, for Pro only]. Any one of
+ * them is enough; which one the room prefers when several are given does not
+ * change the token.
+ */
+export interface PrepaintDeepLink {
+  room: string;
+  params: Record<string, [readonly string[], readonly string[]]>;
 }
 
 export interface PrepaintConfig {
@@ -100,6 +133,8 @@ export interface PrepaintConfig {
    * follows the book, with chapters; its own id otherwise)].
    */
   programs: Record<string, [number, number, number[], string]>;
+  /** Per room path ("/breath"), the deep links that room opens. */
+  deepLinks: Record<string, PrepaintDeepLink>;
 }
 
 /**
@@ -108,11 +143,15 @@ export interface PrepaintConfig {
  * for the program (reviveProgress, then reconcileProgress for rest days, then
  * programToday), and components/account/save-state.ts liveStreak.
  *
- * `where` is the page's address (the browser's `location`). It matters on one
- * page: a program's own view, /programs?program=<id> (served from
+ * `where` is the page's address (the browser's `location`). It matters on
+ * two kinds of page. A program's own view, /programs?program=<id> (served from
  * /programs/<id>, see next.config.ts), shows today's card only when that is
  * the running program. Viewing another one, the running program shows nowhere
- * on the page, so the state says no program.
+ * on the page, so the state says no program. And a room's deep link
+ * (`deepLinks`) names the room when the link holds an id the room opens for
+ * this singer and the free minutes are not used up: capped, every room shows
+ * its cap wall instead (components/breath/breath-studio.tsx, the warmups and
+ * ear rooms ask the same of the stores).
  */
 export function prepaintState(
   storage: { getItem(key: string): string | null },
@@ -272,11 +311,45 @@ export function prepaintState(
     }
   }
 
-  return { plan, program, freeLeft, streakClause, range };
+  // A room's deep link, as the room reads it from its address once hydrated
+  // (components/breath/breath-studio.tsx, components/warmups/warmups-client.tsx,
+  // components/ear/ear-training-client.tsx). An id the room would not open
+  // (unknown, or Pro only for a free singer) leaves the room's own front page,
+  // which the server rendered anyway, and so does the cap: a capped singer's
+  // link opens nothing, and the room shows its cap wall instead.
+  let deeplink: string | null = null;
+  if (where && !capped) {
+    const path = where.pathname.length > 1 ? where.pathname.replace(/\/$/, "") : where.pathname;
+    const link = Object.prototype.hasOwnProperty.call(c.deepLinks, path) ? c.deepLinks[path] : null;
+    if (link) {
+      const query = new URLSearchParams(where.search);
+      const names = Object.keys(link.params);
+      for (let n = 0; n < names.length && deeplink === null; n++) {
+        const value = query.get(names[n]);
+        const ids = link.params[names[n]];
+        if (value !== null && (ids[0].indexOf(value) >= 0 || (isPro && ids[1].indexOf(value) >= 0))) deeplink = link.room;
+      }
+    }
+  }
+
+  return { plan, program, freeLeft, streakClause, range, deeplink };
 }
 
 /** Where the values the attributes cannot carry wait for components/prepaint.tsx PrepaintText. */
 export const PREPAINT_GLOBAL = "__singPrepaint";
+
+/**
+ * How long after the window's load event the deep-link attribute may stay on
+ * <html>. It is the one attribute that hides content rather than choosing
+ * between two versions of it, and only the room's own code takes it off, so a
+ * page whose scripts never run (a dropped connection, a blocked or
+ * unparseable bundle) would keep the room's front page hidden for good. By
+ * load every script has run or failed, so this is time for hydration alone;
+ * past it the script takes the attribute off itself and the front page the
+ * server rendered shows. A room that has read its address has already taken
+ * it off, so then this changes nothing.
+ */
+export const PREPAINT_DEEPLINK_FALLBACK_MS = 5000;
 
 /**
  * The inline script: work the state out, put it on <html>, and leave the two
@@ -284,10 +357,13 @@ export const PREPAINT_GLOBAL = "__singPrepaint";
  * which is the newcomer's layout the server rendered anyway.
  */
 export function prepaintScript(config: PrepaintConfig): string {
+  const deeplink = JSON.stringify(PREPAINT_DEEPLINK_ATTRIBUTE);
   return (
     `try{var s=(${prepaintState.toString()})(localStorage,new Date(),${JSON.stringify(config)},location),` +
     `h=document.documentElement;window.${PREPAINT_GLOBAL}=s;h.setAttribute("data-sing-plan",s.plan);` +
     `if(s.program)h.setAttribute("data-sing-program",s.program);` +
-    `if(s.range)h.setAttribute("data-sing-range","saved")}catch(e){}`
+    `if(s.range)h.setAttribute("data-sing-range","saved");` +
+    `if(s.deeplink){h.setAttribute(${deeplink},s.deeplink);window.addEventListener("load",function(){` +
+    `window.setTimeout(function(){h.removeAttribute(${deeplink})},${PREPAINT_DEEPLINK_FALLBACK_MS})})}}catch(e){}`
   );
 }

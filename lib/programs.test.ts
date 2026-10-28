@@ -735,6 +735,54 @@ describe("program data", () => {
     }
   });
 
+  it("measures nothing in Recovery week beyond its warmups: no range test and no sustain test", () => {
+    // Chapter 12: "start measuring again when you are back to ordinary". Every
+    // breath set ends on the sustain test, which times a held note and scores
+    // how even it stayed, so the week breathes in single drills, as weeks 7
+    // and 8 of The Measured Voice do, and its card says what it measures.
+    const p = programById("recovery-week")!;
+    const steps = (i: ProgramItem): BreathStep[] =>
+      i.kind === "drill" ? [drillPreset(i)] : i.kind === "breath" ? breathRoutineById(i.id)!.steps : [];
+    const practice = p.days.filter((d) => !isRestDay(d));
+    expect(practice).toHaveLength(6);
+    for (const d of practice) {
+      expect(d.items.some((i) => i.kind === "range" || i.kind === "breath"), d.title).toBe(false);
+      expect(d.items.flatMap(steps).some((s) => s.drill === "sustain"), d.title).toBe(false);
+      // Still opening on breath: box breathing, then the climbing count.
+      expect(d.items.slice(0, 2).map((i) => (i.kind === "drill" ? i.id : i.kind)), d.title).toEqual(["box", "farinelli"]);
+    }
+    // The "Breath and hums" days keep the Daily set's three minutes around the square.
+    for (const d of practice.filter((d) => d.title === "Breath and hums")) {
+      expect(steps(d.items[0]), d.title).toEqual([{ drill: "box", side: 4, minutes: 3 }]);
+    }
+    expect(p.measures).toMatch(/^Only what every warmup measures: how close each note landed to its target\./);
+    // Chapter 12: "A range test taken with a cold measures the cold." The
+    // warmups still score each note, so the line does not claim the week
+    // measures nothing.
+    expect(p.measures).toContain(
+      "The week takes no range or sustain test, because a test taken on a tired voice measures the tiredness.",
+    );
+  });
+
+  it("ticks a Recovery week day from its drills and routines, with no sustain test in the log", () => {
+    const p = programById("recovery-week")!;
+    const today = "2026-09-24";
+    p.days.forEach((d, n) => {
+      if (isRestDay(d)) return;
+      const log = sessionsForDay(d, today);
+      expect(log.some((s) => s.detail === "Sustain test"), d.title).toBe(false);
+      expect(itemsDoneOn(d, log, today).every(Boolean), `day ${n + 1}`).toBe(true);
+      // One drill short leaves that row, and only that row, unticked.
+      const box = log.findIndex((s) => s.detail === "Box breathing");
+      const short = itemsDoneOn(d, log.filter((_, k) => k !== box), today);
+      expect(short[0], `day ${n + 1}`).toBe(false);
+      expect(short.slice(1).every(Boolean), `day ${n + 1}`).toBe(true);
+    });
+    // The day completes the run's calendar from that log.
+    const run = begin(p.id, today);
+    expect(reconcileProgress(p, run, sessionsForDay(p.days[0], today), today).done).toEqual([{ index: 0, day: today }]);
+  });
+
   it("deep-links every item with a relative URL into its room", () => {
     const hrefs = PROGRAMS.flatMap((p) => allItems(p).map(itemHref));
     for (const h of hrefs) expect(h).toMatch(/^\/(warmups|breath|range|songs|recorder|ear-training)(\?|$)/);

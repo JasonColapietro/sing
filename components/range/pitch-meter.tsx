@@ -17,19 +17,22 @@ import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { Button, Card, LinkButton, MicGate, SectionLabel } from "@/components/ui";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { LevelMeter } from "@/components/studio/level-meter";
-import { staleRangeProgramNote } from "@/components/practice/program-range-note";
+import { recoveryRangeNote, staleRangeProgramNote } from "@/components/practice/program-range-note";
 import type { ProgramRangeLink } from "@/components/practice/program-range-probe";
 import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { freshInputHint, meterInputHint, nextInputHint } from "./pitch-meter-hint";
 import { retryWhenOnline } from "./retry-when-online";
 import { AMBER, COOL, DIM, INK, OK, PANEL, REC } from "@/lib/chart-colors";
+import { PREPAINT_KEYS } from "@/lib/prepaint";
 
 /**
- * The running program's next range test, read only once the mic starts for a
- * singer whose saved range is stale, the one case the meter needs it for. Its
- * own chunk: lib/programs carries every program and the song catalog, and
- * this page's cold traffic (the homepage's "Start singing", the Sing tab) has
- * no program, the same reason result-view.tsx loads the catalog late.
+ * The running program's next range test, and whether it is Recovery week,
+ * read only once the mic starts for a singer whose saved range is stale, or
+ * who has no saved range and a program in this browser: the cases the meter
+ * needs it for. Its own chunk: lib/programs carries every program and the
+ * song catalog, and this page's cold traffic (the homepage's "Start
+ * singing", the Sing tab) has no program, the same reason result-view.tsx
+ * loads the catalog late.
  *
  * The chunk is optional, and loads that way. Offline it waits for the
  * connection (./retry-when-online) inside a Suspense boundary of its own
@@ -58,6 +61,23 @@ const VISIBLE_SEMITONES = 15;
 const PLAYHEAD = 0.78;
 /** Practice under this long is not logged: the same floor the studio uses. */
 const MIN_LOG_SEC = 45;
+
+/**
+ * Whether this browser holds a program record, running or finished, read
+ * from the store's key alone (lib/prepaint.ts restates it; its test holds the
+ * two together) so the meter need not load lib/programs to ask. Only such a
+ * singer can be on Recovery week, so only they load ProgramRangeProbe without
+ * a saved range. A blocked store reads as none, as the store itself does.
+ */
+function programStored(): boolean {
+  try {
+    const raw = window.localStorage.getItem(PREPAINT_KEYS.program);
+    return raw !== null && raw !== "null";
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Semitones between lowest and highest held before the live panel suggests
  * the range test. Under that the singer has not explored yet, so there is
@@ -110,9 +130,10 @@ function tuneWord(cents: number): string {
 
 /**
  * The next step for a singer the meter does not send to the range test:
- * practice that uses the saved range. When the running program's range test
- * is on today's day, its plan comes first, since the note says to take the
- * test there.
+ * practice that uses the saved range (or, during Recovery week with none
+ * saved, warmups on the nominal ladder and songs in their written keys).
+ * When the running program's range test is on today's day, its plan comes
+ * first, since the note says to take the test there.
  */
 function PracticeActions({ programDayHref }: { programDayHref: string | null }) {
   return (
@@ -142,7 +163,9 @@ function PracticeActions({ programDayHref }: { programDayHref: string | null }) 
  * range tests weeks apart, and their warmups and songs already fit the saved
  * one. They get the practice that builds on it instead. So is a singer whose
  * running program schedules the next test: they get the /progress coach's
- * note saying when it falls (programNote), not a retest of their own.
+ * note saying when it falls (programNote), not a retest of their own. And so
+ * is one on Recovery week, with a stale range or none: the coach's note says
+ * to leave the test until the week is over.
  */
 export function LastRun({
   low,
@@ -160,10 +183,14 @@ export function LastRun({
   onTryRange?: () => void;
   /**
    * No saved range, or one old enough to retest (lib/progress rangeRetestDue)
-   * that no running program schedules a test for.
+   * that no running program schedules a test for or asks to leave.
    */
   retestDue?: boolean;
-  /** A stale range's program test, as components/practice/program-range-note.ts says it. */
+  /**
+   * What the running program says about the range test in place of one, as
+   * components/practice/program-range-note.ts says it: when a stale range's
+   * scheduled test falls, or Recovery week's reason to leave the test.
+   */
   programNote?: string | null;
   /** That test is on today's program day: the program's view, to take it there. */
   programDayHref?: string | null;
@@ -241,26 +268,47 @@ export function PitchMeter({
   const [micStartedAt, setMicStartedAt] = useState<number | null>(null);
   /** The running program's next range test, from ProgramRangeProbe. */
   const [programRange, setProgramRange] = useState<ProgramRangeLink | null>(null);
+  /** Recovery week's name while it runs, from ProgramRangeProbe. */
+  const [recovering, setRecovering] = useState<string | null>(null);
+  /** Whether this browser held a program record when the mic last started. */
+  const [programKept, setProgramKept] = useState(false);
+  const rangeSaved = range.lowMidi !== undefined && range.highMidi !== undefined;
   // retestDue with a saved range means it is six weeks old or more.
-  const staleSaved =
-    micStartedAt !== null && retestDue && range.lowMidi !== undefined && range.highMidi !== undefined;
+  const staleSaved = micStartedAt !== null && retestDue && rangeSaved;
+  /** No saved range, and a program that may be Recovery week. */
+  const unmeasuredInProgram = micStartedAt !== null && !rangeSaved && programKept;
   /**
-   * A stale range whose next test a running program schedules: the coach's
-   * note on when it falls, in place of "a retest is due". Chapter 13 asks
-   * for no retest between the program's points, and one sung here would not
-   * count toward its day.
+   * What the running program says in place of "a retest is due", in the
+   * /progress coach's words. Recovery week: leave the test, stale or never
+   * taken, until the week is over, since a tired voice is not one to measure
+   * (chapters 8 and 12) and a finished test would save its reading as the
+   * range every warmup and song fits to. Otherwise a stale range whose next
+   * test the program schedules: when it falls. Chapter 13 asks for no retest
+   * between the program's points, and one sung here would not count toward
+   * its day.
    */
   const programNote =
-    staleSaved && micStartedAt !== null ? staleRangeProgramNote(range, programRange, micStartedAt) : null;
+    micStartedAt === null
+      ? null
+      : recovering !== null
+        ? recoveryRangeNote(range, recovering, micStartedAt)
+        : staleSaved
+          ? staleRangeProgramNote(range, programRange, micStartedAt)
+          : null;
   const programDayHref = programNote !== null && programRange?.today ? programRange.href : null;
-  /** The range test is the next step: due, and no running program schedules it. */
+  /** The range test is the next step: due, and no running program schedules it or asks to leave it. */
   const offerRetest = retestDue && programNote === null;
-  const probe = staleSaved ? <ProgramRangeProbe isPro={isPro} onProgramRange={setProgramRange} /> : null;
+  const readsProgram = staleSaved || unmeasuredInProgram;
+  const probe = readsProgram ? (
+    <ProgramRangeProbe isPro={isPro} onProgramRange={setProgramRange} onRecovering={setRecovering} />
+  ) : null;
   // The probe's chunk, fetched while the connection is known to be there: a
-  // saved range that is stale now will be when the mic starts.
+  // saved range that is stale now will be when the mic starts, and so will a
+  // missing one with a program in this browser.
   useEffect(() => {
-    if (range.lowMidi === undefined || range.highMidi === undefined) return;
-    if (!rangeRetestDue(range, Date.now())) return;
+    if (range.lowMidi === undefined || range.highMidi === undefined) {
+      if (!programStored()) return;
+    } else if (!rangeRetestDue(range, Date.now())) return;
     const quit = new AbortController();
     void retryWhenOnline(() => import("@/components/practice/program-range-probe"), {
       signal: quit.signal,
@@ -509,6 +557,7 @@ export function PitchMeter({
     const now = Date.now();
     setMicStartedAt(now);
     setRetestDue(rangeRetestDue(range, now));
+    setProgramKept(programStored());
     pointsRef.current = [];
     heldRef.current = { midi: null, ms: 0, lastT: 0 };
     inputRef.current = freshInputHint();
@@ -655,13 +704,17 @@ export function PitchMeter({
           recent already has that result, and the book spaces retests weeks
           apart, so they are pointed at practice that uses it instead. So is
           one whose running program schedules the next test, with the note
-          the /progress coach gives on when it falls. */}
-      {explored && low !== null && high !== null && !offerRetest && saved && (
+          the /progress coach gives on when it falls, and one on Recovery
+          week, saved range or not, with the coach's note to leave the test
+          until the week is over. */}
+      {explored && low !== null && high !== null && !offerRetest && (saved || programNote !== null) && (
         <div className="rounded-2xl border border-violet/40 bg-panel p-4">
           <p className="text-sm text-mut">
             {programNote
               ? `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far. ${programNote}`
-              : `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far. Your saved range, ${midiToLabel(saved.low)}–${midiToLabel(saved.high)}, already fits your warmups and songs. Retest weeks apart, under similar conditions, rather than today.`}
+              : saved
+                ? `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far. Your saved range, ${midiToLabel(saved.low)}–${midiToLabel(saved.high)}, already fits your warmups and songs. Retest weeks apart, under similar conditions, rather than today.`
+                : null}
           </p>
           <PracticeActions programDayHref={programDayHref} />
           {proReady && !isPro && (
@@ -673,12 +726,12 @@ export function PitchMeter({
           )}
         </div>
       )}
-      {explored && low !== null && high !== null && (offerRetest || !saved) && (
+      {explored && low !== null && high !== null && (offerRetest || (!saved && programNote === null)) && (
         <div className="rounded-2xl border border-violet/40 bg-panel p-4">
           {/* offerRetest with a saved range means it is six weeks old or
               more (an undated one counts as current) and no running program
-              schedules the next test, so a retest is due rather than a first
-              result. */}
+              schedules the next test or asks to leave it, so a retest is due
+              rather than a first result. */}
           <p className="text-sm text-mut">
             {saved
               ? `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far. Your saved range, ${midiToLabel(saved.low)}–${midiToLabel(saved.high)}, is six weeks old or more, so a retest is due: the 2-minute range test saves your lowest and highest clear notes today, the span, and a voice-type estimate, and warmups and songs then open fitted to it.`

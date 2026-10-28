@@ -213,9 +213,20 @@ jobs:
               # chart slot moved it by 0.128 at 1440x1300 while 375 and 1280
               # read zero.
               run_check layout-shift-singers-tall node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1440-tall --route=singers-directory "--json=browser-results/layout-shift-singers-tall.json"
+              # A room's own deep links (e2e/cls.mjs DEEP_LINKS), loaded cold
+              # as a link opened in a new tab, shared or bookmarked is: the
+              # two runs above measure them on a phone, fresh and with a saved
+              # range; these measure them on a desktop. The room reads its
+              # address after hydration, so the pre-paint script holds its
+              # front page back until then (lib/prepaint.ts
+              # data-sing-deeplink); before, every /breath link moved the
+              # whole page by 0.85.
+              deeplinks="breath-deeplink-box,breath-deeplink-routine,warmups-deeplink-exercise,warmups-deeplink-routine,ear-deeplink-routine"
+              run_check layout-shift-deeplinks-desktop-1280 node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1280 "--route=$deeplinks" "--json=browser-results/layout-shift-deeplinks-desktop-1280.json"
+              run_check layout-shift-deeplinks-returning-desktop-1280 node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --returning --viewport=desktop-1280 "--route=$deeplinks" "--json=browser-results/layout-shift-deeplinks-returning-desktop-1280.json"
               # The stored states the prerender cannot show (e2e/README.md,
               # "Layout shift"), each on the routes it reshapes, on a phone and
-              # a desktop: about 72 page loads in all. program-detail and
+              # a desktop: about 80 page loads in all. program-detail and
               # program-foundations are /programs?program=<id> deep links
               # (e2e/cls.mjs DEEP_LINKS): another program's view, and the
               # running program's own, with today's card above it. In the
@@ -224,10 +235,12 @@ jobs:
               # finished card has its own pre-paint size, so each is measured
               # on /programs and its own view. saved-range loads the singer
               # and song pages whose header action and verdict a saved range
-              # swaps after hydration.
+              # swaps after hydration. A capped singer's room deep link opens
+              # nothing, so capped also loads three of them, where the room
+              # shows its wall; program loads a program row's warmup link.
               for spec in \
-                "capped:warmups,breath,ear-training,songs" \
-                "program:programs,program-detail,program-foundations,warmups,progress" \
+                "capped:warmups,breath,ear-training,songs,breath-deeplink-box,warmups-deeplink-routine,ear-deeplink-routine" \
+                "program:programs,program-detail,program-foundations,warmups,progress,warmups-deeplink-routine" \
                 "program-capped:programs,program-detail,program-foundations,warmups,breath,ear-training" \
                 "rest-day:programs,program-detail,warmups,progress" \
                 "finished:programs,program-detail,warmups,progress" \

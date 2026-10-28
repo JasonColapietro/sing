@@ -11,6 +11,7 @@ import {
   nextInputHint,
 } from "./pitch-meter-hint";
 import { PitchMeter } from "./pitch-meter";
+import { SILENCE_RMS } from "@/lib/audio/pitch";
 
 const MIN_VOLUME = 0.008;
 
@@ -36,6 +37,15 @@ describe("the too-quiet hint the range test and the pitch meter share", () => {
   it("asks for a steady note when the input is loud enough but unpitched", () => {
     const s = freshInputHint();
     expect(feed(s, HINT_AFTER_MS, 0.05, false)).toBe(UNPITCHED_HINT);
+  });
+
+  it("calls a voice under the detector's silence floor too quiet, whatever floor the room passes", () => {
+    // 0.009 clears the range test's and the pitch meter's MIN_VOLUME (0.008),
+    // but the detector returns no pitch at all under SILENCE_RMS (0.01), so
+    // that voice was never "heard, but with no pitch".
+    expect(SILENCE_RMS).toBeGreaterThan(0.009);
+    const s = freshInputHint();
+    expect(feed(s, 3000, 0.009, false)).toBe(TOO_QUIET_HINT);
   });
 
   it("clears on the first heard pitch, and keeps a hint while the cause changes", () => {

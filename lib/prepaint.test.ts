@@ -18,8 +18,18 @@ import {
   reconcileProgress,
   reviveProgress,
 } from "./programs";
-import { PREPAINT_CAPPED_TYPES, PREPAINT_KEYS, prepaintState } from "./prepaint";
-import { PREPAINT_CONFIG, PREPAINT_SCRIPT } from "./prepaint-config";
+import {
+  PREPAINT_CAPPED_TYPES,
+  PREPAINT_DEEPLINK_ATTRIBUTE,
+  PREPAINT_DEEPLINK_FALLBACK_MS,
+  PREPAINT_KEYS,
+  prepaintState,
+} from "./prepaint";
+import { PREPAINT_CONFIG, PREPAINT_EAR_ROUTINE_IDS, PREPAINT_SCRIPT } from "./prepaint-config";
+import { BREATH_DRILL_IDS, BREATH_ROUTINES, breathRoutineById, isBreathDrillId } from "@/components/breath/routines";
+import { ALL_ROUTINES, routineById } from "@/components/warmups/routines";
+import { ALL_EXERCISES, EXERCISES } from "@/components/warmups/exercises";
+import { EAR_ROUTINES, earRoutineById } from "@/components/ear/routines";
 
 /** Noon local time, so "today" and "yesterday" never straddle a midnight. */
 const NOW = new Date(2026, 9, 14, 12, 0, 0);
@@ -101,7 +111,14 @@ describe("pre-paint state: the free plan", () => {
 
   it("treats unreadable storage as a newcomer's, never as an error", () => {
     const blocked = { getItem: () => { throw new Error("SecurityError"); } };
-    expect(prepaintState(blocked, NOW, PREPAINT_CONFIG)).toEqual({ plan: "free", program: null, freeLeft: "5:00", streakClause: "", range: false });
+    expect(prepaintState(blocked, NOW, PREPAINT_CONFIG)).toEqual({
+      plan: "free",
+      program: null,
+      freeLeft: "5:00",
+      streakClause: "",
+      range: false,
+      deeplink: null,
+    });
     expect(state({ [PROGRESS_STORAGE_KEY]: "{not json", [PRO_STORAGE_KEY]: "[]" }).plan).toBe("free");
   });
 });
@@ -290,11 +307,133 @@ describe("pre-paint state: the running program", () => {
   });
 });
 
+describe("pre-paint state: a room's deep link", () => {
+  const ids = (list: readonly { id: string }[]) => list.map((x) => x.id);
+
+  it("lists what each room opens from its address, Pro's apart", () => {
+    const { "/breath": breath, "/warmups": warmups, "/ear-training": ear, ...rest } = PREPAINT_CONFIG.deepLinks;
+    expect(rest).toEqual({});
+    expect(breath.room).toBe("breath");
+    expect(breath.params).toEqual({ drill: [BREATH_DRILL_IDS, []], routine: [ids(BREATH_ROUTINES), []] });
+    expect(warmups.room).toBe("warmups");
+    expect([...warmups.params.routine[0], ...warmups.params.routine[1]].sort()).toEqual(ids(ALL_ROUTINES).sort());
+    for (const id of warmups.params.routine[1]) expect(routineById(id)?.pro, id).toBe(true);
+    for (const id of warmups.params.routine[0]) expect(routineById(id)?.pro, id).toBe(false);
+    expect(warmups.params.exercise[0]).toEqual(ids(EXERCISES));
+    expect([...warmups.params.exercise[0], ...warmups.params.exercise[1]].sort()).toEqual(ids(ALL_EXERCISES).sort());
+    expect(Object.keys(warmups.params).sort()).toEqual(["exercise", "routine"]);
+    expect(ear.room).toBe("ear");
+    // Restated in the config, because the ear room's module is client-only.
+    expect([...PREPAINT_EAR_ROUTINE_IDS]).toEqual(ids(EAR_ROUTINES));
+    expect(ear.params).toEqual({ routine: [PREPAINT_EAR_ROUTINE_IDS, []] });
+  });
+
+  /**
+   * What each room opens from its address once hydrated, asked the way the
+   * room asks it: components/breath/breath-studio.tsx (a drill, else a set),
+   * components/warmups/warmups-client.tsx (canStartRoutine, canStart), and
+   * components/ear/ear-training-client.tsx (a workout). Every room opens
+   * nothing for a capped singer, who meets the wall instead.
+   */
+  function roomOpens(pathname: string, search: string, opts: { isPro: boolean; capped: boolean }): string | null {
+    if (opts.capped) return null;
+    const q = new URLSearchParams(search);
+    if (pathname === "/breath") {
+      return isBreathDrillId(q.get("drill")) || breathRoutineById(q.get("routine")) ? "breath" : null;
+    }
+    if (pathname === "/warmups") {
+      const routine = routineById(q.get("routine"));
+      const exercise = ALL_EXERCISES.find((e) => e.id === q.get("exercise"));
+      const opens =
+        (routine !== null && (!routine.pro || opts.isPro)) ||
+        (exercise !== undefined && (EXERCISES.includes(exercise) || opts.isPro));
+      return opens ? "warmups" : null;
+    }
+    if (pathname === "/ear-training") return earRoutineById(q.get("routine")) ? "ear" : null;
+    return null;
+  }
+
+  const ADDRESSES: [string, string][] = [
+    ["/breath", ""],
+    ["/breath", "?drill=box&side=4&minutes=1"],
+    ["/breath", "?drill=sustain&attempts=1"],
+    ["/breath", "?drill=farinelli&cap=8"],
+    ["/breath", "?routine=quick"],
+    ["/breath", "?routine=daily&step=3"],
+    ["/breath", "?drill=nope"],
+    ["/breath", "?drill=nope&routine=builder"],
+    ["/breath", "?drill="],
+    ["/breath", "?routine=morning"],
+    ["/breath", "?exercise=lip-trill-scale"],
+    // Malformed or hostile values: a bad escape, a stray %, the wrong case,
+    // names every object inherits. Each must leave the room's front page.
+    ["/breath", "?drill=%E0%A4%A"],
+    ["/breath", "?drill=box%"],
+    ["/breath", "?drill=BOX"],
+    ["/breath", "?drill=constructor"],
+    ["/breath", "?routine=__proto__"],
+    ["/breath", "?drill=box?routine=quick"],
+    ["/warmups", ""],
+    ["/warmups", "?routine=morning"],
+    ["/warmups", "?routine=recovery&step=2"],
+    ["/warmups", "?routine=mix"],
+    ["/warmups", "?routine=mix&exercise=lip-trill-scale"],
+    ["/warmups", "?exercise=lip-trill-scale&reps=6"],
+    ["/warmups", "?exercise=vibrato-hold"],
+    ["/warmups", "?exercise=belt-nay-speech"],
+    ["/warmups", "?exercise=nope"],
+    ["/warmups", "?drill=box"],
+    ["/warmups", "?utm_source=book&routine=quick"],
+    ["/ear-training", ""],
+    ["/ear-training", "?routine=quick"],
+    ["/ear-training", "?routine=pitch"],
+    ["/ear-training", "?routine=nope"],
+    ["/ear-training", "?routine=toString"],
+    ["/ear-training", "?routine=nope&routine=quick"],
+    ["/warmups", "?routine=Morning"],
+    ["/warmups", "?exercise=hasOwnProperty"],
+    ["/songs", "?song=amazing-grace"],
+    ["/programs", "?routine=quick"],
+    ["/", "?drill=box"],
+  ];
+
+  const plans = {
+    free: {},
+    pro: { [PRO_STORAGE_KEY]: { active: true } },
+    capped: { [PROGRESS_STORAGE_KEY]: progress(session("warmup", 330)) },
+  } as const;
+
+  for (const [plan, stored] of Object.entries(plans)) {
+    it(`names the room exactly when the room will open the link, for a ${plan} singer`, () => {
+      const isPro = plan === "pro";
+      const capped = plan === "capped";
+      for (const [pathname, search] of ADDRESSES) {
+        const got = prepaintState(storageOf(stored), NOW, PREPAINT_CONFIG, { pathname, search }).deeplink;
+        expect(got, pathname + search).toBe(roomOpens(pathname, search, { isPro, capped }));
+      }
+    });
+  }
+
+  it("reads a room's address with a trailing slash, and nothing without an address", () => {
+    expect(prepaintState(storageOf({}), NOW, PREPAINT_CONFIG, { pathname: "/breath/", search: "?drill=box" }).deeplink).toBe("breath");
+    expect(prepaintState(storageOf({}), NOW, PREPAINT_CONFIG).deeplink).toBeNull();
+    // Storage that throws is a newcomer's, whose link the room opens.
+    const blocked = { getItem: () => { throw new Error("SecurityError"); } };
+    expect(prepaintState(blocked, NOW, PREPAINT_CONFIG, { pathname: "/warmups", search: "?routine=morning" }).deeplink).toBe("warmups");
+  });
+});
+
 describe("the inline script", () => {
   /** Runs the script text as the browser would, against fake storage and a fake <html>. */
   function run(stored: Record<string, unknown> | "blocked", location = { pathname: "/", search: "" }) {
     const attrs: Record<string, string> = {};
-    const window: Record<string, unknown> = {};
+    // What the script leaves to run later: its load listeners and their timers.
+    const listeners: { type: string; fn: () => void }[] = [];
+    const timers: { fn: () => void; ms: number }[] = [];
+    const window: Record<string, unknown> = {
+      addEventListener: (type: string, fn: () => void) => listeners.push({ type, fn }),
+      setTimeout: (fn: () => void, ms: number) => timers.push({ fn, ms }),
+    };
     const localStorage =
       stored === "blocked"
         ? { getItem: () => { throw new Error("SecurityError"); } }
@@ -316,9 +455,14 @@ describe("the inline script", () => {
       isNaN,
       URLSearchParams,
       location,
-      document: { documentElement: { setAttribute: (k: string, v: string) => (attrs[k] = v) } },
+      document: {
+        documentElement: {
+          setAttribute: (k: string, v: string) => (attrs[k] = v),
+          removeAttribute: (k: string) => delete attrs[k],
+        },
+      },
     });
-    return { attrs, global: window.__singPrepaint };
+    return { attrs, global: window.__singPrepaint, listeners, timers };
   }
 
   it("marks <html> with the plan and the program", () => {
@@ -355,6 +499,56 @@ describe("the inline script", () => {
 
   it("swallows storage that throws, leaving the newcomer's layout", () => {
     expect(run("blocked").attrs).toEqual({ "data-sing-plan": "free" });
+  });
+
+  it("marks a room's deep link, and leaves it off for the room's own page and a capped singer", () => {
+    expect(PREPAINT_DEEPLINK_ATTRIBUTE).toBe("data-sing-deeplink");
+    expect(run({}, { pathname: "/breath", search: "?drill=box&side=4&minutes=1" }).attrs).toEqual({
+      "data-sing-plan": "free",
+      "data-sing-deeplink": "breath",
+    });
+    expect(run({}, { pathname: "/warmups", search: "?routine=morning" }).attrs).toEqual({
+      "data-sing-plan": "free",
+      "data-sing-deeplink": "warmups",
+    });
+    expect(run({}, { pathname: "/ear-training", search: "?routine=quick" }).attrs).toEqual({
+      "data-sing-plan": "free",
+      "data-sing-deeplink": "ear",
+    });
+    expect(run({}, { pathname: "/breath", search: "" }).attrs).toEqual({ "data-sing-plan": "free" });
+    expect(run({ [PROGRESS_STORAGE_KEY]: progress(session("breath", 330)) }, { pathname: "/breath", search: "?drill=box" }).attrs).toEqual({
+      "data-sing-plan": "capped",
+    });
+    expect(run("blocked", { pathname: "/breath", search: "?routine=quick" }).attrs).toEqual({
+      "data-sing-plan": "free",
+      "data-sing-deeplink": "breath",
+    });
+  });
+
+  it("takes a deep link's attribute off itself after load, so a page whose scripts never run is never left blank", () => {
+    // The room takes it off once it has read its address. A page whose
+    // bundle never runs has no room to do that, and its front page would
+    // stay hidden under the empty slot for good.
+    const linked = run({}, { pathname: "/breath", search: "?drill=box" });
+    expect(linked.attrs["data-sing-deeplink"]).toBe("breath");
+    expect(linked.timers).toEqual([]);
+    expect(linked.listeners.map((l) => l.type)).toEqual(["load"]);
+    linked.listeners[0].fn();
+    // Hydration's time, counted from load, when every script has run or failed.
+    expect(linked.timers.map((t) => t.ms)).toEqual([PREPAINT_DEEPLINK_FALLBACK_MS]);
+    expect(PREPAINT_DEEPLINK_FALLBACK_MS).toBeGreaterThanOrEqual(3000);
+    expect(PREPAINT_DEEPLINK_FALLBACK_MS).toBeLessThanOrEqual(10000);
+    expect(linked.attrs["data-sing-deeplink"]).toBe("breath");
+    linked.timers[0].fn();
+    // Only the deep link: the plan's attribute picks between versions of the
+    // page and hides nothing the page needs.
+    expect(linked.attrs).toEqual({ "data-sing-plan": "free" });
+
+    // No link, no listener: nothing else on any page changes after load.
+    for (const where of [{ pathname: "/breath", search: "" }, { pathname: "/", search: "" }]) {
+      expect(run({}, where).listeners).toEqual([]);
+    }
+    expect(run({ [PROGRESS_STORAGE_KEY]: progress(session("breath", 330)) }, { pathname: "/breath", search: "?drill=box" }).listeners).toEqual([]);
   });
 
   it("is in the root layout's head, ahead of the page", () => {

@@ -251,7 +251,9 @@ export function BoxBreathing({
   const phaseIdx = run?.phaseIdx ?? 0;
   const p = run?.p ?? 0;
   const elapsed = run?.elapsed ?? 0;
-  const target = runTargetSec;
+  // Before begin() has run, the length the settings ask for, so a set's
+  // first frame already reads the run's length.
+  const target = runTargetSec || boxSeconds({ side, minutes });
 
   /* ---------------------------------------------------------------- *
    * Session — the full-screen dark surface.
@@ -261,16 +263,22 @@ export function BoxBreathing({
       if (mode === "running") endEarly();
       else onExit?.();
     };
+    // A set's step (autoStart) is drawn as its run from the first render.
+    // begin() runs in the effect above, after that render has painted, and
+    // the setup card it painted first kept the same figure, which then grew
+    // and moved down under the run's readout: a layout shift at the start of
+    // every set that opens on box breathing (0.037 on a phone, /breath?routine=quick).
+    const running = mode === "running" || (autoStart && mode === "setup");
 
     return (
       <SessionShell
         title="Box breathing"
         subtitle={`${minutes} min · ${side}s sides`}
-        progress={mode === "running" && target > 0 ? (elapsed / target) * 100 : 0}
+        progress={running && target > 0 ? (elapsed / target) * 100 : 0}
         onClose={closeSession}
-        closeLabel={mode === "running" ? "End drill" : "Leave"}
+        closeLabel={running ? "End drill" : "Leave"}
         topRight={
-          mode === "running" ? (
+          running ? (
             <span className="tabular font-mono text-xs text-[var(--s-dim)]">
               round {run?.round ?? 1}
             </span>
@@ -292,7 +300,7 @@ export function BoxBreathing({
           </div>
         }
       >
-        {mode === "running" ? (
+        {running ? (
           <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-4 py-3">
             <BoxFigure
               phaseIdx={phaseIdx}

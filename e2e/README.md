@@ -137,13 +137,44 @@ measures: `singer-adele` (`/singers/adele`, a "test" page),
 "compare" pages, with the wider labels) and `song-someone-like-you`
 (`/can-you-sing/someone-like-you`).
 
+It also loads the rooms' own deep links, the addresses program rows,
+lessons, the glossary, the coach and the range result link to, and which a
+link opened in a new tab, shared or bookmarked loads cold:
+`breath-deeplink-box` (`/breath?drill=box&side=4&minutes=1`, a program's box
+row), `breath-deeplink-routine` (`/breath?routine=quick`),
+`warmups-deeplink-exercise` (`/warmups?exercise=lip-trill-scale`),
+`warmups-deeplink-routine` (`/warmups?routine=morning`) and
+`ear-deeplink-routine` (`/ear-training?routine=quick`). These pages cannot be
+prerendered per link the way a program's view is, because the room opens
+what the link names (a drill or a workout as a session over the whole room,
+or the warmups mic gate retitled for that set and scrolled to) only once it
+has read its address after hydration. Before, the prerendered front page painted and
+then went away: every `/breath` link moved the page by 0.85 on a phone, and a
+`/warmups` link by 0.11, or 0.51 with a saved range. Now the pre-paint script
+marks `<html>` with `data-sing-deeplink` when the address holds a link the
+room will open for this singer, and until the room has read it the front page
+is hidden and a screen-tall empty block holds its place
+(`components/prepaint.tsx` `deepLinkMarker`, `DeepLinkSlot`), so what the
+link opens arrives as new content. The `/warmups` room then scrolls to its
+gate two frames later, not in the frame that swaps the slot for the cards:
+in that frame the browser mapped where the sections under the slot had been
+into the scrolled-to screen and counted them as moving across it (0.92 on a
+phone, 1.00 with a saved range). If no room reads it (the page's scripts
+never ran), the script takes the attribute off itself 5 seconds after load
+(`PREPAINT_DEEPLINK_FALLBACK_MS`), so the front page still shows. CI measures them in the plain and
+`--returning` runs at 375px and in both at 1280px, and loads a capped
+singer's links (`--state=capped`, where the link opens nothing and the room
+shows its wall) and a program row's warmup link (`--state=program`).
+`songs-deeplink` (`/songs?song=amazing-grace`) is loaded only when named: a
+song link keeps the songs gate and only names the song in its heading.
+
 The states are what localStorage holds and the prerender cannot: the
 prerender is always a newcomer's page, so each of these used to change shape
 at hydration only for the singers in it.
 
 | `--state=` | Seeded on top of the returning record | Pages it reshapes |
 |---|---|---|
-| `capped` | 330 s of warmup today: the free plan's five guided minutes are used | the cap wall in `/warmups`, `/breath`, `/ear-training`, `/songs` |
+| `capped` | 330 s of warmup today: the free plan's five guided minutes are used | the cap wall in `/warmups`, `/breath`, `/ear-training`, `/songs`, and on a room's deep link, which then opens nothing |
 | `program` | Foundations in 2 weeks, day 2 still to do | today's card on `/programs` and on its own `?program=` view (not on another program's), the leading program card on `/warmups` |
 | `program-capped` | both: the program day waits for midnight | all of the above, with the longer "waits" lines |
 | `rest-day` | Mix in 4 weeks on its day 7 rest day, day 8 onward needing Pro | the rest-day card on `/programs` and `/warmups` |

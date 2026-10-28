@@ -232,6 +232,39 @@ export function pitchMatchTolerance(difficulty: Difficulty): number {
   return difficulty === "hard" ? 35 : 50;
 }
 
+/* ---------------- holding a note ---------------- */
+
+/** A sung hold under way: ms in the band so far, and ms out of it since the voice was last in. */
+export interface HoldState {
+  readonly held: number;
+  readonly lapse: number;
+}
+
+/** Where every hold starts. Shared, so frozen: advanceHold returns new states. */
+export const NO_HOLD: HoldState = Object.freeze({ held: 0, lapse: 0 });
+
+/**
+ * Advance a hold by one frame of `dt` ms (already capped, lib/audio/frame-clock).
+ *
+ * A hold is continuous. Time in the band adds up and survives a lapse of up to
+ * `graceMs` (a dropped detector frame, a consonant, a vibrato swing past the
+ * band's edge), but a real miss longer than that starts it again. Without the
+ * reset, a voice hunting around the target added its passes through the band
+ * into a "held" note it never sang steadily. Note catcher's dwell keeps the
+ * same rule with the same grace (note-catcher.ts GRACE_MS), which callers
+ * pass in. Returns a new state; the input is never mutated.
+ */
+export function advanceHold(
+  state: HoldState,
+  dt: number,
+  inBand: boolean,
+  graceMs: number,
+): HoldState {
+  if (inBand) return { held: state.held + dt, lapse: 0 };
+  const lapse = state.lapse + dt;
+  return { held: lapse > graceMs ? 0 : state.held, lapse };
+}
+
 /** Whether a detected midi matches a target, octave-agnostic or exact. */
 export function midiMatches(
   detected: number,

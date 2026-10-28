@@ -11,7 +11,13 @@ import type { ProgramRangeTest } from "./program-range-note";
 // The range-note builders live in a module with no lib/programs import, so the
 // /range pitch meter can use them without shipping every program; the coach
 // and the tests still reach them here.
-export { programRangeNote, staleRangeProgramNote, type ProgramRangeTest } from "./program-range-note";
+export {
+  programRangeNote,
+  recoveryRangeLine,
+  recoveryRangeNote,
+  staleRangeProgramNote,
+  type ProgramRangeTest,
+} from "./program-range-note";
 
 /**
  * True when today's program day is one this singer cannot open: a free singer
@@ -36,9 +42,13 @@ export function programDayNeedsPro(
  * measuring again when you are back to ordinary" (chapter 12). So while it
  * runs the coach leaves out its own range test, which would save a tired
  * reading over the range every warmup and song fits to, and its octave siren
- * at the top of the range, which none of the week's own warmup sets sings.
- * The week schedules no range test of its own, so programRangeTest is null
- * throughout it.
+ * at the top of the range, which none of the week's own warmup sets sings;
+ * the /range pitch meter offers no range test either, and both say why in
+ * the same words (./program-range-note.ts recoveryRangeNote). The week
+ * schedules no range test of its own, so programRangeTest is null throughout
+ * it, and its breath is single drills, with no sustain test (lib/programs.ts
+ * RECOVERY_BREATH), so the coach's breathing step opens the week's box
+ * breathing rather than the breath room, whose sets end on one.
  */
 export function recoveryWeekOf(active: { program: Program; view: { status: string } }): string | null {
   return active.program.id === "recovery-week" && active.view.status !== "finished" ? active.program.name : null;

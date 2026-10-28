@@ -9,6 +9,8 @@ import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import {
+  NO_HOLD,
+  advanceHold,
   centsToTarget,
   hasSavedRange,
   pitchMatchTolerance,
@@ -16,6 +18,7 @@ import {
   singableRegister,
   type Difficulty,
 } from "./lib";
+import { GRACE_MS } from "./note-catcher";
 import {
   GameShell,
   RoundFeedback,
@@ -230,7 +233,10 @@ export function PitchMatchGame({
     else if (!wasListening && target !== null && phase !== "result") beginRound(target);
   }, [listening, target, phase, beginRound]);
 
-  // The sing-phase loop: accumulate in-tune time inside the window.
+  // The sing-phase loop: the round is matched once one steady hold inside the
+  // band lasts HOLD_MS, before the window runs out. The hold is continuous
+  // (advanceHold): passes through the band while hunting for the note do not
+  // add up to it, as they never did in Note catcher.
   useEffect(() => {
     if (!listening || phase !== "sing" || target === null) return;
     let lastT = performance.now();
@@ -238,7 +244,7 @@ export function PitchMatchGame({
     // rather than wall clock, so time the tab spent hidden is time neither of
     // them counts. See lib/audio/frame-clock.
     let elapsed = 0;
-    let held = 0;
+    let hold = NO_HOLD;
     let settled = false;
 
     const tick = () => {
@@ -256,13 +262,15 @@ export function PitchMatchGame({
       // outright and scored the round correct for someone who sang nothing.
       if (f.freq !== null && isFrameFresh(f.t, now)) {
         cents = centsToTarget(freqToMidiFloat(f.freq), target, octaveAgnostic);
-        if (Math.abs(cents) <= tolerance) held += dt;
       }
+      // No fresh voiced frame is a frame out of the band: a short one is
+      // forgiven inside GRACE_MS, a real stop starts the hold again.
+      hold = advanceHold(hold, dt, cents !== null && Math.abs(cents) <= tolerance, GRACE_MS);
       setLiveCents(cents);
-      setHeldMs(held);
+      setHeldMs(hold.held);
       setLeftMs(Math.max(0, WINDOW_MS - elapsed));
 
-      if (held >= HOLD_MS) {
+      if (hold.held >= HOLD_MS) {
         settled = true;
         setCorrect(true);
         setPhase("result");
@@ -429,7 +437,7 @@ export function PitchMatchGame({
             <span>Held {(heldMs / 1000).toFixed(1)}s / {(HOLD_MS / 1000).toFixed(1)}s</span>
             <span className="tabular">{Math.ceil(leftMs / 1000)}s left</span>
           </div>
-          <ShellBar value={(heldMs / HOLD_MS) * 100} label={`Time held within ${tolerance} cents`} />
+          <ShellBar value={(heldMs / HOLD_MS) * 100} label={`Steady hold within ${tolerance} cents`} />
         </div>
       )}
 
@@ -440,7 +448,9 @@ export function PitchMatchGame({
             message={
               correct
                 ? `You locked onto ${targetLabel}.`
-                : `The note was ${targetLabel}. Try matching it before the timer runs out.`
+                : // A miss is now also a note found but never held: say what
+                  // a match takes, not only that the timer ran out.
+                  `The note was ${targetLabel}. Find it, then hold it steady for ${HOLD_MS / 1000} seconds before the timer runs out.`
             }
           />
           <ShellButton tone="primary" onClick={next}>

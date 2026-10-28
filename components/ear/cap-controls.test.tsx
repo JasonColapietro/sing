@@ -1,10 +1,19 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { FreeCap } from "@/lib/free-cap";
+import { DEFAULT_PROGRESS, type ProgressState } from "@/lib/progress-shape";
+import { localDay } from "@/lib/progress";
 
 const cap = vi.hoisted(() => ({
   current: { isPro: false, usedSec: 0, leftSec: 300, capped: false, capSec: 300 } as FreeCap,
 }));
+
+// The stored log unless a test sets one.
+const stored = vi.hoisted(() => ({ progress: null as ProgressState | null }));
+vi.mock("@/lib/progress", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/progress")>();
+  return { ...actual, useProgress: () => stored.progress ?? actual.useProgress() };
+});
 
 vi.mock("@/lib/free-cap", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/free-cap")>(),
@@ -29,6 +38,37 @@ const OPEN: FreeCap = { isPro: false, usedSec: 0, leftSec: 300, capped: false, c
 beforeEach(() => {
   cap.current = OPEN;
   hydration.done = true;
+  stored.progress = null;
+});
+
+/** A singer with an ear workout logged today, so the room's card is a top-up. */
+function earPracticedToday(): ProgressState {
+  const day = localDay();
+  return {
+    ...DEFAULT_PROGRESS,
+    sessions: [
+      { id: "e1", type: "ear", date: `${day}T09:00:00.000Z`, day, durationSec: 300, score: 80, detail: "Daily ear", xp: 20 },
+    ],
+  };
+}
+
+describe("the ear room's card for a singer who practiced ear today", () => {
+  it("offers a top-up while the allowance is open", () => {
+    stored.progress = earPracticedToday();
+    const html = renderToStaticMarkup(<EarTrainingClient />);
+    expect(html).toContain("Top up today");
+    expect(html).toContain(">Start workout<");
+  });
+
+  it("offers no top-up at the cap, where the button says Available tomorrow", () => {
+    // The same rule as /warmups: a top-up kicker over a set that cannot start.
+    stored.progress = earPracticedToday();
+    cap.current = CAPPED;
+    const html = renderToStaticMarkup(<EarTrainingClient />);
+    expect(html).toContain("Available tomorrow");
+    expect(html).not.toContain("Top up today");
+    expect(html).toContain("Today&#x27;s ear workout");
+  });
 });
 
 describe.each([["ear training", () => <EarTrainingClient />, "Start workout"]])("the %s room once the free minutes are used", (_room, room, openLabel) => {

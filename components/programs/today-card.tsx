@@ -550,8 +550,14 @@ export function ProgramTodayCard({
                     The free plan covers five guided minutes a day, and this day runs longer, so
                     spread it over a few days: it completes once every row is ticked, and a
                     routine&apos;s steps can be sung one at a time.{" "}
-                    <Link href="/pro" className="underline">Pro</Link> removes the cap; the range
-                    test is always free.
+                    {/* The range test is named only on a day that takes one,
+                        as the program's detail names it only for a program
+                        that has one (programs-client.tsx hasRangeTest):
+                        Recovery week asks for none, since a tired voice is
+                        not one to measure (components/practice/program-day.ts
+                        recoveryWeekOf). */}
+                    <Link href="/pro" className="underline">Pro</Link> removes the cap
+                    {day.items.some((i) => i.kind === "range") ? "; the range test is always free" : ""}.
                   </p>
                 )}
               </>

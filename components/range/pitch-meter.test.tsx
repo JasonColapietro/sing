@@ -25,6 +25,7 @@ vi.mock("next/link", () => ({
 }));
 
 import { LastRun, PitchMeter } from "./pitch-meter";
+import { recoveryRangeNote } from "@/components/practice/program-range-note";
 
 describe("the pitch meter after Stop mic", () => {
   it("opens cold on the first-visit gate, with no run to report", () => {
@@ -101,7 +102,10 @@ describe("the pitch meter after Stop mic", () => {
     // live panel and the stopped card.
     expect(src).toContain("const offerRetest = retestDue && programNote === null;");
     expect(src).toContain("retestDue={offerRetest}");
-    expect(src).toMatch(/explored && low !== null && high !== null && !offerRetest && saved &&/);
+    expect(src).toMatch(/explored && low !== null && high !== null && !offerRetest && \(saved \|\| programNote !== null\) &&/);
+    // The retest panel only when the test is offered, or as a first result
+    // with nothing the program says in its place.
+    expect(src).toMatch(/explored && low !== null && high !== null && \(offerRetest \|\| \(!saved && programNote === null\)\) &&/);
     // A singer whose saved range is due a retest already has a result, so the
     // live panel says the retest is due rather than offering a first one.
     expect(src).toContain("is six weeks old or more, so a retest is due");
@@ -154,7 +158,7 @@ describe("the pitch meter after Stop mic", () => {
     expect(html).toContain('href="/songs"');
   });
 
-  it("reads the running program from its own chunk, only for a stale saved range", () => {
+  it("reads the running program from its own chunk, only for a stale saved range or none with a program kept", () => {
     // lib/programs carries every program and the song catalog; this page's
     // cold traffic has no program and never needs them.
     const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
@@ -164,9 +168,49 @@ describe("the pitch meter after Stop mic", () => {
     // render (./retry-when-online.test.ts).
     expect(src).toContain('retryWhenOnline(() => import("@/components/practice/program-range-probe"))');
     expect(src).toContain("{ loading: () => null }");
-    expect(src).toMatch(/const probe = staleSaved \? <ProgramRangeProbe /);
+    // Only for a stale saved range, or for no saved range with a program
+    // record in this browser (Recovery week may be running), read at mic
+    // start from the store's key alone.
+    expect(src).toContain("const readsProgram = staleSaved || unmeasuredInProgram;");
+    expect(src).toContain("const unmeasuredInProgram = micStartedAt !== null && !rangeSaved && programKept;");
+    expect(src).toMatch(/const probe = readsProgram \? \(\s*<ProgramRangeProbe /);
+    const begin = src.slice(src.indexOf("const begin = async"), src.indexOf("const reset = () =>"));
+    expect(begin).toContain("setProgramKept(programStored());");
+    expect(src).toContain("window.localStorage.getItem(PREPAINT_KEYS.program)");
     const note = readFileSync(new URL("../practice/program-range-note.ts", import.meta.url), "utf8");
     expect(note).not.toMatch(/from "@\/lib\/programs"/);
+  });
+
+  it("leaves the range test out during Recovery week, in the /progress coach's words", () => {
+    // Recovery week is for a voice that feels tired; the coach says to leave
+    // the test until the week is over, and the meter used to call a retest
+    // due and lead with the test button.
+    const DAY = 86_400_000;
+    const now = Date.parse("2026-10-13T12:00:00Z");
+    const stale = { lowMidi: 48, highMidi: 67, testedAt: new Date(now - 60 * DAY).toISOString() };
+    for (const range of [stale, {}]) {
+      const note = recoveryRangeNote(range, "Recovery week", now)!;
+      expect(note).toContain("Recovery week is for a voice that feels tired, so leave the range test until the week is over");
+      const html = renderToStaticMarkup(
+        <LastRun low={57} high={64} lastLog={null} retestDue={false} programNote={note} onTryRange={() => {}} />,
+      ).replace(/&#x27;/g, "'");
+      expect(html).toContain(note);
+      expect(html).not.toContain("Take the 2-minute range test");
+      expect(html).not.toContain("retest is due");
+      expect(html).toContain('href="/warmups"');
+      expect(html).toContain('href="/songs"');
+      expect(html).not.toContain("today’s plan");
+    }
+    // Both views read it from the coach's own builder, timed from the instant
+    // the mic started, ahead of the program's scheduled test, which Recovery
+    // week never has.
+    const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
+    expect(src).toContain("recoveryRangeNote(range, recovering, micStartedAt)");
+    expect(src).toMatch(/recovering !== null\s*\?\s*recoveryRangeNote\(range, recovering, micStartedAt\)\s*:\s*staleSaved\s*\?\s*staleRangeProgramNote\(/);
+    expect(src).toContain("onRecovering={setRecovering}");
+    const probe = readFileSync(new URL("../practice/program-range-probe.tsx", import.meta.url), "utf8");
+    expect(probe).toContain("const recovering = active ? recoveryWeekOf(active) : null;");
+    expect(probe).toContain("onRecovering?.(recovering);");
   });
 
   it("clears the last save on every new start that opens the mic", () => {

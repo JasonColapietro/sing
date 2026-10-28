@@ -4,7 +4,7 @@ import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { emitProResult } from "@/lib/pro-signal";
 import { denseStepResults, withStepResult } from "@/components/practice/step-results";
-import { useFreeCap } from "@/lib/free-cap";
+import { formatClock, useFreeCap, type FreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { liveStreak } from "@/components/account/save-state";
 
@@ -27,6 +27,7 @@ import {
   SUSTAIN_LOG_MIN_SEC,
   breathDrillDesc,
   breathDrillTitle,
+  breathRoutineSeconds,
   breathStepSeconds,
   breathStepSummary,
   breathStepTitle,
@@ -112,6 +113,28 @@ function StepDrill({
 }
 
 /**
+ * The free minutes left today, for a step's intro card, when they run out
+ * before the rest of the set does; null on Pro and while they cover it.
+ *
+ * A program row opens a set straight into this runner (/breath?routine=daily),
+ * past the room's own allowance line, and Daily breath alone runs past five
+ * minutes, so without it the cap slide took the sustain test's place with no
+ * countdown. It is a plain readout of the time left, the label the warmup
+ * runner's intro clock switches to in the same case (routine-runner.tsx
+ * introClockLabel).
+ */
+export function breathIntroFreeLeft(
+  routine: BreathRoutine,
+  fromStep: number,
+  cap: Pick<FreeCap, "isPro" | "leftSec">,
+): string | null {
+  if (cap.isPro) return null;
+  // The card's own estimate (breathRoutineSeconds), of the steps still ahead.
+  const setLeftSec = breathRoutineSeconds({ ...routine, steps: routine.steps.slice(fromStep) });
+  return cap.leftSec < setLeftSec ? `${formatClock(cap.leftSec)} free left today` : null;
+}
+
+/**
  * The card between steps: what is next, what it does, and the preset it will
  * run. It starts the step on its own after BREATH_STEP_INTRO_SEC so the routine
  * keeps its own pace; the two buttons are for a singer who wants to move sooner.
@@ -121,6 +144,7 @@ function StepIntro({
   stepIndex,
   stepCount,
   progress,
+  freeLeft,
   onStart,
   onSkip,
   onQuit,
@@ -129,6 +153,8 @@ function StepIntro({
   stepIndex: number;
   stepCount: number;
   progress: number;
+  /** breathIntroFreeLeft: the free minutes left, when the set outlasts them. */
+  freeLeft: string | null;
   onStart: () => void;
   onSkip: () => void;
   onQuit: () => void;
@@ -165,6 +191,13 @@ function StepIntro({
       progress={progress}
       onClose={onQuit}
       closeLabel="Leave routine"
+      topRight={
+        freeLeft ? (
+          <span className="tabular font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
+            {freeLeft}
+          </span>
+        ) : undefined
+      }
     >
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-5 py-6 text-center">
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
@@ -531,6 +564,7 @@ export function BreathRunner({
         stepIndex={phase.step}
         stepCount={stepCount}
         progress={stepProgress}
+        freeLeft={breathIntroFreeLeft(routine, phase.step, cap)}
         onStart={() => setPhase({ kind: "play", step: phase.step })}
         onSkip={() => closeStep(phase.step, null)}
         onQuit={() => leave()}
