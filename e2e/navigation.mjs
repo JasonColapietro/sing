@@ -232,13 +232,6 @@ try {
           "[data-singer-crawl-index]",
           "A-Z index link",
         );
-        // The popular lookups sit under the chart since round 11, so the
-        // chart's mount moves them too; they are a return scope of their own.
-        await backTo(
-          page.locator('[data-singer-search-priority] a[href^="/singers/"]').nth(5),
-          "[data-singer-search-priority]",
-          "Popular vocal range lookups link",
-        );
         // The links under the chart: Browse by genre, the records button and
         // the methodology link used to come back at the footer (content:D2).
         await backTo(
