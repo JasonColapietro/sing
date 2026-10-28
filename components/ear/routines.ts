@@ -108,7 +108,7 @@ export const EAR_ROUTINES: EarRoutine[] = [
   },
   {
     id: "daily",
-    name: "Daily ear workout",
+    name: "Daily ear routine",
     tagline: "The everyday set: four of the five games, three at medium and an easy melody echo to finish.",
     steps: [
       step("higher-lower", "medium"),
@@ -119,7 +119,7 @@ export const EAR_ROUTINES: EarRoutine[] = [
   },
   {
     id: "full",
-    name: "Full ear workout",
+    name: "Full ear routine",
     tagline: "Ten minutes: four games at medium, then intervals and pitch at hard.",
     steps: [
       step("higher-lower", "medium"),
@@ -184,7 +184,7 @@ export function earStepLabel(s: EarRoutineStep): string {
 }
 
 /**
- * Which ear workout to put at the top of the room right now.
+ * Which ear routine to put at the top of the room right now.
  *
  * Someone who has already practised today gets the quick one — a second visit
  * is a top-up, not another full workout. Everyone else gets the daily.

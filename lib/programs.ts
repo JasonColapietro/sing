@@ -83,7 +83,7 @@ export type ProgramItem =
    * what to sing when it is not a verse and a chorus of a song.
    */
   | { kind: "recorder"; take?: string }
-  /** A few minutes of ear training: the Quick ear workout, pitch match and both recognition games. */
+  /** A few minutes of ear training: the Quick ear routine, pitch match and both recognition games. */
   | { kind: "ear" };
 
 export interface ProgramDay {

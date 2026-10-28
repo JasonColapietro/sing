@@ -60,7 +60,7 @@ describe("ear routine catalogue", () => {
   });
 
   it("finds a routine by id and returns null for anything else", () => {
-    expect(earRoutineById("daily")?.name).toBe("Daily ear workout");
+    expect(earRoutineById("daily")?.name).toBe("Daily ear routine");
     expect(earRoutineById("full")?.steps).toHaveLength(6);
     expect(earRoutineById("nope")).toBeNull();
     expect(earRoutineById(null)).toBeNull();

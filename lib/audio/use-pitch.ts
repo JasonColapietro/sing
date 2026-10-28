@@ -90,7 +90,7 @@ export function usePitch(opts?: {
    * stops the analysis loop: no pitch detection, no per-frame state update
    * (`frame` reads empty), no subscriber calls, and `latest` is emptied.
    * True again resumes on the same stream. For a host that holds one stream
-   * across steps that do not all listen: the ear workout keeps it from its
+   * across steps that do not all listen: the ear routine keeps it from its
    * first singing step to its results, and without this re-rendered every
    * animation frame through Interval ID, Higher or lower and the slides
    * between steps. Default true.
