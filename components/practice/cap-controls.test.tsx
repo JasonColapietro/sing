@@ -20,8 +20,10 @@ vi.mock("@/components/prepaint", async (importOriginal) => ({
   useHydrated: () => hydration.done,
 }));
 
-import { BreathStudio } from "./breath-studio";
+import EarTrainingClient from "@/components/ear/ear-training-client";
+import { BreathStudio } from "@/components/breath/breath-studio";
 import { paintedFor } from "@/components/prepaint.testing";
+import { CAPPED_REASON, useCappedStart } from "./use-capped-start";
 
 const CAPPED: FreeCap = { isPro: false, usedSec: 300, leftSec: 0, capped: true, capSec: 300 };
 const OPEN: FreeCap = { isPro: false, usedSec: 0, leftSec: 300, capped: false, capSec: 300 };
@@ -31,7 +33,39 @@ beforeEach(() => {
   hydration.done = true;
 });
 
-describe.each([["breath", () => <BreathStudio />, "Start breathing"]])("the %s room once the free minutes are used", (_room, room, openLabel) => {
+describe("useCappedStart", () => {
+  function Probe({ cap, fn }: { cap: FreeCap; fn: () => void }) {
+    const { guard, reason } = useCappedStart(cap);
+    guard(fn)();
+    return <p>{reason ?? "open"}</p>;
+  }
+
+  it("runs the start while the allowance is open and gives no reason", () => {
+    const fn = vi.fn();
+    expect(renderToStaticMarkup(<Probe cap={OPEN} fn={fn} />)).toContain("open");
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("scrolls to the wall instead of starting once the minutes are used, and names why", () => {
+    const fn = vi.fn();
+    const scrollIntoView = vi.fn();
+    vi.stubGlobal("document", { getElementById: (id: string) => (id === "free-cap" ? { scrollIntoView } : null) });
+    try {
+      expect(renderToStaticMarkup(<Probe cap={CAPPED} fn={fn} />)).toContain(CAPPED_REASON);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(fn).not.toHaveBeenCalled();
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "center" });
+  });
+});
+
+// The two rooms whose cap controls are the shared hook end to end; the
+// warmups room keeps its own test for its gate card and daily picks.
+describe.each([
+  ["ear training", () => <EarTrainingClient />, "Start routine"],
+  ["breath", () => <BreathStudio />, "Start routine"],
+])("the %s room once the free minutes are used", (_room, room, openLabel) => {
   it("shows the wall and a disabled, explained start instead of a dead button", () => {
     cap.current = CAPPED;
     const html = renderToStaticMarkup(room());
@@ -39,13 +73,13 @@ describe.each([["breath", () => <BreathStudio />, "Start breathing"]])("the %s r
     expect(html).toContain("Available tomorrow");
     expect(html).not.toContain(`>${openLabel}<`);
     expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Available tomorrow<\/button>/);
-    expect(html).toContain("Free practice is used for today.");
+    expect(html).toContain(CAPPED_REASON);
   });
 
   it("keeps the start live while the allowance is open", () => {
     const html = renderToStaticMarkup(room());
     expect(html).not.toContain('id="free-cap"');
-    expect(html).toContain(openLabel);
+    expect(html).toContain(`>${openLabel}<`);
     expect(html).not.toContain("Available tomorrow");
   });
 

@@ -23,9 +23,9 @@ import { BreathStudio, drillTried } from "./breath-studio";
 const FREE: FreeCap = { isPro: false, usedSec: 0, leftSec: 300, capped: false, capSec: 300 };
 const PRO: FreeCap = { isPro: true, usedSec: 0, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
 
-/** The recommendation card, which sits above the "Breath sets" grid. */
+/** The recommendation card, which sits above the "Breath routines" grid. */
 function startCard(html: string): string {
-  return html.slice(0, html.indexOf("Breath sets"));
+  return html.slice(0, html.indexOf("Breath routines"));
 }
 
 beforeEach(() => {
@@ -50,7 +50,7 @@ describe("the breath room's first set", () => {
 describe("the breath sets lede", () => {
   it("tells a free singer which set fits in the free minutes", () => {
     const html = renderToStaticMarkup(<BreathStudio />);
-    expect(html).toContain("Free guided practice is 5 minutes a day: the quick set fits");
+    expect(html).toContain("Free guided practice is 5 minutes a day: the quick one fits");
   });
 
   it("names no limit to Pro, or before the plan is known", () => {

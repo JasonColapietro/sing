@@ -8,7 +8,6 @@ import {
   GameShell,
   ShellButton,
   StepDone,
-  SummaryView,
   useActiveStart,
   useEarSession,
   type OnEarComplete,
@@ -58,7 +57,7 @@ export function HigherLowerGame({
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
-  onComplete?: OnEarComplete;
+  onComplete: OnEarComplete;
 }) {
   const session = useEarSession();
   const hasSame = difficulty === "hard";
@@ -68,7 +67,7 @@ export function HigherLowerGame({
 
   const [round, setRound] = useState<Round>(() => makeRound(difficulty));
   const [answered, setAnswered] = useState<Answer | null>(null);
-  const [playClock, restartClock] = useActiveStart(session.results.length);
+  const [playClock] = useActiveStart(session.results.length);
   const advanceRef = useRef(0);
 
   const play = useCallback(() => {
@@ -118,34 +117,15 @@ export function HigherLowerGame({
   useEffect(() => () => window.clearTimeout(advanceRef.current), []);
 
   if (session.done) {
-    if (onComplete) {
-      return (
-        <StepDone
-          game="higher-lower"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onExit={onExit}
-          onComplete={onComplete}
-        />
-      );
-    }
     return (
-      <div className="mx-auto max-w-2xl">
-        <SummaryView
-          game="higher-lower"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onReplay={() => {
-            session.reset();
-            setAnswered(null);
-            setRound(makeRound(difficulty));
-            restartClock();
-          }}
-          onExit={onExit}
-        />
-      </div>
+      <StepDone
+        game="higher-lower"
+        difficulty={difficulty}
+        session={session}
+        startedAt={playClock}
+        onExit={onExit}
+        onComplete={onComplete}
+      />
     );
   }
 

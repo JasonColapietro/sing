@@ -18,9 +18,7 @@ import { liveLags } from "@/lib/audio/latency";
 import { logSession, type VocalRange, type WarmupMode } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
 import { createPracticeClock } from "@/lib/practice-clock";
-import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import {
-  IconArrowLeft,
   IconChevron,
   IconMetronome,
   IconMinus,
@@ -29,8 +27,7 @@ import {
   IconSkip,
   IconStop,
 } from "./icons";
-import { NoteLaneCanvas, type TracePoint } from "./note-lane-canvas";
-import { HighwayCanvas } from "./highway-canvas";
+import { HighwayCanvas, type TracePoint } from "./highway-canvas";
 import { CountIn } from "@/components/practice/count-in";
 import {
   SESSION_FOCUS,
@@ -84,18 +81,8 @@ const MAX_UNSUNG_REPS = 2;
 type Stage = "teach" | "lead" | "sing";
 
 /**
- * What an unsung rep — one where the mic never landed a voiced frame on a
- * target — means for the endless walk. `unsungStreak` counts consecutive
- * unsung reps, this one included; `sungRepCount` is how many reps were
- * actually sung and scored — skips do not count, since a skipped rung is an
- * abstention rather than a performance.
- *
- * - "continue": the singer may just be between breaths, so keep walking.
- * - "finish": end the session and log only the reps that were sung.
- * - "exit": nothing was ever sung — leave without logging a session at all.
- *
- * Unsung reps are never recorded, so they cannot drag the logged average
- * down: eight reps at 85% followed by an abandoned tab still log 85%.
+ * What an unsung rep means for the endless walk: "continue" (between breaths),
+ * "finish" (log only the sung reps), or "exit" (nothing was ever sung).
  */
 export function unsungRepAction(
   unsungStreak: number,
@@ -130,18 +117,7 @@ export function ladderHeightPct(ladderIndex: number, rungs: number): number {
   return (ladderIndex / (rungs - 1)) * 100;
 }
 
-/**
- * Whether a published pitch frame may be scored against the target.
- *
- * Three things have to hold: the detector found a pitch, the input was loud
- * enough to be a voice rather than room noise, and the reading is recent.
- * The last one matters most here. `usePitch` publishes through a ref it only
- * clears on stop, so a loop suspended by a hidden tab leaves the frame from
- * before the tab hid sitting there looking current — and scoring it would not
- * just credit a note that stopped sounding, it would mark a rep the singer was
- * never present for as sung, which is exactly what `unsungRepAction` relies on
- * being able to detect.
- */
+/** A frame is scorable when it has a pitch, is loud enough to be a voice, and is recent (a hidden tab leaves stale frames). */
 export function isScorableFrame(
   frame: { freq: number | null; volume: number; t: number },
   now: number,
@@ -165,18 +141,7 @@ export function repAscending(roots: number[], repIndex: number): boolean {
   return ladderWalk(roots, repIndex).index >= ladderWalk(roots, repIndex - 1).index;
 }
 
-/**
- * The root rep `repIndex` sings, its rung, and whether the pill reads
- * "Climbing". `roots` is the band as the player walks it, top note first on a
- * "down" ladder. A routine step (`bounded`) on a "down" ladder walks
- * descentWalk: down once, then rests on the bottom rung, because the step has
- * a fixed rep count and the triangle walk would turn a short descending ladder
- * round and climb it inside one cool-down step. It never turns, so it reads
- * "Descending" throughout, resting reps included. Everything else, the
- * endless deep-link walk included, keeps ladderWalk's triangle, where
- * "climbing" is about pitch, not ladder index: on a reversed ladder an
- * ascending index is a falling root.
- */
+/** The root rep `repIndex` sings and its rung: a bounded "down" step walks descentWalk (never turns), everything else ladderWalk's triangle. */
 export function walkRep(
   roots: number[],
   repIndex: number,
@@ -239,7 +204,6 @@ export function ExercisePlayer({
   pitch,
   range,
   bounds,
-  variant = "page",
   initialTempo = 1,
   onFinish,
   onExit,
@@ -249,14 +213,6 @@ export function ExercisePlayer({
   range: VocalRange;
   bounds?: ExerciseBounds;
   initialTempo?: (typeof TEMPOS)[number];
-  /**
-   * `page` is the original card layout, still what a deep link into a single
-   * exercise renders. `session` is the full-screen practice surface: same
-   * engine, same handlers, a different room. Only the render differs — every
-   * scheduling, scoring and ref path below is shared, because a second copy of
-   * the audio loop is how the two views would drift apart.
-   */
-  variant?: "page" | "session";
   onFinish: (summary: SessionSummaryData) => void;
   /**
    * Leaving with nothing to report. "silent" when the player ended itself
@@ -313,7 +269,7 @@ export function ExercisePlayer({
   const adjustId = useId();
 
   // The direction that produced this rep, not the one the walk turns to next.
-  const { index: ladderIndex, root: walkRoot, climbing } = walkRep(roots, repIndex, { down: descends, bounded });
+  const { index: ladderIndex, root: walkRoot } = walkRep(roots, repIndex, { down: descends, bounded });
   const currentRoot = Math.max(24, Math.min(96, walkRoot + transpose));
   const { segs, totalSec } = useMemo(
     () => buildSegments(ex, currentRoot, tempo),
@@ -1051,332 +1007,7 @@ export function ExercisePlayer({
     </SessionShell>
   );
 
-  // Built only for the page: the session view is chosen first so the rAF
-  // tick's sixty renders a second never allocate a card tree they throw away.
-  if (variant === "session") return sessionView;
-
-  const pageView = (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        {inRoutine ? (
-          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            {stepLine}
-          </span>
-        ) : (
-          <button
-            type="button"
-            onClick={endExercise}
-            aria-label="Exit exercise"
-            className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-sm text-mut hover:text-ink"
-          >
-            <IconArrowLeft />
-            Exit
-          </button>
-        )}
-        <div className="flex items-center gap-2">
-          <Pill tone="mut">
-            {bounds
-              ? `Rep ${Math.min(results.length + 1, bounds.reps)} of ${bounds.reps}`
-              : `Rep ${repIndex + 1}`}
-          </Pill>
-          <Pill tone={climbing ? "violet" : "cool"}>
-            {climbing ? "Climbing" : "Descending"}{" "}
-            <span aria-hidden="true">{climbing ? "↑" : "↓"}</span>
-          </Pill>
-        </div>
-      </div>
-      {/* In a routine this is the step's completion. Unbounded, it is height in
-          the ladder — it rises to the top note and falls back. */}
-      <ProgressBar
-        value={
-          bounds
-            ? (results.length / bounds.reps) * 100
-            : ladderHeightPct(ladderIndex, roots.length)
-        }
-        label={bounds ? "Step progress" : "Height in the ladder"}
-        tone="violet"
-      />
-
-      {/*
-       * The container carries the stage, not just a word inside it.
-       *
-       * "Listen" and "Your turn" is the one state a singer has to read
-       * correctly mid-exercise — sing over a teach pass and the rep is
-       * wasted — so the whole card changes state, the word leads, and the
-       * live stage gets the same blinking dot the studio already uses to
-       * mean "this is recording you".
-       */}
-      <Card
-        className={
-          singing
-            ? "border-rec bg-rec/[0.04] transition-colors"
-            : "transition-colors"
-        }
-      >
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h2
-              className="flex items-center gap-2.5 text-3xl"
-              aria-live="polite"
-            >
-              {singing && (
-                <span
-                  aria-hidden="true"
-                  className="animate-recblink inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-rec"
-                />
-              )}
-              {singing ? "Your turn" : stage === "teach" ? "Listen" : "Breathe"}
-            </h2>
-            {stage === "lead" && (
-              <div className="mt-2 flex items-center gap-2">
-                {Array.from({ length: COUNT_IN_CLICKS }, (_, i) => (
-                  <span
-                    key={i}
-                    aria-hidden="true"
-                    className={`inline-block h-2.5 w-2.5 rounded-full transition-colors duration-150 ${
-                      i < leadBeat ? "bg-violet" : "bg-line2"
-                    }`}
-                  />
-                ))}
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                  Count-in
-                </span>
-              </div>
-            )}
-            <SectionLabel className="mt-3">{ex.title}</SectionLabel>
-            <p className="mt-2 max-w-md text-sm text-mut">{ex.tip}</p>
-            {ex.vibrato && (
-              <VibratoPanel
-                band={ex.vibrato}
-                reading={vibratoReading}
-                className="mt-3"
-                labelClass="font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
-                valueClass="text-violet-ink"
-                noteClass="text-mut"
-              />
-            )}
-          </div>
-          <div className="text-right">
-            <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              Root
-            </div>
-            <div className="tabular mt-1 font-mono text-3xl font-bold text-violet-ink">
-              {midiToLabel(currentRoot)}
-            </div>
-            {eitherOctave && (
-              <div className="mt-1 font-mono text-[11px] text-dim">{ANY_OCTAVE_NOTE}</div>
-            )}
-          </div>
-        </div>
-
-        {/* The lane now has a real minimum width, so this wrapper genuinely
-            scrolls on a narrow screen instead of squashing it. Same fade and
-            cue as the landing comparison table, so the affordance is one
-            pattern rather than two. */}
-        <p className="mt-6 mb-2 font-mono text-meta text-dim sm:hidden">
-          Swipe the lanes <span aria-hidden>→</span>
-        </p>
-        <div
-          className={`no-scrollbar well mt-2 overflow-x-auto rounded-xl p-3 transition-opacity [mask-image:linear-gradient(to_right,black_calc(100%-24px),transparent)] sm:mt-6 sm:[mask-image:none] ${
-            singing ? "opacity-100" : "opacity-70"
-          }`}
-        >
-          <NoteLaneCanvas
-            segs={segs}
-            totalSec={totalSec}
-            hitSec={hitSec}
-            cursorSec={cursorSec}
-            liveMidiFloat={liveMidiFloat}
-            trace={trace}
-            showLive={singing}
-          />
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-6">
-          {singing && (
-            <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                Cents off
-              </div>
-              <div className="tabular mt-1 font-mono text-2xl text-violet-ink">
-                {currentCents !== null ? (currentCents > 0 ? `+${currentCents}` : currentCents) : "—"}
-              </div>
-            </div>
-          )}
-          {lastOutcome === "silent" && <Pill tone="mut">No sound picked up</Pill>}
-          {lastOutcome === "scored" && lastResult && (
-            <div className="flex flex-1 flex-wrap items-center gap-4">
-              <Pill tone={lastResult.skipped ? "mut" : lastResult.score >= 80 ? "ok" : "violet"}>
-                {lastResult.skipped ? "Skipped" : `Rep score ${lastResult.score}%`}
-              </Pill>
-              {!lastResult.skipped && (
-                <span className="font-mono text-xs text-dim">
-                  avg {lastResult.avgCentsErr}¢ off
-                </span>
-              )}
-            </div>
-          )}
-          {pitch.error && (
-            <p className="font-mono text-xs text-rec" role="alert">
-              {pitch.error}
-            </p>
-          )}
-        </div>
-      </Card>
-
-      {/*
-       * The three things a singer reaches for mid-exercise stay on the card.
-       * Everything that shapes the exercise — mode, guide level, click,
-       * transpose, tempo — lives under Adjust, closed by default: nine controls
-       * on one row read as a mixing desk, and a warmup is not the moment to be
-       * offered one.
-       */}
-      <Card>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => restartCurrentRep({ teach: true })}
-          >
-            <IconPlay /> Play reference again
-          </Button>
-          <Button variant="ghost" size="sm" onClick={skipRep}>
-            <IconSkip /> Skip rep
-          </Button>
-          <button
-            type="button"
-            onClick={() => setAdjustOpen((o) => !o)}
-            aria-expanded={adjustOpen}
-            aria-controls={adjustId}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-xs ${
-              adjustOpen ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
-            }`}
-          >
-            Adjust
-            <IconChevron className={`transition-transform ${adjustOpen ? "rotate-180" : ""}`} />
-          </button>
-
-          <span className="flex-1" />
-
-          <Button variant="rec" size="sm" onClick={endExercise}>
-            <IconStop /> {inRoutine ? "Finish step" : "End exercise"}
-          </Button>
-        </div>
-
-        {adjustOpen && (
-          <div
-            id={adjustId}
-            className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-4"
-          >
-            <div
-              className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1"
-              title={
-                modeLocked
-                  ? "The mode is fixed once a rep has been scored, so one session is one score. End the exercise to switch."
-                  : undefined
-              }
-            >
-              {(Object.keys(MODE_LABELS) as WarmupMode[]).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  disabled={modeLocked}
-                  onClick={() => changeMode(m)}
-                  aria-pressed={mode === m}
-                  className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
-                    mode === m ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
-                  }`}
-                >
-                  {MODE_LABELS[m]}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex min-w-[220px] flex-1 items-center gap-3">
-              <label
-                htmlFor={guideSliderId}
-                className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
-              >
-                {mode === "call-response" ? "Reference level" : "Guide level"}
-              </label>
-              {/* Left at its native height: squashing a range input clips the
-                  thumb and shrinks the touch target on a phone. */}
-              <input
-                id={guideSliderId}
-                type="range"
-                min={0}
-                max={100}
-                step={5}
-                value={guidePct}
-                aria-valuetext={guidePct === 0 ? "Off" : `${guidePct} percent`}
-                onChange={(e) => changeGuidePct(Number(e.target.value))}
-                className="min-w-0 flex-1 cursor-pointer accent-violet"
-              />
-              <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-mut">
-                {guidePct === 0 ? "Off" : `${guidePct}%`}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={toggleClick}
-              aria-pressed={click}
-              title="Count-in clicks before every scored window"
-              className={`inline-flex items-center gap-1.5 rounded-full border border-line2 px-2.5 py-1 font-mono text-xs ${
-                click ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
-              }`}
-            >
-              <IconMetronome /> Click
-            </button>
-
-            <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
-              <button
-                type="button"
-                aria-label="Transpose down a semitone"
-                onClick={() => nudgeTranspose(-1)}
-                className="rounded-full p-1.5 text-mut hover:text-ink"
-              >
-                <IconMinus />
-              </button>
-              <span className="tabular px-1 font-mono text-xs text-mut">
-                Transpose{transpose !== 0 ? ` ${transpose > 0 ? "+" : ""}${transpose}` : ""}
-              </span>
-              <button
-                type="button"
-                aria-label="Transpose up a semitone"
-                onClick={() => nudgeTranspose(1)}
-                className="rounded-full p-1.5 text-mut hover:text-ink"
-              >
-                <IconPlus />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
-              {TEMPOS.map((tv) => (
-                <button
-                  key={tv}
-                  type="button"
-                  onClick={() => changeTempo(tv)}
-                  aria-pressed={tempo === tv}
-                  className={`rounded-full px-2.5 py-1 font-mono text-xs ${
-                    tempo === tv ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
-                  }`}
-                >
-                  {tv}×
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </Card>
-    </div>
-  );
-
-  // --- the session view -----------------------------------------------------
-  // Same handlers, same state, dark tokens. The three shapes below are the
-  // whole vocabulary of the Adjust panel, held here so a control cannot end up
-  // styled one way in the mode row and another in the tempo row.
-  return pageView;
+  return sessionView;
 }
 
 /**

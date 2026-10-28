@@ -114,7 +114,7 @@ try {
     const drill = page.getByRole("dialog", { name: "Sustain test", exact: true });
     await drill.getByRole("button", { name: "Enable microphone", exact: true }).click();
     await page.waitForFunction(() => window.__pendingMicCount() === 1);
-    await drill.getByRole("button", { name: "End drill", exact: true }).click();
+    await drill.getByRole("button", { name: "Exit drill", exact: true }).click();
     await page.getByRole("heading", { name: "Breathing exercises for singers", exact: true }).waitFor();
     await page.evaluate(() => window.__grantPendingMic());
     await page.waitForFunction(() => {
@@ -123,7 +123,7 @@ try {
     }, null, { timeout: 5000 });
     assert.equal(await drill.count(), 0, "late permission does not reopen the drill");
     assert.deepEqual(errors, []);
-    console.log("PASS breath drill: late permission after End drill is released on home");
+    console.log("PASS breath drill: late permission after Exit drill is released on home");
   } finally {
     await context.close();
   }

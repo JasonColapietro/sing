@@ -1,15 +1,15 @@
 "use client";
 
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
-import { withStepResult } from "@/components/practice/step-results";
+import { StepIntroSlide } from "@/components/practice/step-intro";
+import { useStepRunner, type StepPhase } from "@/components/practice/step-runner";
 import { useFreeCap } from "@/lib/free-cap";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { liveStreak } from "@/components/account/save-state";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
-import { SessionShell } from "@/components/practice/session-shell";
 import { useProgress, type Achievement } from "@/lib/progress";
 import { SITE_URL } from "@/lib/site";
 import { DIFFICULTIES, GAME_NAMES, type Difficulty, type GameId } from "./lib";
@@ -22,7 +22,7 @@ import {
   type EarRoutine,
   type EarRoutineStep,
 } from "./routines";
-import { ShellButton, type EarStepResult } from "./session";
+import type { EarStepResult } from "./session";
 import { IntervalGame } from "./interval-game";
 import { PitchMatchGame } from "./pitch-match-game";
 import { MelodyEchoGame } from "./melody-echo-game";
@@ -30,36 +30,12 @@ import { HigherLowerGame } from "./higher-lower-game";
 import { NoteCatcherGame } from "./note-catcher-game";
 
 /**
- * Where the runner is: reading the slide for step `step`, playing it, or done.
- * Steps advance themselves — the intro starts on a timer, a game ends after
- * its tenth round — so a workout runs to the end without the singer choosing
- * anything, which is the whole point of a workout.
+ * Whether the routine's microphone is analysed in this phase: only while a
+ * game that listens is played. The stream stays open between such steps, but
+ * detection (and its per-frame state update) pauses through slides, tapping
+ * games and results.
  */
-export type EarPhase =
-  | { kind: "intro"; step: number }
-  | { kind: "play"; step: number }
-  | { kind: "done" };
-
-/**
- * The phase after step `step` closes, however it closed.
- *
- * Deliberately a copy of the warmup runner's helper rather than an import:
- * three lines of arithmetic are not worth a dependency from the ear room into
- * the warmup room, and the two runners are free to diverge.
- */
-export function afterStep(step: number, stepCount: number): EarPhase {
-  return step + 1 < stepCount ? { kind: "intro", step: step + 1 } : { kind: "done" };
-}
-
-/**
- * Whether the workout's microphone is analysed in this phase: only while a
- * game that listens is being played. The stream stays open between such
- * steps (EarRunner), but pitch detection, and the state update it makes on
- * every animation frame, pause through the slides, the tapping games and the
- * results, which otherwise re-rendered the whole workout sixty times a second
- * with nothing listening.
- */
-export function earPhaseListens(phase: EarPhase, steps: readonly EarRoutineStep[]): boolean {
+export function earPhaseListens(phase: StepPhase, steps: readonly EarRoutineStep[]): boolean {
   return phase.kind === "play" && GAME_MIC[steps[phase.step].game];
 }
 
@@ -79,10 +55,7 @@ function GameStep({
   step: EarRoutineStep;
   /** Note catcher only: chase this song instead of random notes. */
   songId?: string;
-  /**
-   * A workout's microphone, lent to the games that listen. Absent for a game
-   * played on its own, which opens and closes its own.
-   */
+  /** A routine's microphone, lent to the games that listen; a lone game opens its own. */
   pitch?: UsePitchResult;
   onExit: () => void;
   onComplete: (r: EarStepResult) => void;
@@ -102,115 +75,9 @@ function GameStep({
   }
 }
 
-/**
- * The slide between steps: what is next, what it trains, how hard. It starts
- * the step on its own after EAR_STEP_INTRO_SEC so the workout keeps its own
- * pace; the two buttons are for someone who wants to move sooner or skip.
- */
-function StepIntro({
-  routineName,
-  step,
-  stepIndex,
-  stepCount,
-  prev,
-  onStart,
-  onSkip,
-  onQuit,
-}: {
-  routineName: string;
-  step: EarRoutineStep;
-  stepIndex: number;
-  stepCount: number;
-  prev: { label: string; score: number | null } | null;
-  onStart: () => void;
-  onSkip: () => void;
-  onQuit: () => void;
-}) {
-  // Fraction of the hold elapsed, drawn as the bar filling. Ten updates a
-  // second is smooth enough for a 4-second bar and cheap enough to ignore.
-  const [pct, setPct] = useState(0);
-  useEffect(() => {
-    const t0 = performance.now();
-    const holdMs = EAR_STEP_INTRO_SEC * 1000;
-    const id = window.setInterval(() => {
-      const p = Math.min(100, ((performance.now() - t0) / holdMs) * 100);
-      setPct(p);
-      if (p >= 100) {
-        window.clearInterval(id);
-        onStart();
-      }
-    }, 100);
-    return () => window.clearInterval(id);
-    // Runs once per slide: the component is keyed by step, so a new step is a
-    // new mount and a fresh timer. onStart is stable for its lifetime.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const secondsLeft = Math.max(
-    1,
-    Math.ceil(EAR_STEP_INTRO_SEC - (pct / 100) * EAR_STEP_INTRO_SEC),
-  );
-
-  return (
-    <SessionShell
-      title={routineName}
-      subtitle={`Step ${stepIndex + 1} of ${stepCount}`}
-      progress={(stepIndex / stepCount) * 100}
-      onClose={onQuit}
-      closeLabel="Quit workout"
-    >
-      <div className="flex min-h-0 flex-1 items-center justify-center px-5 py-8">
-        <div className="w-full max-w-md text-center">
-          {prev && (
-            <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-              {prev.score === null
-                ? `${prev.label} · skipped`
-                : `${prev.label} · ${prev.score}/100`}
-            </p>
-          )}
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-            {stepIndex === 0 ? "First up" : "Up next"} · Step {stepIndex + 1} of {stepCount}
-          </p>
-          <h2 className="mt-4 text-3xl text-[var(--s-ink)] sm:text-4xl" aria-live="polite">
-            {GAME_NAMES[step.game]}
-          </h2>
-          <p className="mt-3 text-[var(--s-mut)]">{GAME_DESC[step.game]}</p>
-          <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-            {GAME_TRAINS[step.game]}
-            <span className="mx-2 text-[var(--s-line2)]">·</span>
-            {difficultyLabel(step.difficulty)}
-            <span className="mx-2 text-[var(--s-line2)]">·</span>10 rounds
-          </p>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <ShellButton tone="primary" onClick={onStart}>
-              Start now
-            </ShellButton>
-            <ShellButton onClick={onSkip}>Skip this one</ShellButton>
-          </div>
-          <div className="mx-auto mt-7 max-w-[16rem]">
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--s-over)]">
-              <div
-                className="h-full rounded-full bg-[var(--s-ok)] transition-[width] duration-150"
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-            <p className="tabular mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-              Starting in {secondsLeft}
-            </p>
-          </div>
-        </div>
-      </div>
-    </SessionShell>
-  );
-}
-
 /* ---------------- results ---------------- */
 
-/**
- * The end of anything played in this room — a whole workout, or one game
- * started from the path. Scores average across the steps that were played;
- * a skipped step keeps its row but contributes nothing to the average.
- */
+/** The end of a routine or a single game: scores average over the steps played. */
 function EarResults({
   title,
   subtitle,
@@ -279,12 +146,7 @@ function EarResults({
   );
 }
 
-/**
- * The end of a workout. Once the free minutes are spent, whether the cap
- * stopped the set or its last game used them up, "Play again" could only
- * reopen the cap slide, so it is left off and the note says why the set
- * stopped and when it opens again.
- */
+/** The end of a routine; once the free minutes are spent "Play again" is left off, the note says why. */
 export function EarRunResults({
   routine,
   results,
@@ -316,8 +178,7 @@ export function EarRunResults({
       }))}
       onContinue={onContinue}
       onAgain={capped ? undefined : onAgain}
-      // Above the rows, so a workout the cap stopped says why before its
-      // "not reached" rows rather than under them, below a phone's fold.
+      // Above the rows, so the reason comes before "not reached" on a phone.
       notice={capped ? <CappedAgainNote notReached={notReached} /> : undefined}
     />
   );
@@ -338,69 +199,33 @@ export function EarRunner({
 }) {
   const cap = useFreeCap();
   const stepCount = routine.steps.length;
-  const [phase, setPhase] = useState<EarPhase>({ kind: "intro", step: 0 });
-  const [results, setResults] = useState<(EarStepResult | null)[]>([]);
-  // The step the cap slide stood in for, once it has; null otherwise.
-  const [capStoppedAt, setCapStoppedAt] = useState<number | null>(null);
-  // Bumped on "Play again" so every game remounts with a clean session.
-  const [run, setRun] = useState(0);
+  const runner = useStepRunner<EarStepResult>(stepCount, { capped });
+  const { phase, results } = runner;
 
-  /**
-   * The workout holds the microphone rather than each game, as the breath
-   * room holds it for a set. A game that owned its own opened it behind an
-   * "Enable microphone" gate and closed it when its tenth round ended, so a
-   * workout that promises to run itself stopped at every singing step for
-   * another tap: five in Pitch lab. Lent to the three games that listen, the
-   * first one's gate opens it, the next ones start listening as their intro
-   * runs out, and the results screen closes it. Open is not analysed: the
-   * loop runs only while a listening game plays (earPhaseListens).
-   */
+  // The routine holds the microphone and lends it to the games that listen, so
+  // one gate opens it and the later singing steps start as their intro runs out.
   const pitch = usePitch({ analyse: earPhaseListens(phase, routine.steps) });
   const { listening: micOn, stop: stopMic } = pitch;
   // Nothing listens on the results screen or behind the cap slide.
-  const micDone = phase.kind === "done" || (phase.kind === "intro" && capped);
+  const micDone = phase.kind === "done" || runner.atCapSlide;
   useEffect(() => {
     if (micDone && micOn) stopMic();
   }, [micDone, micOn, stopMic]);
 
-  const closeStep = useCallback(
-    (i: number, result: EarStepResult | null) => {
-      setResults((prev) => withStepResult(prev, i, result, stepCount));
-      setPhase(afterStep(i, stepCount));
-    },
-    [stepCount],
-  );
-
-  /** `capAt`: the step whose intro the cap slide replaced, when it did. */
-  const quit = useCallback(
-    (capAt?: number) => {
-      // A quit that played something still earned a summary; a quit with
-      // nothing played has nothing to summarise, so it just leaves.
-      if (results.some((r) => r != null)) {
-        setCapStoppedAt(capAt ?? null);
-        setPhase({ kind: "done" });
-      } else onExit();
-    },
-    [results, onExit],
-  );
-  const quitByHand = useCallback(() => quit(), [quit]);
-
-  const again = useCallback(() => {
-    setResults([]);
-    setCapStoppedAt(null);
-    setRun((r) => r + 1);
-    setPhase({ kind: "intro", step: 0 });
-  }, []);
+  // A quit with nothing played has nothing to summarise, so it just leaves.
+  const quit = (capAt?: number) => {
+    if (runner.quit(capAt) === null) onExit();
+  };
 
   if (phase.kind === "done") {
     return (
       <EarRunResults
         routine={routine}
         results={results}
-        capStoppedAt={capStoppedAt}
+        capStoppedAt={runner.capStoppedAt}
         capped={capped}
         onContinue={onExit}
-        onAgain={again}
+        onAgain={runner.again}
       />
     );
   }
@@ -408,50 +233,57 @@ export function EarRunner({
   const step = routine.steps[phase.step];
 
   if (phase.kind === "intro") {
-    // Between steps only: a game under way finishes and logs first. This step
-    // and the ones after it are then not reached, rather than skipped.
-    if (capped) return <CapSlide cap={cap} onExit={() => quit(phase.step)} />;
+    if (runner.atCapSlide) return <CapSlide cap={cap} onExit={() => quit(phase.step)} />;
     const prevStep = phase.step > 0 ? routine.steps[phase.step - 1] : null;
+    const prevScore = results[phase.step - 1]?.score ?? null;
     return (
-      <StepIntro
-        key={`${run}-${phase.step}`}
+      <StepIntroSlide
+        key={runner.stepKey}
         routineName={routine.name}
-        step={step}
         stepIndex={phase.step}
         stepCount={stepCount}
+        title={GAME_NAMES[step.game]}
         prev={
           prevStep
             ? {
                 label: earStepLabel(prevStep),
-                score: results[phase.step - 1]?.score ?? null,
+                score: prevScore,
+                scoreLabel: prevScore === null ? undefined : `${prevScore}/100`,
               }
             : null
         }
-        onStart={() => setPhase({ kind: "play", step: phase.step })}
-        onSkip={() => closeStep(phase.step, null)}
-        onQuit={quitByHand}
-      />
+        meta={
+          <>
+            {GAME_TRAINS[step.game]}
+            <span className="mx-2 text-[var(--s-line2)]">·</span>
+            {difficultyLabel(step.difficulty)}
+            <span className="mx-2 text-[var(--s-line2)]">·</span>10 rounds
+          </>
+        }
+        holdSec={EAR_STEP_INTRO_SEC}
+        onStart={() => runner.play(phase.step)}
+        onSkip={() => runner.closeStep(phase.step, null)}
+        onQuit={() => quit()}
+      >
+        <p className="mx-auto mt-4 max-w-md text-[var(--s-mut)]">{GAME_DESC[step.game]}</p>
+      </StepIntroSlide>
     );
   }
 
   return (
     <GameStep
-      key={`${run}-${phase.step}`}
+      key={runner.stepKey}
       step={step}
       pitch={pitch}
-      onExit={quitByHand}
-      onComplete={(r) => closeStep(phase.step, r)}
+      onExit={() => quit()}
+      onComplete={(r) => runner.closeStep(phase.step, r)}
     />
   );
 }
 
 /* ---------------- one game, on its own ---------------- */
 
-/**
- * A single game picked off the path. Same surface, same results screen as a
- * workout — the only difference is that there is one row instead of several
- * and no slide in front of it.
- */
+/** A single game picked off the path: one results row and no slide in front of it. */
 export function EarGameSession({
   capped = false,
   game,
@@ -459,11 +291,7 @@ export function EarGameSession({
   song,
   onExit,
 }: {
-  /**
-   * The free allowance is spent. A game under way still finishes and logs,
-   * but its results offer no "Play again": that would start a new session
-   * past the cap, which every other way into the room refuses.
-   */
+  /** The free allowance is spent: the results offer no "Play again". */
   capped?: boolean;
   game: GameId;
   difficulty: Difficulty;

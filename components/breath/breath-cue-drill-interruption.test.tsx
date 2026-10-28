@@ -121,7 +121,7 @@ function mount() {
       render();
       return event;
     },
-    begin() { (nodes(tree).find((n) => n.props.children === "Begin")!.props.onClick as () => void)(); render(); },
+    begin() { (nodes(tree).find((n) => n.props.children === "Start")!.props.onClick as () => void)(); render(); },
     inhale(hiss = false) {
       if (hiss) { pitch.frame = { ...pitch.frame, t: now, volume: 0.1 }; pitch.latest.current = pitch.frame; }
       fixture.inhale = { endMs: now, durationSec: 0.5, endedByHiss: hiss } as InhaleEvent;

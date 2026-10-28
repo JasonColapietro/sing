@@ -5,7 +5,7 @@ import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { STALE_FRAME_MS } from "@/lib/audio/frame-clock";
 import { useBreathDetect } from "@/lib/audio/use-breath-detect";
 import { logSession, type LogResult } from "@/lib/progress";
-import { MIC_PRIVACY } from "@/components/ui";
+import { MicGate } from "@/components/ui";
 import { SessionButton, SessionShell } from "@/components/practice/session-shell";
 import { BreathGatePanel } from "./breath-gate";
 import { LevelMeter } from "./sustain-test";
@@ -27,23 +27,8 @@ import {
 } from "./routines";
 
 /**
- * Breathe and sing: a short note, many times, each one opened by a breath.
- *
- * The sustain test asks how long one breath lasts. This asks for the habit
- * underneath it — breathe, then sing — because the phrase a singer runs out of
- * air in is usually the one they started without taking a breath for. A rep's
- * note only counts once the mic has heard the inhale before it; a note begun
- * without one is simply not counted, and the rep waits for a breath.
- *
- * The mic hears the breath and nothing more. It does not judge how deep it
- * was or where it went, and the drill never says otherwise. Where the mic
- * cannot hear breathing at all, the fallback turns the gate into a timed cue.
- *
- *   setup   → choose a rep count (a routine step skips this)
- *   breath  → waiting for an inhale (or, without detection, a timed cue)
- *   ready   → breath heard; waiting for the voice
- *   holding → the note, until it has lasted holdSec
- *   rest    → a beat before the next rep
+ * Breathe and sing: a note counts only once the mic heard the inhale before it.
+ *   setup → breath (inhale, or a timed cue without detection) → ready → holding → rest
  */
 type Phase = "setup" | "breath" | "ready" | "holding" | "rest";
 
@@ -332,7 +317,7 @@ export function BreathCueDrill({
       subtitle={phase === "setup" ? undefined : `Rep ${Math.min(reps, done + 1)} of ${reps}`}
       progress={(done / reps) * 100}
       onClose={close}
-      closeLabel="End drill"
+      closeLabel="Exit drill"
       bottom={
         <div className="flex items-center justify-center gap-3">
           <SessionButton label="End" onClick={close} tone="danger">
@@ -344,28 +329,15 @@ export function BreathCueDrill({
       }
     >
       {!listening ? (
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 px-5 py-6 text-center">
-          <h2 className="font-display text-3xl">Breathe and sing</h2>
-          <p className="max-w-sm text-sm text-[var(--s-mut)]">
-            Breathe in, then sing one easy note for {holdSec} seconds. Each
-            note counts once the mic has heard the breath before it.
-          </p>
-          <p className="text-xs text-[var(--s-dim)]">{MIC_PRIVACY}</p>
-          <button
-            type="button"
-            onClick={() => {
-              void start();
-            }}
-            className="min-h-11 rounded-full bg-[var(--s-ok)] px-8 text-base font-medium text-[oklch(0.15_0.02_155)] transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
-          >
-            {error ? "Try again" : "Enable microphone"}
-          </button>
-          {error && (
-            <p role="alert" className="max-w-sm text-sm text-[var(--s-rec)]">
-              {error}
-            </p>
-          )}
-        </div>
+        <MicGate
+          tone="session"
+          title="Breathe and sing"
+          description={`Breathe in, then sing one easy note for ${holdSec} seconds. Each note counts once the mic has heard the breath before it.`}
+          onEnable={() => {
+            void start();
+          }}
+          error={error}
+        />
       ) : phase === "setup" ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 px-5 py-6 text-center">
           <p className="max-w-sm text-sm text-[var(--s-mut)]">
@@ -400,7 +372,7 @@ export function BreathCueDrill({
             onClick={begin}
             className="min-h-11 rounded-full bg-[var(--s-ok)] px-8 text-base font-medium text-[oklch(0.15_0.02_155)] transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
           >
-            Begin
+            Start
           </button>
         </div>
       ) : (

@@ -7,6 +7,7 @@ import {
   freeSecondsLeft,
   guidedSecondsToday,
   isCapped,
+  sizeToAllowance,
   subscribePracticeDay,
 } from "./free-cap";
 import { localDay } from "./progress";
@@ -124,5 +125,27 @@ describe("daily allowance rollover", () => {
     observed.document.dispatchEvent(new Event("visibilitychange"));
     expect(observed.changes).toEqual([]);
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe("sizeToAllowance", () => {
+  const sec = (r: { sec: number }) => r.sec;
+  const long = { id: "long", sec: 400 };
+  const mid = { id: "mid", sec: 250 };
+  const short = { id: "short", sec: 100 };
+
+  it("keeps a pick that fits, and on Pro", () => {
+    expect(sizeToAllowance(long, [short], sec, 400)).toBe(long);
+    expect(sizeToAllowance(long, [short], sec, Number.POSITIVE_INFINITY)).toBe(long);
+  });
+
+  it("takes the first fallback that fits, shortest first", () => {
+    expect(sizeToAllowance(long, [mid, short], sec, 300)).toBe(mid);
+    expect(sizeToAllowance(long, [mid, short], sec, 120)).toBe(short);
+    expect(sizeToAllowance(long, [null, short], sec, 120)).toBe(short);
+  });
+
+  it("lets the pick stand when nothing shorter would finish either", () => {
+    expect(sizeToAllowance(long, [mid, short], sec, 60)).toBe(long);
   });
 });

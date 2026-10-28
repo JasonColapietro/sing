@@ -44,7 +44,7 @@ describe("the slide for a step the saved range cannot hold", () => {
     // The step is never sung: no tip, no rep count, no Start or Skip.
     expect(html).not.toContain("tongue on the roof of the mouth");
     expect(html).not.toContain("13 reps");
-    expect(html).not.toContain("Start now");
+    expect(html).not.toContain("</svg> Start</button>");
     expect(html).not.toContain("</svg> Skip</button>");
     expect(html).toContain("</svg> Next</button>");
     expect(html).toContain(`Next step in ${SKIP_INTRO_SEC}<`);
@@ -54,7 +54,7 @@ describe("the slide for a step the saved range cannot hold", () => {
     const html = slide({ lowMidi: 45, highMidi: 69 });
     expect(html).toContain("Up next");
     expect(html).toContain("13 reps");
-    expect(html).toContain("Start now");
+    expect(html).toContain("</svg> Start</button>");
     expect(html).toContain("</svg> Skip</button>");
     expect(html).not.toContain("Skipping");
     expect(html).toContain(`Starting in ${STEP_INTRO_SEC}<`);

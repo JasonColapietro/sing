@@ -5,20 +5,9 @@ import { localDay, useProgress, type ActivityType, type ProgressState } from "./
 import { useIsPro } from "./pro";
 import { FREE_DAILY_SEC } from "./practice-limits";
 
-/**
- * The free tier's daily allowance of guided practice.
- *
- * The free plan includes five minutes a day across the rooms that run a scored
- * session — warmups, ear training, breath and song practice. The pitch
- * studio, the range test, the recorder and the tools stay free without a
- * clock: they are the front door, and the range test is what fits every
- * exercise to a voice in the first place. Pro removes the cap.
- *
- * The allowance is measured from the practice log, so it counts what was
- * actually sung and logged, resets with the local calendar day the way the
- * streak does, and needs no second store. A step already under way is never
- * cut off: the check runs where a session or a step starts.
- */
+// The free tier's daily allowance of guided practice (warmups, ear, breath,
+// songs), measured from the practice log and reset with the local day; the
+// check runs where a session or a step starts, never mid-step.
 export { FREE_DAILY_SEC } from "./practice-limits";
 
 export const CAPPED_TYPES: ReadonlySet<ActivityType> = new Set<ActivityType>([
@@ -49,6 +38,25 @@ export function freeSecondsLeft(
 
 export function isCapped(state: ProgressState, isPro: boolean, day: string = localDay()): boolean {
   return freeSecondsLeft(state, isPro, day) <= 0;
+}
+
+/**
+ * A room's recommended routine, sized to the free minutes left today: a run
+ * that outlasts them stops on the cap slide, so a shorter one from
+ * `fallbacks` (shortest first) stands in when it fits. Nothing fits: the
+ * pick stands. Pro passes Infinity and always gets `preferred`.
+ */
+export function sizeToAllowance<T>(
+  preferred: T,
+  fallbacks: readonly (T | null | undefined)[],
+  secondsOf: (routine: T) => number,
+  leftSec: number,
+): T {
+  if (secondsOf(preferred) <= leftSec) return preferred;
+  for (const r of fallbacks) {
+    if (r != null && secondsOf(r) <= leftSec) return r;
+  }
+  return preferred;
 }
 
 /** "2:10" — for the allowance readouts. */

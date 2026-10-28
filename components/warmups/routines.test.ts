@@ -11,11 +11,11 @@ import {
   routineById,
   routineMinutes,
   routineSeconds,
-  sizeRoutineToAllowance,
   stepExercise,
   stepSeconds,
 } from "./routines";
 import { FREE_DAILY_SEC } from "@/lib/practice-limits";
+import { sizeToAllowance } from "@/lib/free-cap";
 
 describe("routine catalogue", () => {
   it("names only exercises that exist", () => {
@@ -132,27 +132,28 @@ describe("recommendRoutine", () => {
   });
 });
 
-describe("sizeRoutineToAllowance", () => {
+describe("the recommended routine sized to the free minutes", () => {
   const daily = routineById("daily")!;
   const morning = routineById("morning")!;
+  const size = (r: typeof daily, left: number) => sizeToAllowance(r, [morning], routineSeconds, left);
 
   it("swaps a set that runs past a fresh free allowance for the morning reset", () => {
     // The premise: the daily set cannot finish inside the free minutes, the
     // morning reset can. If either stops being true, revisit the swap.
     expect(routineSeconds(daily)).toBeGreaterThan(FREE_DAILY_SEC);
     expect(routineSeconds(morning)).toBeLessThanOrEqual(FREE_DAILY_SEC);
-    expect(sizeRoutineToAllowance(daily, FREE_DAILY_SEC).id).toBe("morning");
-    expect(sizeRoutineToAllowance(routineById("full")!, FREE_DAILY_SEC).id).toBe("morning");
+    expect(size(daily, FREE_DAILY_SEC).id).toBe("morning");
+    expect(size(routineById("full")!, FREE_DAILY_SEC).id).toBe("morning");
   });
 
   it("keeps the pick on Pro and whenever it already fits", () => {
-    expect(sizeRoutineToAllowance(daily, Number.POSITIVE_INFINITY).id).toBe("daily");
-    expect(sizeRoutineToAllowance(daily, routineSeconds(daily)).id).toBe("daily");
-    expect(sizeRoutineToAllowance(morning, FREE_DAILY_SEC).id).toBe("morning");
+    expect(size(daily, Number.POSITIVE_INFINITY).id).toBe("daily");
+    expect(size(daily, routineSeconds(daily)).id).toBe("daily");
+    expect(size(morning, FREE_DAILY_SEC).id).toBe("morning");
   });
 
   it("keeps the pick when not even the morning reset would finish", () => {
-    expect(sizeRoutineToAllowance(daily, routineSeconds(morning) - 1).id).toBe("daily");
+    expect(size(daily, routineSeconds(morning) - 1).id).toBe("daily");
   });
 });
 

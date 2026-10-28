@@ -399,6 +399,8 @@ export function ContinueCard({
 export interface PathItem {
   id: string;
   title: string;
+  /** A small static figure or glyph before the title: what the row's exercise looks like. */
+  figure?: ReactNode;
   /** The secondary line when the row has no `meta` — a row carries one line of
    *  explanation, and the denser mono line wins when both are given. */
   desc?: string;
@@ -513,6 +515,7 @@ function PathRow({
   const secondary = item.meta ?? item.desc;
   const body = (
     <>
+      {item.figure && <span className="shrink-0 text-dim">{item.figure}</span>}
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-center gap-2">
           <span className="truncate font-medium">{item.title}</span>

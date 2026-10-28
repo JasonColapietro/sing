@@ -26,10 +26,10 @@ import {
   isBreathDrillId,
   recommendBreathRoutine,
   routineNeedsMic,
-  sizeBreathRoutineToAllowance,
   type BreathStep,
 } from "./routines";
 import { FREE_DAILY_SEC } from "@/lib/practice-limits";
+import { sizeToAllowance } from "@/lib/free-cap";
 import {
   starsForBox,
   starsForCue,
@@ -105,16 +105,16 @@ describe("the recommendation on the free plan", () => {
     // Daily runs past the free five minutes, so the cap slide would take the
     // place of the sustains, the set's only score.
     expect(breathRoutineSeconds(daily)).toBeGreaterThan(FREE_DAILY_SEC);
-    expect(sizeBreathRoutineToAllowance(daily, FREE_DAILY_SEC).id).toBe("quick");
+    expect(sizeToAllowance(daily, [quick], breathRoutineSeconds, FREE_DAILY_SEC).id).toBe("quick");
   });
 
   it("keeps the daily set when the time is there, as it always is on Pro", () => {
-    expect(sizeBreathRoutineToAllowance(daily, Number.POSITIVE_INFINITY).id).toBe("daily");
-    expect(sizeBreathRoutineToAllowance(quick, FREE_DAILY_SEC).id).toBe("quick");
+    expect(sizeToAllowance(daily, [quick], breathRoutineSeconds, Number.POSITIVE_INFINITY).id).toBe("daily");
+    expect(sizeToAllowance(quick, [quick], breathRoutineSeconds, FREE_DAILY_SEC).id).toBe("quick");
   });
 
   it("leaves the pick alone when not even the quick set would finish", () => {
-    expect(sizeBreathRoutineToAllowance(daily, 60).id).toBe("daily");
+    expect(sizeToAllowance(daily, [quick], breathRoutineSeconds, 60).id).toBe("daily");
   });
 });
 

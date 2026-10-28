@@ -30,6 +30,7 @@ import { SITE_URL } from "@/lib/site";
 import { TOLERANCE_CENTS } from "./scoring";
 import { MODE_LABELS, useWarmupPrefs } from "./prefs";
 import { sungReps, type GuideHeard, type SessionSummaryData } from "./lib";
+import { CAPPED_REASON } from "@/components/practice/use-capped-start";
 
 /**
  * The practice rooms' three-star scale (lib/stars.ts), the one the warmups
@@ -80,9 +81,6 @@ const TONE_TEXT: Record<Tone, string> = {
   rec: "text-rec",
 };
 
-/** Why a start is unavailable, in the room's own words. */
-const CAPPED_REASON =
-  "Free practice is used for today. It resets at midnight; the free studio is still open.";
 
 /**
  * What the score measured, by what the singer heard. In sing-along the guide

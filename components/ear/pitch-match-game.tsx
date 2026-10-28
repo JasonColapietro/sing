@@ -8,6 +8,7 @@ import { useAudioPrefs } from "@/lib/audio/devices";
 import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
+import { MicGate } from "@/components/ui";
 import {
   centsToTarget,
   hasSavedRange,
@@ -21,9 +22,7 @@ import {
   RoundFeedback,
   ShellBar,
   ShellButton,
-  ShellMicGate,
   StepDone,
-  SummaryView,
   useActiveStart,
   useEarSession,
   type OnEarComplete,
@@ -145,7 +144,7 @@ export function PitchMatchGame({
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
-  onComplete?: OnEarComplete;
+  onComplete: OnEarComplete;
 }) {
   const session = useEarSession();
   // Opens no stream until start(), so the unused one costs nothing; hooks
@@ -318,34 +317,15 @@ export function PitchMatchGame({
   }, [session.done, listening, ownsMic, stop]);
 
   if (session.done) {
-    if (onComplete) {
-      return (
-        <StepDone
-          game="pitch-match"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onExit={onExit}
-          onComplete={onComplete}
-        />
-      );
-    }
     return (
-      <div className="mx-auto max-w-2xl">
-        <SummaryView
-          game="pitch-match"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onReplay={() => {
-            session.reset();
-            setTarget(null);
-            setPhase("listen");
-            void start();
-          }}
-          onExit={onExit}
-        />
-      </div>
+      <StepDone
+        game="pitch-match"
+        difficulty={difficulty}
+        session={session}
+        startedAt={playClock}
+        onExit={onExit}
+        onComplete={onComplete}
+      />
     );
   }
 
@@ -354,7 +334,8 @@ export function PitchMatchGame({
   if (!listening) {
     return (
       <GameShell game="pitch-match" difficulty={difficulty} session={session} onExit={onExit}>
-        <ShellMicGate
+        <MicGate
+          tone="session"
           title="This game listens to you sing"
           description="You'll hear a reference note, then sing it back and hold it steady."
           onEnable={() => void start()}
