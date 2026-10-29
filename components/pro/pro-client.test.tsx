@@ -75,8 +75,10 @@ describe("Pro purchase choices", () => {
   it("lands every buy link on the Pro card, which states the no-limit benefit first", () => {
     const html = renderToStaticMarkup(<ProClient />);
 
-    // The hero carries the price and jumps straight to the buy card.
-    expect(html).toMatch(/<a[^>]*href="#buy"[^>]*>Get lifetime Pro: \$79 once<\/a>/);
+    // The hero carries the price and opens Checkout itself, like the card's
+    // button: a priced button that only scrolled to an identical one cost a click.
+    expect(html).toMatch(/<button[^>]*>Get lifetime Pro: \$79 once<\/button>/);
+    expect(html).not.toMatch(/<a[^>]*href="#buy"[^>]*>Get lifetime Pro/);
     expect(html).toMatch(/<div[^>]*id="buy"/);
     expect(html).toContain("One payment. Lifetime Pro. No renewal.");
     expect(html).toContain(
@@ -437,12 +439,12 @@ describe("Pro sales copy on the page", () => {
     // At 375x667 the paragraph pushed the button under the tab bar; on small
     // screens the buttons now come first and the paragraph follows.
     const html = renderToStaticMarkup(<ProClient />);
-    const button = html.indexOf(">Get lifetime Pro: $79 once</a>");
+    const button = html.indexOf(">Get lifetime Pro: $79 once</button>");
     const wrapper = html.lastIndexOf('class="order-1 ', button);
     expect(button).toBeGreaterThan(-1);
     expect(wrapper).toBeGreaterThan(-1);
     expect(html.slice(wrapper, button)).toContain("sm:order-2");
-    expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Suede Pro is the coach on top/);
+    expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Free shows you today/);
     expect(html).not.toContain("once with no renewal");
   });
 });
@@ -495,7 +497,7 @@ describe("the buy card's place in the Tab order", () => {
     // left. No order class at all keeps screen and Tab order together.
     const html = renderToStaticMarkup(<ProClient />);
     const buy = html.indexOf('id="buy"');
-    const buyButton = html.indexOf(">Get lifetime Pro: $79 once</button>");
+    const buyButton = html.indexOf(">Get lifetime Pro: $79 once</button>", buy);
     const freeCard = html.lastIndexOf(">Keep practicing free</a>");
     expect(buy).toBeGreaterThan(-1);
     expect(buyButton).toBeGreaterThan(buy);

@@ -36,19 +36,13 @@
  */
 import pw from "playwright";
 import { ROUTES, VIEWPORTS, discoverTemplateRoutes } from "./routes.mjs";
+import { browserTarget, cliArgs } from "./lib/args.mjs";
 
 const { chromium } = pw;
-// argv[0] is the node binary and argv[1] this script; without the slice the
-// first "bare" argument is /usr/local/bin/node, which Chrome cheerfully tries
-// to navigate to.
-const argv = process.argv.slice(2);
-const BASE = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").replace(/\/$/, "");
-const ONLY_VIEWPORT = argv.find((a) => a.startsWith("--viewport="))?.slice("--viewport=".length);
-/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
-const EXECUTABLE = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
-const flag = (name) => argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
+const { base: BASE, executable: EXECUTABLE, flag, has } = cliArgs("http://localhost:3000");
+const ONLY_VIEWPORT = flag("viewport");
 const STATE = flag("state");
-const RETURNING = argv.includes("--returning") || STATE !== undefined;
+const RETURNING = has("returning") || STATE !== undefined;
 const ROUTE_FILTER = flag("route")?.split(",").map((s) => s.trim()).filter(Boolean);
 /** Every reading, for a before/after comparison or CI evidence. */
 const JSON_OUT = flag("json");
@@ -236,7 +230,7 @@ const DEEP_LINKS = [
   // coach and the range result link to, and what a link opened in a new tab,
   // shared or bookmarked loads cold. The room reads its address after
   // hydration and opens what it names: a drill or a set over the whole room
-  // (/breath), a workout (/ear-training), or the mic gate for a warmup,
+  // (/breath), a routine (/ear-training), or the mic gate for a warmup,
   // retitled and scrolled to (/warmups). The prerender is the room's front
   // page, so the pre-paint script (lib/prepaint.ts data-sing-deeplink) holds
   // it back until then: before, every /breath link moved the whole page (0.85
@@ -327,7 +321,7 @@ if (viewports.length === 0) {
   console.error(`no viewport matched --viewport=${ONLY_VIEWPORT}; known: ${VIEWPORTS.map((v) => v.name).join(", ")}`);
   process.exit(2);
 }
-const browser = await chromium.launch(EXECUTABLE ? { executablePath: EXECUTABLE } : { channel: "chrome" });
+const browser = await chromium.launch(browserTarget(EXECUTABLE));
 
 const rows = [];
 for (const viewport of viewports) {

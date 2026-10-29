@@ -5,7 +5,6 @@ import { ogCardVersion } from "@/lib/og";
 import { singerReviewLabel } from "@/lib/singer-evidence";
 import {
   SINGERS,
-  describeSpan,
   pluralVoice,
   recordHolders,
   singersByGenre,
@@ -51,20 +50,28 @@ export interface SingerCardText {
   status: string;
 }
 
+/**
+ * Bump when app/singers/[slug]/opengraph-image.tsx changes how the card looks
+ * without changing its words. 2026-10-29: serif name, dark black keys on a
+ * light keyboard (they were inverted), and the span in teal.
+ */
+export const SINGER_OG_CARD_REVISION = "2026-10-29";
+
 /** Every line of text the singer card draws; the keyboard band follows `notes`. */
 export function singerCardText(s: Singer): SingerCardText {
   const semis = s.highMidi - s.lowMidi;
   return {
     name: s.name,
     notes: `${midiToLabel(s.lowMidi)} — ${midiToLabel(s.highMidi)}`,
-    span: `${describeSpan(semis)} · ${semis} semitones`,
+    // The page's own format ("about 2.8 octaves (34 semitones)").
+    span: `${spanOctaves(semis)} octaves · ${semis} semitones`,
     status: `${singerReviewLabel(s.slug)} · Not a training target`,
   };
 }
 
 export function singerCardVersion(s: Singer): string {
   const t = singerCardText(s);
-  return ogCardVersion([t.name, t.notes, t.span, t.status].join("|"));
+  return ogCardVersion([SINGER_OG_CARD_REVISION, t.name, t.notes, t.span, t.status].join("|"));
 }
 
 export interface SongCardText {

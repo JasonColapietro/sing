@@ -39,7 +39,7 @@ export function IntervalGame({
 }: {
   difficulty: Difficulty;
   onExit: () => void;
-  /** Set when this game is one step of a workout: the result goes up instead
+  /** Set when this game is one step of a routine: the result goes up instead
       of being drawn here, and no summary card renders. */
   onComplete: OnEarComplete;
 }) {

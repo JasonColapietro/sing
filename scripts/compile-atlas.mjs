@@ -358,7 +358,12 @@ function parseFrontmatter(raw, file) {
   return { meta, body: m[2].trim() };
 }
 
-const wordCount = (t) => t.split(/\s+/).filter(Boolean).length;
+/** Words of prose: table pipes and rules, and `::figure` lines, are not words. */
+const wordCount = (t) =>
+  t
+    .replace(/^::figure.*$/gm, "")
+    .split(/\s+/)
+    .filter((w) => w && !/^[|:-]+$/.test(w)).length;
 const spanText = (semis) => {
   const oct = Math.floor(semis / 12);
   const rem = semis % 12;
@@ -367,9 +372,17 @@ const spanText = (semis) => {
   return rem > 0 ? `${octaves} + ${rem}` : octaves;
 };
 
-/** Generated markdown for the records appendix. */
+/** A pipe-table cell: a pipe inside a name or title would split the row. */
+const cell = (t) => String(t ?? "").replace(/\|/g, "/");
+const tableRows = (head, rows) => [
+  `| ${head.join(" | ")} |`,
+  `|${head.map(() => "---").join("|")}|`,
+  ...rows.map((r) => `| ${r.map(cell).join(" | ")} |`),
+];
+
+/** Generated markdown for the records appendix: one table per list. */
 function recordsMarkdown() {
-  const withSong = (note, src) => (src ? `**${note}** in *${src}*` : `**${note}**`);
+  const heard = (src) => (src ? `*${cell(src)}*` : "–");
   const bySpan = [...singers].sort(
     (a, b) => b.highMidi - b.lowMidi - (a.highMidi - a.lowMidi),
   );
@@ -381,41 +394,58 @@ function recordsMarkdown() {
   const whistlers = singers
     .filter((s) => s.whistle)
     .sort((a, b) => b.highMidi - a.highMidi);
+  const range = (s) => `${s.low}–${s.high}`;
 
   const rows = [];
-  rows.push("## The deepest floors");
-  for (const s of byLow.slice(0, 12))
-    rows.push(`- **${s.name}** — ${withSong(s.low, s.lowSource)}, from a cited ${s.low}–${s.high}`);
-  rows.push("");
-  rows.push("## The highest ceilings");
-  for (const s of byHigh.slice(0, 12))
-    rows.push(
-      `- **${s.name}** — ${withSong(s.high, s.highSource)}${s.whistle ? " (whistle register)" : ""}, from a cited ${s.low}–${s.high}`,
-    );
-  rows.push("");
-  rows.push("## The widest spans");
-  for (const s of bySpan.slice(0, 12))
-    rows.push(
-      `- **${s.name}** — ${s.low}–${s.high}, ${spanText(s.highMidi - s.lowMidi)}`,
-    );
-  rows.push("");
-  rows.push("## The highest full-voice ceilings");
+  rows.push("## The deepest floors", "");
   rows.push(
-    "Belted or full-voice tops, as distinct from falsetto, head voice or whistle — for many readers the most meaningful list on this page.",
+    ...tableRows(
+      ["Singer", "Floor", "Heard in", "Cited range"],
+      byLow.slice(0, 12).map((s) => [s.name, `**${s.low}**`, heard(s.lowSource), range(s)]),
+    ),
   );
-  for (const s of byBelt.slice(0, 12))
-    rows.push(`- **${s.name}** — full voice cited to **${s.belt}** (range ${s.low}–${s.high})`);
-  rows.push("");
-  rows.push("## The whistle club");
+  rows.push("", "## The highest ceilings", "");
+  rows.push(
+    ...tableRows(
+      ["Singer", "Ceiling", "Heard in", "Cited range"],
+      byHigh
+        .slice(0, 12)
+        .map((s) => [s.name, `**${s.high}**${s.whistle ? " (whistle)" : ""}`, heard(s.highSource), range(s)]),
+    ),
+  );
+  rows.push("", "## The widest spans", "");
+  rows.push(
+    ...tableRows(
+      ["Singer", "Cited range", "Span"],
+      bySpan.slice(0, 12).map((s) => [s.name, range(s), spanText(s.highMidi - s.lowMidi)]),
+    ),
+  );
+  rows.push("", "## The highest full-voice ceilings", "");
+  rows.push(
+    "Belted or full-voice tops, as distinct from falsetto, head voice or whistle: for many readers the most meaningful list on this page.",
+    "",
+  );
+  rows.push(
+    ...tableRows(
+      ["Singer", "Full voice to", "Cited range"],
+      byBelt.slice(0, 12).map((s) => [s.name, `**${s.belt}**`, range(s)]),
+    ),
+  );
+  rows.push("", "## The whistle club", "");
   rows.push(
     "Voices in the library with a documented whistle register. The flag is rare on purpose.",
+    "",
   );
-  for (const s of whistlers)
-    rows.push(`- **${s.name}** — cited to ${withSong(s.high, s.highSource)}`);
+  rows.push(
+    ...tableRows(
+      ["Singer", "Cited top", "Heard in"],
+      whistlers.map((s) => [s.name, `**${s.high}**`, heard(s.highSource)]),
+    ),
+  );
   return rows.join("\n");
 }
 
-/** Generated markdown for the voice-type appendix. */
+/** Generated markdown for the voice-type appendix: one two-column table per type. */
 function voiceTypesMarkdown() {
   const ORDER = [
     "Bass",
@@ -435,8 +465,8 @@ function voiceTypesMarkdown() {
     if (!list.length) continue;
     // "Bass" takes -es: a bare `${type}s` printed "## Basss" here, the same
     // typo pluralVoice in lib/singers-core.ts exists to stop on the site.
-    rows.push(`## ${/s$/i.test(type) ? `${type}es` : `${type}s`}`);
-    for (const s of list) rows.push(`- **${s.name}** — \`${s.low}–${s.high}\``);
+    rows.push(`## ${/s$/i.test(type) ? `${type}es` : `${type}s`}`, "");
+    rows.push(...tableRows(["Singer", "Cited range"], list.map((s) => [s.name, `${s.low}–${s.high}`])));
     rows.push("");
   }
   return rows.join("\n");

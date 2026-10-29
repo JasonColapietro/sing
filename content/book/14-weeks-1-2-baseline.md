@@ -72,7 +72,7 @@ Not a bigger range. Not a better take. The actual list:
 - A baseline range reading you know you took honestly, with the conditions written down.
 - One recorded take you did not curate.
 - Breath work on most days, and enough repetitions of the Farinelli drill that you know what your exhale does at the end of a count.
-- Six to eight singing sessions behind you, none of which left you hoarse. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+- Six to eight singing sessions behind you, none of which left you hoarse.
 - A streak in Progress that is intact, or close.
 
 If a session gets missed, miss it. Do not stack two to make up the difference. That turns a rest day into a heavy day, which is the one thing this block is built to avoid. Pick it up next time.

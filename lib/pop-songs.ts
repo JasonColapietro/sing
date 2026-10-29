@@ -191,7 +191,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, G3–A4 in A minor",
     blurb:
-      "A fourteen-semitone range (G3 to A4, a ninth) keeps the notes within reach on paper. What the record actually trades on is delivery: a lazy, behind-the-beat vocal fry drawl, quick flips into light head voice for the hook's decorations, and total rhythmic confidence. Sing it accurately but stiffly and it collapses; the notes are the least of it.",
+      "The notes are within reach on paper. What the record actually trades on is delivery: a lazy, behind-the-beat vocal fry drawl, quick flips into light head voice for the hook's decorations, and total rhythmic confidence. Sing it accurately but stiffly and it collapses; the notes are the least of it.",
   },
   {
     slug: "birds-of-a-feather",
@@ -234,7 +234,7 @@ export const POP_SONGS: PopSong[] = [
     sourceNote: "Musicnotes leadsheet MN0264734, written vocal range C#3–B4 in E major",
     sourceUrl: "https://www.musicnotes.com/sheetmusic/taylor-swift/anti-hero/MN0264734",
     blurb:
-      "This E-major leadsheet spans C#3 to B4. Check both ends against your comfortable range, then choose a key that lets you keep the conversational phrasing clear. The figures describe this published arrangement.",
+      "Check both ends of this E-major leadsheet against your comfortable range, then choose a key that lets you keep the conversational phrasing clear. The figures describe this published arrangement.",
   },
   {
     slug: "flowers",
@@ -276,7 +276,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("E5"),
     sourceNote: "Musicnotes original-key arrangement, F3–E5 in F major",
     blurb:
-      "A three-act structure that starts as a piano ballad and ends in a driving rock climax, dragging the voice from a murmured F3 up to belted E5s along the way. The two-octave-minus-one span is real and so is the dynamic arc: this is a song that auditions every register a pop voice has, one act at a time.",
+      "A three-act structure that starts as a piano ballad and ends in a driving rock climax, dragging the voice from a murmur up to belted top notes along the way. The span is real and so is the dynamic arc: this is a song that auditions every register a pop voice has, one act at a time.",
   },
   {
     slug: "someone-like-you",
@@ -290,7 +290,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("E5"),
     sourceNote: "Musicnotes original-key arrangement, E3–E5 in A major",
     blurb:
-      "Two full octaves from a hushed E3 to the chorus's repeated E5 peaks, sung over nothing but piano. The chorus tessitura hangs high and stays there, and the emotional dynamic asks for those top notes in a cry-adjacent mix rather than a hard belt. Those two demands are what to check against your own range before choosing a key.",
+      "Hushed verses and repeated chorus peaks, sung over nothing but piano. The chorus tessitura hangs high and stays there, and the emotional dynamic asks for those top notes in a cry-adjacent mix rather than a hard belt. Those two demands are what to check against your own range before choosing a key.",
   },
   {
     slug: "shallow",
@@ -424,7 +424,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("B4"),
     sourceNote: "Musicnotes original-key arrangement, sounding B2–B4 in G major",
     blurb:
-      "Two octaves exactly, from a muttered low B up to the falsetto-or-full B4 wail before the last chorus. The verses ask for almost nothing technically, which is the trap: the dynamic explosion has to arrive out of that stillness, and the top can be taken in falsetto or full voice depending on what the singer has.",
+      "A muttered start, then a wail before the last chorus. The verses ask for almost nothing technically, which is the trap: the dynamic explosion has to arrive out of that stillness, and the top can be taken in falsetto or full voice depending on what the singer has.",
   },
   {
     slug: "hallelujah",
@@ -483,7 +483,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, written E4–A5, sounding E3–A4",
     blurb:
-      "Strummed folk-pop with a fast, wordy verse and a chorus that sits on A4 at the top of an untrained male range without ever leaving it much room to rest. The song is a stamina-and-diction test: seventeen semitones of range (an octave and a fourth), a relentless syllable count, and a top note that recurs just often enough to find out whether it is really there.",
+      "Strummed folk-pop with a fast, wordy verse and a chorus that sits on A4 at the top of an untrained male range without ever leaving it much room to rest. The song is a stamina-and-diction test: a relentless syllable count and a top note that recurs just often enough to find out whether it is really there.",
   },
   {
     slug: "drop-dead",
@@ -500,7 +500,7 @@ export const POP_SONGS: PopSong[] = [
     sourceUrl:
       "https://www.musicnotes.com/sheetmusic/olivia-rodrigo/drop-dead/MN0309204",
     blurb:
-      "An octave and a sixth separates the grounded Ab3 low from the F5 peak, so this is less about one isolated high note than keeping every register available at a brisk pop pace. Start the phrases lighter than the recording suggests, map the two range edges separately, and only join the full song after both ends stay free of strain.",
+      "This is less about one isolated high note than keeping every register available at a brisk pop pace. Start the phrases lighter than the recording suggests, map the two range edges separately, and only join the full song after both ends stay free of strain.",
   },
   {
     slug: "unchained-melody",
@@ -518,7 +518,7 @@ export const POP_SONGS: PopSong[] = [
     sourceUrl:
       "https://www.musicnotes.com/sheetmusic/the-righteous-brothers/unchained-melody/MN0133818",
     blurb:
-      "The climb from C3 to A4 makes the ending the obvious headline, but the first job is controlled breath and an even legato line through the quieter opening. Practice the upper section softly and separately; the page's range fit is a boundary check, not permission to push for the recording's full volume or color.",
+      "The climb at the end is the obvious headline, but the first job is controlled breath and an even legato line through the quieter opening. Practice the upper section softly and separately; the page's range fit is a boundary check, not permission to push for the recording's full volume or color.",
   },
   {
     slug: "greedy",

@@ -45,6 +45,8 @@ Breathe low and wide rather than high. If your shoulders climb toward your ears 
 
 Sensations are personal, and you should be suspicious of anyone who describes them as universal. A few come up often enough to name.
 
+::figure support | Steady pressure: the push comes on, holds level for the whole note, then lets go.
+
 The lower ribs stay broad through most of the phrase, rather than dropping the moment you begin. There is a mild sense of resistance around the waist — not a clench, more like leaning gently against something. The throat is uninvolved. That last one is the real marker: if support is working, your neck feels about the same on a loud note as on a quiet one. If it grips as you get louder, the effort has migrated to the wrong place.
 
 Loud is where this gets tested. Getting louder does mean more airflow and more pressure, but it also means firmer closure at the folds, and the two have to rise together. Add air without the closure and you get breathy and loud. Add closure without the air and you get pressed and tight. The good version feels like the sound is getting bigger without the effort moving upward into the throat.
@@ -59,7 +61,7 @@ Slow exhales on a hiss, a lip trill, or a straw into a glass of water all do the
 
 Box breathing, the Farinelli drill and the sustain test each train that slow release from a different angle, and chapter fourteen describes all three in full. Each is a drill in the app's Breath room, and all three belong early in a practice session rather than at the end, when you are tired and more likely to substitute effort for control. Lip trills live in Warmups.
 
-One caution, and it applies to every held-breath drill here. If you feel light-headed, stop — do not finish the round. Nothing in this chapter should hurt. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+One caution, and it applies to every held-breath drill here. If you feel light-headed, stop — do not finish the round. Nothing in this chapter should hurt.
 
 Breath is not fuel you spend, and it is not force you apply. It is a pressure you hold steady underneath a vibration, and the skill is in the holding, not in the amount.
 

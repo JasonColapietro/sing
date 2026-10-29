@@ -211,7 +211,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Singing practice tools"
-            lede="Every practice room runs in your browser: live pitch feedback, range testing, warmups, ear training, breath work and song practice."
+            lede="Open a room, allow the mic, and sing. Each one runs in your browser."
           >
             Open any room and sing
           </SectionHeading>
@@ -250,17 +250,18 @@ export default function Home() {
                 Know what to sing tomorrow
               </h2>
               <p className="mt-3 max-w-xl text-mut">
-                Suede Pro is the coach on top of the free studio, {PRO_PRICE} once
-                for life: no daily practice limit, the full daily plan, per-note
-                accuracy, pitch analysis on every take, and both books.
+                Free shows you today&rsquo;s score. Pro keeps the score over
+                months and tells you what to sing next.
               </p>
+              {/* Each perk once; the price is on the button only. */}
               <ul className="mt-5 space-y-2.5">
                 {[
-                  `Both books in full: ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
+                  "No daily limit on guided practice",
                   "The coach's full daily plan: every step, built from your own scores.",
                   // /pro's wording: one tally per note, only the range over time.
                   "A per-note accuracy chart, and your range charted over months",
                   "Pitch analysis on every recorded take",
+                  `Both books in full: ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
                 ].map((line) => (
                   <li
                     key={line}
@@ -295,9 +296,9 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Side by side"
-            lede="Suede Sing beside the apps you would compare it to, on the rows where the answers differ."
+            lede="Only the rows where the answers differ."
           >
-            Where the apps differ
+            What Suede Sing does free in a browser
           </SectionHeading>
           <div className="mt-8">
             <ComparisonTable />

@@ -104,6 +104,22 @@ describe("a summary reached at the free cap", () => {
     // Under the cap the button is the filled primary and nothing describes it.
     expect(render(data(70))).not.toContain('aria-disabled="true"');
   });
+
+  it("demotes Sing again on a silent mid-setlist run too", () => {
+    const html = renderToStaticMarkup(
+      <SessionSummary
+        data={{ ...data(0), silent: true, xpGained: 0 }}
+        onAgain={() => {}}
+        onLibrary={() => {}}
+        onNext={() => {}}
+        nextInSetlist="Twinkle"
+        againUnavailable="Free practice is used for today."
+      />,
+    );
+    const again = html.match(/<button[^>]*>Sing again<\/button>/)![0];
+    expect(again).toContain('aria-disabled="true"');
+    expect(again).not.toContain("bg-violet ");
+  });
 });
 
 describe("an unscored song summary", () => {

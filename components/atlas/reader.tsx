@@ -122,9 +122,6 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
       <LinkButton href="/pro#restore" variant="ghost" size="md">
         Already have Pro?
       </LinkButton>
-      <LinkButton href="/atlas" prefetch={false} variant="ghost" size="md">
-        Back to contents
-      </LinkButton>
     </div>
   );
 
@@ -142,12 +139,8 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
           <SectionLabel>Included with Pro</SectionLabel>
           <p className="mt-3 max-w-2xl text-mut">{view.message}</p>
           <p className="mt-2 max-w-2xl text-sm text-mut">
-            The full contents — every chapter and every singer covered — is
-            free on the contents page, and each singer&rsquo;s range page stays
-            free too. So are the first {free.length} chapters, which teach the
-            notation and the labels every entry after them uses. Pro unlocks the
-            remaining chapter text, the entry notes, and the PDF of the whole
-            book.
+            Chapters 1–{free.length} and every singer&rsquo;s range page are
+            free. Pro adds this chapter&rsquo;s text and entry notes, and the PDF.
           </p>
           {ctas}
         </Card>

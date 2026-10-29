@@ -5,9 +5,9 @@ import EarTrainingClient from "./ear-training-client";
 describe("the ear room on a deep link's first load", () => {
   // The server HTML, and every render until the room has read its address:
   // the front page behind the deep-link marker, then the screen-tall block
-  // that takes its place when the pre-paint script found a workout the room
+  // that takes its place when the pre-paint script found a routine the room
   // will open (/ear-training?routine=quick, a program row's link), so the
-  // workout opens over a page that never painted the front page
+  // routine opens over a page that never painted the front page
   // (components/prepaint.tsx), as on /breath.
   it("keeps the heading, holds the whole front page behind the marker, and ends on the slot", () => {
     const html = renderToStaticMarkup(<EarTrainingClient />);

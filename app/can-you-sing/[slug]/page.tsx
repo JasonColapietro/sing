@@ -61,6 +61,23 @@ function answerSentence(song: PopSong): string {
   return `${opening}, which on span and top note rates ${rating} for an untrained voice.`;
 }
 
+/**
+ * The line under the H1: who sang it, and what decided the rating. The key and
+ * range are in the stat row right below, so it does not restate them; the
+ * full answerSentence is the structured-data description.
+ */
+function ratingLine(song: PopSong): string {
+  const rating = popDifficulty(song).toLowerCase();
+  const reason = popDifficultyReason(song);
+  const why =
+    reason === "override"
+      ? `Its top, held in full voice above the tenor passaggio, rates it ${rating} for an untrained voice.`
+      : reason === "top"
+        ? `Its top note, ${popNoteLabel(song, song.highMidi)}, rates it ${rating} for an untrained voice.`
+        : `On span and top note it rates ${rating} for an untrained voice.`;
+  return `By ${song.artist}, ${song.year}. ${why}`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -157,8 +174,8 @@ export default async function CanYouSingSongPage({
   return (
     <PageShell
       kicker="Can you sing it?"
-      title={`Can you sing “${song.title}” by ${song.artist}? Key and vocal range`}
-      subtitle={answer}
+      title={`Can you sing “${song.title}”?`}
+      subtitle={ratingLine(song)}
       actions={<CanYouSingAction song={song} />}
     >
       <script

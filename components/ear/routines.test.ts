@@ -43,7 +43,7 @@ describe("ear routine catalogue", () => {
     for (const g of GAME_IDS) expect(used, g).toContain(g);
   });
 
-  it("keeps the quick workout entirely on easy, so a cold ear can finish it", () => {
+  it("keeps the quick routine entirely on easy, so a cold ear can finish it", () => {
     const quick = earRoutineById("quick");
     expect(quick).not.toBeNull();
     for (const s of quick!.steps) expect(s.difficulty).toBe("easy");
@@ -135,7 +135,7 @@ describe("ear routine length", () => {
     }
   });
 
-  it("keeps the quick workout the shortest and the full one the longest", () => {
+  it("keeps the quick routine the shortest and the full one the longest", () => {
     const secs = Object.fromEntries(
       EAR_ROUTINES.map((r) => [r.id, earRoutineSeconds(r)]),
     );
@@ -148,11 +148,11 @@ describe("ear routine length", () => {
 });
 
 describe("recommendEarRoutine", () => {
-  it("tops up with the quick workout once today already has a session", () => {
+  it("tops up with the quick routine once today already has a session", () => {
     expect(recommendEarRoutine({ practicedToday: true }).id).toBe("quick");
   });
 
-  it("offers the daily workout otherwise", () => {
+  it("offers the daily routine otherwise", () => {
     expect(recommendEarRoutine({ practicedToday: false }).id).toBe("daily");
   });
 });

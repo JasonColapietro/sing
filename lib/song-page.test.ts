@@ -72,17 +72,24 @@ describe("composition descriptions preserve the scope of measured notes", () => 
       expect(composition).not.toHaveProperty("additionalProperty");
       expect(description).toContain(`${song.bpm} bpm`);
       expect(description).toContain(`${song.beatsPerBar} beats to the bar`);
-      expect(description).toMatch(/notes span .+ semitones/);
+      expect(description).toMatch(/notes run .+ semitones/);
       if (song.form === "phrase") {
         expect(description).toContain(`The ${song.excerpt ?? "opening phrase"} of “${song.title}”`);
       } else if (song.arrangementOf) {
         expect(description).toContain(`The selected lines of “${song.title}”`);
       }
-      // The exact description sentence is visible prose, not hidden claims.
-      const sentence = description.slice(`${song.origin}. `.length);
+      // No hidden claims: the page states each fact once, in the stat row,
+      // rather than repeating this sentence, so every value it names is visible.
+      expect(description.startsWith(`${song.origin}. `)).toBe(true);
       const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
-      const escapedSentence = renderToStaticMarkup(createElement("span", null, sentence)).slice(6, -7);
-      expect(visibleHtml).toContain(escapedSentence);
+      const [, tonic] = / tonic on (\S+) at /.exec(description)!;
+      const [, notes, low, high, semis] = / Its (\d+) notes run (\S+) to (\S+): (\d+) semitones /.exec(description)!;
+      const [, rating] = / rate it (\w+) to sing/.exec(description)!;
+      for (const value of [tonic, notes, low, high, String(song.bpm), String(song.beatsPerBar)]) {
+        expect(visibleHtml, `${slug}: ${value}`).toContain(`>${value}<`);
+      }
+      expect(visibleHtml).toContain(`${semis} semitones as transcribed`);
+      expect(visibleHtml.toLowerCase()).toContain(`>${rating}<`);
     },
   );
 });
@@ -335,15 +342,15 @@ describe("the song key rule, both halves", () => {
   // the written key and is scored in either octave (components/songs/lib.ts
   // defaultOctaveAgnostic). A treble-pitched written range reads as out of
   // reach for a lower voice unless the octave half is said too.
-  it("is stated on every song page, by the button and by the written range", async () => {
-    const html = await render(SONGS[0].slug);
-    expect(html).toContain("fitted to your");
-    expect(html).toContain("measured range if you have taken the range test");
-    expect(html).toContain("written key and is scored in either octave");
-    expect(html).toContain("written pitch and is scored in either octave");
-    // Both directions: the lowest written songs (E3–C4) suit a high voice an
-    // octave up as much as the treble-pitched ones suit a low voice down.
-    expect(html).toContain("a lower voice can sing it an octave down and a higher voice an octave up");
+  it("is stated once on every song page, beside the button", async () => {
+    for (const song of SONGS) {
+      const html = await render(song.slug);
+      expect(html, song.slug).toContain("Opens fitted to your measured range if you have taken the range");
+      // Both directions: the lowest written songs (E3–C4) suit a high voice an
+      // octave up as much as the treble-pitched ones suit a low voice down.
+      expect(html.split("scored in").length - 1, song.slug).toBe(1);
+      expect(html, song.slug).toContain("a lower voice can sing it an octave down and a");
+    }
   });
 
   it("is stated on the homepage's song shelf", async () => {
@@ -361,16 +368,16 @@ describe("the answer sentence's reason for a rating", () => {
   it("names the span and the leaps the rating comes from", async () => {
     const loch = await render("loch-lomond");
     expect(loch).toContain(
-      "9 semitones, with 1 leap of a major third or more), and the span and leaps together rate it medium to sing",
+      "9 semitones with 1 leap of a major third or more. That span and those leaps rate it medium to sing",
     );
     const valley = await render("down-in-the-valley");
     expect(valley).toContain(
-      "9 semitones, with 3 leaps of a major third or more), and the span and leaps together rate it hard to sing",
+      "9 semitones with 3 leaps of a major third or more. That span and those leaps rate it hard to sing",
     );
     for (const song of SONGS) {
       const html = await render(song.slug);
       expect(html, song.slug).not.toContain("semitones — which rates");
-      expect(html, song.slug).toContain("and the span and leaps together rate it");
+      expect(html, song.slug).toContain("That span and those leaps rate it");
     }
   });
 

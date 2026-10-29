@@ -1,6 +1,7 @@
 import { rangeTestHref } from "@/lib/site";
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
+import { FigureFrame, TraceFigure } from "@/components/figures";
 
 /**
  * Two starting paths, placed above the practice-room grid: a beginner and a
@@ -73,7 +74,7 @@ const PATHS: Path[] = [
     // /pro's wording: the per-note chart is one tally, only the range is
     // charted over time (components/landing/pro-claims.test.tsx).
     payoff:
-      "Then let the coach keep score: Pro adds a per-note accuracy chart, charts your range tests over months, and the coach's full daily plan: every step, built from your own scores.",
+      "Then let Pro keep score: a per-note accuracy chart, your range tests charted over months, and every step of the coach's daily plan.",
     gold: true,
   },
 ];
@@ -82,19 +83,28 @@ export function StartingPaths() {
   return (
     <section className="border-t border-line">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <SectionLabel hairline className="mb-4">Where to start</SectionLabel>
-        <h2 className="max-w-2xl text-2xl sm:text-3xl">Start where you are</h2>
-        <p className="mt-3 max-w-2xl text-mut">
-          Prefer a sequence? The free{" "}
-          <Link href="/learn" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
-            learn-to-sing guide
-          </Link>{" "}
-          has a seven-day plan, and the free{" "}
-          <Link href="/learn/voice" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
-            voice lessons
-          </Link>{" "}
-          go one small skill at a time.
-        </p>
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-12">
+          <div>
+            <SectionLabel hairline className="mb-4">Where to start</SectionLabel>
+            <h2 className="max-w-2xl text-2xl sm:text-3xl">Start where you are</h2>
+            <p className="mt-3 max-w-2xl text-mut">
+              Prefer a sequence? The free{" "}
+              <Link href="/learn" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
+                learn-to-sing guide
+              </Link>{" "}
+              has a seven-day plan, and the free{" "}
+              <Link href="/learn/voice" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
+                voice lessons
+              </Link>{" "}
+              go one small skill at a time.
+            </p>
+          </div>
+          {/* The product near the top of the page: what a held note looks like
+              in the studio, the picture behind the hero's promise. */}
+          <FigureFrame caption="What the studio draws as you sing">
+            <TraceFigure />
+          </FigureFrame>
+        </div>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">
           {PATHS.map((path) => (

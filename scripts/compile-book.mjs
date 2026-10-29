@@ -70,7 +70,11 @@ for (const file of readdirSync(SRC).filter((f) => f.endsWith(".md")).sort()) {
     problems.push(`${file}: needs title, part and integer order`);
     continue;
   }
-  const words = body.split(/\s+/).filter(Boolean).length;
+  // Table pipes and rules, and `::figure` lines, are not words of prose.
+  const words = body
+    .replace(/^::figure.*$/gm, "")
+    .split(/\s+/)
+    .filter((w) => w && !/^[|:-]+$/.test(w)).length;
   if (words < 600) problems.push(`${file}: only ${words} words`);
   if (/^#\s/m.test(body)) problems.push(`${file}: body contains an H1; title comes from frontmatter`);
 

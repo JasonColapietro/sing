@@ -513,7 +513,7 @@ export function Library({
           <PickedForYou
             answers={taste}
             picks={picks}
-            onStart={(pick) => start(pick.song)}
+            onStart={(pick) => start(pick.song, true)}
             onChange={() => setEditingTaste(true)}
           />
         )
@@ -554,7 +554,7 @@ export function Library({
               <button
                 key={song.id}
                 type="button"
-                onClick={() => start(song)}
+                onClick={() => start(song, true)}
                 className="w-44 shrink-0 rounded-xl border border-line bg-panel px-4 py-3 text-left transition-colors hover:border-violet/40"
               >
                 <div className="truncate text-sm">{song.title}</div>

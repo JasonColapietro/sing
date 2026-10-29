@@ -10,9 +10,10 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { useIdleMicRelease } from "@/lib/audio/use-idle-mic-release";
 import { localDay, useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
-import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import { AudioSetup } from "@/components/audio/audio-setup";
+import { FigureFrame } from "@/components/figures/frame";
+import { LaneFigure } from "./lane-figure";
 import { ContinueCard, useDailyGoal, useGoalDoneSec, nextUpId, starsForExercise } from "@/components/practice/learn-home";
 import { IconMic } from "./icons";
 import { ALL_EXERCISES, EXERCISES, PRO_PACKS, TIER_ORDER, type WarmupExercise } from "./exercises";
@@ -187,6 +188,25 @@ export function WarmupsClient() {
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
+  // A link into the folded catalogue (/pro's "/warmups#pro-packs" after a
+  // purchase) names a card inside a closed <details>: the browser cannot
+  // scroll to it, and Safari never opens the fold. Open it and scroll, on
+  // load and on every hash change. Re-run when the fold appears or goes.
+  const newToWarmups = !progress.sessions.some((s) => s.type === "warmup");
+  const homeView = view === "home";
+  useEffect(() => {
+    if (!homeView) return;
+    const reveal = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (revealInFolds(target)) target?.scrollIntoView({ block: "start" });
+    };
+    reveal();
+    window.addEventListener("hashchange", reveal);
+    return () => window.removeEventListener("hashchange", reveal);
+  }, [homeView, newToWarmups]);
+
   // A page left open across midnight must move to the new day: today's three
   // is seeded by the date and ticked off by today's sessions, and the hour
   // picks today's warmup. Re-read both when the tab comes back and once a
@@ -212,7 +232,7 @@ export function WarmupsClient() {
   const routineContext = { practicedToday, hour: hour ?? 12, recent: recentWarmupResults(progress.sessions) };
   // While Recovery week runs, today's warmup is the week's own quiet set (components/practice/program-day.ts recoveryWeekOf).
   const recovering = activeProgram ? recoveryWeekOf(activeProgram) : null;
-  // Sized to the free minutes left: a set that outlasts them ends on the cap slide.
+  // Sized to the free minutes left: a routine that outlasts them ends on the cap slide.
   const preferred = (recovering ? routineById("recovery") : null) ?? recommendRoutine(routineContext);
   const recommended = cap.capped
     ? preferred
@@ -226,12 +246,12 @@ export function WarmupsClient() {
   // a Pro singer would otherwise be told about a limit they paid to remove.
   const proReady = useProReady();
   // When nothing shorter fits what is left today, the pick stands, but the
-  // card says where it will stop rather than calling a longer set "short":
+  // card says where it will stop rather than calling a longer routine "short":
   // the cap is checked between steps, so the step under way always finishes.
   const overAllowance =
     proReady && !cap.isPro && !cap.capped && routineSeconds(recommended) > cap.leftSec;
   // At the cap the button already says when; a top-up reason would offer a
-  // set that cannot start. The no-break space keeps the line's height.
+  // routine that cannot start. The no-break space keeps the line's height.
   const recommendedReason = cap.capped
     ? " "
     : sizedToAllowance
@@ -241,9 +261,9 @@ export function WarmupsClient() {
           ? `Fits in today's ${Math.round(cap.capSec / 60)} free minutes.`
           : `Fits in the ${formatClock(cap.leftSec)} of free practice left today.`
       : overAllowance
-        ? `${formatClock(cap.leftSec)} of free practice left today: this set stops after the step that uses it up.`
+        ? `${formatClock(cap.leftSec)} of free practice left today: this routine stops after the step that uses it up.`
         : recovering
-          ? `${recovering} is running, so today's warmup is the quiet set.`
+          ? `${recovering} is running, so today's warmup is the quiet routine.`
           : routineReason(routineContext);
   const pathExercises = isPro ? ALL_EXERCISES : EXERCISES;
   const pathItem = (e: WarmupExercise) => ({ id: e.id, title: e.title, stars: starsForExercise(progress, e.title) });
@@ -487,7 +507,6 @@ export function WarmupsClient() {
       ? `Turn on your mic to start “${pendingDeepLinkEx.title}”`
       : "How a warmup works here";
 
-  const newToWarmups = !progress.sessions.some((s) => s.type === "warmup");
   // A program day still to do is the plan the singer committed to, so it
   // leads, unless it is a Pro day a free singer cannot open: leading with a
   // paywall every visit would cost them the room's real first action.
@@ -717,27 +736,36 @@ export function WarmupsClient() {
           {!micReady && !cap.capped && (
             <div id="warmup-gate" className="scroll-mt-20" {...prepaintMarker(hydrated, { plan: "not-capped" })}>
               <Card>
-                <h2 className="text-xl">{gateTitle}</h2>
-                {/* A link that named something (the range result, the coach,
-                    a program day) brings the singer here to press one button,
-                    so the button comes straight after the privacy and safety
-                    lines and the how-it-works list follows it. On a 375×667
-                    phone the old order put the button under the tab bar. */}
-                {deepLinkPending ? (
-                  <>
-                    {gateNotes}
-                    {gateStart}
-                    {gateSteps}
-                  </>
-                ) : (
-                  <>
-                    {gateSteps}
-                    {gateNotes}
-                    {gateStart}
-                  </>
-                )}
-                <AudioSetup className="mt-6 max-w-xl" />
-                <ProWhisper className="mt-4" />
+                {/* The room's instrument beside the prompt, as /songs and /studio show theirs:
+                    a column on a wide screen, under the buttons on a phone. */}
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)]">
+                  <div>
+                    <h2 className="text-xl">{gateTitle}</h2>
+                    {/* A link that named something (the range result, the coach,
+                        a program day) brings the singer here to press one button,
+                        so the button comes straight after the privacy and safety
+                        lines and the how-it-works list follows it. On a 375×667
+                        phone the old order put the button under the tab bar. */}
+                    {deepLinkPending ? (
+                      <>
+                        {gateNotes}
+                        {gateStart}
+                        {gateSteps}
+                      </>
+                    ) : (
+                      <>
+                        {gateSteps}
+                        {gateNotes}
+                        {gateStart}
+                      </>
+                    )}
+                    {/* No ProWhisper here: FreeAllowance above is this page's one ask. */}
+                    <AudioSetup className="mt-6 max-w-xl" />
+                  </div>
+                  <FigureFrame className="self-start" caption="What a warmup draws">
+                    <LaneFigure />
+                  </FigureFrame>
+                </div>
               </Card>
             </div>
           )}
@@ -859,4 +887,19 @@ export function WarmupsClient() {
       )}
     </PageShell>
   );
+}
+
+/** The parts of an element the fold walk reads; a DOM Element satisfies it. */
+type FoldNode = { tagName: string; parentElement: FoldNode | null; open?: boolean };
+
+/**
+ * Opens every closed <details> around `target`. Returns true when the target
+ * exists, so the caller can scroll to it once the folds are open.
+ */
+export function revealInFolds(target: FoldNode | null): boolean {
+  if (!target) return false;
+  for (let el = target.parentElement; el; el = el.parentElement) {
+    if (el.tagName === "DETAILS" && !el.open) el.open = true;
+  }
+  return true;
 }

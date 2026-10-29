@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { Button, Card, LinkButton, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { MicAlert } from "@/components/mic-alert";
 import { ProInlineNudge } from "@/components/pro/gate";
 import { logSession } from "@/lib/progress";
@@ -156,37 +157,48 @@ export default function AnalyzeClient() {
 
   return (
     <PageShell
-      kicker="Analysis"
+      kicker="Voice analyzer"
       title="Live voice spectrogram and tone analyzer"
       subtitle="A voice analyzer for singers: sing into your microphone to see your harmonics on a live spectrogram, read your tone, and track estimated vocal load. Free, with no time limit."
       actions={
         <div className="flex items-center gap-2">
           {xpNote && <Pill tone="ok">{xpNote}</Pill>}
-          {listening ? (
+          {listening && (
             <Button variant="outline" onClick={onStop}>
-              Stop
+              Stop mic
             </Button>
-          ) : (
-            <Button variant="rec" onClick={onStart}>Enable microphone</Button>
           )}
         </div>
       }
     >
-      {error && (
+      {listening && error && (
         <Card className="mb-6 border-rec/40">
           <MicAlert message={error} className="text-sm text-rec" />
         </Card>
       )}
 
-      {!listening && !error && (
-        <Card className="mb-6">
-          <p className="text-sm text-mut">
-            {/* About the audio, not "nothing": the analyzer logs sessions,
-                and a Pro member's progress record syncs (lib/sync.ts). */}
-            Your audio is never uploaded. The microphone is read in your
-            browser and the analysis runs on your device.
-          </p>
-        </Card>
+      {!listening && (
+        <MicGate
+          className="mb-6"
+          title="See your tone"
+          description="Sing any note to draw its harmonics, read your tone and track today's vocal load."
+          enableLabel={everListened ? "Start again" : "Enable microphone"}
+          onEnable={() => void onStart()}
+          error={error}
+          audioSetup={<AudioSetup />}
+          secondary={
+            everListened ? (
+              <>
+                <LinkButton href="/recorder" variant="outline" size="lg">
+                  Record a take
+                </LinkButton>
+                <LinkButton href="/warmups" variant="ghost" size="lg">
+                  Warm up
+                </LinkButton>
+              </>
+            ) : undefined
+          }
+        />
       )}
 
       <div className="grid gap-6">

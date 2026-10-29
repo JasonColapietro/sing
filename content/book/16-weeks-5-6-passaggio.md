@@ -75,7 +75,7 @@ Check the obvious. Chapter 12 lists the things that make a session read worse th
 
 And if two or three sessions in a row are bad, stop trying to fix the block and repeat it. Spending three weeks here instead of two is a legitimate move, not a demotion. The transition responds to accumulated quiet repetition and to very little else.
 
-One thing that is not a bad day: pain. Soreness, a raw feeling, or hoarseness that outlasts the session is a reason to stop singing, not something to practise through or work around. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+One thing that is not a bad day: pain. Soreness, a raw feeling, or hoarseness that outlasts the session is a reason to stop singing, not something to practise through or work around.
 
 ## The retest at the end of week 6
 

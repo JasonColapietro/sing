@@ -126,8 +126,10 @@ const TEMPLATES: Template[] = [
   },
   { dir: "can-you-sing", terms: () => ["can i sing this song", "vocal ranges"] },
   {
+    // The H1 is the question alone; key and range are in the stat row under
+    // it, and the title tag carries "Vocal Range & Key".
     dir: "can-you-sing/[slug]",
-    terms: (p) => [`can you sing ${popSongBySlug(p.slug)!.title}`, "vocal range"],
+    terms: (p) => [`can you sing ${popSongBySlug(p.slug)!.title}`],
   },
   {
     // Most entries transcribe a song's opening phrase (or, where `excerpt`

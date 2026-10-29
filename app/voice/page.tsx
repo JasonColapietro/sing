@@ -155,7 +155,7 @@ export default function VoicePage() {
           Suede Voice is the mobile app. Suede Sing is the browser studio and
           Chrome extension. Both are from Suede AI. Without installing the
           mobile app, you can use the free browser range test, pitch studio,
-          take recorder and tools with no daily clock, and warmups, ear
+          recorder and tools with no daily clock, and warmups, ear
           training, breath and songs for {FREE_DAILY_MINUTES} free minutes of
           guided practice a day. The iPhone app has its own practice tools,
           recorder and register analysis.

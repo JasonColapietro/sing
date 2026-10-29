@@ -104,6 +104,11 @@ type PracticeClock = ReturnType<typeof createPracticeClock>;
  * stretch with none is thrown away rather than banked, so the silent seconds
  * never join the next session's.
  */
+/** Whether Sing again continues the last session: it stopped short of MIN_LOG_SEC with a note heard, so nothing was logged or thrown away. */
+export function carriesOver(last: StudioResult | null): boolean {
+  return last !== null && last.log === null && !last.silent;
+}
+
 export function finishStudioSession(
   session: {
     clock: PracticeClock;
@@ -278,15 +283,19 @@ export function StudioClient() {
   const handleStart = async () => {
     const ok = await start();
     if (ok) {
-      practiceClock.reset();
+      // A short, unlogged stop keeps its seconds and locks, as its card promises.
+      const carry = carriesOver(toast);
+      if (!carry) {
+        practiceClock.reset();
+        statsRef.current = emptyTargetStats();
+        heardMsRef.current = 0;
+      }
       if (document.visibilityState !== "hidden") practiceClock.resume();
-      statsRef.current = emptyTargetStats();
-      heardMsRef.current = 0;
       inputRef.current = freshInputHint();
       lastTRef.current = 0;
       hintRef.current = null;
       setHint(null);
-      setElapsed(0);
+      setElapsed(carry ? Math.floor(practiceClock.elapsedMs() / 1000) : 0);
       setToast(null);
     }
   };
@@ -345,7 +354,7 @@ export function StudioClient() {
                 <span className="tabular font-mono">{fmtTime(elapsed)}</span>
               </Pill>
               <Button variant="outline" onClick={handleStop}>
-                Stop
+                Stop mic
               </Button>
             </div>
             <p className="text-[11px] text-dim">
@@ -416,7 +425,8 @@ export function StudioClient() {
             footer={
               <>
                 <AudioSetup className="text-left" />
-                <ProWhisper className="mt-4" />
+                {/* After Stop the Last session card makes the one ask. */}
+                {!toast && <ProWhisper className="mt-4" />}
               </>
             }
           />

@@ -49,6 +49,20 @@ describe("the progress dashboard's first render", () => {
   });
 });
 
+describe("a fresh record", () => {
+  it("shows one empty state, one range-test button, and example figures in the empty chart slots", () => {
+    hydration.done = true;
+    const html = renderToStaticMarkup(<ProgressClient />);
+    expect(html).toContain("Nothing logged yet");
+    for (const dead of ["Nothing to mix yet", "No sessions logged yet", "Not enough scored practice yet", "No practice in the last 12 weeks"]) {
+      expect(html, dead).not.toContain(dead);
+    }
+    expect(html.match(/>(Find your range|Take the range test)</g) ?? []).toHaveLength(1);
+    expect(html.match(/Example · yours fills in as you practise/g)).toHaveLength(2);
+    expect(html).toContain('aria-hidden="true" class="pointer-events-none select-none opacity-25"');
+  });
+});
+
 describe("erasing browser progress", () => {
   it("moves focus to the erased note (or the field) instead of dropping it on <body>", () => {
     // The erase clears the confirmation, which disables the focused button.

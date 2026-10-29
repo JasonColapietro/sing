@@ -1,5 +1,6 @@
 "use client";
 
+import { ProSlot } from "@/components/pro/slot";
 import Link from "next/link";
 import { RANGE_RETEST_DAYS, type ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
@@ -487,9 +488,11 @@ export function CoachCard({
         <div className="mt-3">
           {/* At the cap the card has just said today's free minutes are used,
               so the line names the limit Pro removes, not the plan. */}
-          <ProInlineNudge>
-            {cap.capped ? "Pro has no daily limit" : "Pro unlocks the full daily plan"}
-          </ProInlineNudge>
+          <ProSlot priority={2}>
+            <ProInlineNudge>
+              {cap.capped ? "Pro has no daily limit" : "Pro unlocks the full daily plan"}
+            </ProInlineNudge>
+          </ProSlot>
         </div>
       )}
     </Card>

@@ -93,15 +93,19 @@ const listClass = "mt-3 space-y-2.5 text-sm sm:space-y-2";
 
 /* The two hub columns fold into <details> on a phone: the links stay in the
    HTML for crawlers, and the inline script after the nav opens them from sm
-   up before first paint. The summary hides once the column is open there. */
+   up before first paint. From sm up the summary is the column's heading, the
+   same mono label as its siblings, with no caret and no toggle. */
 const hubDetailsClass = "group";
-const hubSummaryClass = `${headingClass} flex min-h-11 cursor-pointer list-none items-center gap-2 sm:min-h-0 sm:group-open:hidden [&::-webkit-details-marker]:hidden`;
+const hubSummaryClass = `${headingClass} flex min-h-11 cursor-pointer list-none items-center gap-2 sm:pointer-events-none sm:min-h-0 sm:cursor-default [&::-webkit-details-marker]:hidden`;
+/* The h2 inside the summary takes the label face itself: the global h2 rule
+   otherwise gives it the display serif. */
+const hubHeadingClass = `contents ${headingClass}`;
 const HUB_OPEN_SCRIPT =
   'try{if(matchMedia("(min-width:640px)").matches)for(const d of document.querySelectorAll("details[data-footer-hub]"))d.open=true}catch(e){}';
 
 function HubCaret() {
   return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" className="transition-transform group-open:rotate-180">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" className="transition-transform group-open:rotate-180 sm:hidden">
       <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -155,12 +159,12 @@ export default function SiteFooter() {
         >
           <Column heading="Reference" links={REFERENCE} />
           <Column heading="Practice" links={PRACTICE} />
-          <Column heading="More from Suede AI" links={MORE_FROM_SUEDE} />
+          <Column heading="More from Suede" links={MORE_FROM_SUEDE} />
 
           {/* Every voice-type hub, one click from any page. */}
           <details data-footer-hub className={hubDetailsClass}>
             <summary className={hubSummaryClass}>
-              <h2 className="contents">By voice type</h2>
+              <h2 className={hubHeadingClass}>By voice type</h2>
               <HubCaret />
             </summary>
             <ul className={listClass}>
@@ -181,7 +185,7 @@ export default function SiteFooter() {
           {/* Every genre hub that clears the singer-count threshold. */}
           <details data-footer-hub className={`${hubDetailsClass} col-span-2 sm:col-span-1 lg:col-span-2`}>
             <summary className={hubSummaryClass}>
-              <h2 className="contents">By genre</h2>
+              <h2 className={hubHeadingClass}>By genre</h2>
               <HubCaret />
             </summary>
             {/* Every hub stays in the HTML; a phone shows the first few and a way to the rest. */}
@@ -215,7 +219,7 @@ export default function SiteFooter() {
             <span>SUEDE SING</span>
             {/* The durable inbound link to /changelog. */}
             <Link href="/changelog" prefetch={false} className={navLinkClass}>
-              4.0: what we&apos;ve changed
+              4.2: what we&apos;ve changed
             </Link>
             {/* suedeai.org's policy and terms govern this site; plain anchors
                 to another origin. */}

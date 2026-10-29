@@ -12,12 +12,10 @@ import {
 } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import { RANGE_RETEST_DAYS, useProgress, type Achievement } from "@/lib/progress";
-import { MAX_RANGE_HISTORY } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Button, Card, LinkButton, Pill, SectionLabel, Stat } from "@/components/ui";
-import { ProCrescendoNudge, ProInlineNudge } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { RangeHistoryChart } from "@/components/progress/pro-charts";
 import {
@@ -57,9 +55,6 @@ const FAMOUS_VOICES = COMPARISON_SLUGS.flatMap((slug) => {
   const s = SINGERS.find((x) => x.slug === slug);
   return s ? [s] : [];
 });
-
-/** The result's one Pro line, in both forms the offer below takes. */
-const RANGE_NUDGE_LINE = "Pro charts each retest, so you can see whether either edge moves";
 
 /**
  * The quick comparison, closest first. Five of the seven listed singers have
@@ -540,8 +535,6 @@ export function ResultView({
 
   const isPro = useIsPro();
   const proReady = useProReady();
-  // How many tests the record holds, this one included once it is saved.
-  const rangeTests = useProgress().rangeHistory.length;
   // The catalog is ~30 KB of per-note data and all this panel wants from it is
   // a count, so it loads after the result renders rather than riding in the
   // /range bundle — this route's cold traffic never reaches the songbook.
@@ -975,26 +968,7 @@ export function ResultView({
         </div>
       </Card>
 
-      {/* Every other completion screen carries the offer; this one, the
-          highest-intent moment in the product, carried only a locked chart.
-          Self-hides for Pro, so it collapses out of the stack entirely.
-          Free singers keep their tests too (the latest MAX_RANGE_HISTORY), so
-          Pro's part is the chart, not the keeping, and it shows change at the
-          edges rather than promising growth. */}
-      {/* A first result already carries the locked chart below, so it gets
-          the one-line form rather than a card over it; the full offer waits
-          for a retest, when there is a second test to chart. */}
-      {rangeTests <= 1 ? (
-        <ProInlineNudge>{RANGE_NUDGE_LINE}</ProInlineNudge>
-      ) : (
-        <ProCrescendoNudge
-          line={RANGE_NUDGE_LINE}
-          title="See your tests on one chart"
-          body={`Pro charts your latest ${MAX_RANGE_HISTORY} range tests on one chart, so a real change at either edge shows up instead of a number you have to remember.`}
-          context="Range test"
-        />
-      )}
-
+      {/* The locked chart below is this screen's one ask (no nudge stacked over it). */}
       {/* Range over time — real history for Pro, the same chart faded as the
           preview for free. */}
       <RangeOverTime lowMidi={lowMidi} highMidi={highMidi} />
@@ -1035,6 +1009,7 @@ function RangeOverTime({
   return (
     <LockedPanel
       label={hasHistory ? "Range over time" : "Range over time · sample"}
+      cta="See every retest on one chart"
     >
       <div className="p-4 sm:p-5">
         {/* Above the chart, not below it: the panel pins its lock row over the

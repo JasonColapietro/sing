@@ -27,14 +27,20 @@ The passaggio sits where it does because it is tied to the dimensions of your in
 
 Teaching traditions describe two turning points rather than one: a lower one where the voice has to start shedding weight, and an upper one where the head mechanism takes over properly. For the lower voices the classical literature puts them a perfect fourth apart — Richard Miller's *primo* and *secondo passaggio*. The figures usually quoted for the higher voices come from contemporary commercial singing instead, describe a narrower zone of three to four semitones, and are not the same event under another name. The zones this book and the app both work from:
 
-- **Bass:** G3 up to C4
-- **Bass-baritone:** A3 up to D4
-- **Baritone:** B3 up to E4
-- **Tenor:** D4 up to G4
-- **Countertenor:** G3 up to C4, with a caveat — the working transition is the crossing out of full voice into the falsetto-family register, which is a different decision from the one the other rows describe
-- **Contralto:** G4 up to B4
-- **Mezzo-soprano:** A4 up to C5
-- **Soprano:** C5 up to E5
+| Voice type | Zone starts | Zone ends |
+|---|---|---|
+| Bass | G3 | C4 |
+| Bass-baritone | A3 | D4 |
+| Baritone | B3 | E4 |
+| Tenor | D4 | G4 |
+| Countertenor | G3 | C4 |
+| Contralto | G4 | B4 |
+| Mezzo-soprano | A4 | C5 |
+| Soprano | C5 | E5 |
+
+The countertenor row is a different decision from the others: it marks the crossing out of full voice into the falsetto-family register.
+
+::figure registers | Chest below, head above, and the hatched overlap where the handover happens: the passaggio.
 
 Most women also meet an earlier, lighter shift, somewhere around E4 to G4, where chest voice hands over to a lighter middle voice. A quiet slide on "oo" will often flip there, at or below the contralto, mezzo and soprano zones above. Those zones mark where a belt or a full mix has to change gear, which happens higher than that first flip out of chest.
 
@@ -50,7 +56,7 @@ They have found the top of *that configuration*. There is often more voice above
 
 Force also does the reverse of what it promises acoustically. Blasting more air through a heavy fold setup, at a pitch where the resonance has already dropped away, does not bring the resonance back. It raises the collision force on the folds while the sound stays small. More work, less voice. Doing that loudly and often is how singers wear themselves down, which is chapter six's subject and worth reading before you spend much time up here.
 
-One rule overrides everything else in this chapter: singing should not hurt. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+One rule overrides everything else in this chapter: singing should not hurt. Chapter six covers what to do when it does.
 
 ## What works: vowel and weight
 

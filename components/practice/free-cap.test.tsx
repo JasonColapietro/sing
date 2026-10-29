@@ -117,6 +117,16 @@ describe("the free-practice wall", () => {
     expect(paintedFor(html, { plan: "free" })).toContain("p.freeLeft");
   });
 
+  it("reads as a sentence at body size, and drops its Pro link on a results view", () => {
+    const html = renderToStaticMarkup(<FreeAllowance cap={open} />);
+    expect(html).toContain("text-sm");
+    expect(html).not.toContain("uppercase");
+    expect(html).toContain("Pro has no daily limit");
+    const quiet = renderToStaticMarkup(<FreeAllowance cap={open} proLink={false} />);
+    expect(quiet).not.toContain("/pro");
+    expect(quiet).toContain("Free guided practice today");
+  });
+
   it("paints the wall before hydration only where the cap is reached, with its readout exact", () => {
     stored.progress = { ...DEFAULT_PROGRESS, streak: { current: 3, best: 3, lastDay: localDay() } };
     const html = renderToStaticMarkup(<CapWall cap={open} className="mb-6" />);

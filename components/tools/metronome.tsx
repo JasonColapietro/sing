@@ -232,8 +232,8 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               } ${
                 running && i === beat
                   ? i === 0
-                    ? "border-rec bg-rec shadow-[0_0_12px_rgba(157, 63, 51,0.75)]"
-                    : "border-violet bg-violet shadow-[0_0_10px_rgba(197, 150, 66,0.65)]"
+                    ? "border-rec bg-rec shadow-[0_0_12px_rgba(157,63,51,0.75)]"
+                    : "border-violet bg-violet shadow-[0_0_10px_rgba(197,150,66,0.65)]"
                   : "border-line2 bg-panel"
               }`}
             />

@@ -25,7 +25,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 export const ENDPOINT = "https://api.indexnow.org/indexnow";
-export const MAX_URLS_PER_REQUEST = 10000;
+const MAX_URLS_PER_REQUEST = 10000;
 const KEY_PATTERN = /^[A-Za-z0-9-]{8,128}$/;
 
 export function parseArgs(argv) {
@@ -61,7 +61,7 @@ export function readKey(keyFile) {
   return { key, name };
 }
 
-export function locs(xml) {
+function locs(xml) {
   return [...xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map(([, loc]) => loc.replace(/&amp;/g, "&"));
 }
 

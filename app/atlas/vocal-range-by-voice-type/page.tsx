@@ -157,11 +157,11 @@ const STRETCHED_EXAMPLES = ROWS.flatMap((r) => {
 /**
  * One entry per voice type, phrased as the query it answers.
  *
- * Written to stand alone, because an AI Overview or a chat answer quotes a
- * single one of these with none of the page around it — so each answer repeats
- * the category, the number, and the caveat rather than relying on the row
- * above it. Generated from the same data the table renders, so the answer a
- * model quotes and the answer a reader sees cannot disagree.
+ * Each answer names its category and numbers, so one quoted alone still
+ * answers its question; the caveat every row shares (range is not type) is
+ * the section's lede, FAQ_LEDE, said once rather than eight times. Generated
+ * from the same data the table renders, so the answer a model quotes and the
+ * answer a reader sees cannot disagree.
  */
 interface Faq {
   q: string;
@@ -200,9 +200,13 @@ function typeAnswer(row: Row): string {
     ...(CCM_ZONE_TYPES.has(row.voice)
       ? [`That is the commercial-singing zone where a belt or mix changes gear; ${EARLIER_SHIFT}.`]
       : []),
-    `Range and voice type are different measurements, though: the type describes where a voice sits comfortably, not the furthest notes it can reach. The ${row.count} ${plural} in Suede Sing's library of ${SINGERS.length} singers carry cited ranges running ${observed}, well outside the conventional band at both ends.`,
+    `The ${row.count} ${plural} in Suede Sing's library of ${SINGERS.length} singers carry cited ranges running ${observed}.`,
   ].join(" ");
 }
+
+/** The caveat every voice-type answer shares, stated once above them. */
+const FAQ_LEDE =
+  "Range and voice type are different measurements: a type describes where a voice sits comfortably, not the furthest notes it can reach, so the singers filed under each type carry cited ranges well outside its conventional band.";
 
 const FAQ: Faq[] = [
   ...ROWS.map((row) => ({
@@ -509,6 +513,7 @@ export default function VocalRangeByVoiceTypePage() {
         <Card>
           <SectionLabel>Questions</SectionLabel>
           <h2 className="mt-3 text-xl">Every voice type, one at a time</h2>
+          <p className="mt-2 max-w-3xl text-sm text-mut">{FAQ_LEDE}</p>
           {/* Each question is a real heading rather than a <dt>, so the eleven
               Question nodes in the FAQPage markup above have eleven visible
               counterparts. As one description list the whole block read as a

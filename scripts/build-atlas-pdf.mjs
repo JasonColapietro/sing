@@ -15,6 +15,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
+import { MARKDOWN_PDF_STYLES, figureHtml, isTableLine, tableHtml } from "./markdown-pdf.mjs";
 import { ATLAS_SUBTITLE, ATLAS_TITLE, buildAtlas, labelToMidi } from "./compile-atlas.mjs";
 
 // Not public/ — a paid benefit, served only through /api/book/pdf after a
@@ -31,14 +32,17 @@ if (problems.length) {
 const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-/** Same subset the in-app renderer supports. */
+/** Same subset the in-app renderer supports (lib/markdown.tsx). */
 function mdToHtml(md) {
   const lines = md.split("\n");
   const out = [];
   let para = [];
   let list = null;
+  let table = null;
   const inline = (t) =>
     esc(t)
+      // A site link has nowhere to go on paper: print its label.
+      .replace(/\[([^\]]+)\]\(\/[^)\s]*\)/g, "$1")
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
       .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
       .replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -54,13 +58,35 @@ function mdToHtml(md) {
       list = null;
     }
   };
+  const flushT = () => {
+    if (table) {
+      out.push(tableHtml(table, inline));
+      table = null;
+    }
+  };
   for (const raw of lines) {
     const line = raw.trim();
     if (!line) {
       flushP();
       flushL();
+      flushT();
       continue;
     }
+    const fig = figureHtml(line, inline);
+    if (fig) {
+      flushP();
+      flushL();
+      flushT();
+      out.push(fig);
+      continue;
+    }
+    if (isTableLine(line)) {
+      flushP();
+      flushL();
+      (table ??= []).push(line);
+      continue;
+    }
+    flushT();
     const h = /^(#{2,4})\s+(.*)$/.exec(line);
     if (h) {
       flushP();
@@ -80,6 +106,7 @@ function mdToHtml(md) {
   }
   flushP();
   flushL();
+  flushT();
   return out.join("\n");
 }
 
@@ -309,8 +336,15 @@ function contentsHtml(pages) {
 const styles = `
   @page { size: A5; margin: 18mm 16mm; }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Liberation Sans first, as in build-book-pdf.mjs: Helvetica's metric twin,
+     absent on a Mac (which falls through to Helvetica Neue), and on Linux the
+     face Chromium would otherwise only reach through a fontconfig alias. */
+  body { margin: 0; font-family: "Liberation Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
          color: #20201d; font-size: 10.5pt; line-height: 1.62; }
+  /* Chromium names each PDF bookmark from the heading's laid-out lines and
+     drops the space at every soft wrap ("Whereit breaks"); pre-wrap keeps it,
+     as in build-book-pdf.mjs. */
+  h1, h2, h3, h4 { white-space: pre-wrap; }
   .cover { height: 92vh; display: flex; flex-direction: column;
            page-break-after: always; border-top: 2.5pt solid #9d3f33; padding-top: 9mm; }
   .cover .kicker { font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
@@ -395,7 +429,8 @@ const styles = `
   .c-roster { margin: .8mm 0 1.8mm 7mm; font-size: 7.5pt; line-height: 1.5; color: #8a8272; }
 
   .chapter h1 { align-self: center; font-size: 17pt; margin: 0; letter-spacing: -.015em; line-height: 1.15; }
-  h2 { font-size: 12pt; margin: 8mm 0 2mm; letter-spacing: -.01em; }
+  h2 { font-size: 12pt; margin: 8mm 0 2mm; letter-spacing: -.01em;
+       page-break-after: avoid; break-after: avoid; }
   h3, h4 { font-size: 11pt; margin: 6mm 0 2mm; }
   p { margin: 0 0 3.5mm; color: #3a3833; }
   ul { margin: 0 0 3.5mm; padding-left: 5mm; }
@@ -444,7 +479,7 @@ const styles = `
 const COVER_RANGES = [[18, 62], [28, 74], [8, 96], [34, 70], [22, 58]];
 
 const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta charset="utf-8">
-<title>${esc(ATLAS_TITLE)}</title><style>${styles}</style></head><body>
+<title>${esc(ATLAS_TITLE)}</title><style>${styles}${MARKDOWN_PDF_STYLES}</style></head><body>
   <section class="cover">
     <p class="kicker">Included with Suede Pro</p>
     <h1>${esc(ATLAS_TITLE)}</h1>
@@ -499,7 +534,9 @@ const PDF_OPTIONS = {
   margin: { top: "18mm", bottom: "16mm", left: "16mm", right: "16mm" },
 };
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({
+  executablePath: process.env.SING_BROWSER_EXECUTABLE || undefined,
+});
 const page = await browser.newPage();
 
 async function render(html, path) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
-import { StepIntroSlide } from "@/components/practice/step-intro";
+import { RoutineStepContext, StepIntroSlide } from "@/components/practice/step-intro";
 import { useStepRunner, type StepPhase } from "@/components/practice/step-runner";
 import { formatClock, useFreeCap, type FreeCap } from "@/lib/free-cap";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
@@ -292,13 +292,17 @@ export function EarRunner({
   }
 
   return (
-    <GameStep
-      key={runner.stepKey}
-      step={step}
-      pitch={pitch}
-      onExit={() => quit()}
-      onComplete={(r) => runner.closeStep(phase.step, r)}
-    />
+    // The game's X ends this step ("Finish step") and the next slide comes
+    // up, as in warmups and breath; only the slide's own X exits the routine.
+    <RoutineStepContext.Provider value>
+      <GameStep
+        key={runner.stepKey}
+        step={step}
+        pitch={pitch}
+        onExit={() => runner.closeStep(phase.step, null)}
+        onComplete={(r) => runner.closeStep(phase.step, r)}
+      />
+    </RoutineStepContext.Provider>
   );
 }
 

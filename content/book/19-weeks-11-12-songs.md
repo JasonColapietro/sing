@@ -35,7 +35,7 @@ Take that phrase into the pitch studio and treat it as an exercise. Sing it quie
 
 Mark your breaths and keep them. Write them on a lyric sheet if that helps. Phrases often collapse because of a breath taken somewhere you never planned one, and you rarely notice taking it. The sustain work from weeks 9 and 10 carries over only if you decide in advance where the air is going.
 
-Do not sing the song at full volume over and over. Two or three full-voice passes in a twenty-minute session is plenty; work quietly the rest of the time. Volume is what makes a song feel like a performance, and it is also what makes eleven repetitions of a chorus a bad idea. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+Do not sing the song at full volume over and over. Two or three full-voice passes in a twenty-minute session is plenty; work quietly the rest of the time. Volume is what makes a song feel like a performance, and it is also what makes eleven repetitions of a chorus a bad idea.
 
 ## Week 12: retest and compare
 

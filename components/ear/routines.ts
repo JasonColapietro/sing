@@ -1,11 +1,11 @@
 // Ear-training routines: fixed sequences of games, each at a named difficulty,
-// so the room can offer a workout instead of a catalogue.
+// so the room can offer a routine instead of a catalogue.
 //
 // The four games shipped as four cards with a difficulty toggle on each: a
 // singer had to decide which ear skill to train, how hard, and when they had
 // done enough, before hearing a single note. Every structured ear course
 // (Yousician's technique drills, Functional Ear Trainer's daily sets) answers
-// those three questions for you — a named workout, a few games in a sensible
+// those three questions for you — a named routine, a few games in a sensible
 // order, and an end it reaches on its own. This is that catalogue.
 //
 // Nothing here reads scores. `recommendEarRoutine` only answers "what fits
@@ -18,6 +18,7 @@ import {
   type Difficulty,
   type GameId,
 } from "./lib";
+import { findRoutine, recommendQuickOrDaily, routineMinutesOf, routineTotalSeconds } from "@/components/practice/routines";
 
 export interface EarRoutineStep {
   game: GameId;
@@ -156,20 +157,16 @@ export const EAR_ROUTINES: EarRoutine[] = [
 ];
 
 export function earRoutineById(id: string | null | undefined): EarRoutine | null {
-  if (!id) return null;
-  return EAR_ROUTINES.find((r) => r.id === id) ?? null;
+  return findRoutine(EAR_ROUTINES, id);
 }
 
 /** Estimated seconds for a whole routine, intro slides included. */
 export function earRoutineSeconds(r: EarRoutine): number {
-  return r.steps.reduce(
-    (a, s) => a + EAR_GAME_SECONDS[s.game] + EAR_STEP_INTRO_SEC,
-    0,
-  );
+  return routineTotalSeconds(r, (s) => EAR_GAME_SECONDS[s.game], EAR_STEP_INTRO_SEC);
 }
 
 export function earRoutineMinutes(r: EarRoutine): number {
-  return Math.max(1, Math.round(earRoutineSeconds(r) / 60));
+  return routineMinutesOf(earRoutineSeconds(r));
 }
 
 /** True when any step of this routine needs the microphone. */
@@ -187,9 +184,8 @@ export function earStepLabel(s: EarRoutineStep): string {
  * Which ear routine to put at the top of the room right now.
  *
  * Someone who has already practised today gets the quick one — a second visit
- * is a top-up, not another full workout. Everyone else gets the daily.
+ * is a top-up, not another full routine. Everyone else gets the daily.
  */
 export function recommendEarRoutine(opts: { practicedToday: boolean }): EarRoutine {
-  const pick = opts.practicedToday ? "quick" : "daily";
-  return earRoutineById(pick) ?? EAR_ROUTINES[0];
+  return recommendQuickOrDaily(EAR_ROUTINES, opts);
 }

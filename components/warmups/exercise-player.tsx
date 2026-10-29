@@ -34,6 +34,7 @@ import {
   SessionButton,
   SessionShell,
 } from "@/components/practice/session-shell";
+import { ROUTINE_LABELS } from "@/components/practice/step-intro";
 import {
   EMPTY_GUIDE_TRACE,
   bestRep,
@@ -234,7 +235,7 @@ export function ExercisePlayer({
   const bounded = bounds !== undefined;
   // Inside a routine: the labels speak of steps. A standalone set count does not.
   const inRoutine = bounded && !bounds.standalone;
-  const endLabel = inRoutine ? "Finish step" : "End";
+  const endLabel = inRoutine ? ROUTINE_LABELS.finishStep : "End";
   const stepLine = !bounds
     ? null
     : (bounds.label ??
@@ -917,7 +918,7 @@ export function ExercisePlayer({
       subtitle={stepLine ?? "Endless ladder"}
       progress={progressPct}
       onClose={endExercise}
-      closeLabel={inRoutine ? "Finish step" : "Exit exercise"}
+      closeLabel={inRoutine ? ROUTINE_LABELS.finishStep : "Exit exercise"}
       topRight={
         <div className="text-right leading-tight">
           <div className="font-mono text-[11px] text-[var(--s-dim)]">

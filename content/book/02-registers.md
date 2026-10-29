@@ -13,6 +13,8 @@ The sounds themselves are not vague. Something specific changes in your larynx a
 
 Your vocal folds are not a fixed object. They are layered — a muscular body under a softer cover — and the muscles around them can adjust length, thickness and stiffness somewhat independently of each other. That is registers in one sentence. A register is a way of setting up the folds, and each setup has a band of pitches it handles well and a point where it gives out.
 
+::figure registers | Two settings that overlap: the heavier one below, the lighter one above, and a stretch where either will do.
+
 Two muscle groups do most of the negotiating. One runs inside the folds and shortens and thickens them. The other tilts a cartilage in the larynx and draws them longer and thinner. Every note you sing is some balance of those two, plus how firmly the folds are brought together and how much air pressure is arriving from below.
 
 Thick, short folds vibrate through most of their depth. They stay shut for a large share of each cycle and release the air in firm pulses, which builds a tone dense with upper harmonics: solid, carrying, close to speech. Thin, stretched folds vibrate mostly in their cover. Less mass moves, the folds spend less of each cycle closed, and the tone comes out purer and lighter, with less power for the same effort.
@@ -51,7 +53,7 @@ The most damaging thing register vocabulary has done is turn a mechanical fact i
 
 That is backwards, and it is the short road to strain. A register is a band of pitch and volume that one fold setup handles well. Working inside those bands is not a compromise; it is how the instrument is built. Nearly every singer you could name crosses several setups inside a single song, and the skill on display is not avoiding the switch. It is making the switch inaudible — or making it loud on purpose, the way country and yodelling traditions have done for generations.
 
-One boundary is worth stating plainly, because the rest of this chapter is about pushing into unfamiliar territory. Effort is fine. Pain is not. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+One boundary is worth stating plainly, because the rest of this chapter is about pushing into unfamiliar territory. Effort is fine. Pain is not.
 
 For your own practice, the useful questions are mechanical ones. Where does the change happen for you? What does it cost you in volume and tone on either side of it? Can you cross it quietly before you try to cross it loudly? The next chapter takes up that transition zone directly: where it lands, why it lands there, and the principle behind negotiating it.
 

@@ -53,6 +53,12 @@ describe("the unlock stack on /pro", () => {
     expect(html).not.toContain("chapters Pro opens");
   });
 
+  it("draws both book covers at the head of their contents", () => {
+    const html = render();
+    expect(html.match(/aspect-\[3\/4\]/g)).toHaveLength(2);
+    expect(html.indexOf("aspect-[3/4]")).toBeLessThan(html.indexOf('href="/book"'));
+  });
+
   it("prerenders the sales version until the entitlement is read", () => {
     state.active = true;
     state.ready = false;

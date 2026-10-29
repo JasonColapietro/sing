@@ -61,7 +61,7 @@ describe("response headers", () => {
       "/apple-touch-icon.png",
       "/app-store-badge.svg",
       "/founder-portrait.jpg",
-      "/shot-01-start-the-session.png",
+      "/room-range.png",
       "/suede-logo.png",
       "/favicon.ico",
       "/icon.png",

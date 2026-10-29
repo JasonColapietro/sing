@@ -28,23 +28,36 @@ const RESTORE_LABEL = "Already have Pro? Unlock it in this browser";
  * (components/prepaint.tsx) and the pre-paint script shows it only to a free
  * browser under the cap, with the minutes filled in.
  */
-export function FreeAllowance({ cap, className = "" }: { cap: FreeCap; className?: string }) {
+export function FreeAllowance({
+  cap,
+  className = "",
+  proLink = true,
+}: {
+  cap: FreeCap;
+  className?: string;
+  /** False on a results view, where the results nudge is that view's one ask. */
+  proLink?: boolean;
+}) {
   const hydrated = useHydrated();
   if (hydrated && (cap.isPro || cap.capped)) return null;
   return (
     <p
       {...prepaintMarker(hydrated, { plan: "free" })}
-      className={`tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim ${className}`}
+      className={`tabular text-sm text-mut ${className}`}
     >
       Free guided practice today: <PrepaintText field="freeLeft" value={formatClock(cap.leftSec)} /> left
       of {formatClock(cap.capSec)}
-      <span className="mx-2 text-line2">·</span>
-      <Link
-        href={PRO_BUY_HREF}
-        className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
-      >
-        Pro has no daily limit
-      </Link>
+      {proLink && (
+        <>
+          <span className="mx-2 text-line2">·</span>
+          <Link
+            href={PRO_BUY_HREF}
+            className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+          >
+            Pro has no daily limit
+          </Link>
+        </>
+      )}
     </p>
   );
 }

@@ -40,3 +40,17 @@ describe("deep-link entitlement", () => {
     expect(entitled(outside)).toBe(false);
   });
 });
+
+describe("micStepForStart", () => {
+  it("asks for the mic on a card's Sing after Pick a song first, so the run is scored", async () => {
+    const { micStepForStart } = await import("./songs-client");
+    expect(micStepForStart({ micAllowed: false, listening: false, listenMode: false })).toBe("ask");
+  });
+
+  it("never asks in listen mode (Continue without a mic), and reopens an idle-closed mic", async () => {
+    const { micStepForStart } = await import("./songs-client");
+    expect(micStepForStart({ micAllowed: false, listening: false, listenMode: true })).toBe("none");
+    expect(micStepForStart({ micAllowed: true, listening: false, listenMode: false })).toBe("reopen");
+    expect(micStepForStart({ micAllowed: true, listening: true, listenMode: false })).toBe("none");
+  });
+});

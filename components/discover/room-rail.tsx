@@ -67,7 +67,7 @@ export const ROOMS: readonly Room[] = [
   { href: "/studio", label: "Pitch studio", blurb: "Live note, cents, and an eight-second trace.", Glyph: StudioGlyph, mic: true },
   { href: "/warmups", label: "Warmups", blurb: "Warmup routines by length, scored while you sing.", Glyph: WarmupGlyph, mic: true },
   { href: "/recorder", label: "Recorder", blurb: "Cut a take, compare two, keep the good ones.", Glyph: RecorderGlyph, mic: true },
-  { href: "/analyze", label: "Spectrogram and tone", blurb: "Your harmonics live, plus today's vocal load.", Glyph: AnalyzeGlyph, mic: true },
+  { href: "/analyze", label: "Voice analyzer", blurb: "Your harmonics live, plus today's vocal load.", Glyph: AnalyzeGlyph, mic: true },
   { href: "/range", label: "Range test", blurb: "Your lowest and highest notes, plus a voice-type estimate.", Glyph: RangeGlyph, mic: true },
   { href: "/ear-training", label: "Ear training", blurb: "Interval, pitch-matching, and melody games.", Glyph: EarGlyph, mic: true },
   { href: "/breath", label: "Breath control", blurb: "Timed breathing and sustain for steadier phrases.", Glyph: BreathGlyph, mic: true },
@@ -93,7 +93,7 @@ export function RoomRail({
 
   return (
     <nav aria-label={title} className={cn(className)}>
-      <SectionLabel>{title}</SectionLabel>
+      <SectionLabel hairline>{title}</SectionLabel>
       <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {rooms.map(({ href, label, blurb, Glyph, mic, prefetch }) => (
           <li key={href}>

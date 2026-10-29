@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { IconPlay, IconSkip } from "@/components/icons";
 import { SESSION_FOCUS, SessionShell } from "./session-shell";
 
 /** The verbs every routine runner uses, so the rooms never drift again. */
@@ -9,23 +10,20 @@ export const ROUTINE_LABELS = {
   skip: "Skip",
   next: "Next",
   exit: "Exit routine",
+  /** The X on a step inside a routine: ends that step, back to the next slide. */
+  finishStep: "Finish step",
 } as const;
 
-function PlayIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M8 5.5v13l11-6.5z" />
-    </svg>
-  );
-}
+/**
+ * Set by a routine runner around the step it renders. A step's own X reads
+ * it: inside a routine it ends the step ("Finish step") and the runner moves
+ * on to the next slide; alone (null) the step keeps its own exit label.
+ */
+export const RoutineStepContext = createContext(false);
 
-function SkipIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M5 5v14l9-7z" />
-      <rect x="16" y="5" width="3" height="14" rx="1" />
-    </svg>
-  );
+/** The close label for a step: "Finish step" in a routine, `alone` otherwise. */
+export function useStepCloseLabel(alone: string): string {
+  return useContext(RoutineStepContext) ? ROUTINE_LABELS.finishStep : alone;
 }
 
 /**
@@ -65,7 +63,10 @@ export function StepIntroSlide({
   title: string;
   /** The mono line under the how-to: reps, length, difficulty. */
   meta?: ReactNode;
-  /** The step just closed and how it went; null on the first slide. */
+  /**
+   * The step just closed and how it went; null on the first slide. An
+   * unscored step that ran (a breath drill) passes its label with a null score.
+   */
   prev?: { label: string; score: number | null; scoreLabel?: string } | null;
   /** Why the routine skips this step; replaces the how-to. */
   note?: string;
@@ -81,6 +82,13 @@ export function StepIntroSlide({
 }) {
   // Fraction of the hold elapsed, drawn as the bar filling; ten updates a second.
   const [pct, setPct] = useState(0);
+  // Each slide is a fresh mount, so a live region on it would be new and most
+  // screen readers would not announce it. Focus the step title instead: it
+  // runs after the shell focuses its root, and is read as "Up next: <step>".
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  useEffect(() => {
+    headingRef.current?.focus({ preventScroll: true });
+  }, []);
   useEffect(() => {
     const t0 = performance.now();
     const holdMs = holdSec * 1000;
@@ -97,6 +105,7 @@ export function StepIntroSlide({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const kickerText = note ? "Skipping" : (kicker ?? (stepIndex === 0 ? "First up" : "Up next"));
   const secondsLeft = Math.max(1, Math.ceil(holdSec - (pct / 100) * holdSec));
   const button = `flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm ${SESSION_FOCUS}`;
 
@@ -124,11 +133,11 @@ export function StepIntroSlide({
             >
               {note ? (
                 <>
-                  <SkipIcon /> {ROUTINE_LABELS.next}
+                  <IconSkip /> {ROUTINE_LABELS.next}
                 </>
               ) : (
                 <>
-                  <PlayIcon /> {ROUTINE_LABELS.start}
+                  <IconPlay /> {ROUTINE_LABELS.start}
                 </>
               )}
             </button>
@@ -138,7 +147,7 @@ export function StepIntroSlide({
                 onClick={onSkip}
                 className={`${button} border border-[var(--s-line2)] text-[var(--s-mut)] transition-colors hover:bg-[var(--s-over)] hover:text-[var(--s-ink)]`}
               >
-                <SkipIcon /> {ROUTINE_LABELS.skip}
+                <IconSkip /> {ROUTINE_LABELS.skip}
               </button>
             )}
           </div>
@@ -170,14 +179,19 @@ export function StepIntroSlide({
                       : "var(--s-mut)",
               }}
             >
-              {prev.score === null ? "skipped" : (prev.scoreLabel ?? `${prev.score}%`)}
+              {prev.score === null ? (prev.scoreLabel ?? "skipped") : (prev.scoreLabel ?? `${prev.score}%`)}
             </span>
           </p>
         )}
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-          {note ? "Skipping" : (kicker ?? (stepIndex === 0 ? "First up" : "Up next"))}
+        <p aria-hidden="true" className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
+          {kickerText}
         </p>
-        <h2 className="mt-3 text-4xl text-[var(--s-ink)] sm:text-5xl" aria-live="polite">
+        <h2
+          ref={headingRef}
+          tabIndex={-1}
+          aria-label={`${kickerText}: ${title}`}
+          className="mt-3 text-4xl text-[var(--s-ink)] outline-none sm:text-5xl"
+        >
           {title}
         </h2>
         {note ? (

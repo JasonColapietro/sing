@@ -20,7 +20,7 @@ const ROWS: Array<{ label: string; marks: [Mark, Mark, Mark, Mark, Mark, Mark] }
     marks: ["yes", "part", "yes", "part", "yes", "part"],
   },
   {
-    label: "Take recorder",
+    label: "Recorder",
     marks: ["yes", "part", "yes", "yes", "part", "no"],
   },
   {

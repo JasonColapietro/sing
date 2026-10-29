@@ -175,7 +175,7 @@ export default function VoiceCoursePage() {
             data-course-stage={stage.catalog.id}
             className="space-y-4"
           >
-            <div className="flex max-w-3xl items-start justify-between gap-4">
+            <div className="flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
               <div>
               <SectionLabel>Stage {stage.catalog.stage}</SectionLabel>
               <h2 id={`stage-${stage.catalog.stage}`} className="mt-3 text-2xl">
@@ -190,7 +190,11 @@ export default function VoiceCoursePage() {
               <p className="mt-2 text-mut">{stage.catalog.subtitle}</p>
               </div>
               {STAGE_FIGURES[stage.catalog.id] && (
-                <ReferenceFigure kind={STAGE_FIGURES[stage.catalog.id]} className="mt-1 hidden sm:block" />
+                // Above the stage label on a phone, scaled down; beside it from sm up.
+                <ReferenceFigure
+                  kind={STAGE_FIGURES[stage.catalog.id]}
+                  className="order-first h-10 w-auto sm:order-none sm:mt-1 sm:h-12"
+                />
               )}
             </div>
             <div className="grid gap-4 md:grid-cols-2">

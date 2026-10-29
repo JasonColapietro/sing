@@ -1,9 +1,18 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { MARKDOWN_FIGURES, parseFigureLine } from "@/lib/markdown-figures";
 
 /**
- * Minimal markdown renderer for the book — headings, paragraphs, lists,
- * blockquotes, bold/italic, inline code and internal links.
+ * Minimal markdown renderer for the books and lessons: headings, paragraphs,
+ * lists, blockquotes, pipe tables, `::figure` lines, bold/italic, inline code
+ * and internal links.
+ *
+ * Tables are the GitHub subset: a header row, a `|---|` separator, body rows,
+ * no alignment and no multi-line cells; the first column is a row header.
+ * `::figure <id> [key=value…] | caption` places a figure from
+ * lib/markdown-figures.tsx; an unknown id renders nothing (and fails
+ * lib/book-pages.test.tsx), so a typo never prints a raw directive. The two PDF
+ * builders mirror both.
  *
  * The book is the only markdown in the app and it is written in-house, so a
  * parser dependency would be more surface than the job needs. Output is React
@@ -72,12 +81,17 @@ function renderInline(text: string, keyPrefix: string): Inline[] {
   return out;
 }
 
+const TABLE_SEP = /^\|?(\s*:?-{3,}:?\s*\|)+\s*(:?-{3,}:?\s*)?\|?$/;
+const cells = (l: string) =>
+  l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+
 export function Markdown({ source }: { source: string }) {
   const lines = source.replace(/\r\n/g, "\n").split("\n");
   const blocks: ReactNode[] = [];
   let para: string[] = [];
   let list: string[] | null = null;
   let quote: string[] | null = null;
+  let table: string[] | null = null;
   let k = 0;
 
   const flushPara = () => {
@@ -122,10 +136,58 @@ export function Markdown({ source }: { source: string }) {
       </blockquote>,
     );
   };
+  const flushTable = () => {
+    if (!table) return;
+    const rows = table;
+    table = null;
+    const hasHead = rows.length > 1 && TABLE_SEP.test(rows[1].trim());
+    const head = hasHead ? cells(rows[0]) : null;
+    const body = rows.slice(hasHead ? 2 : 0).map(cells);
+    const key = k++;
+    blocks.push(
+      <div key={`t${key}`} className="mt-6 overflow-x-auto">
+        <table className="w-full border-collapse text-left text-[0.975rem] leading-snug">
+          {head && (
+            <thead>
+              <tr>
+                {head.map((c, i) => (
+                  <th
+                    key={i}
+                    scope="col"
+                    className="border-b border-line2 py-2 pr-4 font-mono text-[11px] font-normal uppercase tracking-[0.12em] text-dim"
+                  >
+                    {renderInline(c, `t${key}-h${i}`)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {body.map((r, ri) => (
+              <tr key={ri} className="border-b border-line/60 align-top">
+                {r.map((c, ci) =>
+                  ci === 0 ? (
+                    <th key={ci} scope="row" className="py-2 pr-4 font-medium text-ink">
+                      {renderInline(c, `t${key}-${ri}-${ci}`)}
+                    </th>
+                  ) : (
+                    <td key={ci} className="py-2 pr-4 text-ink/85">
+                      {renderInline(c, `t${key}-${ri}-${ci}`)}
+                    </td>
+                  ),
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>,
+    );
+  };
   const flushAll = () => {
     flushPara();
     flushList();
     flushQuote();
+    flushTable();
   };
 
   for (const raw of lines) {
@@ -135,6 +197,34 @@ export function Markdown({ source }: { source: string }) {
       flushAll();
       continue;
     }
+    const fig = parseFigureLine(line);
+    if (fig) {
+      flushAll();
+      const drawn = MARKDOWN_FIGURES[fig.id]?.(fig.args);
+      if (drawn) {
+        const key = k++;
+        blocks.push(
+          <figure key={`f${key}`} className="mt-8 overflow-hidden rounded-2xl border border-line bg-panel">
+            {/* Visible overflow: a keyboard strip centres its end labels on the end keys. */}
+            <div className="p-4 [&_svg]:overflow-visible">{drawn}</div>
+            {fig.caption && (
+              <figcaption className="border-t border-line px-4 py-2.5 text-sm leading-snug text-mut">
+                {renderInline(fig.caption, `f${key}`)}
+              </figcaption>
+            )}
+          </figure>,
+        );
+      }
+      continue;
+    }
+    if (line.trimStart().startsWith("|")) {
+      flushPara();
+      flushList();
+      flushQuote();
+      (table ??= []).push(line);
+      continue;
+    }
+    flushTable();
     const heading = /^(#{2,4})\s+(.*)$/.exec(line);
     if (heading) {
       flushAll();

@@ -101,15 +101,18 @@ function Table({
   );
 }
 
+/** The caveat every answer below shares, stated once as the section's lede. */
+const FAQ_LEDE =
+  "This catalog cannot establish a world record, or the highest or lowest note ever sung. Each answer gives its largest listed value; check the profile's evidence status before repeating one as a verified performance.";
+
 export default function RecordsPage() {
   const widest = topWithTies(span);
   const lowest = topWithTies(lowScore);
   const highest = topWithTies(highScore);
 
   // The absolute phrasings people actually type — "ever", "in the world",
-  // "biggest" — answered from the same computed rankings the tables render,
-  // with the hedge these numbers deserve stated inside the answer rather than
-  // near it. One array feeds the visible section and the FAQPage markup.
+  // "biggest" — answered from the same computed rankings the tables render.
+  // One array feeds the visible section and the FAQPage markup.
   // Each answer names every profile tied for the record: naming only the
   // first would crown whoever sorts first alphabetically.
   const holders = recordHolders(SINGERS);
@@ -122,22 +125,24 @@ export default function RecordsPage() {
     holders.widest.length === 1
       ? `${w.name} has the widest reported span: ${rangeLabel(w)}, about ${spanOctaves(span(w))} octaves`
       : `${joinNames(holders.widest.map(withRange))} share the widest reported span, ${span(w)} semitones or about ${spanOctaves(span(w))} octaves`;
+  // The hedge all three answers share is the section's lede, said once
+  // (FAQ_LEDE); each answer keeps only its own value.
   const faq = [
     {
       q: "Who has the biggest vocal range in the world?",
-      a: `This catalog cannot establish a world record. Among its ${SINGERS.length} profiles, ${
+      a: `Among this catalog's ${SINGERS.length} profiles, ${
         holders.widest.length === 1
           ? `the largest reported span is ${w.name}'s ${rangeLabel(w)}`
           : `the largest reported span is shared by ${joinNames(holders.widest.map(withRange))}`
-      }, about ${spanOctaves(span(w))} octaves. Individual endpoint evidence must be checked before treating that as a verified performance.`,
+      }, about ${spanOctaves(span(w))} octaves.`,
     },
     {
       q: "What is the highest note ever sung?",
-      a: `This catalog does not establish the highest note ever sung. Its highest listed endpoint is ${midiToLabel(hi.highMidi)}, listed for ${names(holders.highest)}; check ${holders.highest.length === 1 ? "that profile's" : "each profile's"} evidence status before repeating the note as a verified performance.`,
+      a: `The catalog's highest listed endpoint is ${midiToLabel(hi.highMidi)}, listed for ${names(holders.highest)}.`,
     },
     {
       q: "What is the lowest note ever sung?",
-      a: `This catalog does not establish the lowest note ever sung. Its lowest listed endpoint is ${midiToLabel(lo.lowMidi)}, listed for ${names(holders.lowest)}; individual source review is needed to verify the performance and note.`,
+      a: `The catalog's lowest listed endpoint is ${midiToLabel(lo.lowMidi)}, listed for ${names(holders.lowest)}.`,
     },
   ];
 
@@ -266,6 +271,7 @@ export default function RecordsPage() {
             the FAQPage markup above. */}
         <Card>
           <h2 className="text-xl">The questions these tables get asked</h2>
+          <p className="mt-2 max-w-3xl text-sm text-mut">{FAQ_LEDE}</p>
           <div className="mt-4 max-w-3xl space-y-5">
             {faq.map((f) => (
               <div key={f.q}>

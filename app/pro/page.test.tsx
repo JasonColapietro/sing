@@ -107,7 +107,8 @@ describe("homepage Pro teaser", () => {
     expect(html).not.toMatch(/sold out/i);
     expect(html).not.toContain("Never renews");
     expect(html).not.toContain("Cancel in one click");
-    // Once on the page: the teaser button; the footer carries the other priced anchor.
-    expect(html.match(/\$79 once/g)).toHaveLength(2);
+    // Once in the page body, on the teaser button (the layout's footer
+    // carries the site's other priced link).
+    expect(html.match(/\$79/g)).toHaveLength(1);
   });
 });

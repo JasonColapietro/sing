@@ -89,8 +89,8 @@ const WEEK = [
     focus: "Listen back",
     body: "After the same short warm-up, record two takes of the same section. Compare pitch, timing, tone, and the end of each phrase; keep one specific change for next week.",
     links: [
-      { href: "/recorder", label: "Take recorder" },
-      { href: "/analyze", label: "Voice spectrogram" },
+      { href: "/recorder", label: "Recorder" },
+      { href: "/analyze", label: "Voice analyzer" },
     ],
   },
   {

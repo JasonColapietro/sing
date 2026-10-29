@@ -61,12 +61,10 @@ describe("in-page jumps to the buy card", () => {
     // navigation: after any Go Pro link (all land on /pro#buy) the hero's and
     // the final call to action's buttons did nothing.
     const html = renderToStaticMarkup(<ProClient />);
-    const tag = anchor(html, "Get lifetime Pro: $79 once");
-    expect(tag).toContain('href="#buy"');
-    expect(tag).not.toContain("data-client-router");
-    // The final call to action is a real buy button for a free visitor (the
-    // card's and the page's last), never a jump back up to the card.
-    expect(html.match(/>Get lifetime Pro: \$79 once<\/button>/g)).toHaveLength(2);
+    // The hero, the card and the final call to action are real buy buttons
+    // for a free visitor, never a jump to an identical button.
+    expect(html.match(/>Get lifetime Pro: \$79 once<\/button>/g)).toHaveLength(3);
+    expect(html).not.toMatch(/>Get lifetime Pro: \$79 once<\/a>/);
     expect(html).not.toMatch(/>Go Pro<\/a>/);
     // Routes still go through the client router.
     expect(anchor(html, "Back to the studio")).toContain("data-client-router");

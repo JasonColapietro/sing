@@ -72,7 +72,15 @@ A pre-flight, thirty seconds at most:
 - Warm up before you test, not after.
 - Note the time and how you feel — rough, tired, congested, fine.
 
-And a few tells that a session went wrong mid-flight. Accuracy uniformly bad across your whole range rather than worse in the usual places, which points at the setup more often than the voice, because voices do not degrade evenly. Low notes erratic, middle clean. Notes you sang last week that do not appear at all. A trace that lags or stutters. Everything reading sharp or flat by the same amount on every note, which usually means you are singing against a reference you cannot hear properly.
+And a few tells that a session went wrong mid-flight:
+
+| Tell | Usually means |
+|---|---|
+| Accuracy bad everywhere, not just in the usual places | The setup: voices do not degrade evenly |
+| Low notes erratic, middle clean | The mic is too far for quiet low notes, or noise is masking them |
+| Notes from last week missing entirely | The detector is not hearing you cleanly, not a lost note |
+| A trace that lags or stutters | The device or the mic, not your pitch |
+| Every note sharp or flat by the same amount | You are singing against a reference you cannot hear properly |
 
 When one of those shows up, stop treating the session as data. Fix the setup, or accept that today was practice rather than measurement. If a range test is under way, press Start over rather than finishing it: a finished test is saved as your range and refits your warmups and songs. One discarded test costs you nothing. One believed bad test sends you chasing a problem that was never in your voice.
 

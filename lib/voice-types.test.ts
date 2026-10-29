@@ -198,14 +198,14 @@ describe("representativeSingers", () => {
 });
 
 /**
- * The book's chapter-three passaggio list is hand-typed prose, and it had drifted
+ * The book's chapter-three passaggio table is hand-typed, and it once drifted
  * badly: it printed Bass-baritone's A3-D4 under "Bass", and put Contralto,
  * Mezzo-soprano and Soprano two to five semitones below the zones the app and
  * the atlas publish. Nothing compared the two, so a reader following the book
  * was working from different numbers than the product.
  *
- * Prose cannot be generated from the constants without a templating step the
- * book pipeline does not have, so instead it is asserted against them.
+ * The table cannot be generated from the constants without a templating step
+ * the book pipeline does not have, so instead its rows are asserted against them.
  */
 describe("the book's passaggio chapter agrees with VOICE_TYPE_PASSAGGIO", () => {
   const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
@@ -220,7 +220,7 @@ describe("the book's passaggio chapter agrees with VOICE_TYPE_PASSAGGIO", () => 
     const body = chapter?.body ?? "";
     for (const kind of VOICE_KINDS) {
       const zone = VOICE_TYPE_PASSAGGIO[kind];
-      const expected = `**${kind}:** ${label(zone.low)} up to ${label(zone.high)}`;
+      const expected = `| ${kind} | ${label(zone.low)} | ${label(zone.high)} |`;
       expect(body, `chapter 3 does not state ${kind} as ${label(zone.low)}-${label(zone.high)}`).toContain(
         expected,
       );

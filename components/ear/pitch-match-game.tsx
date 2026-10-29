@@ -9,6 +9,7 @@ import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import { MicGate } from "@/components/ui";
+import { SessionAudioSetup } from "@/components/practice/session-audio-setup";
 import {
   NO_HOLD,
   advanceHold,
@@ -139,13 +140,13 @@ export function PitchMatchGame({
 }: {
   difficulty: Difficulty;
   /**
-   * A workout's microphone (EarRunner). Already on after the workout's first
+   * A routine's microphone (EarRunner). Already on after the routine's first
    * listening step, so the first round starts as the game opens, and left on
    * when it ends for the next step to use.
    */
   pitch?: UsePitchResult;
   onExit: () => void;
-  /** Set when this game is one step of a workout: the result goes up instead
+  /** Set when this game is one step of a routine: the result goes up instead
       of being drawn here, and no summary card renders. */
   onComplete: OnEarComplete;
 }) {
@@ -317,7 +318,7 @@ export function PitchMatchGame({
     window.clearTimeout(timerRef.current);
   }, []);
 
-  // Release the mic while the summary is up. A lent one is the workout's to
+  // Release the mic while the summary is up. A lent one is the routine's to
   // close: its next step may listen too.
   const ownsMic = pitch === undefined;
   useEffect(() => {
@@ -344,6 +345,7 @@ export function PitchMatchGame({
       <GameShell game="pitch-match" difficulty={difficulty} session={session} onExit={onExit}>
         <MicGate
           tone="session"
+          audioSetup={<SessionAudioSetup />}
           title="This game listens to you sing"
           description="You'll hear a reference note, then sing it back and hold it steady."
           onEnable={() => void start()}

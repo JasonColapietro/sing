@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FigureFrame, TraceFigure } from "@/components/figures";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
@@ -187,7 +188,7 @@ export default function ExtensionPage() {
     <PageShell
       kicker="Suede Sing for Chrome"
       title="A pitch detector Chrome extension with a vocal coach built in"
-      subtitle="Suede Sing for Chrome shows the note you are singing in real time, measured in cents, and adds a vocal range test, warmups and ear training to the side panel. Free, with no account, and your voice never leaves your machine."
+      subtitle="Suede Sing for Chrome shows the note you are singing in real time, measured in cents, and adds a vocal range test, warmups and ear training to the side panel. Free, with no account."
       actions={
         <LinkButton href={STORE_URL} size="lg">
           Add to Chrome, free
@@ -206,6 +207,12 @@ export default function ExtensionPage() {
         <Pill>Works offline</Pill>
       </div>
 
+      {/* What a pitch trace looks like, drawn with sample data: the picture
+          the page's first feature describes. */}
+      <FigureFrame className="mt-10 max-w-2xl" caption="Example pitch trace, as the web studio draws it">
+        <TraceFigure />
+      </FigureFrame>
+
       <section className="mt-12">
         <SectionLabel heading>What the singing extension does</SectionLabel>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -223,18 +230,10 @@ export default function ExtensionPage() {
         <Card className="mt-4">
           <p className="max-w-prose text-sm text-mut">
             The extension analyzes each audio frame in your browser and throws
-            it away immediately. Nothing is recorded. Nothing is uploaded. There is
-            no account, no sign-in, no server, and no analytics or tracking
-            script anywhere in the extension.
-          </p>
-          <p className="mt-3 max-w-prose text-sm text-mut">
-            Your voice is never used to train anything. Measurement is signal
-            processing on your own machine, not a model in someone else&rsquo;s
-            cloud, so there is no training set to opt out of. Suede AI
-            builds tools that measure rather than harvest.
-          </p>
-          <p className="mt-3 max-w-prose text-sm text-mut">
-            The details are in the{" "}
+            it away immediately: nothing is recorded or uploaded, and there is
+            no server, sign-in, analytics or tracking script. Measurement is
+            signal processing on your own machine, so your voice trains
+            nothing. The details are in the{" "}
             <a
               href="https://suedeai.org/voice/privacy/"
               className="text-violet-ink underline underline-offset-4"

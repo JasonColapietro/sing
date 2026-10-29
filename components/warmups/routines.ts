@@ -20,6 +20,7 @@ import {
 import type { SessionLog } from "@/lib/progress";
 import { planRep } from "./timeline";
 import { starsForScore } from "@/lib/stars";
+import { findRoutine, routineMinutesOf, routineTotalSeconds } from "@/components/practice/routines";
 
 export interface RoutineStep {
   exerciseId: string;
@@ -223,8 +224,7 @@ export const PRO_ROUTINES: Routine[] = PRO_PACKS.map((pack) => ({
 export const ALL_ROUTINES: Routine[] = [...ROUTINES, ...PRO_ROUTINES];
 
 export function routineById(id: string | null | undefined): Routine | null {
-  if (!id) return null;
-  return ALL_ROUTINES.find((r) => r.id === id) ?? null;
+  return findRoutine(ALL_ROUTINES, id);
 }
 
 /** The exercise a step names. Throws on a bad id: every id is checked in tests. */
@@ -271,11 +271,11 @@ export function stepSeconds(s: RoutineStep): number {
 }
 
 export function routineSeconds(r: Routine): number {
-  return r.steps.reduce((a, s) => a + stepSeconds(s) + STEP_INTRO_SEC, 0);
+  return routineTotalSeconds(r, stepSeconds, STEP_INTRO_SEC);
 }
 
 export function routineMinutes(r: Routine): number {
-  return Math.max(1, Math.round(routineSeconds(r) / 60));
+  return routineMinutesOf(routineSeconds(r));
 }
 
 export interface RecentWarmups { averageScore: number; averageStars: number; count: number }
@@ -313,9 +313,9 @@ export function routineReason(opts: RoutineContext): string {
   if (opts.practicedToday) return "A short top-up after today's practice.";
   if (opts.hour < 10) return "A gentle start for your morning voice.";
   const result = readiness(opts.recent);
-  if (result === "strong") return "Your last three scored warmups went well. Try a longer set.";
-  if (result === "gentle") return "A shorter, slower set to find your footing after your last three warmups.";
-  return "A balanced set to build consistency at your own pace.";
+  if (result === "strong") return "Your last three scored warmups went well. Try a longer routine.";
+  if (result === "gentle") return "A shorter, slower routine to find your footing after your last three warmups.";
+  return "A balanced routine to build consistency at your own pace.";
 }
 
 export function routineStartingTempo(opts: RoutineContext): 0.75 | 1 | 1.25 {

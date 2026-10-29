@@ -144,9 +144,10 @@ describe("the product description shown at checkout", () => {
   });
 
   it("sells the full plan, not planning itself, and no songbook", () => {
-    // The free plan shows the coach plan's first two steps each day, as /pro
-    // says, so planning is not something only Pro has.
-    expect(PRODUCT_DESCRIPTION).toContain("the full adaptive daily plan (free shows its first two steps)");
+    // Free shows part of the coach plan each day, so Pro sells every step of
+    // it, as a benefit rather than as what free withholds.
+    expect(PRODUCT_DESCRIPTION).toContain("every step of the adaptive daily plan");
+    expect(PRODUCT_DESCRIPTION).not.toMatch(/first two steps/i);
     expect(PRODUCT_DESCRIPTION).not.toMatch(/adaptive daily plans/i);
     // Every song is free, so a buyer is not sold one.
     expect(PRO_SONGS).toHaveLength(0);

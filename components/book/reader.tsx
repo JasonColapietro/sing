@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useProReady, useProState } from "@/lib/pro";
 import { PRICING, formatPrice } from "@/lib/pro-shared";
@@ -28,7 +28,15 @@ type State =
  * client bundle — /api/book re-checks the Stripe billing record and returns
  * the markdown, so a visitor without Pro has nothing to read in page source.
  */
-export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
+export function ChapterReader({
+  chapter,
+  aside,
+}: {
+  chapter: BookContentsEntry;
+  /** A card about the chapter that is free to read (a programme exit test):
+      below the text for a reader who has it, above the lock for one who does not. */
+  aside?: ReactNode;
+}) {
   const pro = useProState();
   const proReady = useProReady();
   const [state, setState] = useState<State>({ kind: "idle" });
@@ -124,6 +132,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
 
   return (
     <div>
+      {view.kind !== "ready" && aside && <div className="mt-6">{aside}</div>}
       {view.kind === "loading" && (
         <div className="mt-6">
           <p className="font-mono text-xs uppercase tracking-[0.14em] text-dim">
@@ -169,6 +178,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
           <article className="mt-6 max-w-[64ch]">
             <Markdown source={view.body} />
           </article>
+          {aside && <div className="mt-8">{aside}</div>}
           <ChapterNav slug={chapter.slug} />
         </>
       )}

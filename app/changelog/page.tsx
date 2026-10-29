@@ -20,11 +20,11 @@ import { IDLE_GRACE_MS } from "@/components/practice/active-clock";
  */
 const ACCOUNTS_OPEN = accountsReady();
 
-const TITLE = "Suede Sing Changelog: What's New in 4.0";
-/** The day 4.0 shipped: the record head's <time> and the page's dateModified. */
-export const RELEASE_DATE = "2026-10-24";
+const TITLE = "Suede Sing Changelog: What's New in 4.2";
+/** The day 4.2 shipped: the record head's <time> and the page's dateModified. */
+export const RELEASE_DATE = "2026-10-29";
 const DESCRIPTION =
-  "Suede Sing changelog for 4.0: the original design is back, and reference notes now play from recordings of a real grand piano.";
+  "Suede Sing changelog for 4.2: calmer room pages, share cards drawn in the site's own type, a clearer Pro page, and 4.1's example figures in every room.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/changelog"),
@@ -63,6 +63,78 @@ type Story = {
 };
 
 /**
+ * The 4.2 stories (fleet pass 5, October 29), in the order a singer meets
+ * them. Each names something on screen in this release.
+ */
+const RELEASE_STORIES: Story[] = [
+  {
+    label: "Rooms",
+    title: "Calmer room pages",
+    body: "The section labels inside every room (The short version, How to do it, Questions, Where to go next, More practice rooms) are now a short gold rule and a line of small capitals instead of a boxed pill, so the boxes no longer outnumber the things they label. The page's own label at the top keeps its pill.",
+    links: [{ href: "/breath", text: "Open the breath room" }],
+  },
+  {
+    label: "Sharing",
+    title: "Share cards that look like the site",
+    body: "A shared Suede Sing link now shows a card set in the site's own serif. The homepage card draws a pitch trace settling onto its note; the Pro card shows a small example coach report, with one weak note flagged; a singer's card shows their reported span in teal on a keyboard with proper black keys, in the same octave count the page gives.",
+    links: [{ href: "/singers", text: "Find a singer to share" }],
+  },
+  {
+    label: "Home",
+    title: "See the studio before you open it",
+    body: "The homepage now shows what the studio draws, an example pitch trace finding its note, beside the two ways to start. The Pro section lists each thing Pro adds once, starting with no daily limit on guided practice, and prints the price once, on its button.",
+    links: [{ href: "/", text: "See the homepage" }],
+  },
+  {
+    label: "Pro",
+    title: "A Pro page that gets to the point",
+    body: "The price button at the top of the Pro page now opens checkout itself instead of scrolling to a second, identical button. Both books are shown with their covers above their chapter lists. Short Pro notes inside the practice rooms read as ordinary sentences rather than small capitals, and the card after a session states the price once.",
+    links: [{ href: "/pro", text: "See what Pro adds" }],
+  },
+  {
+    label: "Footer",
+    title: "A footer that reads the same everywhere",
+    body: "The By voice type and By genre columns now have headings on a wide screen, set in the same small capitals as the other columns. On a phone they still fold away, and their labels no longer switch to the serif.",
+    links: [{ href: "/singers", text: "Browse the singers" }],
+  },
+];
+
+/**
+ * The 4.1 stories (fleet pass 4, #263, October 28), as a singer meets them.
+ */
+const RELEASE_41_STORIES: Story[] = [
+  {
+    label: "Rooms",
+    title: "An example of what each room draws",
+    body: "The range test, studio, songs, recorder and analyzer now show a small example drawing before you turn the microphone on: a range on a keyboard, a pitch trace, a piano roll, a take's waveform and a spectrogram. Each is labelled as sample data, so you know what to expect before the browser asks for the mic.",
+    links: [
+      { href: "/studio", text: "Step into the studio" },
+      { href: "/analyze", text: "Open the analyzer" },
+    ],
+  },
+  {
+    label: "Songs",
+    title: "Straight into the song",
+    body: "A song's Sing button now opens straight into the count-in. Without a song picked, the microphone screen offers to pick one first, and a capped Sing again says why it is waiting.",
+    links: [{ href: "/songs", text: "Sing the songs" }],
+  },
+  {
+    label: "Singers",
+    title: "Ranges you can compare at a glance",
+    body: "Singer lists and the homepage's famous voices draw each range as a bar on a shared keyboard, and every singer page shows where that span sits among the whole catalog.",
+    links: [{ href: "/singers", text: "Compare famous ranges" }],
+  },
+  {
+    label: "Reading",
+    title: "Books with covers, and a shorter homepage",
+    body: "The Measured Voice and The Voice Atlas have covers and pull quotes on their pages, and both PDFs were rebuilt from the current chapters. The homepage is shorter, the studio's Stop ends on a card with the next rooms to try, and the free-minutes wall is shorter.",
+    links: [
+      { href: "/book", text: "Open The Measured Voice" },
+    ],
+  },
+];
+
+/**
  * The 4.0 stories, told in the order a singer meets them. 4.0 is what
  * shipped on main after 3.1 (September 24) up to October 24, and every claim
  * here points at a commit: the restored design and its menu (#229, #230),
@@ -76,7 +148,7 @@ type Story = {
  * Unmerged work (the pitch detector in #240, the mic release in #242) stays
  * out until it lands.
  */
-const RELEASE_STORIES: Story[] = [
+const RELEASE_40_STORIES: Story[] = [
   {
     label: "Design",
     title: "The original Suede Sing, back",
@@ -227,8 +299,9 @@ const LOG: Array<{
   {
     month: "October 2026",
     entries: [
-      // The owner named the October wave 4.0. Terse on purpose, like the
-      // 3.1 line: the entries below it are what shipped.
+      // Release lines are terse on purpose: the stories above say what shipped.
+      { day: "29", note: "Suede Sing 4.2." },
+      { day: "28", note: "Suede Sing 4.1." },
       { day: "24", note: "Suede Sing 4.0." },
       {
         // MIC_IDLE_RELEASE_MS in lib/audio/use-idle-mic-release.ts is the
@@ -440,10 +513,10 @@ export default function ChangelogPage() {
       kicker="Changelog"
       title={
         <>
-          Suede Sing changelog: everything new in <em>4.0</em>
+          Suede Sing changelog: everything new in <em>4.2</em>
         </>
       }
-      subtitle="Suede Sing 4.0 brings back the original design and plays reference notes from a recorded grand piano. The stories below cover the rest of what changed since 3.1."
+      subtitle="Suede Sing 4.2 calms the room pages, draws share cards in the site's own type, and makes the Pro page quicker to read. Below it: 4.1's example figures in every room, and 4.0, which brought back the original design and a recorded grand piano."
     >
       <script
         type="application/ld+json"
@@ -457,7 +530,7 @@ export default function ChangelogPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cool to-transparent"
         />
         <V2TraceGlyph className="shrink-0 text-cool" />
-        <span className="text-ink">4.0</span>
+        <span className="text-ink">4.2</span>
         {/* Each item carries the dot before it and never breaks inside, so a
             wrap cannot leave a dot alone at the end of a line. */}
         <span className="flex items-center gap-x-3 whitespace-nowrap">
@@ -476,21 +549,47 @@ export default function ChangelogPage() {
           <span aria-hidden className="text-line2">
             ·
           </span>
-          {/* The whole log, since July, not 4.0's share of it. */}
+          {/* The whole log, since July, not 4.2's share of it. */}
           <span className="tabular">{entriesLogged} log entries since July</span>
         </span>
       </div>
 
       {/* Each release is one section with an h2 that names it and its stories
-          as h3s inside, so a reader or an answer engine asking what is in 4.0
-          gets a boundary between 4.0 and the releases below it. The record
-          head above is 4.0's visible title; this h2 says it to the outline. */}
-      <section aria-labelledby="release-4-0">
-        <h2 id="release-4-0" className="sr-only">
-          Suede Sing 4.0, October 2026
+          as h3s inside, so a reader or an answer engine asking what is in 4.2
+          gets a boundary between it and the releases below. The record head
+          above is 4.2's visible title; this h2 says it to the outline. */}
+      <section aria-labelledby="release-4-2">
+        <h2 id="release-4-2" className="sr-only">
+          Suede Sing 4.2, October 2026
         </h2>
         <div className="mt-12 space-y-12">
           {RELEASE_STORIES.map((s) => (
+            <StoryBlock key={s.label} story={s} />
+          ))}
+        </div>
+      </section>
+
+      <section aria-label="Suede Sing 4.1" className="mt-14 border-t border-line2 pt-8">
+        <SectionLabel heading>Earlier: 4.1, October 2026</SectionLabel>
+        <p className="mt-3 max-w-prose text-meta text-mut">
+          Example drawings in every room before the microphone turns on,
+          ranges you can compare at a glance, and books with covers.
+        </p>
+        <div className="mt-8 space-y-12">
+          {RELEASE_41_STORIES.map((s) => (
+            <StoryBlock key={s.label} story={s} />
+          ))}
+        </div>
+      </section>
+
+      <section aria-label="Suede Sing 4.0" className="mt-14 border-t border-line2 pt-8">
+        <SectionLabel heading>Earlier: 4.0, October 2026</SectionLabel>
+        <p className="mt-3 max-w-prose text-meta text-mut">
+          The original design back, reference notes from a recorded grand
+          piano, and free minutes that count only practice.
+        </p>
+        <div className="mt-8 space-y-12">
+          {RELEASE_40_STORIES.map((s) => (
             <StoryBlock key={s.label} story={s} />
           ))}
         </div>

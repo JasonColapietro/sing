@@ -549,7 +549,7 @@ export const SONGS_GUIDE: GuideContent = {
     points: [
       "Work the two bars either side of a register transition rather than the phrase as a whole",
       "Try the same song a semitone up and down to find where the melody sits best against your passaggio",
-      "Use the take recorder's A/B compare to check whether a change actually improved anything",
+      "Use the recorder's A/B compare to check whether a change actually improved anything",
       "Each song keeps your personal best and a score trend on the free plan; Pro adds every note you sing to a per-note accuracy chart, so a note that keeps missing stands out instead of staying a hunch",
     ],
   },
@@ -771,7 +771,7 @@ export const TOOLS_GUIDE: GuideContent = {
       "Hold thirds and sixths against the drone until the beating stops; a beat-free third or sixth sits a little off the piano's, so check the same note on the keyboard too. Tune sevenths on the keyboard or in the pitch studio instead: a major seventh never stops beating against the tonic, and a minor seventh goes quiet well off the piano's note",
       "Drone on a note other than the tonic of your phrase to practice hearing your line against a moving harmony",
       "Use the metronome on subdivisions rather than the beat to expose rushing inside a phrase",
-      "Combine drone and take recorder: sing against the drone, then listen back with it removed",
+      "Combine the drone and the recorder: sing against the drone, then listen back with it removed",
     ],
   },
   faq: [
@@ -948,7 +948,7 @@ export const ANALYZE_GUIDE: GuideContent = {
   howTo: {
     name: "How to read your voice on a spectrogram",
     intro:
-      "The analysis runs in your browser on your own device. No audio is uploaded, and none is recorded unless you use the take recorder separately.",
+      "The analysis runs in your browser on your own device. No audio is uploaded, and none is recorded unless you use the recorder separately.",
     steps: [
       {
         title: "Allow the microphone and sing a steady note",

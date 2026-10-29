@@ -49,7 +49,7 @@ They cannot compare you to anyone else. Your range history is a record of you ag
 
 They cannot separate a good session from a lucky one. Voices have good days, and a day where everything lands is worth enjoying. If it does not repeat, treat it as the top end of your normal variation rather than a new baseline.
 
-And they cannot tell you when something other than practice is behind a change. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more. A chart cannot answer that question and neither can more practice.
+And they cannot tell you when something other than practice is behind a change. A voice that hurts or stays hoarse is chapter six's question; a chart cannot answer it, and neither can more practice.
 
 ## How to actually watch a trend
 

@@ -401,14 +401,17 @@ export function SessionSummary({
         )}
       </Card>
 
+      {/* At the cap the note under the buttons is this screen's one ask. */}
+      {!capped && (
       <div>
         <ProCrescendoNudge
-          line="Pro shows the full daily coach plan, not just its first two steps"
+          line="The coach's full daily plan: every step, built from your own scores."
           title="See the whole plan"
           body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, this one included. Pro adds the full daily coach plan, a per-note accuracy chart and no daily limit."
           context="Warmups"
         />
       </div>
+      )}
 
       <Card>
         {nextDaily ? (

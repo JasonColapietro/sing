@@ -13,7 +13,7 @@ npm run e2e:mobile -- http://localhost:3100   # one viewport, much faster
 ```
 
 `e2e/suite.mjs` holds every browser suite CI runs (`journeys`, `mobile-audit`,
-`desktop-audit`, `audio`, `layout-shift`, `layout-shift-finished`), with the
+`desktop-audit`, `audio`, `layout-shift`, `layout-shift-returning`), with the
 same commands, flags and timeouts as `.github/workflows/ci.yml`.
 
 Exits non-zero when any **blocker** or **major** finding survives, so it works
@@ -67,6 +67,12 @@ parent, leaving ~21% of the nominal target dead. A bounding-box audit passes
 controls a real thumb misses.
 
 **`window.__describe`** — a short, stable selector for reporting.
+
+Every browser script reads its command line through `lib/args.mjs`
+(`cliArgs(defaultBase)` for `[baseUrl] [--executable=path] [--name=value]`,
+`browserTarget(executable)` for `chromium.launch`), and the warmups-path
+journeys open the "Every exercise" fold and find a row through
+`lib/warmups.mjs` (`openPath`, `pathRow`).
 
 ## Rules this suite is built around
 
@@ -151,8 +157,8 @@ row), `breath-deeplink-routine` (`/breath?routine=quick`),
 `warmups-deeplink-routine` (`/warmups?routine=morning`) and
 `ear-deeplink-routine` (`/ear-training?routine=quick`). These pages cannot be
 prerendered per link the way a program's view is, because the room opens
-what the link names (a drill or a workout as a session over the whole room,
-or the warmups mic gate retitled for that set and scrolled to) only once it
+what the link names (a drill or a routine as a session over the whole room,
+or the warmups mic gate retitled for that routine and scrolled to) only once it
 has read its address after hydration. Before, the prerendered front page painted and
 then went away: every `/breath` link moved the page by 0.85 on a phone, and a
 `/warmups` link by 0.11, or 0.51 with a saved range. Now the pre-paint script
@@ -210,13 +216,15 @@ height (`song-verdict` in `app/globals.css`). Measured with
 and from 0.05 to 0.003 at 1280px; the singer pages' header swap was already
 still, both labels of a pair sharing one width.
 
-CI's `layout-shift` and `layout-shift-finished` jobs (`node e2e/suite.mjs
-<suite>`) run every route on a 375px phone twice, as a newcomer and with
-`--returning`, then each state on the routes it reshapes at 375 and 1280px
-(the finished programs in the second job), and `/singers` on a
-`desktop-1440-tall` window (1440x1300): the section after its chart starts
-below the first screen of a phone or a 1080px-tall desktop, so only a tall
-screen would see it move when the chart mounts.
+CI's `layout-shift` and `layout-shift-returning` jobs (`node e2e/suite.mjs
+<suite>`) run every route on a 375px phone twice, as a newcomer (first job)
+and with `--returning` (second job), then each state on the routes it
+reshapes at 375 and 1280px, and `/singers` on a `desktop-1440-tall` window
+(1440x1300): the section after its chart starts below the first screen of a
+phone or a 1080px-tall desktop, so only a tall screen would see it move when
+the chart mounts. The two full-route passes take about 240 s each and every
+other run under 40 s, so the shards are split by measured time with one full
+pass in each (about 480 s and 500 s).
 
 ## Pitch precision
 

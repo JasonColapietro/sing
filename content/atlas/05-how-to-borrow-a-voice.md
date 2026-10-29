@@ -23,7 +23,14 @@ So find where the trait actually lives in the original — which notes, which pa
 
 Change a single variable per practice block. If you are working on Winehouse's timing, sing the phrase in *your own* tone with *her* timing — resist the tribute-act instinct to do the accent, the vowels and the attitude at once. Multi-dial imitation feels productive because it sounds superficially closer, but nothing transfers; you are performing a wax figure, not acquiring a skill. Ten minutes on one dial, done daily for two weeks, transfers.
 
-The order that works: rhythm and phrasing first (cheapest, safest, most distinctive), then vowel color and placement, then onset and vibrato behavior, then — last, and only in comfortable range — weight and grit, with grit kept to the next chapter's rules: quiet before loud, none that leaves you hoarse, and a teacher's ears on it as soon as you can. Notice that "their high notes" appears nowhere on that list. The top of a famous voice is its least imitable part and its most expensive, which is why the entries keep steering you toward each singer's *middle*.
+Borrow in this order:
+
+- **Rhythm and phrasing.** Cheapest, safest, most distinctive.
+- **Vowel colour and placement.**
+- **Onset and vibrato.**
+- **Weight and grit, last,** and only in comfortable range. Grit follows the next chapter's rules: quiet before loud, none that leaves you hoarse, a teacher's ears as soon as you can.
+
+Notice that "their high notes" appears nowhere on that list. The top of a famous voice is its least imitable part and its most expensive, which is why the entries keep steering you toward each singer's *middle*.
 
 ## Step four: close the loop
 

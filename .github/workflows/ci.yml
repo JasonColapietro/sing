@@ -76,7 +76,7 @@ jobs:
 
   browser:
     name: Browser (${{ matrix.suite }})
-    # Pull requests only: a push to main has already had its browser run.
+    # Pull requests only; a push to main re-runs the static checks and build.
     if: github.event_name == 'pull_request'
     needs: checks
     runs-on: ubuntu-latest
@@ -87,7 +87,7 @@ jobs:
       matrix:
         # The suites are defined in e2e/suite.mjs; e2e/suite.test.mjs keeps
         # this list equal to them.
-        suite: [journeys, mobile-audit, desktop-audit, audio, layout-shift, layout-shift-finished]
+        suite: [journeys, mobile-audit, desktop-audit, audio, layout-shift, layout-shift-returning]
     env:
       NEXT_TELEMETRY_DISABLED: '1'
       SING_BASE_URL: http://127.0.0.1:3100

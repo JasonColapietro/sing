@@ -78,6 +78,7 @@
  * Exits non-zero if any check fails.
  */
 import pw from "playwright";
+import { openPath, pathRow } from "../e2e/lib/warmups.mjs";
 
 const { chromium } = pw;
 const argv = process.argv.slice(2);
@@ -200,7 +201,6 @@ async function freshPage(prefs) {
   return { ctx, page };
 }
 
-const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /**
  * The exercise's row on the room's path. A row is a button whose accessible
@@ -209,15 +209,7 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
  * routine's, and from "Minor five-note scale". Today's three are links, not
  * buttons, and start at the plan's tempo, so they must not be what this hits.
  */
-/** A newcomer's /warmups folds the path under "Every exercise": open it, as a singer would, before reaching for a row. */
-async function openPath(page) {
-  const fold = page.locator("details").filter({ has: page.locator("summary", { hasText: /^Every exercise/ }) });
-  if ((await fold.count()) > 0 && !(await fold.first().evaluate((d) => d.open))) await fold.first().locator("summary").click();
-}
 
-function pathRow(page, title) {
-  return page.getByRole("button", { name: new RegExp(`^${escapeRe(title)}`) });
-}
 
 /**
  * Start an exercise from its path row and return the running session: the

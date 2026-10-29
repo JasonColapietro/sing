@@ -71,7 +71,9 @@ async function stored(page) {
 async function sessionRows(page, state) {
   const log = page.getByRole("region", { name: "Session log", exact: true });
   if (state.sessions.length === 0) {
-    await log.getByText("No sessions logged yet", { exact: true }).waitFor();
+    // A fresh record has one empty state (FreshStart); the log waits for the first session.
+    await page.getByText("Nothing logged yet", { exact: true }).waitFor();
+    assert.equal(await log.count(), 0, "no empty session log on a fresh record");
   } else {
     for (const session of state.sessions) {
       await log.getByRole("cell", { name: session.detail, exact: true }).waitFor();

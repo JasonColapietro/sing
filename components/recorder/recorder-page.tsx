@@ -6,6 +6,7 @@ import {
   Card,
   EmptyState,
   LinkButton,
+  MicGate,
   PageShell,
   Pill,
   SectionLabel,
@@ -25,12 +26,11 @@ import { useIsPro } from "@/lib/pro";
 import { logSession, type Achievement } from "@/lib/progress";
 import { openTakesStore, type TakeRecord } from "./db";
 import { computePeaks, decodeTakeBlob, type Peaks } from "./wav";
-import { IconMic, IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
+import { IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
 import { LiveWaveform, PeaksWaveform } from "./waveforms";
 import { TakeRow } from "./take-row";
 import { AbPitchOverlay, TakePitchPanel } from "./pitch-analysis";
 import { AccountSavePrompt } from "@/components/account/save-prompt";
-import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
@@ -792,41 +792,19 @@ export default function RecorderPageClient() {
             </div>
 
             {micState !== "ready" ? (
-              <div className="flex flex-col items-center gap-4 py-8 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-line2 text-violet-ink">
-                  <IconMic className="h-6 w-6" />
-                </div>
-                {micState === "blocked" ? (
-                  <>
-                    {micError && (
-                      <MicAlert
-                        message={micError}
-                        className="max-w-sm text-sm text-mut"
-                      />
-                    )}
-                    <Button variant="outline" onClick={() => void enableMic()}>
-                      Try again
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    {/* One short privacy line beside the prompt, not a repeat of
-                        the page subtitle: the three-line version put "Enable
-                        microphone" under a 375×667 phone's tab bar. */}
-                    <p className="text-xs text-dim">Takes stay on this device.</p>
-                    <Button
-                      variant="rec"
-                      onClick={() => void enableMic()}
-                      disabled={micState === "requesting"}
-                    >
-                      <IconMic />
-                      {micState === "requesting" ? "Waiting for permission…" : "Enable microphone"}
-                    </Button>
-                  </>
-                )}
-                <AudioSetup className="mt-6 w-full max-w-sm text-left" />
-                <ProWhisper className="mt-4" />
-              </div>
+              // No Pro line here: the locked pitch panel below is the page's one ask.
+              <MicGate
+                bare
+                className="py-2"
+                title="Hear your voice back"
+                description="Record a take, play it back, compare two."
+                privacy="Audio stays on this device, and takes are saved in this browser, never uploaded."
+                enableLabel={micState === "requesting" ? "Waiting for permission…" : "Enable microphone"}
+                disabled={micState === "requesting"}
+                onEnable={() => void enableMic()}
+                error={micState === "blocked" ? (micError ?? "The microphone is blocked.") : null}
+                audioSetup={<AudioSetup />}
+              />
             ) : (
               <>
                 <div ref={deckRef} className="mb-4 flex flex-wrap items-center gap-5">
@@ -1309,8 +1287,12 @@ export default function RecorderPageClient() {
                   <WaveformFigure />
                 </FigureFrame>
                 <EmptyState
-                  title="No takes yet. Hit record"
-                  hint="Your takes will show up here with playback, stars, and downloads. They stay on this device."
+                  title="No takes yet"
+                  hint={
+                    micState === "ready"
+                      ? "Press REC (or R). Your takes show up here with playback, stars, and downloads."
+                      : "Enable the microphone, then press REC (or R). Your takes stay on this device."
+                  }
                 />
               </>
             ) : (
@@ -1347,13 +1329,6 @@ export default function RecorderPageClient() {
                 </span>
               ) : (
                 <span>Takes are stored locally in your browser.</span>
-              )}
-              {/* Only once there is a take to analyze: before that, the locked
-                  take-analysis panel above already makes this ask. */}
-              {takes.length > 0 && (
-                <div className="mt-2">
-                  <ProInlineNudge>Pro analyzes the pitch of every take</ProInlineNudge>
-                </div>
               )}
             </div>
           </Card>

@@ -6,11 +6,9 @@
  */
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import { browserTarget, cliArgs } from "./lib/args.mjs";
 
-const argv = process.argv.slice(2);
-const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3197").replace(/\/$/, "");
-/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
-const executable = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
+const { base, executable } = cliArgs("http://localhost:3197");
 // Range must retain the guided-test mode and land on its start button.
 const rooms = [
   ["Studio", "/studio"], ["Warmups", "/warmups"], ["Range", "/range", "#start", "?mode=range"],
@@ -80,7 +78,7 @@ async function tapWhenStill(page, link, label) {
 }
 
 const browser = await chromium.launch({
-  ...(executable ? { executablePath: executable } : { channel: "chrome" }),
+  ...browserTarget(executable),
   args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream", "--autoplay-policy=no-user-gesture-required"],
 });
 try {

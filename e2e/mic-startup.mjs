@@ -19,7 +19,7 @@ const browser = await chromium.launch({
 try {
   for (const room of [
     { path: "/range?mode=pitch#start", start: "Start singing", retry: "Try again", stop: "Stop mic" },
-    { path: "/analyze", start: "Enable microphone", retry: "Enable microphone", stop: "Stop" },
+    { path: "/analyze", start: "Enable microphone", retry: "Try again", stop: "Stop mic" },
   ]) {
     for (const stage of ["createMediaStreamSource", "createAnalyser", "endedStream"]) {
       const context = await browser.newContext({ viewport: { width: 375, height: 667 } });

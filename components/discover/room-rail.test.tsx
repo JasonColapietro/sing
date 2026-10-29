@@ -104,3 +104,13 @@ describe("the rail server-renders real anchors", () => {
     for (const room of ROOMS) expect(html).toContain(room.label);
   });
 });
+
+describe("the rail's label", () => {
+  it("is the in-body hairline label, not the boxed pill a page kicker uses", () => {
+    const html = renderToStaticMarkup(<RoomRail />);
+    const at = html.indexOf(">More practice rooms<");
+    const tag = html.slice(html.lastIndexOf("<span", at), at);
+    expect(tag).toContain("before:bg-amber");
+    expect(tag).not.toContain("border-violet");
+  });
+});

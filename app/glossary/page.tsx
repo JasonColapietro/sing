@@ -128,7 +128,7 @@ export default function GlossaryPage() {
 
         {SING_GLOSSARY.map((section) => (
           <Card key={section.heading}>
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
               <div>
                 <h2 id={termId(section.heading)} className="scroll-mt-20 text-xl">
                   {section.heading}
@@ -136,7 +136,11 @@ export default function GlossaryPage() {
                 <p className="mt-2 max-w-3xl text-sm text-mut">{section.blurb}</p>
               </div>
               {GLOSSARY_FIGURES[section.heading] && (
-                <ReferenceFigure kind={GLOSSARY_FIGURES[section.heading]} className="hidden sm:block" />
+                // Above the heading on a phone, scaled down; beside it from sm up.
+                <ReferenceFigure
+                  kind={GLOSSARY_FIGURES[section.heading]}
+                  className="order-first h-10 w-auto sm:order-none sm:h-12"
+                />
               )}
             </div>
             <div className="mt-5 divide-y divide-line/50">

@@ -17,10 +17,11 @@ import { spawn } from "node:child_process";
 import { appendFileSync, createWriteStream, mkdirSync, readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { setTimeout as sleep } from "node:timers/promises";
+import { cliArgs } from "./lib/args.mjs";
 
-export const DEFAULT_BASE_URL = "http://127.0.0.1:3100";
+const DEFAULT_BASE_URL = "http://127.0.0.1:3100";
 /** A command gets this long before SIGTERM, then ten more seconds before SIGKILL. */
-export const COMMAND_TIMEOUT_MS = 12 * 60 * 1000;
+const COMMAND_TIMEOUT_MS = 12 * 60 * 1000;
 const KILL_GRACE_MS = 10_000;
 const SERVER_WAIT_MS = 60_000;
 const RESULTS = "browser-results";
@@ -101,32 +102,37 @@ export const SUITES = {
     journey("song-loop-scoring", "e2e/song-loop-scoring.mjs"),
     journey("warmup-timing", "scripts/audit-warmup-timing.mjs"),
   ],
-  // Split in two because the whole set is 25 browser launches: this half
-  // holds every route as a newcomer, the returning singer, and the states a
-  // singer mid-program carries; the other holds every finished program.
+  // The 25 browser launches split in two by measured time, not by count
+  // (CI run 40798206122): each full-route phone pass takes about 240 s and
+  // every other run 6-38 s, so the two full passes go one to each shard. This
+  // one holds every route as a newcomer and the states a singer mid-program
+  // carries, about 480 s; layout-shift-returning about 500 s.
   "layout-shift": [
     cls("layout-shift", "--viewport=mobile-375"),
+    ...stateRuns(["capped", "program", "program-capped", "saved-range"]),
+  ],
+  "layout-shift-returning": [
     // A plain returning singer (a saved range and a practice history, no cap
-    // or program state), which the fresh run above never seeds.
+    // or program state), which the newcomer run never seeds.
     cls("layout-shift-returning", "--returning", "--viewport=mobile-375", json("layout-shift-returning-mobile-375")),
     // /singers on a tall desktop window, where the section after its chart is
     // on the first screen when the chart mounts (0.128 at 1440x1300).
     cls("layout-shift-singers-tall", "--viewport=desktop-1440-tall", "--route=singers-directory", json("layout-shift-singers-tall")),
-    // A room's own deep links loaded cold on a desktop (the runs above cover
+    // A room's own deep links loaded cold on a desktop (the full passes cover
     // a phone); the pre-paint script holds the front page back until the room
     // reads its address (lib/prepaint.ts data-sing-deeplink).
     cls("layout-shift-deeplinks-desktop-1280", "--viewport=desktop-1280", `--route=${DEEP_LINK_ROUTES}`, json("layout-shift-deeplinks-desktop-1280")),
     cls("layout-shift-deeplinks-returning-desktop-1280", "--returning", "--viewport=desktop-1280", `--route=${DEEP_LINK_ROUTES}`, json("layout-shift-deeplinks-returning-desktop-1280")),
-    ...stateRuns(["capped", "program", "program-capped", "rest-day", "saved-range"]),
+    ...stateRuns([
+      "rest-day",
+      "finished",
+      "finished-high-notes",
+      "finished-mix",
+      "finished-foundations",
+      "finished-recovery",
+      "finished-vibrato",
+    ]),
   ],
-  "layout-shift-finished": stateRuns([
-    "finished",
-    "finished-high-notes",
-    "finished-mix",
-    "finished-foundations",
-    "finished-recovery",
-    "finished-vibrato",
-  ]),
 };
 
 /** The argv `node` runs for a command. */
@@ -185,7 +191,7 @@ function runCommand(command, options) {
 }
 
 /** Resolves once the server answers, or throws after a minute. */
-export async function waitForServer(baseUrl) {
+async function waitForServer(baseUrl) {
   const deadline = Date.now() + SERVER_WAIT_MS;
   while (Date.now() < deadline) {
     try {
@@ -200,7 +206,7 @@ export async function waitForServer(baseUrl) {
 }
 
 /** Runs every command of a suite; returns the labels that failed. */
-export async function runSuite(name, { baseUrl, executablePath }) {
+async function runSuite(name, { baseUrl, executablePath }) {
   const commands = SUITES[name];
   if (!commands) throw new Error(`Unknown browser suite: ${name} (one of ${Object.keys(SUITES).join(", ")})`);
   mkdirSync(RESULTS, { recursive: true });
@@ -225,17 +231,15 @@ export async function runSuite(name, { baseUrl, executablePath }) {
 
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isMain) {
-  const argv = process.argv.slice(2);
-  const bare = argv.filter((a) => !a.startsWith("--"));
-  const flag = argv.find((a) => a.startsWith("--executable="));
-  const name = bare[0];
+  const { positional, executable } = cliArgs(DEFAULT_BASE_URL);
+  const [name, baseUrl] = positional;
   if (!name || !SUITES[name]) {
     console.error(`usage: node e2e/suite.mjs <${Object.keys(SUITES).join("|")}> [baseUrl] [--executable=path]`);
     process.exit(2);
   }
   const failed = await runSuite(name, {
-    baseUrl: (bare[1] ?? process.env.SING_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/$/, ""),
-    executablePath: flag ? flag.slice("--executable=".length) : process.env.SING_BROWSER_EXECUTABLE || null,
+    baseUrl: (baseUrl ?? process.env.SING_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/$/, ""),
+    executablePath: executable ?? (process.env.SING_BROWSER_EXECUTABLE || null),
   });
   process.exit(failed.length ? 1 : 0);
 }

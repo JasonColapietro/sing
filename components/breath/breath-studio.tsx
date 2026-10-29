@@ -74,7 +74,7 @@ function starsForDrill(drill: BreathDrillId, bests: BreathBests): Stars {
 
 /**
  * Whether the drill has a best at all. A sustain under ten seconds earns no
- * star, and a set's own presets cap box breathing and the Farinelli climb at
+ * star, and a routine's own presets cap box breathing and the Farinelli climb at
  * one, so stars cannot say whether a drill was ever done.
  */
 export function drillTried(drill: BreathDrillId, bests: BreathBests): boolean {
@@ -95,7 +95,7 @@ function bestLine(drill: BreathDrillId, bests: BreathBests): string {
   switch (drill) {
     case "box":
       return bests.boxMinutes > 0
-        ? `Longest set ${bests.boxMinutes} min`
+        ? `Longest run ${bests.boxMinutes} min`
         : "Not tried yet";
     case "farinelli":
       return bests.farinelliCap > 0
@@ -165,8 +165,8 @@ export function BreathStudio() {
       return;
     }
     const routine = breathRoutineById(routineId);
-    // `step` (1-based) opens a set part way through, with that step's own
-    // preset: a program lists a set's steps one by one, for a singer the free
+    // `step` (1-based) opens a routine part way through, with that step's own
+    // preset: a program lists a routine's steps one by one, for a singer the free
     // plan stopped between them.
     const step = Number(q.get("step"));
     const startStep =
@@ -178,7 +178,7 @@ export function BreathStudio() {
   const practicedToday = progress.sessions.some(
     (s) => s.type === "breath" && s.day === localDay(),
   );
-  // Sized to the free minutes left: a set that outlasts them ends on the cap slide.
+  // Sized to the free minutes left: a routine that outlasts them ends on the cap slide.
   const preferred = recommendBreathRoutine({ practicedToday });
   const recommended = cap.capped
     ? preferred
@@ -195,7 +195,7 @@ export function BreathStudio() {
     setView({ kind: "home" });
   };
 
-  // A set or a drill runs in the full-screen session surface, a portal over
+  // A routine or a drill runs in the full-screen session surface, a portal over
   // the page. The page under it keeps the room's heading and a screen of
   // empty page, the same block a deep link's first load paints in place of
   // the front page, so opening a link's drill moves nothing on that page.
@@ -221,7 +221,7 @@ export function BreathStudio() {
     kicker: "Breath training",
     title: "Breathing exercises for singers",
     subtitle:
-      "Guided breath sets and a mic-based sustain test that build breath support for long phrases. Start the set that fits the moment, or pick one drill and work it.",
+      "Guided breath routines and a mic-based sustain test that build breath support for long phrases. Start the routine that fits the moment, or pick one drill and work it.",
   };
   if (session) {
     return (
@@ -273,7 +273,7 @@ export function BreathStudio() {
           streakDays={liveStreak(progress.streak)}
           streakBest={progress.streak.best}
           stars={routineStars(recommended, bests)}
-          // A finished quick set can average under one star (its presets cap
+          // A finished quick routine can average under one star (its presets cap
           // two drills at one, and a short sustain earns none): that is "So
           // far", not "Not started".
           started={recommended.steps.some((st) => drillTried(st.drill, bests))}

@@ -9,6 +9,7 @@ import { playSequence } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import { MicGate } from "@/components/ui";
+import { SessionAudioSetup } from "@/components/practice/session-audio-setup";
 import {
   generateMelody,
   hasSavedRange,
@@ -39,10 +40,10 @@ export function MelodyEchoGame({
   onComplete,
 }: {
   difficulty: Difficulty;
-  /** A workout's microphone (EarRunner); see pitch-match-game.tsx. */
+  /** A routine's microphone (EarRunner); see pitch-match-game.tsx. */
   pitch?: UsePitchResult;
   onExit: () => void;
-  /** Set when this game is one step of a workout: the result goes up instead
+  /** Set when this game is one step of a routine: the result goes up instead
       of being drawn here, and no summary card renders. */
   onComplete: OnEarComplete;
 }) {
@@ -198,7 +199,7 @@ export function MelodyEchoGame({
     [],
   );
 
-  // Release the mic while the summary is up; a lent one is the workout's.
+  // Release the mic while the summary is up; a lent one is the routine's.
   const ownsMic = pitch === undefined;
   useEffect(() => {
     if (session.done && listening && ownsMic) stop();
@@ -224,6 +225,7 @@ export function MelodyEchoGame({
       <GameShell game="melody-echo" difficulty={difficulty} session={session} onExit={onExit}>
         <MicGate
           tone="session"
+          audioSetup={<SessionAudioSetup />}
           title="This game listens to you sing"
           description="You'll hear a short melody, then sing it back note for note."
           onEnable={() => void start()}

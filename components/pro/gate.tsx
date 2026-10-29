@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
-import { proHeadline } from "@/lib/pro-shared";
 import { proMomentSeen } from "@/lib/pro-signal";
 import { useProgress } from "@/lib/progress";
 import { MAX_SESSIONS } from "@/lib/progress-shape";
@@ -89,15 +88,9 @@ export function ProWhisper({ className = "" }: { className?: string }) {
 }
 
 /**
- * The number ProCrescendoNudge alternates on.
- *
- * Below the cap it is the session count, so results alternate between the
- * quiet line and the full card. The record keeps only the latest
- * MAX_SESSIONS sessions, though, so for a singer past the cap the count stops
- * moving: it sat at an even 500 and every summary got the full card, for
- * good, for exactly the most loyal free singers. There it reads the newest
- * session's id instead (a timestamp and a random number), which lands odd or
- * even about half the time, the same share of cards as before the cap.
+ * The number ProCrescendoNudge alternates on: the session count below the
+ * MAX_SESSIONS cap, and past it (where the count stops moving) a hash of the
+ * newest session's id, so the full card still shows about half the time.
  */
 export function crescendoCount(sessions: ReadonlyArray<{ id: string }>): number {
   if (sessions.length < MAX_SESSIONS) return sessions.length;
@@ -137,7 +130,6 @@ export function ProCrescendoNudge({
     <UpgradeCard
       title={title}
       body={body}
-      cta={`Go Pro: ${proHeadline()}`}
       context={context}
     />
   );
@@ -153,7 +145,7 @@ export function ProInlineNudge({ children }: { children: string }) {
   const ready = useProReady();
   if (!ready || isPro) return null;
   return (
-    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-mut">
       <ProChip />
       <span>{children}</span>
       <Link

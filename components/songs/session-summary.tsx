@@ -426,7 +426,8 @@ export function SessionSummary({
 
       {scored && <ResultCard data={data} />}
 
-      {!listenMode && !silent && (
+      {/* At the cap the CapWall below is the one ask. */}
+      {!listenMode && !silent && !againUnavailable && (
         <div>
           <ProCrescendoNudge
             line="Pro adds this song's notes to your per-note accuracy report"
@@ -477,10 +478,20 @@ export function SessionSummary({
             again (what the note above asks for) stays first. */}
         {nextInSetlist && onNext && silent ? (
           <>
-            <Button variant="violet" onClick={onAgain}>
+            <Button
+              variant={againUnavailable ? "outline" : "violet"}
+              onClick={onAgain}
+              aria-disabled={againUnavailable ? true : undefined}
+              aria-describedby={againUnavailable ? unavailableId : undefined}
+            >
               Sing again
             </Button>
-            <Button variant="outline" onClick={onNext}>
+            <Button
+              variant="outline"
+              onClick={onNext}
+              aria-disabled={againUnavailable ? true : undefined}
+              aria-describedby={againUnavailable ? unavailableId : undefined}
+            >
               Next: {nextInSetlist}
             </Button>
           </>

@@ -6,7 +6,7 @@ appendix: records
 summary: "The atlas's extremes in one place (lowest floors, highest ceilings, widest spans and the whistle club), each with the recording where the note happened when one is famously known."
 ---
 
-This appendix gathers the edges of the whole atlas: the lowest cited floors, the highest cited ceilings, the widest spans, and the short roster of voices with a documented whistle register. The tables that follow are generated from the same data as every entry, so they update as the library does, and where an extreme is famously tied to one recording, it is listed with the note.
+Everything here is generated from the same data as the entries, so it updates as the library does. Where an extreme is famously tied to one recording, the recording is listed with the note.
 
 Read the tables with the first chapter's caveats fully loaded, because records concentrate everything approximate about cited figures. An extreme is one recorded moment — often decades old, often live, sometimes a glissando's peak rather than a sustained pitch — and the singers on these lists could not necessarily reproduce their entry on demand, which they would tell you themselves. The spans table stacks a second caveat on top: a wide figure usually spans multiple vocal mechanisms, so it measures versatility of *production*, not the size of one continuous voice.
 

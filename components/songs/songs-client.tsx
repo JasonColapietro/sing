@@ -2,6 +2,7 @@
 
 import { useFreeCap } from "@/lib/free-cap";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
+import { CAPPED_REASON, showCapWall } from "@/components/practice/use-capped-start";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -64,7 +65,7 @@ export interface MicAsk {
   /** The library header's "Enable microphone" was on screen. */
   headerAsk: boolean;
   listening: boolean;
-  /** "Continue without a mic" was chosen. */
+  /** "Continue without a mic" or "Pick a song first" was chosen. */
   listenMode: boolean;
 }
 
@@ -83,14 +84,18 @@ export function micJustAnswered(prev: MicAsk, next: MicAsk): boolean {
   return gone && answered;
 }
 
-/** The reason a capped "Sing again" cannot start, said beside the button. */
-const CAPPED_REASON =
-  "Free practice is used for today. It resets at midnight; the free studio is still open.";
-
-/** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
-function showCapWall() {
-  document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
+/**
+ * What a start does about the microphone first. "ask": the singer chose "Pick
+ * a song first", so the Sing press asks for it and the run is scored once
+ * granted. "reopen": allowed earlier and closed while idle. "none": already
+ * on, or "Continue without a mic" (listen mode) was chosen.
+ */
+export function micStepForStart(s: { micAllowed: boolean; listening: boolean; listenMode: boolean }): "ask" | "reopen" | "none" {
+  if (s.listening) return "none";
+  if (s.micAllowed) return "reopen";
+  return s.listenMode ? "none" : "ask";
 }
+
 
 export function SongsClient() {
   const pitch = usePitch();
@@ -100,6 +105,8 @@ export function SongsClient() {
   const setlist = useSetlist();
 
   const [listenMode, setListenMode] = useState(false);
+  // "Pick a song first": browse now, and a card's Sing asks for the mic.
+  const [browsing, setBrowsing] = useState(false);
   // Whether the singer has allowed the microphone on this visit. The stream
   // itself is closed when the room has been idle for a while (below), so the
   // browser's recording light goes off on the summary and in the library;
@@ -217,13 +224,14 @@ export function SongsClient() {
       return false;
     }
     if (!mayStart(song)) return false;
-    // The room closed an idle microphone. Reopen it before the player mounts:
-    // a player that opens with the mic off is a listen pass, unscored, and
-    // would flash "Listen mode" until access came back. That includes a singer
-    // who first went on without a mic and turned it on later. Only if this
-    // screen is still the one showing when access arrives, as with the
-    // summary's own ask.
-    if (micAllowed && !pitch.listening) {
+    // Ask (after "Pick a song first"; refused, the player opens on its own Enable microphone) or reopen an idle-closed mic before the player mounts.
+    const micStep = micStepForStart({ micAllowed, listening: pitch.listening, listenMode });
+    if (micStep === "ask") {
+      const current = micRequestRef.current.begin();
+      const ok = await pitch.start();
+      if (!current()) return false;
+      if (!ok) autoStart = false;
+    } else if (micStep === "reopen") {
       const current = micRequestRef.current.begin();
       setReopening((n) => n + 1);
       let ok: boolean;
@@ -233,13 +241,10 @@ export function SongsClient() {
         setReopening((n) => n - 1);
       }
       if (!ok) {
-        // The device is gone, busy or refused. Bring the gate back with the
-        // error, which also offers to go on without a mic. That includes a
-        // singer who went on without one earlier: left in listen mode, they
-        // would get no error and no way to retry, and the next start would
-        // be an unscored run.
+        // Device gone or refused: the gate comes back with the error.
         setMicAllowed(false);
         setListenMode(false);
+        setBrowsing(false);
         return false;
       }
       if (!current()) return false;
@@ -270,7 +275,7 @@ export function SongsClient() {
   // A singer who has used today's free minutes meets the cap wall, not a
   // microphone prompt for practice they cannot start.
   const micOn = micAllowed || pitch.listening;
-  const gated = !micOn && !listenMode && !cap.capped;
+  const gated = !micOn && !listenMode && !browsing && !cap.capped;
 
   // The gate's buttons, or the library header's "Enable microphone", go
   // away the moment they are answered, and keyboard focus fell to <body>:
@@ -283,7 +288,7 @@ export function SongsClient() {
     gated,
     headerAsk: !gated && view === "library" && !micOn && !cap.capped,
     listening: micOn,
-    listenMode,
+    listenMode: listenMode || browsing,
   };
   const micRef = useRef(mic);
   useEffect(() => {
@@ -338,8 +343,12 @@ export function SongsClient() {
         error={pitch.error}
         onEnable={pitch.start}
         onListen={() => {
-          // Listening without a mic is unscored by nature, so its entry
-          // preselects the pass that matches: the guide alone.
+          // "Pick a song first" only defers the ask. "Continue without a mic"
+          // (a deep link) is listen mode, which preselects the guide alone.
+          if (!pendingDeepLink) {
+            setBrowsing(true);
+            return;
+          }
           setPass("listen");
           setListenMode(true);
         }}
@@ -398,7 +407,10 @@ export function SongsClient() {
           wall arrives as a surprise. In the player it sits above the
           transport instead: every start scrolls Play into view, which on a
           phone puts the top of the page above the screen. */}
-      {!cap.capped && view !== "practice" && <FreeAllowance cap={cap} className="mb-4" />}
+      {!cap.capped && view !== "practice" && (
+        // On the summary the results nudge is the one ask.
+        <FreeAllowance cap={cap} className="mb-4" proLink={view !== "summary"} />
+      )}
       {view === "library" && (
         <Library
           progress={progress}

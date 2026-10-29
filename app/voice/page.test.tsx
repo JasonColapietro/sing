@@ -39,7 +39,7 @@ describe("/voice, the app download page", () => {
 
   it("states the free plan as every other page does", () => {
     expect(html).toContain("warmups, ear training, breath and songs for 5 free minutes of guided practice a day");
-    expect(html).toContain("take recorder");
+    expect(html).toContain("recorder and tools with no daily clock");
     expect(html).not.toContain("adds its own practice tools, on-device recordings");
   });
 

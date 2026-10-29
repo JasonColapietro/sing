@@ -35,6 +35,7 @@ import {
   genreCardProps,
   hubCardVersion,
   recordsCardProps,
+  SINGER_OG_CARD_REVISION,
   singerCardText,
   singerCardVersion,
   songCardText,
@@ -42,6 +43,7 @@ import {
   voiceTypeCardProps,
 } from "@/lib/og-cards";
 import { midiToLabel } from "@/lib/audio/notes";
+import { ogCardVersion } from "@/lib/og";
 import {
   SINGERS,
   recordHolders,
@@ -102,6 +104,24 @@ describe("per-page share cards are versioned by what they draw", () => {
     for (const line of [text.name, text.notes, text.span, text.status]) {
       expect(html).toContain(line);
     }
+  });
+
+  it("draws the span in teal over a keyboard whose black keys are the dark ones, in the page's octave format", async () => {
+    const s = singerBySlug("alex-warren")!;
+    const html = await drawn(SingerImage({ params: Promise.resolve({ slug: s.slug }) }));
+    expect(singerCardText(s).span).toMatch(/^\d\.\d octaves · \d+ semitones$/);
+    expect(html).toContain("background-color:#0b0a07");
+    expect(html).toContain("background-color:#faf6ec");
+    expect(html).toContain("border:2px solid #11615d");
+    expect(html).not.toContain("#c59642;border-radius:4px");
+    expect(html).toContain("font-family:Instrument Serif");
+  });
+
+  it("moves every singer card's URL with the render revision", () => {
+    const s = singerBySlug("alex-warren")!;
+    expect(singerCardVersion(s)).toBe(
+      ogCardVersion([SINGER_OG_CARD_REVISION, ...Object.values(singerCardText(s))].join("|")),
+    );
   });
 
   it("puts the song card's version into its URL path", () => {

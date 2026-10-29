@@ -1,12 +1,11 @@
 /** Keyboard-only voice-mode navigation, without asking for a microphone. */
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import { browserTarget, cliArgs } from "./lib/args.mjs";
 
-const args = process.argv.slice(2);
-const base = (args.find((arg) => !arg.startsWith("--")) ?? "http://127.0.0.1:3100").replace(/\/$/, "");
+const { base, executable } = cliArgs("http://127.0.0.1:3100");
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(base).hostname), "Use a local test server");
-const executable = args.find((arg) => arg.startsWith("--executable="))?.slice(13);
-const browser = await chromium.launch(executable ? { executablePath: executable } : { channel: "chrome" });
+const browser = await chromium.launch(browserTarget(executable));
 try {
   for (const width of [320, 1280]) {
     const context = await browser.newContext({ viewport: { width, height: 720 } });

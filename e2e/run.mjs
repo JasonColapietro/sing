@@ -16,22 +16,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { ROUTES, VIEWPORTS, discoverTemplateRoutes } from "./routes.mjs";
 import { installProbes, DESCRIBE } from "./lib/harness.mjs";
+import { browserTarget, cliArgs } from "./lib/args.mjs";
 
 const { chromium } = pw;
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 
-const argv = process.argv.slice(2);
-const flag = (name) => {
-  const hit = argv.find((a) => a.startsWith(`--${name}=`));
-  return hit ? hit.slice(name.length + 3) : null;
-};
-const BASE = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").replace(/\/$/, "");
+const { base: BASE, executable: EXECUTABLE, flag } = cliArgs("http://localhost:3000");
 const ONLY = flag("only")?.split(",").map((s) => s.trim()).filter(Boolean) ?? null;
 const ROUTE_FILTER = flag("route")?.split(",").map((s) => s.trim()).filter(Boolean) ?? null;
 const VIEWPORT_FILTER = flag("viewport")?.split(",").map((s) => s.trim()).filter(Boolean) ?? null;
 const JSON_OUT = flag("json");
-/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
-const EXECUTABLE = flag("executable");
 
 async function loadAudits() {
   const dir = path.join(HERE, "audits");
@@ -137,7 +131,7 @@ async function main() {
   );
 
   const browser = await chromium.launch({
-    ...(EXECUTABLE ? { executablePath: EXECUTABLE } : { channel: "chrome" }),
+    ...browserTarget(EXECUTABLE),
     args: [
       "--use-fake-ui-for-media-stream",
       "--use-fake-device-for-media-stream",
