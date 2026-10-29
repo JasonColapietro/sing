@@ -7,28 +7,26 @@ import { COOL } from "@/lib/chart-colors";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 /**
- * The settling trace (the curve family of components/v2-glyph.tsx) drawn
- * full-bleed behind the hero copy. On a phone it stays in the top band, above
- * the copy, so the line never crosses the text.
+ * The settling trace (the curve family of components/v2-glyph.tsx), drawn in
+ * the empty band under the hero copy so it never crosses text.
  */
 function SettlingTrace() {
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 1600 600"
+      viewBox="0 0 1600 100"
       preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36svh] w-full max-sm:h-[30svh] sm:inset-y-0 sm:h-full"
-      style={{ opacity: 0.12 }}
+      className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-12 w-full sm:h-16"
+      style={{ opacity: 0.22 }}
     >
       <path
-        d="M -20 420 C 160 400, 300 470, 420 330 C 560 170, 720 130, 900 190 C 1040 236, 1180 250, 1320 250"
+        d="M -20 72 C 200 68, 360 90, 540 58 C 720 24, 920 18, 1120 36 C 1280 50, 1420 52, 1620 50"
         fill="none"
         stroke={COOL}
         strokeWidth="2"
         strokeLinecap="round"
         vectorEffect="non-scaling-stroke"
       />
-      <circle cx="1350" cy="250" r="7" fill={COOL} />
     </svg>
   );
 }

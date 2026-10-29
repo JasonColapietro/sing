@@ -180,7 +180,7 @@ export default function AtlasPage() {
       // In the header, so the free chapter the subtitle promises is one tap
       // away on the first phone screen rather than below the stats and prose.
       actions={
-        <div className="flex items-end gap-5">
+        <div className="flex items-end gap-5 lg:max-w-sm lg:flex-col lg:items-start">
           <BookCover title={ATLAS_TITLE} author={AUTHOR_NAME} kicker="How famous singers sing" />
           <AtlasCta />
         </div>

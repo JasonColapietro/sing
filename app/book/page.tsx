@@ -76,7 +76,7 @@ export default function BookPage() {
       // stats and paragraphs pushed "Read a free chapter" a screen and a half
       // below the subtitle that promises it.
       actions={
-        <div className="flex items-end gap-5">
+        <div className="flex items-end gap-5 lg:max-w-sm lg:flex-col lg:items-start">
           <BookCover title={BOOK_TITLE} author={AUTHOR_NAME} kicker="A singing book" />
           <BookCta />
         </div>
