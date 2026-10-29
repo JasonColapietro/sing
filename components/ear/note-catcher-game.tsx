@@ -163,6 +163,7 @@ export function NoteCatcherGame({
       // A frame left in the ref from before a hidden tab is not evidence.
       const midi =
         f.freq !== null && isFrameFresh(f.t, now) ? freqToMidiFloat(f.freq) : null;
+      if (midi !== null) session.markHeard();
 
       const prev = stateRef.current;
       const next = tickCatcher(prev, dt, midi, targets, level);

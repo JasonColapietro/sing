@@ -47,7 +47,7 @@ On one comfortable pitch, tap a steady pulse and sing two notes per tap on “da
 
 ### Review your own attempt
 
-I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang two even sounds per tap, then three, then a long-short pair against a steady tapped pulse, heard on playback that only the second note of each pair moved in the swung version, then clapped and sang the Swing Low phrase straight. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I counted and clapped the displayed rhythm before singing it, then reviewed wher
 
 ## Self-check
 
-- I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear.
+- I sang two even sounds per tap, then three, then a long-short pair against a steady tapped pulse, heard on playback that only the second note of each pair moved in the swung version, then clapped and sang the Swing Low phrase straight.
 - On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. This is a self-report, not an automatic assessment.
+What this shows: I sang two even sounds per tap, then three, then a long-short pair against a steady tapped pulse, heard on playback that only the second note of each pair moved in the swung version, then clapped and sang the Swing Low phrase straight. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets.

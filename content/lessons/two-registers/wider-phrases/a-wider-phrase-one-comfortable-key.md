@@ -47,7 +47,7 @@ Sing the Deep River phrase, whose octave leap on “is o-ver” crosses your tra
 
 ### Review your own attempt
 
-I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the Deep River phrase in its opening key and a semitone lower, and kept the key where the crossing fell on an easier note while the low notes stayed audible. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I rehearsed the supplied Deep River phrase in a comfortable key and marked where
 
 ## Self-check
 
-- I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed.
+- I sang the Deep River phrase in its opening key and a semitone lower, and kept the key where the crossing fell on an easier note while the low notes stayed audible.
 - The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. This is a self-report, not an automatic assessment.
+What this shows: I sang the Deep River phrase in its opening key and a semitone lower, and kept the key where the crossing fell on an easier note while the low notes stayed audible. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Which register was used, absence of a register break, vowel strategy, or freedom from strain.

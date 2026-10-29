@@ -256,12 +256,17 @@ export function StudioLastSession({
           ))}
         </div>
       )}
-      <RangeNextStep
-        retestDue={retestDue}
-        programNote={programNote}
-        programDayHref={programDayHref}
-        tryRange={<LinkButton href={rangeTestHref()}>Take the 2-minute range test</LinkButton>}
-      />
+      {/* The range test and the warmups need the same mic, so after a silent
+          session the next step is the input check and Sing again, as on the
+          /range meter's silent card. */}
+      {!result.silent && (
+        <RangeNextStep
+          retestDue={retestDue}
+          programNote={programNote}
+          programDayHref={programDayHref}
+          tryRange={<LinkButton href={rangeTestHref()}>Take the 2-minute range test</LinkButton>}
+        />
+      )}
       {result.log && (
         <div className="mt-3">
           <ProInlineNudge>Pro charts your scored warmups and songs note by note</ProInlineNudge>

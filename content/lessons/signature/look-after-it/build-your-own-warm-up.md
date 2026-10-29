@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I assembled a short warm-up with rests and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I built a short warm-up from gentle semi-occluded sound, comfortable range movement and the day's task, with rests, and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I assembled a short warm-up with rests and wrote the warning signs that would ma
 
 ## Self-check
 
-- I assembled a short warm-up with rests and wrote the warning signs that would make me stop.
+- I built a short warm-up from gentle semi-occluded sound, comfortable range movement and the day's task, with rests, and wrote the warning signs that would make me stop.
 - The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Any blood, or a sudden loss of range or voice, means seeing that doctor now. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
-What this shows: I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.
+What this shows: I built a short warm-up from gentle semi-occluded sound, comfortable range movement and the day's task, with rests, and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer.

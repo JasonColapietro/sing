@@ -25,7 +25,7 @@ vi.mock("@/lib/audio/devices", () => ({ useAudioPrefs: () => ({ monitoring: "hea
 vi.mock("@/lib/audio/synth", () => ({ playTone: fixture.playTone, playSequence: fixture.playSequence }));
 vi.mock("@/lib/progress", () => ({ useProgress: () => fixture.progress }));
 vi.mock("./session", () => {
-  const session = { results: [], done: false, record: fixture.record, round: 1, score: 0, streak: 0 };
+  const session = { results: [], done: false, record: fixture.record, markHeard: () => {}, wasHeard: () => false, round: 1, score: 0, streak: 0 };
   return {
     useEarSession: () => session,
     useActiveStart: () => [0, fixture.restartClock],

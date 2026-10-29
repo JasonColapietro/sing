@@ -48,6 +48,7 @@ export function MelodyEchoGame({
   onComplete: OnEarComplete;
 }) {
   const session = useEarSession();
+  const { markHeard } = session;
   const ownPitch = usePitch();
   const { latest, listening, error, start, stop } = pitch ?? ownPitch;
   const progress = useProgress();
@@ -155,6 +156,7 @@ export function MelodyEchoGame({
       const f = latest.current;
       const fresh = f.freq !== null && isFrameFresh(f.t, now);
       if (fresh) {
+        markHeard();
         framesRef.current.push({ t: now, midi: freqToMidiFloat(f.freq!) });
       }
       setSinging(fresh);
@@ -167,7 +169,7 @@ export function MelodyEchoGame({
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [phase, melody, latest, finishSinging, listening]);
+  }, [phase, melody, latest, finishSinging, listening, markHeard]);
 
   const next = useCallback(() => {
     if (session.done) return;

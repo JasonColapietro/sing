@@ -43,7 +43,7 @@ State the checkpoint target, record one uninterrupted attempt, and keep the resu
 
 ### Review your own attempt
 
-I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang one phrase with a scoop, a fall, a bend and a slide at the places I marked, and named each one on playback. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I named and compared small pitch gestures in one comfortable phrase, using the w
 
 ## Self-check
 
-- I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.
+- I sang one phrase with a scoop, a fall, a bend and a slide at the places I marked, and named each one on playback.
 - The four versions are recognizably different and the underlying words and melody remain intact.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: In one take of one phrase, all four ornaments land where you marked 
 
 If not ready: If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. This is a self-report, not an automatic assessment.
+What this shows: I sang one phrase with a scoop, a fall, a bend and a slide at the places I marked, and named each one on playback. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain.

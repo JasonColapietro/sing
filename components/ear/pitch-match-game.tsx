@@ -261,6 +261,7 @@ export function PitchMatchGame({
       // with the whole absence as a single delta, which cleared HOLD_MS
       // outright and scored the round correct for someone who sang nothing.
       if (f.freq !== null && isFrameFresh(f.t, now)) {
+        session.markHeard();
         cents = centsToTarget(freqToMidiFloat(f.freq), target, octaveAgnostic);
       }
       // No fresh voiced frame is a frame out of the band: a short one is

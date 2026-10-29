@@ -43,7 +43,7 @@ Count a slow four. Hear Sustained hold once and stop the reference, then sing fo
 
 ### Review your own attempt
 
-I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I heard Sustained hold once, stopped it, sang four one-bar holds with a bar of rest between them, and compared the start and end of each by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I matched the sustained reference, released comfortably, and listened for a stea
 
 ## Self-check
 
-- I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds.
+- I heard Sustained hold once, stopped it, sang four one-bar holds with a bar of rest between them, and compared the start and end of each by ear.
 - The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. This is a self-report, not an automatic assessment.
+What this shows: I heard Sustained hold once, stopped it, sang four one-bar holds with a bar of rest between them, and compared the start and end of each by ear. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Why the pitch moved, breath technique, vibrato quality, tone quality, or freedom from strain.

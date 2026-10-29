@@ -31,4 +31,47 @@ describe("catalogPositionFor", () => {
     const rank = catalogPositionFor(widest).find((f) => f.id === "library-rank");
     expect(rank?.text).toContain(`number 1 of ${SINGERS.length}`);
   });
+
+  it("names the singers who share a first place", () => {
+    const fact = (slug: string, id: string) =>
+      catalogPositionFor(SINGERS.find((s) => s.slug === slug)!).find((f) => f.id === id)!.text;
+    expect(fact("mike-patton", "library-rank")).toContain(
+      `number 1 of ${SINGERS.length} by reported span, shared with Dimash Kudaibergen.`,
+    );
+    expect(fact("dimash-kudaibergen", "library-rank")).toContain("shared with Mike Patton");
+    const reggae = fact("bob-marley", "genre-rank");
+    expect(reggae).toContain("Dennis Brown");
+    expect(reggae).toContain("Jimmy Cliff");
+  });
+
+  it("never prints a first place without every singer who shares it, across the whole catalog", () => {
+    // Every singer, every rank fact: the group a fact ranks in is rebuilt
+    // here from the data, and each tie at the top must be named.
+    const span = (s: (typeof SINGERS)[number]) => s.highMidi - s.lowMidi;
+    let sharedFirsts = 0;
+    for (const s of SINGERS) {
+      const groups: Array<[string, typeof SINGERS]> = [
+        ["library-rank", SINGERS],
+        ["type-rank", SINGERS.filter((o) => o.voiceType === s.voiceType)],
+      ];
+      if (s.genres[0]) groups.push(["genre-rank", SINGERS.filter((o) => o.genres.includes(s.genres[0]))]);
+      const facts = catalogPositionFor(s);
+      for (const [id, group] of groups) {
+        const text = facts.find((f) => f.id === id)?.text;
+        if (!text) continue;
+        const first = !group.some((o) => span(o) > span(s));
+        const tied = group.filter((o) => o.slug !== s.slug && span(o) === span(s));
+        if (first && tied.length > 0) {
+          sharedFirsts += 1;
+          expect(text, `${s.slug} ${id}`).toContain("shared with");
+          for (const o of tied) expect(text, `${s.slug} ${id}`).toContain(o.name);
+        } else {
+          expect(text, `${s.slug} ${id}`).not.toContain("shared with");
+        }
+      }
+    }
+    // Mike Patton and Dimash Kudaibergen at least, each naming the other.
+    expect(sharedFirsts).toBeGreaterThanOrEqual(2);
+  });
 });
+

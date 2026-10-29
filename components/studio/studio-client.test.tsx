@@ -154,6 +154,20 @@ describe("the studio's Stop card", () => {
     expect(html).toContain('href="/warmups"');
   });
 
+  it("offers no other mic room after a silent session, only the input check and Sing again", () => {
+    // The range test and the warmups listen through the same mic that just
+    // heard nothing, as the /range meter's silent card already treats it.
+    const silent = { log: null, locks: 0, newBest: false, silent: true };
+    for (const retestDue of [true, false]) {
+      const html = renderToStaticMarkup(
+        <StudioLastSession result={silent} elapsedSec={30} retestDue={retestDue} programNote={null} programDayHref={null} />,
+      );
+      expect(html).toContain("No note was heard, so nothing was logged.");
+      expect(links(html)).toEqual([]);
+      expect(html).not.toContain("range test");
+    }
+  });
+
   it("sends a singer with a recent saved range to practice, not a retest", () => {
     // A range tested three days ago: retestDue is false (lib/progress rangeRetestDue).
     const html = renderToStaticMarkup(

@@ -36,18 +36,18 @@ Choose a short comfortable phrase and establish a neutral version first. Keep pi
 Three ways to attack the same note. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
-- Listen: The three versions are distinguishable in playback without one simply being much louder than the others.
+- Listen: The grace note, staccato and accent are distinguishable from the plain version and from each other in playback, without one simply being much louder.
 
 ### Hear the distinction
 
 A grace note is a quick note a step above or below that falls straight into the main note; staccato is short and detached; an accent is a firmer start, not a louder note. Pick one note in the first phrase of Ode to Joy and sing the phrase four times, changing only how that note is shaped: plain, with a grace note from the step above, staccato, then accented. Keep the pitch, words and tempo the same. Record all four in one take in the recorder with a breath between them. Make each gesture small enough to remain repeatable.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
-- Listen: The three versions are distinguishable in playback without one simply being much louder than the others.
+- Listen: The grace note, staccato and accent are distinguishable from the plain version and from each other in playback, without one simply being much louder.
 
 ### Review your own attempt
 
-I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang one Ode to Joy phrase four times, plain, with a grace note, staccato and accented on the same note, and heard which shape each one had. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,14 +66,14 @@ I used one supplied phrase to compare connected, detached, and gently accented a
 
 ## Self-check
 
-- I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.
-- The three versions are distinguishable in playback without one simply being much louder than the others.
+- I sang one Ode to Joy phrase four times, plain, with a grace note, staccato and accented on the same note, and heard which shape each one had.
+- The grace note, staccato and accent are distinguishable from the plain version and from each other in playback, without one simply being much louder.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
 If not ready: If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. This is a self-report, not an automatic assessment.
+What this shows: I sang one Ode to Joy phrase four times, plain, with a grace note, staccato and accented on the same note, and heard which shape each one had. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain.

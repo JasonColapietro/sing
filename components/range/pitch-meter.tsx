@@ -321,7 +321,8 @@ export function finishMeterRun(
 /**
  * The stopped meter's summary: the notes held since the meter opened (or was
  * last Reset; "Sing again" keeps them, as the live readout does), whether the
- * stop saved (and what it earned), and always a next step. Not "your last
+ * stop saved (and what it earned), and a next step (after a run the mic
+ * heard nothing of, that is the gate's Sing again). Not "your last
  * run": after a second start the notes can come from both runs.
  *
  * A singer whose saved range is recent is not sent to retest: the book spaces
@@ -340,6 +341,7 @@ export function LastRun({
   retestDue = true,
   programNote = null,
   programDayHref = null,
+  silent = false,
 }: {
   low: number;
   high: number;
@@ -359,33 +361,44 @@ export function LastRun({
   programNote?: string | null;
   /** That test is on today's program day: the program's view, to take it there. */
   programDayHref?: string | null;
+  /**
+   * The last run heard no note (a later run after one that was heard): the
+   * notes above are from before it, and that run was thrown away, not banked.
+   */
+  silent?: boolean;
 }) {
   return (
     <Card className="mb-4">
       <SectionLabel>Held so far</SectionLabel>
-      <p className="mt-2 text-sm text-mut">
+      <p className="mt-2 text-sm text-mut" role={silent ? "status" : undefined}>
         {/* One note is what the gate asks for, so it is a common first
             result: "held A3", not "held A3 to A3". */}
         {low === high
           ? `You have held ${midiToLabel(low)} so far.`
           : `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far.`}{" "}
-        {lastLog
-          ? `+${lastLog.xpGained} XP, saved to your progress.`
-          : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
+        {silent
+          ? "No note was heard that time, so it was not logged. Sing a little louder or closer to the mic, or check the input under Audio below."
+          : lastLog
+            ? `+${lastLog.xpGained} XP, saved to your progress.`
+            : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
       </p>
       {/* The gate asks for one note, so a run of a note or two is the
           expected first result, not a reason to withhold the next step. On a
           stop the view scrolls to this card, which puts the Pitch | Range
-          test tabs under the sticky header: the card has to carry the step. */}
-      <RangeNextStep
-        retestDue={retestDue}
-        programNote={programNote}
-        programDayHref={programDayHref}
-        // Only beside the button it explains: without onTryRange there is
-        // nothing on the card to take the test with.
-        explain={Boolean(onTryRange) && high - low < SUGGEST_RANGE_SEMIS}
-        tryRange={onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
-      />
+          test tabs under the sticky header: the card has to carry the step.
+          After a run the mic heard nothing of, the step is the input check
+          and Sing again: the range test listens through the same mic. */}
+      {!silent && (
+        <RangeNextStep
+          retestDue={retestDue}
+          programNote={programNote}
+          programDayHref={programDayHref}
+          // Only beside the button it explains: without onTryRange there is
+          // nothing on the card to take the test with.
+          explain={Boolean(onTryRange) && high - low < SUGGEST_RANGE_SEMIS}
+          tryRange={onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
+        />
+      )}
     </Card>
   );
 }
@@ -641,6 +654,13 @@ export function PitchMeter({
     wasListeningRef.current = listening;
     if (was && !listening) stoppedRef.current?.scrollIntoView({ block: "start" });
   }, [listening]);
+  // The silent card is set by the stop's flush, a render after the scroll
+  // above, and scroll anchoring then pushed it up under the sticky header on
+  // a phone. Bring it into view once it exists. silentStop only turns true on
+  // a stop (begin() clears it), so this never runs on the first mount.
+  useEffect(() => {
+    if (silentStop) stoppedRef.current?.scrollIntoView({ block: "start" });
+  }, [silentStop]);
 
   // "Start singing" goes with the gate as the mic opens, and focus fell to
   // <body>. The live panel takes it: it is where the gate's button was, a
@@ -690,6 +710,7 @@ export function PitchMeter({
             retestDue={offerRetest}
             programNote={programNote}
             programDayHref={programDayHref}
+            silent={silentStop}
           />
         )}
         {/* A silent run is never saved: say so, rather than drop the singer

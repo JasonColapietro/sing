@@ -43,7 +43,7 @@ Mark your breaths and the highest phrase of Amazing Grace or Home on the Range. 
 
 ### Review your own attempt
 
-I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I rehearsed the highest phrase alone, joined two phrases, then recorded the whole arrangement in one take at a fixed microphone distance. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I rehearsed the supplied study arrangement and compared microphone distance or p
 
 ## Self-check
 
-- I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.
+- I rehearsed the highest phrase alone, joined two phrases, then recorded the whole arrangement in one take at a fixed microphone distance.
 - On playback, the melody keeps its own contour and the whole arrangement stays complete from first entry to release. A harmony line, if you add one, is listening practice: nothing here measures two parts at once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.
+What this shows: I rehearsed the highest phrase alone, joined two phrases, then recorded the whole arrangement in one take at a fixed microphone distance. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame.

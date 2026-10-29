@@ -43,7 +43,7 @@ Say “hey!” as if calling a friend across a quiet room: a call, not a shout. 
 
 ### Review your own attempt
 
-I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the pattern I chose three times in a row across my transition at moderate volume, held its top note for six comfortable seconds each time, and noted my own effort. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 ## Self-check
 
-- I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.
+- I sang the pattern I chose three times in a row across my transition at moderate volume, held its top note for six comfortable seconds each time, and noted my own effort.
 - The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: Three times in a row, the pattern crosses your transition at moderat
 
 If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.
 
-What this shows: I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.
+What this shows: I sang the pattern I chose three times in a row across my transition at moderate volume, held its top note for six comfortable seconds each time, and noted my own effort. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those.

@@ -3,6 +3,15 @@ import { pickMimeType } from "./mime";
 import { MIC_ENDED_MESSAGE, watchMicEnd, type openMic } from "@/lib/audio/mic";
 import { getAudioPrefs } from "@/lib/audio/devices";
 import { SILENCE_RMS } from "@/lib/audio/pitch";
+import { creditedSeconds } from "@/components/practice/silent-session";
+
+/** A take shorter than this is kept to play back but not logged as practice. */
+export const RECORDING_MIN_LOG_SEC = 10;
+
+/** Seconds a finished take logs as practice: null for a short take or one the mic heard nothing in. */
+export function takeLogSeconds(durationSec: number, heard: boolean): number | null {
+  return creditedSeconds(durationSec, RECORDING_MIN_LOG_SEC, heard);
+}
 
 /**
  * Whether the mic is picking up sound right now: the analyser's RMS at or

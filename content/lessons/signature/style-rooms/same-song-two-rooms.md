@@ -43,7 +43,7 @@ Mark the key, breaths, range edges, and both treatments before a full take of yo
 
 ### Review your own attempt
 
-I compared two stylistic choices in the same supplied phrase and could explain what I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang both treatments of the same phrase in one take and could explain which choices I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I compared two stylistic choices in the same supplied phrase and could explain w
 
 ## Self-check
 
-- I compared two stylistic choices in the same supplied phrase and could explain what I changed.
+- I sang both treatments of the same phrase in one take and could explain which choices I changed.
 - A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared two stylistic choices in the same supplied phrase and could explain what I changed. This is a self-report, not an automatic assessment.
+What this shows: I sang both treatments of the same phrase in one take and could explain which choices I changed. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer.

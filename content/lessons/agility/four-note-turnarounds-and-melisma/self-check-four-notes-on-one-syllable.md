@@ -43,7 +43,7 @@ State the checkpoint target, record one uninterrupted attempt in the [recorder](
 
 ### Review your own attempt
 
-I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang Hoo descent on one stable vowel and listened for four clear notes, each on its own pitch center. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I sang the supplied four-note descent on one syllable, then listened for four se
 
 ## Self-check
 
-- I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.
+- I sang Hoo descent on one stable vowel and listened for four clear notes, each on its own pitch center.
 - One syllable carries all four notes with clear centers and no swallowed middle pitches.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: On two different days, three reps in a row of Hoo descent on one unb
 
 If not ready: If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a self-report, not an automatic assessment.
+What this shows: I sang Hoo descent on one stable vowel and listened for four clear notes, each on its own pitch center. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow.

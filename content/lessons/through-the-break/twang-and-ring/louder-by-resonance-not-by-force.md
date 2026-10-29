@@ -47,7 +47,7 @@ To find the brighter setup, say a small, bratty “nyeh” at speaking volume, a
 
 ### Review your own attempt
 
-I compared two easy tones on the same pitch and described a change in brightness by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I recorded my easy baseline and a brighter “eh” on the same note in one take, and described the change in brightness by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I compared two easy tones on the same pitch and described a change in brightness
 
 ## Self-check
 
-- I compared two easy tones on the same pitch and described a change in brightness by ear.
+- I recorded my easy baseline and a brighter “eh” on the same note in one take, and described the change in brightness by ear.
 - The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.
+What this shows: I recorded my easy baseline and a brighter “eh” on the same note in one take, and described the change in brightness by ear. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer.

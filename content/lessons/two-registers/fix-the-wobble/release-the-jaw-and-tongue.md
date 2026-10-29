@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang my baseline phrase and then the “yah-yah-yah” and “mah” release versions in one take, and described one audible change without forcing a rough sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I compared a relaxed baseline with a later example in the same recording and des
 
 ## Self-check
 
-- I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.
+- I sang my baseline phrase and then the “yah-yah-yah” and “mah” release versions in one take, and described one audible change without forcing a rough sound.
 - Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If a contrast causes discomfort, hoarseness, loss of range, effort that remains after the attempt or any blood, stop the exercise and rest your voice. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; anything still there after rest means the same. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
-What this shows: I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.
+What this shows: I sang my baseline phrase and then the “yah-yah-yah” and “mah” release versions in one take, and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those.

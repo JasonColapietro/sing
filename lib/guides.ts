@@ -137,9 +137,14 @@ export const RANGE_GUIDE: GuideContent = {
   start: { label: "Start the range test", href: "/range?mode=range#content" },
   related: [
     {
-      href: "/singers",
-      label: "Famous ranges",
-      note: "See which well-known voices share your span.",
+      // The page that owns "voice types" and "vocal range by voice type"
+      // (lib/keywords.ts HEAD_TERM_OWNERS). /range explains the bands, so it
+      // links the reference in its body, not only in the footer
+      // (docs/archive/seo/2026-10-08-search-intent.md). /singers stays one
+      // tap away in the nav and footer.
+      href: "/atlas/vocal-range-by-voice-type",
+      label: "Vocal range by voice type",
+      note: "Compare the conventional range bands, and why range alone does not decide your voice type.",
     },
     {
       href: "/learn/voice/room-check/your-range",

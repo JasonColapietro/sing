@@ -47,7 +47,7 @@ Pick one comfortable note from Humming thirds, low enough that you could say a w
 
 ### Review your own attempt
 
-I compared two easy productions of the same pitch and could describe the audible difference. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang one comfortable note on “ah” fuller and then lighter, and described the difference in color and weight, not just loudness. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I compared two easy productions of the same pitch and could describe the audible
 
 ## Self-check
 
-- I compared two easy productions of the same pitch and could describe the audible difference.
+- I sang one comfortable note on “ah” fuller and then lighter, and described the difference in color and weight, not just loudness.
 - Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared two easy productions of the same pitch and could describe the audible difference. This is a self-report, not an automatic assessment.
+What this shows: I sang one comfortable note on “ah” fuller and then lighter, and described the difference in color and weight, not just loudness. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio.

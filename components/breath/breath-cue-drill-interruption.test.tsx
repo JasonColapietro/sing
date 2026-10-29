@@ -85,6 +85,7 @@ function mount() {
       document.dispatchEvent(new Event("visibilitychange")); render();
     },
     done() { return nodes(tree).find((n) => n.props.role === "img")?.props["aria-label"]; },
+    close() { (nodes(tree).find((n) => typeof n.props.onClose === "function")!.props.onClose as () => void)(); render(); },
   };
 }
 
@@ -230,5 +231,29 @@ describe("hiss confirmation continuity", () => {
     expect(player.gate()).toBeUndefined();
     for (let i = 0; i < 40; i++) player.frame(100, 0.1);
     expect(player.done()).toBe("1 of 6 reps done");
+  });
+});
+
+describe("a Breathe and sing run the mic heard nothing of", () => {
+  // components/practice/silent-session.test.ts lists this room by this test.
+  it("logs nothing however long it ran, timed breath or detected", () => {
+    const player = mount();
+    player.begin();
+    // No breath and no note: the timed cue is taken, and still no hold starts.
+    player.fallback();
+    waitWithQuietFrames(player, 120_000);
+    expect(player.done()).toBe("0 of 6 reps done");
+    player.close();
+    expect(fixture.log).not.toHaveBeenCalled();
+    expect(fixture.complete).not.toHaveBeenCalled();
+  });
+
+  it("logs a run once a held note was heard", () => {
+    const player = mount();
+    player.begin();
+    player.inhale(); hold(player);
+    for (let i = 0; i < 250; i++) player.frame(100, 0);
+    player.close();
+    expect(fixture.log).toHaveBeenCalledOnce();
   });
 });

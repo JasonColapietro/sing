@@ -9,6 +9,7 @@ import {
   relatedSingers,
   singerBySlug,
   singersByGenre,
+  type Singer,
   wikipediaUrl,
 } from "@/lib/singers";
 
@@ -116,6 +117,31 @@ describe("relatedSingers", () => {
         if (Math.abs(span(o) - span(s)) >= 12) octaveOff++;
       }
     }
-    expect(octaveOff / cards).toBeLessThan(0.03);
+    expect(octaveOff / cards).toBeLessThan(0.01);
+  });
+
+  it("never skips a closer range for a matching label, on any singer page", () => {
+    // The whole catalog: no singer left off a page's cards sits nearer both
+    // endpoints than a card that is shown.
+    const distance = (s: Singer, o: Singer) =>
+      Math.abs(o.lowMidi - s.lowMidi) + Math.abs(o.highMidi - s.highMidi);
+    for (const s of SINGERS) {
+      const shown = relatedSingers(s);
+      const farthest = Math.max(...shown.map((o) => distance(s, o)));
+      const closer = SINGERS.filter(
+        (o) => o.slug !== s.slug && !shown.includes(o) && distance(s, o) < farthest,
+      );
+      expect(closer.map((o) => o.slug), s.slug).toEqual([]);
+    }
+  });
+
+  it("lists an identical range whatever its catalog label", () => {
+    const normani = singerBySlug("normani")!;
+    const wendy = singerBySlug("wendy")!;
+    expect([wendy.lowMidi, wendy.highMidi]).toEqual([normani.lowMidi, normani.highMidi]);
+    expect(relatedSingers(normani).map((o) => o.slug)).toContain("wendy");
+    const ramey = relatedSingers(singerBySlug("samuel-ramey")!).map((o) => o.slug);
+    expect(ramey).not.toContain("tim-storms");
+    expect(ramey).toContain("bing-crosby");
   });
 });

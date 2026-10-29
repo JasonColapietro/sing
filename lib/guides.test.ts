@@ -484,3 +484,35 @@ describe("free chapter links", () => {
     }
   });
 });
+
+/**
+ * The voice-type reference (/atlas/vocal-range-by-voice-type) owns "voice
+ * types" and "vocal range by voice type". A guide whose rendered copy explains
+ * voice types links it in its body; a footer link is not enough
+ * (docs/archive/seo/2026-10-08-search-intent.md). #263 dropped it from the
+ * range guide while that page kept its voice-type FAQ. Every rail stays at the
+ * owner's cap of four, so a link is swapped in, never added.
+ */
+describe("voice-type reference links", () => {
+  const rendered = (g: GuideContent) =>
+    renderToStaticMarkup(createElement(ToolGuide, { guide: g }))
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ");
+
+  it("links the voice-type reference from every guide that explains voice types", () => {
+    const explaining = TOOL_GUIDES.filter((g) => /voice[- ]types?\b/i.test(rendered(g)));
+    expect(explaining.map((g) => g.path)).toContain("/range");
+    for (const g of explaining) {
+      expect(g.related.map((r) => r.href), g.path).toContain("/atlas/vocal-range-by-voice-type");
+    }
+  });
+
+  it("keeps every related rail at four links or fewer", () => {
+    for (const g of TOOL_GUIDES) expect(g.related.length, g.path).toBeLessThanOrEqual(4);
+  });
+
+  it("renders the reference in the /range guide's body, not only the footer", () => {
+    const html = renderToStaticMarkup(createElement(ToolGuide, { guide: guides.RANGE_GUIDE }));
+    expect(html).toMatch(/<a[^>]*href="\/atlas\/vocal-range-by-voice-type"[^>]*>[\s\S]*?Vocal range by voice type/);
+  });
+});

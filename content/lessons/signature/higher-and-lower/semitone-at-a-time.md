@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang one semitone beyond my prior comfortable endpoint at low-to-moderate volume, gave it three attempts at most, and kept the earlier endpoint unless it was easy. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 
 ## Self-check
 
-- I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.
+- I sang one semitone beyond my prior comfortable endpoint at low-to-moderate volume, gave it three attempts at most, and kept the earlier endpoint unless it was easy.
 - The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
-What this shows: I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.
+What this shows: I sang one semitone beyond my prior comfortable endpoint at low-to-moderate volume, gave it three attempts at most, and kept the earlier endpoint unless it was easy. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge.

@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I used the supplied minor and pentatonic patterns to make my own short answering phrases. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I used the supplied minor and pentatonic patterns to make my own short answering
 
 ## Self-check
 
-- I used the supplied minor and pentatonic patterns to make my own short answering phrases.
+- I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.
 - The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a self-report, not an automatic assessment.
+What this shows: I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised.

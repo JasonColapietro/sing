@@ -23,6 +23,27 @@ function spanRank(s: Singer, list: Singer[]): number {
   return list.filter((o) => span(o) > span(s)).length + 1;
 }
 
+/**
+ * The others who share a rank-1 span. "Number 1" alone read as the sole
+ * widest voice, while /singers/records and the hubs say the record is shared
+ * (Dimash Kudaibergen and Mike Patton; Bob Marley, Dennis Brown and Jimmy
+ * Cliff among Reggae singers).
+ */
+function tiedAtTop(s: Singer, list: Singer[]): Singer[] {
+  return spanRank(s, list) === 1
+    ? list.filter((o) => o.slug !== s.slug && span(o) === span(s))
+    : [];
+}
+
+/** ", shared with A and B", or nothing when the rank is not a shared first place. */
+function shared(tied: Singer[]): string {
+  if (tied.length === 0) return "";
+  const names = new Intl.ListFormat("en", { type: "conjunction" }).format(
+    tied.map((o) => o.name),
+  );
+  return `, shared with ${names}`;
+}
+
 function semis(n: number): string {
   return `${n} ${n === 1 ? "semitone" : "semitones"}`;
 }
@@ -73,14 +94,14 @@ export function catalogPositionFor(
   facts.push({
     id: "library-rank",
     label: "Span, whole catalog",
-    text: `${semis(sp)} wide: number ${spanRank(s, all)} of ${all.length} by reported span. The catalog median is ${semis(median(all.map(span)))}.`,
+    text: `${semis(sp)} wide: number ${spanRank(s, all)} of ${all.length} by reported span${shared(tiedAtTop(s, all))}. The catalog median is ${semis(median(all.map(span)))}.`,
   });
 
   const typeMedian = median(sameType.map(span));
   facts.push({
     id: "type-rank",
     label: `Span, ${type} group`,
-    text: `Number ${spanRank(s, sameType)} of ${sameType.length} catalog ${sameType.length === 1 ? type : pluralVoice(type)}; that group's median span is ${semis(typeMedian)}, and this span is ${
+    text: `Number ${spanRank(s, sameType)} of ${sameType.length} catalog ${sameType.length === 1 ? type : pluralVoice(type)}${shared(tiedAtTop(s, sameType))}; that group's median span is ${semis(typeMedian)}, and this span is ${
       sp === typeMedian
         ? "the same as that median"
         : `${semis(Math.abs(sp - typeMedian))} ${sp > typeMedian ? "wider" : "narrower"} than that median`
@@ -94,7 +115,7 @@ export function catalogPositionFor(
       facts.push({
         id: "genre-rank",
         label: `Span, ${genre}`,
-        text: `Number ${spanRank(s, sameGenre)} of ${sameGenre.length} catalog singers tagged ${genre} (median ${semis(median(sameGenre.map(span)))}).`,
+        text: `Number ${spanRank(s, sameGenre)} of ${sameGenre.length} catalog singers tagged ${genre}${shared(tiedAtTop(s, sameGenre))} (median ${semis(median(sameGenre.map(span)))}).`,
       });
     }
   }

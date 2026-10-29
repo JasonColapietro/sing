@@ -208,3 +208,15 @@ describe("hiss confirmation continuity", () => {
     expect(fixture.attempt).toHaveBeenCalledExactlyOnceWith(seconds, 100);
   });
 });
+
+describe("a sustain test the mic heard nothing of", () => {
+  // components/practice/silent-session.test.ts lists this room by this test.
+  it("logs nothing however long the silence runs, timed breath or detected", () => {
+    const player = mount();
+    player.fallback();
+    frames(player, 120_000, 0);
+    expect(fixture.attempt).not.toHaveBeenCalled();
+    expect(fixture.log).not.toHaveBeenCalled();
+    expect(fixture.complete).not.toHaveBeenCalled();
+  });
+});

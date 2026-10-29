@@ -11,6 +11,25 @@ import {
   isOurSubscription,
 } from "@/lib/stripe";
 
+/**
+ * Every answer from this route is for one buyer's browser only: a success
+ * carries the buyer's Pro key (and email, when Stripe has one), the same
+ * payload /api/checkout and /api/entitlement mark private. So no shared cache
+ * (Vercel's edge, a proxy, a CDN) may keep it, and the browser must not reuse
+ * it either. Errors and the rate limit's 429 get the same header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
 function isMissingStripeResource(error: unknown): boolean {
   return (
     typeof error === "object" &&
@@ -34,19 +53,19 @@ function isMissingStripeResource(error: unknown): boolean {
  */
 export async function POST(request: Request) {
   const limited = rateLimit(request, "restore", { limit: 10, windowMs: 60_000 });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   let key: unknown;
   try {
     const body = (await request.json()) as { key?: unknown };
     key = body?.key;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   const claims = verifyProKey(key);
   if (!claims) {
-    return NextResponse.json(
+    return json(
       { ...INACTIVE, error: "That Pro key isn't valid. Check for a missing character." },
       { status: 400 },
     );
@@ -61,7 +80,7 @@ export async function POST(request: Request) {
       const owner =
         typeof sub.customer === "string" ? sub.customer : sub.customer.id;
       if (owner !== claims.customerId || !isOurSubscription(sub)) {
-        return NextResponse.json({
+        return json({
           ...INACTIVE,
           error: "That Pro key doesn't match a Suede Pro subscription.",
         });
@@ -69,12 +88,12 @@ export async function POST(request: Request) {
 
       const entitlement = entitlementFrom(sub, emailOf(sub.customer));
       if (!entitlement.active) {
-        return NextResponse.json({
+        return json({
           ...entitlement,
           error: "That subscription is no longer active.",
         });
       }
-      return NextResponse.json(entitlement);
+      return json(entitlement);
     }
 
     const payment = await getStripe().paymentIntents.retrieve(
@@ -86,17 +105,17 @@ export async function POST(request: Request) {
         ? payment.customer
         : payment.customer?.id;
     if (owner !== claims.customerId || !isOurLifetimePayment(payment)) {
-      return NextResponse.json({
+      return json({
         ...INACTIVE,
         error: "That Pro key doesn't match a Suede Pro lifetime purchase.",
       });
     }
-    return NextResponse.json(
+    return json(
       entitlementFromLifetime(payment, emailOf(payment.customer)),
     );
   } catch (error) {
     if (isMissingStripeResource(error)) {
-      return NextResponse.json({
+      return json({
         ...INACTIVE,
         error:
           claims.kind === "subscription"
@@ -105,7 +124,7 @@ export async function POST(request: Request) {
       });
     }
     console.error("[api/restore]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not reach Stripe. Try again in a moment." },
       { status: 502 },
     );

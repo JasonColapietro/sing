@@ -43,7 +43,7 @@ State the checkpoint target, record one uninterrupted attempt in the [recorder](
 
 ### Review your own attempt
 
-I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the straw or lip-trill pattern through its narrow range without pushing, and reset between attempts instead of forcing a fading trill. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I tried the straw or lip-trill pattern gently, with an easy breath and a full re
 
 ## Self-check
 
-- I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts.
+- I sang the straw or lip-trill pattern through its narrow range without pushing, and reset between attempts instead of forcing a fading trill.
 - The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: On two different days, the straw or lip-trill pattern runs its whole
 
 If not ready: If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a self-report, not an automatic assessment.
+What this shows: I sang the straw or lip-trill pattern through its narrow range without pushing, and reset between attempts instead of forcing a fading trill. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Absence of strain, correct laryngeal behavior, vocal health, or readiness for a wider or louder exercise.

@@ -47,7 +47,7 @@ On Vibrato hold, sing two long holds on the same comfortable note, changing only
 
 ### Review your own attempt
 
-I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang two holds on the same note, letting the vibrato in after about one second and then after about three, and heard where it started in each without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I compared straight tone with naturally occurring vibrato, without shaking the j
 
 ## Self-check
 
-- I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.
+- I sang two holds on the same note, letting the vibrato in after about one second and then after about three, and heard where it started in each without shaking the jaw or manufacturing a wobble.
 - The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.
+What this shows: I sang two holds on the same note, letting the vibrato in after about one second and then after about three, and heard where it started in each without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them.

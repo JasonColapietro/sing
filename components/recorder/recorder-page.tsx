@@ -35,7 +35,7 @@ import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
 import { FigureFrame, WaveformFigure } from "@/components/figures";
-import { createRecorderMic, createTakeMutations, soundHeard, startRecorder } from "./runtime";
+import { createRecorderMic, createTakeMutations, soundHeard, startRecorder, takeLogSeconds } from "./runtime";
 
 // 5 minute take limit. The page subtitle says so ("takes of up to five
 // minutes"), and it and the meta description call the free recorder "no
@@ -451,7 +451,7 @@ export default function RecorderPageClient() {
       takesRef.current = [take, ...takesRef.current];
       void persistTake(take);
       // A silent take is kept to play back, but it is not practice.
-      const result = durationSec >= 10 && heardRef.current ? logSession({
+      const result = takeLogSeconds(durationSec, heardRef.current) !== null ? logSession({
         type: "recording",
         durationSec,
         detail: take.name,

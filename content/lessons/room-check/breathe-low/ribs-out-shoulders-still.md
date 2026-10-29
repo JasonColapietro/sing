@@ -47,7 +47,7 @@ Sit or stand tall with one hand on the side of your lower ribs and the other res
 
 ### Review your own attempt
 
-I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I hissed out one breath with my shoulders lifting and one with my ribs widening and my shoulders still, and kept the version whose hiss stayed even with a quieter neck. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I counted an even hiss, kept my shoulders quiet, and released before running out
 
 ## Self-check
 
-- I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath.
+- I hissed out one breath with my shoulders lifting and one with my ribs widening and my shoulders still, and kept the version whose hiss stayed even with a quieter neck.
 - The hiss stays even rather than surging at the start and fading to almost nothing at the end.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. This is a self-report, not an automatic assessment.
+What this shows: I hissed out one breath with my shoulders lifting and one with my ribs widening and my shoulders still, and kept the version whose hiss stayed even with a quieter neck. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Airflow in liters, lung capacity, respiratory health, singing support, or freedom from tension.

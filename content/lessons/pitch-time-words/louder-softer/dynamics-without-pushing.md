@@ -47,7 +47,7 @@ Sing two short holds on one comfortable note: the first at your easy quiet level
 
 ### Review your own attempt
 
-I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang one comfortable note at my quiet level and then fuller with the neck where it was, checked that the fuller one did not creep sharp, then built four levels the same way without pushing. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 
 ## Self-check
 
-- I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.
+- I sang one comfortable note at my quiet level and then fuller with the neck where it was, checked that the fuller one did not creep sharp, then built four levels the same way without pushing.
 - The four levels in your take form an audible progression while pitch stays centered.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.
+What this shows: I sang one comfortable note at my quiet level and then fuller with the neck where it was, checked that the fuller one did not creep sharp, then built four levels the same way without pushing. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain.
