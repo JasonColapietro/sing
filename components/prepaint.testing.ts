@@ -10,7 +10,12 @@ export interface PaintState {
   plan: "free" | "capped" | "pro";
   /** data-sing-program's tokens, or null for no program. */
   program?: string | null;
+  /** data-sing-deeplink: the room whose deep link is loading, or null for none. */
+  deeplink?: string | null;
 }
+
+/** The rooms that hold their front page back on their own deep link's load (lib/prepaint-config.ts deepLinks). */
+const DEEPLINK_ROOMS = ["breath", "warmups", "ear"] as const;
 
 /** Each hidden-marker rule in globals.css, as the attribute it hides and when. */
 export const HIDE_RULES: { selector: string; marker: string; hides: (s: PaintState) => boolean }[] = [
@@ -49,6 +54,20 @@ export const HIDE_RULES: { selector: string; marker: string; hides: (s: PaintSta
     marker: 'data-prepaint-slot="program-lead"',
     hides: (s) => tokens(s).includes("locked"),
   },
+  // A room's deep link: its front page hidden on its own link's load, and the
+  // screen-tall block that holds its place shown on that load only.
+  ...DEEPLINK_ROOMS.flatMap((room) => [
+    {
+      selector: `html[data-sing-deeplink="${room}"] [data-prepaint-deeplink="${room}"]`,
+      marker: `data-prepaint-deeplink="${room}"`,
+      hides: (s: PaintState) => s.deeplink === room,
+    },
+    {
+      selector: `html:not([data-sing-deeplink="${room}"]) [data-prepaint-slot="deeplink-${room}"]`,
+      marker: `data-prepaint-slot="deeplink-${room}"`,
+      hides: (s: PaintState) => s.deeplink !== room,
+    },
+  ]),
 ];
 
 function tokens(s: PaintState): string[] {

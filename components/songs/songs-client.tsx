@@ -173,9 +173,15 @@ export function SongsClient() {
   // (useIdleMicRelease). It used to stay open on the summary and in the
   // library for as long as the page did, with the browser's recording light
   // on and no control to turn it off. The next start reopens it (startSong).
+  // The one exception is a run the mic heard nothing of: its summary shows
+  // the live input level, which needs the mic, and has its own control to
+  // turn it off, as the warmups' "No sound picked up" note does.
   useIdleMicRelease({
     listening: pitch.listening,
-    hold: view === "practice" || reopening > 0,
+    hold:
+      view === "practice" ||
+      reopening > 0 ||
+      (view === "summary" && summary?.silent === true),
     stop: pitch.stop,
   });
 
@@ -467,6 +473,10 @@ export function SongsClient() {
                 }
           }
           micError={pitch.listening ? null : pitch.error}
+          // For the audio setup a run the mic heard nothing of ends on.
+          listening={pitch.listening}
+          level={pitch.frame.volume}
+          onMicOff={pitch.stop}
           onLibrary={() => {
             endSetlist();
             setView("library");

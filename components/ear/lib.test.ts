@@ -1,12 +1,18 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   INTERVAL_SETS,
+  NO_HOLD,
+  advanceHold,
   generateMelody,
   hasSavedRange,
   intervalWithArticle,
+  pitchMatchTolerance,
   singableRegister,
   type Difficulty,
+  type HoldState,
 } from "./lib";
+import { GRACE_MS } from "./note-catcher";
 
 const MAJOR = [0, 2, 4, 5, 7, 9, 11];
 
@@ -103,5 +109,88 @@ describe("hasSavedRange", () => {
     expect(hasSavedRange({})).toBe(false);
     expect(hasSavedRange({ lowMidi: 48 })).toBe(false);
     expect(hasSavedRange({ lowMidi: 48, highMidi: 67 })).toBe(true);
+  });
+});
+
+describe("advanceHold: a pitch-match hold is one steady stretch", () => {
+  // pitch-match-game.tsx's numbers: a 1.5 s hold inside an 8 s window.
+  const HOLD_MS = 1500;
+  const WINDOW_MS = 8000;
+  const FRAME = 1000 / 60;
+
+  /** Runs the game's tick at 60 fps; the ms at which the round is matched, or null. */
+  function matchedAt(inBand: (tMs: number) => boolean): number | null {
+    let hold: HoldState = NO_HOLD;
+    for (let t = FRAME; t <= WINDOW_MS; t += FRAME) {
+      hold = advanceHold(hold, FRAME, inBand(t), GRACE_MS);
+      if (hold.held >= HOLD_MS) return t;
+    }
+    return null;
+  }
+
+  /** In band while `cents(t)` is inside the level's tolerance. */
+  const within = (tol: number, cents: (tMs: number) => number) => (t: number) => Math.abs(cents(t)) <= tol;
+
+  it("never credits 300 ms in and 300 ms out, however long it goes on", () => {
+    expect(matchedAt((t) => Math.floor(t / 300) % 2 === 0)).toBeNull();
+  });
+
+  it("credits 1.5 s held without a break", () => {
+    const at = matchedAt(() => true);
+    expect(at).not.toBeNull();
+    expect(at!).toBeLessThan(HOLD_MS + 2 * FRAME);
+  });
+
+  it("forgives a dropout shorter than the grace mid-hold, and restarts after a longer one", () => {
+    // 1 s in, then a gap, then the note again.
+    const withGap = (gap: number) => (t: number) => t <= 1000 || t > 1000 + gap;
+    // 100 ms out: the second stretch tops the first up to 1.5 s.
+    expect(matchedAt(withGap(100))!).toBeLessThan(1000 + 100 + 500 + 2 * FRAME);
+    // 200 ms out: the hold starts again, so it needs a full 1.5 s more.
+    expect(matchedAt(withGap(200))!).toBeGreaterThan(1000 + 200 + HOLD_MS - FRAME);
+  });
+
+  it("does not mutate the state it is given", () => {
+    const s: HoldState = { held: 400, lapse: 0 };
+    advanceHold(s, 200, false, GRACE_MS);
+    advanceHold(s, 16, true, GRACE_MS);
+    expect(s).toEqual({ held: 400, lapse: 0 });
+  });
+
+  it("does not credit a voice wobbling ±70 cents around the note once a second", () => {
+    const wobble = (t: number) => 70 * Math.sin((2 * Math.PI * t) / 1000);
+    for (const d of ["easy", "medium", "hard"] as const) {
+      expect(matchedAt(within(pitchMatchTolerance(d), wobble)), d).toBeNull();
+    }
+  });
+
+  it("does not credit a slow ±200-cent hunt that never settles", () => {
+    const hunt = (t: number) => 200 * Math.sin((2 * Math.PI * t) / 2500);
+    expect(matchedAt(within(pitchMatchTolerance("easy"), hunt))).toBeNull();
+  });
+
+  it("still credits a held note sung with vibrato, whose swings past the band are brief", () => {
+    // ±60 cents at 5.5 Hz: each swing out of a 50- or 35-cent band lasts well
+    // under the grace, so the note counts as held.
+    const vibrato = (t: number) => 60 * Math.sin((2 * Math.PI * 5.5 * t) / 1000);
+    for (const d of ["easy", "hard"] as const) {
+      expect(matchedAt(within(pitchMatchTolerance(d), vibrato)), d).not.toBeNull();
+    }
+  });
+
+  it("is the rule pitch match's sing loop scores with, Note catcher's grace and all", () => {
+    const src = readFileSync(new URL("./pitch-match-game.tsx", import.meta.url), "utf8");
+    expect(src).toContain("hold = advanceHold(hold, dt, cents !== null && Math.abs(cents) <= tolerance, GRACE_MS);");
+    expect(src).toContain("if (hold.held >= HOLD_MS) {");
+    // No second, cumulative tally beside it.
+    expect(src).not.toMatch(/held \+= dt/);
+  });
+
+  it("still credits a singer who scoops into the note and then holds it", () => {
+    // 800 ms sliding up from 300 cents flat, then on the note.
+    const scoop = (t: number) => (t < 800 ? -300 * (1 - t / 800) : 0);
+    const at = matchedAt(within(pitchMatchTolerance("medium"), scoop));
+    expect(at).not.toBeNull();
+    expect(at!).toBeLessThan(800 + HOLD_MS);
   });
 });

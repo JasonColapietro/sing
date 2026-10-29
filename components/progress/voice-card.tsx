@@ -4,6 +4,7 @@ import type { VocalRange } from "@/lib/progress";
 import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import { Card, EmptyState, LinkButton, Pill } from "@/components/ui";
 import { rangeTestHref } from "@/lib/site";
+import { recoveryRangeLine } from "@/components/practice/program-range-note";
 import {
   AMBER_INK,
   DIM,
@@ -104,14 +105,29 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
   );
 }
 
-export function VoiceCard({ range }: { range: VocalRange }) {
+export function VoiceCard({
+  range,
+  recovering = null,
+}: {
+  range: VocalRange;
+  /**
+   * Recovery week's name while it runs (components/practice/program-day.ts
+   * recoveryWeekOf), or null. The week asks for no range test, as the coach
+   * on the same page says, so the card offers none either.
+   */
+  recovering?: string | null;
+}) {
   if (range.lowMidi === undefined || range.highMidi === undefined) {
     return (
       <Card pad={false}>
         <EmptyState
           title="No range on file"
-          hint="Take the 2-minute range test to find the lowest and highest clear notes you can sing today, plus a voice-type estimate."
-          action={<LinkButton href={rangeTestHref()}>Take the range test</LinkButton>}
+          hint={
+            recovering
+              ? recoveryRangeLine(recovering)
+              : "Take the 2-minute range test to find the lowest and highest clear notes you can sing today, plus a voice-type estimate."
+          }
+          action={recovering ? undefined : <LinkButton href={rangeTestHref()}>Take the range test</LinkButton>}
         />
       </Card>
     );
@@ -143,16 +159,20 @@ export function VoiceCard({ range }: { range: VocalRange }) {
         {midiToLabel(range.highMidi)}
       </div>
       <p className="mt-1 text-xs text-mut">
-        {semitones} semitones — about {octaves} octaves.
+        {semitones} semitones, about {octaves} octaves.
         {tested && ` Tested ${tested}.`}
       </p>
       <div className="mt-4">
         <MiniKeyboard low={range.lowMidi} high={range.highMidi} />
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href={rangeTestHref()} variant="outline" size="sm">
-          Retake the test
-        </LinkButton>
+        {/* No retest offered while Recovery week runs: it would save a
+            tired reading as the range every warmup and song fits to. */}
+        {!recovering && (
+          <LinkButton href={rangeTestHref()} variant="outline" size="sm">
+            Retake the test
+          </LinkButton>
+        )}
         <LinkButton href="/singers" prefetch={false} variant="ghost" size="sm">
           See yourself among famous voices →
         </LinkButton>

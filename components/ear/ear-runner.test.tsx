@@ -1,24 +1,33 @@
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import type { FreeCap } from "@/lib/free-cap";
 
 // SessionShell is a portal and renders nothing on the server, so the screen's
-// contents are rendered in place here.
+// contents are rendered in place here, the top bar's right slot marked.
 vi.mock("@/components/practice/session-shell", () => ({
   SESSION_FOCUS: "",
   SessionButton: ({ children }: { children: ReactNode }) => <button type="button">{children}</button>,
-  SessionShell: ({ children, bottom }: { children: ReactNode; bottom?: ReactNode }) => (
+  SessionShell: ({ children, bottom, topRight }: { children: ReactNode; bottom?: ReactNode; topRight?: ReactNode }) => (
     <div>
+      <div data-slot="top-right">{topRight}</div>
       {children}
       {bottom}
     </div>
   ),
 }));
 
+// The real allowance unless a test sets one.
+const capState = vi.hoisted(() => ({ current: null as FreeCap | null }));
+vi.mock("@/lib/free-cap", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/free-cap")>();
+  return { ...actual, useFreeCap: () => capState.current ?? actual.useFreeCap() };
+});
+
 import { EMPTY_FRAME, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { readFileSync } from "node:fs";
-import { EarRunResults, earPhaseListens } from "./ear-runner";
-import { EAR_ROUTINES, GAME_MIC } from "./routines";
+import { EarRunResults, EarRunner, earIntroFreeLeft, earPhaseListens } from "./ear-runner";
+import { EAR_ROUTINES, GAME_MIC, earRoutineSeconds } from "./routines";
 import type { EarStepResult } from "./session";
 import { PitchMatchGame } from "./pitch-match-game";
 import { MelodyEchoGame } from "./melody-echo-game";
@@ -162,5 +171,52 @@ describe("when a workout's open microphone is analysed", () => {
   it("is what the runner hands its microphone", () => {
     const src = readFileSync(new URL("./ear-runner.tsx", import.meta.url), "utf8");
     expect(src).toContain("const pitch = usePitch({ analyse: earPhaseListens(phase, routine.steps) });");
+  });
+});
+
+describe("a workout opened straight from a program row", () => {
+  afterEach(() => {
+    capState.current = null;
+  });
+
+  const free = (leftSec: number): FreeCap => ({
+    isPro: false,
+    usedSec: 300 - leftSec,
+    leftSec,
+    capped: leftSec <= 0,
+    capSec: 300,
+  });
+
+  /** The top bar's right slot on the first game's intro slide. */
+  function topRight(routine = quick): string {
+    const html = renderToStaticMarkup(<EarRunner routine={routine} onExit={() => {}} />);
+    return html.match(/<div data-slot="top-right">(.*?)<\/div>/)?.[1] ?? "";
+  }
+
+  it("shows the free minutes left on the intro slide when the workout outlasts them", () => {
+    // /ear-training?routine=quick skips the room's allowance line, so this is
+    // the only place the countdown can be read before the cap slide.
+    capState.current = free(100);
+    expect(topRight()).toContain("1:40 free left today");
+  });
+
+  it("shows nothing on Pro", () => {
+    capState.current = { isPro: true, usedSec: 0, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
+    expect(topRight()).not.toContain("free left");
+  });
+
+  it("shows nothing while the free minutes cover the rest of the workout", () => {
+    expect(earRoutineSeconds(quick)).toBeLessThanOrEqual(300);
+    capState.current = free(300);
+    expect(topRight()).not.toContain("free left");
+  });
+
+  it("counts only the games still ahead", () => {
+    const pitchLab = EAR_ROUTINES.find((r) => r.id === "pitch")!;
+    const last = pitchLab.steps.length - 1;
+    const lastSec = earRoutineSeconds({ ...pitchLab, steps: pitchLab.steps.slice(last) });
+    expect(earIntroFreeLeft(pitchLab, last, { isPro: false, leftSec: lastSec })).toBeNull();
+    expect(earIntroFreeLeft(pitchLab, 0, { isPro: false, leftSec: lastSec })).toMatch(/ free left today$/);
+    expect(earIntroFreeLeft(pitchLab, 0, { isPro: true, leftSec: 0 })).toBeNull();
   });
 });

@@ -2,7 +2,7 @@
 
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { withStepResult } from "@/components/practice/step-results";
-import { useFreeCap } from "@/lib/free-cap";
+import { formatClock, useFreeCap, type FreeCap } from "@/lib/free-cap";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { liveStreak } from "@/components/account/save-state";
 
@@ -18,6 +18,7 @@ import {
   GAME_DESC,
   GAME_MIC,
   GAME_TRAINS,
+  earRoutineSeconds,
   earStepLabel,
   type EarRoutine,
   type EarRoutineStep,
@@ -61,6 +62,28 @@ export function afterStep(step: number, stepCount: number): EarPhase {
  */
 export function earPhaseListens(phase: EarPhase, steps: readonly EarRoutineStep[]): boolean {
   return phase.kind === "play" && GAME_MIC[steps[phase.step].game];
+}
+
+/**
+ * The free minutes left today, for a step's intro slide, when they run out
+ * before the rest of the workout does; null on Pro and while they cover it.
+ *
+ * A program row opens a workout straight into this runner
+ * (/ear-training?routine=quick), past the room's own allowance line, so
+ * without it the cap slide arrived with no countdown. It is a plain readout of
+ * the time left, the label the warmup runner's intro clock switches to in the
+ * same case (routine-runner.tsx introClockLabel); the estimate only decides
+ * whether to show it, so it stays true however long the games actually run.
+ */
+export function earIntroFreeLeft(
+  routine: EarRoutine,
+  fromStep: number,
+  cap: Pick<FreeCap, "isPro" | "leftSec">,
+): string | null {
+  if (cap.isPro) return null;
+  // The card's own estimate (earRoutineSeconds), of the games still ahead.
+  const setLeftSec = earRoutineSeconds({ ...routine, steps: routine.steps.slice(fromStep) });
+  return cap.leftSec < setLeftSec ? `${formatClock(cap.leftSec)} free left today` : null;
 }
 
 function difficultyLabel(d: Difficulty): string {
@@ -113,6 +136,7 @@ function StepIntro({
   stepIndex,
   stepCount,
   prev,
+  freeLeft,
   onStart,
   onSkip,
   onQuit,
@@ -122,6 +146,8 @@ function StepIntro({
   stepIndex: number;
   stepCount: number;
   prev: { label: string; score: number | null } | null;
+  /** earIntroFreeLeft: the free minutes left, when the workout outlasts them. */
+  freeLeft: string | null;
   onStart: () => void;
   onSkip: () => void;
   onQuit: () => void;
@@ -158,6 +184,13 @@ function StepIntro({
       progress={(stepIndex / stepCount) * 100}
       onClose={onQuit}
       closeLabel="Quit workout"
+      topRight={
+        freeLeft ? (
+          <span className="tabular font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
+            {freeLeft}
+          </span>
+        ) : undefined
+      }
     >
       <div className="flex min-h-0 flex-1 items-center justify-center px-5 py-8">
         <div className="w-full max-w-md text-center">
@@ -427,6 +460,7 @@ export function EarRunner({
               }
             : null
         }
+        freeLeft={earIntroFreeLeft(routine, phase.step, cap)}
         onStart={() => setPhase({ kind: "play", step: phase.step })}
         onSkip={() => closeStep(phase.step, null)}
         onQuit={quitByHand}

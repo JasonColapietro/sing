@@ -241,7 +241,19 @@ export default function SingersPage() {
         </ul>
       </section>
 
-      <SingersDirectory />
+      {/* The chart is the page's main content, so it has its own heading and
+          margin: bare, its records strip ran straight on from the voice-type
+          cards like one more row of them, and the outline had no entry for
+          it. The heading is static server HTML above the directory's
+          one-screen placeholder, so the load-time reservation is unchanged. */}
+      <section aria-labelledby="singer-chart" className="mt-12">
+        <h2 id="singer-chart" className="text-xl">
+          Every reported range on one keyboard
+        </h2>
+        <div className="mt-4">
+          <SingersDirectory />
+        </div>
+      </section>
       {/* After the chart, not above it: on a phone these cards put the chart
           five screens down. Keep the comparison tool ahead of this additional
           set of links. */}

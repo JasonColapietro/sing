@@ -28,6 +28,7 @@ vi.mock("@/lib/free-cap", async (importOriginal) => {
 });
 import { HeaderRow } from "./progress-client";
 import { CoachCard, buildPlan } from "./coach";
+import { recoveryRangeNote } from "@/components/practice/program-range-note";
 
 const PROGRAM = "The Measured Voice: 12 weeks";
 /** Wednesday 14 October 2026, 15:00 local: after noon, when the streak banner shows. */
@@ -227,6 +228,18 @@ describe("the coach during Recovery week", () => {
     expect(plan.items.length).toBeGreaterThanOrEqual(3);
   });
 
+  it("says it in the same words as the /range pitch meter", () => {
+    // Both rooms build the note in components/practice/program-range-note.ts,
+    // so the meter never offers the test the coach says to leave.
+    for (const s of [withRange(49), state()]) {
+      const note = buildPlan(s, NOW, null, null, RECOVERY).rangeNote;
+      expect(note).not.toBeNull();
+      expect(note).toBe(recoveryRangeNote(s.range, RECOVERY, NOW.getTime()));
+    }
+    // A current range needs no note in either.
+    expect(recoveryRangeNote(withRange(0).range, RECOVERY, NOW.getTime())).toBeNull();
+  });
+
   it("keeps the rest-day line on the week's rest day", () => {
     const plan = buildPlan(withRange(49), NOW, RECOVERY, null, RECOVERY);
     expect(plan.banner).toBeNull();
@@ -247,6 +260,54 @@ describe("the coach during Recovery week", () => {
     expect(html).toMatch(/The <a [^>]*href="\/studio"[^>]*>pitch studio<\/a> is open now\.<\/p>/);
     // Outside the week the range test is still open now.
     expect(renderToStaticMarkup(<CoachCard state={withRange(49)} />)).toContain('href="/range?mode=range#start"');
+  });
+
+  it("does not name the range test in the free plan's footnote during the week", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    capState.capped = false;
+    const html = renderToStaticMarkup(<CoachCard state={withRange(0)} recovering={RECOVERY} />).replace(/<!-- -->/g, "");
+    expect(html).toContain("guided minutes a day; the pitch studio has no clock.");
+    expect(html).not.toContain("the range test");
+    expect(html).not.toContain('href="/range?mode=range#start"');
+    // Outside the week it still says the range test has no clock.
+    expect(renderToStaticMarkup(<CoachCard state={withRange(0)} />).replace(/<!-- -->/g, "")).toContain(
+      "guided minutes a day; the range test and the pitch studio have no clock.",
+    );
+  });
+
+  it("opens the week's box breathing, not a breath set that ends on the sustain test", () => {
+    // The breath room leads with a set, and every set ends on the sustain
+    // test; Recovery week breathes in single drills and takes no sustain test.
+    const breathing = (s: ProgressState, recovering: string | null = RECOVERY) =>
+      buildPlan(s, NOW, null, null, recovering).items.find((i) => i.title === "Breathing")!;
+    const quiet = breathing(withRange(0));
+    expect(quiet.href).toBe("/breath?drill=box&side=4&minutes=1");
+    expect(quiet.reason).toBe(
+      `Box breathing, which opens each practice day of ${RECOVERY}: no held note to time, and no sustain test while the voice is tired.`,
+    );
+    // A free singer sees two steps; with no weak note and no range test the
+    // breathing step leads.
+    expect(buildPlan(withRange(0), NOW, null, null, RECOVERY).items[0].title).toBe("Breathing");
+    // After a heavy day, the week's longer square ("Breath and hums").
+    const heavy = withRange(0);
+    heavy.sessions = [
+      { id: "heavy", type: "warmup", date: "2026-10-13T18:00:00.000Z", day: "2026-10-13", durationSec: 1800, score: 80, detail: "Morning hum", xp: 10 },
+      ...heavy.sessions,
+    ];
+    const tired = breathing(heavy);
+    expect(tired.href).toBe("/breath?drill=box&side=4&minutes=3");
+    expect(tired.reason).toMatch(/^Yesterday was a heavy one \(35 min\)/);
+    // The step states the drill's own length, as the week's row does: the
+    // minute's square (64 s), or the three-minute one (192 s).
+    expect(quiet.minutes).toBe(1);
+    expect(tired.minutes).toBe(3);
+    // Outside the week the step opens the breath room as before.
+    expect(breathing(withRange(0), null).href).toBe("/breath");
+    expect(breathing(withRange(0), null).reason).toBe("Low, steady breaths set up the rest of the session.");
+    expect(breathing(heavy, null).href).toBe("/breath");
+    expect(breathing(withRange(0), null).minutes).toBe(2);
+    expect(breathing(heavy, null).minutes).toBe(4);
   });
 });
 

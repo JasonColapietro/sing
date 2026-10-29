@@ -5,7 +5,7 @@ import { DEFAULT_PROGRESS, type ProgressState } from "@/lib/progress-shape";
 import { localDay } from "@/lib/progress";
 import { programById } from "@/lib/programs";
 import type { ActiveProgram } from "@/components/programs/use-program";
-import { routineById } from "./routines";
+import { routineById, routineSeconds } from "./routines";
 
 const state = vi.hoisted(() => ({
   cap: { isPro: false, usedSec: 0, leftSec: 300, capped: false, capSec: 300 } as FreeCap,
@@ -307,6 +307,100 @@ describe("a program day the singer cannot open", () => {
     state.cap = { isPro: true, usedSec: 0, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
     html = renderToStaticMarkup(<WarmupsClient />);
     expect(html.indexOf("Your program: day 8")).toBeLessThan(html.indexOf("Start here"));
+  });
+});
+
+describe("today's warmup during Recovery week", () => {
+  const recovery = programById("recovery-week")!;
+  const easy = routineById("recovery")!;
+  const full = routineById("full")!;
+  const day = localDay();
+  const recoveryDay1: ActiveProgram = {
+    program: recovery,
+    progress: { programId: recovery.id, startedDay: day, startedAt: `${day}T08:00:00.000Z`, done: [] } as unknown as ActiveProgram["progress"],
+    today: day,
+    view: { status: "todo", index: 0, completed: 0 } as unknown as ActiveProgram["view"],
+    itemsDone: [],
+    stepsDone: [],
+    stepsWaived: [],
+    countsFrom: day,
+    readings: [],
+  };
+  /** Three warmups on earlier days at 92%: the usual pick reads them as strong. */
+  const wellSung = (): ProgressState => ({
+    ...DEFAULT_PROGRESS,
+    sessions: [1, 2, 3].map((n) => ({
+      id: `w${n}`,
+      type: "warmup" as const,
+      date: `2026-10-0${n}T09:00:00.000Z`,
+      day: `2026-10-0${n}`,
+      durationSec: 240,
+      score: 92,
+      detail: "Easy recovery",
+      xp: 20,
+    })),
+  });
+  /** The "Today's warmup" card, up to the mic gate under it. */
+  const todaysCard = (html: string) => html.slice(html.indexOf("Today&#x27;s warmup"), html.indexOf('id="warmup-gate"'));
+
+  beforeEach(() => {
+    state.progress = wellSung();
+    state.pro = true;
+    state.cap = { isPro: true, usedSec: 0, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
+  });
+
+  it("would be the full set after three strong warmups, on an ordinary day", () => {
+    const card = todaysCard(renderToStaticMarkup(<WarmupsClient />));
+    expect(card).toContain(full.name);
+    expect(card).toContain("Try a longer set.");
+  });
+
+  it("is the week's quiet set while the week runs, not a longer, faster one", () => {
+    state.program = recoveryDay1;
+    const card = todaysCard(renderToStaticMarkup(<WarmupsClient />));
+    expect(card).toContain(easy.name);
+    expect(card).toContain("Recovery week is running, so today&#x27;s warmup is the quiet set.");
+    expect(card).not.toContain(full.name);
+    expect(card).not.toContain("Try a longer set");
+  });
+
+  it("stays a quiet set on the free plan, sized to the minutes left", () => {
+    state.program = recoveryDay1;
+    state.pro = false;
+    state.cap = { isPro: false, usedSec: 0, leftSec: 300, capped: false, capSec: 300 };
+    const card = todaysCard(renderToStaticMarkup(<WarmupsClient />));
+    // Easy recovery when it fits the five minutes, else the Morning reset.
+    expect(card).toContain(routineSeconds(easy) <= 300 ? easy.name : morning.name);
+    expect(card).not.toContain(full.name);
+    expect(card).not.toContain("Try a longer set");
+  });
+
+  it("goes back to the usual pick once the week is finished", () => {
+    state.program = { ...recoveryDay1, view: { status: "finished", index: 6, completed: 7 } as unknown as ActiveProgram["view"] };
+    const card = todaysCard(renderToStaticMarkup(<WarmupsClient />));
+    expect(card).toContain(full.name);
+  });
+});
+
+describe("the warmups room on a deep link's first load", () => {
+  // The server HTML, and every render until the room has read its address:
+  // the room behind the deep-link marker, then the screen-tall block that
+  // takes its place when the pre-paint script found a link the room will
+  // open (/warmups?routine=morning), so the cards and the gate the link
+  // waits on arrive together and nothing painted moves
+  // (components/prepaint.tsx).
+  it("keeps the heading, holds the room behind the marker, and puts the slot after it", () => {
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    const marker = html.indexOf('<div class="space-y-8" data-prepaint-deeplink="warmups">');
+    expect(marker).toBeGreaterThan(html.indexOf("Guided vocal warm-up exercises</h1>"));
+    for (const part of ["Start here", 'id="warmup-gate"', "Free guided practice today"]) {
+      expect(html.indexOf(part), part).toBeGreaterThan(marker);
+    }
+    expect(html).toMatch(/<\/div><div aria-hidden="true" class="min-h-screen" data-prepaint-slot="deeplink-warmups"><\/div><\/main>$/);
+    // The gate stays under today's cards, link or not: moving it up once the
+    // room reads a link would push every card down on a client-side visit,
+    // which the pre-paint script never sees.
+    expect(html.indexOf('id="warmup-gate"')).toBeGreaterThan(html.indexOf("Start here"));
   });
 });
 

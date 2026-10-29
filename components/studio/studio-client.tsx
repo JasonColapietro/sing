@@ -9,6 +9,13 @@ import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { createPracticeClock } from "@/lib/practice-clock";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { AudioSetup } from "@/components/audio/audio-setup";
+import { SILENCE_RMS } from "@/lib/audio/pitch";
+import {
+  HINT_AFTER_MS,
+  freshInputHint,
+  meterInputHint,
+  nextInputHint,
+} from "@/components/range/pitch-meter-hint";
 import { Button, Card, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
@@ -23,6 +30,14 @@ const MIN_LOG_SEC = 45;
  * to grade — and a perfect blip would otherwise score 100.
  */
 const MIN_SCORE_MS = 5000;
+
+/**
+ * The level under which the live hint calls the voice too quiet: the
+ * detector's own silence floor. It returns no pitch at all under SILENCE_RMS,
+ * so a soft voice there is too quiet to measure, not "heard, but with no
+ * pitch", which is what a lower floor (the pitch meter's 0.008) made of it.
+ */
+const HINT_MIN_VOLUME = SILENCE_RMS;
 
 const BEST_KEY = "suede-sing:studio-best:v1";
 
@@ -61,11 +76,92 @@ function saveStudioBest(locks: number): boolean {
 }
 
 /** What a finished session has to report, whether or not it was long enough to log. */
-interface StudioResult {
-  /** Null when the session ran under MIN_LOG_SEC — nothing was written. */
+export interface StudioResult {
+  /** Null when the session ran under MIN_LOG_SEC, or heard nothing — nothing was written. */
   log: LogResult | null;
   locks: number;
   newBest: boolean;
+  /**
+   * True when the mic heard no note all session, and the session ran long
+   * enough (HINT_AFTER_MS, the live hint's own wait) to say so. Nothing was
+   * logged and the clock starts over: a dead or muted mic used to log 50
+   * seconds of silence as practice, with XP, a streak and "First note".
+   */
+  silent?: boolean;
+}
+
+type PracticeClock = ReturnType<typeof createPracticeClock>;
+
+/**
+ * Close out a studio session: bank the personal best and log the practice if
+ * it ran long enough and the mic heard a note. Idempotent — the clock pauses
+ * first, so every later call falls straight out. That is what makes it safe
+ * to fire from the stop button, from unmount, and from the page going away.
+ *
+ * `heardMs` is the time a note was heard since the last logged session; a
+ * stretch with none is thrown away rather than banked, so the silent seconds
+ * never join the next session's.
+ */
+export function finishStudioSession(
+  session: {
+    clock: PracticeClock;
+    stats: { current: TargetStats };
+    heardMs: { current: number };
+  },
+  log: typeof logSession = logSession,
+): StudioResult | null {
+  const { clock, stats, heardMs } = session;
+  if (!clock.pause()) return null;
+
+  const { hits, scoredMs, inTuneMs } = stats.current;
+  // Banked before the duration floor: a short session that locked notes
+  // still earned the best it set.
+  const newBest = hits > 0 && saveStudioBest(hits);
+
+  // No note heard at all: not practice, whatever the clock says, so the
+  // silent seconds are thrown away rather than banked. Only a session that
+  // ran as long as the live hint waits is called silent: Stop pressed a
+  // moment after Start says nothing about the mic, and showed nothing before.
+  if (heardMs.current === 0 && hits === 0) {
+    const ranMs = clock.elapsedMs();
+    clock.reset();
+    stats.current = emptyTargetStats();
+    return ranMs >= HINT_AFTER_MS
+      ? { log: null, locks: 0, newBest: false, silent: true }
+      : { log: null, locks: 0, newBest: false };
+  }
+
+  const durationSec = Math.floor(clock.elapsedMs() / 1000);
+  if (durationSec < MIN_LOG_SEC) {
+    // Nothing was logged, so nothing is thrown away either: the seconds and
+    // the locks stay banked for the next flush, and the singer interrupted
+    // twice still logs the practice they actually did.
+    return { log: null, locks: hits, newBest };
+  }
+
+  clock.reset();
+  stats.current = emptyTargetStats();
+  heardMs.current = 0;
+  return {
+    log: log({
+      type: "pitch",
+      durationSec,
+      detail:
+        hits > 0
+          ? `Studio — ${hits} lock${hits === 1 ? "" : "s"}`
+          : "Studio session",
+      // The score is the share of sung target time that landed in tune —
+      // the same measure the warmup ladders report, so the two are
+      // comparable in the weekly trend. A pure-tuner session never set a
+      // target, so it goes in unscored: a 0 there would read as a failed
+      // session, not an unscored one, and would drag the trend down with it.
+      ...(scoredMs >= MIN_SCORE_MS
+        ? { score: Math.round((100 * inTuneMs) / scoredMs) }
+        : {}),
+    }),
+    locks: hits,
+    newBest,
+  };
 }
 
 function fmtTime(sec: number): string {
@@ -117,57 +213,28 @@ export function StudioClient() {
   // Owned here rather than inside TargetPractice: stopping the mic unmounts
   // that component, and the session it scored is logged after it is gone.
   const statsRef = useRef<TargetStats>(emptyTargetStats());
-
+  /** Time a note was heard since the last logged session (finishStudioSession). */
+  const heardMsRef = useRef(0);
   /**
-   * Close out the session: bank the personal best and log the practice if it
-   * ran long enough. Idempotent — the clock pauses first, so every later
-   * call falls straight out. That is what makes it safe to fire from
-   * the stop button, from unmount, and from the page going away.
+   * Why the tuner shows a dash: the pitch meter's too-quiet and no-sound
+   * hints (components/range/pitch-meter-hint), on its rule, so a dead or
+   * muted mic is named instead of a bar that never fills.
    */
-  const finishSession = useCallback((): StudioResult | null => {
-    if (!practiceClock.pause()) return null;
+  const inputRef = useRef(freshInputHint());
+  const lastTRef = useRef(0);
+  const hintRef = useRef<string | null>(null);
+  const [hint, setHint] = useState<string | null>(null);
 
-    const { hits, scoredMs, inTuneMs } = statsRef.current;
-    // Banked before the duration floor: a short session that locked notes
-    // still earned the best it set.
-    const newBest = hits > 0 && saveStudioBest(hits);
+  const finishSession = useCallback(
+    (): StudioResult | null =>
+      finishStudioSession({ clock: practiceClock, stats: statsRef, heardMs: heardMsRef }),
+    [practiceClock],
+  );
 
-    const durationSec = Math.floor(practiceClock.elapsedMs() / 1000);
-    if (durationSec < MIN_LOG_SEC) {
-      // Nothing was logged, so nothing is thrown away either: the seconds and
-      // the locks stay banked for the next flush, and the singer interrupted
-      // twice still logs the practice they actually did.
-      return { log: null, locks: hits, newBest };
-    }
-
-    practiceClock.reset();
-    statsRef.current = emptyTargetStats();
-    return {
-      log: logSession({
-        type: "pitch",
-        durationSec,
-        detail:
-          hits > 0
-            ? `Studio — ${hits} lock${hits === 1 ? "" : "s"}`
-            : "Studio session",
-        // The score is the share of sung target time that landed in tune —
-        // the same measure the warmup ladders report, so the two are
-        // comparable in the weekly trend. A pure-tuner session never set a
-        // target, so it goes in unscored: a 0 there would read as a failed
-        // session, not an unscored one, and would drag the trend down with it.
-        ...(scoredMs >= MIN_SCORE_MS
-          ? { score: Math.round((100 * inTuneMs) / scoredMs) }
-          : {}),
-      }),
-      locks: hits,
-      newBest,
-    };
-  }, [practiceClock]);
-
-  /** Close out the session and show the singer what it logged. */
+  /** Close out the session and show the singer what it logged, or why it did not. */
   const closeSession = useCallback(() => {
     const result = finishSession();
-    if (result && (result.log || result.locks > 0)) setToast(result);
+    if (result && (result.log || result.locks > 0 || result.silent)) setToast(result);
   }, [finishSession]);
 
   // A microphone that goes away mid-session (unplugged, a headset dropped)
@@ -176,7 +243,26 @@ export function StudioClient() {
   // practice. usePitch calls this only for that, never for its own brief stop
   // while the device picker reopens the stream, which must not cut a session
   // in two and reset the timer.
-  const { frame, latest, listening, error, start, stop } = usePitch({ onMicEnded: closeSession });
+  const pitch = usePitch({ onMicEnded: closeSession });
+  const { frame, latest, listening, error, start, stop, subscribe } = pitch;
+
+  // Every analysed frame: the time a note was heard, and the live hint.
+  useEffect(() => {
+    if (!listening) return;
+    return subscribe((_samples, _sampleRate, f) => {
+      const dt = lastTRef.current ? Math.min(120, f.t - lastTRef.current) : 0;
+      lastTRef.current = f.t;
+      if (dt <= 0) return;
+      const voiced = f.note !== null;
+      if (voiced) heardMsRef.current += dt;
+      nextInputHint(inputRef.current, f, dt, voiced, HINT_MIN_VOLUME);
+      const next = meterInputHint(inputRef.current);
+      if (hintRef.current !== next) {
+        hintRef.current = next;
+        setHint(next);
+      }
+    });
+  }, [listening, subscribe]);
 
   // Session timer while listening.
   useEffect(() => {
@@ -193,6 +279,11 @@ export function StudioClient() {
       practiceClock.reset();
       if (document.visibilityState !== "hidden") practiceClock.resume();
       statsRef.current = emptyTargetStats();
+      heardMsRef.current = 0;
+      inputRef.current = freshInputHint();
+      lastTRef.current = 0;
+      hintRef.current = null;
+      setHint(null);
       setElapsed(0);
       setToast(null);
     }
@@ -273,6 +364,12 @@ export function StudioClient() {
                   </span>
                   <span className="text-sm text-mut">Session saved.</span>
                 </>
+              ) : toast.silent ? (
+                <span className="text-sm text-mut">
+                  No note was heard, so nothing was logged. Sing a little
+                  louder or closer to the mic, or check the input under Audio
+                  below.
+                </span>
               ) : (
                 <span className="text-sm text-mut">
                   That one ran under {MIN_LOG_SEC} seconds, so it wasn&rsquo;t
@@ -295,11 +392,14 @@ export function StudioClient() {
               Dismiss
             </Button>
           </div>
-          <div className="mt-2">
-            <ProInlineNudge>
-              Pro charts your scored warmups and songs note by note
-            </ProInlineNudge>
-          </div>
+          {/* Not beside a session that logged nothing for want of a mic. */}
+          {!toast.silent && (
+            <div className="mt-2">
+              <ProInlineNudge>
+                Pro charts your scored warmups and songs note by note
+              </ProInlineNudge>
+            </div>
+          )}
         </Card>
       )}
 
@@ -391,6 +491,11 @@ export function StudioClient() {
               <CentsGauge cents={note ? note.cents : null} />
               <div className="mt-5">
                 <LevelMeter volume={frame.volume} />
+              </div>
+              {/* What the mic hears, and why the note reads "--" when it
+                  cannot measure: the pitch meter's hint, shared. */}
+              <div role="status">
+                {hint && <p className="mt-2 text-sm text-mut">{hint}</p>}
               </div>
             </Card>
 
