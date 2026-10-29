@@ -233,8 +233,9 @@ export default async function CanYouSingSongPage({
               {/*
                 Catalog figures for real singers, framed as reported and, until
                 a singer's record is individually reviewed, labelled so. A
-                voice type is printed only where a review stands behind it —
-                not for a pending record, and not for a disputed one.
+                reviewed or owner-confirmed record shows its voice type as a
+                catalog label, as /singers/records does, never as a bare fact;
+                a pending or disputed record shows its review status instead.
               */}
               <ul className="mt-3 space-y-2">
                 {singers.map((s) => (
@@ -249,7 +250,7 @@ export default async function CanYouSingSongPage({
                     <span className="text-mut">
                       : reported {rangeLabel(s)}
                       {getSingerReviewStatus(s.slug) === "reviewed"
-                        ? ` (${s.voiceType})`
+                        ? ` (catalog label: ${s.voiceType})`
                         : ` · ${singerReviewLabel(s.slug)}`}
                     </span>
                   </li>

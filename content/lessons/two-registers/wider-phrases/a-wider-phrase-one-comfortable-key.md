@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where the high and low phrases both fit, mark the crossing phrase, and sing it as you practiced the siren: quietly, on a narrow vowel.
+A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where both ends fit, mark the leap that crosses, and sing it as you practiced the siren: quietly, on a narrow vowel.
 
 ## Steps
 
@@ -22,11 +22,11 @@ A wider phrase covers more notes than a first song, so it is more likely to cros
 Open the practice material on this page and choose Deep River or Auld Lang Syne. Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Transpose the supplied study so its low and high phrases both fit, then mark the phrase that crosses your transition area.
+Transpose the Deep River phrase so its low end (“-er” of “river”) and its top (“o-” of “over”) both fit, then mark the octave leap on “is o-ver”, where the line crosses your transition.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -35,14 +35,14 @@ Transpose the supplied study so its low and high phrases both fit, then mark the
 
 Why this song needs the siren you just built. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Hear the distinction
 
-Sing the phrase of Deep River that crosses your transition twice in one take: first in the key the song opens in, then one semitone lower. The key is the only thing that changes. Listen to where the crossing lands in each, and keep the key in which the change falls on an easier note or a more open vowel, as long as the low phrase is still clearly audible. Record your takes in the recorder. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.
+Sing the Deep River phrase, whose octave leap on “is o-ver” crosses your transition, twice in one take: first in the key the song opens in, then one semitone lower. The key is the only thing that changes. Listen to where the crossing lands in each, and keep the key in which the change falls on an easier note or a more open vowel, as long as the low “-er” of “river” is still clearly audible. Record your takes in the recorder. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the top of the leap.
 
-- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Review your own attempt

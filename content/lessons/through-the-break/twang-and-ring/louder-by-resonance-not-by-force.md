@@ -22,7 +22,7 @@ Carrying power is mostly resonance, not loudness: a voice with more energy in th
 Open the practice material on this page and choose Humming thirds. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 

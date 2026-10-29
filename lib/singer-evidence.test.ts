@@ -197,6 +197,16 @@ describe("singer evidence", () => {
     expect(rollingInTheDeep?.scope).toContain("does not establish a full-career range");
   });
 
+  it("renders no em dash in any source line on a singer page or in its citation markup", () => {
+    for (const singer of SINGERS) {
+      for (const source of getSingerEvidence(singer.slug).sources) {
+        for (const text of [source.title, source.publisher, source.supportedClaim, source.scope]) {
+          expect(text, singer.slug).not.toContain("—");
+        }
+      }
+    }
+  });
+
   it("rejects invalid or overbroad evidence records before they can be displayed", () => {
     const reviewedRecord = {
       adele: {

@@ -5,7 +5,7 @@ stage: "v-l4"
 title: "Hear the Pitch Before You Sing"
 type: "concept"
 minutes: 4
-objective: "Compare your note with the synthesized reference and listen for whether your next attempt settles closer."
+objective: "Compare your note with the piano reference and listen for whether your next attempt settles closer."
 prerequisites: "v-l3-m5-07"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -22,7 +22,7 @@ Hearing the pitch first means playing the reference once, stopping it, and holdi
 Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
@@ -33,7 +33,7 @@ Use a mid-range note or phrase at moderate volume. Hear the target once, stop pl
 
 ### Name the target: Sustained intonation
 
-Compare your note with the synthesized reference and listen for whether your next attempt settles closer. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
+Compare your note with the piano reference and listen for whether your next attempt settles closer. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change.

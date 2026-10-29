@@ -22,7 +22,7 @@ Your passaggio is the two-to-four-note zone where the voice hands over from a th
 Open the practice material on this page and choose Ng siren to the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading The passaggio: where it breaks and why is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 

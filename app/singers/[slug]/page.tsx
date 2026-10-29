@@ -512,6 +512,15 @@ export default async function SingerPage({
               <p className="mt-3 max-w-3xl text-sm text-mut">
                 {evidenceParagraph(s, Boolean(evidence.reviewConfirmation))}
               </p>
+              {/* A confirmed record's sources predate the confirmation and were
+                  not part of a source review: say what they can't do, as the
+                  pending branch does. */}
+              {evidence.reviewConfirmation && evidence.sources.length > 0 && (
+                <p className="mt-3 max-w-3xl text-xs text-dim">
+                  These sources support only the claims named below. They do not verify
+                  the catalog&apos;s range endpoints.
+                </p>
+              )}
               <div className="mt-5 space-y-5">
                 {groupEvidenceSources(evidence.sources).map((group) => (
                   <section key={group.label}>

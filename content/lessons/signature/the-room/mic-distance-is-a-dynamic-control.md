@@ -22,7 +22,7 @@ A microphone hears distance as loudness: move from a hand's width to arm's lengt
 Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 

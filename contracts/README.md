@@ -57,6 +57,11 @@ kind (2026-10-12):
   (Ode to Joy; Swing Low, Sweet Chariot) and its self-check now place notes
   between taps, and no lesson teaches syncopation. This is a value change,
   not a key change, so there is no version bump.
+- The summaries of `v-l2-m2-01` (Onset Without the Click) and `v-l4-m1-01`
+  (Hear the Pitch Before You Sing) now say "the piano reference" instead of
+  "the synthesized reference" (2026-10-29), matching what the practice
+  material plays, and their lessons' objectives with them. Two values
+  changed and no keys, so there is no version bump.
 
 Don't "re-sync" those edits away: parity with GuitarHub is by stage, module
 and lesson ID, not by text. GuitarHub's copy has to be re-synced byte for byte

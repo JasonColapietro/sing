@@ -228,9 +228,11 @@ export default function ProMoments() {
         <h2 id={titleId} className="mt-4 text-2xl sm:text-3xl">
           Turn this result into a plan
         </h2>
+        {/* The free plan shows the first steps of the same plan; this sells the rest. */}
         <p id={descId} className="mt-3 text-sm text-mut sm:text-base">
-          Pro reads results like this one and plans what to sing next, with
-          your accuracy note by note and your range tests charted over time.
+          The free plan already picks your first steps from results like this
+          one. Pro lays out every step, with your accuracy note by note and
+          your range tests charted over time.
         </p>
         <ul className="mt-4 space-y-2">
           {[

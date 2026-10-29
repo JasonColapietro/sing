@@ -309,7 +309,7 @@ export default function AtlasPage() {
             manual: how the voice works, how to read your own measurements,
             and a twelve-week program.{" "}
             <Link href="/book" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
-              Its contents are free too
+              Its contents page and three of its chapters are free too
             </Link>
             .
           </p>

@@ -22,7 +22,7 @@ As you slide upward, the folds shift gradually from a thicker setup to a thinner
 Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 

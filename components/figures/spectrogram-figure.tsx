@@ -8,7 +8,11 @@ const GUTTER = 44;
 const TOP = 12;
 const BOTTOM = 304;
 const TICKS = [100, 200, 400, 800, 1600, 3200, 6400];
-/** A sung A3 and its harmonics, up through the singer's formant band. */
+/**
+ * A sung A3 and its harmonics, up through the singer's formant band. The source
+ * falls with harmonic number, so the fundamental is drawn strongest and the
+ * ring band is only a local lift, never the loudest part of the voice.
+ */
 const F0 = 220;
 const HARMONICS = 15;
 
@@ -39,7 +43,7 @@ const BANDS = Array.from({ length: HARMONICS }, (_, i) => {
     hz,
     points: band(logY(hz)),
     width: Math.max(5, 11 - k * 0.5),
-    opacity: inRing ? 0.95 : 0.3 + 0.5 * Math.min(1, (k - 1) / 10),
+    opacity: inRing ? 0.6 : Math.max(0.2, 0.95 - 0.07 * (k - 1)),
   };
 });
 
@@ -53,7 +57,7 @@ export function SpectrogramFigure({ className }: { className?: string }) {
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="xMinYMid slice"
       role="img"
-      aria-label="Example spectrogram of a sung A3: horizontal harmonic bands stacked up a logarithmic frequency axis, rippling with vibrato, brightest around the 2.8 to 3.2 kilohertz ring band, with 440 hertz marked. Sample data, not your voice."
+      aria-label="Example spectrogram of a sung A3: horizontal harmonic bands stacked up a logarithmic frequency axis, rippling with vibrato, strongest at the fundamental and low harmonics and fading upward, with a lift around the 2.8 to 3.2 kilohertz ring band, and 440 hertz marked. Sample data, not your voice."
       className={cn("block w-full", className)}
     >
       <rect x="0" y="0" width={W} height={H} fill={PANEL} />

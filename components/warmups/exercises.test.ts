@@ -25,9 +25,10 @@ import {
   capLadder,
   computeRootLadder,
   descentWalk,
+  estimateMinutes,
   ladderWalk,
 } from "./exercises";
-import { ROUTINES } from "./routines";
+import { ROUTINES, stepSeconds } from "./routines";
 import { createRepScorer } from "./scoring";
 
 // five-note-scale's highest interval is the fifth (7 semitones).
@@ -686,5 +687,24 @@ describe("the range cap", () => {
         expect(computeRootLadder(byId(id), low, high).length, `${id} ${low}-${high}`).toBeGreaterThanOrEqual(1);
       }
     }
+  });
+});
+
+describe("estimateMinutes", () => {
+  it("times a path row with the routine cards' planner, so the two never disagree", () => {
+    for (const ex of ALL_EXERCISES) {
+      for (const reps of [1, 5, 9, 14, 20]) {
+        expect(estimateMinutes(ex, reps), `${ex.id} x${reps}`).toBe(
+          Math.max(1, Math.round(stepSeconds({ exerciseId: ex.id, reps }) / 60)),
+        );
+      }
+    }
+  });
+
+  it("teaches the pattern once in sing-along, not before every rep", () => {
+    const ex = ALL_EXERCISES.find((e) => e.id === "hung-ee-mm") ?? ALL_EXERCISES[0];
+    const { totalSec } = buildSegments(ex, 60, 1);
+    const old = Math.max(1, Math.round((14 * (totalSec * 2.2 + 2)) / 60));
+    expect(estimateMinutes(ex, 14)).toBeLessThan(old);
   });
 });

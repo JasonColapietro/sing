@@ -161,14 +161,23 @@ export const UNIVERSAL_LESSON_TEXT: ReadonlySet<string> = (() => {
 /** The port's closing step, which restates the first self-check criterion. */
 export const REVIEW_STEP_TITLE = "Review your own attempt";
 
+/** The port's "Name the target: <module skill>" step heading. */
+export const TARGET_STEP_PREFIX = "Name the target";
+
 /**
  * The steps a lesson page shows: all of them, less a review step that only
- * restates the self-check printed further down the same page.
+ * restates the self-check printed further down the same page, and less a
+ * "Name the target" step whose body only repeats the objective the page
+ * already prints under its heading. A target step that says something of its
+ * own stays.
  */
 export function shownSteps(lesson: Lesson): Lesson["steps"] {
   const first = lesson.selfCheck.criteria[0];
+  const objective = lesson.objective.trim();
   return lesson.steps.filter(
-    (s) => !(s.title === REVIEW_STEP_TITLE && first !== undefined && s.body.startsWith(first)),
+    (s) =>
+      !(s.title === REVIEW_STEP_TITLE && first !== undefined && s.body.startsWith(first)) &&
+      !(s.title.startsWith(TARGET_STEP_PREFIX) && s.body.trim() === objective),
   );
 }
 

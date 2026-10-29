@@ -150,8 +150,8 @@ export function ModulePractice({
           <div>
             <h3 className="text-base">Practice material</h3>
             <p className="mt-1 max-w-prose text-sm text-mut">
-              The exercises and songs play synthesized reference pitches: they
-              supply the notes, not a recording of a singer demonstrating a
+              The exercises and songs play reference notes on a recorded piano:
+              they supply the notes, not a recording of a singer demonstrating a
               technique. Record your takes in{" "}
               <Link href="/recorder" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 the recorder

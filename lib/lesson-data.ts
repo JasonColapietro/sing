@@ -524,7 +524,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "An estimated voice type and both ends of your range, to fit every later exercise to.",
+        "body": "An estimated voice type and the comfortable, repeatable ends of your range, to fit every later exercise to.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -1119,7 +1119,7 @@ export const LESSONS: Lesson[] = [
     "title": "Onset Without the Click",
     "type": "concept",
     "minutes": 3,
-    "objective": "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique.",
+    "objective": "Compare an easy onset with a previous attempt; the piano reference supplies pitch, not a demonstration of vocal technique.",
     "explanation": "An onset is how a note starts, and there are three basic ways. A breathy onset lets air through before the folds meet, so a small “h” comes first; a hard, or glottal, onset closes the folds before the air arrives and releases them with a click; a balanced onset starts breath and sound together. This module trains the balanced one, on its pitch from the first moment; sliding up from below is a scoop, and onset work fixes it.",
     "prerequisites": [
       "v-l2-m1-06"
@@ -1137,7 +1137,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Onset and pitch matching",
-        "body": "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique.",
+        "body": "Compare an easy onset with a previous attempt; the piano reference supplies pitch, not a demonstration of vocal technique.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -2153,7 +2153,7 @@ export const LESSONS: Lesson[] = [
         "title": "Use the practice material",
         "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+        "listen": "Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
@@ -2244,7 +2244,7 @@ export const LESSONS: Lesson[] = [
         "title": "Use the practice material",
         "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+        "listen": "Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
@@ -2335,7 +2335,7 @@ export const LESSONS: Lesson[] = [
         "title": "Use the practice material",
         "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+        "listen": "Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
@@ -2668,7 +2668,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why this song needs the siren you just built.",
-    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where the high and low phrases both fit, mark the crossing phrase, and sing it as you practiced the siren: quietly, on a narrow vowel.",
+    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where both ends fit, mark the leap that crosses, and sing it as you practiced the siren: quietly, on a narrow vowel.",
     "prerequisites": [
       "v-l3-m3-07"
     ],
@@ -2679,20 +2679,20 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Set a safe baseline",
-        "body": "Transpose the supplied study so its low and high phrases both fit, then mark the phrase that crosses your transition area.",
+        "body": "Transpose the Deep River phrase so its low end (“-er” of “river”) and its top (“o-” of “over”) both fit, then mark the octave leap on “is o-ver”, where the line crosses your transition.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
         "title": "Name the target: Two-register repertoire",
         "body": "Why this song needs the siren you just built.",
-        "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
+        "look": "The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
       {
         "title": "Hear the distinction",
-        "body": "Sing the phrase of Deep River that crosses your transition twice in one take: first in the key the song opens in, then one semitone lower. The key is the only thing that changes. Listen to where the crossing lands in each, and keep the key in which the change falls on an easier note or a more open vowel, as long as the low phrase is still clearly audible. Record your takes in the recorder. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.",
-        "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
+        "body": "Sing the Deep River phrase, whose octave leap on “is o-ver” crosses your transition, twice in one take: first in the key the song opens in, then one semitone lower. The key is the only thing that changes. Listen to where the crossing lands in each, and keep the key in which the change falls on an easier note or a more open vowel, as long as the low “-er” of “river” is still clearly audible. Record your takes in the recorder. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the top of the leap.",
+        "look": "The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
       {
@@ -2764,20 +2764,20 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Set a safe baseline",
-        "body": "Transpose the supplied study so its low and high phrases both fit, then mark the phrase that crosses your transition area.",
+        "body": "Transpose the Deep River phrase so its low end (“-er” of “river”) and its top (“o-” of “over”) both fit, then mark the octave leap on “is o-ver”, where the line crosses your transition.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
         "title": "Name the target: Two-register repertoire",
         "body": "Pick a key so the register change lands where yours is.",
-        "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
+        "look": "The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
       {
         "title": "Build the song from phrases",
-        "body": "Mark the key, breaths, range edges, and lesson target before a full take of Deep River. Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.",
-        "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
+        "body": "Mark the key, breaths, range edges, and lesson target before a full take of Deep River. Rehearse the leap from “is” to “o-” alone, then each half of the phrase (“Deep river, my home is” and “over Jordan”), then join them and record the whole phrase in one uninterrupted take. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the top of the leap.",
+        "look": "The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
       {
@@ -2849,20 +2849,20 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Set a safe baseline",
-        "body": "Transpose the supplied study so its low and high phrases both fit, then mark the phrase that crosses your transition area.",
+        "body": "Transpose the Deep River phrase so its low end (“-er” of “river”) and its top (“o-” of “over”) both fit, then mark the octave leap on “is o-ver”, where the line crosses your transition.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
         "title": "Name the target: Two-register repertoire",
         "body": "Rehearse the supplied phrase through and compare the connection by ear.",
-        "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
+        "look": "The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.",
-        "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the top of the leap.",
+        "look": "The written span fits inside your comfortable range and the crossing leap has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
       {
@@ -3177,7 +3177,7 @@ export const LESSONS: Lesson[] = [
     "title": "Hear the Pitch Before You Sing",
     "type": "concept",
     "minutes": 4,
-    "objective": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer.",
+    "objective": "Compare your note with the piano reference and listen for whether your next attempt settles closer.",
     "explanation": "Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head before you make a sound. A voice that starts without that picture searches for the note, sliding up into it or settling on a neighboring pitch, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you judge, so the comparison stays honest.",
     "prerequisites": [
       "v-l3-m5-07"
@@ -3195,7 +3195,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained intonation",
-        "body": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer.",
+        "body": "Compare your note with the piano reference and listen for whether your next attempt settles closer.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change."
       },
@@ -7111,7 +7111,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Build the song from phrases",
-        "body": "Mark the key, breaths, range edges, and lesson target before a full take of your chosen study, Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.",
+        "body": "Mark the key, breaths, range edges, and lesson target before a full take of your chosen study, Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Rehearse the hardest phrase alone, join two phrases (for Deep River, the two halves of its one phrase), then record one uninterrupted form. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.",
         "look": "The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.",
         "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
       },
@@ -7513,7 +7513,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Onset, vibrato, diction, and placement, decided per genre.",
-    "explanation": "A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres decide differently: straight tone that lets vibrato in late is common in pop and jazz; vibrato from the start is usual in opera and musical theater. Copy what singers decide, not what they are made of; the same choices in your body sound like you.",
+    "explanation": "A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres differ: straight tone that lets vibrato in late is common in pop, jazz and contemporary musical theater; vibrato from the start is usual in opera and classical-style musical theater. Copy what singers decide, not what they are made of; the same choices in your body sound like you.",
     "prerequisites": [
       "v-l7-m1-08"
     ],

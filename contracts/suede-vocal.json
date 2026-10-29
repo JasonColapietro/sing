@@ -2686,7 +2686,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 32526,
+      "totalWords": 32535,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -2895,7 +2895,7 @@
           "part": "Range and repertoire",
           "summary": "Why changing a song's key is ordinary professional practice, how to find the key that fits you, and where transposition stops helping.",
           "free": false,
-          "words": 1499,
+          "words": 1508,
           "path": "/book/transposition"
         },
         {
@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 70840,
+      "totalWords": 70846,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -2963,7 +2963,7 @@
           "part": "How to read a voice",
           "summary": "The working lexicon behind every entry (weight, placement, vibrato, onset, grit, breathiness, twang, cry and their friends), each defined by ear with exemplars from the atlas.",
           "free": false,
-          "words": 1064,
+          "words": 1070,
           "path": "/atlas/a-vocabulary-for-tone"
         },
         {
@@ -3001,7 +3001,7 @@
           "order": 8,
           "title": "Pop women: the moderns",
           "part": "Pop",
-          "summary": "The current and recent generation of pop leads (whisper-pop, fry onsets, whistle flexes and conversational belts) and how the microphone rewrote what counts as power.",
+          "summary": "The current generation of pop leads (whisper-pop, fry onsets, whistle flexes, conversational belts) and how the microphone rewrote what counts as power.",
           "free": false,
           "words": 4975,
           "path": "/atlas/pop-women-the-moderns"

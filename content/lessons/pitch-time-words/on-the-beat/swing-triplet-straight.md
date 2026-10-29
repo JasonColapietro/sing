@@ -22,7 +22,7 @@ Straight, triplet and swing are three ways of dividing the same steady beat. Str
 Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 

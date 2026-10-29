@@ -117,8 +117,8 @@ export default function VoiceCoursePage() {
                 you judge your own voice.
               </li>
               <li>
-                Reference notes are synthesized pitches, not recordings of a
-                singer showing you a technique.
+                Reference notes are piano notes, not recordings of a singer
+                showing you a technique.
               </li>
               <li>Note the key and setup you used, so the next comparison is fair.</li>
               <li>
@@ -133,8 +133,9 @@ export default function VoiceCoursePage() {
               <li>Treat a missing or uncertain reading as missing, never as a pass.</li>
               <li>
                 Every self-check is a self-report, not an automatic assessment:
-                nothing here produces an automatic pitch, rhythm, register, tone
-                or safety result.
+                the self-check itself gives no automatic pitch, rhythm, register,
+                tone or safety result, even where a room measures part of the
+                work.
               </li>
               <li>
                 Unless a self-check says otherwise, it is ready when you can

@@ -45,7 +45,7 @@ That makes placement language a shortcut rather than a lie. "Forward" compresses
 
 There is a band of frequencies, well above any pitch you are actually singing, where human hearing is at its sharpest and where a band or an orchestra tends to put comparatively little energy. Trained singers, classical ones especially, often develop a strong resonance peak sitting right in that band. It is usually called the singer's formant, and it goes together with a comfortably low larynx and a narrowing of the tube just above the folds.
 
-::figure spectrogram | A sung note seen as its harmonics. The bright band near 3 kHz is the ring that carries.
+::figure spectrogram | A sung note seen as its harmonics: strongest low down, fading upward, with a lift near 3 kHz, the ring that carries.
 
 The practical consequence is that carrying power is mostly a resonance property rather than a loudness one. A voice with that peak cuts through an ensemble without being pushed. A voice without it can be louder at the mouth and still disappear in the mix. It also explains why singing harder rarely solves a balance problem: volume adds energy across the whole spectrum, including the regions the band already owns.
 
