@@ -648,8 +648,8 @@ export function WarmupsClient() {
               />
             )
           )}
-          {/* A newcomer's three daily picks wait below the gate card until a first session is logged. */}
-          {!newToWarmups && dailyThree}
+          {/* Same place for every singer: the server renders a newcomer, so moving it by history shifted the page on hydration. */}
+          {dailyThree}
           {/* A newcomer's top card is this routine already; it is offered once. */}
           {!newToWarmups && (
             <ContinueCard
@@ -710,11 +710,9 @@ export function WarmupsClient() {
           )}
 
           {newToWarmups ? (
-            // One start card and the gate are the newcomer's whole first screen;
-            // the catalogue stays in the HTML, folded, so nothing is lost to a
-            // link or a search and the grid never becomes the first thing read.
+            // A newcomer's catalogue stays in the HTML, folded, so nothing is
+            // lost to a link or a search and the grid is never the first thing read.
             <>
-              {dailyThree}
               <details className="group rounded-3xl border border-line bg-panel">
                 <summary className="cursor-pointer list-none px-5 py-4 text-lg outline-offset-2 focus-visible:outline-2 focus-visible:outline-violet">
                   All routines
