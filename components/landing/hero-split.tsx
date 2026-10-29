@@ -66,18 +66,18 @@ export function HeroSplit() {
           className="absolute left-4 top-6 inline-flex min-h-6 items-center whitespace-nowrap gap-1.5 rounded-full border border-violet/40 bg-panel/85 px-2.5 font-mono text-label tracking-[0.08em] text-violet-ink backdrop-blur-sm transition-colors hover:border-violet sm:left-6 sm:top-20"
         >
           {/* Real spaces around the hidden dot, so the link's accessible
-              name reads "v4.0 What's new", not "v4.0What's new". */}
-          v4.0{" "}
+              name reads "v4.2 What's new", not "v4.2What's new". */}
+          v4.2{" "}
           <span aria-hidden="true">·</span>{" "}
           What&apos;s new
         </Link>
-        <span className="block font-mono text-label uppercase leading-normal tracking-[0.16em] text-violet-ink">
-          Suede Sing
-        </span>
-        {/* The search term stays in the H1 (lib/on-page-seo.test.tsx), as a
-            small lead-in over the display headline. */}
+        {/* One kicker line, inside the H1 so the search term stays there
+            (lib/on-page-seo.test.tsx), as a small lead-in over the headline. */}
         <h1 id="hero-title">
-          <span className="mt-1 block font-mono text-label uppercase leading-normal tracking-[0.16em] text-dim">
+          <span className="block font-mono text-label uppercase leading-normal tracking-[0.16em] text-dim">
+            <span className="text-violet-ink">Suede Sing</span>
+            <span aria-hidden="true" className="mx-2 text-line2">·</span>
+            <span className="sr-only">: </span>
             Online singing practice with live pitch feedback
           </span>
           <span className="mt-4 block max-w-[19ch] text-[clamp(2.5rem,5.6vw,4.25rem)] leading-[1.04] tracking-[-0.025em]">
