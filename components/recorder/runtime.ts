@@ -2,6 +2,23 @@ import type { TakeRecord, TakesStore } from "./db";
 import { pickMimeType } from "./mime";
 import { MIC_ENDED_MESSAGE, watchMicEnd, type openMic } from "@/lib/audio/mic";
 import { getAudioPrefs } from "@/lib/audio/devices";
+import { SILENCE_RMS } from "@/lib/audio/pitch";
+
+/**
+ * Whether the mic is picking up sound right now: the analyser's RMS at or
+ * above the pitch detector's own silence floor. A take with no such moment is
+ * kept but never logged as practice, the rule round 15 set for the studio and
+ * song practice: a muted mic or the wrong input used to log a silent take
+ * with XP, a streak day and "First note".
+ */
+export function soundHeard(analyser: Pick<AnalyserNode, "fftSize" | "getFloatTimeDomainData">): boolean {
+  const data = new Float32Array(analyser.fftSize);
+  if (data.length === 0) return false;
+  analyser.getFloatTimeDomainData(data);
+  let sum = 0;
+  for (let i = 0; i < data.length; i++) sum += data[i] * data[i];
+  return Math.sqrt(sum / data.length) >= SILENCE_RMS;
+}
 
 type OpenMic = typeof openMic;
 type MicResult = { analyser: AnalyserNode; error: null } | { analyser?: never; error: string } | null;

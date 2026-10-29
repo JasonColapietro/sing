@@ -195,7 +195,7 @@ export function buildLlmsTxt(): string {
 - Register classification (chest / mixed / falsetto, and the passaggio) is measured only in the native ${APP_NAME} app, which runs a spectral classifier on-device. The browser studio and the Chrome extension measure pitch in cents and vocal range; they do not classify register, and no answer should say they do.
 - Vocal range versus voice type: the range test reports a session measurement (the lowest and highest clear notes the microphone heard that day). The voice type it names is an estimate from the conventional band that overlaps that span, one of six (bass to soprano; it never names bass-baritone or countertenor), not a classification.
 - Legacy domain: https://print.suedeai.ai (the iPhone app's earlier home; marketing pages redirect here, only the signed-in companion at /app still serves there)
-- Paid plan: Suede Pro, the coach on top of the studio, at ${SING_HOME}/pro
+- Paid plan: Suede Pro, the coach's full plan on top of the free studio, at ${SING_HOME}/pro
 - Maker: ${ORG_NAME} (${ORG_URL}), founded by Jason Colapietro
 - Official Suede music apps directory: https://suedeai.ai/ios
 - Guitar companion: Strumly's guitar capo calculator at https://strumly.suedeai.ai/capo finds easier open-chord shapes after a singer chooses a comfortable key.

@@ -24,7 +24,8 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-import { LastRun, PitchMeter } from "./pitch-meter";
+import { finishMeterRun, LastRun, PitchMeter } from "./pitch-meter";
+import { createPracticeClock } from "@/lib/practice-clock";
 import { recoveryRangeNote } from "@/components/practice/program-range-note";
 
 describe("the pitch meter after Stop mic", () => {
@@ -226,7 +227,8 @@ describe("the pitch meter after Stop mic", () => {
     // The notes carry on across starts (only Reset clears them), which is
     // why the stopped card says "so far" rather than "your last run".
     expect(begin).not.toMatch(/setLow\(|setHigh\(/);
-    expect(src).toContain('setLastLog(logSession({ type: "pitch"');
+    expect(src).toContain("if (result.log) setLastLog(result.log);");
+    expect(src).toContain('log({ type: "pitch", durationSec, detail: "Pitch meter" })');
   });
 
   it("brings the stopped view on screen after a stop, and only after a stop", () => {
@@ -237,5 +239,60 @@ describe("the pitch meter after Stop mic", () => {
     expect(src).toContain("const wasListeningRef = useRef(false);");
     const stopped = src.slice(src.indexOf("if (!listening) {"));
     expect(stopped).toMatch(/^if \(!listening\) \{\s*return \(\s*<div ref=\{stoppedRef\}>/);
+  });
+});
+
+describe("closing a pitch meter run", () => {
+  // The studio's rule (finishStudioSession): a muted mic or the wrong input
+  // used to log 50 s of silence as practice, with XP, a streak and "First note".
+  function run(ms: number, heard: number) {
+    let t = 0;
+    const clock = createPracticeClock(() => t);
+    clock.resume();
+    t = ms;
+    const heardMs = { current: heard };
+    const log = vi.fn(() => ({ xpGained: 8 }));
+    return { clock, heardMs, log, result: finishMeterRun(clock, heardMs, log as never) };
+  }
+
+  it("logs nothing for a silent run and throws its seconds away", () => {
+    const { clock, log, result } = run(50_000, 0);
+    expect(log).not.toHaveBeenCalled();
+    expect(result).toEqual({ log: null, silent: true });
+    expect(clock.elapsedMs()).toBe(0);
+  });
+
+  it("does not call a stop a moment after Start silent", () => {
+    expect(run(1_000, 0).result).toEqual({ log: null, silent: false });
+  });
+
+  it("logs a run that heard a note once it reaches the floor", () => {
+    const { heardMs, log, result } = run(50_000, 12_000);
+    expect(log).toHaveBeenCalledWith({ type: "pitch", durationSec: 50, detail: "Pitch meter" });
+    expect(result).toEqual({ log: { xpGained: 8 }, silent: false });
+    expect(heardMs.current).toBe(0);
+  });
+
+  it("banks a short run that heard a note for the next flush", () => {
+    const { clock, log, result } = run(20_000, 5_000);
+    expect(log).not.toHaveBeenCalled();
+    expect(result).toEqual({ log: null, silent: false });
+    expect(clock.elapsedMs()).toBe(20_000);
+  });
+
+  it("is idempotent: a second flush after the pause returns null", () => {
+    const { clock, heardMs, log } = run(50_000, 12_000);
+    expect(finishMeterRun(clock, heardMs, log as never)).toBeNull();
+    expect(log).toHaveBeenCalledTimes(1);
+  });
+
+  it("counts heard time only on a voiced note and tells the singer after a silent stop", () => {
+    const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
+    expect(src).toMatch(/if \(f && voiced\(f\) && f\.note\) \{\s*heardMsRef\.current \+= dt;/);
+    expect(src).toContain("const result = finishMeterRun(practiceClock, heardMsRef);");
+    expect(src).toContain("{silentStop && low === null && (");
+    expect(src).toContain("No note was heard, so nothing was logged.");
+    const begin = src.slice(src.indexOf("const begin = async"), src.indexOf("const reset = () =>"));
+    expect(begin).toContain("setSilentStop(false);");
   });
 });

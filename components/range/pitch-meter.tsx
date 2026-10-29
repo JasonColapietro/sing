@@ -21,7 +21,7 @@ import { LevelMeter } from "@/components/studio/level-meter";
 import { recoveryRangeNote, staleRangeProgramNote } from "@/components/practice/program-range-note";
 import type { ProgramRangeLink } from "@/components/practice/program-range-probe";
 import { focusIfDropped } from "@/lib/audio/mic-focus";
-import { freshInputHint, meterInputHint, nextInputHint } from "./pitch-meter-hint";
+import { freshInputHint, HINT_AFTER_MS, meterInputHint, nextInputHint } from "./pitch-meter-hint";
 import { retryWhenOnline } from "./retry-when-online";
 import { AMBER, COOL, DIM, INK, OK, PANEL, REC } from "@/lib/chart-colors";
 import { PREPAINT_KEYS } from "@/lib/prepaint";
@@ -281,6 +281,43 @@ export function useRangeRetestRule() {
   return { range, offerRetest, programNote, programDayHref, probe, readRetestRule };
 }
 
+/** What closing a meter run did: the save, if any, and whether the mic heard nothing. */
+export interface MeterRunResult {
+  log: LogResult | null;
+  /**
+   * True when no note was heard since the last save, over a run as long as
+   * the live hint waits (HINT_AFTER_MS). Nothing was logged and the silent
+   * seconds were thrown away: a muted mic or the wrong input used to log 50
+   * seconds of silence as practice, with XP, a streak day and "First note".
+   */
+  silent: boolean;
+}
+
+/**
+ * Close a meter run, the studio's rule (finishStudioSession): log it once it
+ * has run MIN_LOG_SEC and a note was heard. Idempotent: the clock pauses
+ * first, so every later call returns null. A stretch with no note heard is
+ * thrown away rather than banked, so silence never joins the next run's time;
+ * a short stretch with a note stays banked for the next flush.
+ */
+export function finishMeterRun(
+  clock: ReturnType<typeof createPracticeClock>,
+  heardMs: { current: number },
+  log: typeof logSession = logSession,
+): MeterRunResult | null {
+  if (!clock.pause()) return null;
+  if (heardMs.current === 0) {
+    const ranMs = clock.elapsedMs();
+    clock.reset();
+    return { log: null, silent: ranMs >= HINT_AFTER_MS };
+  }
+  const durationSec = Math.floor(clock.elapsedMs() / 1000);
+  if (durationSec < MIN_LOG_SEC) return { log: null, silent: false };
+  clock.reset();
+  heardMs.current = 0;
+  return { log: log({ type: "pitch", durationSec, detail: "Pitch meter" }), silent: false };
+}
+
 /**
  * The stopped meter's summary: the notes held since the meter opened (or was
  * last Reset; "Sing again" keeps them, as the live readout does), whether the
@@ -405,6 +442,10 @@ export function PitchMeter({
   // the way the studio does, counting only time the mic is on and the page is
   // on screen.
   const [practiceClock] = useState(() => createPracticeClock());
+  /** Time a note was heard since the last save: silence is never practice. */
+  const heardMsRef = useRef(0);
+  /** The last stop heard no note at all, so nothing was logged. */
+  const [silentStop, setSilentStop] = useState(false);
 
   /**
    * Log the practice once it has run long enough to count. Idempotent: the
@@ -412,11 +453,10 @@ export function PitchMeter({
    * all call it. A stretch under the floor stays banked for the next flush.
    */
   const flushLog = useCallback(() => {
-    if (!practiceClock.pause()) return;
-    const durationSec = Math.floor(practiceClock.elapsedMs() / 1000);
-    if (durationSec < MIN_LOG_SEC) return;
-    practiceClock.reset();
-    setLastLog(logSession({ type: "pitch", durationSec, detail: "Pitch meter" }));
+    const result = finishMeterRun(practiceClock, heardMsRef);
+    if (!result) return;
+    if (result.log) setLastLog(result.log);
+    setSilentStop(result.silent);
   }, [practiceClock]);
   useFlushOnExit(flushLog);
 
@@ -467,6 +507,7 @@ export function PitchMeter({
       const dt = held.lastT ? Math.min(120, now - held.lastT) : 0;
       held.lastT = now;
       if (f && voiced(f) && f.note) {
+        heardMsRef.current += dt;
         const m = f.note.midi;
         if (held.midi === m) held.ms += dt;
         else {
@@ -617,6 +658,7 @@ export function PitchMeter({
     inputRef.current = freshInputHint();
     hintRef.current = null;
     setHint(null);
+    setSilentStop(false);
     // Cleared once the mic is on, so a later short run is never reported
     // with an earlier run's XP. A start that fails (the mic refused or
     // unplugged) leaves the last save on the card: it still happened.
@@ -649,6 +691,15 @@ export function PitchMeter({
             programNote={programNote}
             programDayHref={programDayHref}
           />
+        )}
+        {/* A silent run is never saved: say so, rather than drop the singer
+            back on the first-visit gate with no word about the mic. */}
+        {silentStop && low === null && (
+          <Card className="mb-4">
+            <p role="status" className="text-sm text-mut">
+              No note was heard, so nothing was logged. Sing a little louder or closer to the mic, or check the input under Audio below.
+            </p>
+          </Card>
         )}
         <MicGate
           title="See your pitch"

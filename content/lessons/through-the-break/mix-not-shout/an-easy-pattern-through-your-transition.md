@@ -50,7 +50,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness.
+- The target disappears when the range, volume, speed, or duration increases. => Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -68,7 +68,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.
+If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.
 
 What this shows: I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.
 

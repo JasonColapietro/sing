@@ -47,7 +47,7 @@ Play the reference note once and stop it. Sing the same note twice from silence:
 
 ### Review your own attempt
 
-I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the same reference note from silence twice, once straight away and once after hearing it in my head, and heard which one started on the note. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I compared my Amazing Grace study with the note reference and identified one pit
 
 ## Self-check
 
-- I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.
+- I sang the same reference note from silence twice, once straight away and once after hearing it in my head, and heard which one started on the note.
 - The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.
+What this shows: I sang the same reference note from silence twice, once straight away and once after hearing it in my head, and heard which one started on the note. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain.

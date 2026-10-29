@@ -92,6 +92,15 @@ const NON_PAGE_PATHS: Record<string, () => boolean> = {
 };
 
 describe("/llms.txt", () => {
+  it("sells Pro as the coach's full plan, not the coach: free has the coach's first two steps", () => {
+    expect(llms).toContain("Suede Pro, the coach's full plan on top of the free studio");
+    expect(llms).not.toMatch(/Suede Pro, the coach on top/);
+    // The phone menu's Pro card, every page's main navigation on a phone.
+    const nav = readFileSync("components/nav.tsx", "utf8");
+    expect(nav).toContain('"The coach\'s full plan, on top of the free studio"');
+    expect(nav).not.toContain("The coach on top of the studio");
+  });
+
   it("resolves the Chrome extension to the real Web Store listing", () => {
     expect(llms).toContain(STORE_URL);
     expect(llms).toContain(`${SING_HOME}/extension`);

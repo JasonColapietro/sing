@@ -182,7 +182,7 @@ const HOME_JSON_LD = {
 const SESSION_SHOTS = [
   {
     src: "/room-studio.png",
-    alt: "The pitch studio on a phone: the 'See your pitch live' start screen under an example trace",
+    alt: "The pitch studio on a phone: the 'See your pitch live' start screen above an example trace",
     caption: "Studio: see your pitch live",
   },
   {

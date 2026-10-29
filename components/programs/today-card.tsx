@@ -714,12 +714,15 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
               </a>
             </div>
           ) : (
-            // A rest day's "See the calendar" is outline too: the singer can
-            // still warm up, so the room's own start stays the one filled
-            // action on the page.
+            // Filled only as "Open today’s plan". "See today’s plan" and
+            // "See the calendar" (a rest day, a day already done, a finished
+            // program) are always outline: the singer can still practice, so
+            // the room's own start stays the one filled action on the page.
+            // reconcileProgress completes a rest day the day it is reached, so
+            // in the app a rest day reads "done-today", never "todo".
             <LinkButton
               href={calendarHref}
-              variant={waits || (view.status === "todo" && isRestDay(day)) ? "outline" : undefined}
+              variant={!waits && view.status === "todo" && !isRestDay(day) ? undefined : "outline"}
               fullLoad
             >
               {waits

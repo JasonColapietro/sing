@@ -36,18 +36,18 @@ Choose a word whose vowel crosses your transition zone and sing it first below t
 Small shape adjustments that keep the crossing smooth and the lyric intelligible. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.
-- Listen: The pitch remains connected and the lyric is still understandable across all three vowels.
+- Listen: The pitch stays connected and the word is still understandable in both versions.
 
 ### Hear the distinction
 
 Pick a word with an “ah” in it, such as “far”, and sing it on a slide up a fifth, starting a little below your transition so the slide crosses it. Do it twice in one take: first keeping the vowel exactly as you speak it, then letting the “ah” round slightly toward “aw” as you climb. The vowel shape is the only thing that changes, so keep the pitch and the volume the same. On playback, listen for which crossing stays connected and whether the word is still clearly “far”. Record your takes in the recorder. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word.
 
 - Look: The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.
-- Listen: The pitch remains connected and the lyric is still understandable across all three vowels.
+- Listen: The pitch stays connected and the word is still understandable in both versions.
 
 ### Review your own attempt
 
-I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang one “ah” word on a fifth slide through my transition, plain and then shaded toward “aw”, and noted which crossing stayed connected. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,14 +66,14 @@ I compared three vowels on a comfortable fifth slide and noted which small adjus
 
 ## Self-check
 
-- I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.
-- The pitch remains connected and the lyric is still understandable across all three vowels.
+- I sang one “ah” word on a fifth slide through my transition, plain and then shaded toward “aw”, and noted which crossing stayed connected.
+- The pitch stays connected and the word is still understandable in both versions.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
 If not ready: If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. This is a self-report, not an automatic assessment.
+What this shows: I sang one “ah” word on a fifth slide through my transition, plain and then shaded toward “aw”, and noted which crossing stayed connected. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, a measured register break, or freedom from strain.

@@ -326,7 +326,7 @@ export default function Nav() {
                 <span className="mt-1 block text-sm text-mut">
                   {proActive
                     ? "Pro is active · manage your plan"
-                    : "The coach on top of the studio"}
+                    : "The coach's full plan, on top of the free studio"}
                 </span>
               </Link>
             </div>

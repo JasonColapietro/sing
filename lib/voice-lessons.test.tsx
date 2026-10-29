@@ -228,6 +228,76 @@ describe("the lesson data", () => {
     }
   });
 
+  /**
+   * The effects and stop-plan modules ask the singer to copy a stop list. Every
+   * list those pages print (the target step, When it goes wrong, If you're not
+   * ready) names blood, and blood or a sudden loss of range goes to the doctor
+   * now, never after waiting for symptoms to persist.
+   */
+  it("give the effects and stop-plan modules one stop list that sends blood to the doctor now", () => {
+    const stopPlanLessons = LESSONS.filter((l) => l.moduleId === "v-l7-m4" || l.moduleId === "v-l7-m1");
+    expect(stopPlanLessons.length).toBe(6);
+    for (const lesson of stopPlanLessons) {
+      const lists = [
+        ...lesson.mistakes.map((m) => m.recovery),
+        lesson.selfCheck.ifNotReady,
+        ...lesson.steps.map((s) => s.body),
+      ].filter((text) => /\bStop (for|on) pain\b|see a doctor|seeing a doctor/i.test(text));
+      expect(lists.length, lesson.id).toBeGreaterThan(0);
+      for (const text of lists) {
+        expect(text, lesson.id).toMatch(/\bany blood\b/i);
+        if (/doctor/i.test(text)) expect(text, lesson.id).toContain(DOCTOR_REFERRAL);
+        expect(text, lesson.id).not.toMatch(/when symptoms persist/i);
+      }
+    }
+  });
+
+  /**
+   * The belt and wobble modules stop for loss of range too. Their stop rules
+   * must not send a sudden loss of range only to "another day": blood or a
+   * sudden loss goes to the doctor now, in the binding referral wording, in
+   * both When it goes wrong and If you're not ready.
+   */
+  it("send a sudden loss of range or any blood to the doctor in the belt and wobble stop rules", () => {
+    const lessons = LESSONS.filter((l) => l.moduleId === "v-l5-m4" || l.moduleId === "v-l3-m5");
+    expect(lessons.length).toBeGreaterThanOrEqual(6);
+    for (const lesson of lessons) {
+      const rules = [...lesson.mistakes.map((m) => m.recovery), lesson.selfCheck.ifNotReady].filter((text) =>
+        /loss of range/i.test(text),
+      );
+      expect(rules.length, lesson.id).toBe(2);
+      for (const text of rules) {
+        expect(text, lesson.id).toMatch(/Any blood, or a sudden loss of range or voice, means seeing/);
+        expect(text, lesson.id).toContain(DOCTOR_REFERRAL);
+      }
+    }
+  });
+
+  /**
+   * A concept lesson's "Did it work?" asks about the task its "Hear the
+   * distinction" step set, not material from elsewhere in the module, and its
+   * review step still restates that check so the page drops the repeat.
+   */
+  it("ask Did it work? about the task the concept lesson set", () => {
+    const set: Record<string, RegExp> = {
+      "v-l2-m2-01": /breathy, a clicked and a balanced onset/,
+      "v-l4-m1-01": /same reference note from silence twice/,
+      "v-l4-m3-01": /lazy and then clear consonants/,
+      "v-l5-m2-01": /plain and then shaded toward “aw”/,
+      "v-l5-m4-01": /“hey” call up one semitone at a time/,
+    };
+    for (const [id, task] of Object.entries(set)) {
+      const lesson = LESSONS.find((l) => l.id === id)!;
+      const [first] = lesson.selfCheck.criteria;
+      expect(first, id).toMatch(task);
+      expect(first, id).not.toMatch(/five-note scale|Amazing Grace|three vowels|supplied short pattern|spoke and sang/);
+      expect(lesson.selfCheck.shows, id).toContain(first);
+      const said = [...lesson.selfCheck.criteria, ...lesson.steps.flatMap((s) => [s.look, s.listen])];
+      for (const line of said) expect(line, id).not.toMatch(/three vowels|planned short hold/);
+      expect(shownSteps(lesson).some((s) => s.title === REVIEW_STEP_TITLE), id).toBe(false);
+    }
+  });
+
   it("serves every lesson in the catalog, and publishes where each one lives", async () => {
     expect(LESSONS.map((l) => l.id).sort()).toEqual([...catalogLessons.keys()].sort());
     const { default: urls } = await import("@/contracts/suede-voice-lesson-urls.json");

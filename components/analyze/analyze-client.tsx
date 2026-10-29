@@ -21,6 +21,7 @@ import {
   save as saveDose,
   useDose,
 } from "@/lib/audio/vocal-dose";
+import { emptyListenLog, listen, takeChunk, takeTail } from "./listen-log";
 import { Spectrogram } from "./spectrogram";
 import { SpectrogramFigure } from "@/components/figures";
 import { Tone } from "./tone";
@@ -44,7 +45,7 @@ export default function AnalyzeClient() {
   const cyclesRef = useRef<HTMLSpanElement | null>(null);
   const ringRef = useRef<HTMLSpanElement | null>(null);
 
-  const listenSecRef = useRef(0);
+  const listenRef = useRef(emptyListenLog());
   const sinceSaveRef = useRef(0);
   const noteTimer = useRef<number | undefined>(undefined);
 
@@ -60,7 +61,7 @@ export default function AnalyzeClient() {
    * sixty times a second to change two strings.
    */
   const onFrame = useCallback((frame: AnalyserFrame, dtSec: number) => {
-    listenSecRef.current += dtSec;
+    listen(listenRef.current, dtSec, frame.f0);
 
     const next = accumulate(doseRef.current, {
       day: frame.day,
@@ -104,8 +105,8 @@ export default function AnalyzeClient() {
   useEffect(() => {
     if (!listening) return;
     const id = window.setInterval(() => {
-      if (listenSecRef.current >= CHUNK_SEC) {
-        listenSecRef.current -= CHUNK_SEC;
+      // A chunk with no voice heard in it is dropped, never logged.
+      if (takeChunk(listenRef.current, CHUNK_SEC)) {
         const res = logSession({
           type: "analyze",
           durationSec: CHUNK_SEC,
@@ -120,9 +121,8 @@ export default function AnalyzeClient() {
   /** Persist the dose and log the remaining listening time. Idempotent. */
   const flush = useCallback(() => {
     saveDose(doseRef.current);
-    const sec = Math.round(listenSecRef.current);
-    if (sec >= MIN_FLUSH_SEC) {
-      listenSecRef.current = 0;
+    const sec = takeTail(listenRef.current, MIN_FLUSH_SEC);
+    if (sec !== null) {
       logSession({ type: "analyze", durationSec: sec, detail: "Voice analysis" });
     }
   }, []);
@@ -266,8 +266,9 @@ export default function AnalyzeClient() {
       </div>
 
       <p className="mt-6 text-xs text-dim">
-        Time spent listening counts toward your practice XP. Sessions log
-        automatically every 5 minutes and when you leave the page.
+        Time spent listening counts toward your practice XP once the mic
+        hears your voice. A stretch in which it hears no voice is not logged.
+        Sessions log automatically every 5 minutes and when you leave the page.
       </p>
       {everListened && (
         <div className="mt-3">

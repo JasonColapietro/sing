@@ -18,7 +18,9 @@ const KICKER = "SUEDE SING · PRO";
 const TITLE = "Suede Pro";
 const PRICE_LINE = proHeadline();
 const FEATURES = "Full coach plan, per-note accuracy, take analysis, two books";
-const FOOTER = "The online vocal coach on top of the free studio";
+// The free plan has a coach too (its first two steps each day): Pro adds
+// the full plan, the line the mic gates and /pro say. Keeps /pro's head term.
+const FOOTER = "The online vocal coach's full plan, on top of the free studio";
 const REPORT_LABEL = "EXAMPLE COACH REPORT";
 const BARS_LABEL = "ACCURACY BY NOTE";
 const NEXT_STEP = "Tomorrow: Octave siren, 6 min";
@@ -38,7 +40,7 @@ const NOTE_BARS: ReadonlyArray<{ label: string; h: number; weak?: boolean }> = [
   { label: "B4", h: 64 },
 ];
 
-export const alt = `Suede Pro: the online vocal coach on top of the free Suede Sing studio. ${PRICE_LINE}.`;
+export const alt = `Suede Pro: the online vocal coach's full plan, on top of the free Suede Sing studio. ${PRICE_LINE}.`;
 
 /**
  * One card at a URL versioned by what it draws

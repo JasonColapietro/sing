@@ -78,7 +78,7 @@ And a few tells that a session went wrong mid-flight:
 |---|---|
 | Accuracy bad everywhere, not just in the usual places | The setup: voices do not degrade evenly |
 | Low notes erratic, middle clean | The mic is too far for quiet low notes, or noise is masking them |
-| Notes from last week missing entirely | The detector is not hearing you cleanly, not a lost note |
+| Notes from last week missing entirely | Most often the detector not hearing you cleanly. If they are still missing after the setup checks and a retest on a rested day, treat it as a sudden loss of range and see a doctor who can examine the vocal folds, such as an ENT or laryngologist |
 | A trace that lags or stutters | The device or the mic, not your pitch |
 | Every note sharp or flat by the same amount | You are singing against a reference you cannot hear properly |
 

@@ -39,6 +39,7 @@ import {
   stopQuestion,
 } from "@/components/programs/today-card";
 import type { ActiveProgram } from "@/components/programs/use-program";
+import { reconciledProgram } from "@/components/programs/active-program.testing";
 import { FREE_WEEKS, itemSteps, programById } from "@/lib/programs";
 import type { ProgramReading, ProgramToday } from "@/lib/programs";
 import { PRICING, formatPrice } from "@/lib/pro-shared";
@@ -650,16 +651,51 @@ describe("a ticked row, read aloud", () => {
   });
 });
 
-describe("the program entry card on a rest day", () => {
-  it("keeps 'See the calendar' outline, so the room's own start is the one filled action", () => {
+describe("the program entry card on a rest day, a day done and a finished program", () => {
+  // Built as the app builds it (reconcileProgress, then programToday): a rest
+  // day is completed the day it is reached, so the card sees "done-today".
+  const OUTLINE_CALENDAR = /<a[^>]*class="[^"]*border-field[^"]*"[^>]*>See the calendar<\/a>/;
+
+  it("keeps 'See the calendar' outline on a real rest day, so the room's own start is the one filled action", () => {
     plan.pro = false;
     plan.ready = true;
-    // Foundations day 7 (index 6) is a rest day.
-    const rest = renderToStaticMarkup(<ProgramEntryCard active={active("foundations-2w", 6)} />);
-    expect(rest).toMatch(/<a[^>]*class="[^"]*border-field[^"]*"[^>]*>See the calendar<\/a>/);
+    // Foundations day 7 (index 6) is a rest day, reached after six days done.
+    const restDay = reconciledProgram("foundations-2w", 6);
+    expect(restDay.view).toMatchObject({ status: "done-today", index: 6 });
+    const rest = renderToStaticMarkup(<ProgramEntryCard active={restDay} />);
+    expect(rest).toContain("Day 7: rest day.");
+    expect(rest).toMatch(OUTLINE_CALENDAR);
     expect(rest).not.toContain("bg-violet-ink");
-    // A practice day still leads with the filled "Open today's plan".
-    const practice = renderToStaticMarkup(<ProgramEntryCard active={active("foundations-2w", 5)} />);
+  });
+
+  it("keeps it outline once today's practice day is done", () => {
+    plan.pro = false;
+    plan.ready = true;
+    const doneToday = reconciledProgram("foundations-2w", 5, { doneToday: true });
+    expect(doneToday.view).toMatchObject({ status: "done-today", index: 5 });
+    const html = renderToStaticMarkup(<ProgramEntryCard active={doneToday} />);
+    expect(html).toMatch(OUTLINE_CALENDAR);
+    expect(html).not.toContain("bg-violet-ink");
+  });
+
+  it("keeps it outline on a finished program", () => {
+    plan.pro = true;
+    plan.ready = true;
+    const days = programById("foundations-2w")!.days.length;
+    const finished = reconciledProgram("foundations-2w", days - 1, { doneToday: true });
+    expect(finished.view.status).toBe("finished");
+    const html = renderToStaticMarkup(<ProgramEntryCard active={finished} />);
+    expect(html).toMatch(OUTLINE_CALENDAR);
+    expect(html).not.toContain("bg-violet-ink");
+    plan.pro = false;
+  });
+
+  it("leads a practice day still to do with the filled 'Open today's plan'", () => {
+    plan.pro = false;
+    plan.ready = true;
+    const todo = reconciledProgram("foundations-2w", 5);
+    expect(todo.view).toMatchObject({ status: "todo", index: 5 });
+    const practice = renderToStaticMarkup(<ProgramEntryCard active={todo} />);
     expect(practice).toMatch(/<a[^>]*class="[^"]*bg-violet-ink[^"]*"[^>]*>Open today’s plan<\/a>/);
   });
 });

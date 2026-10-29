@@ -515,6 +515,37 @@ describe("the chapters agree with the app", () => {
     );
   });
 
+  /**
+   * Chapter 12's quick table is free and indexed. Notes gone since last week
+   * are usually the setup, but the row itself sends a loss that survives the
+   * setup checks and a rested retest to the doctor, in the site's words, and
+   * points nowhere a free reader cannot open.
+   */
+  it("sends missing notes that survive a rested retest from the free table to a doctor", async () => {
+    expect(FREE.map((c) => c.slug)).toContain("when-numbers-lie");
+    const html = await page("when-numbers-lie");
+    const row = html.slice(html.indexOf("Notes from last week missing entirely"));
+    const cell = row.slice(0, row.indexOf("</tr>"));
+    expect(cell).not.toMatch(/not a lost note/);
+    expect(cell).toMatch(/rested day/);
+    expect(cell).toMatch(/sudden loss of range/);
+    expect(cell).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
+    expect(cell).not.toMatch(/[Cc]hapter|href=/);
+  });
+
+  /**
+   * The chapters every "chapter six says more" and every effects lesson send a
+   * reader to name the same doctor's list: pain that lasts and any blood.
+   */
+  it("lists lasting pain and blood among the doctor's questions in both safety chapters", () => {
+    expect(body("stamina-and-health")).toMatch(/Pain that is still there after you stop singing\./);
+    expect(body("stamina-and-health")).toMatch(/Any blood\./);
+    const rail = ATLAS.find((c) => c.slug === "the-safety-rail")!.body;
+    const doctorRow = rail.split("\n").find((line) => line.includes("See a doctor who can examine the vocal folds"))!;
+    expect(doctorRow).toMatch(/pain that is still there after you stop/);
+    expect(doctorRow).toMatch(/any blood/);
+  });
+
   it("keeps today's belt ceiling out of the songs the reader sings night after night", () => {
     expect(body("finding-your-break")).not.toMatch(/top of the range you can write into a song/);
     expect(body("finding-your-break")).toMatch(/not a note to build a song on/);

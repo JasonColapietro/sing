@@ -31,6 +31,6 @@ Practice that is working feels like effort in the torso and freedom in the throa
 |---|---|---|
 | Pain while singing | A stop sign | Stop for the session |
 | Hoarseness that clears overnight | The habit costs too much | Practice less of it |
-| Hoarseness that does not clear, a rough morning voice past two weeks, an easy note that is gone | Not a technique question | See a doctor who can examine the vocal folds, such as an ENT or laryngologist, often with a voice-specialist speech-language pathologist. There is no waiting period, and you need not be sure it is serious. |
+| Hoarseness that does not clear, a rough morning voice past two weeks, an easy note that is gone, pain that is still there after you stop, any blood | Not a technique question | See a doctor who can examine the vocal folds, such as an ENT or laryngologist, often with a voice-specialist speech-language pathologist. There is no waiting period, and you need not be sure it is serious. |
 
 None of this is a reason to sing smaller. It is the reason the singers in this book got to sing big for decades. The rail is what makes leaning out safe.

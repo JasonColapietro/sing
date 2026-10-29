@@ -227,7 +227,7 @@ export const GENRE_HUB_COPY: Record<string, HubCopy> = {
       "Metal vocals range from operatic clean singing with high sustained notes to harsh styles such as growls and screams, which use distortion rather than pitch to carry intensity. Harsh vocals are hard to pin to a note, so it is the pitched singing that a range figure can describe.",
     neighbour: "hard-rock",
     contrast:
-      "{link} keeps to clean belted lines, without the harsh techniques and the operatic extremes.",
+      "{link} keeps to pitched, belted lines, often with some distortion, without growls, screams and the operatic extremes.",
     titleTag: "Clean Highs and Harsh Vocals",
     summary:
       "Operatic clean highs alongside growls and screams, with range measured on the pitched singing.",

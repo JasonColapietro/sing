@@ -403,8 +403,10 @@ export default async function SingerPage({
         <Card>
           <p className="mb-4 text-sm text-mut">
             {singerReviewLabel(s.slug)}{" · "}
+            {/* Most confirmed records list no sources (/singers/methodology):
+                the link names only what the evidence card holds. */}
             <a href="#evidence" className="text-violet-ink underline underline-offset-4">
-              Read sources and limitations
+              {evidence.sources.length > 0 ? "Read sources and limitations" : "Read the limitations"}
             </a>
           </p>
           <div className="flex flex-wrap items-start justify-between gap-4">

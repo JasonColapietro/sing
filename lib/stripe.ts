@@ -169,7 +169,7 @@ const PRODUCT_NAME = "Suede Pro";
  * song is free. scripts/stripe-setup.mjs brings a reused product up to date.
  */
 export const PRODUCT_DESCRIPTION =
-  "The coach on top of the free vocal studio: every step of the adaptive daily plan, no daily limit on guided practice, per-note analytics, take pitch analysis, two books with PDFs, cloud sync.";
+  "The coach's full plan on top of the free vocal studio: every step of the adaptive daily plan, no daily limit on guided practice, per-note analytics, take pitch analysis, two books with PDFs, cloud sync.";
 
 /** Finds the Suede Pro product in this Stripe account, creating it if absent. */
 async function resolveProductId(): Promise<string> {
