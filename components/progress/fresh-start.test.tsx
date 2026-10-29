@@ -43,6 +43,24 @@ describe("the empty progress page", () => {
     expect(html.indexOf("Try a warmup")).toBeGreaterThan(start);
   });
 
+  it("fills only one start: the studio, or nothing when a program's card leads", () => {
+    const studio = (h: string) => h.match(/<a[^>]*href="\/studio"[^>]*>/)?.[0] ?? "";
+    expect(studio(html)).toContain("bg-rec");
+    const running = renderToStaticMarkup(<FreshStart programRunning />);
+    expect(running).toContain("Open the studio");
+    expect(studio(running)).not.toContain("bg-rec");
+    expect(running).not.toContain("bg-rec");
+  });
+
+  it("puts a running program's card ahead of the empty state on a fresh record", () => {
+    const src = readFileSync(fileURLToPath(new URL("./progress-client.tsx", import.meta.url)), "utf8");
+    const card = src.indexOf("{isFresh && activeProgram && !programPaywalled && <ProgramEntryCard");
+    const fresh = src.indexOf("{isFresh && <FreshStart programRunning=");
+    expect(card).toBeGreaterThan(-1);
+    expect(fresh).toBeGreaterThan(card);
+    expect(src).toContain("{!isFresh && activeProgram && !programPaywalled && <ProgramEntryCard");
+  });
+
   it("points a singer with a backup file to the import, below the start buttons", () => {
     expect(html).toMatch(/<a href="#your-data"[^>]*>Import it under Your data<\/a>/);
     expect(html.indexOf("#your-data")).toBeGreaterThan(html.indexOf("Try a warmup"));

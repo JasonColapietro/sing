@@ -1,5 +1,7 @@
 // Guided warmup exercise library for Suede Sing.
 
+import { planRep } from "./timeline";
+
 export type WarmupTier = "beginner" | "intermediate" | "advanced";
 
 export const TIER_ORDER: WarmupTier[] = ["beginner", "intermediate", "advanced"];
@@ -1097,9 +1099,17 @@ export function descentWalk(ladder: number[], rep: number): LadderStep {
   return { root: ladder[index] ?? 48, index, ascending: index < ladder.length - 1 };
 }
 
-/** Rough length of one climb of the ladder: each rep plays the guide then a 120% sing window. */
+/**
+ * Length of one climb of the ladder in the default sing-along mode, in whole
+ * minutes: the teach rep, then `reps - 1` count-in-and-sing reps, from the
+ * same planner the routine cards time their steps with (routines.ts
+ * stepSeconds), so a path row and a routine card never disagree.
+ */
 export function estimateMinutes(ex: WarmupExercise, reps: number): number {
-  const { totalSec } = buildSegments(ex, 60, 1);
-  const secs = reps * (totalSec * 2.2 + 2);
-  return Math.max(1, Math.round(secs / 60));
+  const { totalSec, noteDur } = buildSegments(ex, 60, 1);
+  let t = 0;
+  for (let i = 0; i < reps; i++) {
+    t += planRep({ mode: "sing-along", repIndex: i, t0: 0, patternSec: totalSec, noteDur }).repDur;
+  }
+  return Math.max(1, Math.round(t / 60));
 }

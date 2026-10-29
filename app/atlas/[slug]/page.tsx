@@ -128,6 +128,14 @@ export default async function AtlasChapterPage({
       subtitle={chapter.summary || undefined}
       actions={
         <div className="flex flex-wrap items-center gap-2">
+          {/* A free chapter is a search landing page: the way into the app
+              sits at the top as well as after the chapter, since phones have
+              no tab bar to reach it from. Locked chapters have no tryIt. */}
+          {tryIt && (
+            <LinkButton href={RANGE_TEST_HREF} size="md">
+              {tryIt.label}
+            </LinkButton>
+          )}
           <Link
             href="/atlas"
             prefetch={false}

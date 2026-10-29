@@ -5,7 +5,7 @@ stage: "v-l2"
 title: "Onset Without the Click"
 type: "concept"
 minutes: 3
-objective: "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique."
+objective: "Compare an easy onset with a previous attempt; the piano reference supplies pitch, not a demonstration of vocal technique."
 prerequisites: "v-l2-m1-06"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -22,7 +22,7 @@ An onset is how a note starts, and there are three basic ways. A breathy onset l
 Open the practice material on this page and choose Five-note scale or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
@@ -33,7 +33,7 @@ Choose a target near the middle of your comfortable range. Hear it once, stop th
 
 ### Name the target: Onset and pitch matching
 
-Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
+Compare an easy onset with a previous attempt; the piano reference supplies pitch, not a demonstration of vocal technique. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide.

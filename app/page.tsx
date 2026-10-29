@@ -249,9 +249,10 @@ export default function Home() {
               <h2 className="max-w-xl text-2xl sm:text-3xl">
                 Know what to sing tomorrow
               </h2>
+              {/* /pro's split: free charts the same record, Pro is the view across it. */}
               <p className="mt-3 max-w-xl text-mut">
-                Free shows you today&rsquo;s score. Pro keeps the score over
-                months and tells you what to sing next.
+                Free scores every session and charts your weekly trend. Pro
+                adds:
               </p>
               {/* Each perk once; the price is on the button only. */}
               <ul className="mt-5 space-y-2.5">

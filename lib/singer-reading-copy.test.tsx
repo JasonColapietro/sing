@@ -20,6 +20,7 @@ vi.mock("server-only", () => ({}));
 
 import SingerPage from "@/app/singers/[slug]/page";
 import SingersPage from "@/app/singers/page";
+import CanYouSingSongPage from "@/app/can-you-sing/[slug]/page";
 import MethodologyPage from "@/app/singers/methodology/page";
 import RecordsPage from "@/app/singers/records/page";
 import VocalRangePage from "@/app/atlas/vocal-range-by-voice-type/page";
@@ -63,7 +64,8 @@ describe("singer evidence claims", () => {
     const text = visible(renderToStaticMarkup(<MethodologyPage />)).replace(/\s+/g, " ");
     expect(text).toContain("Source-reviewed records name a human dataset editor");
     expect(text).toContain("Records marked Review confirmed");
-    expect(text).toContain("list no sources");
+    expect(text).toContain("do not verify either endpoint");
+    expect(text).toContain("those sources do not verify the endpoints either");
     // Every label singerReviewLabel can print is defined, pending included.
     expect(text).toContain("Individual review pending");
     expect(text).not.toMatch(/(^|[.] )Reviewed records name/);
@@ -124,5 +126,23 @@ describe("house copy on the free reading pages", () => {
     expect(free.length).toBe(3);
     for (const c of free) expect(c.body, c.slug).not.toContain("—");
     for (const c of BOOK) expect(britishHits(`${c.title} ${c.summary} ${c.body}`), c.slug).toEqual([]);
+  });
+});
+
+describe("owner-confirmed records with earlier sources", () => {
+  it("scope those sources on the singer page, as a pending record does", async () => {
+    for (const slug of ["taylor-swift", "jeff-buckley", "damiano-david"]) {
+      const text = visible(await singerHtml(slug)).replace(/\s+/g, " ");
+      expect(text, slug).toContain("Review confirmed");
+      expect(text, slug).toContain("They do not verify the catalog's range endpoints.");
+    }
+  });
+
+  it("print a /can-you-sing voice type as a catalog label, not a bare fact", async () => {
+    const text = visible(
+      decode(renderToStaticMarkup(await CanYouSingSongPage({ params: Promise.resolve({ slug: "hallelujah" }) }))),
+    ).replace(/\s+/g, " ");
+    expect(text).toContain("(catalog label: Tenor)");
+    expect(text).not.toContain("(Tenor)");
   });
 });

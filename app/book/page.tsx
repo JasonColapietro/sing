@@ -172,7 +172,7 @@ export default function BookPage() {
             the range, tone and technique of every voice in the singer library,
             with the songs where the extreme notes happened.{" "}
             <Link href="/atlas" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
-              Its full contents are free
+              Its contents page and first three chapters are free
             </Link>
             .
           </p>

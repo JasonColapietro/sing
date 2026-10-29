@@ -15,7 +15,7 @@ That distinction changes things immediately. Sit forty cents flat for a whole ph
 
 The distance between two adjacent keys on a piano — C to C sharp — is one semitone. Split that semitone into a hundred equal slices and each slice is a cent. Cents exist because the ear hears ratios, not hertz. The gap between A2 and A sharp 2 is about seven hertz; the same gap three octaves higher, between A5 and A sharp 5, is about fifty. In hertz those look like different-sized problems. In cents they are the same size: a hundred, both times. That is why the pitch studio reports cents and draws its trace in semitone lanes rather than showing you a raw frequency.
 
-::figure pitch-trace | A trace settling into the target band. The wobble before it settles is normal.
+::figure pitch-trace | A trace that starts under the note, searches and overshoots, then settles into the target band. Most of that searching at the front is scored as time outside the window; a clean onset starts inside the band.
 
 Twenty cents sharp is a fifth of the way to the next key. Written down, that sounds enormous. In motion it is not. On a note that passes in a quarter of a second inside a running line, twenty cents is close to invisible to a listener. Held on a long exposed vowel with a piano underneath, the same twenty cents sits there and curdles. Same measurement, opposite musical consequence.
 

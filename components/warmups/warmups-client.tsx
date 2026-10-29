@@ -875,8 +875,9 @@ export function WarmupsClient() {
 
       {/* The single-exercise summary starts the next run itself ("Run this
           ladder again", "Sing it", "Next exercise"), so it says how much of
-          today's free time is left before the singer picks one. */}
-      {view === "summary" && summary && !cap.capped && <FreeAllowance cap={cap} className="mb-4" />}
+          today's free time is left before the singer picks one. No Pro link
+          here: the results nudge below is this view's one ask. */}
+      {view === "summary" && summary && !cap.capped && <FreeAllowance cap={cap} className="mb-4" proLink={false} />}
       {view === "summary" && summary && (
         <SessionSummary
           data={summary}

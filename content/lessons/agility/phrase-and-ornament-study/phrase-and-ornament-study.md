@@ -18,7 +18,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
@@ -36,7 +36,7 @@ Choose a comfortable key for the supplied phrase, then add one familiar small or
 
 ### Build the song from phrases
 
-Mark the key, breaths, range edges, and lesson target before a full take of your chosen study, Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.
+Mark the key, breaths, range edges, and lesson target before a full take of your chosen study, Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Rehearse the hardest phrase alone, join two phrases (for Deep River, the two halves of its one phrase), then record one uninterrupted form. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.
 
 - Look: The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.
 - Listen: The full take keeps the authored melody recognizable and the planned ornaments audible.

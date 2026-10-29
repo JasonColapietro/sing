@@ -74,7 +74,7 @@ const PATHS: Path[] = [
     // /pro's wording: the per-note chart is one tally, only the range is
     // charted over time (components/landing/pro-claims.test.tsx).
     payoff:
-      "Then let Pro keep score: a per-note accuracy chart, your range tests charted over months, and every step of the coach's daily plan.",
+      "Then let Pro add the detail: a per-note accuracy chart, your range tests charted over months, and every step of the coach's daily plan.",
     gold: true,
   },
 ];

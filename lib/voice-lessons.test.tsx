@@ -68,6 +68,7 @@ import { voiceCurriculum } from "@/lib/voice-curriculum";
 import {
   COURSE,
   REVIEW_STEP_TITLE,
+  TARGET_STEP_PREFIX,
   UNIVERSAL_LESSON_TEXT,
   VOICE_LEARN_PATH,
   coursePaths,
@@ -934,7 +935,7 @@ describe("the pages", () => {
     expect(course).toMatch(/Unless a self-check says otherwise, it is ready when you can\s+describe the result/);
     expect(course).toContain("never as a pass");
     // The disclosure the shared Listen line carried on every lesson.
-    expect(course).toMatch(/Reference notes are synthesized pitches, not recordings of a\s+singer/);
+    expect(course).toMatch(/Reference notes are piano notes, not recordings of a\s+singer/);
   });
 
   it("say a lesson's not-ready advice once, not again after its own recovery", () => {
@@ -987,6 +988,33 @@ describe("the pages", () => {
     expect(shownSteps(l)).not.toContain(review);
     const own = { ...review, body: "Play both takes back to back and name the one that sounds easier." };
     const rewritten: Lesson = { ...l, steps: l.steps.map((s) => (s === review ? own : s)) };
+    expect(shownSteps(rewritten)).toContain(own);
+  });
+
+  /**
+   * The port's "Name the target: <module skill>" step mostly restated the
+   * objective the page prints under its heading; such a step is left out,
+   * one that says something of its own stays, and no check is lost with it.
+   */
+  it("leave out a target step that only repeats the objective", () => {
+    let dropped = 0;
+    for (const l of LESSONS) {
+      const shown = shownSteps(l);
+      for (const s of shown) expect(s.body.trim(), `${l.id}: ${s.title}`).not.toBe(l.objective.trim());
+      dropped += l.steps.length - shown.length;
+      const kept = new Set(shown.flatMap((s) => [s.look, s.listen]));
+      for (const s of l.steps.filter((x) => x.title.startsWith(TARGET_STEP_PREFIX) && !shown.includes(x))) {
+        for (const check of [s.look, s.listen]) {
+          if (!UNIVERSAL_LESSON_TEXT.has(check)) expect(kept.has(check), `${l.id} loses "${check}"`).toBe(true);
+        }
+      }
+    }
+    expect(dropped).toBeGreaterThan(0);
+    const l = LESSONS.find((x) => x.steps.some((s) => s.title.startsWith(TARGET_STEP_PREFIX) && s.body === x.objective))!;
+    const target = l.steps.find((s) => s.title.startsWith(TARGET_STEP_PREFIX))!;
+    expect(shownSteps(l)).not.toContain(target);
+    const own = { ...target, body: "Aim for the same easy start on every note of the pattern." };
+    const rewritten: Lesson = { ...l, steps: l.steps.map((s) => (s === target ? own : s)) };
     expect(shownSteps(rewritten)).toContain(own);
   });
 

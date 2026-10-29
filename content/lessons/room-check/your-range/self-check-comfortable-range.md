@@ -18,7 +18,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 Open the practice material on this page and choose First hum or Easy fourth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Reading your range test is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
@@ -29,7 +29,7 @@ Warm up first, for about four minutes with the [Morning reset](/warmups?routine=
 
 ### Name the target: Range scan and voice type
 
-An estimated voice type and both ends of your range, to fit every later exercise to. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
+An estimated voice type and the comfortable, repeatable ends of your range, to fit every later exercise to. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.

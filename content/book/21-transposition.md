@@ -59,7 +59,7 @@ Harmony parts and duets do not transpose independently. If you sing with other p
 
 And the honest limit: transposition solves fit. It does not solve technique. If a song sits well in your middle and still falls apart, the key was never the problem, and moving it again will not help. The reverse is truer than most singers want to hear — grinding away for months at a key that does not fit your voice is not discipline, it is a longer route to the same conclusion. Sing it where you sound like yourself. Then, separately, do the work.
 
-One more thing. If a key that felt fine starts to cost you, that is not a transposition problem and it is not something to solve on the page.
+One more thing. If a key that felt fine starts to cost you, that is not a transposition problem and it is not something to solve on the page. Chapter six covers what to do when it does.
 
 Otherwise: write down the key you settled on and stop relitigating it. Practicing a song in a slightly different key every week is a good way to learn it slowly and perform it badly.
 

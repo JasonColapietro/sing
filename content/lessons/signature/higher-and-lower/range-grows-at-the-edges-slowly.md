@@ -22,7 +22,7 @@ Your highest and lowest notes are set largely by anatomy, and practice does not 
 Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading Tracking change over months, not days is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 

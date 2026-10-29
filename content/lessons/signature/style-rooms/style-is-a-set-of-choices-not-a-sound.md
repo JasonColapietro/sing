@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres decide differently: straight tone that lets vibrato in late is common in pop and jazz; vibrato from the start is usual in opera and musical theater. Copy what singers decide, not what they are made of; the same choices in your body sound like you.
+A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres differ: straight tone that lets vibrato in late is common in pop, jazz and contemporary musical theater; vibrato from the start is usual in opera and classical-style musical theater. Copy what singers decide, not what they are made of; the same choices in your body sound like you.
 
 ## Steps
 
@@ -22,7 +22,7 @@ A style is a set of decisions, not a voice you put on: how notes start, when vib
 Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
+- Listen: Piano notes supply the pitches; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 

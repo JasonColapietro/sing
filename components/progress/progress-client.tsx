@@ -724,7 +724,10 @@ function HoldsProSlot({ priority, children }: { priority: number; children: Reac
  * page already say it, and the extra lines put every start button behind a
  * 375×667 phone's tab bar.
  */
-export function FreshStart() {
+export function FreshStart({ programRunning = false }: {
+  /** A running program's card leads the page, so its "Open today's plan" is the one filled start. */
+  programRunning?: boolean;
+} = {}) {
   const { paused } = useProgressCloudState();
   return (
     <EmptyState
@@ -733,7 +736,7 @@ export function FreshStart() {
       action={
         <div>
           <div className="flex flex-wrap justify-center gap-2.5">
-            <LinkButton href="/studio" variant="rec">
+            <LinkButton href="/studio" variant={programRunning ? "outline" : "rec"}>
               Open the studio
             </LinkButton>
             <LinkButton href={rangeTestHref()} variant="outline">
@@ -891,7 +894,11 @@ export function ProgressClient() {
       subtitle={PROGRESS_SUBTITLE}
     >
       <div className="space-y-10">
-        {isFresh && <FreshStart />}
+        {/* A program started before anything was logged (the one-tap Start
+            on /programs) is the plan the singer chose: it leads the empty
+            page, ahead of the generic starts, as it does on /warmups. */}
+        {isFresh && activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
+        {isFresh && <FreshStart programRunning={activeProgram !== null && !programPaywalled} />}
 
         {!isFresh && (
           <Card>
@@ -936,7 +943,7 @@ export function ProgressClient() {
         {/* Today's plan right after the numbers, not six phone screens down
             under the charts: the running program first, since it is the plan
             the singer chose, then the coached session. */}
-        {activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
+        {!isFresh && activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
         {/* A fresh record's plan is FreshStart's three starts, so the coach waits for the first session. */}
         {!isFresh && (

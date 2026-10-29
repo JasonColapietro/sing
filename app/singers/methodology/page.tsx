@@ -126,13 +126,14 @@ export default function SingerMethodologyPage() {
             confidence level: limited, moderate, or high. A disputed record means the evidence
             was reviewed and does not support a settled catalog claim. Records marked Review
             confirmed carry an owner confirmation of an earlier catalog review: they name the
-            editor and confirmation date, but list no sources and do not verify either endpoint
-            against a recording or score. A profile marked Individual review pending has had
-            neither.
+            editor and confirmation date and do not verify either endpoint against a recording
+            or score. A few also list earlier sources, each shown with the limited claim it
+            supports and a confidence level; those sources do not verify the endpoints either. A
+            profile marked Individual review pending has had no individual review yet.
           </p>
           <p className="mt-3 max-w-3xl text-mut">
             Most profiles read &ldquo;Review confirmed&rdquo;. That means the site&apos;s owner
-            confirmed an earlier catalog review of the record. It adds no new sources, dates or
+            confirmed an earlier catalog review of the record. It adds no new sources, review date or
             confidence level, and the endpoints are still not checked against recordings.
           </p>
         </Card>

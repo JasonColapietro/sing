@@ -25,6 +25,9 @@ describe("the homepage sells Pro for what Pro adds", () => {
   it("names the per-note chart and the range over months, in /pro's words", () => {
     expect(home).toContain("A per-note accuracy chart, and your range charted over months");
     expect(home).not.toMatch(OVERCLAIM);
+    // Round 16's /pro rule: free stores and charts the same record.
+    expect(home).not.toMatch(/today.s score|keeps? (the )?score/i);
+    expect(home).toContain("Free scores every session and charts your weekly trend.");
   });
 
   it("lists each teaser perk once, leading with no daily limit, and prints the price once in the body", () => {
@@ -45,9 +48,10 @@ describe("the homepage sells Pro for what Pro adds", () => {
   it("says the same in the 'If you already sing' path", () => {
     const paths = read(renderToStaticMarkup(<StartingPaths />));
     expect(paths).toContain(
-      "Then let Pro keep score: a per-note accuracy chart, your range tests charted over months, and every step of the coach's daily plan.",
+      "Then let Pro add the detail: a per-note accuracy chart, your range tests charted over months, and every step of the coach's daily plan.",
     );
     expect(paths).not.toMatch(/first two steps/i);
     expect(paths).not.toMatch(OVERCLAIM);
+    expect(paths).not.toMatch(/keeps? (the )?score/i);
   });
 });

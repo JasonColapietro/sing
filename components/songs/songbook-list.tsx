@@ -18,7 +18,10 @@ export function SongbookList({ songs }: { songs: Song[] }) {
               className="flex h-full items-center justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
             >
               <span className="min-w-0">
-                <span className="block truncate text-sm font-medium">{s.title}</span>
+                {/* Wraps, not truncates: beside the contour a phone row has
+                    about 190px, and the end of a title ("(Opening Lines…)")
+                    is what tells an arrangement apart. */}
+                <span className="block text-sm font-medium [overflow-wrap:anywhere]">{s.title}</span>
                 <span className="block font-mono text-[10px] uppercase tracking-[0.1em] text-dim">
                   {s.genre} · {computeDifficulty(s).label}
                 </span>
