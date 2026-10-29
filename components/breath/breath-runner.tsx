@@ -5,7 +5,7 @@ import { ProCrescendoNudge } from "@/components/pro/gate";
 import { emitProResult } from "@/lib/pro-signal";
 import { StepIntroSlide } from "@/components/practice/step-intro";
 import { useStepRunner } from "@/components/practice/step-runner";
-import { useFreeCap } from "@/lib/free-cap";
+import { formatClock, useFreeCap, type FreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { liveStreak } from "@/components/account/save-state";
 
@@ -27,6 +27,7 @@ import {
   SUSTAIN_LOG_MIN_SEC,
   breathDrillDesc,
   breathDrillTitle,
+  breathRoutineSeconds,
   breathStepSeconds,
   breathStepSummary,
   breathStepTitle,
@@ -96,6 +97,24 @@ function StepDrill({
 }
 
 /** Stars for one drill, from how far it was taken, on the path's own bands. */
+/**
+ * The free minutes left today, for a step's intro card, when they run out
+ * before the rest of the routine does; null on Pro and while they cover it.
+ *
+ * A program row opens a routine straight into this runner, past the room's
+ * own allowance line, so the intro shows the countdown the cap would cut.
+ */
+export function breathIntroFreeLeft(
+  routine: BreathRoutine,
+  fromStep: number,
+  cap: Pick<FreeCap, "isPro" | "leftSec">,
+): string | null {
+  if (cap.isPro) return null;
+  // The card's own estimate (breathRoutineSeconds), of the steps still ahead.
+  const setLeftSec = breathRoutineSeconds({ ...routine, steps: routine.steps.slice(fromStep) });
+  return cap.leftSec < setLeftSec ? `${formatClock(cap.leftSec)} free left today` : null;
+}
+
 function starsForDrillResult(drill: BreathDrillId, r: BreathDrillResult): Stars {
   switch (drill) {
     case "box":
@@ -354,6 +373,7 @@ export function BreathRunner({
             <span className="mx-2 text-[var(--s-line2)]">·</span>~{Math.round(breathStepSeconds(step))}s
           </>
         }
+        clockLabel={breathIntroFreeLeft(routine, phase.step, cap) ?? undefined}
         holdSec={BREATH_STEP_INTRO_SEC}
         onStart={() => runner.play(phase.step)}
         onSkip={() => runner.closeStep(phase.step, null)}

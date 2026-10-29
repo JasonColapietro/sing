@@ -4,6 +4,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { midiToLabel } from "@/lib/audio/notes";
 import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
 import { RangePrompt } from "./library";
+import { recoveryRangeLine } from "@/components/practice/program-range-note";
+import { rangeTestHref } from "@/lib/site";
 import {
   ALL_EXERCISES,
   EXERCISES,
@@ -60,6 +62,21 @@ describe("computeRootLadder", () => {
     expect(html).toContain("either octave counts");
     const withRange = { ...DEFAULT_PROGRESS, range: { lowMidi: 48, highMidi: 72 } };
     expect(renderToStaticMarkup(createElement(RangePrompt, { progress: withRange }))).toBe("");
+  });
+
+  it("offers the range test in the no-range prompt, except while Recovery week runs", () => {
+    const usual = renderToStaticMarkup(createElement(RangePrompt, { progress: DEFAULT_PROGRESS }));
+    expect(usual).toContain("Take the range test and they fit your measured range.");
+    expect(usual).toContain(`href="${rangeTestHref()}"`);
+    // The /progress coach and the /range pitch meter say to leave the test
+    // until the week is over; the warmups room says the same, with no link.
+    const recovering = renderToStaticMarkup(
+      createElement(RangePrompt, { progress: DEFAULT_PROGRESS, recovering: "Recovery week" }),
+    );
+    expect(recovering).toContain("either octave counts");
+    expect(recovering).toContain(recoveryRangeLine("Recovery week").replace(/'/g, "&#x27;"));
+    expect(recovering).not.toContain("Take the range test");
+    expect(recovering).not.toContain("/range");
   });
 
   it("keeps two semitones under a two-octave singer's measured top", () => {

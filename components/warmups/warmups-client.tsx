@@ -28,8 +28,8 @@ import { DailyThreeCard, DailyThreeCardPlaceholder } from "./daily-three-card";
 import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
 import { ProgramEntryCard } from "@/components/programs/today-card";
 import { useActiveProgram } from "@/components/programs/use-program";
-import { programDayNeedsPro } from "@/components/practice/program-day";
-import { prepaintMarker, useHydrated } from "@/components/prepaint";
+import { programDayNeedsPro, recoveryWeekOf } from "@/components/practice/program-day";
+import { DeepLinkSlot, deepLinkMarker, prepaintMarker, useDeepLinkRead, useHydrated } from "@/components/prepaint";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
 
@@ -157,11 +157,16 @@ export function WarmupsClient() {
   // mount rather than with useSearchParams: that hook needs a Suspense boundary
   // in app/warmups/page.tsx, and the boundary would blank this page's
   // prerendered heading and copy — the same trade the singers directory
-  // documents. `undefined` means the URL hasn't been read yet.
+  // documents. `undefined` means the URL hasn't been read yet; until it has,
+  // the room carries the deep-link marker, which a link's first load uses to
+  // hold the room back until its gate names what the link opens
+  // (components/prepaint.tsx).
   const [deepLink, setDeepLink] = useState<
     | { exercise: string | null; routine: string | null; step: string | null; reps: string | null }
     | undefined
   >(undefined);
+  const deepLinkRead = deepLink !== undefined;
+  useDeepLinkRead(deepLinkRead);
   // The local hour, for "today's warmup". The server has no idea what time it
   // is where the singer sits, so it renders the daily routine and the
   // client corrects it once — the same shape as the deep-link read above.
@@ -205,8 +210,10 @@ export function WarmupsClient() {
 
   const practicedToday = progress.sessions.some((s) => s.day === localDay());
   const routineContext = { practicedToday, hour: hour ?? 12, recent: recentWarmupResults(progress.sessions) };
+  // While Recovery week runs, today's warmup is the week's own quiet set (components/practice/program-day.ts recoveryWeekOf).
+  const recovering = activeProgram ? recoveryWeekOf(activeProgram) : null;
   // Sized to the free minutes left: a set that outlasts them ends on the cap slide.
-  const preferred = recommendRoutine(routineContext);
+  const preferred = (recovering ? routineById("recovery") : null) ?? recommendRoutine(routineContext);
   const recommended = cap.capped
     ? preferred
     : sizeToAllowance(preferred, [routineById("morning")], routineSeconds, cap.leftSec);
@@ -235,7 +242,9 @@ export function WarmupsClient() {
           : `Fits in the ${formatClock(cap.leftSec)} of free practice left today.`
       : overAllowance
         ? `${formatClock(cap.leftSec)} of free practice left today: this set stops after the step that uses it up.`
-        : routineReason(routineContext);
+        : recovering
+          ? `${recovering} is running, so today's warmup is the quiet set.`
+          : routineReason(routineContext);
   const pathExercises = isPro ? ALL_EXERCISES : EXERCISES;
   const pathItem = (e: WarmupExercise) => ({ id: e.id, title: e.title, stars: starsForExercise(progress, e.title) });
   const nextId = nextUpId([
@@ -410,11 +419,34 @@ export function WarmupsClient() {
   // outranks the link, so without this the first button a visitor sees starts
   // something else. Scrolled to rather than hiding the cards above it: those
   // are server-rendered, and removing them after first paint would shift the
-  // whole page.
+  // whole page. Nor does the gate move up to lead them: on a client-side
+  // visit the room paints before it reads its address, and a gate moving to
+  // the top would push every card down. On a link's first load the pre-paint
+  // state holds the room back until it has read the address
+  // (components/prepaint.tsx deepLinkMarker), so the cards and the retitled
+  // gate arrive together.
+  //
+  // The scroll waits two frames, so the cards first paint in the slot's place
+  // with the page still at its top, and only then does the view move to the
+  // gate. In the same frame as that swap, the browser maps where the rail
+  // band and the guide sat under the slot into the scrolled-to screen, and
+  // counted them as moving across it: 0.92 on a phone for every /warmups link.
+  // Painted first at the top, they are below the screen before and after, and
+  // the scroll that follows moves nothing.
   const deepLinkWaiting =
     !pitch.listening && !cap.capped && Boolean(pendingDeepLinkEx || pendingDeepLinkRoutine);
   useEffect(() => {
-    if (deepLinkWaiting) document.getElementById("warmup-gate")?.scrollIntoView({ block: "start" });
+    if (!deepLinkWaiting) return;
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() =>
+        document.getElementById("warmup-gate")?.scrollIntoView({ block: "start" }),
+      );
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
   }, [deepLinkWaiting]);
 
   // Out of a session, an open microphone closes after a short idle wait
@@ -558,6 +590,7 @@ export function WarmupsClient() {
       error={errorAt.kind === "exercise" ? pitch.error : null}
       errorExerciseId={errorAt.kind === "exercise" ? errorAt.id : null}
       unavailableReason={unavailableReason}
+      recovering={recovering}
     />
   );
 
@@ -577,7 +610,7 @@ export function WarmupsClient() {
       }
     >
       {view === "home" && (
-        <div className="space-y-8">
+        <div className="space-y-8" {...deepLinkMarker(deepLinkRead, "warmups")}>
           {/* Both are in the server HTML; each renders only in its own state, and
               until hydration the pre-paint state shows the right one
               (components/prepaint.tsx). */}
@@ -740,6 +773,8 @@ export function WarmupsClient() {
           )}
         </div>
       )}
+      {/* Shown only on a deep link's first load, until the room has read it. */}
+      {view === "home" && !deepLinkRead && <DeepLinkSlot room="warmups" read={false} />}
 
       {view === "routine" && activeRoutine && (
         <RoutineRunner

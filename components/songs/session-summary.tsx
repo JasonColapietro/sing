@@ -8,6 +8,7 @@ import { midiToLabel } from "@/lib/audio/notes";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { useProResultOnLeave } from "@/lib/use-pro-result-on-leave";
 import { MicAlert } from "@/components/mic-alert";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { IconMic } from "./icons";
 import { useProgress, type SessionLog } from "@/lib/progress";
 import { computeGrade, starGlyphs, starRatingLabel, type Tone } from "./grade";
@@ -126,6 +127,9 @@ export function SessionSummary({
   onEnableMic,
   micError,
   againUnavailable,
+  listening,
+  level,
+  onMicOff,
 }: {
   data: SessionSummaryData;
   /** The recorded take; undefined when the singer didn't record this run. */
@@ -145,6 +149,19 @@ export function SessionSummary({
   micError?: string | null;
   /** Why "Sing again" and "Next" cannot start a run today (the free cap); they demote to outline. */
   againUnavailable?: string;
+  /**
+   * Whether the microphone is on, and its live input level: for the audio
+   * setup a silent run's summary carries, so "is it hearing me" is not a
+   * guess.
+   */
+  listening?: boolean;
+  level?: number;
+  /**
+   * Turns the microphone off. The room holds it open on a silent run's
+   * summary for the level meter, as the warmups' "No sound picked up" note
+   * does, so that summary carries the control.
+   */
+  onMicOff?: () => void;
 }) {
   const unavailableId = useId();
   const {
@@ -162,11 +179,15 @@ export function SessionSummary({
     topMultiplier,
   } = data;
   const progress = useProgress();
+  // A silent run (the mic heard no note) was not logged and is not graded:
+  // every scored block below gives way to what to check instead.
+  const silent = !listenMode && data.silent === true;
   // A completed result (the session is logged before this renders): the
   // one-time Pro moment listens for this and decides for itself whether to
   // open. Sent when the singer leaves this summary, so the modal never
-  // covers a grade they have not read. A listen-only run is not a result.
-  useProResultOnLeave(!listenMode);
+  // covers a grade they have not read. A listen-only run is not a result,
+  // and neither is a run the mic heard nothing of.
+  useProResultOnLeave(!listenMode && !silent);
   // Read just after the session logged, so it is today's streak — but read
   // live anyway, so a summary never names a streak that has lapsed.
   const streak = liveStreak(progress.streak);
@@ -175,7 +196,7 @@ export function SessionSummary({
   // this (it returns null whenever score is undefined), so listen mode falls
   // out of every grade/star/breakdown block below for free.
   const grade = computeGrade(score, data.maxCombo, data.judgments);
-  const scored = !listenMode && score !== undefined;
+  const scored = !listenMode && !silent && score !== undefined;
   const wholeLoops = perLoopScores.length - (data.partialLastLoop ? 1 : 0);
   const totalJudged = JUDGMENTS.reduce((n, j) => n + data.judgments[j], 0);
   const { previousBest, isNewBest, history } = scored
@@ -201,7 +222,22 @@ export function SessionSummary({
           </div>
         )}
 
-        {!scored ? (
+        {silent ? (
+          <>
+            <h3 className="mt-4 text-xl">No sound picked up</h3>
+            <p className="mt-2 max-w-md text-sm text-mut">
+              Nothing was scored or logged. If you were singing, the mic didn&apos;t pick up a
+              clear note. Sing a little louder or closer to the mic, or check the input below,
+              then press Sing again.
+            </p>
+            <AudioSetup className="mt-4 max-w-md" listening={listening} level={level} />
+            {listening && onMicOff && (
+              <Button variant="ghost" size="sm" className="mt-3" onClick={onMicOff}>
+                Turn off the mic
+              </Button>
+            )}
+          </>
+        ) : !scored ? (
           <>
             {/* A Sing along or On your own run in listen mode had the
                 microphone off, so it is not called a listen pass. */}
@@ -366,11 +402,11 @@ export function SessionSummary({
           <SectionLabel>Personal best</SectionLabel>
           {previousBest === undefined ? (
             <p className="mt-3 text-sm text-mut">
-              First time singing this one — nothing to compare against yet.
+              First time singing this one, so there&rsquo;s nothing to compare against yet.
             </p>
           ) : isNewBest ? (
             <p className="mt-3 text-sm text-ok-ink">
-              New personal best — up from {previousBest}.
+              New personal best, up from {previousBest}.
             </p>
           ) : (
             <p className="mt-3 text-sm text-mut">
@@ -390,7 +426,7 @@ export function SessionSummary({
 
       {scored && <ResultCard data={data} />}
 
-      {!listenMode && (
+      {!listenMode && !silent && (
         <div>
           <ProCrescendoNudge
             line="Pro adds this song's notes to your per-note accuracy report"
@@ -401,31 +437,34 @@ export function SessionSummary({
         </div>
       )}
 
-      <Card className="border-ok/30">
-        <div className="flex flex-wrap items-center gap-3">
-          <Pill tone="ok">Saved to your progress</Pill>
-          <span className="tabular font-mono text-sm text-ok-ink">+{xpGained} XP</span>
+      {/* Only what was saved: a silent run logged nothing. */}
+      {!silent && (
+        <Card className="border-ok/30">
+          <div className="flex flex-wrap items-center gap-3">
+            <Pill tone="ok">Saved to your progress</Pill>
+            <span className="tabular font-mono text-sm text-ok-ink">+{xpGained} XP</span>
+            {streak > 0 && (
+              <span className="tabular font-mono text-sm text-rec">
+                <span aria-hidden="true">🔥</span> {streak}-day streak
+              </span>
+            )}
+          </div>
           {streak > 0 && (
-            <span className="tabular font-mono text-sm text-rec">
-              <span aria-hidden="true">🔥</span> {streak}-day streak
-            </span>
+            <p className="mt-2 text-sm text-mut">Sing tomorrow to make it {streak + 1}.</p>
           )}
-        </div>
-        {streak > 0 && (
-          <p className="mt-2 text-sm text-mut">Sing tomorrow to make it {streak + 1}.</p>
-        )}
-        {newAchievements.length > 0 && (
-          <ul className="mt-4 space-y-2">
-            {newAchievements.map((a) => (
-              <li key={a.id} className="flex items-center gap-3 text-sm">
-                <span aria-hidden="true">{a.icon}</span>
-                <span className="font-medium">{a.title}</span>
-                <span className="text-mut">{a.desc}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
+          {newAchievements.length > 0 && (
+            <ul className="mt-4 space-y-2">
+              {newAchievements.map((a) => (
+                <li key={a.id} className="flex items-center gap-3 text-sm">
+                  <span aria-hidden="true">{a.icon}</span>
+                  <span className="font-medium">{a.title}</span>
+                  <span className="text-mut">{a.desc}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+      )}
 
       <div className="flex flex-wrap gap-3">
         {/*
@@ -434,7 +473,18 @@ export function SessionSummary({
           straight into the next song would throw away the grade the singer
           just earned.
         */}
-        {nextInSetlist && onNext ? (
+        {/* After a silent run the next song would go the same way, so Sing
+            again (what the note above asks for) stays first. */}
+        {nextInSetlist && onNext && silent ? (
+          <>
+            <Button variant="violet" onClick={onAgain}>
+              Sing again
+            </Button>
+            <Button variant="outline" onClick={onNext}>
+              Next: {nextInSetlist}
+            </Button>
+          </>
+        ) : nextInSetlist && onNext ? (
           <>
             <Button
               variant={againUnavailable ? "outline" : "violet"}

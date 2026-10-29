@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { FREE_WEEKS, isRestDay, programById, programToday, startProgram, type ProgramToday } from "@/lib/programs";
-import { programDayNeedsPro, programRangeNote, programRangeTest, recoveryWeekOf, staleRangeProgramNote } from "./program-day";
+import {
+  programDayNeedsPro,
+  programRangeNote,
+  programRangeTest,
+  recoveryRangeLine,
+  recoveryRangeNote,
+  recoveryWeekOf,
+  staleRangeProgramNote,
+} from "./program-day";
 
 describe("programDayNeedsPro", () => {
   const mix = programById("mix-4w")!;
@@ -149,5 +157,34 @@ describe("staleRangeProgramNote", () => {
     expect(staleRangeProgramNote(range(50), null, NOW)).toBeNull();
     // A singer with no range still takes the range test first.
     expect(staleRangeProgramNote({}, scheduled, NOW)).toBeNull();
+  });
+});
+
+describe("recoveryRangeNote", () => {
+  const DAY = 86_400_000;
+  const NOW = Date.parse("2026-10-13T12:00:00Z");
+  const name = "Recovery week";
+  const line = `${name} is for a voice that feels tired, so leave the range test until the week is over and your voice feels back to ordinary.`;
+  const range = (ageDays: number | null) => ({
+    lowMidi: 45,
+    highMidi: 67,
+    ...(ageDays === null ? {} : { testedAt: new Date(NOW - ageDays * DAY).toISOString() }),
+  });
+
+  it("says why to leave the test, for a stale range and for none", () => {
+    expect(recoveryRangeLine(name)).toBe(line);
+    expect(recoveryRangeNote(range(60), name, NOW)).toBe(`Your range was last measured 60 days ago. ${line}`);
+    expect(recoveryRangeNote({}, name, NOW)).toBe(`You haven't measured your range yet. ${line}`);
+    // Half a range is not a saved one.
+    expect(recoveryRangeNote({ lowMidi: 45 }, name, NOW)).toBe(`You haven't measured your range yet. ${line}`);
+  });
+
+  it("is null for a current or undated range, which nothing asks to retest", () => {
+    expect(recoveryRangeNote(range(10), name, NOW)).toBeNull();
+    expect(recoveryRangeNote(range(null), name, NOW)).toBeNull();
+  });
+
+  it("never offers the test or calls a retest due", () => {
+    for (const r of [range(60), {}]) expect(recoveryRangeNote(r, name, NOW)).not.toMatch(/retest is due|take the (2-minute )?range test/i);
   });
 });

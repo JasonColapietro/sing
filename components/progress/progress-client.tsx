@@ -1000,7 +1000,7 @@ export function ProgressClient() {
         </section>
 
         <section aria-label="Your voice">
-          <VoiceCard range={state.range} />
+          <VoiceCard range={state.range} recovering={recovering} />
         </section>
 
         {/* Sixteen greyed-out badges are not a start; the gallery waits for

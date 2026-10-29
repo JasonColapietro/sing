@@ -6,6 +6,7 @@ import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { useCappedStart } from "@/components/practice/use-capped-start";
 import { liveStreak } from "@/components/account/save-state";
+import { DeepLinkSlot, deepLinkMarker, useDeepLinkRead } from "@/components/prepaint";
 
 import { useEffect, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
@@ -143,7 +144,9 @@ export function BreathStudio() {
 
   // /breath?drill=<id> and ?routine=<id>[&step=n] deep links, read once after
   // mount (useSearchParams would need a Suspense boundary that blanks the prerender).
+  // Until it has run, the front page carries the deep-link marker the pre-paint script hides on a link's first load.
   const [handledDeepLink, setHandledDeepLink] = useState(false);
+  useDeepLinkRead(handledDeepLink);
   useEffect(() => {
     if (handledDeepLink) return;
     const q = new URLSearchParams(window.location.search);
@@ -192,8 +195,12 @@ export function BreathStudio() {
     setView({ kind: "home" });
   };
 
-  if (view.kind === "routine") {
-    return (
+  // A set or a drill runs in the full-screen session surface, a portal over
+  // the page. The page under it keeps the room's heading and a screen of
+  // empty page, the same block a deep link's first load paints in place of
+  // the front page, so opening a link's drill moves nothing on that page.
+  const session =
+    view.kind === "routine" ? (
       <BreathRunner
         routine={view.routine}
         startStep={view.startStep}
@@ -201,10 +208,7 @@ export function BreathStudio() {
         onExit={goHome}
         capped={cap.capped}
       />
-    );
-  }
-  if (view.kind === "drill") {
-    return (
+    ) : view.kind === "drill" ? (
       <BreathDrillSession
         capped={cap.capped}
         drill={view.drill}
@@ -212,157 +216,175 @@ export function BreathStudio() {
         pitch={pitch}
         onExit={goHome}
       />
+    ) : null;
+  const heading = {
+    kicker: "Breath training",
+    title: "Breathing exercises for singers",
+    subtitle:
+      "Guided breath sets and a mic-based sustain test that build breath support for long phrases. Start the set that fits the moment, or pick one drill and work it.",
+  };
+  if (session) {
+    return (
+      <PageShell {...heading}>
+        <DeepLinkSlot room="breath" read />
+        {session}
+      </PageShell>
     );
   }
 
-
   return (
-    <PageShell
-      kicker="Breath training"
-      title="Breathing exercises for singers"
-      subtitle="Guided breath sets and a mic-based sustain test that build breath support for long phrases. Start the set that fits the moment, or pick one drill and work it."
-    >
-      {/* Both are in the server HTML; each renders only in its own state, and
-          until hydration the pre-paint state shows the right one
-          (components/prepaint.tsx). */}
-      <CapWall cap={cap} className="mb-6" />
-      <FreeAllowance cap={cap} className="mb-4" />
-      <ContinueCard
-        kicker={practicedToday ? "Back for more" : "Start here"}
-        title={recommended.name}
-        tagline={recommended.tagline}
-        meta={
-          <p className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            {recommended.steps.length} drills
-            <span className="mx-2 text-line2">·</span>~
-            {breathRoutineMinutes(recommended)} min
-            {micStep(recommended) !== null && (
-              <>
-                <span className="mx-2 text-line2">·</span>mic at step {micStep(recommended)}
-              </>
-            )}
-          </p>
-        }
-        stepTitles={recommended.steps.map(breathStepTitle)}
-        onStart={() => start({ kind: "routine", routine: recommended })}
-        /* Not the card's mic-aware default: every breath routine opens on a silent drill. */
-        startLabel={cap.capped ? "Available tomorrow" : "Start routine"}
-        unavailableReason={unavailableReason}
-        micReady={pitch.listening}
-        error={pitch.error}
-        // The stored count outlives a lapsed streak; only a live one is named.
-        streakDays={liveStreak(progress.streak)}
-        streakBest={progress.streak.best}
-        stars={routineStars(recommended, bests)}
-        // A finished quick set can average under one star (its presets cap
-        // two drills at one, and a short sustain earns none): that is "So
-        // far", not "Not started".
-        started={recommended.steps.some((st) => drillTried(st.drill, bests))}
-        goal={{ doneSec: goalDoneSec, goalSec }}
-      />
-
-      <section className="mt-10">
-        <SectionHeading label="Routines" lede={setsLede}>
-          Breath routines
-        </SectionHeading>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {BREATH_ROUTINES.map((r) => {
-            const stars = routineStars(r, bests);
-            return (
-              <Card key={r.id} tone="raised" className="flex flex-col">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-lg">{r.name}</h3>
-                  <StarTrio stars={stars} />
-                </div>
-                <p className="mt-2 flex-1 text-sm text-mut">{r.tagline}</p>
-                <p className="tabular mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                  {r.steps.length} drills
-                  <span className="mx-2 text-line2">·</span>~
-                  {breathRoutineMinutes(r)} min
-                </p>
-                {/* Outline: the continue card above keeps the one primary action. */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => start({ kind: "routine", routine: r })}
-                  className="mt-4"
-                  aria-label={`Start ${r.name}`}
-                >
-                  Start
-                </Button>
-              </Card>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="mt-10">
-        <SectionHeading
-          label="Path"
-          lede="The four drills on their own, with the stars each has earned so far."
-        >
-          Your breath path
-        </SectionHeading>
-        <div className="mt-5">
-          <PathList
-            micNoteId={null}
-            unavailableReason={unavailableReason}
-            levels={[
-              {
-                title: "Breath",
-                blurb:
-                  "One measured test, one drill where the mic listens for your breath, and two guided drills. Stars come from how far you have taken each one.",
-                unit: "drills",
-                items: DRILL_ORDER.map((drill) => {
-                  const stars = starsForDrill(drill, bests);
-                  return {
-                    id: drill,
-                    title: breathDrillTitle(drill),
-                    figure: <BreathDrillFigure drill={drill} />,
-                    // A row shows one secondary line and the mono one wins, so
-                    // an untried drill explains itself and a tried one reports,
-                    // stars or not: a 7-second sustain is a best, not "untried".
-                    ...(drillTried(drill, bests)
-                      ? { meta: bestLine(drill, bests) }
-                      : { desc: breathDrillDesc(drill) }),
-                    stars,
-                    mic: breathDrillNeedsMic(drill),
-                    onSelect: () => start({ kind: "drill", drill }),
-                  };
-                }),
-              },
-            ]}
-          />
-        </div>
-      </section>
-
-      <Card className="mt-10">
-        <div className="flex items-start gap-4">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--color-cool)"
-            strokeWidth="1.5"
-            aria-hidden="true"
-            className="mt-0.5 shrink-0"
-          >
-            <path d="M12 3v7" />
-            <path d="M12 10c0 4-2 6-5 7a4 4 0 0 1-4-4c0-3 4-3 9-3s9 0 9 3a4 4 0 0 1-4 4c-3-1-5-3-5-7Z" />
-          </svg>
-          <div>
-            <h3 className="text-lg">Why breath work</h3>
-            <p className="mt-1 max-w-2xl text-sm text-mut">
-              Steady airflow is what keeps a note even and a phrase alive to
-              its last word. Training slow, measured exhales teaches your body
-              to meter air out instead of spending it all at once, so
-              sustained notes hold their level and phrase endings stay
-              supported. A few minutes a day is plenty.
+    <PageShell {...heading}>
+      <div {...deepLinkMarker(handledDeepLink, "breath")}>
+        {/* Both are in the server HTML; each renders only in its own state, and
+            until hydration the pre-paint state shows the right one
+            (components/prepaint.tsx). */}
+        <CapWall cap={cap} className="mb-6" />
+        <FreeAllowance cap={cap} className="mb-4" />
+        <ContinueCard
+          kicker={practicedToday && !cap.capped ? "Back for more" : "Start here"}
+          title={recommended.name}
+          tagline={recommended.tagline}
+          meta={
+            <p className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              {recommended.steps.length} drills
+              <span className="mx-2 text-line2">·</span>~
+              {breathRoutineMinutes(recommended)} min
+              <span className="mx-2 text-line2">·</span>
+              {practicedToday
+                ? cap.capped
+                  ? "breath work done today"
+                  : "second routine today"
+                : "no breath work yet today"}
+              {micStep(recommended) !== null && (
+                <>
+                  <span className="mx-2 text-line2">·</span>mic at step {micStep(recommended)}
+                </>
+              )}
             </p>
+          }
+          stepTitles={recommended.steps.map(breathStepTitle)}
+          onStart={() => start({ kind: "routine", routine: recommended })}
+          /* Not the card's mic-aware default: every breath routine opens on a silent drill. */
+          startLabel={cap.capped ? "Available tomorrow" : "Start routine"}
+          unavailableReason={unavailableReason}
+          micReady={pitch.listening}
+          error={pitch.error}
+          // The stored count outlives a lapsed streak; only a live one is named.
+          streakDays={liveStreak(progress.streak)}
+          streakBest={progress.streak.best}
+          stars={routineStars(recommended, bests)}
+          // A finished quick set can average under one star (its presets cap
+          // two drills at one, and a short sustain earns none): that is "So
+          // far", not "Not started".
+          started={recommended.steps.some((st) => drillTried(st.drill, bests))}
+          goal={{ doneSec: goalDoneSec, goalSec }}
+        />
+
+        <section className="mt-10">
+          <SectionHeading label="Routines" lede={setsLede}>
+            Breath routines
+          </SectionHeading>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {BREATH_ROUTINES.map((r) => {
+              const stars = routineStars(r, bests);
+              return (
+                <Card key={r.id} tone="raised" className="flex flex-col">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-lg">{r.name}</h3>
+                    <StarTrio stars={stars} />
+                  </div>
+                  <p className="mt-2 flex-1 text-sm text-mut">{r.tagline}</p>
+                  <p className="tabular mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    {r.steps.length} drills
+                    <span className="mx-2 text-line2">·</span>~
+                    {breathRoutineMinutes(r)} min
+                  </p>
+                  {/* Outline: the continue card above keeps the one primary action. */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => start({ kind: "routine", routine: r })}
+                    className="mt-4"
+                    aria-label={`Start ${r.name}`}
+                  >
+                    Start
+                  </Button>
+                </Card>
+              );
+            })}
           </div>
-        </div>
-      </Card>
+        </section>
+
+        <section className="mt-10">
+          <SectionHeading
+            label="Path"
+            lede="The four drills on their own, with the stars each has earned so far."
+          >
+            Your breath path
+          </SectionHeading>
+          <div className="mt-5">
+            <PathList
+              micNoteId={null}
+              unavailableReason={unavailableReason}
+              levels={[
+                {
+                  title: "Breath",
+                  blurb:
+                    "One measured test, one drill where the mic listens for your breath, and two guided drills. Stars come from how far you have taken each one.",
+                  unit: "drills",
+                  items: DRILL_ORDER.map((drill) => {
+                    const stars = starsForDrill(drill, bests);
+                    return {
+                      id: drill,
+                      title: breathDrillTitle(drill),
+                      figure: <BreathDrillFigure drill={drill} />,
+                      // A row shows one secondary line and the mono one wins, so
+                      // an untried drill explains itself and a tried one reports,
+                      // stars or not: a 7-second sustain is a best, not "untried".
+                      ...(drillTried(drill, bests)
+                        ? { meta: bestLine(drill, bests) }
+                        : { desc: breathDrillDesc(drill) }),
+                      stars,
+                      mic: breathDrillNeedsMic(drill),
+                      onSelect: () => start({ kind: "drill", drill }),
+                    };
+                  }),
+                },
+              ]}
+            />
+          </div>
+        </section>
+
+        <Card className="mt-10">
+          <div className="flex items-start gap-4">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--color-cool)"
+              strokeWidth="1.5"
+              aria-hidden="true"
+              className="mt-0.5 shrink-0"
+            >
+              <path d="M12 3v7" />
+              <path d="M12 10c0 4-2 6-5 7a4 4 0 0 1-4-4c0-3 4-3 9-3s9 0 9 3a4 4 0 0 1-4 4c-3-1-5-3-5-7Z" />
+            </svg>
+            <div>
+              <h3 className="text-lg">Why breath work</h3>
+              <p className="mt-1 max-w-2xl text-sm text-mut">
+                Steady airflow is what keeps a note even and a phrase alive to
+                its last word. Training slow, measured exhales teaches your body
+                to meter air out instead of spending it all at once, so
+                sustained notes hold their level and phrase endings stay
+                supported. A few minutes a day is plenty.
+              </p>
+            </div>
+          </div>
+        </Card>
+      </div>
+      {/* Shown only on a deep link's first load, until the room has read it. */}
+      {!handledDeepLink && <DeepLinkSlot room="breath" read={false} />}
     </PageShell>
   );
 }

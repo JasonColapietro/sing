@@ -115,7 +115,10 @@ try {
     await drill.getByRole("button", { name: "Enable microphone", exact: true }).click();
     await page.waitForFunction(() => window.__pendingMicCount() === 1);
     await drill.getByRole("button", { name: "Exit drill", exact: true }).click();
-    await page.getByRole("heading", { name: "Breathing exercises for singers", exact: true }).waitFor();
+    // The room's heading stays mounted under a session, so wait for the drill
+    // to close and the room's home view to come back.
+    await drill.waitFor({ state: "detached" });
+    await page.getByRole("heading", { name: "Breath routines", exact: true }).waitFor();
     await page.evaluate(() => window.__grantPendingMic());
     await page.waitForFunction(() => {
       const state = window.__cancelledMicState();

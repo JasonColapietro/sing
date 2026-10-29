@@ -137,6 +137,19 @@ describe("/singers hub schema and crawl discovery", () => {
     expect(html.indexOf(placeholder, at + 1)).toBe(-1);
   });
 
+  it("gives the chart its own heading, between the voice-type list and the chart", () => {
+    // Bare, the chart's records strip ran on from the voice-type cards with no
+    // gap and no outline entry. The heading is server HTML above the
+    // placeholder, so it adds nothing that shifts at hydration.
+    const placeholder = '<div aria-hidden="true" class="min-h-screen"></div>';
+    const heading = html.indexOf('id="singer-chart"');
+    expect(heading).toBeGreaterThan(html.indexOf("Browse by voice type"));
+    expect(heading).toBeLessThan(html.indexOf(placeholder));
+    expect(html).toMatch(
+      /<section aria-labelledby="singer-chart" class="mt-12"><h2 id="singer-chart"[^>]*>Every reported range on one keyboard<\/h2>/,
+    );
+  });
+
   it("makes the free range test an immediate next step from the hub", () => {
     expect(html).toContain('href="/range?mode=range#start"');
     expect(html).toContain("Test my vocal range");

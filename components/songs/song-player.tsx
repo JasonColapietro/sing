@@ -19,6 +19,7 @@ import { logSession, type VocalRange } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import { MicAlert } from "@/components/mic-alert";
+import { freshInputHint, nextInputHint } from "@/components/range/pitch-meter-hint";
 import type { Song } from "./data";
 import {
   IconArrowLeft,
@@ -55,6 +56,7 @@ import {
   hardestNotes,
   isMastered,
   judgeRatio,
+  judgedCount,
   loopsFor,
   lyricLines,
   multiplierStep,
@@ -78,6 +80,9 @@ import {
   isWholeSongRange,
   reachedBeats,
   reachedNothing,
+  runHearing,
+  SONG_HINT_FLOOR,
+  songInputHint,
   setupForSong,
   type LoopRange,
   type PlayerSetup,
@@ -381,6 +386,17 @@ export function SongPlayer({
   // a note can report how sharp or flat it tends to be, not just hit or miss.
   const centsSumRef = useRef<number[]>([]);
   const centsFramesRef = useRef<number[]>([]);
+  /**
+   * Why a scored run hears nothing, said while it runs: the shared too-quiet
+   * and no-sound hints (components/range/pitch-meter-hint), on the song rule
+   * (songInputHint). Once the mic has heard a held note they stop, so a rest
+   * between phrases never reads as a mic that cannot hear. Without it a dead
+   * or too-quiet mic showed "Miss" on every note and nothing to act on.
+   */
+  const inputHintRef = useRef(freshInputHint());
+  /** The hint on screen, so the draw loop sets state only when it changes. */
+  const inputHintShownRef = useRef<string | null>(null);
+  const [inputHint, setInputHint] = useState<string | null>(null);
   const loopSnapshotRef = useRef(0);
   const loopIndexTrackRef = useRef(0);
   /**
@@ -734,8 +750,15 @@ export function SongPlayer({
         : undefined;
     // Awake time, not wall clock. See awakeSecRef.
     const durationSec = Math.max(1, Math.round(awakeSecRef.current));
+    // A scored run in which the mic heard no note at all is not graded or
+    // logged: no XP, streak or achievement, and no free minutes spent on
+    // silence. The summary says no sound was picked up (see runHearing).
+    const silent =
+      scoringRef.current &&
+      totalPossible > 0 &&
+      runHearing(centsFramesRef.current, judgedCount(tallyRef.current)) === "silent";
 
-    const log = logSession({
+    const log = silent ? null : logSession({
       type: "song",
       durationSec,
       score: overallScore,
@@ -761,7 +784,9 @@ export function SongPlayer({
     const ratiosForHardest = possibleSec.map((possible, i) =>
       possible > 0 ? Math.min(1, (hitSecRef.current[i] ?? 0) / possible) : 1,
     );
-    const hardest = scoringRef.current ? hardestNotes(sungNotes, ratiosForHardest) : [];
+    // A silent run has no trickiest notes: every ratio is 0 because nothing
+    // was heard, not because those notes were hard.
+    const hardest = scoringRef.current && !silent ? hardestNotes(sungNotes, ratiosForHardest) : [];
 
     const sectionScores = scoringRef.current
       ? sections
@@ -810,9 +835,10 @@ export function SongPlayer({
       perLoopScores: finalPerLoop,
       partialLastLoop: keepLastLoop && lastLoopPartial,
       hardest,
-      xpGained: log.xpGained,
-      newAchievements: log.newAchievements,
+      xpGained: log?.xpGained ?? 0,
+      newAchievements: log?.newAchievements ?? [],
       listenMode: !scoringRef.current,
+      silent,
       maxCombo: scoringRef.current ? maxComboRef.current : 0,
       judgments: scoringRef.current ? tallyRef.current : emptyTally(),
       sectionScores,
@@ -950,6 +976,17 @@ export function SongPlayer({
     if (scoringRef.current) {
       const f = pitch.latest.current;
       const voiced = f.freq !== null && f.volume >= MIN_VOLUME;
+      // The live hint (see inputHintRef). dt is in seconds here; the hint
+      // counts milliseconds. Its floor is the detector's, not MIN_VOLUME: a
+      // voice under SILENCE_RMS is too quiet, not unpitched (SONG_HINT_FLOOR).
+      if (dt > 0) {
+        nextInputHint(inputHintRef.current, f, dt * 1000, voiced, SONG_HINT_FLOOR);
+        const hint = songInputHint(inputHintRef.current);
+        if (hint !== inputHintShownRef.current) {
+          inputHintShownRef.current = hint;
+          setInputHint(hint);
+        }
+      }
       if (voiced && f.freq !== null) {
         const midiFloat = freqToMidiFloat(f.freq);
         // The frame in hand describes the voice `scoreLag` ago, and the guide it
@@ -1091,6 +1128,9 @@ export function SongPlayer({
     hitRatioRef.current = notes.map(() => 0);
     centsSumRef.current = notes.map(() => 0);
     centsFramesRef.current = notes.map(() => 0);
+    inputHintRef.current = freshInputHint();
+    inputHintShownRef.current = null;
+    setInputHint(null);
     loopStartHitRef.current = notes.map(() => 0);
 
     scheduledMaskRef.current = freshScheduleMask();
@@ -1244,7 +1284,16 @@ export function SongPlayer({
       // Stopped in the count-in, before a note of it was sung: nothing to
       // summarise, so it leaves like any other End practice (see reachedNothing).
       const { wholePasses, beat } = scoredAtRef.current;
-      if (!reachedNothing(currentNotesRef.current, playBeatsRef.current, wholePasses, beat)) {
+      // Stopped a moment into the first note with nothing heard yet is the
+      // same: no note was over, so the run cannot be graded, and nothing
+      // says the mic failed either (see runHearing).
+      const unstarted =
+        scoringRef.current &&
+        runHearing(centsFramesRef.current, judgedCount(tallyRef.current)) === "unstarted";
+      if (
+        !unstarted &&
+        !reachedNothing(currentNotesRef.current, playBeatsRef.current, wholePasses, beat)
+      ) {
         finalize(true);
         return;
       }
@@ -1496,10 +1545,13 @@ export function SongPlayer({
               <div className="tabular mt-1 font-mono text-5xl font-bold text-ok-ink">
                 {runningScore}%
               </div>
+              <div role="status">
+                {inputHint && <p className="mt-2 max-w-sm text-sm text-mut">{inputHint}</p>}
+              </div>
             </div>
           ) : (
             <p className="text-sm text-mut">
-              {listening ? "Listen pass — no scoring." : "Listen mode — no scoring."}
+              {listening ? "Listen pass: no scoring." : "Listen mode: no scoring."}
             </p>
           )}
           <div className="flex flex-wrap items-center gap-3">
@@ -1571,20 +1623,34 @@ export function SongPlayer({
         </div>
         {judgmentReadout && <div className="mt-3">{judgmentReadout}</div>}
 
-        <div className="mt-4 overflow-x-auto rounded-xl border border-line bg-panel2 p-2">
-          <PianoRoll
-            notes={currentNotes}
-            totalBeats={totalBeats}
-            spanStartBeat={spanStart}
-            spanEndBeat={spanEnd}
-            positionBeatsRef={positionBeatsRef}
-            hitRatioRef={hitRatioRef}
-            latest={pitch.latest}
-            showLive={listening}
-            octaveAgnostic={octaveAgnostic}
-            passOctaveRef={passOctaveRef}
-            className="h-48 w-full"
-          />
+        <div className="relative mt-4">
+          <div className="overflow-x-auto rounded-xl border border-line bg-panel2 p-2">
+            <PianoRoll
+              notes={currentNotes}
+              totalBeats={totalBeats}
+              spanStartBeat={spanStart}
+              spanEndBeat={spanEnd}
+              positionBeatsRef={positionBeatsRef}
+              hitRatioRef={hitRatioRef}
+              latest={pitch.latest}
+              showLive={listening}
+              octaveAgnostic={octaveAgnostic}
+              passOctaveRef={passOctaveRef}
+              className="h-48 w-full"
+            />
+          </div>
+          {/* Why the live line and the score are not moving, when the mic is
+              the reason: over the roll, where the singer looks for their
+              line, not in the flow. In the flow it arrived seconds into the
+              run and pushed the transport, with End practice, down toward a
+              phone's tab bar at the moment the singer most wants it. */}
+          <div role="status" className="pointer-events-none absolute inset-x-3 bottom-3">
+            {scoring && inputHint && (
+              <p className="max-w-md rounded-lg border border-line bg-panel px-3 py-2 text-sm text-ink">
+                {inputHint}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-6">
@@ -1599,7 +1665,7 @@ export function SongPlayer({
             <div className="max-w-sm">
               <p className="text-sm text-mut">
                 {listening
-                  ? "Listen pass — the guide sings it. Switch passes to be scored."
+                  ? "Listen pass: the guide sings it. Switch passes to be scored."
                   : micOff.line}
               </p>
               {/* The line above asks for the microphone, so the control sits

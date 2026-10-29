@@ -19,7 +19,8 @@ import {
 import { TOLERANCE_CENTS } from "@/components/warmups/scoring";
 import { rangeTestHref } from "@/lib/site";
 import { STAR_THRESHOLDS } from "@/lib/stars";
-import { programRangeNote, type ProgramRangeTest } from "@/components/practice/program-day";
+import { BREATH_STEP_INTRO_SEC, breathStepSeconds, drillPresetQuery } from "@/components/breath/routines";
+import { programRangeNote, recoveryRangeNote, type ProgramRangeTest } from "@/components/practice/program-day";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 /**
@@ -30,15 +31,6 @@ import { TYPE_META, addDays, localDayStr } from "./format";
  * who was landing nearly everything to six minutes of remedial sirens.
  */
 const WEAK_NOTE_MAX_ACCURACY = STAR_THRESHOLDS[1];
-
-/**
- * Why the plan asks for no range test while Recovery week runs. Chapter 12:
- * "A range test taken with a cold measures the cold … start measuring again
- * when you are back to ordinary."
- */
-function recoveryRangeLine(program: string): string {
-  return `${program} is for a voice that feels tired, so leave the range test until the week is over and your voice feels back to ordinary.`;
-}
 
 interface PlanItem {
   title: string;
@@ -73,7 +65,9 @@ interface PlanItem {
  * asks for no range test, missing or stale, since a finished test saves a
  * tired reading over the range every warmup and song fits to, and a note says
  * to leave it until the week is over. A weak note near the top of the range
- * gets the smaller Ng siren to the fifth, not six minutes of octave sirens.
+ * gets the smaller Ng siren to the fifth, not six minutes of octave sirens,
+ * and the breathing step opens the week's box breathing rather than the
+ * breath room, whose sets end on the sustain test the week leaves out.
  *
  * Exported for its test.
  */
@@ -191,24 +185,38 @@ export function buildPlan(
     });
   }
   // Recovery week's note says why the test the plan would have led with is
-  // missing. The program's note is shared with the /range pitch meter, so the
-  // two never disagree.
+  // missing; the program's note, when its test falls. Both are shared with the
+  // /range pitch meter (components/practice/program-range-note.ts), so the two
+  // rooms never disagree about the same measurement.
   const rangeNote =
-    recovering !== null && !hasRange
-      ? `You haven't measured your range yet. ${recoveryRangeLine(recovering)}`
-      : recovering !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
-        ? `Your range was last measured ${rangeAgeDays} days ago. ${recoveryRangeLine(recovering)}`
-        : hasRange && programRange !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
-          ? programRangeNote(rangeAgeDays, programRange)
-          : null;
+    recovering !== null
+      ? recoveryRangeNote(state.range, recovering, now.getTime())
+      : hasRange && programRange !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
+        ? programRangeNote(rangeAgeDays, programRange)
+        : null;
 
+  // The breath room leads with a set, and every set ends on the sustain test,
+  // which times a held note and scores it. Recovery week takes none (a tired
+  // voice is not one to measure, lib/programs.ts RECOVERY_BREATH), so while
+  // it runs the step opens the week's own box breathing instead: its minute,
+  // or its "Breath and hums" days' three after a heavy day. That is a timed
+  // drill, so the step states its length, as the week's own row does (a
+  // minute, or three), not the room's two or four.
+  const recoveryBox =
+    recovering === null ? null : ({ drill: "box", side: 4, minutes: heavyYesterday ? 3 : 1 } as const);
   items.push({
     title: "Breathing",
-    href: "/breath",
-    minutes: heavyYesterday ? 4 : 2,
+    href: recoveryBox ? `/breath?${drillPresetQuery(recoveryBox)}` : "/breath",
+    minutes: recoveryBox
+      ? Math.max(1, Math.round((breathStepSeconds(recoveryBox) + BREATH_STEP_INTRO_SEC) / 60))
+      : heavyYesterday
+        ? 4
+        : 2,
     reason: heavyYesterday
       ? `Yesterday was a heavy one (${Math.round(yesterdaySec / 60)} min), so start slow and give the voice time to settle.`
-      : "Low, steady breaths set up the rest of the session.",
+      : recovering !== null
+        ? `Box breathing, which opens each practice day of ${recovering}: no held note to time, and no sustain test while the voice is tired.`
+        : "Low, steady breaths set up the rest of the session.",
   });
 
   // The core of the plan: measured weak notes drive the warmup choice.
@@ -465,8 +473,12 @@ export function CoachCard({
       {!isPro && !cap.capped && (
         <p className="mt-1 text-xs text-dim">
           On the free plan, warmups, ear training, breath and songs share{" "}
-          {FREE_DAILY_MINUTES} guided minutes a day; the range test and the
-          pitch studio have no clock.
+          {FREE_DAILY_MINUTES} guided minutes a day;{" "}
+          {/* Not the range test during Recovery week, as at the cap above:
+              the plan asks for none until the week is over. */}
+          {recovering === null
+            ? "the range test and the pitch studio have no clock."
+            : "the pitch studio has no clock."}
         </p>
       )}
       {/* Not before the first session: a singer with nothing logged has not

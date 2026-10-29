@@ -89,7 +89,7 @@ describe("where the page-style results use it", () => {
   it("replaces the signal each of them sent as the result appeared", () => {
     for (const [file, call] of [
       ["components/warmups/session-summary.tsx", "useProResultOnLeave(true);"],
-      ["components/songs/session-summary.tsx", "useProResultOnLeave(!listenMode);"],
+      ["components/songs/session-summary.tsx", "useProResultOnLeave(!listenMode && !silent);"],
       [
         "components/range/range-test.tsx",
         'useProResultOnLeave(stage === "result" && result?.offerPro === true);',

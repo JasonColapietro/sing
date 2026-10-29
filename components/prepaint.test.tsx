@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { PrepaintText, prepaintMarker, prepaintWords } from "./prepaint";
+import { DeepLinkSlot, PrepaintText, deepLinkMarker, prepaintMarker, prepaintWords, type DeepLinkRoom } from "./prepaint";
 import { HIDE_RULES, paintedFor } from "./prepaint.testing";
 import { PREPAINT_CONFIG } from "@/lib/prepaint-config";
 import { programById } from "@/lib/programs";
@@ -19,6 +19,17 @@ function hideSelectors(): string[] {
   return hits[0].split(",").map((s) => s.trim()).filter(Boolean);
 }
 
+/** The rooms that open a deep link, by their token (lib/prepaint-config.ts). */
+const ROOMS = Object.values(PREPAINT_CONFIG.deepLinks).map((link) => link.room as DeepLinkRoom);
+
+/** A room's two deep-link rules: its front page hidden on its link's load, its slot shown only then. */
+function deepLinkSelectors(room: DeepLinkRoom): string[] {
+  return [
+    `html[data-sing-deeplink="${room}"] [data-prepaint-deeplink="${room}"]`,
+    `html:not([data-sing-deeplink="${room}"]) [data-prepaint-slot="deeplink-${room}"]`,
+  ];
+}
+
 describe("pre-paint markers", () => {
   it("are on an element only until hydration", () => {
     expect(prepaintMarker(false, { plan: "capped" })).toEqual({ "data-prepaint-plan": "capped" });
@@ -28,7 +39,8 @@ describe("pre-paint markers", () => {
 
   it("are hidden by exactly the rules the markup tests paint with", () => {
     // Hidden with display:none, so a part another state needs is out of the
-    // accessibility tree as well as off the screen.
+    // accessibility tree as well as off the screen. The deep-link rules are
+    // also checked with their rooms below.
     expect(hideSelectors().sort()).toEqual(HIDE_RULES.map((r) => r.selector).sort());
   });
 
@@ -69,6 +81,41 @@ describe("pre-paint markers", () => {
     }
     // A program's own view drops the list's calendar button.
     expect(rules).toMatch(/\[data-prepaint-slot="program-today"\]\[data-prepaint-view\]\s*\{\s*min-height: calc\(var\(--finished-slot\) - 3\.25rem\);/);
+  });
+});
+
+describe("pre-paint for a room's deep link", () => {
+  it("covers every room the script names, each with its own token", () => {
+    expect([...ROOMS].sort()).toEqual(["breath", "ear", "warmups"]);
+    const selectors = hideSelectors();
+    for (const room of ROOMS) {
+      for (const selector of deepLinkSelectors(room)) expect(selectors, room).toContain(selector);
+    }
+  });
+
+  it("paints a room's front page on any other load, and only its empty block on its own link's", () => {
+    for (const room of ROOMS) {
+      const html = `<main><h1>Room</h1><div data-prepaint-deeplink="${room}"><p>cards</p></div><div aria-hidden="true" class="min-h-screen" data-prepaint-slot="deeplink-${room}"></div></main>`;
+      const front = `<main><h1>Room</h1><div data-prepaint-deeplink="${room}"><p>cards</p></div></main>`;
+      const held = `<main><h1>Room</h1><div aria-hidden="true" class="min-h-screen" data-prepaint-slot="deeplink-${room}"></div></main>`;
+      expect(paintedFor(html, { plan: "free" }), room).toBe(front);
+      expect(paintedFor(html, { plan: "free", deeplink: room }), room).toBe(held);
+      // Another room's link never hides this one.
+      const other = ROOMS.find((r) => r !== room)!;
+      expect(paintedFor(html, { plan: "free", deeplink: other }), room).toBe(front);
+    }
+  });
+
+  it("marks the front page until the room has read its address, not only until hydration", () => {
+    expect(deepLinkMarker(false, "breath")).toEqual({ "data-prepaint-deeplink": "breath" });
+    expect(deepLinkMarker(true, "breath")).toEqual({});
+  });
+
+  it("holds a screen of empty page on the link's load, and the same block under a session", () => {
+    const slot = renderToStaticMarkup(<DeepLinkSlot room="warmups" read={false} />);
+    expect(slot).toBe('<div aria-hidden="true" class="min-h-screen" data-prepaint-slot="deeplink-warmups"></div>');
+    // Read, it is the plain block a session's page keeps under the session.
+    expect(renderToStaticMarkup(<DeepLinkSlot room="breath" read />)).toBe('<div aria-hidden="true" class="min-h-screen"></div>');
   });
 });
 

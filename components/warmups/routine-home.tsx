@@ -189,6 +189,7 @@ export function PathSection({
   error,
   errorExerciseId,
   unavailableReason,
+  recovering = null,
 }: {
   progress: ProgressState;
   onSelect: (ex: WarmupExercise) => void;
@@ -200,6 +201,8 @@ export function PathSection({
   error: string | null;
   errorExerciseId: string | null;
   unavailableReason?: string;
+  /** Recovery week's name while it runs, or null: the no-range prompt then offers no test (RangePrompt). */
+  recovering?: string | null;
 }) {
   const isPro = useIsPro();
 
@@ -259,7 +262,7 @@ export function PathSection({
           score so far.
         </span>
       </div>
-      <RangePrompt progress={progress} />
+      <RangePrompt progress={progress} recovering={recovering} />
       <PathList levels={levels} unavailableReason={unavailableReason} />
     </section>
   );

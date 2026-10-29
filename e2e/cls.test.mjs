@@ -202,6 +202,54 @@ describe("CLS measurement CLI gate", () => {
     expect([...finished.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1])).toEqual(["/programs", "/programs?program=high-notes-6w"]);
   });
 
+  it("measures the rooms' own deep links on every run, each one the pre-paint script holds", async () => {
+    // A room reads its address after hydration, so its link's first load is
+    // only still if the inline script marks it (lib/prepaint.ts
+    // data-sing-deeplink). A link the script no longer recognizes (a renamed
+    // drill or routine) would measure the old, moving page, so each one is
+    // read through the script, as a newcomer, as the returning singer and as
+    // a capped one, whose link opens nothing.
+    const all = await runCls("good");
+    const gotos = [...all.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1]);
+    const rooms = { "/breath": "breath", "/warmups": "warmups", "/ear-training": "ear" };
+    const links = gotos.filter((path) => path.includes("?") && Object.hasOwn(rooms, path.slice(0, path.indexOf("?"))));
+    expect(links.map((path) => path.slice(0, path.indexOf("?"))).sort()).toEqual(["/breath", "/breath", "/ear-training", "/warmups", "/warmups"]);
+    // A song link keeps its gate and is measured when named.
+    expect(gotos).not.toContain("/songs?song=amazing-grace");
+    const named = await runCls("good", "mobile-375", ["--route=songs-deeplink"]);
+    expect([...named.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1])).toEqual(["/songs?song=amazing-grace"]);
+
+    const seedOf = async (extra) => Buffer.from(/^SEED:(.+)$/m.exec((await runCls("good", "mobile-375", [...extra, "--route=warmups"])).stdout)[1], "base64").toString();
+    const now = new Date(2026, 9, 14, 21);
+    const storeAfter = (seed) => {
+      const store = new Map();
+      if (seed) {
+        class FixedDate extends Date {
+          constructor(...args) {
+            super(...(args.length ? args : [now.getTime()]));
+          }
+        }
+        runInNewContext(seed, {
+          Date: FixedDate,
+          JSON,
+          String,
+          localStorage: { clear: () => store.clear(), setItem: (k, v) => store.set(k, String(v)), getItem: (k) => store.get(k) ?? null },
+        });
+      }
+      return { getItem: (k) => store.get(k) ?? null };
+    };
+    const fresh = storeAfter(null);
+    const returning = storeAfter(await seedOf(["--returning"]));
+    const capped = storeAfter(await seedOf(["--state=capped"]));
+    for (const path of links) {
+      const where = { pathname: path.slice(0, path.indexOf("?")), search: path.slice(path.indexOf("?")) };
+      const room = rooms[where.pathname];
+      expect(prepaintState(fresh, now, PREPAINT_CONFIG, where).deeplink, path).toBe(room);
+      expect(prepaintState(returning, now, PREPAINT_CONFIG, where).deeplink, path).toBe(room);
+      expect(prepaintState(capped, now, PREPAINT_CONFIG, where).deeplink, path).toBeNull();
+    }
+  });
+
   it("refuses an unknown state before launching a browser", async () => {
     const result = await runCls("good", "mobile-375", ["--state=nope"]);
     expect(result.code).toBe(2);

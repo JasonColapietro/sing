@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { tallyFromScores } from "@/lib/analytics";
+import { SILENCE_RMS } from "@/lib/audio/pitch";
+import {
+  NO_SOUND_HINT,
+  TOO_QUIET_HINT,
+  freshInputHint,
+  nextInputHint,
+} from "@/components/range/pitch-meter-hint";
 import { ALL_SONGS, SONGS, PRO_SONGS, songBySlug } from "./data";
 import {
   AUTO_TEMPO_DOWN_SCORE,
@@ -48,6 +55,11 @@ import {
   secPerBeat,
   reachedBeats,
   reachedNothing,
+  judgedCount,
+  runHearing,
+  MIN_VOLUME,
+  SONG_HINT_FLOOR,
+  songInputHint,
   setupForSong,
   songKeyLabel,
   type PlayerSetup,
@@ -813,6 +825,79 @@ describe("what a stopped run had reached", () => {
     const whole = playBeats.reduce((a, b) => a + b, 0);
     expect(Math.round((1.5 / partial) * 100)).toBe(100);
     expect(Math.round((1.5 / whole) * 100)).toBe(50); // what the summary used to show
+  });
+});
+
+describe("what the mic made of a scored run", () => {
+  it("calls a run heard once any voiced frame landed on a note", () => {
+    // However badly: one note sung far off is still singing, graded as such.
+    expect(runHearing([0, 0, 3, 0], 12)).toBe("heard");
+    expect(runHearing([0, 1], 0)).toBe("heard");
+  });
+
+  it("calls a run silent when no note was heard though notes were judged", () => {
+    // A muted or too-quiet mic: every note a miss used to be graded D, named
+    // three "trickiest notes" and logged the silence as practice.
+    expect(runHearing([0, 0, 0, 0], 4)).toBe("silent");
+    // Notes outside a drilled span are never filled in.
+    expect(runHearing([0, undefined, 0], 1)).toBe("silent");
+  });
+
+  it("says nothing about the mic before any note's window closed", () => {
+    // End practice a moment into the first note: not a dead mic, just a run
+    // that never got going.
+    expect(runHearing([0, 0, 0, 0], 0)).toBe("unstarted");
+    expect(runHearing([], 0)).toBe("unstarted");
+  });
+
+  it("counts judged notes across every band", () => {
+    expect(judgedCount({ perfect: 1, great: 2, good: 3, miss: 4 })).toBe(10);
+    expect(judgedCount({ perfect: 0, great: 0, good: 0, miss: 0 })).toBe(0);
+  });
+});
+
+describe("the live hint a scored song run shows", () => {
+  /** Feed `ms` of one kind of input, in 16 ms frames, as the draw loop does. */
+  function feed(
+    state: ReturnType<typeof freshInputHint>,
+    ms: number,
+    volume: number,
+    voiced: boolean,
+  ) {
+    for (let t = 0; t < ms; t += 16) nextInputHint(state, { volume }, 16, voiced, SONG_HINT_FLOOR);
+    return songInputHint(state);
+  }
+
+  it("calls a soft voice too quiet, not heard without a pitch", () => {
+    // Between MIN_VOLUME and the detector's silence floor no pitch ever comes
+    // back, so the voice is too quiet to measure. A floor at MIN_VOLUME told
+    // that singer "we can hear you" and to sing a steady "ah" instead.
+    expect(SONG_HINT_FLOOR).toBe(Math.max(MIN_VOLUME, SILENCE_RMS));
+    expect(feed(freshInputHint(), 3000, 0.008, false)).toBe(TOO_QUIET_HINT);
+  });
+
+  it("names a mic that hears nothing, after the shared wait", () => {
+    const state = freshInputHint();
+    expect(feed(state, 2000, 0, false)).toBeNull();
+    expect(feed(state, 1000, 0, false)).toBe(NO_SOUND_HINT);
+    // Heard: gone at once.
+    expect(feed(state, 32, 0.05, true)).toBeNull();
+  });
+
+  it("never raises a quiet hint for a rest once the singer has been heard", () => {
+    const state = freshInputHint();
+    expect(feed(state, 400, 0.05, true)).toBeNull();
+    // A long rest between phrases, a soft line, then dead air.
+    expect(feed(state, 4000, 0.002, false)).toBeNull();
+    expect(feed(state, 4000, 0.008, false)).toBeNull();
+    expect(feed(state, 4000, 0, false)).toBeNull();
+  });
+
+  it("leaves out the unpitched hint, which asks for a steady ah mid-song", () => {
+    expect(feed(freshInputHint(), 3000, 0.05, false)).toBeNull();
+    const heard = freshInputHint();
+    feed(heard, 400, 0.05, true);
+    expect(feed(heard, 4000, 0.05, false)).toBeNull();
   });
 });
 

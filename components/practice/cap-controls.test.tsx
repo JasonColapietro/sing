@@ -1,10 +1,19 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { FreeCap } from "@/lib/free-cap";
+import { DEFAULT_PROGRESS, type ProgressState } from "@/lib/progress-shape";
+import { localDay } from "@/lib/progress";
 
 const cap = vi.hoisted(() => ({
   current: { isPro: false, usedSec: 0, leftSec: 300, capped: false, capSec: 300 } as FreeCap,
 }));
+
+// The stored log unless a test sets one.
+const stored = vi.hoisted(() => ({ progress: null as ProgressState | null }));
+vi.mock("@/lib/progress", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/progress")>();
+  return { ...actual, useProgress: () => stored.progress ?? actual.useProgress() };
+});
 
 vi.mock("@/lib/free-cap", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/free-cap")>(),
@@ -31,6 +40,78 @@ const OPEN: FreeCap = { isPro: false, usedSec: 0, leftSec: 300, capped: false, c
 beforeEach(() => {
   cap.current = OPEN;
   hydration.done = true;
+  stored.progress = null;
+});
+
+/** A singer with a breath routine logged today, so the room's card is a second one. */
+function breathPracticedToday(): ProgressState {
+  const day = localDay();
+  return {
+    ...DEFAULT_PROGRESS,
+    sessions: [
+      { id: "b1", type: "breath", date: `${day}T09:00:00.000Z`, day, durationSec: 300, score: 80, detail: "Quick breath", xp: 20 },
+    ],
+  };
+}
+
+describe("the breath room's card for a singer who practiced breath today", () => {
+  it("offers a second routine while the allowance is open", () => {
+    stored.progress = breathPracticedToday();
+    const html = renderToStaticMarkup(<BreathStudio />);
+    expect(html).toContain("Back for more");
+    expect(html).toContain("second routine today");
+    expect(html).toContain(">Start routine<");
+  });
+
+  it("offers no second routine at the cap, where the button says Available tomorrow", () => {
+    // The same rule as /warmups and /ear-training: no return greeting over a start that cannot start.
+    stored.progress = breathPracticedToday();
+    cap.current = CAPPED;
+    const html = renderToStaticMarkup(<BreathStudio />);
+    expect(html).toContain("Available tomorrow");
+    expect(html).not.toContain("second routine today");
+    expect(html).not.toContain("Back for more");
+    expect(html).not.toContain(">Start routine<");
+    expect(html).toContain("Start here");
+    expect(html).toContain("breath work done today");
+  });
+
+  it("still says no breath work yet to a capped singer who has not done any", () => {
+    // Capped by another room's minutes: the card is a newcomer's, waiting for tomorrow.
+    cap.current = CAPPED;
+    const html = renderToStaticMarkup(<BreathStudio />);
+    expect(html).toContain("no breath work yet today");
+    expect(html).not.toContain("breath work done today");
+  });
+});
+
+/** A singer with an ear routine logged today, so the room's card is a top-up. */
+function earPracticedToday(): ProgressState {
+  const day = localDay();
+  return {
+    ...DEFAULT_PROGRESS,
+    sessions: [
+      { id: "e1", type: "ear", date: `${day}T09:00:00.000Z`, day, durationSec: 300, score: 80, detail: "Daily ear", xp: 20 },
+    ],
+  };
+}
+
+describe("the ear room's card for a singer who practiced ear today", () => {
+  it("offers a top-up while the allowance is open", () => {
+    stored.progress = earPracticedToday();
+    const html = renderToStaticMarkup(<EarTrainingClient />);
+    expect(html).toContain("Top up today");
+    expect(html).toContain(">Start routine<");
+  });
+
+  it("offers no top-up at the cap, where the button says Available tomorrow", () => {
+    stored.progress = earPracticedToday();
+    cap.current = CAPPED;
+    const html = renderToStaticMarkup(<EarTrainingClient />);
+    expect(html).toContain("Available tomorrow");
+    expect(html).not.toContain("Top up today");
+    expect(html).toContain("Today&#x27;s ear routine");
+  });
 });
 
 describe("useCappedStart", () => {

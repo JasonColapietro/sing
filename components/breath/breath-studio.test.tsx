@@ -73,3 +73,22 @@ describe("a drill with a best but no star", () => {
     expect(drillTried("box", EMPTY_BREATH_BESTS)).toBe(false);
   });
 });
+
+describe("the breath room on a deep link's first load", () => {
+  // The server HTML, and every render until the room has read its address:
+  // the front page behind the deep-link marker, then the screen-tall block
+  // that takes its place when the pre-paint script found a link the room
+  // will open (/breath?drill=box), so the drill opens over a page that
+  // never painted the front page (components/prepaint.tsx).
+  it("keeps the heading, holds the whole front page behind the marker, and ends on the slot", () => {
+    const html = renderToStaticMarkup(<BreathStudio />);
+    const marker = html.indexOf('<div data-prepaint-deeplink="breath">');
+    expect(marker).toBeGreaterThan(html.indexOf("Breathing exercises for singers</h1>"));
+    for (const part of ['id="free-cap"', "Free guided practice today", "Quick breath", "Breath routines", "Your breath path", "Why breath work"]) {
+      expect(html.indexOf(part), part).toBeGreaterThan(marker);
+    }
+    expect(html).toMatch(
+      /Why breath work[\s\S]*<\/div><div aria-hidden="true" class="min-h-screen" data-prepaint-slot="deeplink-breath"><\/div><\/main>$/,
+    );
+  });
+});

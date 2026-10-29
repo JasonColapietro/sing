@@ -8,6 +8,12 @@ import type {
   SongSection,
 } from "./types";
 import type { Achievement, SessionLog, VocalRange } from "@/lib/progress";
+import { SILENCE_RMS } from "@/lib/audio/pitch";
+import {
+  UNPITCHED_HINT,
+  meterInputHint,
+  type InputHintState,
+} from "@/components/range/pitch-meter-hint";
 
 export const COUNT_IN_BEATS = 4;
 export const TOLERANCE_CENTS = 50;
@@ -761,6 +767,13 @@ export interface SessionSummaryData {
   xpGained: number;
   newAchievements: Achievement[];
   listenMode: boolean;
+  /**
+   * A scored run in which no voiced frame landed on any note (runHearing's
+   * "silent"): nothing was logged, so it earned no XP, streak or
+   * achievement and spent no free minutes, and the summary says no sound was
+   * picked up instead of grading it.
+   */
+  silent?: boolean;
   /** Longest unbroken run of non-miss notes. */
   maxCombo: number;
   /** How many notes landed in each judgment band, summed over every loop. */
@@ -1065,6 +1078,59 @@ export function reachedNothing(
   beat: number,
 ): boolean {
   return reachedBeats(notes, playBeats, wholePasses, beat).every((b) => b <= 0);
+}
+
+/**
+ * What the microphone made of a scored run, from the voiced frames that
+ * landed on each note (silence and rests between notes do not count) and how
+ * many notes have been judged so far, summed over every loop.
+ *
+ * - "heard": a voiced frame landed on at least one note. Graded as sung,
+ *   however badly.
+ * - "silent": none did, though at least one note's window closed. A muted or
+ *   wrong microphone, or a singer under MIN_VOLUME, used to end on a D with
+ *   three "trickiest notes" nobody sang, and to log the silence as practice:
+ *   XP, a streak, first-session achievements and free minutes. Such a run is
+ *   neither graded nor logged, and its summary says no sound was picked up.
+ * - "unstarted": none did, and no note's window had closed yet: End practice
+ *   a moment into the first note. Nothing can be said about the mic from
+ *   that, so the player leaves as it does from the count-in (reachedNothing).
+ */
+export type RunHearing = "heard" | "silent" | "unstarted";
+
+export function runHearing(
+  voicedFrames: readonly (number | undefined)[],
+  judged: number,
+): RunHearing {
+  if (voicedFrames.some((n) => (n ?? 0) > 0)) return "heard";
+  return judged > 0 ? "silent" : "unstarted";
+}
+
+/** How many notes a tally has judged, across every band. */
+export function judgedCount(tally: JudgmentTally): number {
+  return JUDGMENTS.reduce((n, j) => n + tally[j], 0);
+}
+
+/**
+ * The input level under which a scored song run's live hint calls the voice
+ * too quiet. Not MIN_VOLUME alone: the detector returns no pitch at all under
+ * SILENCE_RMS, so a soft voice between the two was never "heard but with no
+ * pitch", it was too quiet to measure. Passed to nextInputHint.
+ */
+export const SONG_HINT_FLOOR = Math.max(MIN_VOLUME, SILENCE_RMS);
+
+/**
+ * The live hint a scored song run shows, from the shared input-hint state
+ * (components/range/pitch-meter-hint): the too-quiet and no-sound hints, and
+ * only until the singer has been heard (meterInputHint), so a rest between
+ * phrases or a soft line later in the song never reads as a mic that cannot
+ * hear. The unpitched hint is left out. Its remedy, a steady "ah" on one
+ * comfortable note, is not something to do in the middle of a song, and it
+ * stays up after the singer has been heard, so a noisy rest would raise it.
+ */
+export function songInputHint(state: InputHintState): string | null {
+  const hint = meterInputHint(state);
+  return hint === UNPITCHED_HINT ? null : hint;
 }
 
 /**

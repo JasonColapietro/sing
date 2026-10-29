@@ -5,12 +5,21 @@ import { localDay } from "@/lib/progress";
 import { songBySlug } from "./data";
 import type { SessionSummaryData } from "./lib";
 
-const state = vi.hoisted(() => ({ progress: null as ProgressState | null }));
+const state = vi.hoisted(() => ({
+  progress: null as ProgressState | null,
+  /** What each render told the one-time Pro moment: is this a result? */
+  proResult: [] as boolean[],
+}));
 vi.mock("@/lib/progress", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/progress")>();
   return { ...actual, useProgress: () => state.progress ?? actual.useProgress() };
 });
 vi.mock("@/lib/pro", () => ({ useIsPro: () => false, useProReady: () => true }));
+vi.mock("@/lib/use-pro-result-on-leave", () => ({
+  useProResultOnLeave: (active: boolean) => {
+    state.proResult.push(active);
+  },
+}));
 
 import { SessionSummary } from "./session-summary";
 
@@ -155,5 +164,93 @@ describe("a rehearsal stopped part-way through a loop", () => {
     const html = render({ ...data(96), perLoopScores: [96, 98] });
     expect(html).toMatch(/Loops sung<\/div><div[^>]*>2<\/div>/);
     expect(html).not.toContain("part-way");
+  });
+});
+
+describe("a song run the mic heard nothing of", () => {
+  beforeEach(() => {
+    state.progress = null;
+  });
+
+  // What finalize hands over for a silent run: scored at 0, nothing logged.
+  const silent = (): SessionSummaryData => ({
+    ...data(0),
+    silent: true,
+    xpGained: 0,
+    judgments: { perfect: 0, great: 0, good: 0, miss: 12 },
+  });
+
+  it("says no sound was picked up and offers the audio setup, instead of a grade", () => {
+    const html = renderToStaticMarkup(
+      <SessionSummary data={silent()} onAgain={() => {}} onLibrary={() => {}} listening level={0} />,
+    );
+    expect(html).toContain("Rehearsal complete");
+    expect(html).toContain("No sound picked up");
+    expect(html).toContain("Nothing was scored or logged.");
+    // The audio setup (its summary reads "Audio"), open on the live level.
+    expect(html).toMatch(/<details[^>]*>[\s\S]*Audio[\s\S]*aria-label="Microphone input level"/);
+    expect(html).toContain("Sing again");
+    for (const graded of ["Trickiest notes", "Grade", "Score", "Loops sung", "Per-loop score", "Judgment breakdown"]) {
+      expect(html, graded).not.toContain(graded);
+    }
+  });
+
+  it("names nothing as saved, since nothing was logged", () => {
+    // A streak earned earlier today is still live, but this run added nothing to it.
+    state.progress = { ...DEFAULT_PROGRESS, streak: { current: 3, best: 3, lastDay: localDay() } };
+    const html = render(silent());
+    expect(html).not.toContain("Saved to your progress");
+    expect(html).not.toContain("+0 XP");
+    expect(html).not.toContain("-day streak");
+    expect(html).not.toContain("Personal best");
+  });
+
+  it("carries the control to turn off the mic it keeps open for the level", () => {
+    const withMic = renderToStaticMarkup(
+      <SessionSummary data={silent()} onAgain={() => {}} onLibrary={() => {}} listening level={0} onMicOff={() => {}} />,
+    );
+    expect(withMic).toContain("Turn off the mic");
+    const micOff = renderToStaticMarkup(
+      <SessionSummary data={silent()} onAgain={() => {}} onLibrary={() => {}} listening={false} onMicOff={() => {}} />,
+    );
+    expect(micOff).not.toContain("Turn off the mic");
+    expect(micOff).not.toContain("Microphone input level");
+    // A graded run never shows it.
+    expect(
+      renderToStaticMarkup(
+        <SessionSummary data={data(40)} onAgain={() => {}} onLibrary={() => {}} listening onMicOff={() => {}} />,
+      ),
+    ).not.toContain("Turn off the mic");
+  });
+
+  it("keeps Sing again first in a setlist, since the next song would go the same way", () => {
+    const html = renderToStaticMarkup(
+      <SessionSummary data={silent()} onAgain={() => {}} onLibrary={() => {}} nextInSetlist="Silent Night" onNext={() => {}} />,
+    );
+    expect(html.indexOf("Sing again")).toBeGreaterThan(-1);
+    expect(html.indexOf("Sing again")).toBeLessThan(html.indexOf("Next: Silent Night"));
+    // The one filled button on the screen.
+    expect(html).toMatch(/bg-violet-ink[^"]*">Sing again</);
+    expect(html).not.toMatch(/bg-violet-ink[^"]*">Next: /);
+    // A heard run moves the setlist on first, as before.
+    const heard = renderToStaticMarkup(
+      <SessionSummary data={data(40)} onAgain={() => {}} onLibrary={() => {}} nextInSetlist="Silent Night" onNext={() => {}} />,
+    );
+    expect(heard.indexOf("Next: Silent Night")).toBeLessThan(heard.indexOf("Sing again"));
+  });
+
+  it("is not a result for the one-time Pro moment", () => {
+    state.proResult = [];
+    render(silent());
+    render(data(0));
+    expect(state.proResult).toEqual([false, true]);
+  });
+
+  it("still grades a heard run that scored 0", () => {
+    const html = render({ ...data(0), hardest: [{ index: 0, midi: 67, lyric: "Home", ratio: 0 }] });
+    expect(html).not.toContain("No sound picked up");
+    expect(html).toContain("Trickiest notes");
+    expect(html).toContain("Grade");
+    expect(html).toContain("Saved to your progress");
   });
 });

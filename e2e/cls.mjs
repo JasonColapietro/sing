@@ -187,8 +187,12 @@ const STATES = {
  * singer and pass.
  */
 const STATE_PROOF = {
-  capped: { routes: ["warmups", "breath", "ear-training", "songs"], selector: "#free-cap" },
-  program: { routes: ["programs", "program-foundations", "warmups", "progress"], selector: "[data-program-day]" },
+  // A capped singer's deep link opens nothing: the room shows its wall.
+  capped: {
+    routes: ["warmups", "breath", "ear-training", "songs", "breath-deeplink-box", "warmups-deeplink-routine", "ear-deeplink-routine"],
+    selector: "#free-cap",
+  },
+  program: { routes: ["programs", "program-foundations", "warmups", "progress", "warmups-deeplink-routine"], selector: "[data-program-day]" },
   "program-capped": { routes: ["programs", "program-foundations", "warmups"], selector: "[data-program-day] [data-program-waits]" },
   "rest-day": { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
   finished: { routes: ["programs", "program-detail", "warmups", "progress"], selector: '[data-program-day][data-status="finished"]' },
@@ -210,12 +214,13 @@ const STATE_PROOF = {
  * runs, so those states measure a singer opening their own program, with
  * today's card above it.
  *
- * The rest are measured only when `--route` names them, for the state that
- * needs them, so a plain run's page count does not grow: the other programs'
- * own views (each finished-<program> state), and the singer and song pages
- * whose header action --state=saved-range swaps. Adele's is a "test" page,
- * Celine Dion's a "compare" page (the CTR pilot's wider labels), and
- * "Someone Like You" is Adele's song.
+ * The other programs' own views and the singer and song pages are measured
+ * only when `--route` names them, for the state that needs them, so a plain
+ * run's page count does not grow: each finished-<program> state loads its
+ * program's view, and --state=saved-range the singer and song pages whose
+ * header action it swaps. Adele's is a "test" page, Celine Dion's a "compare"
+ * page (the CTR pilot's wider labels), and "Someone Like You" is Adele's
+ * song. The rooms' own deep links, last, are measured on every run.
  */
 const DEEP_LINKS = [
   { path: "/programs?program=measured-voice-12w", name: "program-detail", kind: "app" },
@@ -227,6 +232,25 @@ const DEEP_LINKS = [
   { path: "/singers/adele", name: "singer-adele", kind: "detail", onlyWhenNamed: true },
   { path: "/singers/celine-dion", name: "singer-celine-dion", kind: "detail", onlyWhenNamed: true },
   { path: "/can-you-sing/someone-like-you", name: "song-someone-like-you", kind: "detail", onlyWhenNamed: true },
+  // A room's own deep links, what program rows, lessons, the glossary, the
+  // coach and the range result link to, and what a link opened in a new tab,
+  // shared or bookmarked loads cold. The room reads its address after
+  // hydration and opens what it names: a drill or a set over the whole room
+  // (/breath), a workout (/ear-training), or the mic gate for a warmup,
+  // retitled and scrolled to (/warmups). The prerender is the room's front
+  // page, so the pre-paint script (lib/prepaint.ts data-sing-deeplink) holds
+  // it back until then: before, every /breath link moved the whole page (0.85
+  // at 375) and a /warmups link 0.11, or 0.51 with a saved range. Measured in
+  // the plain and --returning runs, and by the capped and program states,
+  // where a capped singer's link opens nothing and the room shows its wall.
+  { path: "/breath?drill=box&side=4&minutes=1", name: "breath-deeplink-box", kind: "room" },
+  { path: "/breath?routine=quick", name: "breath-deeplink-routine", kind: "room" },
+  { path: "/warmups?exercise=lip-trill-scale", name: "warmups-deeplink-exercise", kind: "room" },
+  { path: "/warmups?routine=morning", name: "warmups-deeplink-routine", kind: "room" },
+  { path: "/ear-training?routine=quick", name: "ear-deeplink-routine", kind: "room" },
+  // A song link keeps the songs gate and only names the song in its heading,
+  // so it is measured when named rather than on every run.
+  { path: "/songs?song=amazing-grace", name: "songs-deeplink", kind: "room", onlyWhenNamed: true },
 ];
 
 if (STATE !== undefined && !Object.hasOwn(STATES, STATE)) {

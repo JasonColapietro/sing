@@ -3,7 +3,7 @@
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { StepIntroSlide } from "@/components/practice/step-intro";
 import { useStepRunner, type StepPhase } from "@/components/practice/step-runner";
-import { useFreeCap } from "@/lib/free-cap";
+import { formatClock, useFreeCap, type FreeCap } from "@/lib/free-cap";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { liveStreak } from "@/components/account/save-state";
 
@@ -18,6 +18,7 @@ import {
   GAME_DESC,
   GAME_MIC,
   GAME_TRAINS,
+  earRoutineSeconds,
   earStepLabel,
   type EarRoutine,
   type EarRoutineStep,
@@ -37,6 +38,25 @@ import { NoteCatcherGame } from "./note-catcher-game";
  */
 export function earPhaseListens(phase: StepPhase, steps: readonly EarRoutineStep[]): boolean {
   return phase.kind === "play" && GAME_MIC[steps[phase.step].game];
+}
+
+/**
+ * The free minutes left today, for a step's intro slide, when they run out
+ * before the rest of the routine does; null on Pro and while they cover it.
+ *
+ * A program row opens a routine straight into this runner, past the room's
+ * own allowance line, so the intro shows the countdown the cap would cut. The
+ * estimate only decides whether to show it.
+ */
+export function earIntroFreeLeft(
+  routine: EarRoutine,
+  fromStep: number,
+  cap: Pick<FreeCap, "isPro" | "leftSec">,
+): string | null {
+  if (cap.isPro) return null;
+  // The card's own estimate (earRoutineSeconds), of the games still ahead.
+  const setLeftSec = earRoutineSeconds({ ...routine, steps: routine.steps.slice(fromStep) });
+  return cap.leftSec < setLeftSec ? `${formatClock(cap.leftSec)} free left today` : null;
 }
 
 function difficultyLabel(d: Difficulty): string {
@@ -260,6 +280,7 @@ export function EarRunner({
             <span className="mx-2 text-[var(--s-line2)]">·</span>10 rounds
           </>
         }
+        clockLabel={earIntroFreeLeft(routine, phase.step, cap) ?? undefined}
         holdSec={EAR_STEP_INTRO_SEC}
         onStart={() => runner.play(phase.step)}
         onSkip={() => runner.closeStep(phase.step, null)}

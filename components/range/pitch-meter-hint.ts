@@ -9,6 +9,8 @@
  * same input. Pure, so it runs per frame in an effect or a draw loop.
  */
 
+import { SILENCE_RMS } from "@/lib/audio/pitch";
+
 /**
  * How long to let a singer work before explaining why nothing is happening.
  * Long enough not to nag someone who is about to succeed, short enough that
@@ -54,6 +56,11 @@ export function freshInputHint(): InputHintState {
  * clears it at once. Loud but unpitched input, or input under `minVolume`,
  * names its cause after HINT_AFTER_MS of it unbroken; until then whatever
  * hint is showing stays, so moving between the two never flickers.
+ *
+ * The quiet floor is never lower than the detector's own (SILENCE_RMS): the
+ * frame's volume is the same RMS the detector gates on, and it returns no
+ * pitch at all under it, so a soft voice there is too quiet to measure, not
+ * "heard, but with no pitch". A room may still ask for a higher floor.
  */
 export function nextInputHint(
   state: InputHintState,
@@ -62,13 +69,14 @@ export function nextInputHint(
   voiced: boolean,
   minVolume: number,
 ): string | null {
+  const floor = Math.max(minVolume, SILENCE_RMS);
   state.loudestSeen = Math.max(state.loudestSeen, frame.volume);
   if (voiced) {
     state.quietMs = 0;
     state.unpitchedMs = 0;
     state.voicedMs += dtMs;
     state.hint = null;
-  } else if (frame.volume >= minVolume) {
+  } else if (frame.volume >= floor) {
     state.quietMs = 0;
     state.unpitchedMs += dtMs;
     if (state.unpitchedMs >= HINT_AFTER_MS) state.hint = UNPITCHED_HINT;

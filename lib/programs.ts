@@ -330,12 +330,29 @@ const HIGH_NOTES: Program = {
   ],
 };
 
+/**
+ * Recovery week's breath: a minute of box breathing and the climb to eight,
+ * the Quick set without its sustain. Single drills rather than a set, because
+ * every set ends on the sustain test, which times a held note and scores how
+ * even it stayed, and a test taken on a tired voice measures the tiredness:
+ * chapter 12, "start measuring again when you are back to ordinary"
+ * (components/practice/program-day.ts recoveryWeekOf keeps the coach's range
+ * test out of the week for the same reason).
+ */
+const RECOVERY_BREATH: ProgramItem[] = [drill("box"), drill("farinelli")];
+/**
+ * The "Breath and hums" days' longer breath: the Daily set's three minutes
+ * around the square and its climb to eight, without its breathe-and-sing
+ * notes or its two sustains.
+ */
+const RECOVERY_LONG_BREATH: ProgramItem[] = [drill("box", { drill: "box", side: 4, minutes: 3 }), drill("farinelli")];
+
 const RECOVERY: Program = {
   id: "recovery-week",
   name: "Recovery week",
   tagline: "Seven quiet days for a voice that feels tired: small hums, soft trills and gentle breath, with a day off in the middle.",
   measures:
-    "Only what every warmup measures: how close each note landed to its target. It is practice, not treatment. A voice that hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, not an app.",
+    "Only what every warmup measures: how close each note landed to its target. The week takes no range or sustain test, because a test taken on a tired voice measures the tiredness. It is practice, not treatment. A voice that hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, not an app.",
   weeks: 1,
   pro: false,
   // Chapter 6: hoarseness that hangs around is a question for a doctor, not
@@ -344,13 +361,13 @@ const RECOVERY: Program = {
   finished:
     "If your voice feels back to ordinary, return to your usual practice or pick another program. A voice that still hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, rather than another week here.",
   days: [
-    day("Quiet start", breath("quick"), routine("morning"), routine("recovery")),
-    day("Breath and hums", breath("daily"), routine("recovery"), routine("morning")),
-    day("Soft and low", breath("quick"), routine("morning"), routine("recovery")),
+    day("Quiet start", ...RECOVERY_BREATH, routine("morning"), routine("recovery")),
+    day("Breath and hums", ...RECOVERY_LONG_BREATH, routine("recovery"), routine("morning")),
+    day("Soft and low", ...RECOVERY_BREATH, routine("morning"), routine("recovery")),
     rest(),
-    day("Breath and hums", breath("daily"), routine("recovery"), routine("morning")),
-    day("A little more", breath("quick"), routine("recovery"), routine("quick")),
-    day("Back to your usual", breath("quick"), routine("recovery"), routine("quick")),
+    day("Breath and hums", ...RECOVERY_LONG_BREATH, routine("recovery"), routine("morning")),
+    day("A little more", ...RECOVERY_BREATH, routine("recovery"), routine("quick")),
+    day("Back to your usual", ...RECOVERY_BREATH, routine("recovery"), routine("quick")),
   ],
 };
 

@@ -218,22 +218,26 @@ export function BoxBreathing({
   const phaseIdx = run?.phaseIdx ?? 0;
   const p = run?.p ?? 0;
   const elapsed = run?.elapsed ?? 0;
-  const target = runTargetSec;
+  // Before begin() has run, the length the settings ask for, so a set's
+  // first frame already reads the run's length.
+  const target = runTargetSec || boxSeconds({ side, minutes });
 
   const closeSession = () => {
     if (mode === "running") endEarly();
     else onExit();
   };
+  // A routine's step (autoStart) is drawn as its run from the first render, so the figure does not jump when begin() runs.
+  const running = mode === "running" || (autoStart && mode === "setup");
 
   return (
     <SessionShell
       title="Box breathing"
       subtitle={`${minutes} min · ${side}s sides`}
-      progress={mode === "running" && target > 0 ? (elapsed / target) * 100 : 0}
+      progress={running && target > 0 ? (elapsed / target) * 100 : 0}
       onClose={closeSession}
       closeLabel="Exit drill"
       topRight={
-        mode === "running" ? (
+        running ? (
           <span className="tabular font-mono text-xs text-[var(--s-dim)]">
             round {run?.round ?? 1}
           </span>
@@ -255,7 +259,7 @@ export function BoxBreathing({
         </div>
       }
     >
-      {mode === "running" ? (
+      {running ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-4 py-3">
           <BoxFigure
             phaseIdx={phaseIdx}

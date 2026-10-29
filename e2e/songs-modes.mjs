@@ -1,12 +1,20 @@
 /**
  * Songs room: rehearsal and performance modes, against a running local app:
  *   node e2e/songs-modes.mjs http://localhost:3011 [--executable=path]
- * A fake microphone (silence) drives the real player, so scores are 0 and every
- * loop is "poor" — which is exactly what makes Auto tempo's downward step, the
- * rehearsal wrap, and the performance readout deterministic to assert.
+ * The fake microphone plays a sung A3 in short bursts, a quarter of a second
+ * out of every 1.25 s, so the mic hears a voice on the song's notes (a run the
+ * mic hears nothing of is neither graded nor logged: runHearing in
+ * components/songs/lib.ts) while every loop still scores far under Auto
+ * tempo's step-down line and the mastery bar. That is what makes Auto tempo's
+ * downward step, the rehearsal wrap, and the performance readout deterministic
+ * to assert.
  */
 import assert from "node:assert/strict";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { chromium } from "playwright";
+import { encodeWav, midiToHz, synthVoice } from "../lib/audio/voice-fixture.ts";
 
 const argv = process.argv.slice(2);
 const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3011").replace(/\/$/, "");
@@ -17,9 +25,42 @@ const progressKey = "suede-sing:progress:v1";
 const coachIntroKey = "suede-sing:coach-intro:v1";
 const record = { xp: 0, sessions: [], range: { lowMidi: 52, highMidi: 72 }, rangeHistory: [], achievements: [],
   streak: { current: 0, best: 0, lastDay: null } };
+/**
+ * The fake microphone's input: a sung A3 (synthVoice, the pitch suites' voice)
+ * on for BURST_MS out of every PERIOD_MS, with 5 ms fades so the gate adds no
+ * click. Each burst outlasts the pitch analyser's 85 ms window, so the mic
+ * reports a voiced pitch on whatever note it lands on; with the window's
+ * overhang the detector reads a pitch about a quarter of the time (24% of
+ * 60 fps frames, run through lib/audio/pitch.ts detectPitch), so no loop can
+ * score near AUTO_TEMPO_DOWN_SCORE (60) or MASTERY_SCORE (80) whatever key the
+ * song is fitted to. Chrome loops the file.
+ */
+const SAMPLE_RATE = 48000;
+const BURST_MS = 250;
+const PERIOD_MS = 1250;
+function burstVoice(seconds = 20) {
+  const length = SAMPLE_RATE * seconds;
+  const voice = synthVoice({ freq: midiToHz(57), sampleRate: SAMPLE_RATE, length, level: 0.3 });
+  const period = (SAMPLE_RATE * PERIOD_MS) / 1000;
+  const burst = (SAMPLE_RATE * BURST_MS) / 1000;
+  const fade = SAMPLE_RATE * 0.005;
+  for (let i = 0; i < length; i++) {
+    const t = i % period;
+    voice[i] *= t >= burst ? 0 : Math.min(1, t / fade, (burst - t) / fade);
+  }
+  return voice;
+}
+const dir = await mkdtemp(path.join(os.tmpdir(), "sing-songs-modes-"));
+const wav = path.join(dir, "a3-bursts.wav");
+await writeFile(wav, encodeWav(burstVoice(), SAMPLE_RATE));
 const browser = await chromium.launch({
   ...(executable ? { executablePath: executable } : { channel: "chrome" }), headless: true,
-  args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream", "--autoplay-policy=no-user-gesture-required"],
+  args: [
+    "--use-fake-device-for-media-stream",
+    "--use-fake-ui-for-media-stream",
+    `--use-file-for-fake-audio-capture=${wav}`,
+    "--autoplay-policy=no-user-gesture-required",
+  ],
 });
 
 async function open(song = "silent-night") {
@@ -151,7 +192,7 @@ try {
     await context.close();
   }
 
-  // 2. Rehearsal (default): Auto tempo steps down after a silent loop; the song wraps past its planned loops instead of finishing.
+  // 2. Rehearsal (default): Auto tempo steps down after a poor loop; the song wraps past its planned loops instead of finishing.
   {
     const { context, page, errors } = await open();
     await dismissOverlays(page);
@@ -169,7 +210,7 @@ try {
     await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
     const loopPill = page.getByText(/^Loop \d+$/);
     await loopPill.waitFor();
-    // Wait for the first loop line: Auto reads the silent loop as poor and steps down one notch.
+    // Wait for the first loop line: Auto reads the barely sung loop as poor and steps down one notch.
     await page.waitForFunction(() => /^Loop [2-9]/.test([...document.querySelectorAll("span")].map((s) => s.textContent).find((t) => /^Loop \d+$/.test(t ?? "")) ?? ""), null, { timeout: 120_000 });
     // Auto steps when the *scored* position crosses the loop line, which trails
     // the on-screen loop number by the pitch-report lag (~0.1 s), so wait for it.
@@ -178,7 +219,7 @@ try {
       null,
       { timeout: 5_000 },
     ).catch(() => {});
-    assert.equal(await tempoText(page), "120%", "Auto stepped the rate down after a silent loop");
+    assert.equal(await tempoText(page), "120%", "Auto stepped the rate down after a poor loop");
     // Planned loops for this song; a rehearsal must run past them.
     const planned = await page.evaluate(() => {
       const m = document.body.innerText.match(/Loops sung|Loop (\d+) of (\d+)/);
@@ -192,7 +233,9 @@ try {
     await dismissOverlays(page);
     await page.getByRole("button", { name: "End practice", exact: true }).click();
     await page.locator("main").getByText("Rehearsal complete").waitFor();
+    // The fake mic's bursts land on the song's notes, so the run is heard, graded and logged.
     assert.match(await page.locator("main").innerText(), /loops sung/i);
+    assert.doesNotMatch(await page.locator("main").innerText(), /No sound picked up/i, "the mic heard the bursts");
     assert.doesNotMatch(await page.locator("main").innerText(), /top multiplier/i, "rehearsal summary carries no points");
     assert.deepEqual(errors, []);
     console.log(`PASS rehearsal: auto tempo 125%→120%, wrapped past planned loops (${planned ?? "?"}), summary without points`);
@@ -222,7 +265,7 @@ try {
     const summary = page.locator("main");
     await summary.getByText("Performance complete").waitFor({ timeout: 240_000 });
     assert.match(await summary.innerText(), /on your own pass/i, "summary names the pass sung");
-    assert.doesNotMatch(await summary.innerText(), /\bmastered\b/i, "a silent solo cannot master the song");
+    assert.doesNotMatch(await summary.innerText(), /\bmastered\b/i, "a barely sung solo cannot master the song");
     assert.deepEqual(errors, []);
     console.log("PASS passes: chips, solo guide off, paused switch, summary names the pass");
 
@@ -349,4 +392,5 @@ try {
   }
 } finally {
   await browser.close();
+  await rm(dir, { recursive: true, force: true });
 }

@@ -5,6 +5,7 @@ import { getProState } from "@/lib/pro";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { useCappedStart } from "@/components/practice/use-capped-start";
 import { liveStreak } from "@/components/account/save-state";
+import { DeepLinkSlot, deepLinkMarker, useDeepLinkRead } from "@/components/prepaint";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, PageShell, Pill, SectionLabel } from "@/components/ui";
@@ -109,6 +110,8 @@ export default function EarTrainingClient() {
   // useSearchParams (its Suspense boundary blanks the prerendered copy). The cap
   // is asked of the stores: `cap` is still the prerender's in this commit.
   const [handledDeepLink, setHandledDeepLink] = useState(false);
+  // Until it has run, the front page carries the deep-link marker the pre-paint script hides on a link's first load.
+  useDeepLinkRead(handledDeepLink);
   useEffect(() => {
     if (handledDeepLink) return;
     /* eslint-disable react-hooks/set-state-in-effect */
@@ -196,111 +199,124 @@ export default function EarTrainingClient() {
     return [...games, chase];
   }, [bests, start]);
 
+  const heading = {
+    kicker: "Ear training",
+    title: "Ear training for singers",
+    subtitle:
+      "Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each.",
+  };
+
+  // A session is a portal over the page; the page under it keeps the heading and the deep-link slot, so opening a link moves nothing.
   if (active) {
-    return active.kind === "routine" ? (
-      <EarRunner routine={active.routine} onExit={exit} capped={cap.capped} />
-    ) : (
-      <EarGameSession
-        capped={cap.capped}
-        game={active.game}
-        difficulty={active.difficulty}
-        song={active.song}
-        onExit={exit}
-      />
+    return (
+      <PageShell {...heading}>
+        <DeepLinkSlot room="ear" read />
+        {active.kind === "routine" ? (
+          <EarRunner routine={active.routine} onExit={exit} capped={cap.capped} />
+        ) : (
+          <EarGameSession
+            capped={cap.capped}
+            game={active.game}
+            difficulty={active.difficulty}
+            song={active.song}
+            onExit={exit}
+          />
+        )}
+      </PageShell>
     );
   }
 
   return (
-    <PageShell
-      kicker="Ear training"
-      title="Ear training for singers"
-      subtitle="Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each."
-    >
-      {/* Both are in the server HTML; each renders only in its own state, and
-          until hydration the pre-paint state shows the right one
-          (components/prepaint.tsx). */}
-      <CapWall cap={cap} className="mb-6" />
-      <FreeAllowance cap={cap} className="mb-4" />
-      <ContinueCard
-        kicker={earToday ? "Top up today" : "Today's ear routine"}
-        title={recommended.name}
-        tagline={recommended.tagline}
-        meta={routineMeta(recommended)}
-        stepTitles={recommended.steps.map((s) => GAME_NAMES[s.game])}
-        onStart={() => start({ kind: "routine", routine: recommended })}
-        startLabel={cap.capped ? "Available tomorrow" : "Start routine"}
-        unavailableReason={unavailableReason}
-        micReady
-        error={null}
-        streakDays={streakDays}
-        streakBest={progress.streak.best}
-      />
+    <PageShell {...heading}>
+      <div {...deepLinkMarker(handledDeepLink, "ear")}>
+        {/* Both are in the server HTML; each renders only in its own state, and
+            until hydration the pre-paint state shows the right one
+            (components/prepaint.tsx). */}
+        <CapWall cap={cap} className="mb-6" />
+        <FreeAllowance cap={cap} className="mb-4" />
+        <ContinueCard
+          kicker={earToday && !cap.capped ? "Top up today" : "Today's ear routine"}
+          title={recommended.name}
+          tagline={recommended.tagline}
+          meta={routineMeta(recommended)}
+          stepTitles={recommended.steps.map((s) => GAME_NAMES[s.game])}
+          onStart={() => start({ kind: "routine", routine: recommended })}
+          startLabel={cap.capped ? "Available tomorrow" : "Start routine"}
+          unavailableReason={unavailableReason}
+          micReady
+          error={null}
+          streakDays={streakDays}
+          streakBest={progress.streak.best}
+        />
 
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        <GoalRing doneSec={goalDoneSec} goalSec={goalSec} />
-        {/* The continue card above already says "Start a streak today" (or
-            the lapsed best) whenever there is no live streak, so the chip
-            here only names a streak that exists. */}
-        {streakDays >= 1 && <StreakChip days={streakDays} best={progress.streak.best} />}
+        <div className="mt-6 flex flex-wrap items-center gap-4">
+          <GoalRing doneSec={goalDoneSec} goalSec={goalSec} />
+          {/* The continue card above already says "Start a streak today" (or
+              the lapsed best) whenever there is no live streak, so the chip
+              here only names a streak that exists. */}
+          {streakDays >= 1 && <StreakChip days={streakDays} best={progress.streak.best} />}
+        </div>
+
+        <section className="mt-10">
+          <div className="flex flex-wrap items-center gap-2">
+            <SectionLabel heading>Ear training routines</SectionLabel>
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              Pick a length, press start
+            </span>
+          </div>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {EAR_ROUTINES.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => start({ kind: "routine", routine: r })}
+                className="text-left"
+              >
+                <Card tone="raised" className="h-full">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-lg">{r.name}</h3>
+                    <StarTrio stars={routineStars(r, bests)} />
+                  </div>
+                  <p className="mt-2 text-sm text-mut">{r.tagline}</p>
+                  <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    {r.steps.length} games
+                    <span className="mx-2 text-line2">·</span>~{earRoutineMinutes(r)} min
+                  </p>
+                  <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="Games in this routine">
+                    {r.steps.map((s, i) => (
+                      <li key={`${s.game}-${s.difficulty}-${i}`}>
+                        <Pill tone="mut">{GAME_NAMES[s.game]}</Pill>
+                      </li>
+                    ))}
+                  </ol>
+                </Card>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <div className="flex flex-wrap items-center gap-2">
+            <SectionLabel>Path</SectionLabel>
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              Three stars on every game, easiest first
+            </span>
+          </div>
+          <div className="mt-4">
+            <PathList levels={levels} micNoteId={null} unavailableReason={unavailableReason} />
+          </div>
+        </section>
+
+        <p className="mt-8 text-center text-xs text-dim">
+          Every finished game earns XP and counts toward your streak.
+          {" "}
+          {GAME_NAMES["pitch-match"]}, {GAME_NAMES["note-catcher"].toLowerCase()} and{" "}
+          {GAME_NAMES["melody-echo"].toLowerCase()} need a microphone; the other two never
+          listen.
+        </p>
       </div>
-
-      <section className="mt-10">
-        <div className="flex flex-wrap items-center gap-2">
-          <SectionLabel heading>Ear training routines</SectionLabel>
-          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Pick a length, press start
-          </span>
-        </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {EAR_ROUTINES.map((r) => (
-            <button
-              key={r.id}
-              type="button"
-              onClick={() => start({ kind: "routine", routine: r })}
-              className="text-left"
-            >
-              <Card tone="raised" className="h-full">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-lg">{r.name}</h3>
-                  <StarTrio stars={routineStars(r, bests)} />
-                </div>
-                <p className="mt-2 text-sm text-mut">{r.tagline}</p>
-                <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                  {r.steps.length} games
-                  <span className="mx-2 text-line2">·</span>~{earRoutineMinutes(r)} min
-                </p>
-                <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="Games in this routine">
-                  {r.steps.map((s, i) => (
-                    <li key={`${s.game}-${s.difficulty}-${i}`}>
-                      <Pill tone="mut">{GAME_NAMES[s.game]}</Pill>
-                    </li>
-                  ))}
-                </ol>
-              </Card>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-10">
-        <div className="flex flex-wrap items-center gap-2">
-          <SectionLabel>Path</SectionLabel>
-          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Three stars on every game, easiest first
-          </span>
-        </div>
-        <div className="mt-4">
-          <PathList levels={levels} micNoteId={null} unavailableReason={unavailableReason} />
-        </div>
-      </section>
-
-      <p className="mt-8 text-center text-xs text-dim">
-        Every finished game earns XP and counts toward your streak.
-        {" "}
-        {GAME_NAMES["pitch-match"]}, {GAME_NAMES["note-catcher"].toLowerCase()} and{" "}
-        {GAME_NAMES["melody-echo"].toLowerCase()} need a microphone; the other two never
-        listen.
-      </p>
+      {/* Shown only on a deep link's first load, until the room has read it. */}
+      {!handledDeepLink && <DeepLinkSlot room="ear" read={false} />}
     </PageShell>
   );
 }

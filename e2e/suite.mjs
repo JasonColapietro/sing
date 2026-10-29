@@ -41,8 +41,8 @@ const cls = (label, ...args) => journey(label, "e2e/cls.mjs", ...args);
  * song pages whose header action and verdict a saved range swaps in.
  */
 const STATE_ROUTES = {
-  capped: "warmups,breath,ear-training,songs",
-  program: "programs,program-detail,program-foundations,warmups,progress",
+  capped: "warmups,breath,ear-training,songs,breath-deeplink-box,warmups-deeplink-routine,ear-deeplink-routine",
+  program: "programs,program-detail,program-foundations,warmups,progress,warmups-deeplink-routine",
   "program-capped": "programs,program-detail,program-foundations,warmups,breath,ear-training",
   "rest-day": "programs,program-detail,warmups,progress",
   finished: "programs,program-detail,warmups,progress",
@@ -53,6 +53,10 @@ const STATE_ROUTES = {
   "finished-vibrato": "programs,program-vibrato",
   "saved-range": "singer-adele,singer-celine-dion,song-someone-like-you",
 };
+
+/** The rooms' own deep links (e2e/cls.mjs DEEP_LINKS). */
+const DEEP_LINK_ROUTES =
+  "breath-deeplink-box,breath-deeplink-routine,warmups-deeplink-exercise,warmups-deeplink-routine,ear-deeplink-routine";
 
 /** Each state on a phone and a desktop. */
 const stateRuns = (states) =>
@@ -108,6 +112,11 @@ export const SUITES = {
     // /singers on a tall desktop window, where the section after its chart is
     // on the first screen when the chart mounts (0.128 at 1440x1300).
     cls("layout-shift-singers-tall", "--viewport=desktop-1440-tall", "--route=singers-directory", json("layout-shift-singers-tall")),
+    // A room's own deep links loaded cold on a desktop (the runs above cover
+    // a phone); the pre-paint script holds the front page back until the room
+    // reads its address (lib/prepaint.ts data-sing-deeplink).
+    cls("layout-shift-deeplinks-desktop-1280", "--viewport=desktop-1280", `--route=${DEEP_LINK_ROUTES}`, json("layout-shift-deeplinks-desktop-1280")),
+    cls("layout-shift-deeplinks-returning-desktop-1280", "--returning", "--viewport=desktop-1280", `--route=${DEEP_LINK_ROUTES}`, json("layout-shift-deeplinks-returning-desktop-1280")),
     ...stateRuns(["capped", "program", "program-capped", "rest-day", "saved-range"]),
   ],
   "layout-shift-finished": stateRuns([

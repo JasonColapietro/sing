@@ -215,7 +215,16 @@ export default function SingersPage() {
         </ul>
       </section>
 
-      <SingersDirectory />
+      {/* The chart is the page's main content, so it has its own heading; the
+          heading is static server HTML above the directory's placeholder. */}
+      <section aria-labelledby="singer-chart" className="mt-12">
+        <h2 id="singer-chart" className="text-xl">
+          Every reported range on one keyboard
+        </h2>
+        <div className="mt-4">
+          <SingersDirectory />
+        </div>
+      </section>
       <SingerCrawlIndex />
 
       {/* data-singer-return: a Back target the directory restores (RETURN_SCOPES). */}

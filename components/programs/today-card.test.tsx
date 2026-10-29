@@ -354,6 +354,37 @@ describe("restarting a finished program", () => {
   });
 });
 
+describe("the free plan's note on a day longer than five guided minutes", () => {
+  const note = (id: string, index: number) =>
+    renderToStaticMarkup(<ProgramTodayCard active={active(id, index)} onBrowse={null} />).replace(/<!-- -->/g, "");
+
+  it("names the range test only on a day that takes one", () => {
+    plan.pro = false;
+    plan.ready = true;
+    // Recovery week asks for no range test (a tired voice is not one to
+    // measure), so its card does not point at one.
+    const rw = programById("recovery-week")!;
+    expect(rw.days[0].items.some((i) => i.kind === "range")).toBe(false);
+    const recovery = note(rw.id, 0);
+    expect(recovery).toContain("The free plan covers five guided minutes a day, and this day runs longer");
+    expect(recovery).toMatch(/>Pro<\/a> removes the cap\.<\/p>/);
+    expect(recovery).not.toContain("range test is always free");
+    // Foundations' day 1 takes one, and still says it is free.
+    const f = programById("foundations-2w")!;
+    expect(f.days[0].items.some((i) => i.kind === "range")).toBe(true);
+    const foundations = note(f.id, 0);
+    expect(foundations).toContain("The free plan covers five guided minutes a day, and this day runs longer");
+    expect(foundations).toContain("removes the cap; the range test is always free.");
+  });
+
+  it("is not shown to Pro", () => {
+    plan.pro = true;
+    plan.ready = true;
+    expect(note("recovery-week", 0)).not.toContain("The free plan covers five guided minutes");
+    plan.pro = false;
+  });
+});
+
 describe("a finished Recovery week", () => {
   const rw = programById("recovery-week")!;
   const finished: ProgramToday = { status: "finished", index: rw.days.length - 1, completed: rw.days.length };
