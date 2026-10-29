@@ -446,6 +446,8 @@ try {
     assert.equal(await page.getByText("Listen mode", { exact: true }).count(), 0, '"Listen mode" after Pick a song first');
     await expectLive(page, 1, "card Sing after Pick a song first, running", notes, 0);
     await endSongRunOnSummary(page);
+    // Wait out the idle grace, so Sing again has to reopen the mic (and fail) rather than reuse the open stream.
+    await expectLive(page, 0, "summary after Pick a song first", notes);
     await page.evaluate(() => { window.__micFail = true; });
     await page.getByRole("button", { name: "Sing again", exact: true }).click();
     await page.getByRole("button", { name: "Pick a song first", exact: true }).waitFor();
