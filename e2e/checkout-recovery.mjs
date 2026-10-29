@@ -5,11 +5,11 @@
  */
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import { browserTarget, cliArgs } from "./lib/args.mjs";
 
-const args = process.argv.slice(2);
-const base = new URL(args.find((arg) => !arg.startsWith("--")) ?? "http://127.0.0.1:3100");
+const cli = cliArgs("http://127.0.0.1:3100");
+const base = new URL(cli.base);
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(base.hostname), "Use a local test server");
-const executable = args.find((arg) => arg.startsWith("--executable="))?.slice(13);
 const keys = {
   started: "suede-sing:pro:started-checkout",
   pending: "suede-sing:pro:pending-checkout",
@@ -85,7 +85,7 @@ async function unlocked(page) {
   assert.equal(state.started, null);
 }
 
-const browser = await chromium.launch({ ...(executable ? { executablePath: executable } : {}) });
+const browser = await chromium.launch(browserTarget(cli.executable, {}));
 try {
   {
     const { context, page, wire } = await fixture(browser);

@@ -12,11 +12,9 @@ import { chromium } from "playwright";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { browserTarget, cliArgs } from "../e2e/lib/args.mjs";
 
-const argv = process.argv.slice(2);
-const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3200").replace(/\/$/, "");
-/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium`. */
-const executable = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
+const { base, executable } = cliArgs("http://localhost:3200");
 const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public");
 
 /** Local calendar day, as lib/progress.ts localDay writes it. */
@@ -91,7 +89,7 @@ const SHOTS = [
 ];
 const HEADER_PX = 56;
 
-const browser = await chromium.launch(executable ? { executablePath: executable } : {});
+const browser = await chromium.launch(browserTarget(executable, {}));
 try {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },

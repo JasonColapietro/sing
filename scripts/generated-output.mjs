@@ -10,7 +10,7 @@ export const CHECK = process.argv.includes("--check");
 const nameOf = (url) => url.pathname.split("/").slice(-2).join("/");
 
 /** Line counts and the first line that differs. */
-export function diffSummary(current, next) {
+function diffSummary(current, next) {
   const a = current.split("\n");
   const b = next.split("\n");
   let i = 0;

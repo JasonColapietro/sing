@@ -47,7 +47,7 @@ the same runner CI calls (`.github/workflows/ci.yml`):
 
 ```bash
 npm start -- --port 3100     # in another shell, after npm run build
-node e2e/suite.mjs journeys  # or mobile-audit, desktop-audit, audio, layout-shift, layout-shift-finished
+node e2e/suite.mjs journeys  # or mobile-audit, desktop-audit, audio, layout-shift, layout-shift-returning
 ```
 
 Single checks take any base URL (default `http://localhost:3000`): `npm run

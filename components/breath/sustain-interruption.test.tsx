@@ -3,66 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Run the routed sustain test itself, keeping hook state and effect cleanup.
 // Only microphone/breath observations and persistence are mocked.
-const hooks = vi.hoisted(() => {
-  type Slot = { value?: unknown; deps?: unknown[]; cleanup?: void | (() => void) };
-  let slots: Slot[] = [];
-  let cursor = 0;
-  let pending: (() => void)[] = [];
-  let dirty = false;
-  const same = (a?: unknown[], b?: unknown[]) =>
-    !!a && !!b && a.length === b.length && a.every((v, i) => Object.is(v, b[i]));
-  return {
-    reset() { slots = []; },
-    unmount() { slots.forEach((slot) => { if (typeof slot.cleanup === "function") slot.cleanup(); }); slots = []; },
-    render<T>(component: () => T): T {
-      let out: T;
-      let remaining = 20;
-      do {
-        cursor = 0; pending = []; dirty = false;
-        out = component();
-        pending.forEach((effect) => effect());
-        if (!remaining--) throw new Error("Effects did not settle");
-      } while (dirty);
-      return out!;
-    },
-    useState<S>(init: S | (() => S)) {
-      const i = cursor++;
-      if (!slots[i]) slots[i] = { value: typeof init === "function" ? (init as () => S)() : init };
-      return [slots[i].value as S, (next: S | ((previous: S) => S)) => {
-        const value = typeof next === "function" ? (next as (previous: S) => S)(slots[i].value as S) : next;
-        if (!Object.is(value, slots[i].value)) { slots[i].value = value; dirty = true; }
-      }] as const;
-    },
-    useRef<T>(value: T) {
-      const i = cursor++;
-      slots[i] ??= { value: { current: value } };
-      return slots[i].value as { current: T };
-    },
-    useMemo<T>(create: () => T, deps: unknown[]) {
-      const i = cursor++;
-      if (!slots[i] || !same(slots[i].deps, deps)) slots[i] = { value: create(), deps };
-      return slots[i].value as T;
-    },
-    useEffect(effect: () => void | (() => void), deps?: unknown[]) {
-      const i = cursor++;
-      if (slots[i] && same(slots[i].deps, deps)) return;
-      pending.push(() => {
-        const cleanup = slots[i]?.cleanup;
-        if (typeof cleanup === "function") cleanup();
-        slots[i] = { deps, cleanup: effect() };
-      });
-    },
-  };
-});
-
-vi.mock("react", async (original) => ({
-  ...(await original<typeof import("react")>()),
-  useState: hooks.useState,
-  useRef: hooks.useRef,
-  useMemo: hooks.useMemo,
-  useCallback: <T,>(fn: T, deps: unknown[]) => hooks.useMemo(() => fn, deps),
-  useEffect: hooks.useEffect,
-}));
+const hooks = await vi.hoisted(async () => (await import("@/tests/hooks-harness")).createHooks());
+vi.mock("react", async (original) => hooks.mockReact(await original<typeof import("react")>()));
 
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { InhaleDetector, type BreathFeatures, type InhaleEvent } from "@/lib/audio/breath-detect";

@@ -317,9 +317,9 @@ async function openEarTrainingGame(page) {
 
 /**
  * /breath asks for the microphone only inside a drill that needs it: every
- * breath set opens on a silent drill, so the room's own start buttons read
+ * breath routine opens on a silent drill, so the room's own start buttons read
  * "Start routine" and never call getUserMedia. Opening "Sustain test" (the
- * first mic drill in the path, components/breath/drills.ts) puts its
+ * first mic drill in the path, components/breath/routines.ts) puts its
  * "Enable microphone" button on screen. Without this the probe found no
  * control and the room's refusal state went unaudited.
  */

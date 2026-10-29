@@ -15,7 +15,7 @@
  * needs compositing against every ancestor before its contrast means anything.
  * Painting into a 1x1 canvas makes the browser do both conversions for us.
  */
-export const COLOR_PROBE = `
+const COLOR_PROBE = `
 (() => {
   const cv = document.createElement("canvas");
   cv.width = cv.height = 1;
@@ -216,7 +216,7 @@ export const HIT_PROBE = `
  * details:not([open]) test covers the collapsed accordion directly rather than
  * relying on which Chrome version models it which way.
  */
-export const RENDERED_PROBE = `
+const RENDERED_PROBE = `
 (() => {
   window.__rendered = function (el) {
     if (!el || !el.isConnected) return false;

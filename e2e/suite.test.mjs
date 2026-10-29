@@ -18,6 +18,17 @@ describe("the CI browser suites", () => {
     expect(matrix[1].split(",").map((s) => s.trim()).sort()).toEqual(Object.keys(SUITES).sort());
   });
 
+  // Each full-route phone pass takes about 240 s and every other run under
+  // 40 s (CI run 40798206122), so two in one shard would set the PR's wall.
+  it("put the two full-route layout-shift passes in different shards", () => {
+    const full = (c) => c.script === "e2e/cls.mjs" && !c.args.some((a) => a.startsWith("--route="));
+    const shards = Object.entries(SUITES).filter(([, commands]) => commands.some(full));
+    expect(shards.map(([name, commands]) => [name, commands.filter(full).length])).toEqual([
+      ["layout-shift", 1],
+      ["layout-shift-returning", 1],
+    ]);
+  });
+
   // Each command's log and JSON land under its label, so two with one label
   // would overwrite each other's evidence.
   it("give every command of a suite its own label", () => {

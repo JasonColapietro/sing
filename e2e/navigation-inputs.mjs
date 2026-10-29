@@ -4,17 +4,16 @@
  */
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import { browserTarget, cliArgs } from "./lib/args.mjs";
 
-const argv = process.argv.slice(2);
-const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3197").replace(/\/$/, "");
-const executable = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
+const { base, executable, has } = cliArgs("http://localhost:3197");
 const rooms = [
   ["Studio", "/studio"], ["Warmups", "/warmups"], ["Range", "/range?mode=range#start"],
   ["Singers", "/singers"], ["Ear", "/ear-training"], ["Breath", "/breath"],
   ["Songs", "/songs"], ["Tools", "/tools"], ["Learn", "/learn"], ["Progress", "/progress"],
 ];
 const browser = await chromium.launch({
-  ...(executable ? { executablePath: executable } : { channel: "chrome" }),
+  ...browserTarget(executable),
   // Keep classic scrollbars: hiding them would miss modal-lock width changes.
   ignoreDefaultArgs: ["--hide-scrollbars"],
   ...(process.env.SING_BROWSER_PROXY ? { proxy: { server: process.env.SING_BROWSER_PROXY } } : {}),
@@ -82,7 +81,7 @@ try {
       console.log(`PASS classic scrollbar boundary ${low}px: drawer remains open and restores layout`);
     } finally { await context.close(); }
   }
-  for (const input of argv.includes("--scrollbar-boundary") ? [] : ["mouse", "touch", "keyboard"]) {
+  for (const input of has("scrollbar-boundary") ? [] : ["mouse", "touch", "keyboard"]) {
     // Begin with the original failing tablet case; include both sides of sm.
     for (const width of input === "mouse" ? [768, 320, 375, 639, 640, 1024, 1280, 1440] : [375, 768, 1024, 1440]) {
       const context = await browser.newContext({
