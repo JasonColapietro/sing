@@ -172,6 +172,22 @@ export function shownSteps(lesson: Lesson): Lesson["steps"] {
   );
 }
 
+/** Sentences, split the way scripts/compile-lessons.mjs splits them. */
+const sentencesOf = (text: string) => text.split(/(?<=[.!?])\s+(?=[A-Z“"(])/).filter(Boolean);
+
+/**
+ * The self-check's "If you're not ready" advice, less any sentence the page
+ * already printed as a recovery under "When it goes wrong". Once the compiler
+ * drops the course-wide lines, most lessons' advice is their own recovery word
+ * for word; printed twice it reads as filler. Empty when nothing is left.
+ */
+export function notReadyAdvice(lesson: Lesson, printedRecoveries: readonly string[]): string {
+  const printed = new Set(printedRecoveries.flatMap(sentencesOf));
+  return sentencesOf(lesson.selfCheck.ifNotReady)
+    .filter((s) => !printed.has(s))
+    .join(" ");
+}
+
 /** "Room setup and clean input" → "room setup and clean input", for mid-sentence use. */
 export function lowerFirst(text: string): string {
   return text.charAt(0).toLowerCase() + text.slice(1);

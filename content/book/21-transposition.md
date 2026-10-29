@@ -13,7 +13,7 @@ In most recorded popular music, the key was chosen for one particular larynx on 
 
 None of that is a fact about the song. It is a fact about a room.
 
-Meanwhile, the corners of music with the longest and strictest traditions treat key as a variable. Art song is published in high, medium and low editions, and nobody files the low edition under failure. Opera has a long history of transpositions made for particular singers, some of which stuck. Jazz standards are learned in your key as a matter of course — a horn player and a singer settle it early in the rehearsal, in the same flat tone they would use to settle tempo. Church music gets moved so the congregation can actually sing it. Session and theatre singers hand out charts in their key without a flicker.
+Meanwhile, the corners of music with the longest and strictest traditions treat key as a variable. Art song is published in high, medium and low editions, and nobody files the low edition under failure. Opera has a long history of transpositions made for particular singers, some of which stuck. Jazz standards are learned in your key as a matter of course — a horn player and a singer settle it early in the rehearsal, in the same flat tone they would use to settle tempo. Church music gets moved so the congregation can actually sing it. Session and theater singers hand out charts in their key without a flicker.
 
 The idea that key is fixed is a listener's idea, formed by hearing one recording several hundred times. It was never a singer's idea.
 
@@ -61,7 +61,7 @@ And the honest limit: transposition solves fit. It does not solve technique. If 
 
 One more thing. If a key that felt fine starts to cost you, that is not a transposition problem and it is not something to solve on the page.
 
-Otherwise: write down the key you settled on and stop relitigating it. Practising a song in a slightly different key every week is a good way to learn it slowly and perform it badly.
+Otherwise: write down the key you settled on and stop relitigating it. Practicing a song in a slightly different key every week is a good way to learn it slowly and perform it badly.
 
 ## Try this
 

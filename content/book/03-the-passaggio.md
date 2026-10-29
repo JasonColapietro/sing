@@ -17,7 +17,7 @@ That shift is not the problem. The folds change proportion across most of your r
 
 Above the folds, the throat and mouth act as a filter — the resonator that turns one buzz into "ah" or "ee". Chapter five works through that properly. What matters here is that the filter has resonant peaks, and for a given vowel and a given shape of throat, those peaks sit at fixed frequencies. Your pitch is not fixed. It is climbing. As it climbs, the harmonics of your voice slide upward through those fixed peaks like a train passing signal lights.
 
-For most of your range this is fine. The harmonics slide past, the tone changes colour a little, nobody minds. But there is a region where a strong harmonic — often the second one, the octave above the note you are singing — arrives at the lowest resonant peak of the vowel, sits on it, and then keeps climbing past it. On the way up to the peak, the voice feels loud and free and reinforced. Past the peak, that reinforcement drops out from under you. The same effort buys a smaller note.
+For most of your range this is fine. The harmonics slide past, the tone changes color a little, nobody minds. But there is a region where a strong harmonic — often the second one, the octave above the note you are singing — arrives at the lowest resonant peak of the vowel, sits on it, and then keeps climbing past it. On the way up to the peak, the voice feels loud and free and reinforced. Past the peak, that reinforcement drops out from under you. The same effort buys a smaller note.
 
 Now put the two things together. Right where the acoustic support goes away, the muscular blend also has to change. If you answer the drop in loudness by pushing harder — the natural human response to a sound getting quieter — you drive the thickening muscles at the exact moment they need to yield. An adjustment that was going to spread over several notes now happens in one. You hear it. That is the crack.
 
@@ -44,7 +44,7 @@ The countertenor row is a different decision from the others: it marks the cross
 
 Most women also meet an earlier, lighter shift, somewhere around E4 to G4, where chest voice hands over to a lighter middle voice. A quiet slide on "oo" will often flip there, at or below the contralto, mezzo and soprano zones above. Those zones mark where a belt or a full mix has to change gear, which happens higher than that first flip out of chest.
 
-Treat those as a neighbourhood, not an address. Individual voices sit a semitone or three off the list in either direction, and the vowel you are singing shifts the acoustic half of it, because different vowels put their resonant peaks in different places. An "ee" and an "ah" on the same pitch do not meet the wall at the same moment.
+Treat those as a neighborhood, not an address. Individual voices sit a semitone or three off the list in either direction, and the vowel you are singing shifts the acoustic half of it, because different vowels put their resonant peaks in different places. An "ee" and an "ah" on the same pitch do not meet the wall at the same moment.
 
 The pattern is the part you can use. If you find a zone of two to four notes where sustaining feels like work while the notes just below it feel free, that zone is probably yours, and it tends to stay put rather than wander week to week. Chapter ten covers pinning down your own in the pitch studio. For now it is enough to know the thing exists and has a physical address.
 

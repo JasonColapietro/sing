@@ -38,7 +38,7 @@ Slide to your lowest comfortable note, then your highest. Stop before strain, ev
 
 Work in short repetitions, with a normal breath and a full release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness or the urge to chase a number.
 
-Practise the slides in the recorder first, as this module's first lesson does. Then repeat each once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end. Neither room changes your saved range; a finished range test replaces it and refits your warm-ups and songs. Take it once, warmed up, for the self-check, and keep retests weeks apart.
+Practice the slides in the recorder first, as this module's first lesson does. Then repeat each once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end. Neither room changes your saved range; a finished range test replaces it and refits your warm-ups and songs. Take it once, warmed up, for the self-check, and keep retests weeks apart.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.

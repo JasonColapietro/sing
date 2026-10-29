@@ -166,7 +166,7 @@ describe("the ladder diagnosis on a descending drill", () => {
       { ex, results: level, avgScore: 40, best: level[1], xpGained: 5, newAchievements: [], mode: "sing-along" },
       { daily: false },
     ).replace(/<!-- -->/g, "");
-    expect(html).toContain("your average across the whole ladder stayed under 50% instead");
+    expect(html).toContain("No single root came apart. Your average across the whole ladder stayed under 50% instead");
     expect(html).not.toContain("sat under the");
   });
 

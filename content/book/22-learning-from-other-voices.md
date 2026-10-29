@@ -5,7 +5,7 @@ order: 22
 summary: "How to read the singer library for tessitura and craft instead of ceilings, and what those cited figures can and cannot tell you."
 ---
 
-There is a way of reading another singer's range that quietly makes you a worse singer. You look up someone you admire, see a figure like E2–C7, compare it to your own, and file the difference away as the distance between you and them. Then you spend six months practising the wrong thing.
+There is a way of reading another singer's range that quietly makes you a worse singer. You look up someone you admire, see a figure like E2–C7, compare it to your own, and file the difference away as the distance between you and them. Then you spend six months practicing the wrong thing.
 
 The famous ranges page puts the great voices on one keyboard. Almost none of its usefulness lives in that first comparison.
 
@@ -49,7 +49,7 @@ Now set that band against your own comfortable middle, which you find the same w
 
 Copying another singer is one of the oldest ways to learn and one of the easier ways to end up straining. The difference is in what you copy.
 
-Worth imitating: phrasing. Where they breathe. How they place a consonant against the beat. Whether they arrive on a note straight or slide into it. When they drop to almost nothing, how long they hold a note before letting vibrato in, which vowel they choose on a hard one. All of these are decisions. They are learnable, they transfer between voices, and stealing them is how style has always travelled.
+Worth imitating: phrasing. Where they breathe. How they place a consonant against the beat. Whether they arrive on a note straight or slide into it. When they drop to almost nothing, how long they hold a note before letting vibrato in, which vowel they choose on a hard one. All of these are decisions. They are learnable, they transfer between voices, and stealing them is how style has always traveled.
 
 Not worth imitating: timbre, weight, and effort. Timbre is mostly the shape of a vocal tract you do not have. The same choice, made in your body, produces your sound instead of theirs, and that is the correct result rather than a shortfall. Weight is worse. Matching the thickness of a bigger voice means carrying chest weight higher than your instrument wants, and a top built that way tends to arrive tight and tire early in a session. Effort is the trap of copying by sound alone: you hear a note that reads as enormous and reproduce it by pushing, when the original may have been a moderate sound in a good room with a compressor doing the rest.
 

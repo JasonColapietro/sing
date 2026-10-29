@@ -31,7 +31,7 @@ import { HigherLowerGame } from "./higher-lower-game";
 import { NoteCatcherGame } from "./note-catcher-game";
 
 /**
- * Whether the routine's microphone is analysed in this phase: only while a
+ * Whether the routine's microphone is analyzed in this phase: only while a
  * game that listens is played. The stream stays open between such steps, but
  * detection (and its per-frame state update) pauses through slides, tapping
  * games and results.

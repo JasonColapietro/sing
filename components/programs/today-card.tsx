@@ -592,9 +592,13 @@ export function ProgramTodayCard({
           ))}
           {view.status === "finished" && (
             // Chapter 19 asks a run that held together not to start again
-            // tomorrow, so there the restart is not the filled button.
+            // tomorrow, so there the restart is not the filled button. Nor
+            // after a program whose own finished line says what next
+            // (Recovery week: back to ordinary practice, or a doctor), which
+            // recommends neither path a filled restart would push. Same
+            // height either way, so the finished pre-paint slot holds.
             <Button
-              variant={goBacks.length > 0 ? "outline" : undefined}
+              variant={goBacks.length > 0 || program.finished ? "outline" : undefined}
               size="sm"
               onClick={() => restartFinished(program, readings, today)}
             >

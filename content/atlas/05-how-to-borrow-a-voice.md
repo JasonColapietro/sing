@@ -26,7 +26,7 @@ Change a single variable per practice block. If you are working on Winehouse's t
 Borrow in this order:
 
 - **Rhythm and phrasing.** Cheapest, safest, most distinctive.
-- **Vowel colour and placement.**
+- **Vowel color and placement.**
 - **Onset and vibrato.**
 - **Weight and grit, last,** and only in comfortable range. Grit follows the next chapter's rules: quiet before loud, none that leaves you hoarse, a teacher's ears as soon as you can.
 

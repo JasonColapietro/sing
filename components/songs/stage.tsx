@@ -140,7 +140,7 @@ export function Stage({
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={`${label} — stage mode`}
+        aria-label={`${label}: stage mode`}
         className="mx-auto flex min-h-full w-full max-w-4xl flex-col gap-5 px-4 py-6 outline-none sm:px-8 sm:py-10"
       >
         {/* The player passes points and multiplier together, or neither. */}

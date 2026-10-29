@@ -8,11 +8,11 @@ summary: "Room noise, mic placement, headphone bleed and a rough day distort you
 
 Every number the app shows you measures two things at once: your singing, and the conditions you sang in. Usually the second is quiet enough to ignore. Sometimes it is louder than the first, and you end up reading the room instead of your voice.
 
-Bad data does not feel like bad data. It feels like a verdict. A range test that comes back a third short of last month's does not announce itself as a microphone problem — it announces itself as loss. And a singer who believes they have lost a third starts pushing to get it back, which is the wrong response to a measurement error.
+Bad data does not feel like bad data. It feels like a verdict. A range test that comes back a third short of last month's does not announce itself as a microphone problem. It announces itself as loss. And a singer who believes they have lost a third starts pushing to get it back, which is the wrong response to a measurement error.
 
 ## What the app is actually hearing
 
-The pitch trace, the range test scoring, the per-note accuracy Pro reports — all of it runs on your device, from your device's microphone. No audio is uploaded (Pro's cloud sync backs up your progress numbers, never the sound), and no engineer is cleaning up the signal on the way. That is good for privacy and good for speed. It also means the input is exactly as good as your room and your setup make it.
+The pitch trace, the range test scoring, the per-note accuracy Pro reports: all of it runs on your device, from your device's microphone. No audio is uploaded (Pro's cloud sync backs up your progress numbers, never the sound), and no engineer is cleaning up the signal on the way. That is good for privacy and good for speed. It also means the input is exactly as good as your room and your setup make it.
 
 Pitch detection works by finding a repeating pattern in the incoming sound and reporting how often it repeats. That is reliable when the loudest thing in the signal is one voice on one note. It gets less reliable as other steady sounds compete, as the signal drops toward the noise floor, and at the edges of your range: at the bottom, where your tone carries little energy in the fundamental, and at the top, when a thin or breathy tone gives the detector less to lock onto.
 
@@ -20,7 +20,7 @@ Which gives you a short list of things that can corrupt a session.
 
 ## Room noise
 
-A fan. An air conditioner. Traffic through a single-glazed window, a fridge compressor, a laptop under load, someone watching television in the next room. Low steady noise is the worst kind, because it sits in the same neighbourhood as your low notes and never stops long enough for the app to find a gap.
+A fan. An air conditioner. Traffic through a single-glazed window, a fridge compressor, a laptop under load, someone watching television in the next room. Low steady noise is the worst kind, because it sits in the same neighborhood as your low notes and never stops long enough for the app to find a gap.
 
 The symptom: the trace shows a pitch when you are not singing, or your low notes read as jittery while your middle sounds fine. If your bottom three or four notes look wild and the rest of your range looks normal, suspect the room before you suspect your throat.
 
@@ -34,11 +34,11 @@ Too close and loud notes clip: the waveform flattens, the pitch estimate wobbles
 
 Most people move the phone as they sing without noticing. You lift it as you go up. You bring it in on the quiet notes. The app asks the browser to switch automatic gain off so it measures what you actually produced, which means every one of those movements lands in the reading, and your loudness data becomes a record of your arm.
 
-Pick a distance — roughly a foot, a hand's span and a bit — and a position, and keep both the same every time. Propped on a stand or a stack of books beats held in a hand, because a stack of books does not flinch on the high note. Angle it slightly off-axis so your breath is not blasting into the capsule, which keeps plosives and breath noise out of the signal.
+Pick a distance (roughly a foot, a hand's span and a bit) and a position, and keep both the same every time. Propped on a stand or a stack of books beats held in a hand, because a stack of books does not flinch on the high note. Angle it slightly off-axis so your breath is not blasting into the capsule, which keeps plosives and breath noise out of the signal.
 
 ## Headphone bleed
 
-This one produces the strangest readings. If you practise with open-back headphones, or earbuds turned up, or a backing track playing out loud, the microphone hears the track as well as you.
+This one produces the strangest readings. If you practice with open-back headphones, or earbuds turned up, or a backing track playing out loud, the microphone hears the track as well as you.
 
 What comes back is neither you nor the track but a blend of the two. Sustained notes read as accurate while you are silent. Your scores drift toward whatever the reference tone is doing, which flatters you uselessly. In melody echo and pitch-match, the exercise's own reference can leak back in and score itself.
 
@@ -46,7 +46,7 @@ Closed-back headphones or in-ears at a moderate volume fix it. If you have to us
 
 ## Time of day, and the body you woke up in
 
-Your voice is not the same instrument at 7am as at 2pm. Plenty of singers find the bottom is available first thing while the top takes hours to arrive; others run the other way. Either pattern is worth learning about yourself. Neither is worth generalising from one morning.
+Your voice is not the same instrument at 7am as at 2pm. Plenty of singers find the bottom is available first thing while the top takes hours to arrive; others run the other way. Either pattern is worth learning about yourself. Neither is worth generalizing from one morning.
 
 Add the ordinary variables. How much you slept. How much you talked yesterday. Whether you were shouting over a band on Friday, where you are in a menstrual cycle, how much water you have had, how dry the air is. None of these is a fault. All of them move the numbers.
 
@@ -56,13 +56,13 @@ The consequence is simple. A range test taken cold at 7am and compared against o
 
 Congestion changes what you hear more than it changes what comes out. A blocked nose alters the resonance you perceive through your own skull, so you can feel badly out of tune while the trace says you are fine, or feel fine while you drift.
 
-The practical part is easy: put the numbers aside. A range test taken with a cold measures the cold. If the cold has stayed in your nose, gentle, quiet singing is usually fine. If it has reached your voice — hoarse, husky, or sore to sing — rest it rather than practising through it, and start measuring again when you are back to ordinary.
+The practical part is easy: put the numbers aside. A range test taken with a cold measures the cold. If the cold has stayed in your nose, gentle, quiet singing is usually fine. If it has reached your voice (hoarse, husky, or sore to sing), rest it rather than practicing through it, and start measuring again when you are back to ordinary.
 
-Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one. Chapter six says more.
 
 ## Spotting a bad session before you act on it
 
-You do not need to analyse every practice. You need one question before you let a number change your plan: *was this session measurable?*
+You do not need to analyze every practice. You need one question before you let a number change your plan: *was this session measurable?*
 
 A pre-flight, thirty seconds at most:
 
@@ -70,7 +70,7 @@ A pre-flight, thirty seconds at most:
 - Same distance, same position, phone propped rather than held.
 - Headphones in, closed or in-ear, volume moderate.
 - Warm up before you test, not after.
-- Note the time and how you feel — rough, tired, congested, fine.
+- Note the time and how you feel: rough, tired, congested, fine.
 
 And a few tells that a session went wrong mid-flight:
 

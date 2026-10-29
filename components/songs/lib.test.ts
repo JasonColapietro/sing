@@ -725,7 +725,7 @@ describe("songbook transcriptions", () => {
   it("transcribes the corrected folk melodies", () => {
     const midis = (slug: string) => songBySlug(slug)!.notes.map((n) => n.midi);
     expect(midis("london-bridge-is-falling-down").slice(-3)).toEqual([64, 65, 67]);
-    expect(midis("danny-boy")).toEqual([59, 60, 62, 64, 62, 64, 69, 67, 64, 62, 57]);
+    expect(midis("danny-boy")).toEqual([55, 57, 59, 60, 59, 60, 65, 64, 60, 62, 57]);
   });
 });
 

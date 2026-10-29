@@ -33,9 +33,9 @@ describe("404 page", () => {
   it("names Suede Pro once, in a quiet line below the practice links, with the price from the pricing code", () => {
     const price = formatPrice(PRICING.lifetime.amount);
     expect(text).toContain(`Or see what Suede Pro adds, ${price} once.`);
-    expect(html).toMatch(/<a[^>]*href="\/pro"[^>]*>what Suede Pro adds<\/a>/);
-    expect(html.indexOf('href="/pro"')).toBeGreaterThan(html.indexOf(anchor("/studio")));
-    expect(html.match(/href="\/pro"/g)).toHaveLength(1);
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>what Suede Pro adds<\/a>/);
+    expect(html.indexOf('href="/pro#buy"')).toBeGreaterThan(html.indexOf(anchor("/studio")));
+    expect(html.match(/href="\/pro(#buy)?"/g)).toHaveLength(1);
   });
 
   it("has no em dash in its visible text", () => {

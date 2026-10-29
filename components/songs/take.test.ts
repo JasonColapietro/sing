@@ -125,6 +125,6 @@ describe("song takes", () => {
   });
 
   it("names a saved take after the song and the day", () => {
-    expect(songTakeName("Silent Night", new Date(2026, 8, 23))).toBe("Silent Night — Sep 23");
+    expect(songTakeName("Silent Night", new Date(2026, 8, 23))).toBe("Silent Night · Sep 23");
   });
 });

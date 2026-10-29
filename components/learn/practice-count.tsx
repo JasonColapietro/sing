@@ -67,7 +67,7 @@ export function PracticedMark({ match }: { match: PracticeMatch }) {
   if (matchingSessions(sessions, match).length === 0) return null;
   return (
     <span className="inline-flex items-center gap-1 rounded-full border border-ok/40 px-2.5 py-0.5 text-xs text-ok-ink">
-      Practised
+      Practiced
     </span>
   );
 }

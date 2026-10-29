@@ -25,7 +25,7 @@ Two reasons, and neither is aesthetic. Head voice teaches the coordination you a
 
 The second reason is workload. Ten minutes of quiet head voice above the transition is a light session. Ten minutes of repeated belt attempts near your ceiling is a different proposition.
 
-If you sing styles where belt is the sound — pop, rock, musical theatre — this is not a detour away from what you want. A reliable belt tends to sit on top of a well-organised head voice, and the mix chapter 2 described lives there too. Chapter 10 had you find the pitch where belting stops being available. For these two weeks, that pitch is a ceiling you do not test. Sing below it in your usual voice, and above it lightly. The region right at the ceiling, hammered over and over, is the fastest way to end a block sore.
+If you sing styles where belt is the sound — pop, rock, musical theater — this is not a detour away from what you want. A reliable belt tends to sit on top of a well-organized head voice, and the mix chapter 2 described lives there too. Chapter 10 had you find the pitch where belting stops being available. For these two weeks, that pitch is a ceiling you do not test. Sing below it in your usual voice, and above it lightly. The region right at the ceiling, hammered over and over, is the fastest way to end a block sore.
 
 ## What the two weeks look like
 
@@ -41,7 +41,7 @@ Finish every session below the transition. Two or three minutes of easy middle-v
 
 ## The limits, stated plainly
 
-Ten minutes maximum above your transition in any session. That is total time up there, not total session time. Twenty minutes of ascent work is not twice as good; past a point you are practising fatigue.
+Ten minutes maximum above your transition in any session. That is total time up there, not total session time. Twenty minutes of ascent work is not twice as good; past a point you are practicing fatigue.
 
 Three attempts at any note near your top, then move on. Not five, not "one more". The fourth attempt at a note that failed three times is rarely better, and it is where strain accumulates.
 

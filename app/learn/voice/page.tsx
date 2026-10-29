@@ -92,7 +92,7 @@ export default function VoiceCoursePage() {
           <SectionLabel>How it works</SectionLabel>
           <h2 className="mt-3 text-2xl">Lessons teach, rooms measure</h2>
           <p className="mt-3 max-w-3xl text-mut">
-            Every lesson ends in a self-check: your own listening judgement,
+            Every lesson ends in a self-check: your own listening judgment,
             written down. Where a Suede Sing room can measure part of the work,
             such as pitch against a target, a sustain or your range, the lesson
             links to it and says what the number does and doesn&apos;t tell
@@ -122,7 +122,7 @@ export default function VoiceCoursePage() {
               </li>
               <li>Note the key and setup you used, so the next comparison is fair.</li>
               <li>
-                Say what will count as complete before you practise, and keep
+                Say what will count as complete before you practice, and keep
                 every attempt inside the range and duration you can repeat
                 comfortably.
               </li>

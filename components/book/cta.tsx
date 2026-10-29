@@ -1,7 +1,7 @@
 "use client";
 
 import { useProState } from "@/lib/pro";
-import { proHeadline } from "@/lib/pro-shared";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { BOOK_CONTENTS } from "@/lib/book-data";
 import { LinkButton } from "@/components/ui";
 import { PdfDownload } from "@/components/book/pdf-download";
@@ -30,12 +30,13 @@ export function BookCta() {
           Read a free chapter
         </LinkButton>
       )}
-      <LinkButton href="/pro" variant="outline" size="md">
-        See what Pro includes
+      {/* A priced ask lands on the buy card, as the locked chapters' do. */}
+      <LinkButton href="/pro#buy" variant="outline" size="md">
+        {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
       </LinkButton>
       <span className="text-xs text-dim">
         {BOOK_CONTENTS.filter((c) => c.free).length} chapters free · all{" "}
-        {BOOK_CONTENTS.length} and a PDF to keep with Pro, {proHeadline()}
+        {BOOK_CONTENTS.length} and a PDF to keep with Pro
       </span>
     </div>
   );

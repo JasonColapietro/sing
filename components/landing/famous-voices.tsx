@@ -78,11 +78,7 @@ export function FamousVoices() {
                     {rangeLabel(singer)}
                   </span>
                 </span>
-                <RangeMini
-                  low={singer.lowMidi}
-                  high={singer.highMidi}
-                  beltMidi={singer.beltMidi}
-                />
+                <RangeMini low={singer.lowMidi} high={singer.highMidi} />
               </Link>
             </li>
           ))}

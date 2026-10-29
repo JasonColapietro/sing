@@ -61,7 +61,7 @@ export function PdfDownload({
           back into "Download the PDF". */}
       {state === "error" && (
         <span role="alert" className="text-xs text-rec">
-          Couldn&apos;t start the download — try again in a moment.
+          Couldn&apos;t start the download. Try again in a moment.
         </span>
       )}
     </span>

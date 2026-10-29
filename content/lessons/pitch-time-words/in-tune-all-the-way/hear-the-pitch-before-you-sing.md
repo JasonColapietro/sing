@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head before you make a sound. A voice that starts without that picture searches for the note, sliding up into it or settling on a neighbour, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you judge, so the comparison stays honest.
+Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head before you make a sound. A voice that starts without that picture searches for the note, sliding up into it or settling on a neighboring pitch, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you judge, so the comparison stays honest.
 
 ## Steps
 

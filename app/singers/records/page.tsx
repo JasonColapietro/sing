@@ -215,8 +215,7 @@ export default function RecordsPage() {
             verified performance record or a physiological limit. {HUB_FIGURES_NOTE}
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            Open an artist profile for its source status and scope. A written
-            song arrangement, a single recording, and a repeatable working
+            A written song arrangement, a single recording, and a repeatable working
             range answer different questions.
           </p>
         </Card>

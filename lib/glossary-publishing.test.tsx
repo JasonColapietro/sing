@@ -50,6 +50,19 @@ function definedTermSet() {
 }
 
 describe("the glossary page", () => {
+  it("defines passaggio, the title's first term, in its opening line", () => {
+    // The title promises "Passaggio, Tessitura"; the first definition in the
+    // list sits several phone screens down, so the subtitle answers first.
+    const passaggio = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");
+    expect(passaggio).toBeDefined();
+    const def = passaggio!.definition;
+    const opening = HTML.slice(0, HTML.indexOf(`id="${termId("Passaggio")}"`));
+    const text = opening.replace(/&#x27;/g, "'");
+    expect(text).toContain(
+      `Passaggio, for example, is ${def.charAt(0).toLowerCase()}${def.slice(1)}`,
+    );
+  });
+
   /**
    * Two of the guitar entries — `register` and `tone` — share an anchor with a
    * sing entry, so their absence cannot be asserted by name. They are covered by

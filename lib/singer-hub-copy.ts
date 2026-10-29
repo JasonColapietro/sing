@@ -35,7 +35,7 @@ import type { VoiceKind } from "@/lib/singers-core";
 
 /** The one truthful sentence every hub says about its figures (voice-type hubs, genre hubs, records). */
 export const HUB_FIGURES_NOTE =
-  "Every profile's figures are commonly cited spans confirmed against the catalog, not recordings checked note by note; open a profile for what its sources support.";
+  "Most profiles' figures are commonly cited spans from the catalog, not recordings checked note by note; a few have reviewed or disputed sources. Open a profile for what its sources support.";
 
 export interface HubCopy {
   /** Two sentences on what is specific to this hub. Rendered, and used as the CollectionPage description. */
@@ -67,7 +67,7 @@ export const GENRE_HUB_COPY: Record<string, HubCopy> = {
       "Alternative covers the independent and college-radio rock that broke into the mainstream from the 1980s on, so its voices are deliberately varied: whispered, falsetto-led, shouted or conversational. There is no single typical tessitura here. What links these singers is a habit of using tone and character in place of conventional polish.",
     neighbour: "indie",
     contrast:
-      "{link} is the quieter, close-mic end of the same family, where falsetto and light head voice are used for colour more often than power.",
+      "{link} is the quieter, close-mic end of the same family, where falsetto and light head voice are used for color more often than power.",
     titleTag: "Character Over Polish",
     summary:
       "Whispered, falsetto-led or shouted: voices chosen for character, with no single typical tessitura.",
@@ -144,7 +144,7 @@ export const GENRE_HUB_COPY: Record<string, HubCopy> = {
   },
   grunge: {
     intro:
-      "Grunge is the late-1980s and early-1990s Seattle sound, and its singers favoured heavy baritone weight and raw, unpolished tone over clean high notes. Verses often sit low and quiet in the middle of the voice before breaking into a strained, full-throated chorus.",
+      "Grunge is the late-1980s and early-1990s Seattle sound, and its singers favored heavy baritone weight and raw, unpolished tone over clean high notes. Verses often sit low and quiet in the middle of the voice before breaking into a strained, full-throated chorus.",
     neighbour: "alternative",
     contrast:
       "It is one narrow, heavy slice of {link}, which covers the wider movement.",
@@ -174,13 +174,13 @@ export const GENRE_HUB_COPY: Record<string, HubCopy> = {
   },
   indie: {
     intro:
-      "Indie singers often favour a close, conversational delivery recorded near the microphone, with falsetto and light head voice used for colour rather than power. The songs are written for character rather than display, so modest ranges are common.",
+      "Indie singers often favor a close, conversational delivery recorded near the microphone, with falsetto and light head voice used for color rather than power. The songs are written for character rather than display, so modest ranges are common.",
     neighbour: "alternative",
     contrast:
       "{link} is the louder, older umbrella it grew from, with more room for shouting and grit.",
     titleTag: "Close-Mic Tone and Falsetto",
     summary:
-      "Close-mic, conversational singing with falsetto and head voice used for colour.",
+      "Close-mic, conversational singing with falsetto and head voice used for color.",
   },
   "j-pop": {
     intro:
@@ -361,10 +361,10 @@ export const VOICE_TYPE_HUB_COPY: Record<VoiceKind, HubCopy> = {
       "A bass-baritone has a bass's low notes with a baritone's working middle, conventionally {low} to {high}, a step above the bass band at both ends. Its transition sits around {pLow} to {pHigh}.",
     neighbour: "bass",
     contrast:
-      "Compared with a true {link}, the low notes are colour rather than home, so most of the singing happens in the octave above them.",
+      "Compared with a true {link}, the low notes are color rather than home, so most of the singing happens in the octave above them.",
     titleTag: "Bass Lows, Baritone Core",
     summary:
-      "Real bass depth used as colour, with most of the singing in a baritone's middle.",
+      "Real bass depth used as color, with most of the singing in a baritone's middle.",
   },
   Baritone: {
     intro:

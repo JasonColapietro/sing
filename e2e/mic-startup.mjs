@@ -84,6 +84,33 @@ try {
     }
   }
 
+  // A room's one start button is on a 375x667 phone's first screen: the
+  // example figures sit under it (round 16), not between the heading and it.
+  for (const room of [
+    { path: "/studio", start: "Enable microphone" },
+    { path: "/range?mode=range#start", start: "Start free range test" },
+    { path: "/range?mode=pitch#start", start: "Start singing" },
+  ]) {
+    const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
+    try {
+      await context.addInitScript(() => {
+        localStorage.clear();
+        localStorage.setItem("suede-sing:coach-intro:v1", new Date().toISOString());
+      });
+      const page = await context.newPage();
+      await page.goto(`${base}${room.path}`);
+      await page.waitForLoadState("networkidle");
+      const start = page.getByRole("button", { name: room.start, exact: true });
+      await start.waitFor();
+      const bounds = await start.boundingBox();
+      assert.ok(bounds && bounds.y >= 0 && bounds.y + bounds.height <= 667,
+        `${room.path}: "${room.start}" is on a phone's first screen (${bounds && `${Math.round(bounds.y)}-${Math.round(bounds.y + bounds.height)}`})`);
+      console.log(`PASS ${room.path}: "${room.start}" on the first 375x667 screen`);
+    } finally {
+      await context.close();
+    }
+  }
+
   // BreathStudio owns the mic across its drill and home views. Leaving the
   // drill must cancel permission even though the hook itself stays mounted.
   const context = await browser.newContext({ viewport: { width: 375, height: 667 } });

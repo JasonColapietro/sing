@@ -636,6 +636,29 @@ at version 1. `suede-vocal.json`, `glossary.json` and
 What the other apps must do: GuitarHub re-syncs
 `suede-voice-curriculum.json` byte for byte. Nothing else changes.
 
+#### Editorial and wording changes inside v9 (2026-10-29, round 16)
+
+No key was added or renamed, so `version` stays 9 and `glossary.json` stays
+at version 1. `glossary.json` and `suede-voice-lesson-urls.json` are
+unchanged:
+
+- `editorial`: word counts moved because em dashes came out of the free
+  chapters and American spelling was applied across the book. Book:
+  `what-your-voice-is` (1386), `reading-the-range-test` (1465),
+  `when-numbers-lie` (1461), `totalWords` 32526. Atlas: chapters 1 to 3,
+  `how-to-read-an-entry` (861), `notes-octaves-and-the-keyboard` (840),
+  `voice-types-in-the-wild` (855), `totalWords` 70840. These are the counts
+  after merging the fifth fleet pass's chapter edits.
+- `suede-voice-curriculum.json`, two summaries, with their lessons'
+  objectives: `v-l5-m4-04` (An Easy Pattern Through Your Transition) is now
+  "A short supplied pattern that crosses your transition zone. Pick the key
+  that puts it there." (no em dash), and `v-l5-m4-07` (Self-Check: One
+  Song, Two Styles) is now "Both recognizable, both yours." (American
+  spelling).
+
+What the other apps must do: re-sync `suede-vocal.json` and
+`suede-voice-curriculum.json` byte for byte. Nothing else changes.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

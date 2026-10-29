@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "Suede Voice — vocal range and singing practice for iPhone and Android";
+export const alt = "Suede Voice: vocal range and singing practice for iPhone and Android";
 
 export default function Image() {
   return new ImageResponse(

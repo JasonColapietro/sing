@@ -39,7 +39,7 @@ If four songs in a row put their choruses in the same handful of notes, you have
 
 So spread the load. When you lay the set out, write down the tessitura of each chorus — the few notes each chorus actually lives in — and read down the column. You want variety there. If three cluster, move one by a tone or two, reorder so they are not adjacent, or swap one out.
 
-Two more considerations that only show up in a set. If a song's chorus sits right at your break, it is a bad neighbour: put nothing demanding on either side of it. And avoid two songs in a row that both push your ceiling, even when each is fine alone. The second is sung on a voice that has already been to the top once, and the top is where tiredness shows first.
+Two more considerations that only show up in a set. If a song's chorus sits right at your break, it is a bad neighbor: put nothing demanding on either side of it. And avoid two songs in a row that both push your ceiling, even when each is fine alone. The second is sung on a voice that has already been to the top once, and the top is where tiredness shows first.
 
 ## Plan for the room and the night, not the take
 
@@ -57,7 +57,7 @@ Plan for repetition too. A set is rarely sung once. Two nights running, or two s
 
 Write the running order down. Beside each song, note the chorus tessitura, whether it crosses your break, and whether it is demanding, neutral or restful. Then look at the shape. You are checking the same four things every time: hardest song in the middle third, no two demanding songs adjacent, restful songs spread rather than clumped at the end, no long stretch of choruses in one narrow band.
 
-Then rehearse the joins, not just the songs. Sing three consecutive songs straight through with the real transitions between them, talking included. That is how you find out song six was fine in isolation and is not fine after song five. Nothing else reveals it. A song you have practised a hundred times alone has never once been sung in the condition it will be sung in.
+Then rehearse the joins, not just the songs. Sing three consecutive songs straight through with the real transitions between them, talking included. That is how you find out song six was fine in isolation and is not fine after song five. Nothing else reveals it. A song you have practiced a hundred times alone has never once been sung in the condition it will be sung in.
 
 If a join fails you have three moves: reorder, retranspose, replace. Try them in that order. Reordering costs nothing, retransposing costs a rehearsal, replacing costs a song. Most failed joins go away at the first.
 

@@ -128,7 +128,7 @@ export function TakePitchPanel({ analysis, name }: { analysis: TakeAnalysis; nam
       <p className="mt-2 text-xs text-mut">
         Median note {midiToLabel(median)} · {analysis.inTunePct}% within ±25 cents of a note ·{" "}
         {fmtClock(analysis.durationSec)}
-        {analysis.truncated && " — first 3:00 analyzed"}
+        {analysis.truncated && " (first 3:00 analyzed)"}
       </p>
     </div>
   );
@@ -150,7 +150,7 @@ export function AbPitchOverlay({
   if (midisA.length === 0 && midisB.length === 0) {
     return (
       <p className="rounded-xl border border-dashed border-line2 px-4 py-8 text-center text-sm text-mut">
-        No clear pitch found in either take yet — the overlay needs voiced singing to compare.
+        No clear pitch found in either take yet. The overlay needs voiced singing to compare.
       </p>
     );
   }

@@ -3,6 +3,7 @@ import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import { LinkButton, PageShell, SectionHeading, SectionLabel } from "@/components/ui";
 import { ProChip } from "@/components/pro/ui";
+import { NotPro } from "@/components/pro/gate";
 import V2TraceGlyph from "@/components/v2-glyph";
 import { SINGERS } from "@/lib/singers";
 import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
@@ -106,7 +107,7 @@ const RELEASE_41_STORIES: Story[] = [
   {
     label: "Rooms",
     title: "An example of what each room draws",
-    body: "The range test, studio, songs, recorder and analyzer now show a small example drawing before you turn the microphone on: a range on a keyboard, a pitch trace, a piano roll, a take's waveform and a spectrogram. Each is labelled as sample data, so you know what to expect before the browser asks for the mic.",
+    body: "The range test, studio, songs, recorder and analyzer now show a small example drawing before you turn the microphone on: a range on a keyboard, a pitch trace, a piano roll, a take's waveform and a spectrogram. Each is labeled as sample data, so you know what to expect before the browser asks for the mic.",
     links: [
       { href: "/studio", text: "Step into the studio" },
       { href: "/analyze", text: "Open the analyzer" },
@@ -188,7 +189,7 @@ const RELEASE_40_STORIES: Story[] = [
   {
     label: "Songs",
     title: "Songs that hear the octave you sing",
-    body: "Sing a song an octave away from the written melody and the piano roll now draws your voice in the octave you sang. Per-note tallies and hardest notes are filed there too, so the coach no longer calls a low voice out of range. Without a saved range, a song scores one octave per pass. If you started without a microphone, the player and its summary offer to turn it on.",
+    body: "Sing a song an octave away from the written melody and the piano roll now draws your voice in the octave you sang. Per-note tallies and hardest notes are filed there too, so the coach no longer calls a low voice out of range. Without a saved range, a song opens in the written key and is scored in either octave, one octave per pass. If you started without a microphone, the player and its summary offer to turn it on.",
     links: [{ href: "/songs", text: "Sing the songs" }],
   },
 ];
@@ -627,22 +628,26 @@ export default function ChangelogPage() {
       </section>
 
       {/* The page's one violet moment, because this surface genuinely is Pro. */}
-      <section className="relative mt-14 overflow-hidden rounded-2xl border border-violet/50 bg-panel p-5 sm:p-6">
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet to-transparent"
-        />
-        <ProChip />
-        <h2 className="mt-3 text-2xl sm:text-3xl">{proHeadlineLong()}</h2>
-        <p className="mt-3 max-w-prose text-mut">
-          Guided practice with no daily clock, both books in full, the pro
-          warmup packs, pitch analysis on every take, your range history, and
-          cloud sync. v2 grew the free studio; Pro is what keeps it free.
-        </p>
-        <LinkButton href="/pro" variant="violet" size="md" className="mt-5">
-          See what Pro adds
-        </LinkButton>
-      </section>
+      {/* A priced ask: hidden from a Pro owner before first paint (NotPro), and
+          its button lands on the buy card, as the homepage's does. */}
+      <NotPro as="div">
+        <section className="relative mt-14 overflow-hidden rounded-2xl border border-violet/50 bg-panel p-5 sm:p-6">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet to-transparent"
+          />
+          <ProChip />
+          <h2 className="mt-3 text-2xl sm:text-3xl">{proHeadlineLong()}</h2>
+          <p className="mt-3 max-w-prose text-mut">
+            Guided practice with no daily clock, both books in full, the pro
+            warmup packs, pitch analysis on every take, your range history, and
+            cloud sync. v2 grew the free studio; Pro is what keeps it free.
+          </p>
+          <LinkButton href="/pro#buy" variant="violet" size="md" className="mt-5">
+            {`Go Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
+          </LinkButton>
+        </section>
+      </NotPro>
 
       <section aria-label="Release log" className="mt-14 border-t border-line2 pt-8">
         <SectionLabel heading>The running log</SectionLabel>

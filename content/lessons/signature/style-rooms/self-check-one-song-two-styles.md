@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Self-Check: One Song, Two Styles"
 type: "checkpoint"
 minutes: 7
-objective: "Both recognisable, both yours."
+objective: "Both recognizable, both yours."
 prerequisites: "v-l7-m2-05"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,7 +29,7 @@ Choose one well-learned song in a comfortable key so pitch and words do not cons
 
 ### Name the target: Genre choices
 
-Both recognisable, both yours. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
+Both recognizable, both yours. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Each treatment has written choices rather than a vague instruction to sound like a particular artist.
 - Listen: A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.

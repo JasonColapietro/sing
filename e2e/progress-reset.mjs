@@ -139,7 +139,7 @@ async function resumeThroughUi(page, wire) {
   const pullsBefore = wire.pulls;
   const pushesBefore = wire.pushes.length;
   await page.getByRole("button", { name: "Resume sync and restore", exact: true }).click();
-  await page.getByRole("status").filter({ hasText: "Synced — progress from your other devices is merged in." }).waitFor();
+  await page.getByRole("status").filter({ hasText: "Synced: progress from your other devices is merged in." }).waitFor();
   await sessionRows(page, { sessions: [...cloudCopy.sessions, ...newPractice.sessions] });
   const state = await stored(page);
   assert.equal(state.cloud?.paused, false, "explicit resume re-enables sync");

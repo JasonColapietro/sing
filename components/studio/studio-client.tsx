@@ -18,6 +18,7 @@ import {
 } from "@/components/range/pitch-meter-hint";
 import { Button, Card, LinkButton, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { FigureFrame, TraceFigure } from "@/components/figures";
+import { RangeNextStep, useRangeRetestRule } from "@/components/range/pitch-meter";
 import { rangeTestHref } from "@/lib/site";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
@@ -155,7 +156,7 @@ export function finishStudioSession(
       durationSec,
       detail:
         hits > 0
-          ? `Studio — ${hits} lock${hits === 1 ? "" : "s"}`
+          ? `Studio: ${hits} lock${hits === 1 ? "" : "s"}`
           : "Studio session",
       // The score is the share of sung target time that landed in tune —
       // the same measure the warmup ladders report, so the two are
@@ -209,6 +210,67 @@ const STUDIO_PARTS = [
 ] as const;
 
 
+/**
+ * The Stop card: what the session did, then a next room. The same shape as
+ * the /range meter's stopped card, and the same retest rule
+ * (components/range/pitch-meter.tsx RangeNextStep): the range test only while
+ * one is due, and otherwise the program's note or "retest weeks apart" with
+ * practice that uses the saved range.
+ */
+export function StudioLastSession({
+  result,
+  elapsedSec,
+  retestDue,
+  programNote,
+  programDayHref,
+}: {
+  result: StudioResult;
+  /** The session clock as it stopped: the logged length, banked time included. */
+  elapsedSec: number;
+  retestDue: boolean;
+  programNote: string | null;
+  programDayHref: string | null;
+}) {
+  return (
+    <Card className="mx-auto mb-6 max-w-2xl">
+      <SectionLabel>Last session</SectionLabel>
+      <p className="mt-2 text-sm text-mut">
+        {result.log
+          ? `${fmtTime(elapsedSec)} in the studio. +${result.log.xpGained} XP, saved to your progress.`
+          : result.silent
+            ? "No note was heard, so nothing was logged. Sing a little louder or closer to the mic, or check the input under Audio below."
+            : `That one ran under ${MIN_LOG_SEC} seconds, so it wasn’t logged. Sing again adds to the time.`}
+      </p>
+      {(result.locks > 0 || (result.log?.newAchievements.length ?? 0) > 0) && (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {result.locks > 0 && (
+            <Pill tone={result.newBest ? "ok" : "violet"}>
+              <span className="tabular font-mono">{result.locks}</span>
+              {result.newBest ? " locked · new personal best" : " locked"}
+            </Pill>
+          )}
+          {result.log?.newAchievements.map((a) => (
+            <Pill key={a.id} tone="ok">
+              {a.icon} {a.title}
+            </Pill>
+          ))}
+        </div>
+      )}
+      <RangeNextStep
+        retestDue={retestDue}
+        programNote={programNote}
+        programDayHref={programDayHref}
+        tryRange={<LinkButton href={rangeTestHref()}>Take the 2-minute range test</LinkButton>}
+      />
+      {result.log && (
+        <div className="mt-3">
+          <ProInlineNudge>Pro charts your scored warmups and songs note by note</ProInlineNudge>
+        </div>
+      )}
+    </Card>
+  );
+}
+
 export function StudioClient() {
   const [elapsed, setElapsed] = useState(0);
   const [toast, setToast] = useState<StudioResult | null>(null);
@@ -231,6 +293,9 @@ export function StudioClient() {
   const lastTRef = useRef(0);
   const hintRef = useRef<string | null>(null);
   const [hint, setHint] = useState<string | null>(null);
+  /** Whether the Stop card's next step is the range test, read as the mic starts. */
+  const retestRule = useRangeRetestRule();
+  const { readRetestRule } = retestRule;
 
   const finishSession = useCallback(
     (): StudioResult | null =>
@@ -238,11 +303,27 @@ export function StudioClient() {
     [practiceClock],
   );
 
-  /** Close out the session and show the singer what it logged, or why it did not. */
+  /**
+   * Close out the session and show the singer what it logged, or why it did
+   * not. A short session that heard a note and kept its seconds banked
+   * (carriesOver, with time on the clock) gets the card too, even with no
+   * lock: its Sing again is what carries those seconds into the next
+   * session. Without the card a tuner-only 30 s stop showed nothing, and the
+   * next start threw the 30 s away. A Stop pressed a moment after Start
+   * banks nothing (the clock is reset) and still shows nothing.
+   */
   const closeSession = useCallback(() => {
     const result = finishSession();
-    if (result && (result.log || result.locks > 0 || result.silent)) setToast(result);
-  }, [finishSession]);
+    if (
+      result &&
+      (result.log ||
+        result.locks > 0 ||
+        result.silent ||
+        (carriesOver(result) && practiceClock.elapsedMs() > 0))
+    ) {
+      setToast(result);
+    }
+  }, [finishSession, practiceClock]);
 
   // A microphone that goes away mid-session (unplugged, a headset dropped)
   // stops the room with its error showing, and the session closes the way
@@ -281,6 +362,7 @@ export function StudioClient() {
   }, [listening, practiceClock]);
 
   const handleStart = async () => {
+    readRetestRule();
     const ok = await start();
     if (ok) {
       // A short, unlogged stop keeps its seconds and locks, as its card promises.
@@ -364,61 +446,24 @@ export function StudioClient() {
         ) : undefined
       }
     >
-      {/* The same shape as the /range meter's stopped card: what the session
-          did, then a next room, instead of a toast with Dismiss. */}
+      {/* The running program's next range test or Recovery week, read only
+          when the retest rule needs it (useRangeRetestRule). */}
+      {retestRule.probe}
       {toast && (
-        <Card className="mx-auto mb-6 max-w-2xl">
-          <SectionLabel>Last session</SectionLabel>
-          <p className="mt-2 text-sm text-mut">
-            {toast.log
-              ? `${fmtTime(elapsed)} in the studio. +${toast.log.xpGained} XP, saved to your progress.`
-              : toast.silent
-                ? "No note was heard, so nothing was logged. Sing a little louder or closer to the mic, or check the input under Audio below."
-                : `That one ran under ${MIN_LOG_SEC} seconds, so it wasn’t logged. Sing again adds to the time.`}
-          </p>
-          {(toast.locks > 0 || (toast.log?.newAchievements.length ?? 0) > 0) && (
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {toast.locks > 0 && (
-                <Pill tone={toast.newBest ? "ok" : "violet"}>
-                  <span className="tabular font-mono">{toast.locks}</span>
-                  {toast.newBest ? " locked · new personal best" : " locked"}
-                </Pill>
-              )}
-              {toast.log?.newAchievements.map((a) => (
-                <Pill key={a.id} tone="ok">
-                  {a.icon} {a.title}
-                </Pill>
-              ))}
-            </div>
-          )}
-          <div className="mt-3 flex flex-wrap gap-3">
-            <LinkButton href={rangeTestHref()}>Take the 2-minute range test</LinkButton>
-            <LinkButton href="/warmups" variant="outline">
-              Warm up first
-            </LinkButton>
-            <LinkButton href="/songs" variant="outline">
-              Sing a song
-            </LinkButton>
-          </div>
-          {toast.log && (
-            <div className="mt-3">
-              <ProInlineNudge>Pro charts your scored warmups and songs note by note</ProInlineNudge>
-            </div>
-          )}
-        </Card>
+        <StudioLastSession
+          result={toast}
+          elapsedSec={elapsed}
+          retestDue={retestRule.offerRetest}
+          programNote={retestRule.programNote}
+          programDayHref={retestRule.programDayHref}
+        />
       )}
 
       {!listening ? (
         <>
-          {/* The room's instrument before the browser prompt: the trace the gate describes. */}
-          {!toast && (
-            <FigureFrame className="mx-auto mb-6 max-w-2xl" caption="What the trace draws once the mic is on">
-              <TraceFigure />
-            </FigureFrame>
-          )}
           <MicGate
             title="See your pitch live"
-            description="Sing any note. The tuner names it, the gauge shows how far off centre you are, and the trace draws the last eight seconds."
+            description="Sing any note to see its name, how far off center it is, and its trace."
             enableLabel={toast ? "Sing again" : "Enable microphone"}
             onEnable={handleStart}
             error={error}
@@ -430,6 +475,16 @@ export function StudioClient() {
               </>
             }
           />
+
+          {/* The room's instrument before the browser prompt: the trace the
+              gate describes. Below the gate, as on the /range pitch meter, so
+              Enable microphone and any mic error stay on a 375x667 phone's
+              first screen. */}
+          {!toast && (
+            <FigureFrame className="mx-auto mt-8 max-w-2xl" caption="What the trace draws once the mic is on">
+              <TraceFigure />
+            </FigureFrame>
+          )}
 
           {/* Under the gate, so the room is legible before the prompt without competing with it. */}
           <div className="mx-auto mt-8 max-w-2xl">

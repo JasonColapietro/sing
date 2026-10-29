@@ -100,7 +100,7 @@ export function TasteQuiz({
               Which styles do you enjoy?
             </legend>
             <p className="mt-1 text-sm text-mut">
-              Pick any. Leave them all blank if you have no favourite.
+              Pick any. Leave them all blank if you have no favorite.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {genres.map((g) => {
@@ -157,7 +157,7 @@ export function TasteQuiz({
         {step === 2 && (
           <fieldset className="mt-4 min-w-0">
             <legend ref={legendRef} tabIndex={-1} className={legendClass}>
-              What would you like to practise?
+              What would you like to practice?
             </legend>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {TASTE_GOALS.map((o) => (

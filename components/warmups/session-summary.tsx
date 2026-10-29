@@ -290,7 +290,7 @@ export function SessionSummary({
           <SectionLabel>What that means</SectionLabel>
           <p className="mt-3 max-w-xl text-sm text-mut">
             Your score is the share of each phrase you held within{" "}
-            {TOLERANCE_CENTS} cents of the target — how close to the note you
+            {TOLERANCE_CENTS} cents of the target: how close to the note you
             stayed, not how good it sounded.{" "}
             {scoreMeasuredLine(mode, heard)}
           </p>
@@ -303,7 +303,7 @@ export function SessionSummary({
               </>
             ) : avgScore >= HELD_FLOOR ? (
               <>
-                Your reps held together across the whole ladder — no root fell
+                Your reps held together across the whole ladder. No root fell
                 apart on you.
               </>
             ) : (
@@ -313,7 +313,7 @@ export function SessionSummary({
               // above it. The score has no direction (it keeps absolute
               // cents), so this names the average, never "under the note".
               <>
-                No single root came apart — your average across the whole
+                No single root came apart. Your average across the whole
                 ladder stayed under {HELD_FLOOR}% instead, so this one is worth
                 repeating slower rather than chasing one note.
               </>

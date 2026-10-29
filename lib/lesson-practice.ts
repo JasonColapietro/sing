@@ -376,7 +376,7 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
   "v-l7-m2": {
     basis: selfCheck(
       "vowelOrFormant",
-      "That you sang one phrase two recognisably different ways. Style is a human judgement and is not scored.",
+      "That you sang one phrase two recognizably different ways. Style is a human judgment and is not scored.",
     ),
     // The lessons record both styles in one take; the atlas chapter stays
     // listed under the readings.
@@ -412,7 +412,7 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     // semitone past today's comfortable endpoint that these lessons ask for.
     basis: selfCheck(
       "strainOrPressedPhonation",
-      "That you compared today's easy low and high notes with an earlier baseline taken the same way, by ear and on playback, without forcing an extension. Whether a new note is usable rather than forced is your judgement; the range test measures your extremes, and it belongs to your next retest, weeks apart.",
+      "That you compared today's easy low and high notes with an earlier baseline taken the same way, by ear and on playback, without forcing an extension. Whether a new note is usable rather than forced is your judgment; the range test measures your extremes, and it belongs to your next retest, weeks apart.",
     ),
     companion: { room: "recorder" },
     studies: ["morning-three-note", "chromatic-neighbor"],

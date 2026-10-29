@@ -21,6 +21,8 @@ import { Card, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Singing Terms Glossary: Passaggio, Tessitura";
+/** The title's first term, defined in the opening line so the answer comes first. */
+const PASSAGGIO = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");
 const DESCRIPTION = `What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each: passaggio, tessitura, cents, chest and head voice, falsetto, vocal fry and more. Free.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
@@ -86,7 +88,11 @@ export default function GlossaryPage() {
     <PageShell
       kicker="Free reference"
       title="Singing terms glossary: what each vocal term means"
-      subtitle={`What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each, with the room where you can see each one at work.`}
+      subtitle={`What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each, with the room where you can see each one at work.${
+        PASSAGGIO
+          ? ` Passaggio, for example, is ${PASSAGGIO.definition.charAt(0).toLowerCase()}${PASSAGGIO.definition.slice(1)}`
+          : ""
+      }`}
     >
       <script
         type="application/ld+json"

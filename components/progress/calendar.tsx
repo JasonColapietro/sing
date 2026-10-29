@@ -90,7 +90,7 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
                 weekday: "short",
                 month: "short",
                 day: "numeric",
-              })} — ${sec > 0 ? fmtDur(sec) : "no practice"}`,
+              })}: ${sec > 0 ? fmtDur(sec) : "no practice"}`,
         });
       }
     }
@@ -155,7 +155,7 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
         <p className="text-xs text-mut">
           {activeDays > 0
             ? `${activeDays} active ${activeDays === 1 ? "day" : "days"} and ${durationWords(totalSec)} in the last 12 weeks.`
-            : "No practice in the last 12 weeks — today is a good day to start."}
+            : "No practice in the last 12 weeks. Today is a good day to start."}
         </p>
         <div
           className="ml-auto flex items-center gap-1.5 font-mono text-[10px] text-dim"

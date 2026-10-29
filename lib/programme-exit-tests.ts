@@ -118,7 +118,7 @@ export const PROGRAMME_EXIT_TESTS: Record<string, ProgrammeExitTest> = {
   },
   "weeks-11-12-songs": {
     chapter: "weeks-11-12-songs",
-    test: "One song through, start to finish, no restarts, at a score you would be willing to show someone — and a second pass of the same song on another day that does not collapse.",
+    test: "One song through, start to finish, no restarts, at a score you would be willing to show someone, and a second pass of the same song on another day that does not collapse.",
     measurement: "scorePercent",
     room: "songs",
     roomPath: "/songs",

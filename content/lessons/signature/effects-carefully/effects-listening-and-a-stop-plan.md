@@ -15,7 +15,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Start with the stop rules
 
-Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
+Read the stop signals under When it goes wrong and the safety line at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist; any blood means stop and see that doctor. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: For the planning task, work from the stop rules on this page; you do not need to make a pitched sound.
@@ -34,7 +34,7 @@ Only for an effect a teacher has already taught you: short bursts, with a hard s
 - Look: The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.
 - Listen: Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.
 
-### Use prior supervision—or observe
+### Use prior supervision, or observe
 
 Do not learn or imitate a new vocal effect from this lesson. For “Effects: Listening and a Stop Plan,” either review an effect already taught to you by a qualified teacher at the prescribed dose, or complete the anatomy, listening, warning-sign, and stop-plan work without producing the effect. For an already-taught effect only, begin and end on the teacher's clean baseline and use the dose they prescribed. Otherwise compare your own earlier supervised recordings, name the audible change, and write the stop plan without imitating it.
 

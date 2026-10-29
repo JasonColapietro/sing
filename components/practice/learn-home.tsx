@@ -282,6 +282,8 @@ export function ContinueCard({
   goal,
   children,
   unavailableReason,
+  secondary = false,
+  showStreak = true,
 }: {
   /** The tape label — "Today's warmup", "Continue learning". */
   kicker: string;
@@ -315,6 +317,17 @@ export function ContinueCard({
   children?: ReactNode;
   /** Why starting is unavailable; shown beside the disabled action. */
   unavailableReason?: string;
+  /**
+   * Another card on the page carries the room's one filled start button
+   * (/warmups: a returning singer's "Today's warmup"), so this one's is an
+   * outline.
+   */
+  secondary?: boolean;
+  /**
+   * False where another card on the page already shows the streak, so it is
+   * said once. The chip's own line stays on the card that keeps it.
+   */
+  showStreak?: boolean;
 }) {
   const unavailableId = useId();
   const shown = stepTitles.slice(0, 5);
@@ -342,7 +355,7 @@ export function ContinueCard({
               state. From sm up there is room for both on one line, as before. */}
           <div className="order-1 flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             <SectionLabel>{kicker}</SectionLabel>
-            <StreakChip days={streakDays} best={streakBest} />
+            {showStreak && <StreakChip days={streakDays} best={streakBest} />}
           </div>
           <h2 className="order-1 mt-3 text-3xl sm:text-4xl">{title}</h2>
           {/* mt-4 on a phone, where it follows the full-width button rather
@@ -381,7 +394,7 @@ export function ContinueCard({
               </span>
             </div>
           )}
-          <Button variant="rec" size="lg" onClick={onStart} className="order-2 mt-4 w-full sm:order-none sm:mt-0 sm:w-auto"
+          <Button variant={secondary ? "outline" : "rec"} size="lg" onClick={onStart} className="order-2 mt-4 w-full sm:order-none sm:mt-0 sm:w-auto"
             disabled={Boolean(unavailableReason)} aria-describedby={unavailableReason ? unavailableId : undefined}>
             {startLabel ?? (micReady ? "Start" : "Enable mic and start")}
           </Button>

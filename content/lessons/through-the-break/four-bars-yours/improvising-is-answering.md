@@ -40,7 +40,7 @@ Rung one of the improvising ladder: answer a short call with notes from the supp
 
 ### Hear the distinction
 
-Tap four steady beats per bar. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Sing those four bars twice in one take, with a bar of tapped rest between: the second time, keep every note the same and change only the rhythm of bar 3, for example by holding one note for two beats. Listen back for whether both versions still sound like an answer that lands home on 1. Once that is familiar, invent a different answer from the same note set, varying one element—rhythm, direction, or ending—while keeping the same key center. Record your takes in the recorder.
+Tap four steady beats per bar. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Sing those four bars twice in one take, with a bar of tapped rest between: the second time, keep every note the same and change only the rhythm of bar 3, for example by holding one note for two beats. Listen back for whether both versions still sound like an answer that lands home on 1. Once that is familiar, invent a different answer from the same note set, varying one element (rhythm, direction or ending) while keeping the same key center. Record your takes in the recorder.
 
 - Look: Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.
 - Listen: The take sounds like an answer to the call and returns convincingly to the tonal center.

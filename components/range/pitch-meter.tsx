@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { usePitch, type PitchFrame } from "@/lib/audio/use-pitch";
 import {
@@ -44,7 +44,7 @@ import { PREPAINT_KEYS } from "@/lib/prepaint";
  * mounts for a singer whose saved range is already stale, so one who loses
  * the connection after the page loaded (on a train) still has it.
  */
-const ProgramRangeProbe = dynamic(
+export const ProgramRangeProbe = dynamic(
   () => retryWhenOnline(() => import("@/components/practice/program-range-probe")),
   { loading: () => null },
 );
@@ -70,7 +70,7 @@ const MIN_LOG_SEC = 45;
  * singer can be on Recovery week, so only they load ProgramRangeProbe without
  * a saved range. A blocked store reads as none, as the store itself does.
  */
-function programStored(): boolean {
+export function programStored(): boolean {
   try {
     const raw = window.localStorage.getItem(PREPAINT_KEYS.program);
     return raw !== null && raw !== "null";
@@ -155,109 +155,65 @@ function PracticeActions({ programDayHref }: { programDayHref: string | null }) 
 }
 
 /**
- * The stopped meter's summary: the notes held since the meter opened (or was
- * last Reset; "Sing again" keeps them, as the live readout does), whether the
- * stop saved (and what it earned), and always a next step. Not "your last
- * run": after a second start the notes can come from both runs.
- *
- * A singer whose saved range is recent is not sent to retest: the book spaces
- * range tests weeks apart, and their warmups and songs already fit the saved
- * one. They get the practice that builds on it instead. So is a singer whose
- * running program schedules the next test: they get the /progress coach's
- * note saying when it falls (programNote), not a retest of their own. And so
- * is one on Recovery week, with a stale range or none: the coach's note says
- * to leave the test until the week is over.
+ * The next step on a stopped card, by the retest rule: the range test while
+ * one is due (no saved range, or one six weeks old, that no running program
+ * schedules or asks to leave), and otherwise the program's note or "retest
+ * weeks apart", then practice that uses the saved range. The /range meter's
+ * stopped card and the studio's Stop card both end on it, so one room never
+ * sends a singer to retest the day the other says not to.
  */
-export function LastRun({
-  low,
-  high,
-  lastLog,
-  onTryRange,
-  retestDue = true,
-  programNote = null,
-  programDayHref = null,
+export function RangeNextStep({
+  retestDue,
+  programNote,
+  programDayHref,
+  tryRange,
+  explain = false,
 }: {
-  low: number;
-  high: number;
-  /** What the run's flush saved; null when it was under the floor. */
-  lastLog: Pick<LogResult, "xpGained"> | null;
-  onTryRange?: () => void;
-  /**
-   * No saved range, or one old enough to retest (lib/progress rangeRetestDue)
-   * that no running program schedules a test for or asks to leave.
-   */
-  retestDue?: boolean;
-  /**
-   * What the running program says about the range test in place of one, as
-   * components/practice/program-range-note.ts says it: when a stale range's
-   * scheduled test falls, or Recovery week's reason to leave the test.
-   */
-  programNote?: string | null;
-  /** That test is on today's program day: the program's view, to take it there. */
-  programDayHref?: string | null;
+  retestDue: boolean;
+  programNote: string | null;
+  programDayHref: string | null;
+  /** The room's way into the range test; offered only while one is due. */
+  tryRange?: ReactNode;
+  /** Say what the range test adds, beside its button. */
+  explain?: boolean;
 }) {
-  return (
-    <Card className="mb-4">
-      <SectionLabel>Held so far</SectionLabel>
-      <p className="mt-2 text-sm text-mut">
-        {/* One note is what the gate asks for, so it is a common first
-            result: "held A3", not "held A3 to A3". */}
-        {low === high
-          ? `You have held ${midiToLabel(low)} so far.`
-          : `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far.`}{" "}
-        {lastLog
-          ? `+${lastLog.xpGained} XP, saved to your progress.`
-          : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
-      </p>
-      {/* The gate asks for one note, so a run of a note or two is the
-          expected first result, not a reason to withhold the next step. On a
-          stop the view scrolls to this card, which puts the Pitch | Range
-          test tabs under the sticky header: the card has to carry the step. */}
-      {retestDue ? (
-        <>
-          {/* Only beside the button it explains: without onTryRange there
-              is nothing on the card to take the test with. */}
-          {onTryRange && high - low < SUGGEST_RANGE_SEMIS && (
-            <p className="mt-2 text-sm text-mut">
-              Next, the 2-minute range test walks you down to your lowest note and up to
-              your highest, and saves them for your warmups and songs.
-            </p>
-          )}
-          <div className="mt-3 flex flex-wrap gap-3">
-            {onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
-            <LinkButton href="/warmups" variant="outline">
-              Warm up first
-            </LinkButton>
-          </div>
-        </>
-      ) : (
-        <>
-          <p className="mt-2 text-sm text-mut">
-            {programNote ??
-              "Your saved range already fits your warmups and songs. Retest weeks apart, not in the same session."}
-          </p>
-          <PracticeActions programDayHref={programDayHref} />
-        </>
+  return retestDue ? (
+    <>
+      {explain && tryRange && (
+        <p className="mt-2 text-sm text-mut">
+          Next, the 2-minute range test walks you down to your lowest note and up to
+          your highest, and saves them for your warmups and songs.
+        </p>
       )}
-    </Card>
+      <div className="mt-3 flex flex-wrap gap-3">
+        {tryRange}
+        <LinkButton href="/warmups" variant="outline">
+          Warm up first
+        </LinkButton>
+      </div>
+    </>
+  ) : (
+    <>
+      <p className="mt-2 text-sm text-mut">
+        {programNote ??
+          "Your saved range already fits your warmups and songs. Retest weeks apart, not in the same session."}
+      </p>
+      <PracticeActions programDayHref={programDayHref} />
+    </>
   );
 }
 
 /**
- * The default voice test: open the mic and see your pitch, nothing else. A
- * scrolling note lane shows where your voice is and where it has been, the
- * readout names the note and how far off center you are, and the lowest and
- * highest notes you have held this session are kept as a running measurement.
+ * Whether a room's next step is the range test, read the instant its mic
+ * starts (readRetestRule, from an event handler, never during render): no
+ * saved range or a stale one, less a test the running program schedules
+ * (its note says when) or Recovery week (its note says to leave the test).
+ * The program is read from its own chunk (ProgramRangeProbe, `probe`, which
+ * the room renders), only for a stale saved range, or none with a program in
+ * this browser. The /range meter and the studio share it.
  */
-export function PitchMeter({
-  onTryRange,
-}: {
-  /** Switches the voice test to the guided range test. */
-  onTryRange?: () => void;
-} = {}) {
-  const { frame, latest, listening, error, start, stop } = usePitch();
+export function useRangeRetestRule() {
   const isPro = useIsPro();
-  const proReady = useProReady();
   const { range } = useProgress();
   /**
    * Whether the range is due a test: no saved range, or one six weeks old
@@ -316,6 +272,106 @@ export function PitchMeter({
     });
     return () => quit.abort();
   }, [range]);
+  const readRetestRule = useCallback(() => {
+    const now = Date.now();
+    setMicStartedAt(now);
+    setRetestDue(rangeRetestDue(range, now));
+    setProgramKept(programStored());
+  }, [range]);
+  return { range, offerRetest, programNote, programDayHref, probe, readRetestRule };
+}
+
+/**
+ * The stopped meter's summary: the notes held since the meter opened (or was
+ * last Reset; "Sing again" keeps them, as the live readout does), whether the
+ * stop saved (and what it earned), and always a next step. Not "your last
+ * run": after a second start the notes can come from both runs.
+ *
+ * A singer whose saved range is recent is not sent to retest: the book spaces
+ * range tests weeks apart, and their warmups and songs already fit the saved
+ * one. They get the practice that builds on it instead. So is a singer whose
+ * running program schedules the next test: they get the /progress coach's
+ * note saying when it falls (programNote), not a retest of their own. And so
+ * is one on Recovery week, with a stale range or none: the coach's note says
+ * to leave the test until the week is over.
+ */
+export function LastRun({
+  low,
+  high,
+  lastLog,
+  onTryRange,
+  retestDue = true,
+  programNote = null,
+  programDayHref = null,
+}: {
+  low: number;
+  high: number;
+  /** What the run's flush saved; null when it was under the floor. */
+  lastLog: Pick<LogResult, "xpGained"> | null;
+  onTryRange?: () => void;
+  /**
+   * No saved range, or one old enough to retest (lib/progress rangeRetestDue)
+   * that no running program schedules a test for or asks to leave.
+   */
+  retestDue?: boolean;
+  /**
+   * What the running program says about the range test in place of one, as
+   * components/practice/program-range-note.ts says it: when a stale range's
+   * scheduled test falls, or Recovery week's reason to leave the test.
+   */
+  programNote?: string | null;
+  /** That test is on today's program day: the program's view, to take it there. */
+  programDayHref?: string | null;
+}) {
+  return (
+    <Card className="mb-4">
+      <SectionLabel>Held so far</SectionLabel>
+      <p className="mt-2 text-sm text-mut">
+        {/* One note is what the gate asks for, so it is a common first
+            result: "held A3", not "held A3 to A3". */}
+        {low === high
+          ? `You have held ${midiToLabel(low)} so far.`
+          : `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far.`}{" "}
+        {lastLog
+          ? `+${lastLog.xpGained} XP, saved to your progress.`
+          : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
+      </p>
+      {/* The gate asks for one note, so a run of a note or two is the
+          expected first result, not a reason to withhold the next step. On a
+          stop the view scrolls to this card, which puts the Pitch | Range
+          test tabs under the sticky header: the card has to carry the step. */}
+      <RangeNextStep
+        retestDue={retestDue}
+        programNote={programNote}
+        programDayHref={programDayHref}
+        // Only beside the button it explains: without onTryRange there is
+        // nothing on the card to take the test with.
+        explain={Boolean(onTryRange) && high - low < SUGGEST_RANGE_SEMIS}
+        tryRange={onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
+      />
+    </Card>
+  );
+}
+
+/**
+ * The default voice test: open the mic and see your pitch, nothing else. A
+ * scrolling note lane shows where your voice is and where it has been, the
+ * readout names the note and how far off center you are, and the lowest and
+ * highest notes you have held this session are kept as a running measurement.
+ */
+export function PitchMeter({
+  onTryRange,
+}: {
+  /** Switches the voice test to the guided range test. */
+  onTryRange?: () => void;
+} = {}) {
+  const { frame, latest, listening, error, start, stop } = usePitch();
+  const isPro = useIsPro();
+  const proReady = useProReady();
+  // Whether the range test is the next step (useRangeRetestRule), read as
+  // the mic starts.
+  const { range, offerRetest, programNote, programDayHref, probe, readRetestRule } =
+    useRangeRetestRule();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointsRef = useRef<Point[]>([]);
   /** The midi value the view is centered on, eased toward the singer. */
@@ -555,10 +611,7 @@ export function PitchMeter({
   }, [listening]);
 
   const begin = async () => {
-    const now = Date.now();
-    setMicStartedAt(now);
-    setRetestDue(rangeRetestDue(range, now));
-    setProgramKept(programStored());
+    readRetestRule();
     pointsRef.current = [];
     heldRef.current = { midi: null, ms: 0, lastT: 0 };
     inputRef.current = freshInputHint();

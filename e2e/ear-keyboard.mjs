@@ -42,7 +42,7 @@ try {
           // A silent actual MediaStream reaches the ordinary timed result.
           await game.getByRole("button", { name: "Next round", exact: true }).waitFor({ timeout: 20000 });
         } else {
-          await game.getByText(/Sing it back —/).waitFor();
+          await game.getByText(/Sing it back:/).waitFor();
         }
       }
       const before = await page.evaluate(() => window.__toneStarts);
@@ -50,7 +50,7 @@ try {
       await page.waitForFunction((count) => window.__toneStarts > count, before);
       if (name === "Melody echo") {
         assert.match(await game.innerText(), /Round 1\/10/i, "Hear again must not record an answer");
-        await game.getByText(/Sing it back —/).waitFor();
+        await game.getByText(/Sing it back:/).waitFor();
         await game.getByRole("button", { name: "I'm done", exact: true }).press("Enter");
       }
       assert.equal(await game.getByRole("button", { name: "Next round", exact: true }).count(), 1,

@@ -37,10 +37,10 @@ export default function NotFound() {
             </div>
             {/* One quiet line below the practice links: the free tools stay
                 the recovery, and the paid tier is named once, with its price
-                read from the pricing code. */}
+                read from the pricing code. A priced ask lands on the buy card. */}
             <p className="mt-4 text-sm text-mut">
               Or see{" "}
-              <Link href="/pro" className="text-violet-ink underline underline-offset-4">
+              <Link href="/pro#buy" className="text-violet-ink underline underline-offset-4">
                 what Suede Pro adds
               </Link>
               , {formatPrice(PRICING.lifetime.amount)} once.

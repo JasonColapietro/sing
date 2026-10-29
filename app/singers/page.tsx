@@ -184,7 +184,7 @@ export default function SingersPage() {
                       {rangeLabel(singer)}
                     </span>
                   </span>
-                  <RangeMini low={singer.lowMidi} high={singer.highMidi} beltMidi={singer.beltMidi} />
+                  <RangeMini low={singer.lowMidi} high={singer.highMidi} />
                   <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-dim">
                     {singerReviewLabel(singer.slug)}
                   </span>

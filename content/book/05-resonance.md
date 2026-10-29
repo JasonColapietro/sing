@@ -5,7 +5,7 @@ order: 5
 summary: "How the throat and mouth shape one buzzy fold vibration into vowels, brightness and carrying power, and how to change tone without changing effort."
 ---
 
-Your folds make one sound, and it is not a nice one. Heard raw, before it travels anywhere, it is a thin buzzy rasp — closer to a duck call than to singing. Everything you recognise as your voice happens after that buzz leaves the folds. The vowels, the warmth, the edge, the sense that this is you and not someone else: all of it gets added on the way out, in the corridor between your folds and your lips.
+Your folds make one sound, and it is not a nice one. Heard raw, before it travels anywhere, it is a thin buzzy rasp — closer to a duck call than to singing. Everything you recognize as your voice happens after that buzz leaves the folds. The vowels, the warmth, the edge, the sense that this is you and not someone else: all of it gets added on the way out, in the corridor between your folds and your lips.
 
 That corridor is the vocal tract. It is a tube, and you reshape it constantly with your tongue, jaw, lips, soft palate and larynx height. The buzz is the source. The tube is the filter. Once you have that split, most tone problems stop looking like effort problems and start looking like shape problems.
 
@@ -15,9 +15,9 @@ Any tube of air has frequencies it likes. Blow across a bottle and it sings one 
 
 Those peaks are called formants. The buzz already contains a fundamental plus a long stack of harmonics above it, and the tract adds nothing to that stack. It only decides which parts get amplified and which get damped on the way out. Harmonics that land near a formant come out loud. Harmonics that land between formants come out quiet.
 
-This is why one pitch can produce several completely different sounds. Sing a comfortable note in your middle and slide the vowel from "ee" to "eh" to "ah" to "oh" to "oo" without changing pitch or volume. The note stays exactly where it was. The colour changes enormously. You moved two formants with your tongue and lips and never touched the note.
+This is why one pitch can produce several completely different sounds. Sing a comfortable note in your middle and slide the vowel from "ee" to "eh" to "ah" to "oh" to "oo" without changing pitch or volume. The note stays exactly where it was. The color changes enormously. You moved two formants with your tongue and lips and never touched the note.
 
-So a vowel is not a mouth position you memorise. It is a pattern of resonances — chiefly the first two — and different mouth shapes can land on the same pattern. Listeners judge that pattern relative to the voice making it, which is why a child's "ah" and a bass's "ah" read as the same vowel even though every resonance sits at a different frequency.
+So a vowel is not a mouth position you memorize. It is a pattern of resonances — chiefly the first two — and different mouth shapes can land on the same pattern. Listeners judge that pattern relative to the voice making it, which is why a child's "ah" and a bass's "ah" read as the same vowel even though every resonance sits at a different frequency.
 
 ## Vowel modification, and why it is not cheating
 
@@ -25,7 +25,7 @@ Low in your range, your fundamental sits well below the first formant of every v
 
 At that point the vowel fights you. Closed vowels have low first formants, so "ee" and "oo" run out of room earliest. Open vowels like "ah" sit higher and survive further up. Push a vowel past the point where its resonance can support the pitch and the sound thins, goes shouty, or refuses to speak at all. The instinct is to add force. Force is the wrong tool. The tube is the wrong shape.
 
-Vowel modification is the fix. You nudge the vowel toward a neighbour so its resonance moves back into a workable relationship with the pitch. In practice that means:
+Vowel modification is the fix. You nudge the vowel toward a neighbor so its resonance moves back into a workable relationship with the pitch. In practice that means:
 
 - Bright, closed vowels open a little as you ascend. "Ee" drifts toward "ih", then toward "eh". "Oo" drifts toward "uh" or "oh".
 - Wide open vowels round a little through the transition. "Ah" drifts toward "aw" or "uh" as the voice climbs past its break. Right at the top of a high voice the direction reverses: once the note climbs toward the first resonance of even "ah", the jaw drops further and every vowel opens toward a wide "ah", which keeps that resonance at or just above the note. That is why a soprano's top notes come out vaguer than the printed word.

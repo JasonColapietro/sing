@@ -16,11 +16,12 @@ import {
   lessonById,
   lessonHref,
   neighbours,
+  notReadyAdvice,
   shownSteps,
 } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { CompanionButtons, ModulePractice } from "@/components/learn/module-practice";
-import { SAFETY_LINE, SafetyLine } from "@/components/learn/safety-note";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 
 interface Params {
@@ -78,8 +79,8 @@ export async function generateMetadata({
   });
 }
 
-/** What each of the port's four blocks does, for the timing line. */
-const BLOCK_ROLES = ["set up", "isolate", "practise", "review"];
+/** What each of the port's four blocks is, for the timing line: nouns, read as "45 s setup". */
+const BLOCK_ROLES = ["setup", "isolation", "practice", "review"];
 
 const TYPE_LABEL: Record<string, string> = {
   concept: "Concept",
@@ -121,14 +122,12 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
     return checks;
   });
   const mistakes = lesson.mistakes.filter((mk) => own(mk.recovery));
-  const doctor = SAFETY_LINE.slice(SAFETY_LINE.indexOf("a doctor who"), -1);
-  const namesDoctor = [lesson.selfCheck.ifNotReady, ...mistakes.map((mk) => mk.recovery)].some((t) =>
-    t.includes(doctor),
-  );
   const criteria = lesson.selfCheck.criteria.filter(own);
   // The compiler blanks the port's template blocks; four timings then read as one line.
   const ownBlocks = lesson.blocks.some((b) => b.instruction);
-  const { shows, doesNotShow, ifNotReady } = lesson.selfCheck;
+  const { shows, doesNotShow } = lesson.selfCheck;
+  // Said once: a sentence already printed as a recovery above is not repeated here.
+  const ifNotReady = notReadyAdvice(lesson, mistakes.map((mk) => mk.recovery));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -216,7 +215,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
           <section aria-labelledby="steps" className="max-w-2xl">
             <SectionLabel>Steps</SectionLabel>
             <h2 id="steps" className="mt-3 text-2xl">
-              How to practise it
+              How to practice it
             </h2>
             <ol className="mt-4 space-y-6">
               {steps.map((step, i) => (
@@ -263,7 +262,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                 {lesson.blocks.map((b, i) => (
                   <li key={`${i}-${b.instruction}`} className="flex gap-3">
                     <span className="w-12 shrink-0 font-mono text-dim">{b.seconds} s</span>
-                    <span className="text-mut">{b.instruction || BLOCK_ROLES[i] || "practise"}</span>
+                    <span className="text-mut">{b.instruction || BLOCK_ROLES[i] || "practice"}</span>
                   </li>
                 ))}
               </ol>
@@ -271,7 +270,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
               <p className="mt-3 font-mono text-sm text-mut" data-block-line>
                 {lesson.minutes} min:{" "}
                 {lesson.blocks
-                  .map((b, i) => `${b.seconds} s ${BLOCK_ROLES[i] ?? "practise"}`)
+                  .map((b, i) => `${b.seconds} s ${BLOCK_ROLES[i] ?? "practice"}`)
                   .join(" · ")}
               </p>
             )}
@@ -371,8 +370,8 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
             .
           </p>
         )}
-        {/* Left out where the lesson's own recovery already names the doctor. */}
-        {!namesDoctor && <SafetyLine />}
+        {/* On every lesson, the stop-plan lessons included: their steps point here. */}
+        <SafetyLine />
       </div>
     </PageShell>
   );

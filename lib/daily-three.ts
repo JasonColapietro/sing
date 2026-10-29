@@ -276,7 +276,7 @@ function rotation(c: Candidate): number {
 }
 
 function focusWhy(c: Candidate): { role: PickRole; why: string } {
-  if (c.avg === null) return { role: "new", why: "New to you — see where it sits." };
+  if (c.avg === null) return { role: "new", why: "New to you. See where it sits." };
   if (c.avg >= CONFIDENT_AVG && (c.idle ?? 0) >= STALE_DAYS) {
     return { role: "refresh", why: `Not sung in ${c.idle} days.` };
   }

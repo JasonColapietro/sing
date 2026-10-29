@@ -440,7 +440,7 @@ function LoopControls({
       <p className="mt-2 text-xs text-mut">
         {loopRange === null
           ? "Singing the whole song. Move the handles, or pick a section, to loop just that span."
-          : `Looping ${describeLoopRange(song, loopRange)} ${drillLoops}× — only those notes are played and scored.`}
+          : `Looping ${describeLoopRange(song, loopRange)} ${drillLoops}×: only those notes are played and scored.`}
       </p>
     </div>
   );

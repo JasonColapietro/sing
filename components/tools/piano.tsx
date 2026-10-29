@@ -366,7 +366,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           Keyboard
         </span>{" "}
-        A row plays notes — A=C, W=C#, S=D, E=D#, D=E, F=F, T=F#, G=G, Y=G#,
+        A row plays notes: A=C, W=C#, S=D, E=D#, D=E, F=F, T=F#, G=G, Y=G#,
         H=A, U=A#, J=B, K=C above. Z and X shift the octave. Current range:{" "}
         <span className="tabular font-mono text-violet-ink">
           {midiToLabel(kbBase)}–{midiToLabel(kbBase + 12)}

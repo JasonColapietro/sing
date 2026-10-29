@@ -33,7 +33,7 @@ Do five, resting properly between them. Then move to "oo", which asks a little m
 
 Two rules for every siren in these two weeks.
 
-First: never louder than conversation. If a neighbour through the wall would notice, you are too loud.
+First: never louder than conversation. If a neighbor through the wall would notice, you are too loud.
 
 Second: if the glide breaks, do not restart it harder. Restart it quieter, slower, and a note lower. A break in the glide means the settings were wrong, not that you were insufficiently committed.
 
@@ -59,7 +59,7 @@ The crossing, when it goes well, feels like less rather than more. You arrive at
 
 On the trace it looks like a slide that stopped having a scruffy patch in the middle. On a recording it sounds like one instrument rather than two. If you took a siren in week 5 and take the same siren in week 6, A/B them in the Recorder rather than trusting your memory of how week 5 felt. Memory is unreliable in exactly the direction that flatters recent effort.
 
-Expect this on some days and not others, and expect the good days to be scattered rather than sequential. Two weeks is not long. The aim by the end of week 6 is a crossing you have felt often enough to recognise, not one you can produce on demand.
+Expect this on some days and not others, and expect the good days to be scattered rather than sequential. Two weeks is not long. The aim by the end of week 6 is a crossing you have felt often enough to recognize, not one you can produce on demand.
 
 ## The days it does not work
 
@@ -75,7 +75,7 @@ Check the obvious. Chapter 12 lists the things that make a session read worse th
 
 And if two or three sessions in a row are bad, stop trying to fix the block and repeat it. Spending three weeks here instead of two is a legitimate move, not a demotion. The transition responds to accumulated quiet repetition and to very little else.
 
-One thing that is not a bad day: pain. Soreness, a raw feeling, or hoarseness that outlasts the session is a reason to stop singing, not something to practise through or work around.
+One thing that is not a bad day: pain. Soreness, a raw feeling, or hoarseness that outlasts the session is a reason to stop singing, not something to practice through or work around.
 
 ## The retest at the end of week 6
 

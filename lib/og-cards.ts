@@ -62,7 +62,7 @@ export function singerCardText(s: Singer): SingerCardText {
   const semis = s.highMidi - s.lowMidi;
   return {
     name: s.name,
-    notes: `${midiToLabel(s.lowMidi)} — ${midiToLabel(s.highMidi)}`,
+    notes: `${midiToLabel(s.lowMidi)}–${midiToLabel(s.highMidi)}`,
     // The page's own format ("about 2.8 octaves (34 semitones)").
     span: `${spanOctaves(semis)} octaves · ${semis} semitones`,
     status: `${singerReviewLabel(s.slug)} · Not a training target`,
@@ -99,7 +99,7 @@ export function songCardText(song: Song): SongCardText {
     title: song.title,
     facts: `${song.genre} · ${song.era} · ${song.bpm} bpm · ${song.beatsPerBar}/bar · ${difficulty}`,
     firstLine: lyricLines(song.notes)[0]?.text ?? "",
-    notes: `${midiToLabel(lo)} — ${midiToLabel(hi)}`,
+    notes: `${midiToLabel(lo)}–${midiToLabel(hi)}`,
     footer: `${part}${rangeSemis} semitones · ${song.notes.length} notes · suede sing`,
   };
 }
@@ -181,7 +181,7 @@ export function recordsCardProps(): HubCardProps {
   return {
     kicker: "Extremes",
     title: "Reported catalog extremes",
-    stat: `The widest voices in the library — up to ${spanOctaves(spanOf(rows[0]))} octaves`,
+    stat: `The widest voices in the library: up to ${spanOctaves(spanOf(rows[0]))} octaves`,
     rows,
     ...octaveAxis(
       Math.min(...rows.map((s) => s.lowMidi)),

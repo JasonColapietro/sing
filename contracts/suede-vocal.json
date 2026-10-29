@@ -2686,7 +2686,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 32562,
+      "totalWords": 32526,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -2695,7 +2695,7 @@
           "part": "How the voice works",
           "summary": "Breath as the power, the folds as the vibrator, the throat and mouth as the filter: the three-part model the rest of this book runs on.",
           "free": true,
-          "words": 1403,
+          "words": 1386,
           "path": "/book/what-your-voice-is"
         },
         {
@@ -2765,7 +2765,7 @@
           "part": "Reading your own voice",
           "summary": "How to take the range test honestly, what a disappointing result usually means, and how much the voice-type label is worth.",
           "free": true,
-          "words": 1476,
+          "words": 1465,
           "path": "/book/reading-the-range-test"
         },
         {
@@ -2805,7 +2805,7 @@
           "part": "Reading your own voice",
           "summary": "Room noise, mic placement, headphone bleed and a rough day distort your readings. Here is how to catch a bad session before you act on it.",
           "free": true,
-          "words": 1469,
+          "words": 1461,
           "path": "/book/when-numbers-lie"
         },
         {
@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 70865,
+      "totalWords": 70840,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -2933,7 +2933,7 @@
           "part": "How to read a voice",
           "summary": "The anatomy of an atlas entry: what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how far to trust those claims.",
           "free": true,
-          "words": 871,
+          "words": 861,
           "path": "/atlas/how-to-read-an-entry"
         },
         {
@@ -2943,7 +2943,7 @@
           "part": "How to read a voice",
           "summary": "Scientific pitch notation in five minutes: what C4 means, why F#5 and Gb5 are the same note, how octave spans are counted, and why identical voices get different figures.",
           "free": true,
-          "words": 848,
+          "words": 840,
           "path": "/atlas/notes-octaves-and-the-keyboard"
         },
         {
@@ -2953,7 +2953,7 @@
           "part": "How to read a voice",
           "summary": "What the eight classification labels mean, why a pop mezzo and an opera mezzo are different claims, tessitura versus range, and how to guess your own type without a teacher.",
           "free": true,
-          "words": 862,
+          "words": 855,
           "path": "/atlas/voice-types-in-the-wild"
         },
         {

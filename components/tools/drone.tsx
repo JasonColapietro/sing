@@ -126,7 +126,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
       </div>
 
       <p className="mb-5 text-sm text-mut">
-        Sing over a drone to sharpen intonation — hold long tones against the
+        Sing over a drone to sharpen intonation: hold long tones against the
         root and listen until the wobble between your voice and the drone
         disappears.
       </p>

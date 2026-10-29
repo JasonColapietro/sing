@@ -17,7 +17,7 @@ Set aside about thirty minutes. It is the longest session in the block, and you 
 
 **Warm up first, gently.** Five to ten minutes from one of the shorter warmup packs. Do not skip this to get a "true" cold reading. A cold voice under-reports at both ends, and an under-report is not honesty — it is a different kind of wrong number.
 
-**Take the range test.** Take it the way chapter 8 describes: the room you expect to practise in, a consistent distance from the phone, counting only notes you would let another person hear. Stop the moment a note becomes effort rather than height. This reading anchors the whole twelve weeks, and an inflated anchor is worse than a modest one. It makes every honest reading afterwards look like a decline.
+**Take the range test.** Take it the way chapter 8 describes: the room you expect to practice in, a consistent distance from the phone, counting only notes you would let another person hear. Stop the moment a note becomes effort rather than height. This reading anchors the whole twelve weeks, and an inflated anchor is worse than a modest one. It makes every honest reading afterwards look like a decline.
 
 **Record the context, not just the number.** Time of day. Room. How much sleep. Whether you were getting over something. Whether you had been talking for eight hours. In eleven weeks you will look at this point on the chart in Progress and remember none of it, and a number without its conditions reads as fact.
 

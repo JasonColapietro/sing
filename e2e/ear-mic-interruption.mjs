@@ -48,7 +48,7 @@ try {
       const game = page.getByRole("dialog", { name, exact: true });
       await game.getByRole("button", { name: "Enable microphone", exact: true }).click();
       if (name === "Pitch match") await game.getByText("Sing the note and hold it inside the band.", { exact: true }).waitFor();
-      else if (name === "Melody echo") await game.getByText(/Sing it back —/).waitFor();
+      else if (name === "Melody echo") await game.getByText(/Sing it back:/).waitFor();
       else await game.getByRole("button", { name: /Pause/ }).waitFor();
 
       await page.evaluate(() => {

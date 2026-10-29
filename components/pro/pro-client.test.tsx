@@ -398,7 +398,10 @@ describe("Pro sales copy on the page", () => {
     const html = renderToStaticMarkup(<ProClient />);
     expect(html).not.toContain("Pro keeps the months");
     expect(html).not.toContain("long record of your own voice");
-    expect(html).toContain("Pro shows you the months behind");
+    expect(html).toContain("Pro charts your range over months");
+    // Free also draws the weekly trend and the first two coach steps.
+    expect(html).not.toContain("Free shows you today");
+    expect(html).toContain("plans the first two steps of each day");
   });
 
   it("says pay-once in three places, and the checkout and on-device facts once each", () => {
@@ -444,7 +447,7 @@ describe("Pro sales copy on the page", () => {
     expect(button).toBeGreaterThan(-1);
     expect(wrapper).toBeGreaterThan(-1);
     expect(html.slice(wrapper, button)).toContain("sm:order-2");
-    expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Free shows you today/);
+    expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Free scores every session/);
     expect(html).not.toContain("once with no renewal");
   });
 });
