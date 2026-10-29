@@ -714,7 +714,14 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
               </a>
             </div>
           ) : (
-            <LinkButton href={calendarHref} variant={waits ? "outline" : undefined} fullLoad>
+            // A rest day's "See the calendar" is outline too: the singer can
+            // still warm up, so the room's own start stays the one filled
+            // action on the page.
+            <LinkButton
+              href={calendarHref}
+              variant={waits || (view.status === "todo" && isRestDay(day)) ? "outline" : undefined}
+              fullLoad
+            >
               {waits
                 ? "See today’s plan"
                 : view.status === "todo" && !isRestDay(day)

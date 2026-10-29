@@ -82,7 +82,7 @@ export function ProWhisper({ className = "" }: { className?: string }) {
       >
         Pro
       </Link>{" "}
-      adds the coach
+      adds the coach&apos;s full plan
     </p>
   );
 }

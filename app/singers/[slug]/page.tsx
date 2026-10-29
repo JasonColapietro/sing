@@ -638,7 +638,7 @@ export default async function SingerPage({
           )}
         </Card>
 
-        {/* Similar voices by type and range centre, then the voices sharing an exact endpoint. */}
+        {/* Similar voices by type and nearest endpoints, then the voices sharing an exact endpoint. */}
         <Card>
           <SectionLabel>Similar voices</SectionLabel>
           <h2 className="mt-3 text-xl">Voices with a similar catalog range</h2>

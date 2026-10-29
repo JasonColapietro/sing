@@ -534,7 +534,10 @@ describe("the chapters agree with the app", () => {
     expect(body("when-numbers-lie")).toMatch(/choose Speakers under "I'm listening through"/);
     // The chapter names the pitch studio as the place to find the control.
     const studio = readFileSync(join(__dirname, "..", "components", "studio", "studio-client.tsx"), "utf8");
-    expect(body("when-numbers-lie")).toMatch(/in the pitch studio, open Audio setup/);
+    // The control's visible label is the one word "Audio" (no "Audio setup" anywhere).
+    expect(body("when-numbers-lie")).toMatch(/in the pitch studio, open the Audio panel/);
+    expect(body("when-numbers-lie")).not.toMatch(/Audio setup/);
+    expect(setup).toMatch(/<MicGlyph \/>\s*Audio\s*<\/span>/);
     expect(studio).toContain("<AudioSetup");
   });
 

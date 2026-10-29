@@ -1233,7 +1233,7 @@ export function ProClient() {
                 </div>
               )}
               <p className="mt-6 text-sm text-mut">
-                Everything in Free, plus the coach.
+                Everything in Free, plus:
               </p>
               <ul className="mt-5 space-y-2.5">
                 {PRO_CARD_POINTS.map((point) => (
@@ -1471,7 +1471,7 @@ export function ProClient() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl sm:text-4xl">
-            The studio costs nothing. Pro adds the coach.
+            The studio costs nothing. Pro adds the coach&apos;s full plan.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-mut">
             The pitch meter, range test and recorder stay free, with no clock.

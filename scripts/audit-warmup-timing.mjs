@@ -69,7 +69,7 @@
  * stops a real room from scoring the guide on real speakers. The manual
  * check for that half:
  *
- *   1. In Audio setup, set monitoring to Speakers.
+ *   1. In the pitch studio's Audio panel, set monitoring to Speakers.
  *   2. In a warmup, set the guide level to 100 and start "Sustained hold".
  *   3. Stay silent through two full reps.
  *   4. Both must read "No sound picked up". A rep score for singing that

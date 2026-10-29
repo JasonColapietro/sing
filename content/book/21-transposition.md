@@ -39,7 +39,7 @@ Transposition is not neutral. Something is always traded, and it is better to ch
 
 **Where the song crosses your transition.** This is the big one. A melody that sat comfortably below your passaggio in one key may straddle it in another, and a phrase that crosses back and forth over the seam is harder than a phrase sitting a little higher and staying put. Moving a song down does not always make it easier. Sometimes it drops the melody right onto the join.
 
-**Which words land on which notes.** The vowel that felt open on a high note in the original key is now on a different pitch, where it may want a different shape. Consonant clusters that were manageable at the old height can get clumsy at the new one. Worth noticing, not worth agonising over.
+**Which words land on which notes.** The vowel that felt open on a high note in the original key is now on a different pitch, where it may want a different shape. Consonant clusters that were manageable at the old height can get clumsy at the new one. Worth noticing, not worth agonizing over.
 
 **The drama of the climax.** Some songs are built so the peak note sits at the edge of the original singer's comfort, and you can hear the note costing something. Drop it five semitones and it becomes an easy mid-range note, correctly sung and inert. The answer is not to keep a key that hurts. It is to put the cost somewhere else — volume, timing, the breath you take before the phrase, how late you arrive on the vowel. A note you can sing gives you choices. A note you can barely reach gives you one.
 

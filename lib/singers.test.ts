@@ -6,6 +6,7 @@ import {
   SINGERS,
   genreSlug,
   hubGenresFor,
+  relatedSingers,
   singerBySlug,
   singersByGenre,
   wikipediaUrl,
@@ -83,5 +84,38 @@ describe("hubGenresFor", () => {
 
   it("charts at least one singer on every hub", () => {
     for (const g of HUB_GENRES) expect(singersByGenre(g).length, g).toBeGreaterThan(0);
+  });
+});
+
+/**
+ * The "Voices with a similar catalog range" cards. Ranked by range center
+ * alone, Akon's C3–A#4 listed CeeLo Green's A#1–C6, and 828 of the catalog's
+ * 3,816 cards were an octave or more off in span: the cards must sit near
+ * both of the page singer's endpoints.
+ */
+describe("relatedSingers", () => {
+  const span = (s: { lowMidi: number; highMidi: number }) => s.highMidi - s.lowMidi;
+
+  it("lists voices near both of Akon's endpoints, not a wider voice with the same center", () => {
+    const akon = singerBySlug("akon")!;
+    const related = relatedSingers(akon);
+    expect(related).toHaveLength(6);
+    for (const o of related) {
+      expect(Math.abs(o.lowMidi - akon.lowMidi)).toBeLessThanOrEqual(3);
+      expect(Math.abs(o.highMidi - akon.highMidi)).toBeLessThanOrEqual(3);
+    }
+    expect(related.map((o) => o.slug)).not.toContain("ceelo-green");
+  });
+
+  it("rarely lists a voice whose span is an octave wider or narrower, across the catalog", () => {
+    let cards = 0;
+    let octaveOff = 0;
+    for (const s of SINGERS) {
+      for (const o of relatedSingers(s)) {
+        cards++;
+        if (Math.abs(span(o) - span(s)) >= 12) octaveOff++;
+      }
+    }
+    expect(octaveOff / cards).toBeLessThan(0.03);
   });
 });

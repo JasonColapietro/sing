@@ -7258,7 +7258,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Whispering is on the harmful list. So is talking over noise. Neither is obvious.",
-    "explanation": "Water reaches your voice slowly: steady drinking across the day shows up in how singing feels; a glass just before you sing does little. Dry air counts too, so the NIDCD's Taking Care of Your Voice guidance, in the sources below, suggests a humidifier at home. It also says avoid whispering and talking over noise; both stress the voice, and most fatigue comes from talking. Rest with silence, not a whisper, and count a loud evening out as voice use.",
+    "explanation": "Water reaches your voice slowly: steady drinking across the day helps; a glass just before singing does little. Dry air counts too, so the NIDCD's Taking Care of Your Voice guidance suggests a humidifier at home. It also says to avoid whispering and talking in noisy places, because both strain the voice. The Measured Voice, chapter 6, adds that most voice fatigue comes from talking. Rest with silence, not a whisper, and count a loud evening out as voice use.",
     "prerequisites": [
       "v-l6-m6-08"
     ],

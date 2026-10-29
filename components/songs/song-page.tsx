@@ -316,7 +316,9 @@ export function SongLinkList({ songs }: { songs: Song[] }) {
               className="flex h-full items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
             >
               <span className="min-w-0">
-                <span className="block truncate text-sm font-medium">
+                {/* Wraps, not truncates, as on the /songs songbook: the end of a
+                    title ("(Opening Lines…)") tells an arrangement apart. */}
+                <span className="block text-sm font-medium [overflow-wrap:anywhere]">
                   {s.title}
                 </span>
                 <span className="block font-mono text-[10px] uppercase tracking-[0.1em] text-dim">

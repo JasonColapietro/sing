@@ -649,3 +649,17 @@ describe("a ticked row, read aloud", () => {
     if (day.items.length > 1) expect(html).toContain('<span class="sr-only">(not done yet)</span>');
   });
 });
+
+describe("the program entry card on a rest day", () => {
+  it("keeps 'See the calendar' outline, so the room's own start is the one filled action", () => {
+    plan.pro = false;
+    plan.ready = true;
+    // Foundations day 7 (index 6) is a rest day.
+    const rest = renderToStaticMarkup(<ProgramEntryCard active={active("foundations-2w", 6)} />);
+    expect(rest).toMatch(/<a[^>]*class="[^"]*border-field[^"]*"[^>]*>See the calendar<\/a>/);
+    expect(rest).not.toContain("bg-violet-ink");
+    // A practice day still leads with the filled "Open today's plan".
+    const practice = renderToStaticMarkup(<ProgramEntryCard active={active("foundations-2w", 5)} />);
+    expect(practice).toMatch(/<a[^>]*class="[^"]*bg-violet-ink[^"]*"[^>]*>Open today’s plan<\/a>/);
+  });
+});

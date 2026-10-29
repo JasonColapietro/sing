@@ -192,6 +192,20 @@ try {
   await page.goto(`${BASE}/programs`, { waitUntil: "networkidle" });
   card = await todayCard(page);
   check("after midnight, day 2 is today", card.status === "todo" && card.index === 1, card.text.slice(0, 120));
+  // While a program day leads /warmups, its "Open today's plan" is the room's
+  // one filled start; the routine's "Enable mic and start" steps back to outline.
+  // A second tab, so the journey's page stays on the program's card.
+  const warmups = await context.newPage();
+  await warmups.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
+  await warmups.locator('section[aria-labelledby="program-entry-heading"]').waitFor({ timeout: 15000 });
+  const filledStarts = await warmups.$$eval("main a, main button", (els) =>
+    els
+      .filter((el) => /(?:^|\s)bg-(?:rec|violet-ink)(?:\s|$)/.test(el.getAttribute("class") ?? ""))
+      .filter((el) => !el.closest("#warmup-gate"))
+      .map((el) => (el.textContent ?? "").trim()),
+  );
+  check("warmups: the program day is the one filled start", filledStarts.length === 1 && filledStarts[0] === "Open today’s plan", filledStarts.join(" | "));
+  await warmups.close();
 
   // 6. Doing day 2 and day 3 today still completes only day 2.
   const day2 = await todayRows(page);
