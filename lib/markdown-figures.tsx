@@ -20,9 +20,11 @@ import { labelToMidi } from "@/lib/audio/notes";
  */
 export type FigureArgs = Record<string, string>;
 
-const ref = (kind: ReferenceFigureKind) => () => (
-  <ReferenceFigure kind={kind} className="mx-auto h-auto w-full max-w-[22rem]" />
-);
+function ref(kind: ReferenceFigureKind) {
+  return function ReferenceFigureBlock() {
+    return <ReferenceFigure kind={kind} className="mx-auto h-auto w-full max-w-[22rem]" />;
+  };
+}
 
 export const MARKDOWN_FIGURES: Record<string, (args: FigureArgs) => ReactNode> = {
   "source-filter": () => <SourceFilterFigure className="h-auto w-full" />,

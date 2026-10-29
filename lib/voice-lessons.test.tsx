@@ -663,7 +663,7 @@ describe("links from the lessons", () => {
   });
 
   /**
-   * Step 1 of most lessons says "The reading X is listed there too", meaning the
+   * A practice step can say "The reading X is listed there too", meaning the
    * practice panel. It names the module's first reading, so a reading added to
    * a module goes after it, and reordering a module's readings rewrites that
    * sentence in every one of its lessons.
@@ -679,7 +679,9 @@ describe("links from the lessons", () => {
         expect(readings[0]?.title, lesson.id).toBe(named);
       }
     }
-    expect(checked).toBeGreaterThan(50);
+    // A step that only pointed at the panel is dropped at compile time
+    // (scripts/compile-lessons.mjs); the few that also give an instruction stay.
+    expect(checked).toBeGreaterThan(0);
   });
 
   it("keeps range extension out of the range test, which its lessons save for a retest weeks apart", () => {
