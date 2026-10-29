@@ -65,7 +65,9 @@ export function MicAlert({
     const el = ref.current;
     if (!el) return;
     el.scrollIntoView({ block: "nearest" });
-    const lift = tabBarOverlap(el);
+    // `nearest` can leave the line flush with (or a fraction past) the screen's bottom edge; keep the same clearance there.
+    const edge = el.getBoundingClientRect().bottom - (window.innerHeight - TAB_BAR_CLEARANCE);
+    const lift = Math.max(tabBarOverlap(el), edge > 0 ? edge : 0);
     if (lift > 0) window.scrollBy(0, lift);
   }, [message]);
 

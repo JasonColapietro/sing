@@ -139,7 +139,7 @@ function ProgramCard({
             e.preventDefault();
             onOpen(program.id);
           }}
-          className="text-sm font-medium text-violet-ink underline-offset-4 hover:underline"
+          className="inline-flex min-h-11 items-center text-sm font-medium text-violet-ink underline-offset-4 hover:underline"
         >
           See the {program.days.length}-day calendar
         </a>

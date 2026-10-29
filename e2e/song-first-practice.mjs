@@ -41,10 +41,8 @@ async function session(viewport, range = {}, pro = false) {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(`${base}${path}`);
-  // The H1 is the SEO question form ("Can you sing “Espresso” by Sabrina
-  // Carpenter? …", pinned by lib/on-page-headings.test.tsx); match the part
-  // that names the song rather than the whole sentence.
-  await page.getByRole("heading", { level: 1, name: "“Espresso” by Sabrina Carpenter" }).waitFor();
+  // The H1 asks the question (pinned by lib/on-page-headings.test.tsx).
+  await page.getByRole("heading", { level: 1, name: "Can you sing “Espresso”?" }).waitFor();
   return { context, page, errors };
 }
 
