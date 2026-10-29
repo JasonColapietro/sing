@@ -19,6 +19,8 @@ When this atlas calls a pop singer a mezzo-soprano, it is making a much smaller 
 
 Two consequences follow. First, do not be surprised when a pop soprano's cited range dips below a pop contralto's — range and type are different measurements. The type tracks where the voice *lives*; the range tracks the furthest it has ever been photographed. A soprano with a practiced low extension can show a floor below a contralto who never records down there, and the atlas is full of exactly that pattern. Second, do not treat another singer's label as a constraint on you. Microphones changed the game: amplification means a baritone can sing soft and high over a huge track, a mezzo can whisper where an opera house would demand a blade of sound. Half the innovation in twentieth-century singing is people ignoring what their fach was supposed to do.
 
+::figure spans | Three voice types, overlapping. The notes between the dashed lines belong to all three, which is why a range alone rarely settles a type.
+
 ## Tessitura, one more time
 
 Range is the two extreme notes. Tessitura is where the melody spends its time — the middle of the histogram, not its edges. Two tenors with identical C3–C5 figures can have tessituras a fourth apart, and the one whose songs sit higher will feel unsingable to the other despite the matching numbers. When an entry's technique paragraph says a voice "sits low" or "lives above the staff," it is telling you tessitura, and that sentence predicts whether the singer's songs will fit you better than the headline figure ever will. The transposition chapter of *The Measured Voice* turns that prediction into a practical rule: match your comfortable band to the song's busiest band and move the key by the difference.

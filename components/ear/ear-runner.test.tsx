@@ -56,7 +56,7 @@ function render(capped: boolean) {
   );
 }
 
-describe("a workout the free minutes stopped", () => {
+describe("a routine the free minutes stopped", () => {
   it("offers no Play again, which could only reopen the cap slide, and says why the set stopped", () => {
     const html = render(true);
     expect(html).not.toContain("Play again");
@@ -71,7 +71,7 @@ describe("a workout the free minutes stopped", () => {
   });
 });
 
-describe("a workout the free minutes stopped between games", () => {
+describe("a routine the free minutes stopped between games", () => {
   function stopped(capStoppedAt: number | null, results: (EarStepResult | null)[] = [played]) {
     return renderToStaticMarkup(
       <EarRunResults
@@ -101,7 +101,7 @@ describe("a workout the free minutes stopped between games", () => {
   });
 });
 
-/** A workout's microphone, already on from an earlier step. */
+/** A routine's microphone, already on from an earlier step. */
 const lentMic: UsePitchResult = {
   frame: EMPTY_FRAME,
   latest: { current: EMPTY_FRAME },
@@ -113,7 +113,7 @@ const lentMic: UsePitchResult = {
   subscribe: () => () => {},
 };
 
-describe("a listening game inside a workout whose mic is on", () => {
+describe("a listening game inside a routine whose mic is on", () => {
   const noop = () => {};
   const games = [
     ["Pitch match", (pitch?: UsePitchResult) => <PitchMatchGame difficulty="easy" pitch={pitch} onExit={noop} onComplete={noop} />],
@@ -133,7 +133,7 @@ describe("a listening game inside a workout whose mic is on", () => {
   });
 });
 
-describe("who deals Note catcher's run in a workout", () => {
+describe("who deals Note catcher's run in a routine", () => {
   it("is the game itself once a lent mic is on, so the gate's button only turns it on", () => {
     // Lent, nothing dealt yet: the mic going live deals the run, once.
     expect(dealsWhenMicOn(true, false, false)).toBe(true);
@@ -145,11 +145,11 @@ describe("who deals Note catcher's run in a workout", () => {
   });
 });
 
-describe("when a workout's open microphone is analysed", () => {
+describe("when a routine's open microphone is analysed", () => {
   it("only while a game that listens is played, never on a slide, a tapping game or the results", () => {
     // The stream stays open from the first singing step to the results, so
     // no step asks for the mic again; the analysis loop, which updated state
-    // on every animation frame, re-rendered the whole workout through
+    // on every animation frame, re-rendered the whole routine through
     // Interval ID, Higher or lower and the slides between steps.
     let listening = 0;
     let quiet = 0;
@@ -163,7 +163,7 @@ describe("when a workout's open microphone is analysed", () => {
       });
       expect(earPhaseListens({ kind: "done" }, routine.steps)).toBe(false);
     }
-    // The workouts mix both kinds, so the pause is exercised.
+    // The routines mix both kinds, so the pause is exercised.
     expect(listening).toBeGreaterThan(0);
     expect(quiet).toBeGreaterThan(0);
   });
@@ -174,7 +174,7 @@ describe("when a workout's open microphone is analysed", () => {
   });
 });
 
-describe("a workout opened straight from a program row", () => {
+describe("a routine opened straight from a program row", () => {
   afterEach(() => {
     capState.current = null;
   });
@@ -193,7 +193,7 @@ describe("a workout opened straight from a program row", () => {
     return html.match(/<div data-slot="top-right">(.*?)<\/div>/)?.[1] ?? "";
   }
 
-  it("shows the free minutes left on the intro slide when the workout outlasts them", () => {
+  it("shows the free minutes left on the intro slide when the routine outlasts them", () => {
     // /ear-training?routine=quick skips the room's allowance line, so this is
     // the only place the countdown can be read before the cap slide.
     capState.current = free(100);
@@ -205,7 +205,7 @@ describe("a workout opened straight from a program row", () => {
     expect(topRight()).not.toContain("free left");
   });
 
-  it("shows nothing while the free minutes cover the rest of the workout", () => {
+  it("shows nothing while the free minutes cover the rest of the routine", () => {
     expect(earRoutineSeconds(quick)).toBeLessThanOrEqual(300);
     capState.current = free(300);
     expect(topRight()).not.toContain("free left");

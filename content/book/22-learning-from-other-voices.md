@@ -55,7 +55,7 @@ Not worth imitating: timbre, weight, and effort. Timbre is mostly the shape of a
 
 A rule that holds up under pressure: imitate what a singer decided, not what they are made of. When you catch yourself straining to match a texture, you have crossed from the first list into the second, and the practice has stopped paying.
 
-One signal ends a session rather than shaping it: if singing hurts, stop, because pain is not evidence of work getting done. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+One signal ends a session rather than shaping it: if singing hurts, stop, because pain is not evidence of work getting done.
 
 ## Try this
 

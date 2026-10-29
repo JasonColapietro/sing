@@ -434,22 +434,48 @@ try {
     await expectLive(page, 0, "gate after a refused reopen", notes, 0);
   });
 
-  // 6. Listen mode: a singer who picked a song first, without a mic, is never asked for
-  //    one; once they turn it on, the next start reopens it.
-  await runCase(held, "songs listen mode: no mic until asked, then starts reopen it", async (page, notes) => {
+  // 6. "Pick a song first" is browsing, not listen mode: the library opens with
+  //    no mic, and a card's Sing asks for it and starts a scored run.
+  await runCase(held, "songs pick a song first: no mic while browsing, a card's Sing asks and scores", async (page, notes) => {
     await page.goto(`${BASE}/songs`);
     await page.waitForLoadState("networkidle");
     await dismissOverlays(page);
     await page.getByRole("button", { name: "Pick a song first", exact: true }).click();
     const libraryTitle = page.getByRole("heading", { level: 1, name: "Public domain songs to sing in your key", exact: true });
     await libraryTitle.waitFor();
-    // Unchanged: the library still offers the mic to a singer who has not allowed it.
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).waitFor();
+    await expectStill(page, 0, "library while browsing", notes, 1000);
+    const sing = page.getByRole("button", { name: "Sing", exact: true }).first();
+    await sing.click();
+    await page.locator("#song-transport").waitFor();
+    await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
+    await page.getByText("Running score", { exact: true }).waitFor();
+    assert.equal(await page.getByText("Listen mode", { exact: true }).count(), 0, '"Listen mode" after Pick a song first');
+    await expectLive(page, 1, "card Sing after Pick a song first, running", notes, 0);
+    await endSongRunOnSummary(page);
+    await page.evaluate(() => { window.__micFail = true; });
+    await page.getByRole("button", { name: "Sing again", exact: true }).click();
+    await page.getByRole("button", { name: "Pick a song first", exact: true }).waitFor();
+    assert.equal(await page.locator("#song-transport").count(), 0, "a player opened on a failed reopen");
+  });
+
+  // 6b. Listen mode ("Continue without a mic" on a song link) is never asked for
+  //     the mic; once they turn it on, the next start reopens it.
+  await runCase(held, "songs listen mode: no mic until asked, then starts reopen it", async (page, notes) => {
+    await page.goto(`${BASE}/songs?song=twinkle-twinkle-little-star`);
+    await page.waitForLoadState("networkidle");
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Continue without a mic", exact: true }).click();
+    await page.getByText("Listen mode", { exact: true }).waitFor();
+    await expectStill(page, 0, "listen-mode player", notes, 1000);
+    await page.getByRole("button", { name: "Exit practice", exact: true }).click();
+    const libraryTitle = page.getByRole("heading", { level: 1, name: "Public domain songs to sing in your key", exact: true });
+    await libraryTitle.waitFor();
     await page.getByRole("button", { name: "Enable microphone", exact: true }).waitFor();
     const sing = page.getByRole("button", { name: "Sing", exact: true }).first();
     await sing.click();
     await page.locator("#song-transport").waitFor();
     await page.getByText("Listen mode", { exact: true }).waitFor();
-    // A card's Sing opens straight into the count-in; Pause marks the run as started.
     await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
     await page.waitForTimeout(4000);
     await expectLive(page, 0, "listen mode, running", notes, 0);
@@ -457,12 +483,7 @@ try {
     const summary = page.getByRole("heading", { level: 1, name: "Practice summary", exact: true });
     await Promise.race([summary.waitFor(), libraryTitle.waitFor()]);
     if (await summary.count()) {
-      await expectLive(page, 0, "listen-mode summary", notes, 0);
-      await page.getByRole("button", { name: "Sing again", exact: true }).click();
-      await page.locator("#song-transport").waitFor();
-      await page.getByText("Listen mode", { exact: true }).waitFor();
-      await expectLive(page, 0, "Sing again in listen mode", notes, 0);
-      await page.getByRole("button", { name: "Exit practice", exact: true }).click();
+      await page.getByRole("button", { name: "Back to library", exact: true }).click().catch(() => {});
       await libraryTitle.waitFor();
     }
     await expectStill(page, 0, "library in listen mode", notes, 1000);

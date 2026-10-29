@@ -6,6 +6,8 @@ import { BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { BOOKS, UNLOCK_TILES } from "@/lib/pro-inventory";
 import { useProReady, useProState } from "@/lib/pro";
 import { SectionLabel } from "@/components/ui";
+import { BookCover } from "@/components/book/cover";
+import { AUTHOR_NAME } from "@/lib/author";
 
 /**
  * What a buyer gets the moment the payment clears: every chapter title is
@@ -64,12 +66,14 @@ export function UnlockStack() {
         <div className="mt-12 grid gap-8 lg:grid-cols-2">
           <BookContents
             title={BOOK_TITLE}
+            kicker="A singing book"
             href="/book"
             entries={BOOK_CONTENTS}
             owned={owned}
           />
           <BookContents
             title={ATLAS_TITLE}
+            kicker="How famous singers sing"
             href="/atlas"
             entries={ATLAS_CONTENTS}
             owned={owned}
@@ -102,11 +106,14 @@ interface ContentsEntry {
 
 function BookContents({
   title,
+  kicker,
   href,
   entries,
   owned,
 }: {
   title: string;
+  /** The cover's mono line, as the book's own page draws it. */
+  kicker: string;
   href: string;
   entries: readonly ContentsEntry[];
   /** Pro is active on this device: every chapter opens. */
@@ -159,6 +166,7 @@ function BookContents({
 
   return (
     <div>
+      <BookCover title={title} author={AUTHOR_NAME} kicker={kicker} className="mb-5" />
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         {/* The book's own hub, by name: this page sells the book and was the
             one place on the site that never linked to it. */}

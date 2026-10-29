@@ -27,7 +27,7 @@ Where it earns its place: it points you in a direction, it gives you something t
 
 Tessitura is the old word for where a voice lives. Not the extremes it can touch. The band of pitches where it sounds like itself with the least work.
 
-You know your tessitura by feel more than by measurement. No test hands it to you: the range test reports a low note, a high note and a voice-type label, and its middle band is only those two edges, trimmed. Tessitura is the region where your tone is even and you are not thinking about breath, where you can sing a phrase, breathe, sing another, and another, without the effort piling up on you. It is where you sing when you are humming to yourself and not paying attention. It sits well inside the absolute range, with real distance at both ends.
+No test hands you your tessitura; you find it by feel. The range test reports a low note, a high note and a label, and its middle band is only those edges, trimmed. Tessitura is where your tone stays even and breath takes no thought: you can sing a phrase, breathe, and sing another without the effort piling up. It is where you hum when you are not paying attention, well inside the absolute range.
 
 This is the number that decides what you can sing well. A song does not sit on its highest note. It sits in the band where the melody spends its time, and that band is usually a narrow one — which is why a song with one dramatic high note can be comfortable, and why a song that never leaves your middle can still wreck you if it parks there for four minutes and never lets you off.
 

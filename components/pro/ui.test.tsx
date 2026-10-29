@@ -8,8 +8,10 @@ describe("UpgradeCard purchase terms", () => {
       <UpgradeCard title="Your full report" body="Every note." context="Coach" />,
     );
 
-    expect(html).toContain("$79 once for lifetime access");
-    expect(html).toContain("Never renews");
+    expect(html).toContain("Go Pro: $79 once");
+    expect(html).toContain("Lifetime access · Never renews");
+    // The price is printed once, on the button.
+    expect(html.match(/\$79/g)).toHaveLength(1);
     expect(html).not.toContain("sold out");
     expect(html).toContain('href="/pro#buy"');
     expect(html).not.toContain("Cancel anytime ·");

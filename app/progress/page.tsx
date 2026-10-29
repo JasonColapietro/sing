@@ -39,7 +39,7 @@ export default function ProgressPage() {
           </h2>
           <p className="mt-3 max-w-3xl text-mut">
             Sessions from the warmups, ear-training games, breath drills, song
-            practice, the range test, the pitch studio, the take recorder, the
+            practice, the range test, the pitch studio, the recorder, the
             tools and the analyzer are logged here. Each logged session earns XP,
             with a bonus when a scored exercise goes well, and practicing on
             consecutive days builds your streak. The calendar shows the days you

@@ -3,7 +3,7 @@
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { emitProResult } from "@/lib/pro-signal";
-import { StepIntroSlide } from "@/components/practice/step-intro";
+import { RoutineStepContext, StepIntroSlide } from "@/components/practice/step-intro";
 import { useStepRunner } from "@/components/practice/step-runner";
 import { formatClock, useFreeCap, type FreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
@@ -115,6 +115,16 @@ export function breathIntroFreeLeft(
   return cap.leftSec < setLeftSec ? `${formatClock(cap.leftSec)} free left today` : null;
 }
 
+/** The previous-step chip on a breath intro slide. */
+export function breathPrevChip(
+  step: BreathStep,
+  r: BreathDrillResult | null,
+): { label: string; score: number | null; scoreLabel?: string } {
+  // The results screen's wording for the same step: its own label, or "skipped".
+  if (r == null) return { label: breathStepTitle(step), score: null };
+  return { label: breathStepTitle(step), score: r.score, scoreLabel: r.label };
+}
+
 function starsForDrillResult(drill: BreathDrillId, r: BreathDrillResult): Stars {
   switch (drill) {
     case "box":
@@ -151,13 +161,13 @@ export function starsForCompletion(done: number, total: number): Stars {
 }
 
 /**
- * Whether a step of a set was done, from what it handed back.
+ * Whether a step of a routine was done, from what it handed back.
  *
  * A guided drill counts once it ran long enough to be logged (its own
  * MIN_LOG_SEC), not merely because End was pressed. The sustain test is the
  * exception: a hold from SUSTAIN_ATTEMPT_MIN_SEC is a real attempt, kept in
  * the room's record and counted by programs, even though only holds of
- * SUSTAIN_LOG_MIN_SEC or more are logged for XP. A set whose three steps
+ * SUSTAIN_LOG_MIN_SEC or more are logged for XP. A routine whose three steps
  * all ran must not read "2 of 3 steps" because its sustain was short.
  */
 export function breathStepDone(step: BreathStep, r: BreathDrillResult | null | undefined): boolean {
@@ -167,8 +177,8 @@ export function breathStepDone(step: BreathStep, r: BreathDrillResult | null | u
 }
 
 /**
- * The sustain hold a set counted as done but did not log, or null. Its row
- * prints the steadiness score, so without this a set's XP silently left the
+ * The sustain hold a routine counted as done but did not log, or null. Its row
+ * prints the steadiness score, so without this a routine's XP silently left the
  * sustain out and the singer had no way to tell why.
  */
 export function shortSustainHold(
@@ -201,7 +211,7 @@ function BreathProNudge() {
       <ProCrescendoNudge
         line="Pro removes the daily limit and shows your full coach plan"
         title="Keep the breath work going"
-        body={`Breath sets share the free plan's ${FREE_DAILY_MINUTES} guided minutes a day. Pro removes the limit and lays out the full daily plan.`}
+        body={`Breath routines share the free plan's ${FREE_DAILY_MINUTES} guided minutes a day. Pro removes the limit and lays out the full daily plan.`}
         context="Breath"
       />
     </div>
@@ -210,7 +220,7 @@ function BreathProNudge() {
 
 /**
  * The results screen's subtitle. A `?step=` link (a program row carrying on
- * from the step the free minutes stopped at) runs the set from `firstStep`,
+ * from the step the free minutes stopped at) runs the routine from `firstStep`,
  * so the steps before it were sung in an earlier run, not skipped in this
  * one: the count is of this run's steps.
  */
@@ -298,7 +308,7 @@ export function BreathRunResults({
       achievements={mergeAchievements(results)}
       onContinue={onContinue}
       onAgain={capped ? undefined : onAgain}
-      // Above the rows, so a set the cap stopped says why before its
+      // Above the rows, so a routine the cap stopped says why before its
       // "Not reached" rows rather than under them, below a phone's fold.
       notice={capped ? <CappedAgainNote notReached={notReached} /> : undefined}
     >
@@ -360,6 +370,9 @@ export function BreathRunner({
 
   if (phase.kind === "intro") {
     if (runner.atCapSlide) return <CapSlide cap={cap} onExit={() => leave(phase.step)} />;
+    // The drill just closed, as warmups and ear show it; none before this run's first step.
+    const prevStep = phase.step > runner.firstStep ? routine.steps[phase.step - 1] : null;
+    const prevResult = results[phase.step - 1] ?? null;
     return (
       <StepIntroSlide
         key={runner.stepKey}
@@ -367,6 +380,7 @@ export function BreathRunner({
         stepIndex={phase.step}
         stepCount={stepCount}
         title={breathStepTitle(step)}
+        prev={prevStep ? breathPrevChip(prevStep, prevResult) : null}
         meta={
           <>
             {breathStepSummary(step)}
@@ -385,14 +399,17 @@ export function BreathRunner({
   }
 
   return (
-    <StepDrill
-      key={runner.stepKey}
-      step={step}
-      pitch={pitch}
-      autoStart
-      onComplete={(r) => runner.closeStep(phase.step, r)}
-      onExit={() => runner.closeStep(phase.step, null)}
-    />
+    // The drill's X ends this step ("Finish step"); the slide's X exits the routine.
+    <RoutineStepContext.Provider value>
+      <StepDrill
+        key={runner.stepKey}
+        step={step}
+        pitch={pitch}
+        autoStart
+        onComplete={(r) => runner.closeStep(phase.step, r)}
+        onExit={() => runner.closeStep(phase.step, null)}
+      />
+    </RoutineStepContext.Provider>
   );
 }
 

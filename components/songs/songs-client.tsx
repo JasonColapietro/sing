@@ -2,6 +2,7 @@
 
 import { useFreeCap } from "@/lib/free-cap";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
+import { CAPPED_REASON, showCapWall } from "@/components/practice/use-capped-start";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -83,14 +84,18 @@ export function micJustAnswered(prev: MicAsk, next: MicAsk): boolean {
   return gone && answered;
 }
 
-/** The reason a capped "Sing again" cannot start, said beside the button. */
-const CAPPED_REASON =
-  "Free practice is used for today. It resets at midnight; the free studio is still open.";
-
-/** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
-function showCapWall() {
-  document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
+/**
+ * What a start does about the microphone first. "ask": the singer chose "Pick
+ * a song first", so the Sing press asks for it and the run is scored once
+ * granted. "reopen": allowed earlier and closed while idle. "none": already
+ * on, or "Continue without a mic" (listen mode) was chosen.
+ */
+export function micStepForStart(s: { micAllowed: boolean; listening: boolean; listenMode: boolean }): "ask" | "reopen" | "none" {
+  if (s.listening) return "none";
+  if (s.micAllowed) return "reopen";
+  return s.listenMode ? "none" : "ask";
 }
+
 
 export function SongsClient() {
   const pitch = usePitch();
@@ -219,20 +224,14 @@ export function SongsClient() {
       return false;
     }
     if (!mayStart(song)) return false;
-    // The room closed an idle microphone. Reopen it before the player mounts:
-    // a player that opens with the mic off is a listen pass, unscored, and
-    // would flash "Listen mode" until access came back. That includes a singer
-    // who first went on without a mic and turned it on later. Only if this
-    // screen is still the one showing when access arrives, as with the
-    // summary's own ask.
-    // Browsing without a mic: the Sing press is the gesture that asks for it.
-    // Refused, the player opens on its own "Enable microphone" line, not into a run.
-    if (!micAllowed && !pitch.listening && !listenMode) {
+    // Ask (after "Pick a song first"; refused, the player opens on its own Enable microphone) or reopen an idle-closed mic before the player mounts.
+    const micStep = micStepForStart({ micAllowed, listening: pitch.listening, listenMode });
+    if (micStep === "ask") {
       const current = micRequestRef.current.begin();
       const ok = await pitch.start();
       if (!current()) return false;
       if (!ok) autoStart = false;
-    } else if (micAllowed && !pitch.listening) {
+    } else if (micStep === "reopen") {
       const current = micRequestRef.current.begin();
       setReopening((n) => n + 1);
       let ok: boolean;
@@ -242,11 +241,7 @@ export function SongsClient() {
         setReopening((n) => n - 1);
       }
       if (!ok) {
-        // The device is gone, busy or refused. Bring the gate back with the
-        // error, which also offers to go on without a mic. That includes a
-        // singer who went on without one earlier: left in listen mode, they
-        // would get no error and no way to retry, and the next start would
-        // be an unscored run.
+        // Device gone or refused: the gate comes back with the error.
         setMicAllowed(false);
         setListenMode(false);
         setBrowsing(false);
@@ -412,7 +407,10 @@ export function SongsClient() {
           wall arrives as a surprise. In the player it sits above the
           transport instead: every start scrolls Play into view, which on a
           phone puts the top of the page above the screen. */}
-      {!cap.capped && view !== "practice" && <FreeAllowance cap={cap} className="mb-4" />}
+      {!cap.capped && view !== "practice" && (
+        // On the summary the results nudge is the one ask.
+        <FreeAllowance cap={cap} className="mb-4" proLink={view !== "summary"} />
+      )}
       {view === "library" && (
         <Library
           progress={progress}

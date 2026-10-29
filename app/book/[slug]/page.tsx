@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { chapterKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AUTHOR_NAME } from "@/lib/author";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { RANGE_WARM_UP } from "@/lib/lesson-practice";
 import { freeLessonsReading } from "@/lib/lesson-readings";
@@ -15,6 +14,7 @@ import { chapterJsonLd } from "@/lib/page-jsonld";
 import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
+import { AuthorByline } from "@/components/book/byline";
 import { BookProgramNote } from "@/components/book/program-link";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
 import { LessonList } from "@/components/learn/lesson-list";
@@ -27,23 +27,18 @@ interface Params {
 
 /**
  * The room each free chapter's "Try this" sends the reader to. The chapter
- * names the room in its prose; this is the button, so a reader who arrived from
- * search can do the exercise the chapter just prescribed before being asked to
- * pay for anything. Keyed by slug, so a chapter without an entry shows nothing.
+ * says what to do in its own "Try this" section; this is the header button, so
+ * a reader who arrived from search can do it before being asked to pay for
+ * anything. Keyed by slug, so a chapter without an entry shows nothing.
  */
-const TRY_IT: Record<
-  string,
-  { href: string; label: string; line: string; warmUpFirst?: boolean }
-> = {
+const TRY_IT: Record<string, { href: string; label: string; warmUpFirst?: boolean }> = {
   "what-your-voice-is": {
     href: "/studio",
     label: "Try it in the pitch studio",
-    line: "Hold one note on “ah”, then “ee”: the trace stays on one line while the sound changes.",
   },
   "reading-the-range-test": {
     href: rangeTestHref(),
     label: "Take the range test honestly",
-    line: "Warm up first, stop at the first note that needs effort, and count only notes you can hold for two beats.",
     // The warm-up button comes before the test wherever the page offers it,
     // and opens the Morning reset the Your Range lessons and /learn's Day 1
     // name: a cold voice under-reports at both ends, and every finished test
@@ -53,19 +48,10 @@ const TRY_IT: Record<
   "when-numbers-lie": {
     href: "/studio",
     label: "Check your room in the pitch studio",
-    line: "Stay silent for fifteen seconds and watch the trace: any pitch it shows is your room, not your voice.",
   },
 };
 
-/**
- * Exit-test rooms (keys of the contract's `deepLinks.rooms`) that run guided
- * practice, which the free plan caps at FREE_DAILY_MINUTES a day. The studio
- * and the range test have no clock. Mirrors CAPPED_TYPES in lib/free-cap.ts,
- * a client module this server page cannot read values from.
- */
-const GUIDED_ROOMS: ReadonlySet<string> = new Set(["warmups", "breath", "earTraining", "songs"]);
-
-/** Said beside every warm-up button: the warm-up is capped, the test is not. */
+/** Said beside the warm-up button: the warm-up is capped, the test is not. */
 function WarmUpCapNote() {
   return (
     <p className="text-xs text-dim">
@@ -135,6 +121,33 @@ export default async function ChapterPage({
    * leave the calendar as the only free way to judge progress.
    */
   const exit = exitTestFor(chapter.slug);
+  /**
+   * The phase chapters are all gated, so the reader places this card: below
+   * the chapter for a reader who has the text, on top when the page is locked.
+   */
+  const exitCard = exit && (
+    <Card>
+      <div className="max-w-2xl space-y-3">
+        <p className="text-sm font-medium text-ink">Move on when: {exit.test}</p>
+        <p className="text-sm text-mut">
+          The evidence comes from{" "}
+          <Link
+            href={exit.room === "range" ? rangeTestHref() : exit.roomPath}
+            className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
+          >
+            {exit.roomLabel}
+          </Link>
+          , which is where this app measures it.
+        </p>
+        <p className="text-sm text-mut">
+          When it does not pass, the blocker is usually this one. {exit.blocker}
+        </p>
+        <p className="text-sm text-mut">What passing does not prove: {exit.doesNotProve}</p>
+        {/* The one place the page states the free cap for the program. */}
+        <BookProgramNote scope="fortnight" className="text-sm text-mut" />
+      </div>
+    </Card>
+  );
 
   return (
     <PageShell
@@ -163,31 +176,6 @@ export default async function ChapterPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(chapterJsonLd({ section: "book", bookTitle: BOOK_TITLE, ...chapter })) }}
       />
-      {exit && (
-        <Card>
-          <div className="max-w-2xl space-y-3">
-            <p className="text-sm font-medium text-ink">
-              Move on when: {exit.test}
-            </p>
-            <p className="text-sm text-mut">
-              The evidence comes from{" "}
-              <Link href={exit.room === "range" ? rangeTestHref() : exit.roomPath} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
-                {exit.roomLabel}
-              </Link>
-              , which is where this app measures it.
-              {GUIDED_ROOMS.has(exit.room) &&
-                ` Time there counts toward the free plan's ${FREE_DAILY_MINUTES} guided minutes a day; Pro removes the limit.`}
-            </p>
-            <p className="text-sm text-mut">
-              When it does not pass, the blocker is usually this one. {exit.blocker}
-            </p>
-            <p className="text-sm text-mut">
-              What passing does not prove: {exit.doesNotProve}
-            </p>
-            <BookProgramNote scope="fortnight" className="text-sm text-mut" />
-          </div>
-        </Card>
-      )}
       {/* The chapter that explains the plan's shape sets no exit test, so its
           bridge to the in-app program stands on its own. */}
       {!exit && chapter.part === PROGRAMME_PART && (
@@ -200,51 +188,20 @@ export default async function ChapterPage({
           <Card>
             <article className="max-w-2xl">
               {/* The visible counterpart of the chapter's author markup. */}
-              <p className="text-sm text-mut">
-                By{" "}
-                <a
-                  href="https://jasoncolapietro.com"
-                  rel="author"
-                  className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
-                >
-                  {AUTHOR_NAME}
-                </a>{" "}
+              <AuthorByline lead="By">
+                {" "}
                 · Chapter {chapter.order} of{" "}
                 <Link href="/book" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                   {BOOK_TITLE}
                 </Link>
-              </p>
+              </AuthorByline>
               <Markdown source={full.body} />
             </article>
           </Card>
-          {(tryIt || lessons.length > 0) && (
+          {exitCard}
+          {lessons.length > 0 && (
             <Card>
-              {tryIt && (
-                <>
-                  <SectionLabel>Try this now</SectionLabel>
-                  <p className="mt-3 max-w-2xl text-sm text-mut">{tryIt.line}</p>
-                  <div className="mt-4 flex flex-wrap gap-3">
-                    {tryIt.warmUpFirst && (
-                      <LinkButton href={RANGE_WARM_UP.href} size="md">
-                        {RANGE_WARM_UP.label}
-                      </LinkButton>
-                    )}
-                    <LinkButton href={tryIt.href} size="md" variant={tryIt.warmUpFirst ? "outline" : "violet"}>
-                      {tryIt.label}
-                    </LinkButton>
-                  </div>
-                  {tryIt.warmUpFirst && (
-                    <div className="mt-3 max-w-2xl">
-                      <WarmUpCapNote />
-                    </div>
-                  )}
-                </>
-              )}
-              {lessons.length > 0 && (
-                <div className={tryIt ? "mt-6 border-t border-line pt-5" : undefined}>
-                  <LessonList lessons={lessons} />
-                </div>
-              )}
+              <LessonList lessons={lessons} />
             </Card>
           )}
           {/* Server-rendered for everyone, so the free chapters link one another
@@ -298,7 +255,7 @@ export default async function ChapterPage({
         </div>
       ) : (
         <div className="space-y-6">
-          <ChapterReader chapter={chapter} />
+          <ChapterReader chapter={chapter} aside={exitCard || undefined} />
           {lessons.length > 0 && (
             <Card>
               <LessonList lessons={lessons} />

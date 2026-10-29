@@ -67,8 +67,6 @@ And repeat the same small set of exercises rather than sampling new ones. Novelt
 
 Some days the middle will feel thick, or the onsets will keep clicking, or the tone will not settle. Drop the volume, shorten the session, do the same material at half power — coordination still trains quietly. What you should not do is push harder into a voice that is not answering.
 
-Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
-
 The aim of these two weeks is not a bigger voice. It is a middle that does the same thing twice.
 
 ## Try this

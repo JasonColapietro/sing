@@ -33,7 +33,7 @@ Use a small, relaxed sound for most of it: a hum, a soft "oh", or a neutral "uh"
 
 Watch the pitch trace on the descents. The low register tends to go flat before it goes rough. A trace that sags a few cents under the target on the way down, session after session, is usually telling you the note is under-supported rather than out of reach.
 
-One caution, because the low register is deceptive: pressing the larynx down does not announce itself the way a strained high note does. It rarely stings. You can do it for twenty minutes and notice only afterwards that speaking feels heavy. Keep the low sessions short. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+One caution, because the low register is deceptive: pressing the larynx down does not announce itself the way a strained high note does. It rarely stings. You can do it for twenty minutes and notice only afterwards that speaking feels heavy. Keep the low sessions short.
 
 ## Phrases, not sustains
 

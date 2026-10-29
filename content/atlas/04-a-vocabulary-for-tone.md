@@ -15,9 +15,9 @@ Weight is how much of the vocal folds' mass engages in the sound — the differe
 
 Placement is where the sound seems to resonate — a sensation with fuzzy physics but perfectly real acoustics. Forward placement, "in the mask," gives ring and cut: Steven Tyler, Ailee, Rema's high nasal shine. Back placement gives warmth and hoot: Josh Groban, Samara Joy's plush low register. Related but not identical is brightness — the balance of high overtones in the tone. Bright and dark are the equalizer; forward and back are where the equalizer seems to live in the singer's head.
 
-## Vibrato: rate, width, onset
+## Vibrato: rate, width, delay
 
-Vibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Onset*: immediate (opera, most of musical theatre) versus delayed — straight tone first, bloom on beat three — which is the default across modern pop and jazz, from Billie Eilish to Samara Joy. When an entry says "vibrato arrives late," that is the dial it means. All three are trainable; delayed onset is a good first one to practice, because it starts from a plain, straight tone.
+Vibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Delay*: immediate (opera, most of musical theatre) versus delayed, with straight tone first and bloom on beat three, the default across modern pop and jazz from Billie Eilish to Samara Joy. When an entry says "vibrato arrives late," that is the dial it means. All three are trainable; a delayed start is a good first one to practise, because it begins from a plain, straight tone.
 
 ## Onset
 
@@ -41,7 +41,17 @@ A slight sob placed in the tone — the larynx tilting into the posture of weepi
 
 ## Register colors
 
-Words the entries use for where a note is made rather than how it is flavored. *Chest voice*: the speaking mechanism, full and grounded. *Head voice*: the lighter upper mechanism, clear and rounded. *Falsetto*: the flutey, disconnected version of the upper voice, air-adjacent at the edges (Frank Ocean's confessional top). *Mix*: chest and head blended so the seam disappears — the sound of essentially every big modern pop chorus. *Belt*: chest-dominant production carried above the natural break, brassy and loud (Reneé Rapp, Idina Menzel). *Whistle*: the separate top-floor mechanism above head voice (Mariah Carey, Minnie Riperton). *Fry*: the creaking sub-basement below chest (Britney Spears's onsets, half of modern pop's verse texture).
+Words the entries use for where a note is made rather than how it is flavoured.
+
+| Term | Where it is made | Hear it in |
+|---|---|---|
+| Chest voice | The speaking mechanism: full and grounded | Your own speaking voice |
+| Head voice | The lighter upper mechanism: clear and rounded | – |
+| Falsetto | The flutey, disconnected upper voice, airy at the edges | Frank Ocean's confessional top |
+| Mix | Chest and head blended so the seam disappears | Nearly every big modern pop chorus |
+| Belt | Chest-dominant, carried above the natural break | Reneé Rapp, Idina Menzel |
+| Whistle | A separate mechanism above head voice | Mariah Carey, Minnie Riperton |
+| Fry | The creak below chest | Britney Spears's onsets, modern pop verses |
 
 ## Using the vocabulary
 

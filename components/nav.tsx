@@ -292,18 +292,9 @@ export default function Nav() {
                   Suede Sing
                 </span>
               </Link>
-              {/* 44x44, because p-2 around an 18px glyph gave a 34px tap
-                  target — under Apple's minimum on the one control a phone
-                  reaches for most. The glyph stays 18px and the negative
-                  margin spends the extra width into the row's own px-4
-                  gutter, so the X sits where it always did and the row gets
-                  no wider.
-
-                  The square overlay is the hit region. `rounded-full` shapes
-                  the global focus ring, but border-radius clips pointer
-                  hit-testing too, which would leave the four corners of the
-                  new box dead — a fifth of it. iOS does the same thing:
-                  round button, square target. */}
+              {/* A 44x44 target around the 18px glyph; the negative margin
+                  keeps the X where it was. The square ::after overlay is the
+                  hit region, since border-radius would clip its corners. */}
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
@@ -533,22 +524,11 @@ export default function Nav() {
             )}
           </Link>
 
-          {/* Last in the row, where an account control is looked for, and a
-              glyph rather than a label because the row has no words left to
-              give. At the max-w-6xl plateau the ten tabs need 739px, and the
-              logo, the Pro pill and the progress pill at its widest (about
-              114px, "LV 60" and a three-digit streak), with their gaps, leave
-              about 50px: room for this 28px slot and its 16px gap, and little
-              more. Past that the row overflows and the Menu button takes the
-              place of Learn and Progress — and a "Save progress" label alone
-              is wider than that. The offer gets its sentence where there is room
-              to say it: the drawer below, and the in-page save prompt.
-              28px square either way, so signing in shifts nothing.
-
-              Signed in it shows at every width, because the user button is the
-              only route to signing out. Signed out it hides below sm: a phone
-              header already carries the menu, the current page name and the Pro
-              pill, and a free offer can wait two taps for the drawer. */}
+          {/* Last in the row, a 28px glyph: at the max-w-6xl plateau the tabs,
+              logo and pills leave about 50px, so a label would push Learn and
+              Progress into the Menu. Signed in it shows at every width (the
+              only route to signing out); signed out it hides below sm, where
+              the drawer carries the offer. */}
           {accountsReady() && authLoaded && (
             <NavAccount
               placement="header"

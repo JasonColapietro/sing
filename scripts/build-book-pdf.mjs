@@ -25,6 +25,7 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
+import { MARKDOWN_PDF_STYLES, figureHtml, isTableLine, tableHtml } from "./markdown-pdf.mjs";
 
 const SRC = "content/book";
 // Not public/ — the PDF is a paid benefit, served only through /api/book/pdf
@@ -51,12 +52,13 @@ function parse(raw) {
 const esc = (s) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-/** Same subset the in-app renderer supports. */
+/** Same subset the in-app renderer supports (lib/markdown.tsx). */
 function mdToHtml(md) {
   const lines = md.split("\n");
   const out = [];
   let para = [];
   let list = null;
+  let table = null;
   const flushP = () => {
     if (para.length) {
       out.push(`<p>${inline(para.join(" "))}</p>`);
@@ -69,13 +71,35 @@ function mdToHtml(md) {
       list = null;
     }
   };
+  const flushT = () => {
+    if (table) {
+      out.push(tableHtml(table, inline));
+      table = null;
+    }
+  };
   for (const raw of lines) {
     const line = raw.trim();
     if (!line) {
       flushP();
       flushL();
+      flushT();
       continue;
     }
+    const fig = figureHtml(line, inline);
+    if (fig) {
+      flushP();
+      flushL();
+      flushT();
+      out.push(fig);
+      continue;
+    }
+    if (isTableLine(line)) {
+      flushP();
+      flushL();
+      (table ??= []).push(line);
+      continue;
+    }
+    flushT();
     const h = /^(#{2,4})\s+(.*)$/.exec(line);
     if (h) {
       flushP();
@@ -95,6 +119,7 @@ function mdToHtml(md) {
   }
   flushP();
   flushL();
+  flushT();
   return out.join("\n");
 }
 
@@ -414,7 +439,7 @@ const styles = `
 `;
 
 const documentHtml = (pages, face) => `<!doctype html><html lang="en"><head><meta charset="utf-8">
-<title>${esc(TITLE)}</title><style>${styles}</style></head><body>
+<title>${esc(TITLE)}</title><style>${styles}${MARKDOWN_PDF_STYLES}</style></head><body>
   ${coverHtml()}
   ${contentsHtml(pages)}
   ${bodyHtml(pages)}

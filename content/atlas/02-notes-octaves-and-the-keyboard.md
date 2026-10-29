@@ -21,9 +21,13 @@ The black keys carry two names each. The key between F and G is F# — F raised 
 
 A semitone is the distance between any key and its immediate neighbor, black keys included — the smallest step Western music uses. Twelve of them make an octave. Those two facts are the entire arithmetic of this book.
 
+::figure semitone | One semitone is one key to its neighbour, black keys included. Twelve make an octave.
+
 ## Counting a span
 
 A range like C3–C5 spans two octaves: count the Cs. When the ends do not line up so neatly, count semitones and divide. B2 to E5 is 29 semitones; 29 ÷ 12 is 2.4 octaves, and the entry will say so. The singer pages do this math for you, showing both the semitone count and the decimal.
+
+::figure strip low=C3 high=C5 | C3 to C5: count the Cs, and the span is two octaves, with middle C between them.
 
 Two warnings about spans, because they are the most misread numbers in the atlas. First, a span says nothing about what fills it. A 2.1-octave voice that is strong everywhere is a better instrument than a 4-octave figure held together by two party tricks — the full-voice ceiling from the last chapter tells you which you are looking at. Second, octaves are not linearly impressive. Each extra half-octave at the edges is harder won than the last, and the far ends depend more on anatomy and on switching between mechanisms than on practice, which is why the method chapters keep pointing you at the middle of your voice instead of the ends of someone else's.
 

@@ -3,7 +3,6 @@ import { chapterKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ATLAS, ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
-import { AUTHOR_NAME } from "@/lib/author";
 import { freeLessonsReading } from "@/lib/lesson-readings";
 import { Markdown } from "@/lib/markdown";
 import { firstFit } from "@/lib/meta-fit";
@@ -13,6 +12,7 @@ import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { AtlasChapterNav, AtlasChapterReader } from "@/components/atlas/reader";
+import { AuthorByline } from "@/components/book/byline";
 import { AtlasEntryCard } from "@/components/atlas/entry";
 import { LessonList } from "@/components/learn/lesson-list";
 import { FreeOnly } from "@/components/pro/gate";
@@ -32,11 +32,10 @@ const SEARCH_TITLES: Record<string, string> = {
 };
 
 /**
- * What each free chapter asks the reader to go and do. The chapter prose says
- * "take your own range test" but the markdown renderer cannot link, so this is
- * the button: a reader who arrived from search can measure their own voice
- * before being asked to pay for anything. A free chapter with no entry falls
- * back to DEFAULT_TRY_IT.
+ * What each free chapter asks the reader to go and do, as the card under the
+ * chapter: a reader who arrived from search can measure their own voice, and
+ * find the reference page beside the chapter, before being asked to pay for
+ * anything. A free chapter with no entry falls back to DEFAULT_TRY_IT.
  */
 interface TryIt {
   label: string;
@@ -148,20 +147,13 @@ export default async function AtlasChapterPage({
           <Card>
             <div className="max-w-3xl">
               {/* The visible counterpart of the chapter's author markup. */}
-              <p className="mb-4 text-sm text-mut">
-                By{" "}
-                <a
-                  href="https://jasoncolapietro.com"
-                  rel="author"
-                  className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
-                >
-                  {AUTHOR_NAME}
-                </a>{" "}
+              <AuthorByline lead="By" className="mb-4">
+                {" "}
                 · Chapter {chapter.order} of{" "}
                 <Link href="/atlas" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                   {ATLAS_TITLE}
                 </Link>
-              </p>
+              </AuthorByline>
               <Markdown source={full.body} />
             </div>
           </Card>

@@ -17,10 +17,15 @@ import RecorderPageClient from "./recorder-page";
 describe("/recorder before hydration", () => {
   const html = renderToStaticMarkup(<RecorderPageClient />);
 
-  it("carries the locked pitch panel and the gate's Pro line for a free singer's first paint", () => {
+  it("carries the locked pitch panel for a free singer's first paint, and no second ask at the gate", () => {
     const free = paintedFor(html, { plan: "free" });
     expect(free).toContain("Take pitch analysis");
-    expect(free).toContain("adds the coach");
+    expect(free).not.toContain("adds the coach");
+  });
+
+  it("asks for the mic through the shared gate", () => {
+    expect(html).toContain("Hear your voice back");
+    expect(html).toContain("takes are saved in this browser, never uploaded");
   });
 
   it("hides both before the first paint for a Pro singer", () => {

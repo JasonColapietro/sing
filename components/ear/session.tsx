@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { SessionShell } from "@/components/practice/session-shell";
+import { useStepCloseLabel } from "@/components/practice/step-intro";
 import { logSession, type Achievement } from "@/lib/progress";
 import { emitProResult } from "@/lib/pro-signal";
 import { trackHiddenTime } from "@/components/practice/hidden-time";
@@ -119,6 +120,7 @@ export function GameShell({
   variant?: EarVariant;
   children: ReactNode;
 }) {
+  const closeLabel = useStepCloseLabel("Exit game");
   return (
     <SessionShell
       // A variant names itself in the title, which truncates; the subtitle
@@ -131,7 +133,7 @@ export function GameShell({
       }
       progress={(session.results.length / ROUNDS) * 100}
       onClose={onExit}
-      closeLabel="Exit game"
+      closeLabel={closeLabel}
       topRight={<ScoreChip score={session.score} streak={session.streak} />}
     >
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-10 pt-2 sm:px-6">

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProChip } from "./ui";
 import { getProState, subscribePro } from "@/lib/pro";
-import { proHeadline } from "@/lib/pro-shared";
+import { formatPrice, PRICING } from "@/lib/pro-shared";
 import { getState as getProgressState } from "@/lib/progress";
 import { PRO_MOMENT_SEEN_KEY as SEEN_KEY, subscribeProResult } from "@/lib/pro-signal";
 import { useModalFocus } from "@/lib/use-modal-focus";
@@ -228,11 +228,9 @@ export default function ProMoments() {
         <h2 id={titleId} className="mt-4 text-2xl sm:text-3xl">
           Turn this result into a plan
         </h2>
-        {/* The free plan shows two steps of the same plan; this sells the rest. */}
         <p id={descId} className="mt-3 text-sm text-mut sm:text-base">
-          Pro reads results like this one and lays out what to sing next: the
-          full daily plan, every step of it, with your accuracy note by note
-          and your range tests charted over time.
+          Pro reads results like this one and plans what to sing next, with
+          your accuracy note by note and your range tests charted over time.
         </p>
         <ul className="mt-4 space-y-2">
           {[
@@ -254,15 +252,13 @@ export default function ProMoments() {
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Button variant="violet" size="md" onClick={goPro}>
-            {`Go Pro: ${proHeadline()}`}
+            {`Go Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
             Not now
           </Button>
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          One payment
-          <span className="mx-2 text-line2">·</span>
           Never renews
           <span className="mx-2 text-line2">·</span>
           Voice stays on device

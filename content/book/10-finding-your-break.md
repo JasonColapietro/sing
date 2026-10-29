@@ -45,8 +45,6 @@ Two things matter about it. First, it is not the top of your range. Head voice g
 
 Second, a belt ceiling is a coordination limit rather than a wall to push through. Hammering the note just above it tends to end a session worse than it started. Chapter 17 covers adding height properly. For now, find where the cost curve turns steep and treat it as information: the edge of your belt today, not a note to build a song on. What you can expect to belt four nights running sits some way below it — chapter 7's betting test finds where, and chapter 23 builds a set with that margin.
 
-Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
-
 ## Head voice or falsetto
 
 Above the transition you have more than one option, and telling them apart matters more than the labels suggest.

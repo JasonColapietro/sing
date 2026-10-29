@@ -45,9 +45,11 @@ That makes placement language a shortcut rather than a lie. "Forward" compresses
 
 There is a band of frequencies, well above any pitch you are actually singing, where human hearing is at its sharpest and where a band or an orchestra tends to put comparatively little energy. Trained singers, classical ones especially, often develop a strong resonance peak sitting right in that band. It is usually called the singer's formant, and it goes together with a comfortably low larynx and a narrowing of the tube just above the folds.
 
+::figure spectrogram | A sung note seen as its harmonics. The bright band near 3 kHz is the ring that carries.
+
 The practical consequence is that carrying power is mostly a resonance property rather than a loudness one. A voice with that peak cuts through an ensemble without being pushed. A voice without it can be louder at the mouth and still disappear in the mix. It also explains why singing harder rarely solves a balance problem: volume adds energy across the whole spectrum, including the regions the band already owns.
 
-Contemporary singers get a related effect from twang, narrowing the same region to add a ringing, sometimes nasal-sounding edge. Twang is efficient rather than effortful. It brightens the tone by reshaping the tube, not by driving more air or squeezing harder. It is also easy to overdo and easy to confuse with strain. One rough check: if the brightness costs you nothing and you can still sing the same phrase quietly, it is coming from resonance. If holding it takes gripping, if your throat tightens, or if the sound turns rough, stop and go back to the plainer version — that is force, and force is not something to practise through. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+Contemporary singers get a related ring from twang: narrowing the same region for a bright, sometimes nasal edge. It brightens by reshaping the tube, not by pushing air, and it is easy to overdo. The check: if the brightness costs nothing and you can sing the same phrase quietly, it is resonance. If it takes gripping, a tight throat or a rough edge, it is force. Go back to the plain version.
 
 A pairing worth hearing yourself: a straight, unbrightened tone next to the same note with a slightly narrowed, ringier setup. Same pitch, same air, different tube. That comparison is the whole chapter.
 

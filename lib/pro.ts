@@ -578,9 +578,9 @@ export const PRO_PERKS: ProPerk[] = [
   },
   {
     id: "songs",
-    title: "Every song, no daily limit",
+    title: "Every song, unlimited",
     // Each song's best score and trend are free; the limit and the per-note chart are Pro's.
-    desc: "Sing every song past the daily limit; every scored note feeds your accuracy chart.",
+    desc: "No daily limit on songs, and every scored note feeds your accuracy chart.",
   },
   {
     id: "warmups",

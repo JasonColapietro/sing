@@ -13,7 +13,9 @@ vi.mock("server-only", () => ({}));
 
 import { AUTHOR_NAME } from "@/lib/author";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
+import { ATLAS } from "@/lib/atlas-data";
 import { Markdown } from "@/lib/markdown";
+import { MARKDOWN_FIGURES, parseFigureLine } from "@/lib/markdown-figures";
 import { PLAN_ROWS } from "@/lib/pro";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { PROGRAMME_EXIT_TESTS, PROGRAMME_PART, programmePhaseChapters } from "@/lib/programme-exit-tests";
@@ -60,6 +62,64 @@ describe("markdown links", () => {
   });
 });
 
+describe("markdown tables and figures", () => {
+  const TABLE = "| Voice type | Zone starts | Zone ends |\n|---|---|---|\n| Bass | G3 | **C4** |\n| Tenor | D4 | G4 |";
+
+  it("renders a pipe table with column and row headers, and no raw pipes", () => {
+    const html = md(`Before.\n\n${TABLE}\n\nAfter.`);
+    expect(html).toContain("<table");
+    expect(html.match(/scope="col"/g)).toHaveLength(3);
+    expect(html).toMatch(/<th scope="row"[^>]*>Bass<\/th>/);
+    expect(html).toMatch(/<td[^>]*><strong[^>]*>C4<\/strong><\/td>/);
+    expect(html).not.toContain("|");
+    expect(html.indexOf("Before.")).toBeLessThan(html.indexOf("<table"));
+    expect(html.indexOf("</table>")).toBeLessThan(html.indexOf("After."));
+  });
+
+  it("draws a registered figure with its caption", () => {
+    const html = md("::figure range-test | Two notes and every key between.");
+    expect(html).toContain("<figure");
+    expect(html).toContain("<svg");
+    expect(html).toMatch(/<figcaption[^>]*>Two notes and every key between\.<\/figcaption>/);
+    expect(html).not.toContain("::figure");
+  });
+
+  it("passes key=value arguments to the figure", () => {
+    const html = md("::figure strip low=C3 high=C6 belt=A5");
+    expect(html).toContain("C3 to C6");
+    expect(parseFigureLine("::figure strip low=C3 high=C6 | cap")).toEqual({
+      id: "strip",
+      args: { low: "C3", high: "C6" },
+      caption: "cap",
+    });
+  });
+
+  it("renders nothing for an unknown figure id", () => {
+    expect(md("::figure no-such-figure | Caption")).toBe("");
+  });
+
+  it("only places figures the registry knows, with arguments that draw", () => {
+    const lines = [...BOOK, ...ATLAS].flatMap((c) =>
+      c.body.split("\n").filter((l) => l.startsWith("::figure")).map((l) => [c.slug, l] as const),
+    );
+    expect(lines.length).toBeGreaterThan(5);
+    for (const [slug, line] of lines) {
+      const fig = parseFigureLine(line);
+      expect(fig, `${slug}: ${line}`).toBeTruthy();
+      expect(MARKDOWN_FIGURES[fig!.id], `${slug}: ${line}`).toBeTruthy();
+      expect(MARKDOWN_FIGURES[fig!.id](fig!.args), `${slug}: ${line}`).toBeTruthy();
+    }
+  });
+
+  it("leaves no raw table pipes or directives in any rendered chapter", () => {
+    for (const c of [...BOOK, ...ATLAS]) {
+      const html = md(c.body);
+      expect(html, c.slug).not.toMatch(/\|\s*---/);
+      expect(html, c.slug).not.toContain("::figure");
+    }
+  });
+});
+
 /**
  * Every chapter outside the programme ends with a "Try this" that sends the
  * reader to a room, and a Pro reader gets no room button under a gated
@@ -92,7 +152,9 @@ describe("the free chapters", () => {
       const html = await page(slug);
       expect(html).toContain('rel="author"');
       expect(html).toContain(AUTHOR_NAME);
-      expect(html).toContain("Try this now");
+      // The chapter's own "Try this" section says what to do; the header
+      // button is the one way to the room, with no end card repeating it.
+      expect(html).not.toContain("Try this now");
       expect(html).toMatch(/href="\/(studio|range\?mode=range#start)"/);
       expect(html).toContain("Lessons that use this chapter");
       expect(html).toMatch(/href="\/learn\/voice\/[^"]+\/[^"]+"/);
@@ -108,16 +170,17 @@ describe("the free chapters", () => {
   });
 
   /**
-   * The chapter says a cold voice under-reports at both ends, so its buttons
-   * offer the Morning reset before the test, in the header and the end card,
-   * as the Your Range lessons and /learn's Day 1 do.
+   * The chapter says a cold voice under-reports at both ends, so its header
+   * offers the Morning reset before the test, as the Your Range lessons and
+   * /learn's Day 1 do, once: the end card no longer repeats the pair.
    */
   it("offers the warm-up before the range test wherever chapter 8 links the test", async () => {
     const html = await page("reading-the-range-test");
     const warm = '<a[^>]*href="/warmups\\?routine=morning"';
     const test = '<a[^>]*href="/range\\?mode=range#start"[^>]*>Take the range test honestly';
     const pairs = [...html.matchAll(new RegExp(`(${warm})|(${test})`, "g"))].map((m) => (m[1] ? "warm" : "test"));
-    expect(pairs).toEqual(["warm", "test", "warm", "test"]);
+    expect(pairs).toEqual(["warm", "test"]);
+    expect(html.split("minutes a day; Pro removes the limit").length - 1).toBe(1);
   });
 
   it("does not add the free-chapter extras to a gated chapter", async () => {
@@ -235,16 +298,14 @@ describe("the twelve-week program", () => {
     }
   });
 
-  it("names the daily cap where an exit test sends a reader into guided practice", async () => {
-    const note = `guided minutes a day; Pro removes the limit`;
+  it("states the program's daily cap once on a phase chapter, whatever room its exit test uses", async () => {
+    const cap = new RegExp(`free plan&#x27;s ${FREE_DAILY_MINUTES} guided minutes`, "g");
     for (const slug of programmePhaseChapters()) {
-      const room = PROGRAMME_EXIT_TESTS[slug].room;
       const html = await page(slug);
-      // The studio and the range test have no clock; breath and songs do.
-      if (room === "studio" || room === "range") expect(html, slug).not.toContain(note);
-      else expect(html, `${slug} (${room})`).toContain(note);
+      expect(html.match(cap)?.length ?? 0, slug).toBe(1);
+      expect(html, slug).not.toContain("guided minutes a day; Pro removes the limit");
     }
-    // Both kinds are exercised, so neither branch is vacuous.
+    // Guided and unguided exit rooms are both exercised.
     const rooms = programmePhaseChapters().map((s) => PROGRAMME_EXIT_TESTS[s].room);
     expect(rooms).toContain("studio");
     expect(rooms).toContain("breath");

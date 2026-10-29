@@ -142,7 +142,7 @@ export function starsForSustain(sec: number): Stars {
   return 0;
 }
 
-/** Box breathing is scored by sitting through it: a minute earns a star, the five-minute set earns all three. */
+/** Box breathing is scored by sitting through it: a minute earns a star, the five-minute run earns all three. */
 export function starsForBox(minutes: number): Stars {
   if (minutes >= 5) return 3;
   if (minutes >= 3) return 2;

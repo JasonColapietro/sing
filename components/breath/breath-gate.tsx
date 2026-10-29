@@ -16,26 +16,20 @@ export function BreathGatePanel({
   inhaling,
   stale,
   onFallback,
-  tone,
 }: {
   inhaling: boolean;
   /** Waited BREATH_FALLBACK_SEC with nothing heard: put the fallback first. */
   stale: boolean;
   onFallback: () => void;
-  /** The session surface is dark and takes the scoped tokens instead. */
-  tone: "page" | "session";
 }) {
-  const session = tone === "session";
-  const lampOn = session ? "bg-[var(--s-ok)]" : "bg-ok";
-  const lampOff = session ? "bg-[var(--s-over)]" : "bg-panel2";
-  const muted = session ? "text-[var(--s-mut)]" : "text-mut";
-  const lit = session ? "text-[var(--s-ink)]" : "text-ink";
-  const primary = session
-    ? "bg-[var(--s-ok)] text-[oklch(0.15_0.02_155)] hover:brightness-110"
-    : "bg-violet-ink text-white hover:bg-violet";
-  const quiet = session
-    ? "border border-[var(--s-line2)] text-[var(--s-mut)] hover:bg-[var(--s-over)] hover:text-[var(--s-ink)]"
-    : "border border-line2 text-mut hover:bg-panel2 hover:text-ink";
+  // Drawn only on the dark session surface, in its scoped tokens.
+  const lampOn = "bg-[var(--s-ok)]";
+  const lampOff = "bg-[var(--s-over)]";
+  const muted = "text-[var(--s-mut)]";
+  const lit = "text-[var(--s-ink)]";
+  const primary = "bg-[var(--s-ok)] text-[oklch(0.15_0.02_155)] hover:brightness-110";
+  const quiet =
+    "border border-[var(--s-line2)] text-[var(--s-mut)] hover:bg-[var(--s-over)] hover:text-[var(--s-ink)]";
 
   return (
     <div className="flex w-full max-w-md flex-col items-center gap-3">

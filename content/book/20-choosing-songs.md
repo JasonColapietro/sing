@@ -67,7 +67,7 @@ You can shelve it. Some songs belong to voices built differently from yours, and
 
 You can change what you do with it. The melody you are copying is one singer's choice on one recording. Take a phrase down an octave, simplify an ad lib, drop an ornament you cannot place cleanly. Singers have always reshaped material to suit themselves; it is not a concession.
 
-The bad option is the common one: keep the song where it is, keep the melody exactly as recorded, and try to grow into it by repetition. That is rehearsing strain, and strain gets learned as reliably as anything else. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+The bad option is the common one: keep the song where it is, keep the melody exactly as recorded, and try to grow into it by repetition. That is rehearsing strain, and strain gets learned as reliably as anything else.
 
 Choose songs that fit the voice you have now, and you spend the performance sounding like yourself rather than like someone reaching. You can hear the difference on a playback long before anyone tells you about it.
 

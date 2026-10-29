@@ -142,7 +142,7 @@ describe("today's warmup on the free plan", () => {
     state.cap = { isPro: false, usedSec: 240, leftSec: 60, capped: false, capSec: 300 };
     const html = renderToStaticMarkup(<WarmupsClient />);
     expect(todaysWarmup(html)).toBe(quick.name);
-    expect(html).toContain("1:00 of free practice left today: this set stops after the step that uses it up.");
+    expect(html).toContain("1:00 of free practice left today: this routine stops after the step that uses it up.");
     expect(html).not.toContain("A short top-up after today&#x27;s practice.");
   });
 
@@ -196,7 +196,7 @@ describe("today's warmup on the free plan", () => {
     const html = renderToStaticMarkup(<WarmupsClient />);
     expect(todaysWarmup(html)).toBe(quick.name);
     expect(html).toContain("A short top-up after today&#x27;s practice.");
-    expect(html).not.toContain("this set stops after");
+    expect(html).not.toContain("this routine stops after");
   });
 
   it("keeps the full recommendation on Pro", () => {
@@ -352,16 +352,16 @@ describe("today's warmup during Recovery week", () => {
   it("would be the full set after three strong warmups, on an ordinary day", () => {
     const card = todaysCard(renderToStaticMarkup(<WarmupsClient />));
     expect(card).toContain(full.name);
-    expect(card).toContain("Try a longer set.");
+    expect(card).toContain("Try a longer routine.");
   });
 
   it("is the week's quiet set while the week runs, not a longer, faster one", () => {
     state.program = recoveryDay1;
     const card = todaysCard(renderToStaticMarkup(<WarmupsClient />));
     expect(card).toContain(easy.name);
-    expect(card).toContain("Recovery week is running, so today&#x27;s warmup is the quiet set.");
+    expect(card).toContain("Recovery week is running, so today&#x27;s warmup is the quiet routine.");
     expect(card).not.toContain(full.name);
-    expect(card).not.toContain("Try a longer set");
+    expect(card).not.toContain("Try a longer routine");
   });
 
   it("stays a quiet set on the free plan, sized to the minutes left", () => {
@@ -372,7 +372,7 @@ describe("today's warmup during Recovery week", () => {
     // Easy recovery when it fits the five minutes, else the Morning reset.
     expect(card).toContain(routineSeconds(easy) <= 300 ? easy.name : morning.name);
     expect(card).not.toContain(full.name);
-    expect(card).not.toContain("Try a longer set");
+    expect(card).not.toContain("Try a longer routine");
   });
 
   it("goes back to the usual pick once the week is finished", () => {

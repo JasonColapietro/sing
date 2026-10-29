@@ -259,8 +259,8 @@ function ItemSteps({
  */
 export function restartQuestion(program: Program, readings: readonly ProgramReading[]): string {
   return readings.length > 0
-    ? `Start ${program.name} again from day 1? This run's check-in readings above are cleared.`
-    : `Start ${program.name} again from day 1?`;
+    ? `Restart ${program.name} from day 1? This run's check-in readings above are cleared.`
+    : `Restart ${program.name} from day 1?`;
 }
 
 /** The finished card's restart, once the singer confirms it. */
@@ -598,7 +598,7 @@ export function ProgramTodayCard({
               size="sm"
               onClick={() => restartFinished(program, readings, today)}
             >
-              Start again from day 1
+              Restart from day 1
             </Button>
           )}
           {onBrowse && (

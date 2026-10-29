@@ -6,7 +6,9 @@ import { useBreathDetect } from "@/lib/audio/use-breath-detect";
 import { STALE_FRAME_MS } from "@/lib/audio/frame-clock";
 import { logSession, type Achievement, type LogResult } from "@/lib/progress";
 import { MicGate } from "@/components/ui";
+import { SessionAudioSetup } from "@/components/practice/session-audio-setup";
 import { SessionButton, SessionShell } from "@/components/practice/session-shell";
+import { useStepCloseLabel } from "@/components/practice/step-intro";
 import { recordAttempt, recordBreathBest } from "./store";
 import {
   BREATH_FALLBACK_SEC,
@@ -35,23 +37,14 @@ function meterNorm(v: number) {
   return Math.min(1, Math.sqrt(Math.max(0, v) / 0.3));
 }
 
-export function LevelMeter({
-  volume,
-  threshold,
-  tone = "page",
-}: {
-  volume: number;
-  threshold: number;
-  /** The session surface is dark and takes the scoped tokens instead. */
-  tone?: "page" | "session";
-}) {
+/** The input level on the dark session surface, with the detector's threshold marked. */
+export function LevelMeter({ volume, threshold }: { volume: number; threshold: number }) {
   const lit = Math.round(meterNorm(volume) * METER_SEGS);
   const thPct = meterNorm(threshold) * 100;
-  const session = tone === "session";
-  const off = session ? "bg-[var(--s-over)]" : "bg-panel2";
-  const hot = session ? "bg-[var(--s-rec)]" : "bg-rec";
-  const mid = session ? "bg-[var(--s-accent)]" : "bg-violet";
-  const low = session ? "bg-[var(--s-ok)]" : "bg-ok";
+  const off = "bg-[var(--s-over)]";
+  const hot = "bg-[var(--s-rec)]";
+  const mid = "bg-[var(--s-accent)]";
+  const low = "bg-[var(--s-ok)]";
   return (
     <div className="relative">
       <div className="flex h-4 items-stretch gap-[3px]" aria-hidden="true">
@@ -70,9 +63,7 @@ export function LevelMeter({
       {/* threshold marker */}
       <div
         aria-hidden="true"
-        className={`absolute -bottom-1.5 -top-1.5 w-px ${
-          session ? "bg-[var(--s-amber)]" : "bg-violet/70"
-        }`}
+        className="absolute -bottom-1.5 -top-1.5 w-px bg-[var(--s-amber)]"
         style={{ left: `${thPct}%` }}
       />
       <span className="sr-only">
@@ -147,6 +138,7 @@ export function SustainTest({
   /** Leaving with nothing held — there is nothing to report. */
   onExit: () => void;
 }) {
+  const closeLabel = useStepCloseLabel("Exit drill");
   // usePitch opens no stream until start(): a lent mic costs nothing here.
   const ownPitch = usePitch();
   const mic = pitch ?? ownPitch;
@@ -409,7 +401,7 @@ export function SustainTest({
       }
       progress={(doneCount / attemptsTarget) * 100}
       onClose={closeSession}
-      closeLabel="Exit drill"
+      closeLabel={closeLabel}
       bottom={
         <div className="flex items-center justify-center gap-3">
           <SessionButton label="End" onClick={closeSession} tone="danger">
@@ -423,6 +415,7 @@ export function SustainTest({
       {!listening ? (
         <MicGate
           tone="session"
+          audioSetup={<SessionAudioSetup />}
           title="Sustain test"
           description="Breathe in, then sing or hiss one steady note for as long as it stays easy. The mic listens for your breath before it starts timing, and stops when the sound stops. End the note when it starts to tighten, before the last of your air."
           onEnable={() => {
@@ -452,7 +445,7 @@ export function SustainTest({
           </div>
 
           <div className="w-full max-w-md">
-            <LevelMeter volume={frame.volume} threshold={threshold} tone="session" />
+            <LevelMeter volume={frame.volume} threshold={threshold} />
           </div>
 
           <p
@@ -483,7 +476,6 @@ export function SustainTest({
 
           {phase === "breath" && (
             <BreathGatePanel
-              tone="session"
               inhaling={breath.inhaling}
               stale={breathStale}
               onFallback={startWithoutBreath}

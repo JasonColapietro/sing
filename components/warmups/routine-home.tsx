@@ -96,7 +96,7 @@ export function RoutineMeta({ routine }: { routine: Routine }) {
 }
 
 /**
- * The workouts: every routine, the free ones then the Pro packs. Pro cards are
+ * The routine grid: every routine, the free ones then the Pro packs. Pro cards are
  * rendered from PRO_ROUTINES either way; for a free singer they link to /pro
  * instead of starting, and the exercises inside stay behind the paywall in the
  * player.

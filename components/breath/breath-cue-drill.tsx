@@ -6,7 +6,9 @@ import { STALE_FRAME_MS } from "@/lib/audio/frame-clock";
 import { useBreathDetect } from "@/lib/audio/use-breath-detect";
 import { logSession, type LogResult } from "@/lib/progress";
 import { MicGate } from "@/components/ui";
+import { SessionAudioSetup } from "@/components/practice/session-audio-setup";
 import { SessionButton, SessionShell } from "@/components/practice/session-shell";
+import { useStepCloseLabel } from "@/components/practice/step-intro";
 import { BreathGatePanel } from "./breath-gate";
 import { LevelMeter } from "./sustain-test";
 import { recordBreathBest } from "./store";
@@ -59,6 +61,7 @@ export function BreathCueDrill({
   /** Leaving before any rep finished — there is nothing to report. */
   onExit: () => void;
 }) {
+  const closeLabel = useStepCloseLabel("Exit drill");
   const { frame, listening, error, start } = pitch;
   const holdSec = preset.holdSec;
   const [reps, setReps] = useState(preset.reps);
@@ -317,7 +320,7 @@ export function BreathCueDrill({
       subtitle={phase === "setup" ? undefined : `Rep ${Math.min(reps, done + 1)} of ${reps}`}
       progress={(done / reps) * 100}
       onClose={close}
-      closeLabel="Exit drill"
+      closeLabel={closeLabel}
       bottom={
         <div className="flex items-center justify-center gap-3">
           <SessionButton label="End" onClick={close} tone="danger">
@@ -331,6 +334,7 @@ export function BreathCueDrill({
       {!listening ? (
         <MicGate
           tone="session"
+          audioSetup={<SessionAudioSetup />}
           title="Breathe and sing"
           description={`Breathe in, then sing one easy note for ${holdSec} seconds. Each note counts once the mic has heard the breath before it.`}
           onEnable={() => {
@@ -396,7 +400,7 @@ export function BreathCueDrill({
             ))}
           </div>
           <div className="w-full max-w-md">
-            <LevelMeter volume={frame.volume} threshold={threshold} tone="session" />
+            <LevelMeter volume={frame.volume} threshold={threshold} />
           </div>
           <p
             className="min-h-[2.5rem] max-w-sm text-sm text-[var(--s-mut)]"
@@ -407,7 +411,6 @@ export function BreathCueDrill({
           </p>
           {phase === "breath" && gated && (
             <BreathGatePanel
-              tone="session"
               inhaling={breath.inhaling}
               stale={stale}
               onFallback={() => {

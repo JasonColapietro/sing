@@ -23,7 +23,11 @@ Treat those citations as listening assignments, because they carry information t
 
 Many entries carry a second, smaller number: the highest note the singer takes in full, connected voice — a belt or a strong mix — before handing the rest of the span to falsetto, head voice or whistle. On the singers chart it is the solid part of each bar, and a bar drawn dashed means none is cited; a singer's page states it in words as the catalog's highest full or belted note. In print it reads "full voice to G5."
 
-For a working singer this is the most useful number on the page. The distance between the ceiling and the cited top is the falsetto-and-above zone, and it changes what the range figure means. Two singers can both show a span to C6; if one belts to A5 and the other flips at E4, they are running completely different machines. When no ceiling is listed, the catalog has no cited full-voice figure for that singer: sometimes the voice really does take full voice to the top, as is common in opera, but often nobody has documented where it hands over, so read the technique paragraph before assuming either.
+For a working singer this is the most useful number on the page. The gap between it and the cited top is the falsetto-and-above zone. Two singers can both show a span to C6; if one belts to A5 and the other flips at E4, they are running different machines.
+
+::figure strip low=C3 high=C6 belt=A5 | A cited span of C3 to C6 with full voice to A5, the dashed line. Everything above the line is falsetto, head voice or whistle.
+
+No ceiling listed means the catalog has no cited full-voice figure. Some voices, often operatic ones, do take full voice to the top; often nobody has documented the handover. Read the technique paragraph before assuming either.
 
 ## The whistle flag
 

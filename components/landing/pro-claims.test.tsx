@@ -27,6 +27,16 @@ describe("the homepage sells Pro for what Pro adds", () => {
     expect(home).not.toMatch(OVERCLAIM);
   });
 
+  it("lists each teaser perk once, leading with no daily limit, and prints the price once in the body", () => {
+    const teaser = home.slice(home.indexOf("Know what to sing tomorrow"), home.indexOf("See everything Pro adds"));
+    expect(teaser).toContain("No daily limit on guided practice");
+    expect(teaser.indexOf("No daily limit")).toBeLessThan(teaser.indexOf("full daily plan"));
+    for (const perk of ["daily limit", "daily plan", "per-note accuracy", "Pitch analysis", "Both books"]) {
+      expect(teaser.split(perk).length - 1).toBe(1);
+    }
+    expect(home.split("$79").length - 1).toBe(1);
+  });
+
   it("sells the coach's plan as a benefit, and keeps the gating rule to the /pro table", () => {
     expect(home).toContain("The coach&#x27;s full daily plan: every step, built from your own scores.".replace("&#x27;", "'"));
     expect(home).not.toMatch(/first two steps/i);
@@ -35,7 +45,7 @@ describe("the homepage sells Pro for what Pro adds", () => {
   it("says the same in the 'If you already sing' path", () => {
     const paths = read(renderToStaticMarkup(<StartingPaths />));
     expect(paths).toContain(
-      "Pro adds a per-note accuracy chart, charts your range tests over months, and the coach's full daily plan: every step, built from your own scores.",
+      "Then let Pro keep score: a per-note accuracy chart, your range tests charted over months, and every step of the coach's daily plan.",
     );
     expect(paths).not.toMatch(/first two steps/i);
     expect(paths).not.toMatch(OVERCLAIM);

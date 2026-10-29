@@ -11,6 +11,8 @@ The range test asks you to sing down until you run out of bottom, then up until 
 
 The test measures the lowest and highest notes you would let another person hear — today, in this room, with the voice you warmed up or did not. That is the entire claim. It is not your absolute range, because the creaks and scrapings at either end are sounds rather than notes. It is not measuring your potential, your talent, or the range you would have on a better day. Those exist. No measurement reaches them.
 
+::figure range-test | What the range test reports: a lowest note, a highest note, and every key between them.
+
 Which matters, because the two edges are the least stable part of your voice. The middle is boring and reliable; you could sing a comfortable G in your sleep. The bottom and top are where a short night, a dry room, or a slightly different amount of effort moves the result while nothing about you has changed.
 
 Treat the two numbers like a bathroom scale. Real, useful across months, close to meaningless on any single reading.
@@ -23,9 +25,17 @@ Honest means the same conditions every time, and the same definition of a note e
 
 **Same distance from the phone.** Mic distance changes what the detector hears. Quiet low notes need the mic close or they never register at all, and loud high notes with the mic close can distort into something the pitch detector cannot lock onto. A hand's span from your mouth, held roughly still, is a workable habit. Write down what you chose. You are after repeatability, not perfection.
 
-**Count only notes you would let someone else hear.** This one rule decides whether the test is worth anything. A note counts if it has an identifiable pitch, arrives without strain, and could be held for a beat or two. It does not count if it is a creak, a squeak, a breathy suggestion of a pitch, or something that arrived along with your neck. Vocal fry is the classic case: most people can make a rattling noise somewhere below their real lowest sung note. It is a legitimate sound. It is not a note you can sing a phrase on, and counting it puts your bottom number somewhere you cannot actually sing. Falsetto and head voice do count, as the test itself tells you: a light, clear falsetto note you could hold for a beat or two is a note, not a breathy suggestion of one. Including it can move a top note by several semitones, so count it the same way every time.
+**Count only notes you would let someone else hear.** This one rule decides whether the test is worth anything, because a sound you cannot sing a phrase on puts your number somewhere you cannot actually sing.
 
-**Stop before the edge, not after it.** If a note feels like effort rather than height, you are done. The reading you get by stopping honestly is the one you can reproduce next month; the one you get by grinding out a final semitone is not. And if reaching for the top hurts, that is not a data problem — stop. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+| Counts | Does not count |
+|---|---|
+| A clear pitch you could hold for a beat or two | Vocal fry, the rattle below your real lowest note |
+| A light, clear falsetto or head-voice note | A breathy suggestion of a pitch, or a squeak |
+| A note that arrives without strain | A note your neck delivered |
+
+Count falsetto the same way every time: including it can move your top note by several semitones.
+
+**Stop before the edge, not after it.** If a note feels like effort rather than height, you are done. The reading you get by stopping honestly is the one you can reproduce next month; the one you get by grinding out a final semitone is not. And if reaching for the top hurts, that is not a data problem — stop.
 
 ## When the result looks wrong
 

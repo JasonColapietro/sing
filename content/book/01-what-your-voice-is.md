@@ -12,6 +12,8 @@ Reductive, but it tells you where to look when something goes wrong. Almost ever
 
 Power, vibrator, filter.
 
+::figure source-filter | Breath is the power, the folds turn it into a buzz, and the throat and mouth filter the buzz into a vowel.
+
 ## The power: breath
 
 Air leaves your lungs because the space around them gets smaller. That is it. The diaphragm — a dome of muscle under your lungs, separating chest from gut — contracts and flattens on the way in, pulling air down into you. Your ribs swing out at the same time. On the way out, the diaphragm releases upward, the ribs come back in, and the abdominal wall can help squeeze from below.

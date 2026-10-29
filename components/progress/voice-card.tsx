@@ -170,7 +170,7 @@ export function VoiceCard({
             tired reading as the range every warmup and song fits to. */}
         {!recovering && (
           <LinkButton href={rangeTestHref()} variant="outline" size="sm">
-            Retake the test
+            Retake test
           </LinkButton>
         )}
         <LinkButton href="/singers" prefetch={false} variant="ghost" size="sm">

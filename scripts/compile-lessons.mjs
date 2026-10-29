@@ -271,6 +271,8 @@ function blockShape(instruction, title) {
  * whole. A block whose instruction was the template keeps its seconds and an
  * empty instruction, and the page draws the four as one timing line.
  */
+const POINTER = [/^Open the practice material on this page and choose .+\.$/, /^The reading .+ is listed there too\.$/];
+
 function dropSharedLines(all) {
   const counts = new Map();
   const tally = (lines) => {
@@ -294,6 +296,14 @@ function dropSharedLines(all) {
       .join("\n\n");
   for (const l of all) {
     l.steps = l.steps.map((s) => ({ ...s, body: keep(s.body) })).filter((s) => s.body);
+    // "Use the practice material" only points at the panel the page already
+    // shows ("Open the practice material on this page and choose X. The
+    // reading Y is listed there too."); each sentence names this lesson's
+    // items, so the word-for-word filter above misses it.
+    const pointerOnly = (s) =>
+      s.title === "Use the practice material" &&
+      sentences(s.body).every((x) => POINTER.some((re) => re.test(x)));
+    if (l.steps.some((s) => !pointerOnly(s))) l.steps = l.steps.filter((s) => !pointerOnly(s));
     l.blocks = l.blocks.map((b) => ({
       seconds: b.seconds,
       instruction: shared(blockShape(b.instruction, l.title)) ? "" : b.instruction,

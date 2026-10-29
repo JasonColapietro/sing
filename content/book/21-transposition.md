@@ -21,6 +21,8 @@ The idea that key is fixed is a listener's idea, formed by hearing one recording
 
 The instinct, when a song is too high, is to work from the top note down. Find the highest note, work out how far above your ceiling it is, drop the whole thing by that much.
 
+::figure piano-roll | The song piano roll: each block is a note of the melody. Transposing moves every block by the same amount.
+
 That is the wrong end to measure from, for the reason the repertoire chapter laid out: the chorus is where the song lives, and the chorus decides whether you survive it.
 
 So the question is not "can I reach the peak in this key." It is "where does the bulk of this melody sit relative to my comfortable middle." Find the band the chorus occupies — usually a narrow one, often less than an octave — and move the song until that band sits inside the part of your voice that behaves when you are not thinking about it. Then check what happened to the top note. Then check what happened to the bottom.
@@ -57,7 +59,7 @@ Harmony parts and duets do not transpose independently. If you sing with other p
 
 And the honest limit: transposition solves fit. It does not solve technique. If a song sits well in your middle and still falls apart, the key was never the problem, and moving it again will not help. The reverse is truer than most singers want to hear — grinding away for months at a key that does not fit your voice is not discipline, it is a longer route to the same conclusion. Sing it where you sound like yourself. Then, separately, do the work.
 
-One more thing. If a key that felt fine starts to cost you, that is not a transposition problem and it is not something to solve on the page. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+One more thing. If a key that felt fine starts to cost you, that is not a transposition problem and it is not something to solve on the page.
 
 Otherwise: write down the key you settled on and stop relitigating it. Practising a song in a slightly different key every week is a good way to learn it slowly and perform it badly.
 

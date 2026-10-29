@@ -92,12 +92,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. The reading When the numbers lie to you is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Silence reference playback, lower speaker volume below halfway, and use wired headphones when available. Keep the microphone opening clear and stay one relaxed hand-span away. Before singing today, check your speaking voice: if it is tired from a day of talking, especially over noise, keep this session short and quiet, or rest it. Stop for pain, burning or sudden hoarseness.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -182,12 +176,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. The reading When the numbers lie to you is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Silence reference playback, lower speaker volume below halfway, and use wired headphones when available. Keep the microphone opening clear and stay one relaxed hand-span away.",
@@ -274,12 +262,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. The reading When the numbers lie to you is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Silence reference playback, lower speaker volume below halfway, and use wired headphones when available. Keep the microphone opening clear and stay one relaxed hand-span away.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -364,12 +346,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. The reading Reading your range test is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
@@ -456,12 +432,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. The reading Reading your range test is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -475,7 +445,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practice these slides in the recorder, as this module's first lesson does. Then repeat each slide once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end: nothing you sing or record in either room replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.",
+        "body": "Work in short repetitions, with a normal breath and a full release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness or the urge to chase a number.\n\nPractise the slides in the recorder first, as this module's first lesson does. Then repeat each once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end. Neither room changes your saved range; a finished range test replaces it and refits your warm-ups and songs. Take it once, warmed up, for the self-check, and keep retests weeks apart.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -546,12 +516,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. The reading Reading your range test is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
@@ -911,12 +875,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Begin at a comfortable middle pitch with a straw in air or a loose lip trill. Keep the sound small; the exercise should feel easier than open singing.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -1001,12 +959,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Begin at a comfortable middle pitch with a straw in air or a loose lip trill. Keep the sound small; the exercise should feel easier than open singing.",
@@ -1093,12 +1045,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Begin at a comfortable middle pitch with a straw in air or a loose lip trill. Keep the sound small; the exercise should feel easier than open singing.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -1183,12 +1129,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a target near the middle of your comfortable range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.",
@@ -1275,12 +1215,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a target near the middle of your comfortable range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -1365,12 +1299,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a target near the middle of your comfortable range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.",
@@ -1457,12 +1385,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Use a comfortable pitch and moderate volume. Let the reference stop before singing, and choose a duration you can finish without running empty.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -1547,12 +1469,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use a comfortable pitch and moderate volume. Let the reference stop before singing, and choose a duration you can finish without running empty.",
@@ -1639,12 +1555,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Use a comfortable pitch and moderate volume. Let the reference stop before singing, and choose a duration you can finish without running empty.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -1729,12 +1639,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Choosing songs that actually fit is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
@@ -1821,12 +1725,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Choosing songs that actually fit is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -1911,12 +1809,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Choosing songs that actually fit is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
@@ -2003,12 +1895,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose one easy pitch that can be produced lightly in more than one way. Keep attempts short and separate them with a quiet breath.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -2094,12 +1980,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose one easy pitch that can be produced lightly in more than one way. Keep attempts short and separate them with a quiet breath.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -2184,12 +2064,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose one easy pitch that can be produced lightly in more than one way. Keep attempts short and separate them with a quiet breath.",
@@ -2549,12 +2423,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a short mid-range phrase and establish it first on a neutral, easy vowel. Keep the jaw released and the tongue tip resting forward.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -2639,12 +2507,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a short mid-range phrase and establish it first on a neutral, easy vowel. Keep the jaw released and the tongue tip resting forward.",
@@ -2731,12 +2593,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a short mid-range phrase and establish it first on a neutral, easy vowel. Keep the jaw released and the tongue tip resting forward.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -2821,12 +2677,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. The reading Choosing songs that actually fit is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Transpose the supplied study so its low and high phrases both fit, then mark the phrase that crosses your transition area.",
@@ -2913,12 +2763,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. The reading Choosing songs that actually fit is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Transpose the supplied study so its low and high phrases both fit, then mark the phrase that crosses your transition area.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -3003,12 +2847,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. The reading Choosing songs that actually fit is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Transpose the supplied study so its low and high phrases both fit, then mark the phrase that crosses your transition area.",
@@ -3095,12 +2933,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. The reading When the numbers lie to you is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a short, comfortable phrase at moderate volume. Record the relaxed baseline and one changed example in one take, with a quiet breath between them. Make only one deliberate change; record your takes in the recorder.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -3185,12 +3017,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. The reading When the numbers lie to you is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a short, comfortable phrase at moderate volume. Record the relaxed baseline and one changed example in one take, with a quiet breath between them. Make only one deliberate change; record your takes in the recorder.",
@@ -3277,12 +3103,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. The reading When the numbers lie to you is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a short, comfortable phrase at moderate volume. Record the relaxed baseline and one changed example in one take, with a quiet breath between them. Make only one deliberate change; record your takes in the recorder.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -3367,12 +3187,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use a mid-range note or phrase at moderate volume. Hear the target once, stop playback, and begin from silence.",
@@ -3459,12 +3273,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Use a mid-range note or phrase at moderate volume. Hear the target once, stop playback, and begin from silence.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -3549,12 +3357,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use a mid-range note or phrase at moderate volume. Hear the target once, stop playback, and begin from silence.",
@@ -3641,12 +3443,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -3731,12 +3527,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.",
@@ -3823,12 +3613,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -3913,12 +3697,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Speak the lyric in rhythm at an easy tempo. Mark the vowel that carries each pitch and the consonant that releases into the next word.",
@@ -4005,12 +3783,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Speak the lyric in rhythm at an easy tempo. Mark the vowel that carries each pitch and the consonant that releases into the next word.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -4095,12 +3867,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Speak the lyric in rhythm at an easy tempo. Mark the vowel that carries each pitch and the consonant that releases into the next word.",
@@ -4187,12 +3953,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a short comfortable phrase and establish a neutral version first. Keep pitch, words, and tempo unchanged across comparisons.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -4277,12 +4037,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a short comfortable phrase and establish a neutral version first. Keep pitch, words, and tempo unchanged across comparisons.",
@@ -4369,12 +4123,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a short comfortable phrase and establish a neutral version first. Keep pitch, words, and tempo unchanged across comparisons.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -4459,12 +4207,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. Keep microphone distance fixed across takes.",
@@ -4551,12 +4293,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. Keep microphone distance fixed across takes.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -4641,12 +4377,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. Keep microphone distance fixed across takes.",
@@ -4733,12 +4463,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth. The reading The passaggio: where it breaks and why is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Warm up gently, then choose a narrow range that crosses a place where production tends to change. Use moderate volume and short attempts.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -4823,12 +4547,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth. The reading The passaggio: where it breaks and why is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Warm up gently, then choose a narrow range that crosses a place where production tends to change. Use moderate volume and short attempts.",
@@ -4915,12 +4633,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth. The reading The passaggio: where it breaks and why is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Warm up gently, then choose a narrow range that crosses a place where production tends to change. Use moderate volume and short attempts.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -5005,12 +4717,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a word whose vowel crosses your transition zone and sing it first below the zone at easy volume.",
@@ -5097,12 +4803,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a word whose vowel crosses your transition zone and sing it first below the zone at easy volume.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -5187,12 +4887,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a word whose vowel crosses your transition zone and sing it first below the zone at easy volume.",
@@ -5279,12 +4973,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -5369,12 +5057,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
@@ -5461,12 +5143,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds. The reading Resonance, placement and the vowel is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -5551,12 +5227,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Work only after an easy warm-up, on a pitch below the top of your comfortable range. Keep attempts short and have a clear stop rule before starting.",
@@ -5643,12 +5313,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Work only after an easy warm-up, on a pitch below the top of your comfortable range. Keep attempts short and have a clear stop rule before starting.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -5733,12 +5397,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Work only after an easy warm-up, on a pitch below the top of your comfortable range. Keep attempts short and have a clear stop rule before starting.",
@@ -5825,12 +5483,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose Pentatonic run in the practice material on this page and hear its 8–6–5–3–2–1 pattern in a comfortable key. Its final note is your tonic. Stop the reference and use only 1, 2, 3, 5, and 6 for this exercise. Tap four steady beats per bar; no backing loop is needed.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -5915,12 +5567,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose Pentatonic run in the practice material on this page and hear its 8–6–5–3–2–1 pattern in a comfortable key. Its final note is your tonic. Stop the reference and use only 1, 2, 3, 5, and 6 for this exercise. Tap four steady beats per bar; no backing loop is needed.",
@@ -6007,12 +5653,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose Pentatonic run in the practice material on this page and hear its 8–6–5–3–2–1 pattern in a comfortable key. Its final note is your tonic. Stop the reference and use only 1, 2, 3, 5, and 6 for this exercise. Tap four steady beats per bar; no backing loop is needed.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -6097,12 +5737,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose Small three-note climb (1–2–3–2–1), the three-note turn in the practice material, in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
@@ -6189,12 +5823,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose Small three-note climb (1–2–3–2–1), the three-note turn in the practice material, in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -6279,12 +5907,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. The reading What pitch accuracy actually measures is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose Small three-note climb (1–2–3–2–1), the three-note turn in the practice material, in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
@@ -6371,12 +5993,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hoo descent. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Establish one easy vowel on the starting note, then sing the four-note pattern slowly without changing the vowel under each pitch.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -6461,12 +6077,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hoo descent. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Establish one easy vowel on the starting note, then sing the four-note pattern slowly without changing the vowel under each pitch.",
@@ -6553,12 +6163,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hoo descent. The reading Breath: support versus pressure is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Establish one easy vowel on the starting note, then sing the four-note pattern slowly without changing the vowel under each pitch.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -6643,12 +6247,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Vibrato hold. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a comfortable sustained note and establish three easy seconds of straight tone before adding any oscillation.",
@@ -6735,12 +6333,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Vibrato hold. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose a comfortable sustained note and establish three easy seconds of straight tone before adding any oscillation.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -6825,12 +6417,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Vibrato hold. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose a comfortable sustained note and establish three easy seconds of straight tone before adding any oscillation.",
@@ -6917,12 +6503,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Use one short phrase in an easy range and sing a plain version first. Keep the underlying pitch and rhythm map visible.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -7007,12 +6587,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use one short phrase in an easy range and sing a plain version first. Keep the underlying pitch and rhythm map visible.",
@@ -7099,12 +6673,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Use one short phrase in an easy range and sing a plain version first. Keep the underlying pitch and rhythm map visible.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -7189,12 +6757,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, press Transpose down twice, hear its first note, then transpose back up to where you started. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
@@ -7281,12 +6843,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, press Transpose down twice, hear its first note, then transpose back up to where you started. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -7371,12 +6927,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, press Transpose down twice, hear its first note, then transpose back up to where you started. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
@@ -7463,12 +7013,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Transposition without shame is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -7553,12 +7097,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Transposition without shame is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
@@ -7645,12 +7183,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Transposition without shame is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -7735,12 +7267,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. The reading Stamina, warming up, and not hurting yourself is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Check how the voice feels before making sound. Choose only drills that have previously felt easy, and plan pauses and water breaks.",
@@ -7827,12 +7353,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. The reading Stamina, warming up, and not hurting yourself is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Check how the voice feels before making sound. Choose only drills that have previously felt easy, and plan pauses and water breaks.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -7917,12 +7437,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. The reading Stamina, warming up, and not hurting yourself is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Check how the voice feels before making sound. Choose only drills that have previously felt easy, and plan pauses and water breaks.",
@@ -8009,12 +7523,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. The reading How to borrow a voice is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -8099,12 +7607,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. The reading How to borrow a voice is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.",
@@ -8191,12 +7693,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. The reading How to borrow a voice is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -8281,12 +7777,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Soft sustain. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use one mid-range phrase at moderate volume and establish a neutral baseline. Use neutral plus two others, and leave edged out until a teacher has heard it. Neutral: your easy, speech-like default. Restrained: the same note held back, softer and more contained. Driven: fuller and more speech-like, like calling across a room at a moderate level. Edged: brighter and more cutting, still not loud.",
@@ -8373,12 +7863,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Soft sustain. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Use one mid-range phrase at moderate volume and establish a neutral baseline. Use neutral plus two others, and leave edged out until a teacher has heard it. Neutral: your easy, speech-like default. Restrained: the same note held back, softer and more contained. Driven: fuller and more speech-like, like calling across a room at a moderate level. Edged: brighter and more cutting, still not loud.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -8463,12 +7947,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Soft sustain. The reading A vocabulary for tone is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Use one mid-range phrase at moderate volume and establish a neutral baseline. Use neutral plus two others, and leave edged out until a teacher has heard it. Neutral: your easy, speech-like default. Restrained: the same note held back, softer and more contained. Driven: fuller and more speech-like, like calling across a room at a moderate level. Edged: brighter and more cutting, still not loud.",
@@ -8829,12 +8307,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. The reading Tracking change over months, not days is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes in the [pitch studio](/studio), which names each note as you sing it, and write them down before approaching either edge.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -8919,12 +8391,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. The reading Tracking change over months, not days is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes in the [pitch studio](/studio), which names each note as you sing it, and write them down before approaching either edge.",
@@ -9011,12 +8477,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. The reading Tracking change over months, not days is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes in the [pitch studio](/studio), which names each note as you sing it, and write them down before approaching either edge.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
@@ -9101,12 +8561,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). The reading Building a set you can survive is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
@@ -9193,12 +8647,6 @@ export const LESSONS: Lesson[] = [
     ],
     "steps": [
       {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). The reading Building a set you can survive is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
-      {
         "title": "Set a safe baseline",
         "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
@@ -9283,12 +8731,6 @@ export const LESSONS: Lesson[] = [
       "asha-voice-disorders"
     ],
     "steps": [
-      {
-        "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). The reading Building a set you can survive is listed there too.",
-        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
-        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
-      },
       {
         "title": "Set a safe baseline",
         "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",

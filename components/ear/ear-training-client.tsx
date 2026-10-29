@@ -41,6 +41,7 @@ import {
   type EarRoutine,
 } from "./routines";
 import { EarGameSession, EarRunner } from "./ear-runner";
+import { GameGlyph } from "./game-glyph";
 
 /** What the room is running right now, if anything. */
 type Active =
@@ -158,6 +159,7 @@ export default function EarTrainingClient() {
         return {
           id: `${game}:${d.id}`,
           title: GAME_NAMES[game],
+          figure: <GameGlyph game={game} />,
           desc: GAME_DESC[game],
           meta:
             typeof best === "number"
@@ -179,6 +181,7 @@ export default function EarTrainingClient() {
         return {
           id: `chase:${song.id}`,
           title: song.title,
+          figure: <GameGlyph game="note-catcher" />,
           desc: `Catch the first ${ROUNDS} notes of ${song.title} as they slide in.`,
           meta:
             typeof best === "number"
@@ -285,7 +288,10 @@ export default function EarTrainingClient() {
                   <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="Games in this routine">
                     {r.steps.map((s, i) => (
                       <li key={`${s.game}-${s.difficulty}-${i}`}>
-                        <Pill tone="mut">{GAME_NAMES[s.game]}</Pill>
+                        <Pill tone="mut">
+                          <GameGlyph game={s.game} className="h-4 w-4" />
+                          {GAME_NAMES[s.game]}
+                        </Pill>
                       </li>
                     ))}
                   </ol>

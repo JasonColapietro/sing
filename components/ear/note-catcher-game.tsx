@@ -7,6 +7,7 @@ import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import { MicGate } from "@/components/ui";
+import { SessionAudioSetup } from "@/components/practice/session-audio-setup";
 import { SONGS } from "@/components/songs/data";
 import { phraseName } from "@/components/songs/lib";
 import { centsToTarget, hasSavedRange, ROUNDS, type Difficulty } from "./lib";
@@ -67,7 +68,7 @@ const EMPTY_VIEW: CatcherView = {
 
 /**
  * Whether the game deals its own run the moment the mic is on, rather than
- * from the gate's button: a workout's lent mic (EarRunner) with no run dealt
+ * from the gate's button: a routine's lent mic (EarRunner) with no run dealt
  * yet and the game not over. The gate's button must then only turn the mic
  * on; dealing there as well dealt the run twice and restarted its clock.
  */
@@ -85,10 +86,10 @@ export function NoteCatcherGame({
   difficulty: Difficulty;
   /** Chase this song's songbook phrase instead of random notes. Free songs only. */
   songId?: string;
-  /** A workout's microphone (EarRunner); see pitch-match-game.tsx. */
+  /** A routine's microphone (EarRunner); see pitch-match-game.tsx. */
   pitch?: UsePitchResult;
   onExit: () => void;
-  /** Set when this game is one step of a workout: the result goes up instead
+  /** Set when this game is one step of a routine: the result goes up instead
       of being drawn here, and no summary card renders. */
   onComplete: OnEarComplete;
 }) {
@@ -278,13 +279,13 @@ export function NoteCatcherGame({
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
-  // Release the mic while the results are up; a lent one is the workout's.
+  // Release the mic while the results are up; a lent one is the routine's.
   const ownsMic = pitch === undefined;
   useEffect(() => {
     if (session.done && listening && ownsMic) stop();
   }, [session.done, listening, ownsMic, stop]);
 
-  // In a workout whose mic is already on, the run starts as the game opens
+  // In a routine whose mic is already on, the run starts as the game opens
   // instead of waiting on a gate whose only job is to turn on a mic that is
   // on. The step's intro countdown has just said what is coming, and the
   // first note still slides in toward the line before it can be caught.
@@ -329,6 +330,7 @@ export function NoteCatcherGame({
         ) : (
           <MicGate
             tone="session"
+            audioSetup={<SessionAudioSetup />}
             title={song ? `Chase the notes of ${song.title}` : "This game listens to you sing"}
             description={
               song
@@ -336,7 +338,7 @@ export function NoteCatcherGame({
                 : "Notes slide toward a line. Your voice moves the marker up and down; hold each note as it crosses to catch it."
             }
             onEnable={() => {
-              // The effect above deals a workout's first run once the mic is
+              // The effect above deals a routine's first run once the mic is
               // on (dealsWhenMicOn); this only deals when nothing else will.
               // Reconnecting resumes the paused run; dealing it again would
               // reset its targets while keeping the rounds already scored.

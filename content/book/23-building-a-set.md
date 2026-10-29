@@ -53,8 +53,6 @@ Then there is the part singers forget. Talking between songs is voice use. It is
 
 Plan for repetition too. A set is rarely sung once. Two nights running, or two sets in a night, changes the arithmetic — the demanding song that is fine on Friday can be why Saturday goes badly. If a second night is coming, take something out of Friday rather than hoping.
 
-Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
-
 ## Build it, then test the joins
 
 Write the running order down. Beside each song, note the chorus tessitura, whether it crosses your break, and whether it is demanding, neutral or restful. Then look at the shape. You are checking the same four things every time: hardest song in the middle third, no two demanding songs adjacent, restful songs spread rather than clumped at the end, no long stretch of choruses in one narrow band.

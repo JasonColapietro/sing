@@ -5,6 +5,7 @@ import { audioNow } from "@/lib/audio/context";
 import { clickAt } from "@/lib/audio/synth";
 import { logSession } from "@/lib/progress";
 import { SessionButton, SessionShell } from "@/components/practice/session-shell";
+import { useStepCloseLabel } from "@/components/practice/step-intro";
 import { recordBreathBest } from "./store";
 import { FARINELLI_START_N, type BreathDrillResult } from "./routines";
 
@@ -79,6 +80,7 @@ export function FarinelliDrill({
   /** Leaving before anything ran — there is nothing to report. */
   onExit: () => void;
 }) {
+  const closeLabel = useStepCloseLabel("Exit drill");
   const [mode, setMode] = useState<Mode>("setup");
   const [cap, setCap] = useState(preset?.cap ?? 8);
   const [sound, setSound] = useState(true);
@@ -191,7 +193,7 @@ export function FarinelliDrill({
       subtitle={`Top count ${cap}`}
       progress={mode === "running" ? progress : 0}
       onClose={closeSession}
-      closeLabel="Exit drill"
+      closeLabel={closeLabel}
       topRight={
         beat ? (
           <span className="tabular font-mono text-xs text-[var(--s-dim)]">

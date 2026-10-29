@@ -185,7 +185,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
         }}
       />
       <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
-        <SectionLabel className="mb-4">The short version</SectionLabel>
+        <SectionLabel hairline className="mb-4">The short version</SectionLabel>
         <h2 id={GUIDE_HEADING_ID} className="max-w-3xl text-3xl">
           {guide.heading}
         </h2>
@@ -196,7 +196,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
 
         {guide.safety && (
           <aside className="mt-8 max-w-3xl rounded-2xl border border-rec/30 bg-panel p-5 sm:p-6">
-            <SectionLabel tone="rec" className="mb-3">
+            <SectionLabel hairline tone="rec" className="mb-3">
               Vocal health
             </SectionLabel>
             <h3 className="text-xl">{guide.safety.heading}</h3>
@@ -219,7 +219,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
 
         {guide.howTo && (
           <div className="mt-12">
-            <SectionLabel className="mb-4">How to do it</SectionLabel>
+            <SectionLabel hairline className="mb-4">How to do it</SectionLabel>
             {/* Directly under the guide's serif h2, so the same editorial
                 face rather than the h3 card-title sans. */}
             <h3 className="max-w-3xl font-display text-2xl font-normal">{guide.howTo.name}</h3>
@@ -282,7 +282,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
         </div>
 
         <div className="mt-12">
-          <SectionLabel className="mb-4">Questions</SectionLabel>
+          <SectionLabel hairline className="mb-4">Questions</SectionLabel>
           <div className="grid gap-4 md:grid-cols-2">
             {guide.faq.map((item) => (
               <div
@@ -306,7 +306,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
         </div>
 
         <div className="mt-12">
-          <SectionLabel className="mb-4">Where to go next</SectionLabel>
+          <SectionLabel hairline className="mb-4">Where to go next</SectionLabel>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {guide.related.map((link) => (
               <Link

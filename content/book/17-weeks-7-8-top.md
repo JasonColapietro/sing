@@ -55,7 +55,7 @@ Two things stack up there. The mechanism is working at its finest margins — th
 
 The other trap is that it does not hurt at the time. Adrenaline, the excitement of hearing the note come out, and a hot voice all mask fatigue while you are singing. The bill arrives the next morning, as a voice that will not start cleanly or a middle that feels thick and unresponsive.
 
-Some tiredness after a session aimed at the top is ordinary. These are different, and they are reasons to put the session down rather than sing through: pain, hoarseness or breathiness the day after, notes in your middle that were fine last week and are now unreliable, or any sense of something catching. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
+Some tiredness after a session aimed at the top is ordinary. These are different, and they are reasons to put the session down rather than sing through: pain, hoarseness or breathiness the day after, notes in your middle that were fine last week and are now unreliable, or any sense of something catching.
 
 ## Reading what happened
 

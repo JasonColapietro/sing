@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { LinkButton } from "@/components/ui";
-import { proHeadline } from "@/lib/pro-shared";
+import { formatPrice, PRICING } from "@/lib/pro-shared";
 
 /**
  * Shared Pro visual language: gold console-tape labels, one quiet gold
@@ -54,15 +54,13 @@ export function LockGlyph({ size = 13 }: { size?: number }) {
 export function UpgradeCard({
   title,
   body,
-  cta = "See Suede Pro",
+  cta = `Go Pro: ${formatPrice(PRICING.lifetime.amount)} once`,
   context,
   className = "",
 }: {
   title: string;
   body: string;
-  /** Default carries no price — this file renders on server surfaces and
-      must not pull in the client-only pricing constant. Pass a priced label
-      where the caller already imports it. */
+  /** The price lives on the button, once; the line beside it states the terms. */
   cta?: string;
   /** Mono tape-label context, e.g. "Coach" or "Take 4 of 3". */
   context: string;
@@ -90,11 +88,7 @@ export function UpgradeCard({
         <LinkButton href="/pro#buy" variant="violet" size="sm">
           {cta}
         </LinkButton>
-        {/* The price, not the sold-out monthly plan: in a practice room this
-            line is the first pricing fact a free singer reads. */}
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          {proHeadline()} · Never renews
-        </span>
+        <span className="text-sm text-dim">Lifetime access · Never renews</span>
       </div>
     </div>
   );

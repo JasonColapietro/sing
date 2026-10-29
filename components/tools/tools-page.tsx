@@ -100,7 +100,7 @@ export default function ToolsClient() {
 
   return (
     <PageShell
-      kicker="Studio tools"
+      kicker="Tools"
       title="Singing practice tools"
       subtitle="A metronome, an online piano keyboard and a drone tone for pitch reference: the three tools a practice session leans on. Free, with no time limit, and no mic needed."
       actions={xpNote ? <Pill tone="ok">{xpNote}</Pill> : undefined}

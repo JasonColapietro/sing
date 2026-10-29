@@ -93,7 +93,7 @@ export function RoomRail({
 
   return (
     <nav aria-label={title} className={cn(className)}>
-      <SectionLabel>{title}</SectionLabel>
+      <SectionLabel hairline>{title}</SectionLabel>
       <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {rooms.map(({ href, label, blurb, Glyph, mic, prefetch }) => (
           <li key={href}>

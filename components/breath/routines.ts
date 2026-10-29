@@ -15,6 +15,7 @@
 // preset that changes moves the estimate in the same commit.
 
 import type { LogResult } from "@/lib/progress";
+import { findRoutine, recommendQuickOrDaily, routineMinutesOf, routineTotalSeconds } from "@/components/practice/routines";
 
 export type BreathStep =
   | { drill: "box"; side: number; minutes: 1 | 3 | 5 }
@@ -171,7 +172,7 @@ export const BREATH_ROUTINES: BreathRoutine[] = [
     id: "builder",
     name: "Breath builder",
     tagline:
-      "Longer sides, a higher count, notes started on a breath, then three sustains: the set that stretches the breath rather than settling it.",
+      "Longer sides, a higher count, notes started on a breath, then three sustains: the routine that stretches the breath rather than settling it.",
     steps: [
       { drill: "box", side: 5, minutes: 3 },
       { drill: "farinelli", cap: 10 },
@@ -184,8 +185,7 @@ export const BREATH_ROUTINES: BreathRoutine[] = [
 ];
 
 export function breathRoutineById(id: string | null | undefined): BreathRoutine | null {
-  if (!id) return null;
-  return BREATH_ROUTINES.find((r) => r.id === id) ?? null;
+  return findRoutine(BREATH_ROUTINES, id);
 }
 
 /**
@@ -238,14 +238,11 @@ export function breathStepSeconds(step: BreathStep): number {
 }
 
 export function breathRoutineSeconds(r: BreathRoutine): number {
-  return r.steps.reduce(
-    (a, s) => a + breathStepSeconds(s) + BREATH_STEP_INTRO_SEC,
-    0,
-  );
+  return routineTotalSeconds(r, breathStepSeconds, BREATH_STEP_INTRO_SEC);
 }
 
 export function breathRoutineMinutes(r: BreathRoutine): number {
-  return Math.max(1, Math.round(breathRoutineSeconds(r) / 60));
+  return routineMinutesOf(breathRoutineSeconds(r));
 }
 
 /** The drill's own name, as it appears everywhere in the room. */
@@ -396,12 +393,11 @@ export function routineNeedsMic(r: BreathRoutine): boolean {
  * Which breath routine to put at the top of the room right now.
  *
  * Someone who has already done breath work today gets the quick one — a second
- * visit is a top-up, not another full set. Everyone else gets the daily. The
+ * visit is a top-up, not another full routine. Everyone else gets the daily. The
  * builder is a choice, never a recommendation: it is the one that asks for more
  * air than the singer has, which is a fine thing to opt into and a bad thing to
  * be handed.
  */
 export function recommendBreathRoutine(opts: { practicedToday: boolean }): BreathRoutine {
-  const pick = opts.practicedToday ? "quick" : "daily";
-  return BREATH_ROUTINES.find((r) => r.id === pick) ?? BREATH_ROUTINES[0];
+  return recommendQuickOrDaily(BREATH_ROUTINES, opts);
 }

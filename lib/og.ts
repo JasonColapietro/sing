@@ -37,9 +37,10 @@ export const OG_IMAGE_TAGLINE = `Free pitch meter & range test · Guided practic
  * layout) without changing its words: scrapers cache the picture by URL. The
  * 2026-10-15 restyle (#229) repainted the card from dark to paper with the
  * same words, so the ~200 pages naming it kept the URL whose dark picture
- * Facebook, LinkedIn, X and Slack had already cached.
+ * Facebook, LinkedIn, X and Slack had already cached. 2026-10-29: the
+ * headline in Instrument Serif, and the settling trace in place of the bars.
  */
-export const OG_CARD_RENDER_REVISION = "2026-10-15-paper";
+export const OG_CARD_RENDER_REVISION = "2026-10-29-serif-trace";
 
 /**
  * A short, stable fingerprint of a card's text (31-multiplier string hash,

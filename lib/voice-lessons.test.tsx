@@ -137,13 +137,7 @@ const DOCTOR_REFERRAL = "a doctor who can examine the vocal folds, such as an EN
 const VAGUE_REFERRAL = /qualified clinician|clinical assessment/i;
 
 describe("the lesson data", () => {
-  it("is compiled from content/lessons and not stale", () => {
-    const run = spawnSync(process.execPath, ["scripts/compile-lessons.mjs", "--check"], {
-      encoding: "utf8",
-    });
-    expect(run.status, run.stdout + run.stderr).toBe(0);
-  });
-
+  // Staleness against content/lessons is lib/generated-data.test.ts.
   /**
    * "## In short" leads the lesson and is plain text, because the page prints
    * it as a paragraph and the structured data reuses it as the description. A

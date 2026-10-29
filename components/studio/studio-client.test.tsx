@@ -18,7 +18,7 @@ vi.mock("@/lib/audio/use-pitch", () => ({
 }));
 vi.mock("@/lib/pro", () => ({ useIsPro: () => false, useProReady: () => true }));
 
-import { StudioClient, finishStudioSession } from "./studio-client";
+import { StudioClient, carriesOver, finishStudioSession } from "./studio-client";
 
 const LOGGED: LogResult = { xpGained: 40, newAchievements: [] } as unknown as LogResult;
 
@@ -88,6 +88,28 @@ describe("closing a studio session", () => {
     expect(result?.silent).toBeUndefined();
     expect(log).not.toHaveBeenCalled();
     expect(clock.elapsedMs()).toBe(20_000);
+  });
+
+  it("lets Sing again add to a short session: two 30 s stretches log one 60 s session", () => {
+    let now = 1_000;
+    const clock = createPracticeClock(() => now);
+    clock.resume();
+    now += 30_000;
+    const session = { clock, stats: { current: emptyTargetStats() }, heardMs: { current: 900 } };
+    const first = finishStudioSession(session, vi.fn(() => LOGGED));
+    expect(carriesOver(first)).toBe(true);
+    // Sing again: the clock resumes where it stopped (handleStart resets only when nothing carries).
+    clock.resume();
+    now += 30_000;
+    const log = vi.fn(() => LOGGED);
+    finishStudioSession(session, log);
+    expect(log).toHaveBeenCalledWith(expect.objectContaining({ durationSec: 60 }));
+  });
+
+  it("starts over after a logged or silent session", () => {
+    expect(carriesOver({ log: LOGGED, locks: 0, newBest: false })).toBe(false);
+    expect(carriesOver({ log: null, locks: 0, newBest: false, silent: true })).toBe(false);
+    expect(carriesOver(null)).toBe(false);
   });
 
   it("falls straight out once the session is already closed", () => {

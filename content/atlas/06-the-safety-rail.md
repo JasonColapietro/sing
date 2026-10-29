@@ -25,6 +25,12 @@ The belt is not inherently dangerous; the belt *schedule* is. One F5 proves noth
 
 ## The signals that mean stop
 
-Practice that is working feels like effort in the torso and freedom in the throat. The reverse — comfort in the body, gripping in the throat — means the setup is wrong, whatever the sound says. Beyond that, three bright lines. Pain during singing is a stop sign, immediately, that session. Hoarseness that follows a practice habit and clears overnight is your budget telling you the habit costs too much; spend less of it. Hoarseness that stops clearing, a morning voice that stays rough past a fortnight, a note that used to be easy and reliably is not — that is no longer a technique question, and the person to see is a doctor who can examine the vocal folds — an ENT or laryngologist, often working with a voice-specialist speech-language pathologist — without a waiting period and without needing to be sure it is serious first.
+Practice that is working feels like effort in the torso and freedom in the throat. The reverse — comfort in the body, gripping in the throat — means the setup is wrong, whatever the sound says. Beyond that, three bright lines.
+
+| Sign | What it means | What to do |
+|---|---|---|
+| Pain while singing | A stop sign | Stop for the session |
+| Hoarseness that clears overnight | The habit costs too much | Practise less of it |
+| Hoarseness that does not clear, a rough morning voice past two weeks, an easy note that is gone | Not a technique question | See a doctor who can examine the vocal folds, such as an ENT or laryngologist, often with a voice-specialist speech-language pathologist. There is no waiting period, and you need not be sure it is serious. |
 
 None of this is a reason to sing smaller. It is the reason the singers in this book got to sing big for decades. The rail is what makes leaning out safe.

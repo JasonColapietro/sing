@@ -34,7 +34,7 @@ export const metadata = withCanonicalOpenGraph({
 const MIC_ROOMS = [
   {
     href: "/recorder",
-    label: "Take recorder",
+    label: "Recorder",
     desc: "Cut a take, listen back, and keep the good ones. Every take stays on this device.",
     Glyph: RecorderGlyph,
     inside: [
@@ -46,7 +46,7 @@ const MIC_ROOMS = [
   },
   {
     href: "/analyze",
-    label: "Spectrogram and tone",
+    label: "Voice analyzer",
     desc: "Watch the shape of your voice while you sing it, harmonic by harmonic.",
     Glyph: AnalyzeGlyph,
     inside: [
@@ -66,11 +66,11 @@ export default function ToolsPage() {
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <SectionLabel>Also in this tab</SectionLabel>
           <h2 className="mt-4 max-w-2xl text-2xl sm:text-3xl">
-            The take recorder and voice spectrogram: two rooms that listen
+            The recorder and voice analyzer: two rooms that listen
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
             This tab is the metronome, the keyboard and the drone. The recorder
-            and the spectrogram are separate rooms with pages of their own,
+            and the analyzer are separate rooms with pages of their own,
             because each does considerably more than a console module and each
             answers a question this tab does not. The three above only need
             speakers. These two read your microphone and draw what they hear.

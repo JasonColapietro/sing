@@ -115,8 +115,8 @@ function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
   );
 }
 
-/** The buy buttons on this page: the plans card, and the final call to action. */
-type BuySpot = "card" | "end";
+/** The buy buttons on this page: the hero, the plans card, and the final call to action. */
+type BuySpot = "hero" | "card" | "end";
 
 type Task =
   | { kind: "idle" }
@@ -1001,26 +1001,39 @@ export function ProClient() {
                 {/* On a phone the buttons come straight after the headline;
                     nothing in the paragraph is focusable, so tab order holds. */}
                 <div className="flex flex-col">
+                  {/* "Shows", never "keeps": free stores the same record; Pro is the view across it. */}
                   <p className="order-2 mt-5 max-w-xl text-lg text-mut sm:order-1 sm:mt-4">
-                    Suede Pro is the coach on top of the free studio: no daily
-                    practice limit, the full daily plan, per-note accuracy,
-                    pitch analysis on every take, and both books. The plan is
-                    built from your own scores, range tests and practice; the
-                    pitch meter, range test and recorder stay free, with no
-                    clock.
+                    Free shows you today&apos;s score. Pro shows you the months
+                    behind it and plans every step of tomorrow, from your own
+                    scores and range tests.
                   </p>
                   <div className="order-1 mt-6 flex flex-wrap items-center gap-4 sm:order-2 sm:mt-7">
-                    {/* Straight to the buy card, with the price on the button.
-                        A plain anchor: see jumpInPage. */}
-                    <LinkButton
-                      href="#buy"
-                      fullLoad
-                      onClick={jumpInPage}
-                      variant="violet"
-                      size="lg"
-                    >
-                      {`Get lifetime Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
-                    </LinkButton>
+                    {/* The priced button buys: it opens Stripe, as the card's does.
+                        While a charge awaits confirmation it only jumps to the
+                        card, which explains what to do. */}
+                    {lifetimePurchase && !paidButUnconfirmed ? (
+                      <Button
+                        variant="violet"
+                        size="lg"
+                        onClick={() => goPro("hero")}
+                        aria-disabled={buyBusy || undefined}
+                      >
+                        {opening && buySpot === "hero"
+                          ? "Opening Stripe…"
+                          : `Get lifetime Pro: ${price} once`}
+                      </Button>
+                    ) : (
+                      // A plain anchor: see jumpInPage.
+                      <LinkButton
+                        href="#buy"
+                        fullLoad
+                        onClick={jumpInPage}
+                        variant="violet"
+                        size="lg"
+                      >
+                        See the plan
+                      </LinkButton>
+                    )}
                     <Link
                       href="/studio"
                       className="inline-flex min-h-11 items-center text-sm text-mut underline decoration-line2 underline-offset-4 hover:text-ink"
@@ -1028,6 +1041,14 @@ export function ProClient() {
                       or keep practicing free
                     </Link>
                   </div>
+                  {checkout.kind === "error" && !checkout.ref && buySpot === "hero" && (
+                    <p
+                      role="alert"
+                      className="order-1 mt-3 max-w-xl rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-sm text-rec sm:order-2"
+                    >
+                      {checkout.message}
+                    </p>
+                  )}
                 </div>
               </>
             )}
@@ -1045,11 +1066,6 @@ export function ProClient() {
           <h2 className="max-w-2xl text-2xl sm:text-3xl">
             A coach&apos;s ear on every session
           </h2>
-          {/* "Shows", never "keeps": free stores the same record; Pro is the view across it. */}
-          <p className="mt-3 max-w-2xl text-mut">
-            Free shows you today&apos;s score. Pro shows you the months behind
-            it and plans every step of tomorrow.
-          </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {PRO_PERKS.map((perk) => {
               const Glyph = PERK_GLYPHS[perk.id];
@@ -1410,7 +1426,7 @@ export function ProClient() {
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
           <div className="max-w-xl">
-            <h2 className="text-sm text-ink">Pro is what keeps free free.</h2>
+            <h2 className="text-2xl text-ink">Pro is what keeps free free.</h2>
             <p className="mt-1 text-sm text-mut">
               One musician builds this:{" "}
               <a

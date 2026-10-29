@@ -4,7 +4,7 @@
  * The coach a few cards up says to leave the range test until the week is
  * over (components/practice/program-range-note.ts recoveryRangeNote). The card
  * used to offer the test anyway: a filled "Take the range test" to a singer
- * with no saved range, "Retake the test" to one with a range. The same page
+ * with no saved range, "Retake test" to one with a range. The same page
  * told the singer two opposite things about the same measurement.
  */
 import { renderToStaticMarkup } from "react-dom/server";
@@ -37,14 +37,14 @@ describe("VoiceCard", () => {
 
   it("offers a retest beside the singers link once a range is saved", () => {
     const html = renderToStaticMarkup(<VoiceCard range={saved} />);
-    expect(html).toContain("Retake the test");
+    expect(html).toContain("Retake test");
     expect(html).toContain(`href="${rangeTestHref()}"`);
     expect(html).toContain('href="/singers"');
   });
 
   it("keeps the singers link but drops the retest during Recovery week", () => {
     const html = renderToStaticMarkup(<VoiceCard range={saved} recovering={RECOVERY} />);
-    expect(html).not.toContain("Retake the test");
+    expect(html).not.toContain("Retake test");
     expect(html).not.toContain("/range");
     expect(html).toContain('href="/singers"');
     expect(html).toContain("See yourself among famous voices");

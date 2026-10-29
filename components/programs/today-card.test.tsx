@@ -317,15 +317,15 @@ describe("restarting a finished program", () => {
   it("asks first, and says the check-in readings go when there are any", () => {
     const p = programById("foundations-2w")!;
     expect(restartQuestion(p, readings)).toBe(
-      `Start ${p.name} again from day 1? This run's check-in readings above are cleared.`,
+      `Restart ${p.name} from day 1? This run's check-in readings above are cleared.`,
     );
     // Vibrato in 3 weeks takes no range or sustain readings.
     const v = programById("vibrato-3w")!;
-    expect(restartQuestion(v, [])).toBe(`Start ${v.name} again from day 1?`);
+    expect(restartQuestion(v, [])).toBe(`Restart ${v.name} from day 1?`);
     const html = renderToStaticMarkup(
       <ProgramTodayCard active={active("foundations-2w", 13, finished("foundations-2w"), [], [], readings)} onBrowse={null} />,
     );
-    expect(html).toContain("Start again from day 1");
+    expect(html).toContain("Restart from day 1");
     expect(html).toContain("data-program-readings");
   });
 
@@ -399,7 +399,7 @@ describe("a finished Recovery week", () => {
     expect(html).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
     expect(html).not.toContain("Run it again from day 1");
     // The restart stays (its variant is an open owner decision), with no go-back.
-    expect(html).toContain("Start again from day 1");
+    expect(html).toContain("Restart from day 1");
     expect(html).not.toContain("Repeat weeks");
     // The entry card on /warmups and /progress points at that line rather
     // than suggesting another run, and never says a bare "a doctor".
@@ -476,7 +476,7 @@ describe("going back a fortnight in the book's program", () => {
       expect(text).toContain("Repeat weeks 5–6");
       expect(text).toContain("Repeat weeks 7–8");
       expect(text).not.toContain("Go back to week");
-      expect(html).toContain("Start again from day 1");
+      expect(html).toContain("Restart from day 1");
       // Other programs keep their finished line and no go-back.
       const f = renderToStaticMarkup(
         <ProgramTodayCard

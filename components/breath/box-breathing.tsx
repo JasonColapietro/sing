@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { logSession } from "@/lib/progress";
 import { SessionButton, SessionShell } from "@/components/practice/session-shell";
+import { useStepCloseLabel } from "@/components/practice/step-intro";
 import { recordBreathBest } from "./store";
 import { boxSeconds, type BreathDrillResult } from "./routines";
 
@@ -126,6 +127,7 @@ export function BoxBreathing({
   /** Leaving before anything ran — there is nothing to report. */
   onExit: () => void;
 }) {
+  const closeLabel = useStepCloseLabel("Exit drill");
   const [mode, setMode] = useState<Mode>("setup");
   const [side, setSide] = useState(preset?.side ?? 4);
   const [minutes, setMinutes] = useState<Minutes>(preset?.minutes ?? 3);
@@ -156,8 +158,8 @@ export function BoxBreathing({
       !early || sec >= MIN_LOG_SEC
         ? logSession({ type: "breath", durationSec: sec, detail: "Box breathing" })
         : null;
-    // A best is earned by finishing: a five-minute set abandoned at ninety
-    // seconds is not a five-minute set.
+    // A best is earned by finishing: a five-minute run abandoned at ninety
+    // seconds is not a five-minute run.
     if (!early) recordBreathBest({ boxMinutes: cfgRef.current.minutes });
     completeRef.current({
       durationSec: sec,
@@ -218,7 +220,7 @@ export function BoxBreathing({
   const phaseIdx = run?.phaseIdx ?? 0;
   const p = run?.p ?? 0;
   const elapsed = run?.elapsed ?? 0;
-  // Before begin() has run, the length the settings ask for, so a set's
+  // Before begin() has run, the length the settings ask for, so a routine's
   // first frame already reads the run's length.
   const target = runTargetSec || boxSeconds({ side, minutes });
 
@@ -235,7 +237,7 @@ export function BoxBreathing({
       subtitle={`${minutes} min · ${side}s sides`}
       progress={running && target > 0 ? (elapsed / target) * 100 : 0}
       onClose={closeSession}
-      closeLabel="Exit drill"
+      closeLabel={closeLabel}
       topRight={
         running ? (
           <span className="tabular font-mono text-xs text-[var(--s-dim)]">
