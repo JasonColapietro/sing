@@ -42,7 +42,7 @@ This one produces the strangest readings. If you practice with open-back headpho
 
 What comes back is neither you nor the track but a blend of the two. Sustained notes read as accurate while you are silent. Your scores drift toward whatever the reference tone is doing, which flatters you uselessly. In melody echo and pitch-match, the exercise's own reference can leak back in and score itself.
 
-Closed-back headphones or in-ears at a moderate volume fix it. If you have to use speakers, tell the app: in the pitch studio, open Audio setup and choose Speakers under "I'm listening through". That asks the browser to filter the app's own sound out of the mic, and the choice carries over to every exercise on that device. The filter catches most of the leak, not all of it, so take any session whose scores you plan to compare on headphones.
+Closed-back headphones or in-ears at a moderate volume fix it. If you have to use speakers, tell the app: in the pitch studio, open the Audio panel and choose Speakers under "I'm listening through". That asks the browser to filter the app's own sound out of the mic, and the choice carries over to every exercise on that device. The filter catches most of the leak, not all of it, so take any session whose scores you plan to compare on headphones.
 
 ## Time of day, and the body you woke up in
 

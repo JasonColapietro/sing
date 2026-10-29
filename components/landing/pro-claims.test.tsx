@@ -28,10 +28,12 @@ describe("the homepage sells Pro for what Pro adds", () => {
     // Round 16's /pro rule: free stores and charts the same record.
     expect(home).not.toMatch(/today.s score|keeps? (the )?score/i);
     expect(home).toContain("Free scores every session and charts your weekly trend.");
+    // The free plan already reads your scores into tomorrow's practice.
+    expect(home).not.toMatch(/what to sing tomorrow/i);
   });
 
   it("lists each teaser perk once, leading with no daily limit, and prints the price once in the body", () => {
-    const teaser = home.slice(home.indexOf("Know what to sing tomorrow"), home.indexOf("See everything Pro adds"));
+    const teaser = home.slice(home.indexOf("Add the coach's full plan to the free studio"), home.indexOf("See everything Pro adds"));
     expect(teaser).toContain("No daily limit on guided practice");
     expect(teaser.indexOf("No daily limit")).toBeLessThan(teaser.indexOf("full daily plan"));
     for (const perk of ["daily limit", "daily plan", "per-note accuracy", "Pitch analysis", "Both books"]) {

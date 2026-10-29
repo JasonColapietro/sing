@@ -40,13 +40,14 @@ async function pageFingerprint(slug: string): Promise<string> {
  * re-pin the fingerprint and date together.
  */
 const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
-  // 2026-10-29: similar-voice heading says what picks the cards, other artists' recordings credited.
-  "olivia-rodrigo": { fingerprint: "8224e9e5964236c0", lastModified: "2026-10-29" },
-  "reba-mcentire": { fingerprint: "ae8d5fafdd49c42f", lastModified: "2026-10-29" },
-  "alex-warren": { fingerprint: "9673659e876bf1b1", lastModified: "2026-10-29" },
-  "sam-smith": { fingerprint: "cb1b3debafa8b5e3", lastModified: "2026-10-29" },
-  "arijit-singh": { fingerprint: "810474e4313e1d92", lastModified: "2026-10-29" },
-  adele: { fingerprint: "792db2bfc3659303", lastModified: "2026-10-29" },
+  // 2026-10-29: similar-voice heading says what picks the cards, other artists' recordings credited;
+  // round 18: similar voices picked by nearest endpoints, the span histogram captioned.
+  "olivia-rodrigo": { fingerprint: "7b0645bb394c5c57", lastModified: "2026-10-29" },
+  "reba-mcentire": { fingerprint: "d5ad69b2039cb632", lastModified: "2026-10-29" },
+  "alex-warren": { fingerprint: "bc4c4b6e13561464", lastModified: "2026-10-29" },
+  "sam-smith": { fingerprint: "ac70ea3d2e38f943", lastModified: "2026-10-29" },
+  "arijit-singh": { fingerprint: "4e476574916aa70a", lastModified: "2026-10-29" },
+  adele: { fingerprint: "7b7d020d7f9c25d5", lastModified: "2026-10-29" },
 };
 
 describe("reviewed singer page freshness", () => {

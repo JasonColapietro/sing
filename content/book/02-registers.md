@@ -51,7 +51,7 @@ None of this makes the terms useless. It makes them local. When a teacher asks f
 
 The most damaging thing register vocabulary has done is turn a mechanical fact into a moral one. Chest gets called the real voice. Falsetto gets treated as an apology. Mix gets sold as the thing serious singers have and you do not. Beginners then spend months hauling chest voice up past its ceiling, because switching feels like losing.
 
-That is backwards, and it is the short road to strain. A register is a band of pitch and volume that one fold setup handles well. Working inside those bands is not a compromise; it is how the instrument is built. Nearly every singer you could name crosses several setups inside a single song, and the skill on display is not avoiding the switch. It is making the switch inaudible — or making it loud on purpose, the way country and yodelling traditions have done for generations.
+That is backwards, and it is the short road to strain. A register is a band of pitch and volume that one fold setup handles well. Working inside those bands is not a compromise; it is how the instrument is built. Nearly every singer you could name crosses several setups inside a single song, and the skill on display is not avoiding the switch. It is making the switch inaudible — or making it loud on purpose, the way country and yodeling traditions have done for generations.
 
 One boundary is worth stating plainly, because the rest of this chapter is about pushing into unfamiliar territory. Effort is fine. Pain is not.
 

@@ -2686,7 +2686,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 32535,
+      "totalWords": 32536,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -2805,7 +2805,7 @@
           "part": "Reading your own voice",
           "summary": "Room noise, mic placement, headphone bleed and a rough day distort your readings. Here is how to catch a bad session before you act on it.",
           "free": true,
-          "words": 1461,
+          "words": 1462,
           "path": "/book/when-numbers-lie"
         },
         {

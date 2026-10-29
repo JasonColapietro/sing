@@ -17,6 +17,7 @@ import {
   lessonHref,
   neighbours,
   notReadyAdvice,
+  echoesObjective,
   shownSteps,
 } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
@@ -224,7 +225,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                     <span className="mr-2 font-mono text-sm text-dim">{i + 1}.</span>
                     {step.title}
                   </h3>
-                  <Markdown source={step.body} />
+                  {!echoesObjective(step, lesson) && <Markdown source={step.body} />}
                   {(stepChecks[i].look || stepChecks[i].listen) && (
                     <dl className="mt-3 space-y-1 text-sm">
                       {stepChecks[i].look && (

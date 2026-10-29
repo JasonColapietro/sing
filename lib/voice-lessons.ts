@@ -164,21 +164,40 @@ export const REVIEW_STEP_TITLE = "Review your own attempt";
 /** The port's "Name the target: <module skill>" step heading. */
 export const TARGET_STEP_PREFIX = "Name the target";
 
+/** Text without surrounding space or trailing stops and commas. */
+const core = (t: string) => t.trim().replace(/[.,\s]+$/, "");
+
+/**
+ * True when a "Name the target" step's body only repeats the objective the
+ * page prints under its heading: the whole objective, its leading sentences
+ * (self-check objectives add "This is a listening and reflection check." or
+ * "Judged by ear: …"), or its first sentence with a trailing clause.
+ */
+export function echoesObjective(step: Lesson["steps"][number], lesson: Lesson): boolean {
+  if (!step.title.startsWith(TARGET_STEP_PREFIX)) return false;
+  const body = core(step.body);
+  if (!body) return false;
+  const objective = lesson.objective.trim();
+  const first = core(objective.split(/(?<=\.)\s/)[0]);
+  return body === core(objective) || objective.startsWith(`${body}.`) || body.startsWith(`${first},`);
+}
+
 /**
  * The steps a lesson page shows: all of them, less a review step that only
  * restates the self-check printed further down the same page, and less a
- * "Name the target" step whose body only repeats the objective the page
- * already prints under its heading. A target step that says something of its
- * own stays.
+ * "Name the target" step whose body only repeats the objective and whose
+ * Look/Listen checks are course-wide or printed on another step. A target
+ * step that repeats the objective but carries a check of its own stays, and
+ * the page prints it without the repeated body (see echoesObjective).
  */
 export function shownSteps(lesson: Lesson): Lesson["steps"] {
   const first = lesson.selfCheck.criteria[0];
-  const objective = lesson.objective.trim();
-  return lesson.steps.filter(
-    (s) =>
-      !(s.title === REVIEW_STEP_TITLE && first !== undefined && s.body.startsWith(first)) &&
-      !(s.title.startsWith(TARGET_STEP_PREFIX) && s.body.trim() === objective),
+  const steps = lesson.steps.filter(
+    (s) => !(s.title === REVIEW_STEP_TITLE && first !== undefined && s.body.startsWith(first)),
   );
+  const elsewhere = new Set(steps.filter((s) => !echoesObjective(s, lesson)).flatMap((s) => [s.look, s.listen]));
+  const said = (check: string) => UNIVERSAL_LESSON_TEXT.has(check) || elsewhere.has(check);
+  return steps.filter((s) => !(echoesObjective(s, lesson) && said(s.look) && said(s.listen)));
 }
 
 /** Sentences, split the way scripts/compile-lessons.mjs splits them. */

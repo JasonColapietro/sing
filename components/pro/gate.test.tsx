@@ -1,5 +1,5 @@
 /**
- * ProWhisper, the one-line "Free · Pro adds the coach" under the mic gates of
+ * ProWhisper, the one-line "Free · Pro adds the coach's full plan" under the mic gates of
  * /recorder, /studio, /warmups and /songs.
  *
  * It used to render nothing until the entitlement cache had been read, so it
@@ -25,6 +25,8 @@ describe("ProWhisper before hydration", () => {
 
   it("is in the server HTML, so a free singer's gate has its full height from the first paint", () => {
     expect(html).toContain("adds the coach");
+    // The free plan has a coach (its first two steps each day): Pro adds the rest of the plan.
+    expect(html).toContain("adds the coach&#x27;s full plan");
     expect(html).toContain('href="/pro#buy"');
   });
 

@@ -30,6 +30,7 @@ import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type Dai
 import { ProgramEntryCard } from "@/components/programs/today-card";
 import { useActiveProgram } from "@/components/programs/use-program";
 import { programDayNeedsPro, recoveryWeekOf } from "@/components/practice/program-day";
+import { isRestDay, itemIsCapped } from "@/lib/programs";
 import { DeepLinkSlot, deepLinkMarker, prepaintMarker, useDeepLinkRead, useHydrated } from "@/components/prepaint";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
@@ -512,6 +513,21 @@ export function WarmupsClient() {
   // paywall every visit would cost them the room's real first action.
   const programLeads =
     activeProgram?.view.status === "todo" && !programDayNeedsPro(activeProgram, isPro);
+  // When that leading card's button is the filled "Open today's plan", the
+  // room's own start steps back to outline, so the page has one filled start
+  // (as on /progress). Not on a rest day ("See the calendar") or once today's
+  // free minutes are used with capped rows left (an outline "See today's
+  // plan", the waits test in ProgramEntryCard): then the room's start stays
+  // the filled one.
+  const programDay = activeProgram ? activeProgram.program.days[activeProgram.view.index] : undefined;
+  const programDayStartLeads = Boolean(
+    hydrated &&
+      programLeads &&
+      activeProgram &&
+      programDay &&
+      !isRestDay(programDay) &&
+      !(cap.capped && programDay.items.some((item, i) => !activeProgram.itemsDone[i] && itemIsCapped(item))),
+  );
 
   // The mic gate's three parts. Their order depends on whether a link is
   // waiting to start something; see the gate below.
@@ -658,6 +674,7 @@ export function WarmupsClient() {
             // A newcomer has no path to continue: the first button starts the recommended routine, sized to the free minutes.
             <ContinueCard
               kicker="Start here"
+              secondary={programDayStartLeads}
               title={recommended.name}
               tagline={recommended.tagline}
               meta={<RoutineMeta routine={recommended} />}
@@ -680,7 +697,9 @@ export function WarmupsClient() {
           ) : (
             nextExercise && (
               // Today's warmup, below, is the room's one filled start: the
-              // finite daily routine. This card's single endless exercise is
+              // finite daily routine, unless a program day leads, whose "Open
+              // today's plan" is then the one filled start, as on /progress.
+              // This card's single endless exercise is
               // the outline alternative, and the streak is said here only,
               // where the newcomer's card (the server HTML) says it too, so
               // the card keeps its height at hydration.
@@ -712,6 +731,7 @@ export function WarmupsClient() {
           {!newToWarmups && (
             <ContinueCard
               kicker="Today's warmup"
+              secondary={programDayStartLeads}
               showStreak={false}
               title={recommended.name}
               tagline={recommended.tagline}

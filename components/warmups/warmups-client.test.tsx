@@ -329,6 +329,51 @@ describe("a program day the singer cannot open", () => {
   });
 });
 
+describe("one filled start while a program day leads", () => {
+  const mix = programById("mix-4w")!;
+  const onDay = (index: number): ActiveProgram => ({
+    program: mix,
+    progress: { programId: mix.id, startedOn: "2026-09-01", completed: [] } as unknown as ActiveProgram["progress"],
+    today: "2026-10-12",
+    view: { status: "todo", index, completed: index },
+    itemsDone: [],
+    stepsDone: [],
+    stepsWaived: [],
+    countsFrom: "2026-10-12",
+    readings: [],
+  });
+  const filled = (html: string) =>
+    [...html.matchAll(/<(?:a|button)[^>]*class="([^"]*)"[^>]*>([^<]*)<\/(?:a|button)>/g)]
+      .filter((m) => /(?:^|\s)bg-(?:rec|violet-ink)(?:\s|$)/.test(m[1]))
+      .map((m) => m[2]);
+
+  it("lets the program's 'Open today's plan' be the filled start, for a newcomer and a returning singer", () => {
+    state.program = onDay(1);
+    let html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("Start here");
+    expect(html).toContain("Open today’s plan");
+    expect(filled(html)).toEqual(["Open today’s plan"]);
+    state.progress = practisedToday();
+    html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("Today&#x27;s warmup");
+    expect(filled(html)).toEqual(["Open today’s plan"]);
+  });
+
+  it("keeps the room's start filled on a rest day, and once the free minutes are used", () => {
+    state.program = onDay(3);
+    let html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("See the calendar");
+    // The rest day's "See the calendar" is outline: the room's start is the one filled action.
+    expect(filled(html)).toEqual(["Enable mic and start"]);
+    state.program = onDay(1);
+    state.cap = { isPro: false, usedSec: 300, leftSec: 0, capped: true, capSec: 300 };
+    html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("See today’s plan");
+    expect(filled(html)).not.toContain("See today’s plan");
+    expect(filled(html)).toContain("Available tomorrow");
+  });
+});
+
 describe("today's warmup during Recovery week", () => {
   const recovery = programById("recovery-week")!;
   const easy = routineById("recovery")!;

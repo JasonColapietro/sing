@@ -247,7 +247,7 @@ export default function Home() {
                 Suede Pro · Early Access
               </SectionLabel>
               <h2 className="max-w-xl text-2xl sm:text-3xl">
-                Know what to sing tomorrow
+                Add the coach&apos;s full plan to the free studio
               </h2>
               {/* /pro's split: free charts the same record, Pro is the view across it. */}
               <p className="mt-3 max-w-xl text-mut">

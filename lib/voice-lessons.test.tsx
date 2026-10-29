@@ -69,6 +69,8 @@ import {
   COURSE,
   REVIEW_STEP_TITLE,
   TARGET_STEP_PREFIX,
+  echoesObjective,
+  lessonById,
   UNIVERSAL_LESSON_TEXT,
   VOICE_LEARN_PATH,
   coursePaths,
@@ -1000,7 +1002,13 @@ describe("the pages", () => {
     let dropped = 0;
     for (const l of LESSONS) {
       const shown = shownSteps(l);
-      for (const s of shown) expect(s.body.trim(), `${l.id}: ${s.title}`).not.toBe(l.objective.trim());
+      for (const s of shown) {
+        expect(echoesObjective(s, l) ? "" : s.body.trim(), `${l.id}: ${s.title}`).not.toBe(l.objective.trim());
+        // No shown target step prints a body the objective starts with.
+        if (s.title.startsWith(TARGET_STEP_PREFIX) && !echoesObjective(s, l)) {
+          expect(l.objective.trim().startsWith(s.body.trim()), `${l.id}: ${s.title}`).toBe(false);
+        }
+      }
       dropped += l.steps.length - shown.length;
       const kept = new Set(shown.flatMap((s) => [s.look, s.listen]));
       for (const s of l.steps.filter((x) => x.title.startsWith(TARGET_STEP_PREFIX) && !shown.includes(x))) {
@@ -1016,6 +1024,41 @@ describe("the pages", () => {
     const own = { ...target, body: "Aim for the same easy start on every note of the pattern." };
     const rewritten: Lesson = { ...l, steps: l.steps.map((s) => (s === target ? own : s)) };
     expect(shownSteps(rewritten)).toContain(own);
+    // A step that repeats the objective but carries a check no other step
+    // prints stays, so the check is not lost (the page omits its body).
+    const checked = { ...target, look: "Your shoulders stay level through the last note." };
+    const withCheck: Lesson = { ...l, steps: l.steps.map((s) => (s === target ? checked : s)) };
+    expect(echoesObjective(checked, withCheck)).toBe(true);
+    expect(shownSteps(withCheck)).toContain(checked);
+  });
+
+  /**
+   * Self-check objectives add a trailing sentence ("This is a listening and
+   * reflection check.", "Judged by ear: ..."), so their target step repeats
+   * only the first sentence. That repeat is hidden; a step with its own
+   * Look/Listen check stays, printed without the repeated body.
+   */
+  it("hide a target step body that repeats the objective's first sentence", async () => {
+    const escape = (t: string) => renderToStaticMarkup(<>{t}</>);
+    for (const id of ["v-l3-m2-07", "v-l5-m2-07", "v-l7-m1-08", "v-l7-m6-08"]) {
+      const l = lessonById(id)!;
+      const target = l.steps.find((s) => s.title.startsWith(TARGET_STEP_PREFIX))!;
+      expect(echoesObjective(target, l), id).toBe(true);
+      const shown = shownSteps(l);
+      const html = renderToStaticMarkup(
+        await LessonPage({
+          params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
+        }),
+      );
+      if (shown.includes(target)) expect(html, id).toContain(target.title.replace(/&/g, "&amp;"));
+      // The subtitle prints the objective; no step repeats its first sentence.
+      expect(html, id).toContain(escape(l.objective.trim()));
+      expect(html, id).not.toContain(`>${escape(target.body.trim())}</p>`);
+    }
+    const l = lessonById("v-l3-m2-07")!;
+    const target = l.steps.find((s) => s.title.startsWith(TARGET_STEP_PREFIX))!;
+    expect(echoesObjective({ ...target, body: "Three vowels" }, l)).toBe(false);
+    expect(echoesObjective({ ...target, body: "Three vowels, both directions. Rest a minute between takes." }, l)).toBe(false);
   });
 
   it("put the practise button before the steps, with the daily allowance where it applies", async () => {

@@ -94,7 +94,7 @@ export const GENRE_HUB_COPY: Record<string, HubCopy> = {
   },
   country: {
     intro:
-      "Country singing sits close to speech, with a conversational delivery, regional vowels and ornaments such as the vocal break or cry inherited from older folk and yodelling traditions. Many male country singers are baritones whose low notes carry the storytelling.",
+      "Country singing sits close to speech, with a conversational delivery, regional vowels and ornaments such as the vocal break or cry inherited from older folk and yodeling traditions. Many male country singers are baritones whose low notes carry the storytelling.",
     neighbour: "folk",
     contrast:
       "{link} shares the words-first approach but keeps a plainer tone, without country's twang, cry and vocal break.",

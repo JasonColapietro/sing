@@ -42,6 +42,7 @@ import {
 } from "./routines";
 import { EarGameSession, EarRunner } from "./ear-runner";
 import { GameGlyph } from "./game-glyph";
+import { phraseName } from "@/components/songs/lib";
 
 /** What the room is running right now, if anything. */
 type Active =
@@ -182,7 +183,8 @@ export default function EarTrainingClient() {
           id: `chase:${song.id}`,
           title: song.title,
           figure: <GameGlyph game="note-catcher" />,
-          desc: `Catch the first ${ROUNDS} notes of ${song.title} as they slide in.`,
+          // The phrase the intro card names: a short one loops, so never "the first N notes".
+          desc: `Catch ${ROUNDS} notes from the ${phraseName(song)} of ${song.title} as they slide in.`,
           meta:
             typeof best === "number"
               ? `${ROUNDS} notes · best ${best}/100`

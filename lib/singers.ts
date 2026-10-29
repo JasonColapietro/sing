@@ -39,17 +39,19 @@ export function computeRecords(list: Singer[] = SINGERS): SingerRecords {
 }
 
 /**
- * Singers most comparable to `s`: same voice type first, then nearest
- * range-center, so the "similar voices" links stay musically meaningful.
+ * Singers most comparable to `s`: same voice type first, then nearest low and
+ * high endpoints, so the "similar catalog range" heading holds. Ranking by
+ * range center alone put C3–A#4 beside A#1–C6 (same center, an octave and
+ * more wider).
  */
 export function relatedSingers(s: Singer, count = 6): Singer[] {
-  const center = (s.lowMidi + s.highMidi) / 2;
   return SINGERS.filter((o) => o.slug !== s.slug)
     .map((o) => ({
       o,
       score:
         (o.voiceType === s.voiceType ? 0 : 24) +
-        Math.abs((o.lowMidi + o.highMidi) / 2 - center),
+        Math.abs(o.lowMidi - s.lowMidi) +
+        Math.abs(o.highMidi - s.highMidi),
     }))
     .sort((a, b) => a.score - b.score)
     .slice(0, count)
