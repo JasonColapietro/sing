@@ -130,7 +130,6 @@ const RELEASE_41_STORIES: Story[] = [
     body: "The Measured Voice and The Voice Atlas have covers and pull quotes on their pages, and both PDFs were rebuilt from the current chapters. The homepage is shorter, the studio's Stop ends on a card with the next rooms to try, and the free-minutes wall is shorter.",
     links: [
       { href: "/book", text: "Open The Measured Voice" },
-      { href: "/atlas", text: "Open The Voice Atlas" },
     ],
   },
 ];

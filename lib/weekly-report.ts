@@ -221,7 +221,7 @@ const ROOM_WORDS: Record<ActivityType, { name: string; scored: string; open: str
   ear: { name: "ear training", scored: "ear training", open: "Open ear training", practise: "Practice ear training" },
   breath: { name: "breath training", scored: "breath training", open: "Open breath training", practise: "Practice breathing" },
   song: { name: "song practice", scored: "song practice", open: "Open song practice", practise: "Practice a song" },
-  recording: { name: "the take recorder", scored: "the take recorder", open: "Open the recorder", practise: "Record a take" },
+  recording: { name: "the recorder", scored: "the recorder", open: "Open the recorder", practise: "Record a take" },
   tools: { name: "the practice tools", scored: "the practice tools", open: "Open the tools", practise: "Open the tools" },
   analyze: { name: "the voice analyzer", scored: "the voice analyzer", open: "Open the analyzer", practise: "Open the analyzer" },
 };

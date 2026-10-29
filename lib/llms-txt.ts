@@ -173,7 +173,7 @@ export function buildLlmsTxt(): string {
 
   return `# Suede Sing
 
-> Suede Sing is a browser-based singing practice app made by ${ORG_NAME}. At ${SING_HOME} it gives singers a live pitch meter, a vocal range test with a voice-type estimate, guided warmups, ear training, breath drills, song practice, a take recorder, a voice spectrogram, a free ${stages}-stage voice course, a catalog of ${total} singers' reported vocal ranges, and a singing glossary, all in the browser with nothing to install. ${ORG_NAME} also publishes a free Suede Sing Chrome extension and a mobile app, "${APP_NAME}: Vocal Range Test," for iPhone and Android.
+> Suede Sing is a browser-based singing practice app made by ${ORG_NAME}. At ${SING_HOME} it gives singers a live pitch meter, a vocal range test with a voice-type estimate, guided warmups, ear training, breath drills, song practice, a recorder, a voice analyzer, a free ${stages}-stage voice course, a catalog of ${total} singers' reported vocal ranges, and a singing glossary, all in the browser with nothing to install. ${ORG_NAME} also publishes a free Suede Sing Chrome extension and a mobile app, "${APP_NAME}: Vocal Range Test," for iPhone and Android.
 
 ## Names
 
@@ -207,7 +207,7 @@ export function buildLlmsTxt(): string {
 
 The plan details below are read from the site's own pricing and practice-limit code. ${SING_HOME}/pro is the source of truth for current prices and terms.
 
-- Free, with no daily limit: the pitch studio (/studio), the vocal range test (/range), the take recorder (/recorder), the metronome, keyboard and drone (/tools), the spectrogram and vocal-load analyzer (/analyze), the ${CATALOG_LESSON_COUNT}-lesson voice course (/learn/voice), every singer page (/singers), song-fit checks (/can-you-sing), the glossary (/glossary), ${measured.free} free chapters of ${BOOK_TITLE} and ${atlas.free} of ${ATLAS_TITLE}.
+- Free, with no daily limit: the pitch studio (/studio), the vocal range test (/range), the recorder (/recorder), the metronome, keyboard and drone (/tools), the spectrogram and vocal-load analyzer (/analyze), the ${CATALOG_LESSON_COUNT}-lesson voice course (/learn/voice), every singer page (/singers), song-fit checks (/can-you-sing), the glossary (/glossary), ${measured.free} free chapters of ${BOOK_TITLE} and ${atlas.free} of ${ATLAS_TITLE}.
 - Free, with a daily limit: guided practice (${guided}) shares ${FREE_DAILY_MINUTES} minutes a day on the free plan. The time is counted from logged practice and resets with the local calendar day; a step already under way is not cut off. All ${SONG_COUNT} songs and ${FREE_EXERCISES} warmup exercises are available inside that allowance.
 - Suede Pro removes the daily guided-practice limit and adds ${PRO_EXERCISES} more warmup exercises in ${PRO_PACK_COUNT} packs, both books in full with PDFs (${measured.chapters} and ${atlas.chapters} chapters), pitch analysis on recorded takes, a per-note accuracy chart across every kept session, the singer's latest ${MAX_RANGE_HISTORY} range tests charted over time, the full adaptive coach plan, and progress sync across devices. The programs at /programs are free except ${PRO_PROGRAM_NAMES.join(" and ")}, which need Pro after their free first week.
 - Price when this file was built: Suede Pro Early Access is ${proPriceLine()}. Check ${SING_HOME}/pro before quoting a price.

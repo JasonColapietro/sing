@@ -35,6 +35,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { encodeWav, midiToHz, synthVoice } from "../lib/audio/voice-fixture.ts";
+import { openPath, pathRow } from "./lib/warmups.mjs";
 
 const argv = process.argv.slice(2);
 const flag = (name) => {
@@ -158,16 +159,8 @@ async function dismissOverlays(page) {
   }
 }
 
-const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-/** An exercise's row on the warmups path: a button whose name opens with the title. */
-const pathRow = (page, title) => page.getByRole("button", { name: new RegExp(`^${escapeRe(title)}`) });
 const REP_SCORE = /^Rep \d+%$/;
 
-/** A newcomer's /warmups folds the path under "Every exercise": open it, as a singer would, before reaching for a row. */
-async function openPath(page) {
-  const fold = page.locator("details").filter({ has: page.locator("summary", { hasText: /^Every exercise/ }) });
-  if ((await fold.count()) > 0 && !(await fold.first().evaluate((d) => d.open))) await fold.first().locator("summary").click();
-}
 
 /**
  * The session's "Cents off" readout shows a number, not the dash it shows
