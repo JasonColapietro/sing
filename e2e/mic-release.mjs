@@ -481,8 +481,8 @@ try {
 
     // A scored run, then a reopen that fails from its summary: the gate comes
     // back with its error, as it does for a singer who never skipped the mic,
-    // and "Sing again" does not quietly start an unscored run.
-    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    // and "Sing again" does not quietly start an unscored run. The card's Sing started the run itself.
+    await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
     await endSongRunOnSummary(page);
     await expectLive(page, 0, "scored summary after a late enable", notes);
     await page.evaluate(() => { window.__micFail = true; });
