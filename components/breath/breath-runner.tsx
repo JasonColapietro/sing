@@ -96,7 +96,6 @@ function StepDrill({
   }
 }
 
-/** Stars for one drill, from how far it was taken, on the path's own bands. */
 /**
  * The free minutes left today, for a step's intro card, when they run out
  * before the rest of the routine does; null on Pro and while they cover it.
@@ -125,6 +124,7 @@ export function breathPrevChip(
   return { label: breathStepTitle(step), score: r.score, scoreLabel: r.label };
 }
 
+/** Stars for one drill, from how far it was taken, on the path's own bands. */
 function starsForDrillResult(drill: BreathDrillId, r: BreathDrillResult): Stars {
   switch (drill) {
     case "box":
