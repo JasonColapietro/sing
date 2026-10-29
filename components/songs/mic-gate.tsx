@@ -50,7 +50,7 @@ export function SongsMicGate({
 }) {
   const hydrated = useHydrated();
   const pre = prepaint && !hydrated;
-  // With no song named, the way in without a mic is picking one: the player asks for the mic at Play.
+  // With no song named, the way in without a mic is browsing: a card's Sing asks for the mic.
   const deepLinked = heading !== "Sing along and see every note you hit";
   const gate = (
     <Card>

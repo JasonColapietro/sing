@@ -10,7 +10,6 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { useIdleMicRelease } from "@/lib/audio/use-idle-mic-release";
 import { localDay, useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
-import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { ContinueCard, useDailyGoal, useGoalDoneSec, nextUpId, starsForExercise } from "@/components/practice/learn-home";
@@ -736,8 +735,8 @@ export function WarmupsClient() {
                     {gateStart}
                   </>
                 )}
+                {/* No ProWhisper here: FreeAllowance above is this page's one ask. */}
                 <AudioSetup className="mt-6 max-w-xl" />
-                <ProWhisper className="mt-4" />
               </Card>
             </div>
           )}

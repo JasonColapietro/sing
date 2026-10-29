@@ -64,7 +64,7 @@ export interface MicAsk {
   /** The library header's "Enable microphone" was on screen. */
   headerAsk: boolean;
   listening: boolean;
-  /** "Continue without a mic" was chosen. */
+  /** "Continue without a mic" or "Pick a song first" was chosen. */
   listenMode: boolean;
 }
 
@@ -100,6 +100,8 @@ export function SongsClient() {
   const setlist = useSetlist();
 
   const [listenMode, setListenMode] = useState(false);
+  // "Pick a song first": browse now, and a card's Sing asks for the mic.
+  const [browsing, setBrowsing] = useState(false);
   // Whether the singer has allowed the microphone on this visit. The stream
   // itself is closed when the room has been idle for a while (below), so the
   // browser's recording light goes off on the summary and in the library;
@@ -223,7 +225,14 @@ export function SongsClient() {
     // who first went on without a mic and turned it on later. Only if this
     // screen is still the one showing when access arrives, as with the
     // summary's own ask.
-    if (micAllowed && !pitch.listening) {
+    // Browsing without a mic: the Sing press is the gesture that asks for it.
+    // Refused, the player opens on its own "Enable microphone" line, not into a run.
+    if (!micAllowed && !pitch.listening && !listenMode) {
+      const current = micRequestRef.current.begin();
+      const ok = await pitch.start();
+      if (!current()) return false;
+      if (!ok) autoStart = false;
+    } else if (micAllowed && !pitch.listening) {
       const current = micRequestRef.current.begin();
       setReopening((n) => n + 1);
       let ok: boolean;
@@ -240,6 +249,7 @@ export function SongsClient() {
         // be an unscored run.
         setMicAllowed(false);
         setListenMode(false);
+        setBrowsing(false);
         return false;
       }
       if (!current()) return false;
@@ -270,7 +280,7 @@ export function SongsClient() {
   // A singer who has used today's free minutes meets the cap wall, not a
   // microphone prompt for practice they cannot start.
   const micOn = micAllowed || pitch.listening;
-  const gated = !micOn && !listenMode && !cap.capped;
+  const gated = !micOn && !listenMode && !browsing && !cap.capped;
 
   // The gate's buttons, or the library header's "Enable microphone", go
   // away the moment they are answered, and keyboard focus fell to <body>:
@@ -283,7 +293,7 @@ export function SongsClient() {
     gated,
     headerAsk: !gated && view === "library" && !micOn && !cap.capped,
     listening: micOn,
-    listenMode,
+    listenMode: listenMode || browsing,
   };
   const micRef = useRef(mic);
   useEffect(() => {
@@ -338,8 +348,12 @@ export function SongsClient() {
         error={pitch.error}
         onEnable={pitch.start}
         onListen={() => {
-          // Listening without a mic is unscored by nature, so its entry
-          // preselects the pass that matches: the guide alone.
+          // "Pick a song first" only defers the ask. "Continue without a mic"
+          // (a deep link) is listen mode, which preselects the guide alone.
+          if (!pendingDeepLink) {
+            setBrowsing(true);
+            return;
+          }
           setPass("listen");
           setListenMode(true);
         }}

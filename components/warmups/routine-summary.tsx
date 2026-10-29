@@ -187,7 +187,7 @@ export function RoutineSummary({
       {!capped && (
       <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
         <ProCrescendoNudge
-          line="Pro shows the full daily coach plan, not just its first two steps"
+          line="The coach's full daily plan: every step, built from your own scores."
           title="See the whole plan"
           body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, these included. Pro adds the full daily coach plan, a per-note accuracy chart and no daily limit."
           context="Warmups"
