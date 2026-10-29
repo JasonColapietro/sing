@@ -54,7 +54,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist.
+- The target disappears when the range, volume, speed, or duration increases. => Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -72,7 +72,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.
+If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same. Do not try the effect again to check; leave it until a teacher has heard it.
 
 What this shows: I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.
 

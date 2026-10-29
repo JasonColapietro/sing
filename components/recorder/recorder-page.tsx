@@ -35,7 +35,7 @@ import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
 import { FigureFrame, WaveformFigure } from "@/components/figures";
-import { createRecorderMic, createTakeMutations, startRecorder } from "./runtime";
+import { createRecorderMic, createTakeMutations, soundHeard, startRecorder } from "./runtime";
 
 // 5 minute take limit. The page subtitle says so ("takes of up to five
 // minutes"), and it and the meta description call the free recorder "no
@@ -178,6 +178,12 @@ export default function RecorderPageClient() {
   const chunksRef = useRef<Blob[]>([]);
   const startedAtRef = useRef(0);
   const tickRef = useRef(0);
+  /** Whether the take being recorded has picked up any sound (soundHeard). */
+  const heardRef = useRef(false);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  useEffect(() => {
+    analyserRef.current = analyser;
+  }, [analyser]);
   const countTimerRef = useRef(0);
   const countGroupRef = useRef<ToneGroup | null>(null);
 
@@ -444,7 +450,8 @@ export default function RecorderPageClient() {
       };
       takesRef.current = [take, ...takesRef.current];
       void persistTake(take);
-      const result = durationSec >= 10 ? logSession({
+      // A silent take is kept to play back, but it is not practice.
+      const result = durationSec >= 10 && heardRef.current ? logSession({
         type: "recording",
         durationSec,
         detail: take.name,
@@ -472,6 +479,7 @@ export default function RecorderPageClient() {
     setMicError(null);
     chunksRef.current = [];
     startedAtRef.current = performance.now();
+    heardRef.current = false;
     const capture = startRecorder(stream, {
       onData: (blob) => chunksRef.current.push(blob),
       onStop: finalizeTake,
@@ -496,6 +504,8 @@ export default function RecorderPageClient() {
     tickRef.current = window.setInterval(() => {
       const sec = (performance.now() - startedAtRef.current) / 1000;
       setElapsed(sec);
+      const live = analyserRef.current;
+      if (!heardRef.current && live && soundHeard(live)) heardRef.current = true;
       if (sec >= MAX_SEC) {
         const r = recorderRef.current;
         if (r && r.state !== "inactive") {
@@ -765,9 +775,12 @@ export default function RecorderPageClient() {
         <div className="space-y-6 lg:col-span-3">
           {/* Record deck */}
           <Card>
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <SectionLabel>Record deck</SectionLabel>
-              {micState === "ready" && (
+            {/* The label row comes with the live deck: before the mic opens it
+                held only "Record deck", and its 40px pushed the gate's one
+                button below a 375x667 phone's first screen (r4-seo-tools-01). */}
+            {micState === "ready" && (
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <SectionLabel>Record deck</SectionLabel>
                 <button
                   type="button"
                   className={cn(
@@ -788,8 +801,8 @@ export default function RecorderPageClient() {
                   />
                   Count-in (4 clicks)
                 </button>
-              )}
-            </div>
+              </div>
+            )}
 
             {micState !== "ready" ? (
               // No Pro line here: the locked pitch panel below is the page's one ask.
@@ -798,7 +811,7 @@ export default function RecorderPageClient() {
                 className="py-2"
                 title="Hear your voice back"
                 description="Record a take, play it back, compare two."
-                privacy="Audio stays on this device, and takes are saved in this browser, never uploaded."
+                privacy="Takes are saved in this browser, never uploaded."
                 enableLabel={micState === "requesting" ? "Waiting for permission…" : "Enable microphone"}
                 disabled={micState === "requesting"}
                 onEnable={() => void enableMic()}

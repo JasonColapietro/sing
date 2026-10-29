@@ -86,12 +86,12 @@ describe("/learn vocal training hub", () => {
     for (const path of paths.itemListElement) {
       expect(path.url).toMatch(new RegExp(`^${SITE_URL.replaceAll(".", "\\.")}/`));
       const destination = new URL(path.url);
-      // The schema names the page; the card may add where a tap scrolls to
-      // (the range test's #start).
+      // The schema names the canonical page; the card may add the deep link
+      // (the range test's ?mode=range#start), which canonicalizes to /range.
       expect(destination.hash, path.url).toBe("");
-      const page = `${destination.pathname}${destination.search}`;
-      const escaped = page.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      expect(html).toMatch(new RegExp(`href="${escaped}(#[a-z-]+)?"`));
+      expect(destination.search, path.url).toBe("");
+      const escaped = destination.pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      expect(html).toMatch(new RegExp(`href="${escaped}(\\?[^"#]*)?(#[a-z-]+)?"`));
     }
   });
 

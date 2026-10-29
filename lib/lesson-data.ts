@@ -1149,7 +1149,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
+        "body": "I sang one comfortable note on “ah” with a breathy, a clicked and a balanced onset in one take, and heard which one started on its pitch.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1184,13 +1184,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
+        "I sang one comfortable note on “ah” with a breathy, a clicked and a balanced onset in one take, and heard which one started on its pitch.",
         "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard.",
-      "shows": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
+      "shows": "I sang one comfortable note on “ah” with a breathy, a clicked and a balanced onset in one take, and heard which one started on its pitch.",
       "doesNotShow": "Which onset mechanism you used, freedom from strain, tone quality, or accuracy when no confident pitch was detected."
     }
   },
@@ -2960,7 +2960,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice."
+        "recovery": "If a contrast causes discomfort, hoarseness, loss of range, effort that remains after the attempt or any blood, stop the exercise and rest your voice. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; anything still there after rest means the same."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -2992,7 +2992,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, effort that remains after the attempt or any blood, stop the exercise and rest your voice. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; anything still there after rest means the same. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
       "doesNotShow": "Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
@@ -3045,7 +3045,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice."
+        "recovery": "If a contrast causes discomfort, hoarseness, loss of range, effort that remains after the attempt or any blood, stop the exercise and rest your voice. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; anything still there after rest means the same."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -3077,7 +3077,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, effort that remains after the attempt or any blood, stop the exercise and rest your voice. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; anything still there after rest means the same. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
       "doesNotShow": "Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
@@ -3130,7 +3130,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice."
+        "recovery": "If a contrast causes discomfort, hoarseness, loss of range, effort that remains after the attempt or any blood, stop the exercise and rest your voice. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; anything still there after rest means the same."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -3162,7 +3162,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one recording, you sing your baseline and one deliberate change, name the difference you hear as breathy, nasal or tight, and return to a baseline that sounds like the first, with no hoarseness or lingering effort afterward.",
-      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, effort that remains after the attempt or any blood, stop the exercise and rest your voice. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; anything still there after rest means the same. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
       "doesNotShow": "Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
@@ -3207,7 +3207,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
+        "body": "I sang the same reference note from silence twice, once straight away and once after hearing it in my head, and heard which one started on the note.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3242,13 +3242,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
+        "I sang the same reference note from silence twice, once straight away and once after hearing it in my head, and heard which one started on the note.",
         "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center.",
-      "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
+      "shows": "I sang the same reference note from silence twice, once straight away and once after hearing it in my head, and heard which one started on the note.",
       "doesNotShow": "Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
     }
   },
@@ -3717,7 +3717,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
+        "body": "I sang one line of the lyric with lazy and then clear consonants, and wrote down the words I could hear in each take on playback.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3752,13 +3752,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
+        "I sang one line of the lyric with lazy and then clear consonants, and wrote down the words I could hear in each take on playback.",
         "A listener can write down the words from the recording without seeing the lyric.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo.",
-      "shows": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
+      "shows": "I sang one line of the lyric with lazy and then clear consonants, and wrote down the words I could hear in each take on playback.",
       "doesNotShow": "A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health."
     }
   },
@@ -4727,17 +4727,17 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Vowel modification",
         "body": "Small shape adjustments that keep the crossing smooth and the lyric intelligible.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
-        "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
+        "listen": "The pitch stays connected and the word is still understandable in both versions."
       },
       {
         "title": "Hear the distinction",
         "body": "Pick a word with an “ah” in it, such as “far”, and sing it on a slide up a fifth, starting a little below your transition so the slide crosses it. Do it twice in one take: first keeping the vowel exactly as you speak it, then letting the “ah” round slightly toward “aw” as you climb. The vowel shape is the only thing that changes, so keep the pitch and the volume the same. On playback, listen for which crossing stays connected and whether the word is still clearly “far”. Record your takes in the recorder. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
-        "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
+        "listen": "The pitch stays connected and the word is still understandable in both versions."
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
+        "body": "I sang one “ah” word on a fifth slide through my transition, plain and then shaded toward “aw”, and noted which crossing stayed connected.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4772,13 +4772,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
-        "The pitch remains connected and the lyric is still understandable across all three vowels.",
+        "I sang one “ah” word on a fifth slide through my transition, plain and then shaded toward “aw”, and noted which crossing stayed connected.",
+        "The pitch stays connected and the word is still understandable in both versions.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there.",
-      "shows": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
+      "shows": "I sang one “ah” word on a fifth slide through my transition, plain and then shaded toward “aw”, and noted which crossing stayed connected.",
       "doesNotShow": "Formant values, vowel identity, a measured register break, or freedom from strain."
     }
   },
@@ -5237,17 +5237,17 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Comfortable mixed-voice coordination",
         "body": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
-        "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
+        "listen": "The call stays clear and easy on each step until it starts to sound like a shout, with an easy release and no rasp that persists afterward."
       },
       {
         "title": "Hear the distinction",
         "body": "Say “hey!” as if calling a friend across a quiet room: a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Record the climb in one take in the [recorder](/recorder). Pitch is the only thing that changes, so on playback listen for the first note where the call starts to sound like a shout: harder, louder without getting brighter, or tight. That note is where to lighten next time. To put a name on it, climb back to that step once more, lightly, in the [pitch studio](/studio), which shows each note as you sing it. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
-        "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
+        "listen": "The call stays clear and easy on each step until it starts to sound like a shout, with an easy release and no rasp that persists afterward."
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
+        "body": "I moved an easy “hey” call up one semitone at a time and noted the first step where it began to sound like a shout.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5255,7 +5255,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness."
+        "recovery": "Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -5282,13 +5282,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
-        "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.",
+        "I moved an easy “hey” call up one semitone at a time and noted the first step where it began to sound like a shout.",
+        "The call stays clear and easy on each step below that one, with an easy release and no rasp that persists afterward.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
-      "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
+      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
+      "shows": "I moved an easy “hey” call up one semitone at a time and noted the first step where it began to sound like a shout.",
       "doesNotShow": "Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
   },
@@ -5340,7 +5340,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness."
+        "recovery": "Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -5372,7 +5372,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
+      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
       "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
       "doesNotShow": "Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
@@ -5425,7 +5425,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness."
+        "recovery": "Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -5457,7 +5457,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "Three times in a row, the pattern crosses your transition at moderate volume with the same easy, call-like effort you have below it, you hold its top note for six comfortable seconds, and your speaking voice feels unchanged afterward.",
-      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
+      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
       "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
       "doesNotShow": "Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
@@ -7295,7 +7295,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Any blood, or a sudden loss of range or voice, means seeing that doctor now. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7327,7 +7327,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Any blood, or a sudden loss of range or voice, means seeing that doctor now. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
       "doesNotShow": "Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -7380,7 +7380,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Any blood, or a sudden loss of range or voice, means seeing that doctor now. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7412,7 +7412,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Any blood, or a sudden loss of range or voice, means seeing that doctor now. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
       "doesNotShow": "Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -7465,7 +7465,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Any blood, or a sudden loss of range or voice, means seeing that doctor now. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7497,7 +7497,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear, or any blood, means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.",
-      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Any blood, or a sudden loss of range or voice, means seeing that doctor now. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
       "doesNotShow": "Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -8067,7 +8067,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist."
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -8099,7 +8099,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
       "doesNotShow": "Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -8158,7 +8158,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist."
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -8190,7 +8190,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
       "doesNotShow": "Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -8229,7 +8229,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Effects safety and a stop plan",
-        "body": "Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt.",
+        "body": "Stop on pain, rawness, sudden hoarseness, loss of range, a changed speaking voice or any blood. The app cannot certify a safe attempt.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
@@ -8249,7 +8249,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist."
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -8281,7 +8281,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice, any blood), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
       "doesNotShow": "Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }

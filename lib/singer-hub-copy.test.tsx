@@ -257,3 +257,14 @@ describe("hub snippets, next steps and structured data", () => {
     60_000,
   );
 });
+
+describe("hubs that describe each other", () => {
+  it("does not call hard rock clean on the Metal hub while the Hard Rock hub defines it by distortion", () => {
+    const metal = GENRE_HUB_COPY.metal.contrast;
+    const hardRock = `${GENRE_HUB_COPY["hard-rock"].intro} ${GENRE_HUB_COPY["hard-rock"].summary}`;
+    expect(hardRock).toContain("often with deliberate distortion");
+    expect(metal).not.toMatch(/\bclean\b/);
+    // The same hedge as the Hard Rock hub's own "often".
+    expect(metal).toContain("often with some distortion");
+  });
+});

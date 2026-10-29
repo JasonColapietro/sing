@@ -90,6 +90,8 @@ try {
     { path: "/studio", start: "Enable microphone" },
     { path: "/range?mode=range#start", start: "Start free range test" },
     { path: "/range?mode=pitch#start", start: "Start singing" },
+    // Round 4 fixed it, #264's shared gate undid it (644-696px): kept here.
+    { path: "/recorder", start: "Enable microphone" },
   ]) {
     const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
     try {

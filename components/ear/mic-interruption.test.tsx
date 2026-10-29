@@ -40,6 +40,7 @@ import { MelodyEchoGame } from "./melody-echo-game";
 import { NoteCatcherGame } from "./note-catcher-game";
 import { NoteCatcherCanvas } from "./note-catcher-canvas";
 import type { CatcherView } from "./note-catcher-canvas";
+import { chaseSongs } from "./note-catcher";
 
 let now = 0;
 let nextFrame = 1;
@@ -155,5 +156,33 @@ describe("a microphone disconnected during an ear game", () => {
     expect(view().current.state.elapsed).toBeGreaterThan(before.state.elapsed);
     expect(view().current.state.elapsed).toBeLessThan(before.state.elapsed + 200);
     expect(fixture.record).not.toHaveBeenCalled();
+  });
+});
+
+describe("a song chase's mic gate", () => {
+  // songRegister places the phrase in C3–E4 until a range is saved, so the
+  // gate says so, and only claims "your range" once there is one.
+  const songId = chaseSongs()[0].id;
+  const gate = () => {
+    fixture.pitch.listening = false;
+    const tree = hooks.render(() =>
+      NoteCatcherGame({ difficulty: "easy", songId, pitch: fixture.pitch as never, onExit: noop, onComplete: noop }),
+    );
+    return String(find(tree, "mic-gate")!.props.description);
+  };
+  afterEach(() => { fixture.progress = { range: {} }; });
+
+  it("names the fallback band without a saved range", () => {
+    fixture.progress = { range: {} };
+    const text = gate();
+    expect(text).toContain("between C3 and E4 until you take the range test");
+    expect(text).not.toContain("your range");
+  });
+
+  it("says your range once one is saved", () => {
+    fixture.progress = { range: { lowMidi: 45, highMidi: 69 } } as never;
+    const text = gate();
+    expect(text).toContain("in your range.");
+    expect(text).not.toContain("C3 and E4");
   });
 });

@@ -25,7 +25,16 @@ describe("/recorder before hydration", () => {
 
   it("asks for the mic through the shared gate", () => {
     expect(html).toContain("Hear your voice back");
-    expect(html).toContain("takes are saved in this browser, never uploaded");
+    expect(html).toContain("Takes are saved in this browser, never uploaded.");
+  });
+
+  it("keeps the gate's button on a phone's first screen: no label row before the mic opens", () => {
+    // The "Record deck" row holds only the count-in toggle once the deck is
+    // live; before that its 40px, and a two-line privacy sentence, pushed
+    // "Enable microphone" to 644-696px on a 375x667 phone (r4-seo-tools-01).
+    expect(html).not.toContain("Record deck");
+    expect(html).not.toContain("Audio stays on this device");
+    expect(html.indexOf("Enable microphone")).toBeGreaterThan(html.indexOf("Hear your voice back"));
   });
 
   it("hides both before the first paint for a Pro singer", () => {
@@ -33,7 +42,7 @@ describe("/recorder before hydration", () => {
     expect(pro).not.toContain("Take pitch analysis");
     expect(pro).not.toContain("adds the coach");
     // The rest of the room is untouched.
-    expect(pro).toContain("Record deck");
+    expect(pro).toContain("Hear your voice back");
     expect(pro).toContain("Enable microphone");
   });
 });

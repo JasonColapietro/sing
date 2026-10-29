@@ -28,6 +28,8 @@ import { FamousVoices } from "@/components/landing/famous-voices";
 import { ATLAS } from "@/lib/atlas-data";
 import { BOOK } from "@/lib/book-data";
 import { GENRE_HUB_COPY, HUB_FIGURES_NOTE, VOICE_TYPE_HUB_COPY } from "@/lib/singer-hub-copy";
+import { getSingerEvidence } from "@/lib/singer-evidence";
+import { SINGERS } from "@/lib/singers";
 
 const BRITISH =
   /\b(colour\w*|favour\w*|labelled|labelling|centre[ds]?|programmes?|practis(e|ed|es|ing)|analys(e|ed|ing)|recognis(e|ed|able|ing)|neighbour\w*|judgement)\b/gi;
@@ -75,6 +77,17 @@ describe("singer evidence claims", () => {
     const html = await singerHtml("leonard-cohen");
     expect(html).not.toContain("Who else reaches these notes");
     expect(html).toContain("Voices with a similar catalog range");
+  });
+
+  it("promises sources at the top only when the evidence card lists some", async () => {
+    // 621 confirmed records list no sources: the link named sources anyway.
+    const noSources = SINGERS.find((x) => getSingerEvidence(x.slug).sources.length === 0)!;
+    const bare = visible(await singerHtml(noSources.slug));
+    expect(bare).toContain("Read the limitations");
+    expect(bare).not.toContain("Read sources and limitations");
+    const cited = SINGERS.find((x) => getSingerEvidence(x.slug).sources.length > 0)!;
+    expect(visible(await singerHtml(cited.slug))).toContain("Read sources and limitations");
+    expect(visible(await singerHtml("tim-storms"))).toContain("Read the limitations");
   });
 
   it("credits another artist's recording on a singer page", async () => {

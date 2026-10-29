@@ -36,25 +36,25 @@ Work only after an easy warm-up, on a pitch below the top of your comfortable ra
 Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
-- Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
+- Listen: The call stays clear and easy on each step until it starts to sound like a shout, with an easy release and no rasp that persists afterward.
 
 ### Hear the distinction
 
 Say “hey!” as if calling a friend across a quiet room: a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Record the climb in one take in the [recorder](/recorder). Pitch is the only thing that changes, so on playback listen for the first note where the call starts to sound like a shout: harder, louder without getting brighter, or tight. That note is where to lighten next time. To put a name on it, climb back to that step once more, lightly, in the [pitch studio](/studio), which shows each note as you sing it. Never chase a belt label by adding throat pressure.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
-- Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
+- Listen: The call stays clear and easy on each step until it starts to sound like a shout, with an easy release and no rasp that persists afterward.
 
 ### Review your own attempt
 
-I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I moved an easy “hey” call up one semitone at a time and noted the first step where it began to sound like a shout. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness.
+- The target disappears when the range, volume, speed, or duration increases. => Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -66,14 +66,14 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 ## Self-check
 
-- I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.
-- The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
+- I moved an easy “hey” call up one semitone at a time and noted the first step where it began to sound like a shout.
+- The call stays clear and easy on each step below that one, with an easy release and no rasp that persists afterward.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.
+If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, effort that lingers or any blood. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness or effort that is still there after rest means the same. Otherwise, resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.
 
-What this shows: I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.
+What this shows: I moved an easy “hey” call up one semitone at a time and noted the first step where it began to sound like a shout. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those.

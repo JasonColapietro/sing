@@ -176,7 +176,7 @@ export default function EarTrainingClient() {
       title: "Chase the notes",
       unit: "songs",
       blurb:
-        "Note catcher with a real melody: each song's phrase from the songbook, moved into your range. Any octave counts.",
+        "Note catcher with a real melody: each song's phrase from the songbook, moved into your saved range, or into C3–E4 until you take the range test. Any octave counts.",
       items: CHASE_SONGS.map((song) => {
         const best = bests[bestKey("note-catcher", CHASE_DIFFICULTY, `song:${song.id}`)];
         return {

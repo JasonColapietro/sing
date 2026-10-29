@@ -53,7 +53,7 @@ Then there is the other thing, and it gets said plainly.
 
 Pain is not part of singing. Not a burn, not a sharp catch, not an ache in the throat or one that runs up toward the ear. If singing hurts, stop singing.
 
-Hoarseness that hangs around. Any blood. A voice that disappears suddenly. Any feeling of something obstructing the throat, or of choking. Any change in your voice you cannot explain, and especially one that keeps getting worse. Those are questions for a doctor, and they do not come with a waiting period — sooner is better than later, and you do not need to be sure it is serious before you go.
+Pain that is still there after you stop singing. Hoarseness that hangs around. Any blood. A voice that disappears suddenly. Any feeling of something obstructing the throat, or of choking. Any change in your voice you cannot explain, and especially one that keeps getting worse. Those are questions for a doctor, and they do not come with a waiting period — sooner is better than later, and you do not need to be sure it is serious before you go.
 
 A doctor who can actually look at the folds is the right person, often an ENT specialist or a laryngologist. A warmup is not. Neither is a herbal drink, an internet remedy, a stricter practice week, or waiting to see. Your singing teacher cannot see inside your throat, and no app can either, including this one. A pitch trace is not a diagnosis. Get looked at, then come back and we will work.
 

@@ -194,8 +194,8 @@ export default function LearnPage() {
           position: index + 1,
           name: path.title,
           description: path.need,
-          // The page, not the scroll position: the range card links #start.
-          url: `${SITE_URL}${path.href.split("#")[0]}`,
+          // The canonical page, not the deep link: the range card links ?mode=range#start.
+          url: `${SITE_URL}${path.href.split(/[?#]/)[0]}`,
         })),
       },
       {

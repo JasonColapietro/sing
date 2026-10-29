@@ -28,3 +28,11 @@ describe("the ear room on a deep link's first load", () => {
     );
   });
 });
+
+describe("the ear room's song chase level", () => {
+  // The server render has no saved range: the phrase sits in C3–E4 then.
+  it("says where the phrase sits until the range test is saved", () => {
+    const html = renderToStaticMarkup(<EarTrainingClient />);
+    expect(html).toContain("moved into your saved range, or into C3–E4 until you take the range test.");
+  });
+});

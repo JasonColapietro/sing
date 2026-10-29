@@ -334,7 +334,8 @@ export function NoteCatcherGame({
             title={song ? `Chase the notes of ${song.title}` : "This game listens to you sing"}
             description={
               song
-                ? `The notes of its ${phraseName(song)} slide toward a line, in your range. Your voice moves the marker; hold each note as it crosses to catch it.`
+                ? // songRegister falls back to C3–E4 until a range is saved.
+                  `The notes of its ${phraseName(song)} slide toward a line, ${noRange ? "between C3 and E4 until you take the range test. Any octave counts." : "in your range."} Your voice moves the marker; hold each note as it crosses to catch it.`
                 : "Notes slide toward a line. Your voice moves the marker up and down; hold each note as it crosses to catch it."
             }
             onEnable={() => {

@@ -5,6 +5,7 @@ import { DEFAULT_PROGRESS, type ProgressState } from "@/lib/progress-shape";
 import { localDay } from "@/lib/progress";
 import { programById } from "@/lib/programs";
 import type { ActiveProgram } from "@/components/programs/use-program";
+import { reconciledProgram } from "@/components/programs/active-program.testing";
 import { routineById, routineSeconds } from "./routines";
 
 const state = vi.hoisted(() => ({
@@ -360,7 +361,11 @@ describe("one filled start while a program day leads", () => {
   });
 
   it("keeps the room's start filled on a rest day, and once the free minutes are used", () => {
-    state.program = onDay(3);
+    // As the app builds it: reconcileProgress completes Mix's rest day (index
+    // 3) the day it is reached, so the card sees "done-today", not "todo".
+    const restDay = reconciledProgram("mix-4w", 3);
+    expect(restDay.view).toMatchObject({ status: "done-today", index: 3 });
+    state.program = restDay;
     let html = renderToStaticMarkup(<WarmupsClient />);
     expect(html).toContain("See the calendar");
     // The rest day's "See the calendar" is outline: the room's start is the one filled action.
@@ -371,6 +376,20 @@ describe("one filled start while a program day leads", () => {
     expect(html).toContain("See today’s plan");
     expect(filled(html)).not.toContain("See today’s plan");
     expect(filled(html)).toContain("Available tomorrow");
+  });
+
+  it("keeps one filled start once today's program day is done, for a returning singer too", () => {
+    const doneToday = reconciledProgram("mix-4w", 1, { doneToday: true });
+    expect(doneToday.view).toMatchObject({ status: "done-today", index: 1 });
+    state.program = doneToday;
+    let html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("See the calendar");
+    expect(filled(html)).toEqual(["Enable mic and start"]);
+    state.progress = practisedToday();
+    state.program = reconciledProgram("mix-4w", 3);
+    html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("Today&#x27;s warmup");
+    expect(filled(html)).toEqual(["Enable mic and start"]);
   });
 });
 

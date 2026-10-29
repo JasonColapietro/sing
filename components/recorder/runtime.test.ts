@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createRecorderMic, startRecorder, createTakeMutations } from "./runtime";
+import { createRecorderMic, startRecorder, createTakeMutations, soundHeard } from "./runtime";
 import type { TakeRecord, TakesStore } from "./db";
 import { openMic } from "@/lib/audio/mic";
 const prefs = vi.hoisted(() => ({ inputId: "B", outputId: "", monitoring: "headphones" }));
@@ -309,5 +309,30 @@ describe("take mutation ordering", () => {
       remove: async () => { throw new Error("unavailable"); },
     }));
     await expect(mutations.remove("one")).rejects.toThrow("unavailable");
+  });
+});
+
+describe("a take's sound check", () => {
+  // A muted mic or the wrong input records silence: the take is kept but not
+  // logged as practice, the studio's and song practice's silent-run rule.
+  const analyser = (level: number) => ({
+    fftSize: 256,
+    getFloatTimeDomainData: (out: Float32Array) => out.fill(level),
+  });
+  it("hears nothing from a muted mic or room hiss under the silence floor", () => {
+    expect(soundHeard(analyser(0))).toBe(false);
+    expect(soundHeard(analyser(0.004))).toBe(false);
+  });
+  it("hears a voice above the pitch detector's floor", () => {
+    expect(soundHeard(analyser(0.012))).toBe(true);
+    expect(soundHeard(analyser(0.2))).toBe(true);
+  });
+  it("gates the take's practice log on it", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(new URL("./recorder-page.tsx", import.meta.url), "utf8");
+    expect(src).toContain("const result = durationSec >= 10 && heardRef.current ? logSession({");
+    expect(src).toContain("if (!heardRef.current && live && soundHeard(live)) heardRef.current = true;");
+    const begin = src.slice(src.indexOf("const beginCapture = useCallback"));
+    expect(begin).toMatch(/startedAtRef\.current = performance\.now\(\);\s*heardRef\.current = false;/);
   });
 });
