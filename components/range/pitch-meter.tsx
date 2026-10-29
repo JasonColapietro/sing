@@ -597,12 +597,6 @@ export function PitchMeter({
             programDayHref={programDayHref}
           />
         )}
-        {/* The result shape before the prompt: a first visit has nothing held yet. */}
-        {low === null && (
-          <FigureFrame className="mx-auto mb-6 max-w-2xl" caption="What the range test draws for you">
-            <RangeFigure />
-          </FigureFrame>
-        )}
         <MicGate
           title="See your pitch"
           description="Sing any note out loud, an easy “ah” as if to someone across the room. You will see exactly which note you are on, how close to center you are, and a live line of your voice."
@@ -611,6 +605,12 @@ export function PitchMeter({
           error={error}
         />
         <AudioSetup className="mx-auto mt-6 max-w-md" />
+        {/* Below the gate so the start button and any mic error stay on a phone's first screen after a #start link. */}
+        {low === null && (
+          <FigureFrame className="mx-auto mt-8 max-w-2xl" caption="What the range test draws for you">
+            <RangeFigure />
+          </FigureFrame>
+        )}
       </div>
     );
   }
