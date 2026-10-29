@@ -70,7 +70,7 @@ export default function ToolsPage() {
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
             This tab is the metronome, the keyboard and the drone. The recorder
-            and the analyzer are separate rooms with pages of their own,
+            and the spectrogram are separate rooms with pages of their own,
             because each does considerably more than a console module and each
             answers a question this tab does not. The three above only need
             speakers. These two read your microphone and draw what they hear.

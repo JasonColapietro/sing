@@ -53,8 +53,12 @@ export function SongsMicGate({
   // With no song named, the way in without a mic is browsing: a card's Sing asks for the mic.
   const deepLinked = heading !== "Sing along and see every note you hit";
   const gate = (
-    <Card>
-      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+    <>
+      {/* The room's instrument first, at the size and in the frame /studio uses. */}
+      <FigureFrame className="mx-auto mb-6 max-w-2xl" caption="What a run looks like">
+        <PianoRollFigure />
+      </FigureFrame>
+      <Card>
         <div>
           <h2 className="text-lg sm:text-xl">{heading}</h2>
           {/* Buttons straight after the heading: with the explanation first, "Enable microphone" sat behind a 375×667 phone's tab bar. */}
@@ -87,12 +91,8 @@ export function SongsMicGate({
           {/* The gate's one ask; the sentence above states the allowance. */}
           <ProWhisper className="mt-4" />
         </div>
-        {/* The room's instrument before the prompt: the piano roll the heading promises. */}
-        <FigureFrame className="self-start" caption="What a run looks like">
-          <PianoRollFigure />
-        </FigureFrame>
-      </div>
-    </Card>
+      </Card>
+    </>
   );
   return (
     <PageShell

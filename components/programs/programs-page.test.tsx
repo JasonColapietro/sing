@@ -40,6 +40,11 @@ describe("a program's own view", () => {
     const list = renderToStaticMarkup(<ProgramsListPage />);
     for (const p of PROGRAMS) expect(list).toContain(`See the ${p.days.length}-day calendar`);
     expect(list).not.toContain("← All programs");
+    // Each card starts from the list, and shows its first week's rhythm.
+    for (const p of PROGRAMS) {
+      expect(list, p.id).toContain(`aria-label="Start ${p.name}"`);
+      expect(list, p.id).toMatch(new RegExp(`aria-label="Week 1: \\d practice days, \\d rest"`));
+    }
   });
 
   it("keeps the page's heading and today's card slot, which the pre-paint state shows only for that program", async () => {

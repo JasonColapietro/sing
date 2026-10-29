@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { Suspense } from "react";
 import { PRO_SONGS, SONGS } from "@/components/songs/data";
-import { SongLinkList } from "@/components/songs/song-page";
+import { SongbookList } from "@/components/songs/songbook-list";
 import { SongsClient } from "@/components/songs/songs-client";
 import { SongsMicGate } from "@/components/songs/mic-gate";
 import { SITE_URL } from "@/lib/site";
@@ -78,7 +78,7 @@ export default function SongsPage() {
             Free to sing ({SONGS.length})
           </h3>
           <div className="mt-4">
-            <SongLinkList songs={SONGS} />
+            <SongbookList songs={SONGS} />
           </div>
 
           {PRO_SONGS.length > 0 && (
@@ -87,7 +87,7 @@ export default function SongsPage() {
                 Pro songbook ({PRO_SONGS.length})
               </h3>
               <div className="mt-4">
-                <SongLinkList songs={PRO_SONGS} />
+                <SongbookList songs={PRO_SONGS} />
               </div>
               <div className="mt-6">
                 <LinkButton href="/pro" variant="outline" size="sm">
