@@ -132,7 +132,8 @@ function leapPhrase(n: number): string {
 }
 
 /**
- * One sentence that answers "what is this song, musically" from the data.
+ * The structured-data description: "what is this song, musically", from the
+ * data. The page itself shows these facts once, in SongStats.
  *
  * The rating names both of its inputs. computeDifficulty adds how densely a
  * melody leaps to its span, so "9 semitones — which rates Medium" on Loch
@@ -151,7 +152,7 @@ function answerSentence(song: Song): string {
   const transcription = !isPhrase(song) && song.arrangementOf
     ? "are transcribed here with their"
     : "is transcribed here with its";
-  return `${what} ${transcription} tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} (${f.rangeSemis} semitones, with ${leapPhrase(f.leaps)}), and the span and leaps together rate it ${f.difficulty.toLowerCase()} to sing; a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
+  return `${what} ${transcription} tonic on ${f.tonic} at ${song.bpm} bpm, ${song.beatsPerBar} beats to the bar. Its ${f.noteCount} notes run ${f.lowLabel} to ${f.highLabel}: ${f.rangeSemis} semitones with ${leapPhrase(f.leaps)}. That span and those leaps rate it ${f.difficulty.toLowerCase()} to sing. A full ${f.loops}-pass session takes about ${formatMinSec(f.sessionSec)}.`;
 }
 
 export async function generateMetadata({
@@ -309,7 +310,9 @@ export default async function SongPage({
             ? `Sing ${song.title}: the lines, their key and note range`
             : `Sing ${song.title}: lyrics, key and vocal range`
       }
-      subtitle={`${phrase ? `The ${phraseName(song)} of “${song.title}”` : `“${song.title}”`} runs from ${f.lowLabel} to ${f.highLabel}, ${f.rangeSemis} semitones, with its tonic on ${f.tonic} at ${song.bpm} bpm, and rates ${f.difficulty.toLowerCase()} to sing. Origin: ${song.origin}.`}
+      // The facts live once, in SongStats; the subtitle carries the origin,
+      // which the page does not print anywhere else.
+      subtitle={song.origin}
       actions={
         // The singing action sits in the first screen, above the facts, so a
         // visitor who came to sing does not scroll past two paragraphs of
@@ -319,14 +322,29 @@ export default async function SongPage({
             ← All songs
           </LinkButton>
         ) : (
-          <>
-            <LinkButton href={`/songs?song=${song.slug}`} size="md">
-              Sing {song.title}
-            </LinkButton>
-            <LinkButton href="/songs" variant="outline" size="md">
-              ← All songs
-            </LinkButton>
-          </>
+          <div className="flex flex-col items-start gap-2">
+            {/*
+              Deep-links into the practice room so a reader who arrived from
+              search lands on this melody rather than on the library. The
+              practice room honours the link whatever band the song sits in
+              (songs-client.tsx).
+            */}
+            <div className="flex flex-wrap items-center gap-2">
+              <LinkButton href={`/songs?song=${song.slug}`} size="md">
+                Sing {song.title}
+              </LinkButton>
+              <LinkButton href="/songs" variant="outline" size="md">
+                ← All songs
+              </LinkButton>
+            </div>
+            <p className="max-w-xl text-xs text-dim">
+              Opens fitted to your measured range if you have taken the range
+              test. Without one it opens in the written key and is scored in
+              either octave, so a lower voice can sing it an octave down and a
+              higher voice an octave up. Song practice counts toward{" "}
+              {FREE_DAILY_MINUTES} free minutes of guided practice a day.
+            </p>
+          </div>
         )
       }
     >
@@ -336,7 +354,7 @@ export default async function SongPage({
       />
 
       <div className="space-y-6">
-        {/* The one thing a visitor came to do, or the reason they can't yet. */}
+        {/* Why a Pro song cannot be sung here; a free one's button is in the header. */}
         {pro ? (
           <Card className="border-violet/40">
             <SectionLabel className="border-violet/40 text-violet-ink">
@@ -360,31 +378,7 @@ export default async function SongPage({
               </LinkButton>
             </div>
           </Card>
-        ) : (
-          <Card>
-            <h2 className="text-xl">Sing {song.title} with pitch feedback</h2>
-            <p className="mt-3 max-w-2xl text-mut">{answer}</p>
-            {/*
-              Deep-links into the practice room so a reader who arrived from
-              search lands on this melody rather than on the library, having
-              already told us which song they wanted. The practice room honours
-              the link whatever band the song sits in (songs-client.tsx).
-            */}
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <LinkButton href={`/songs?song=${song.slug}`} variant="outline" size="lg">
-                Sing this song
-              </LinkButton>
-              <span className="text-xs text-dim">
-                Opens {song.title} in the practice room, fitted to your
-                measured range if you have taken the range test; if not, it
-                opens in the written key and is scored in either octave. Free
-                in the browser: song practice counts
-                toward {FREE_DAILY_MINUTES} free minutes of guided practice a
-                day.
-              </span>
-            </div>
-          </Card>
-        )}
+        ) : null}
 
         <SongStats song={song} />
         <LyricSheet song={song} />

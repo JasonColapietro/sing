@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import {
   ACHIEVEMENTS,
@@ -31,6 +31,7 @@ import { AccountBackupControls } from "./account-backup-sync";
 import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
 import { streakChipState } from "@/components/nav";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
+import { ProSlot, ProSlotProvider, useProSlot } from "@/components/pro/slot";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { useActiveProgram } from "@/components/programs/use-program";
 import { ProgramEntryCard } from "@/components/programs/today-card";
@@ -48,6 +49,7 @@ import { NoteAccuracyChart, RangeHistoryChart } from "./pro-charts";
 import { PracticeCalendar, calendarStartDay } from "./calendar";
 import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
 import { CoachCard } from "./coach";
+import { sampleSessions } from "./sample";
 import { VoiceCard } from "./voice-card";
 import { TYPE_META, fmtDur, localDayStr, parseDay, relDay } from "./format";
 import { rangeTestHref } from "@/lib/site";
@@ -611,9 +613,11 @@ export function DataControls({
                 record, though: there is nothing to sync yet, and a page with
                 no sessions should not open on a row of asks. */}
             {!fresh && (
-              <ProInlineNudge>
-                Pro syncs progress across devices automatically
-              </ProInlineNudge>
+              <ProSlot priority={1}>
+                <ProInlineNudge>
+                  Pro syncs progress across devices automatically
+                </ProInlineNudge>
+              </ProSlot>
             )}
             {/* Pro lives in this browser's storage, so a cleared or second
                 browser reads as free here while the record waits in the
@@ -690,6 +694,26 @@ export function DataControls({
       </Card>
     </div>
   );
+}
+
+/** A ghost figure in an empty chart slot: the example faded and hidden from assistive tech, the label not. */
+function Example({ children }: { children: ReactNode }) {
+  return (
+    <div>
+      <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+        Example · yours fills in as you practise
+      </p>
+      <div aria-hidden="true" className="pointer-events-none select-none opacity-25">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/** Holds the page's Pro slot for an ask that is always rendered (the locked panel). */
+function HoldsProSlot({ priority, children }: { priority: number; children: ReactNode }) {
+  useProSlot(priority);
+  return <>{children}</>;
 }
 
 /**
@@ -793,6 +817,7 @@ export function ProgressClient() {
   const weekly = weeklyReport(state.sessions);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
   const isFresh = state.sessions.length === 0 && state.xp === 0;
+  const sample = useMemo(() => sampleSessions(), []);
   const noteTallies = useMemo(
     () => aggregateNotes(state.sessions),
     [state.sessions],
@@ -859,6 +884,7 @@ export function ProgressClient() {
       : null;
 
   return (
+    <ProSlotProvider>
     <PageShell
       kicker="Progress"
       title="Singing progress tracker"
@@ -912,6 +938,8 @@ export function ProgressClient() {
             the singer chose, then the coached session. */}
         {activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
+        {/* A fresh record's plan is FreshStart's three starts, so the coach waits for the first session. */}
+        {!isFresh && (
         <section aria-label="Today's coached session">
           <CoachCard
             state={state}
@@ -921,6 +949,7 @@ export function ProgressClient() {
             hideProNudge={programPaywalled}
           />
         </section>
+        )}
 
         {activeProgram && programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
@@ -929,7 +958,13 @@ export function ProgressClient() {
             <h2 className="text-lg">Practice calendar</h2>
           </div>
           <Card>
-            <PracticeCalendar sessions={state.sessions} />
+            {isFresh ? (
+              <Example>
+                <PracticeCalendar sessions={sample} />
+              </Example>
+            ) : (
+              <PracticeCalendar sessions={state.sessions} />
+            )}
             {calendarCutoff && (
               <p className="mt-2 text-xs text-dim">
                 Your practice record keeps the latest {MAX_SESSIONS} sessions,
@@ -941,30 +976,42 @@ export function ProgressClient() {
 
         <section aria-label="Practice charts" className="space-y-4">
           <h2 className="text-lg">Trends</h2>
-          {/* Not on an empty record: a fortnight of bare gridlines says
-              nothing the empty state above has not, and it is 350px tall. */}
-          {!isFresh && (
+          {isFresh ? (
             <Card>
-              <SectionLabel>Minutes / day · last 14 days</SectionLabel>
-              <div className="mt-4">
-                <MinutesBarChart sessions={state.sessions} />
-              </div>
+              <Example>
+                <div className="space-y-6">
+                  <MinutesBarChart sessions={sample} />
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <ScoreTrendChart sessions={sample} />
+                    <PracticeMixChart sessions={sample} />
+                  </div>
+                </div>
+              </Example>
             </Card>
+          ) : (
+            <>
+              <Card>
+                <SectionLabel>Minutes / day · last 14 days</SectionLabel>
+                <div className="mt-4">
+                  <MinutesBarChart sessions={state.sessions} />
+                </div>
+              </Card>
+              <div className="grid gap-4 lg:grid-cols-2">
+                <Card>
+                  <SectionLabel>Score trend · by week</SectionLabel>
+                  <div className="mt-4">
+                    <ScoreTrendChart sessions={state.sessions} />
+                  </div>
+                </Card>
+                <Card>
+                  <SectionLabel>Practice mix</SectionLabel>
+                  <div className="mt-4">
+                    <PracticeMixChart sessions={state.sessions} />
+                  </div>
+                </Card>
+              </div>
+            </>
           )}
-          <div className="grid gap-4 lg:grid-cols-2">
-            <Card>
-              <SectionLabel>Score trend · by week</SectionLabel>
-              <div className="mt-4">
-                <ScoreTrendChart sessions={state.sessions} />
-              </div>
-            </Card>
-            <Card>
-              <SectionLabel>Practice mix</SectionLabel>
-              <div className="mt-4">
-                <PracticeMixChart sessions={state.sessions} />
-              </div>
-            </Card>
-          </div>
           {isPro ? (
             <div className="grid gap-4 lg:grid-cols-2">
               <Card>
@@ -987,6 +1034,7 @@ export function ProgressClient() {
               </Card>
             </div>
           ) : !isFresh ? (
+            <HoldsProSlot priority={3}>
             <LockedPanel label="Accuracy by note" className="mt-4">
               {/* Real chart as the preview: faded and inert under the panel,
                   but it is the singer's own data doing the selling. With no
@@ -996,11 +1044,12 @@ export function ProgressClient() {
                 <NoteAccuracyChart tallies={noteTallies} />
               </div>
             </LockedPanel>
+            </HoldsProSlot>
           ) : null}
         </section>
 
         <section aria-label="Your voice">
-          <VoiceCard range={state.range} recovering={recovering} />
+          <VoiceCard range={state.range} recovering={recovering} fresh={isFresh} />
         </section>
 
         {/* Sixteen greyed-out badges are not a start; the gallery waits for
@@ -1011,6 +1060,7 @@ export function ProgressClient() {
           </section>
         )}
 
+        {!isFresh && (
         <section aria-label="Session log">
           <Card pad>
             <div className="mb-1 flex items-baseline justify-between gap-2">
@@ -1031,13 +1081,16 @@ export function ProgressClient() {
             </div>
             <FreeOnly>
               {state.sessions.length > FREE_SESSION_LOG && (
-                <ProInlineNudge>
-                  {`${state.sessions.length - FREE_SESSION_LOG} older sessions are stored; Pro shows all of them`}
-                </ProInlineNudge>
+                <ProSlot priority={1}>
+                  <ProInlineNudge>
+                    {`${state.sessions.length - FREE_SESSION_LOG} older sessions are stored; Pro shows all of them`}
+                  </ProInlineNudge>
+                </ProSlot>
               )}
             </FreeOnly>
           </Card>
         </section>
+        )}
 
         <section id="your-data" aria-label="Data controls" className="scroll-mt-24">
           <h2 className="mb-3 text-lg">Your data</h2>
@@ -1045,5 +1098,6 @@ export function ProgressClient() {
         </section>
       </div>
     </PageShell>
+    </ProSlotProvider>
   );
 }

@@ -108,8 +108,11 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
 export function VoiceCard({
   range,
   recovering = null,
+  fresh = false,
 }: {
   range: VocalRange;
+  /** An empty record: FreshStart already carries the page's one range-test button. */
+  fresh?: boolean;
   /**
    * Recovery week's name while it runs (components/practice/program-day.ts
    * recoveryWeekOf), or null. The week asks for no range test, as the coach
@@ -127,7 +130,7 @@ export function VoiceCard({
               ? recoveryRangeLine(recovering)
               : "Take the 2-minute range test to find the lowest and highest clear notes you can sing today, plus a voice-type estimate."
           }
-          action={recovering ? undefined : <LinkButton href={rangeTestHref()}>Take the range test</LinkButton>}
+          action={recovering || fresh ? undefined : <LinkButton href={rangeTestHref()}>Take the range test</LinkButton>}
         />
       </Card>
     );

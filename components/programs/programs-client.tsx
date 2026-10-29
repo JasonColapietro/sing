@@ -65,17 +65,34 @@ function plainClick(e: MouseEvent): boolean {
   return !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0);
 }
 
+/** Week 1 as seven squares: a practice day filled, a rest day hollow. */
+export function WeekStrip({ program }: { program: Program }) {
+  const week = program.days.slice(0, 7);
+  return (
+    <div className="mt-3 flex items-center gap-1" role="img" aria-label={`Week 1: ${week.filter((d) => !isRestDay(d)).length} practice days, ${week.filter(isRestDay).length} rest`}>
+      {week.map((d, i) => (
+        <span
+          key={i}
+          className={`h-3 w-3 rounded-[3px] ${isRestDay(d) ? "border border-line2" : "bg-violet/70"}`}
+        />
+      ))}
+    </div>
+  );
+}
+
 function ProgramCard({
   program,
   active,
   finished,
   onOpen,
+  onStart,
 }: {
   program: Program;
   active: boolean;
   /** The running program's every day is done: a restart begins a new run. */
   finished: boolean;
   onOpen: (id: string) => void;
+  onStart: (id: string) => void;
 }) {
   return (
     <Card tone="raised" className="flex flex-col">
@@ -93,6 +110,7 @@ function ProgramCard({
         {restDayCount(program) === 1 ? "day" : "days"}
         {program.pro && ` · ${freeLabel()} free`}
       </p>
+      <WeekStrip program={program} />
       {/* No free-plan pace line on the card: the page's lede says it once
           for all six, and each program's own view gives its weeks. */}
       <p className="mt-3 text-sm text-mut">{program.tagline}</p>
@@ -102,7 +120,16 @@ function ProgramCard({
         <span className="font-medium text-ink">What gets measured. </span>
         {program.measures}
       </p>
-      <div className="mt-4">
+      {/* One row whatever the state, so the card keeps its prerendered height. */}
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <Button
+          variant={active ? "outline" : "violet"}
+          size="sm"
+          onClick={() => (active ? onOpen(program.id) : onStart(program.id))}
+          aria-label={`${active ? "Continue" : "Start"} ${program.name}`}
+        >
+          {active ? "Continue" : "Start"}
+        </Button>
         {/* A plain anchor (lib/program-ids.ts programViewHref): a plain click
             opens the view in place, and a new tab loads it as a document. */}
         <a
@@ -476,6 +503,13 @@ export function ProgramsClient({ initialProgram = null }: { initialProgram?: str
                 active={active?.program.id === p.id}
                 finished={active?.program.id === p.id && active.view.status === "finished"}
                 onOpen={open}
+                onStart={(id) => {
+                  // As the view's own start: leaving another program is a deliberate act.
+                  if (active && !window.confirm(leaveQuestion(active))) return;
+                  beginProgram(id, active?.today ?? localDay());
+                  open(id);
+                  showToday();
+                }}
               />
             ))}
           </div>

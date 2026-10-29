@@ -115,12 +115,7 @@ export function SongStats({ song }: { song: Song }) {
             {f.highLabel}
           </div>
           <p className="mt-2 max-w-prose text-sm text-mut">
-            {f.rangeSemis} semitones as transcribed. Once you have taken the
-            range test, the practice room opens it fitted to your range, and
-            you can shift it by semitones from there. Without a saved range it
-            opens at this written pitch and is scored in either octave, so a
-            lower voice can sing it an octave down and a higher voice an
-            octave up.
+            {f.rangeSemis} semitones as transcribed.
           </p>
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-5">
@@ -230,13 +225,8 @@ export function PublicDomainNote({ song }: { song: Song }) {
       <SectionLabel>Why this one is free to sing</SectionLabel>
       <h2 className="mt-3 text-xl">Origin and copyright status</h2>
       <p className="mt-3 max-w-3xl text-mut">{song.publicDomain}</p>
-      <dl className="mt-5 grid gap-4 sm:grid-cols-2">
-        <div>
-          <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Attribution
-          </dt>
-          <dd className="mt-1 text-sm">{song.origin}</dd>
-        </div>
+      {/* The attribution line is the page subtitle; it is not repeated here. */}
+      <dl className="mt-5">
         <div>
           <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             Language

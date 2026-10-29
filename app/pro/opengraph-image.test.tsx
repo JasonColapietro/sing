@@ -16,8 +16,8 @@ import { metadata } from "./page";
 import { OG_IMAGE_SIZE } from "@/lib/og";
 import { PRICING, formatPrice, proHeadline } from "@/lib/pro-shared";
 
-function drawn(): string {
-  const result = ProImage() as unknown as { element: ReactNode };
+async function drawn(): Promise<string> {
+  const result = (await ProImage()) as unknown as { element: ReactNode };
   return renderToStaticMarkup(<>{result.element}</>);
 }
 
@@ -38,11 +38,21 @@ describe("/pro share card", () => {
     expect(src).not.toMatch(/\b79\b/);
   });
 
-  it("draws the title, the price line and the feature line", () => {
-    const html = drawn();
+  it("draws the title, the price line and the feature line", async () => {
+    const html = await drawn();
     expect(html).toContain("Suede Pro");
     expect(html).toContain(proHeadline());
     expect(html).toContain("Full coach plan, per-note accuracy, take analysis, two books");
+  });
+
+  it("sets the title in the serif and draws the coach-report miniature, labelled as an example", async () => {
+    const html = await drawn();
+    expect(html).toContain("font-family:Instrument Serif");
+    expect(html).toContain("EXAMPLE COACH REPORT");
+    expect(html).toContain("ACCURACY BY NOTE");
+    // Seven per-note bars, the weak E4 flagged in the record red.
+    for (const note of ["C4", "D4", "E4", "F4", "G4", "A4", "B4"]) expect(html).toContain(`>${note}<`);
+    expect(html).toContain("background-color:#9d3f33");
   });
 
   it("is the sitewide card's size and type", () => {
