@@ -163,6 +163,12 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const pathRow = (page, title) => page.getByRole("button", { name: new RegExp(`^${escapeRe(title)}`) });
 const REP_SCORE = /^Rep \d+%$/;
 
+/** A newcomer's /warmups folds the path under "Every exercise": open it, as a singer would, before reaching for a row. */
+async function openPath(page) {
+  const fold = page.locator("details").filter({ has: page.locator("summary", { hasText: /^Every exercise/ }) });
+  if ((await fold.count()) > 0 && !(await fold.first().evaluate((d) => d.open))) await fold.first().locator("summary").click();
+}
+
 /**
  * The session's "Cents off" readout shows a number, not the dash it shows
  * with no note: the exercise is hearing the held A3. Returns the reading.
@@ -260,6 +266,7 @@ try {
     // The list is out of a session, so the stream the gate opened goes idle too.
     await expectLive(page, 0, "list after Enable microphone, idle", notes);
 
+    await openPath(page);
     await pathRow(page, "Sustained hold").click();
     await expectLive(page, 1, "Sustained hold opened from the list", notes);
     const first = page.getByRole("dialog", { name: "Sustained hold", exact: true });
@@ -274,12 +281,14 @@ try {
     await expectLive(page, 0, "summary after End", notes);
 
     await page.getByRole("button", { name: "Back to library", exact: true }).click();
+    await openPath(page);
     await pathRow(page, "Five-note scale").waitFor();
     await expectStill(page, 0, "list after Back to library", notes);
     assert.equal(await page.locator("#warmup-gate").count(), 0, "the gate card came back");
     assert.equal(await page.getByText("Enable mic and start").count(), 0, '"Enable mic and start" came back');
     assert.equal(await page.getByRole("button", { name: "Enable microphone", exact: true }).count(), 0);
 
+    await openPath(page);
     await pathRow(page, "Five-note scale").click();
     const second = page.getByRole("dialog", { name: "Five-note scale", exact: true });
     await second.waitFor();
@@ -292,6 +301,7 @@ try {
 
     // End before any rep closes: nothing to summarize, straight back to the list.
     await page.getByRole("button", { name: "Back to library", exact: true }).click();
+    await openPath(page);
     await pathRow(page, "Humming thirds").click();
     const third = page.getByRole("dialog", { name: "Humming thirds", exact: true });
     await third.waitFor();
@@ -384,7 +394,8 @@ try {
     const transport = page.locator("#song-transport");
     await transport.waitFor();
     const title = (await page.getByRole("heading", { level: 1 }).textContent())?.trim();
-    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    // A card's Sing opens straight into the count-in; Pause marks the run as started.
+    await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
     await page.getByText("Running score", { exact: true }).waitFor();
     await expectLive(page, 1, `${title}, running`, notes, 0);
     await endSongRunOnSummary(page);
@@ -438,7 +449,7 @@ try {
     await sing.click();
     await page.locator("#song-transport").waitFor();
     await page.getByText("Listen mode", { exact: true }).waitFor();
-    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    // A card's Sing opens straight into the count-in; Pause marks the run as started.
     await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
     await page.waitForTimeout(4000);
     await expectLive(page, 0, "listen mode, running", notes, 0);
@@ -487,6 +498,7 @@ try {
     await openWarmups(page);
     await enableFromGate(page, "Enable microphone");
     await page.locator("#warmup-gate").waitFor({ state: "detached" });
+    await openPath(page);
     await pathRow(page, "Humming thirds").click();
     const run = page.getByRole("dialog", { name: "Humming thirds", exact: true });
     await run.waitFor();
@@ -501,7 +513,8 @@ try {
     await page.getByRole("button", { name: "Pick a song first" }).waitFor({ state: "detached" });
     await page.getByRole("button", { name: "Sing", exact: true }).first().click();
     await page.locator("#song-transport").waitFor();
-    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    // A card's Sing opens straight into the count-in; Pause marks the run as started.
+    await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
     await endSongRunOnSummary(page);
     const ended = await expectStill(page, 1, `Practice summary ${GRACE_CHECK_MS / 1000} s after End practice`, notes, GRACE_CHECK_MS);
     await page.getByRole("button", { name: "Sing again", exact: true }).click();
@@ -523,6 +536,7 @@ try {
     await openWarmups(page);
     await enableFromGate(page, "Enable microphone");
     await page.locator("#warmup-gate").waitFor({ state: "detached" });
+    await openPath(page);
     await pathRow(page, "Five-note scale").click();
     const run = page.getByRole("dialog", { name: "Five-note scale", exact: true });
     await run.waitFor();
@@ -540,6 +554,7 @@ try {
     await openWarmups(page);
     await enableFromGate(page, "Enable microphone");
     await page.locator("#warmup-gate").waitFor({ state: "detached" });
+    await openPath(page);
     await pathRow(page, "Five-note scale").click();
     const run = page.getByRole("dialog", { name: "Five-note scale", exact: true });
     await run.waitFor();
@@ -549,6 +564,7 @@ try {
     await page.getByRole("button", { name: "Turn off the mic", exact: true }).click();
     await expectLive(page, 0, "after Turn off the mic", notes);
     await expectStill(page, 0, "still off", notes, 1000);
+    await openPath(page);
     await pathRow(page, "Five-note scale").click();
     await run.waitFor();
     await expectLive(page, 1, "Five-note scale started again", notes);

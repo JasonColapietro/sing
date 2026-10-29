@@ -576,6 +576,13 @@ export function MicGate({
       {footer && <div className="mt-4">{footer}</div>}
     </>
   );
-  if (bare || session) return <div className={cn("py-8 text-center", className)}>{body}</div>;
+  // In a session the gate fills the shell's body and scrolls there, so a short window never puts the button under the bottom bar.
+  if (session)
+    return (
+      <div className={cn("flex min-h-0 flex-1 flex-col overflow-y-auto px-5 py-6 text-center", className)}>
+        <div className="my-auto">{body}</div>
+      </div>
+    );
+  if (bare) return <div className={cn("py-8 text-center", className)}>{body}</div>;
   return <Card className={cn("mx-auto max-w-2xl py-10 text-center", className)}>{body}</Card>;
 }

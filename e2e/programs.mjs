@@ -162,12 +162,12 @@ try {
     const res = await room.goto(`${BASE}${r.href}`, { waitUntil: "networkidle" });
     check(`${r.href} responds`, res?.ok() === true, `${res?.status()}`);
     // The warmups room asks for the mic first, naming what it will start; a
-    // breath set opens straight into its runner, headed by its first drill.
+    // breath routine opens straight into its runner, its first slide naming the first drill.
     const expected =
       r.kind === "routine" || r.kind === "exercise"
         ? `turn on your mic to start “${r.title}”`
         : r.kind === "breath"
-          ? `${r.evidence[0].detail} step 1 of`
+          ? `first up ${r.evidence[0].detail}`
           : r.title;
     const body = (await room.locator("body").innerText()).replace(/\s+/g, " ").toLowerCase();
     check(`${r.href} opens on "${expected}"`, body.includes(expected.toLowerCase()));
