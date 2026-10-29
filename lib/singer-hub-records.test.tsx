@@ -106,11 +106,18 @@ describe("/singers/records", () => {
   it("names every holder of the lowest and highest endpoints", () => {
     const faq = faqAnswers(html);
     expect(faq["What is the lowest note ever sung?"]).toContain(
-      `listed for ${joinNames(holders.lowest.map((s) => s.name))};`,
+      `listed for ${joinNames(holders.lowest.map((s) => s.name))}.`,
     );
     expect(faq["What is the highest note ever sung?"]).toContain(
-      `listed for ${joinNames(holders.highest.map((s) => s.name))};`,
+      `listed for ${joinNames(holders.highest.map((s) => s.name))}.`,
     );
+  });
+
+  it("states the shared caveat once, as the FAQ's lede, not in every answer", () => {
+    expect(html.split("cannot establish a world record").length - 1).toBe(1);
+    for (const answer of Object.values(faqAnswers(html))) {
+      expect(answer).not.toMatch(/cannot establish|does not establish|evidence status/);
+    }
   });
 
   it("gives tied spans the same rank in the ItemList, as the singer pages do", () => {

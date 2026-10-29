@@ -312,7 +312,7 @@ export default async function SongPage({
       }
       // The facts live once, in SongStats; the subtitle carries the origin,
       // which the page does not print anywhere else.
-      subtitle={song.origin}
+      subtitle={/[.!?)]$/.test(song.origin) ? song.origin : `${song.origin}.`}
       actions={
         // The singing action sits in the first screen, above the facts, so a
         // visitor who came to sing does not scroll past two paragraphs of

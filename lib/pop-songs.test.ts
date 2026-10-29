@@ -122,8 +122,9 @@ describe("catalog data sanity", () => {
         checked++;
       }
     }
-    // Espresso and Stick Season state their spans in words.
-    expect(checked).toBeGreaterThanOrEqual(2);
+    // The stat row states the span; blurbs no longer repeat it (Espresso and
+    // Stick Season used to), so any count that comes back must also agree.
+    expect(checked).toBe(0);
   });
 });
 

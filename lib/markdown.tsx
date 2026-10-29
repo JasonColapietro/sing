@@ -205,7 +205,8 @@ export function Markdown({ source }: { source: string }) {
         const key = k++;
         blocks.push(
           <figure key={`f${key}`} className="mt-8 overflow-hidden rounded-2xl border border-line bg-panel">
-            <div className="p-4">{drawn}</div>
+            {/* Visible overflow: a keyboard strip centres its end labels on the end keys. */}
+            <div className="p-4 [&_svg]:overflow-visible">{drawn}</div>
             {fig.caption && (
               <figcaption className="border-t border-line px-4 py-2.5 text-sm leading-snug text-mut">
                 {renderInline(fig.caption, `f${key}`)}

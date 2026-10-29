@@ -127,6 +127,11 @@ export default function SingerMethodologyPage() {
             was reviewed and does not support a settled catalog claim. Pending records have not
             received that individual review.
           </p>
+          <p className="mt-3 max-w-3xl text-mut">
+            Most profiles read &ldquo;Review confirmed&rdquo;. That means the site&apos;s owner
+            confirmed an earlier catalog review of the record. It adds no new sources, dates or
+            confidence level, and the endpoints are still not checked against recordings.
+          </p>
         </Card>
 
         <Card>

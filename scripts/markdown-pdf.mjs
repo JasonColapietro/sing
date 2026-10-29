@@ -69,7 +69,9 @@ export const MARKDOWN_PDF_STYLES = `
   .md-figure { margin: 2mm 0 5mm; border: .5pt solid #d6cbb7; border-radius: 3mm; overflow: hidden;
                page-break-inside: avoid; background: #fffaf2; }
   .md-figure-art { padding: 3mm; }
-  .md-figure-art svg { display: block; width: 100%; height: auto; max-height: 52mm; }
+  /* Visible overflow: a keyboard strip centres its end labels on the end keys. */
+  .md-figure-art svg { display: block; width: 100%; height: auto; max-height: 52mm; overflow: visible; }
+  .md-figure-art svg[data-reference-figure] { max-width: 72mm; margin: 0 auto; }
   .md-figure figcaption { border-top: .5pt solid #d6cbb7; padding: 2mm 3mm; font-size: 8.5pt;
                           line-height: 1.4; color: #5c564d; }
 `;

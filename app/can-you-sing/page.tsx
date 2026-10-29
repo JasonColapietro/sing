@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { RangeMini } from "@/components/singers/range-mini";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import {
@@ -99,6 +100,8 @@ export default function CanYouSingHub() {
               <div className="tabular mt-3 font-mono text-sm text-cool">
                 {popRangeLabel(s)}
               </div>
+              {/* One shared C2-C6 axis on every card, so "easiest first" reads by eye. */}
+              <RangeMini low={s.lowMidi} high={s.highMidi} className="mt-2" />
               <div className="mt-1 text-xs text-dim">
                 {s.key} · {popDifficulty(s)}
               </div>

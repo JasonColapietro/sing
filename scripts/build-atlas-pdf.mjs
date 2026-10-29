@@ -336,8 +336,15 @@ function contentsHtml(pages) {
 const styles = `
   @page { size: A5; margin: 18mm 16mm; }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Liberation Sans first, as in build-book-pdf.mjs: Helvetica's metric twin,
+     absent on a Mac (which falls through to Helvetica Neue), and on Linux the
+     face Chromium would otherwise only reach through a fontconfig alias. */
+  body { margin: 0; font-family: "Liberation Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
          color: #20201d; font-size: 10.5pt; line-height: 1.62; }
+  /* Chromium names each PDF bookmark from the heading's laid-out lines and
+     drops the space at every soft wrap ("Whereit breaks"); pre-wrap keeps it,
+     as in build-book-pdf.mjs. */
+  h1, h2, h3, h4 { white-space: pre-wrap; }
   .cover { height: 92vh; display: flex; flex-direction: column;
            page-break-after: always; border-top: 2.5pt solid #9d3f33; padding-top: 9mm; }
   .cover .kicker { font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
@@ -422,7 +429,8 @@ const styles = `
   .c-roster { margin: .8mm 0 1.8mm 7mm; font-size: 7.5pt; line-height: 1.5; color: #8a8272; }
 
   .chapter h1 { align-self: center; font-size: 17pt; margin: 0; letter-spacing: -.015em; line-height: 1.15; }
-  h2 { font-size: 12pt; margin: 8mm 0 2mm; letter-spacing: -.01em; }
+  h2 { font-size: 12pt; margin: 8mm 0 2mm; letter-spacing: -.01em;
+       page-break-after: avoid; break-after: avoid; }
   h3, h4 { font-size: 11pt; margin: 6mm 0 2mm; }
   p { margin: 0 0 3.5mm; color: #3a3833; }
   ul { margin: 0 0 3.5mm; padding-left: 5mm; }
@@ -526,7 +534,9 @@ const PDF_OPTIONS = {
   margin: { top: "18mm", bottom: "16mm", left: "16mm", right: "16mm" },
 };
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({
+  executablePath: process.env.SING_BROWSER_EXECUTABLE || undefined,
+});
 const page = await browser.newPage();
 
 async function render(html, path) {
