@@ -89,9 +89,7 @@ describe("where the ear games' play time comes from", () => {
       "./melody-echo-game.tsx",
     ]) {
       const src = read(file);
-      expect(src, file).toContain(
-        "const [playClock, restartClock] = useActiveStart(session.results.length);",
-      );
+      expect(src, file).toMatch(/const \[playClock(?:, restartClock)?\] = useActiveStart\(session\.results\.length\);/);
       expect(src, file).not.toMatch(/startedAt=\{(?!playClock\})/);
       expect(src, file).not.toMatch(/setStartedAt\(performance\.now\(\)\)/);
     }

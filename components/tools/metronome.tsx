@@ -212,7 +212,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
           <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             Tempo
           </div>
-          <div className="tabular font-mono text-4xl text-violet-ink">
+          <div className="font-mono text-5xl sm:text-6xl tabular tracking-tight text-violet-ink">
             {bpm}
             <span className="ml-1.5 text-sm text-mut">BPM</span>
           </div>

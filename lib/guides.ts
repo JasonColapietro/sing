@@ -1,4 +1,5 @@
 import type { GuideContent } from "@/components/guide";
+import { SAFETY_LINE } from "@/components/learn/safety-note";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { rangeTestHref } from "@/lib/site";
 
@@ -33,7 +34,7 @@ export const RANGE_GUIDE: GuideContent = {
   safety: {
     heading: "Test the notes you can sing without forcing",
     body:
-      "Use a comfortable volume and stop if a note causes pain, strain, or persistent hoarseness. Suede Sing is a practice and measurement tool, not a medical assessment. A sudden or lasting loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist.",
+      `Use a comfortable volume and stop if a note causes pain, strain, or persistent hoarseness. Suede Sing is a practice and measurement tool, not a medical assessment. ${SAFETY_LINE}`,
     sources: [
       {
         href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",
@@ -136,34 +137,9 @@ export const RANGE_GUIDE: GuideContent = {
   start: { label: "Start the range test", href: "/range?mode=range#content" },
   related: [
     {
-      href: "/atlas/vocal-range-by-voice-type",
-      label: "Vocal ranges by voice type",
-      note: "Compare conventional range bands and understand why range alone does not define your voice type.",
-    },
-    {
-      href: "/warmups",
-      label: "Warmups",
-      note: "Keep your warmup conditions consistent when comparing tests.",
-    },
-    {
       href: "/singers",
       label: "Famous ranges",
       note: "See which well-known voices share your span.",
-    },
-    {
-      href: "/studio",
-      label: "Pitch studio",
-      note: "Practice steady notes within your comfortable range.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Fry, falsetto and tessitura: the words on this result, defined.",
-    },
-    {
-      href: "/atlas/notes-octaves-and-the-keyboard",
-      label: "Scientific pitch notation (free chapter)",
-      note: "What the letter and number on your result mean: C4 is middle C, and a span is counted in semitones.",
     },
     {
       href: "/learn/voice/room-check/your-range",
@@ -287,11 +263,6 @@ export const WARMUPS_GUIDE: GuideContent = {
       note: "Test warm for a number that reflects your real range.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Siren, lip trill and passaggio: what these exercises are named after.",
-    },
-    {
       href: "/learn/voice/steady-tone/straw-and-lip-trill",
       label: "Straw and lip-trill lessons",
       note: "Semi-occluded warm-ups, in three short free lessons.",
@@ -400,11 +371,6 @@ export const BREATH_GUIDE: GuideContent = {
       href: "/songs",
       label: "Song practice",
       note: "Apply support to real phrases with real breath points.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Support, steadiness and the rest of the breath vocabulary.",
     },
     {
       href: "/learn/voice/room-check/breathe-low",
@@ -517,11 +483,6 @@ export const EAR_GUIDE: GuideContent = {
       note: "A drone gives you a reference pitch to sing against.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "The units these drills count in: interval, semitone and cent.",
-    },
-    {
       href: "/learn/voice/steady-tone/land-the-note",
       label: "Land the Note lessons",
       note: "Onset and pitch matching, in three short free lessons.",
@@ -623,18 +584,8 @@ export const SONGS_GUIDE: GuideContent = {
     },
     {
       href: "/recorder",
-      label: "Take recorder",
+      label: "Recorder",
       note: "Record the take and hear what you can't hear while singing.",
-    },
-    {
-      href: "/breath",
-      label: "Breath control",
-      note: "Fix the phrases that run out of air.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Transposition, tessitura and belt: the words behind song fit.",
     },
     {
       href: "/learn/voice/steady-tone/first-song-one-register",
@@ -752,11 +703,6 @@ export const RECORDER_GUIDE: GuideContent = {
       note: "See pitch live before you commit a take.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Vibrato, resonance and register are names for what you hear back.",
-    },
-    {
       href: "/learn/voice/room-check/set-up-your-space",
       label: "Set Up Your Space lessons",
       note: "Room setup and clean input, in three short free lessons.",
@@ -868,11 +814,6 @@ export const TOOLS_GUIDE: GuideContent = {
       note: "Take the tuned interval into real phrases.",
     },
     {
-      href: "/glossary",
-      label: "Glossary",
-      note: "A440, cents and drone: what these tools are doing.",
-    },
-    {
       href: "/learn/voice/pitch-time-words/on-the-beat",
       label: "On the Beat lessons",
       note: "Rhythm and subdivision, in three short free lessons.",
@@ -975,19 +916,9 @@ export const STUDIO_GUIDE: GuideContent = {
       note: "Scored patterns that apply the same feedback.",
     },
     {
-      href: "/ear-training",
-      label: "Ear training",
-      note: "Fix the target if you can't hear it, not just the production.",
-    },
-    {
       href: rangeTestHref(),
       label: "Range test",
       note: "Measure your lowest and highest notes, then start your pitch work in the middle of them.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "The readout, defined: cents, fundamental, sharp and flat.",
     },
     {
       href: "/book/when-numbers-lie",
@@ -1100,18 +1031,13 @@ export const ANALYZE_GUIDE: GuideContent = {
     },
     {
       href: "/recorder",
-      label: "Take recorder",
+      label: "Recorder",
       note: "Record the phrase you just watched here, then listen back to it.",
     },
     {
       href: rangeTestHref(),
       label: "Range test",
       note: "Measure your lowest and highest notes; the transitions between them show up here, on a slow slide.",
-    },
-    {
-      href: "/glossary",
-      label: "Glossary",
-      note: "Harmonic, formant and vocal dose: the spectrogram's vocabulary.",
     },
     {
       href: "/learn/voice/through-the-break/twang-and-ring",
@@ -1121,7 +1047,7 @@ export const ANALYZE_GUIDE: GuideContent = {
   ],
   safety: {
     heading: "Vocal load is a practice signal, not a health check",
-    body: "Cycle dose can show that today put your folds through more cycles than yesterday. It cannot tell you what is safe for your voice, because that depends on the individual and on factors no microphone can see. Persistent hoarseness, pain, or a loss of range belongs with a doctor who can examine the vocal folds (an ENT or laryngologist, often working with a voice-specialist speech-language pathologist), not with a number on a screen.",
+    body: `Cycle dose can show that today put your folds through more cycles than yesterday. It cannot tell you what is safe for your voice, because that depends on the individual and on factors no microphone can see. ${SAFETY_LINE}`,
     sources: [
       {
         href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",

@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Improvising is easiest to start as an answer: a short call sets the key and the pulse, and you reply with a phrase of your own that ends on the home note. Limiting the answer to five notes of the scale, 1, 2, 3, 5 and 6, leaves fewer wrong choices, so your attention can go to rhythm, direction and where you land. Change one of those at a time and the answer stays connected to the call while still being yours.
+Improvising is easiest to start as an answer: a short call sets the key and the pulse, and you reply with a phrase of your own that ends on the home note. Limiting the answer to five notes of the scale, 1, 2, 3, 5 and 6, leaves fewer wrong choices, so your attention goes to rhythm, direction and where you land. Change one of those at a time and the answer stays connected to the call while still yours.
 
 ## Steps
 

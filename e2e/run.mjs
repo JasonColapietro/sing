@@ -1,8 +1,8 @@
 /**
  * UI/UX end-to-end audit for sing.
  *
- *   npm run dev          # in another shell — the account surfaces need it
- *   node e2e/run.mjs [baseUrl] [--only=id,id] [--route=name] [--json=path] [--executable=path]
+ *   npm run build && npm start -- --port 3100   # in another shell: the account surfaces need a server
+ *   node e2e/run.mjs http://localhost:3100 [--only=id,id] [--route=name] [--json=path] [--executable=path]
  *
  * Exits non-zero when any blocker or major finding survives, so this is usable
  * as a gate. Chrome is driven through `channel: "chrome"`: the bundled

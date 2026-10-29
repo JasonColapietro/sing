@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Melisma is several notes sung on one syllable, the way a run carries a single word. The vowel is what carries all of those notes, and a vowel is a shape of the tongue, jaw and lips, so if that shape moves on every note the color flickers and the line starts to sound like new syllables or a smear. Hold one vowel shape still and let only the pitch move; that steady vowel is what lets each note sound separate and still belong to the same word.
+Melisma is several notes sung on one syllable, the way a run carries a single word. The vowel carries every note, and a vowel is a shape of tongue, jaw and lips; move that shape on each note and the colour flickers into new syllables or a smear. Hold one vowel shape still and let only the pitch move. That steady vowel lets each note sound separate and still belong to the same word.
 
 ## Steps
 

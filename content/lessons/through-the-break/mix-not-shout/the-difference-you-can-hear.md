@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A shout gets its size from more air and more squeeze at the folds, so as it climbs it turns tight, goes sharp or cracks, and it tires the voice. Mix is the middle ground between chest and head voice, part fold setup and part vowel and resonance, where the transition can be crossed without a seam, and a belt carries a chest-like sound higher by getting brighter rather than by pushing. The difference you can hear is in repetition: an easy call sounds the same the third time, a shout costs more each time, and any grip in the throat means stop and go lighter.
+A shout gets its size from more air and more squeeze at the folds, so as it climbs it turns tight, goes sharp or cracks, and it tires the voice. Mix is the middle ground between chest and head voice, part fold setup and part vowel and resonance, where the transition crosses without a seam; a belt carries a chest-like sound higher by getting brighter, not by pushing. An easy call sounds the same the third time.
 
 ## Steps
 

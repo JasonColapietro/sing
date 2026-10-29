@@ -91,19 +91,7 @@ import type { GuidePass, SessionMode } from "./types";
 
 export type Phase = "idle" | "running" | "paused" | "finished";
 
-/**
- * What the player says, and offers, while the microphone is off. The control
- * sits at the moments the pass switch does, before a run and while paused. A
- * run already under way was sung unheard, so the paused control says it
- * starts over (see `afterMicOn`), and while the song plays the line points at
- * Pause, where the control is, rather than at a control that is not there.
- *
- * `at` is where the control is drawn. Before a run it sits under the line, in
- * the piano-roll card, which the start's scroll keeps on screen. Once paused
- * it sits in the transport row beside Resume: the singer just pressed Pause
- * there, and on a phone scrolled down to the pass chips the piano-roll card
- * (line and control with it) was above the screen.
- */
+/** The mic-off line and control: before a run under the line, while paused beside Resume (where the singer just was), and none while running. */
 export function micOffPrompt(phase: Phase): {
   line: string;
   control: string | null;
@@ -126,16 +114,7 @@ export function micOffPrompt(phase: Phase): {
   };
 }
 
-/**
- * What turning the microphone on from inside the player does, read once the
- * permission prompt has closed (the singer can press other things while it is
- * up). A listen pass scores nothing even with the mic on, so it moves to Sing
- * along, the pass the gate would have started on; a pass the singer picked
- * stays. A run already under way starts over: scoring it from here would judge
- * every note before this moment a miss in one burst and log the score that
- * left, and the coach would read those notes as weak. A finished run is the
- * summary's to restart, so nothing happens.
- */
+/** After the mic comes on mid-player: a listen pass becomes Sing along, a run under way starts over (scoring it from here would judge every earlier note a miss), a finished run is the summary's. */
 export function afterMicOn(
   phase: Phase,
   pass: GuidePass,
@@ -237,6 +216,7 @@ export function SongPlayer({
   onTake,
   allowance,
   setup,
+  autoStart = false,
 }: {
   song: Song;
   pitch: UsePitchResult;
@@ -264,6 +244,8 @@ export function SongPlayer({
    * ("Sing again"): read once, as the player opens. Ignored for another song.
    */
   setup?: PlayerSetup | null;
+  /** Open straight into the count-in (a library card's Sing): one tap fewer before the first note. */
+  autoStart?: boolean;
 }) {
   // Read at mount only: the state below is the singer's from then on.
   const [initial] = useState(() => setupForSong(setup, song.id));
@@ -459,19 +441,7 @@ export function SongPlayer({
   const scheduledMaskRef = useRef<boolean[]>([]);
   const clickCursorRef = useRef(0);
   const sessionStartRef = useRef(0);
-  /**
-   * Seconds this session was actually being played and watched.
-   *
-   * `sessionStartRef` is wall clock, and wall clock counts two things that are
-   * not practice: time the tab spent hidden (rAF is suspended, so no note is
-   * scored and nothing is drawn) and time spent paused (`pause()` never
-   * adjusted the start, so an eight-minute pause inside a thirty-second phrase
-   * still billed eight and a half minutes). `logSession` derives XP from the
-   * duration and clamps it to 80, so both paths handed out the ceiling for a
-   * phrase nobody sang, and both counted toward the thirty-minutes-in-a-day
-   * achievement. This accumulates capped frame deltas instead — see
-   * lib/audio/frame-clock — so it can only ever advance while the loop is awake.
-   */
+  /** Seconds actually played and watched: capped frame deltas (lib/audio/frame-clock), so hidden tabs and pauses earn no XP. */
   const awakeSecRef = useRef(0);
   const sessionTransposeRef = useRef(0);
   const sessionTempoRef = useRef<Tempo>(1);
@@ -662,16 +632,7 @@ export function SongPlayer({
     return mask;
   }
 
-  /**
-   * Change the beat length mid-song without moving the song or the score.
-   *
-   * `elapsedBeats` is the position on the session clock: t0 is re-based on the
-   * new beat length so the current beat stays exactly where it is and only the
-   * beats after it get longer or shorter. Every second already banked is
-   * restated in the new beat length too, so a change of speed on its own can
-   * never move a ratio. Notes already inside schedTick's lookahead keep the
-   * times they were scheduled at.
-   */
+  /** Change the beat length mid-song: t0 is re-based so the current beat stays put and banked seconds are restated, so a speed change never moves a ratio. */
   function applyTempoRate(rate: number, elapsedBeats: number) {
     const next = snapTempo(rate);
     const oldSpb = spbRef.current;
@@ -895,23 +856,7 @@ export function SongPlayer({
     }, setupNow);
   }
 
-  /**
-   * Leaving the tab pauses the song instead of destroying the session.
-   *
-   * rAF stops in a hidden tab but the AudioContext clock does not, and rafTick
-   * is the only thing that accumulates score or can end a session. So the first
-   * frame after coming back read the audio clock, found it past the end, and
-   * finalized immediately: every note whose window had passed while hidden had
-   * accumulated zero hit time and was judged a miss in one burst, producing a
-   * near-zero score. The wall-clock duration meanwhile included the entire
-   * absence, which hit the 80 XP ceiling. logSession runs before onFinish, so
-   * that result was already permanent — in the practice log, in the personal
-   * best, in the achievement counters — before the summary rendered, with no
-   * confirmation and no way to discard it. Alt-tabbing mid-song is routine.
-   *
-   * Pausing is the whole fix: resume() rebases t0 on the audio clock, so the
-   * song picks up where it left off and nothing is judged in absentia.
-   */
+  /** A hidden tab pauses the song: rAF stops but the audio clock does not, so coming back would judge the absence a miss in one burst and log it before the summary. */
   useEffect(() => {
     const onVisibility = () => {
       if (document.visibilityState === "hidden" && phaseRef.current === "running") {
@@ -1314,6 +1259,14 @@ export function SongPlayer({
   useLayoutEffect(() => { pauseRef.current = pause; });
   useLayoutEffect(() => { restartRef.current = beginSession; });
 
+  // Once, on mount: the Sing press that opened the player is the gesture the audio clock needs.
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (!autoStart || autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    restartRef.current(pass);
+  }, [autoStart, pass]);
+
   function endPractice() {
     stopLoops();
     takeRecorderRef.current?.discard();
@@ -1373,20 +1326,7 @@ export function SongPlayer({
   }
 
 
-  /**
-   * The microphone, turned on from inside the player — a singer who chose
-   * "Continue without a mic" at the gate, or denied the prompt by accident and
-   * has since allowed it, is told here that the mic is off and needs the
-   * control in the same place. Read through refs after the await, because the
-   * permission prompt can stay up while the singer presses other things; the
-   * restart goes through `restartRef` for the same reason, so it starts the
-   * run as the latest render set it up. See `afterMicOn`.
-   *
-   * Only the latest press acts, and only while the player is on screen: a
-   * singer who chose End practice with the prompt up and allowed it afterwards
-   * had the restart start timers, frames and the guide on an unmounted player,
-   * with nothing left to stop them. Either way the mic stays as usePitch left it.
-   */
+  /** The mic turned on from inside the player; read through refs after the await, and only the latest press acts while the player is still on screen. */
   async function enableMic() {
     const current = micRequestRef.current.begin();
     if (!(await pitch.start()) || !current()) return;

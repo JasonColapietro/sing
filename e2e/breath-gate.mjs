@@ -154,7 +154,7 @@ const CASES = [
     drill,
     make: () => inhaleThenVowel(8),
     async run(page) {
-      if (drill === "cue") await page.getByRole("button", { name: "Begin", exact: true }).click();
+      if (drill === "cue") await page.getByRole("button", { name: "Start", exact: true }).click();
       await page.getByText("Hold", { exact: true }).waitFor({ timeout: 15000 });
       const before = await page.locator('[role="dialog"]').innerText();
       await page.evaluate(() => {
@@ -297,7 +297,7 @@ const CASES = [
     async run(page) {
       const failures = [];
       await page.getByRole("button", { name: "4", exact: true }).click();
-      await page.getByRole("button", { name: "Begin" }).click();
+      await page.getByRole("button", { name: "Start", exact: true }).click();
       // The results row carries the drill's own line: reps, and breaths heard.
       const row = page.getByText(/^\d+ reps · \d+ breaths heard$/);
       await row.waitFor({ timeout: 60000 });

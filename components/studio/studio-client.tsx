@@ -16,7 +16,9 @@ import {
   meterInputHint,
   nextInputHint,
 } from "@/components/range/pitch-meter-hint";
-import { Button, Card, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { Button, Card, LinkButton, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { FigureFrame, TraceFigure } from "@/components/figures";
+import { rangeTestHref } from "@/lib/site";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
 import { PitchTrace } from "./pitch-trace";
@@ -353,29 +355,20 @@ export function StudioClient() {
         ) : undefined
       }
     >
+      {/* The same shape as the /range meter's stopped card: what the session
+          did, then a next room, instead of a toast with Dismiss. */}
       {toast && (
-        <Card className="mb-6 border-violet/40 bg-panel2">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-3">
-              {toast.log ? (
-                <>
-                  <span className="tabular font-mono text-xl text-violet-ink">
-                    +{toast.log.xpGained} XP
-                  </span>
-                  <span className="text-sm text-mut">Session saved.</span>
-                </>
-              ) : toast.silent ? (
-                <span className="text-sm text-mut">
-                  No note was heard, so nothing was logged. Sing a little
-                  louder or closer to the mic, or check the input under Audio
-                  below.
-                </span>
-              ) : (
-                <span className="text-sm text-mut">
-                  That one ran under {MIN_LOG_SEC} seconds, so it wasn&rsquo;t
-                  logged.
-                </span>
-              )}
+        <Card className="mx-auto mb-6 max-w-2xl">
+          <SectionLabel>Last session</SectionLabel>
+          <p className="mt-2 text-sm text-mut">
+            {toast.log
+              ? `${fmtTime(elapsed)} in the studio. +${toast.log.xpGained} XP, saved to your progress.`
+              : toast.silent
+                ? "No note was heard, so nothing was logged. Sing a little louder or closer to the mic, or check the input under Audio below."
+                : `That one ran under ${MIN_LOG_SEC} seconds, so it wasn’t logged. Sing again adds to the time.`}
+          </p>
+          {(toast.locks > 0 || (toast.log?.newAchievements.length ?? 0) > 0) && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               {toast.locks > 0 && (
                 <Pill tone={toast.newBest ? "ok" : "violet"}>
                   <span className="tabular font-mono">{toast.locks}</span>
@@ -388,16 +381,19 @@ export function StudioClient() {
                 </Pill>
               ))}
             </div>
-            <Button variant="ghost" size="sm" onClick={() => setToast(null)}>
-              Dismiss
-            </Button>
+          )}
+          <div className="mt-3 flex flex-wrap gap-3">
+            <LinkButton href={rangeTestHref()}>Take the 2-minute range test</LinkButton>
+            <LinkButton href="/warmups" variant="outline">
+              Warm up first
+            </LinkButton>
+            <LinkButton href="/songs" variant="outline">
+              Sing a song
+            </LinkButton>
           </div>
-          {/* Not beside a session that logged nothing for want of a mic. */}
-          {!toast.silent && (
-            <div className="mt-2">
-              <ProInlineNudge>
-                Pro charts your scored warmups and songs note by note
-              </ProInlineNudge>
+          {toast.log && (
+            <div className="mt-3">
+              <ProInlineNudge>Pro charts your scored warmups and songs note by note</ProInlineNudge>
             </div>
           )}
         </Card>
@@ -405,9 +401,16 @@ export function StudioClient() {
 
       {!listening ? (
         <>
+          {/* The room's instrument before the browser prompt: the trace the gate describes. */}
+          {!toast && (
+            <FigureFrame className="mx-auto mb-6 max-w-2xl" caption="What the trace draws once the mic is on">
+              <TraceFigure />
+            </FigureFrame>
+          )}
           <MicGate
-            title="The voice oscilloscope"
-            description="Pick a target note to lock onto."
+            title="See your pitch live"
+            description="Sing any note. The tuner names it, the gauge shows how far off centre you are, and the trace draws the last eight seconds."
+            enableLabel={toast ? "Sing again" : "Enable microphone"}
             onEnable={handleStart}
             error={error}
             footer={
@@ -418,19 +421,10 @@ export function StudioClient() {
             }
           />
 
-          {/*
-           * The card above is the only button on this page and it stays that
-           * way. This block sits under it so the room is legible before the
-           * browser prompt, not so it competes with the prompt.
-           */}
+          {/* Under the gate, so the room is legible before the prompt without competing with it. */}
           <div className="mx-auto mt-8 max-w-2xl">
             <SectionLabel>{PARTS_LABEL}</SectionLabel>
-            {/*
-             * SectionLabel is a decorative span, not a heading, so without an
-             * explicit name this list announces as "list, 4 items" with no clue
-             * what it lists. Naming the list beats promoting the tape to a
-             * heading, which would put a second h2 on the page.
-             */}
+            {/* Named: SectionLabel is a decorative span, so the list otherwise announces as "list, 4 items". */}
             <ul
               aria-label={PARTS_LABEL}
               className="mt-4 grid gap-3 sm:grid-cols-2"
@@ -472,7 +466,7 @@ export function StudioClient() {
               </div>
               <div className="mt-4 text-center">
                 <div
-                  className={`tabular font-mono text-7xl tracking-tight ${
+                  className={`font-mono text-5xl sm:text-6xl tabular tracking-tight ${
                     note ? (inTune ? "text-ok-ink" : "text-ink") : "text-dim"
                   }`}
                 >

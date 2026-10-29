@@ -60,16 +60,12 @@ describe("singer evidence and comparison regressions", () => {
     expect(html).toContain("REPORTED VOCAL RANGE");
     expect(html).toContain(status);
   });
-  it("discloses the shared guided allowance before the exercise links", () => {
+  it("states the shared guided allowance once, in the What is free? card", () => {
     expect(FREE_DAILY_SEC).toBe(300);
     const learn = renderToStaticMarkup(<LearnPage />).replace(/<!--.*?-->/g, "");
     expect(learn).toContain("An example 20-minute practice plan");
-    expect(learn).toContain("5 minutes a day");
-    // Before the first of the map's exercise links; the full "What is free?"
-    // card now sits below the map, so the map's intro carries the cap.
-    const firstPath = learn.indexOf('href="/learn/voice"', learn.indexOf("Choose the problem"));
-    expect(firstPath).toBeGreaterThan(-1);
-    expect(learn.indexOf("5 minutes a day")).toBeLessThan(firstPath);
+    expect(learn.split("5 minutes a day").length - 1).toBe(1);
+    expect(learn.indexOf("5 minutes a day")).toBeGreaterThan(learn.indexOf("What is free?"));
     expect(learn).toContain('href="/pro"');
     expect(learn).not.toContain("Twenty focused minutes beats");
   });

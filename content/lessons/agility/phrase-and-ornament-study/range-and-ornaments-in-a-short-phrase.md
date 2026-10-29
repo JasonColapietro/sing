@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-An ornament that is easy in the middle of your voice gets harder near the top or bottom, because the edges of your range already take most of your control. That is the real difficulty of a phrase with both a wide leap and an ornament: each demand is manageable alone, and they compete when they arrive together. So choose a key where both ends of the phrase are repeatable, rehearse the leap and the ornament separately, and keep the top lighter rather than louder when you join them.
+An ornament that is easy in the middle of your voice gets harder near the edges, because the edges already take most of your control. That is the difficulty of a phrase with a wide leap and an ornament: each is manageable alone, and they compete when they arrive together. Choose a key where both ends are repeatable, rehearse the leap and the ornament separately, and keep the top lighter, not louder, when you join them.
 
 ## Steps
 

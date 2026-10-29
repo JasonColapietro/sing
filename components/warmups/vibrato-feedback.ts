@@ -116,7 +116,7 @@ function tail(frames: F0Frame[], sec: number): F0Frame[] {
  * tail, which does not start on an onset. When nothing passes, the whole
  * run's reason is the one reported.
  */
-export function analyzeHold(frames: F0Frame[]): VibratoAnalysis {
+function analyzeHold(frames: F0Frame[]): VibratoAnalysis {
   const whole = analyzeVibrato(frames);
   if (whole.present) return whole;
   for (const sec of TAIL_WINDOWS_SEC) {

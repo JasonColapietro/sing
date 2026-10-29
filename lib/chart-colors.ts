@@ -21,7 +21,7 @@ export const PANEL = "#fffaf2";
 export const PANEL2 = "#efe6d5";
 
 /* Rules and borders */
-export const LINE = "#ddd4c4";
+export const LINE = "#d6cbb7";
 export const LINE2 = "#c9bda0";
 
 /* Type. DIM is the lightest value that still clears WCAG AA on all three

@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Vibrato is a small, regular swing in pitch around the note's center, with three separate dials: rate is how many times a second the pitch swings, from a fast flutter to a slow wave; extent is how far above and below the center it moves, from a narrow shimmer to a wide wobble; and onset is when it starts, straight away or after a stretch of straight tone. What separates vibrato from an unsteady note is regularity, an even rate and extent around a steady center. The Vibrato hold warm-up shows how fast and how wide your pitch moved after each hold, but nothing times the onset, so that dial is yours to judge. It is also the easiest one to practice first, because it begins from a plain, straight note.
+Vibrato is a small, regular swing in pitch around the note's centre, with three dials: rate, how many swings a second; extent, how far above and below the centre it moves; and onset, when it starts, at once or after a stretch of straight tone. Regularity separates vibrato from an unsteady note. The Vibrato hold warm-up reports rate and extent after each hold; nothing times the onset, so that dial is yours to judge, and the easiest to practise first.
 
 ## Steps
 

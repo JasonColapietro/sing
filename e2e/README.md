@@ -6,10 +6,15 @@ that scroll sideways on a phone, controls a keyboard cannot reach, and a
 microphone refusal nobody can see.
 
 ```bash
-npm run dev          # in another shell — the account surfaces need it
-npm run e2e          # full pass
-npm run e2e:mobile   # one viewport, much faster
+npm run build && npm start -- --port 3100     # in another shell: CI audits the production build
+node e2e/suite.mjs mobile-audit               # exactly what CI's "Browser (mobile-audit)" job runs
+npm run e2e -- http://localhost:3100          # full pass, six viewports
+npm run e2e:mobile -- http://localhost:3100   # one viewport, much faster
 ```
+
+`e2e/suite.mjs` holds every browser suite CI runs (`journeys`, `mobile-audit`,
+`desktop-audit`, `audio`, `layout-shift`, `layout-shift-finished`), with the
+same commands, flags and timeouts as `.github/workflows/ci.yml`.
 
 Exits non-zero when any **blocker** or **major** finding survives, so it works
 as a gate.
@@ -205,9 +210,10 @@ height (`song-verdict` in `app/globals.css`). Measured with
 and from 0.05 to 0.003 at 1280px; the singer pages' header swap was already
 still, both labels of a pair sharing one width.
 
-CI's `layout-shift` job (`.github/workflows/ci.yml`) runs every route on a
-375px phone twice, as a newcomer and with `--returning`, then each state on
-the routes it reshapes at 375 and 1280px, and `/singers` on a
+CI's `layout-shift` and `layout-shift-finished` jobs (`node e2e/suite.mjs
+<suite>`) run every route on a 375px phone twice, as a newcomer and with
+`--returning`, then each state on the routes it reshapes at 375 and 1280px
+(the finished programs in the second job), and `/singers` on a
 `desktop-1440-tall` window (1440x1300): the section after its chart starts
 below the first screen of a phone or a 1080px-tall desktop, so only a tall
 screen would see it move when the chart mounts.

@@ -14,6 +14,7 @@ import {
 import { PracticedMark } from "@/components/learn/practice-count";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
+import { ReferenceFigure, STAGE_FIGURES } from "@/components/learn/reference-figure";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -103,10 +104,7 @@ export default function VoiceCoursePage() {
             short sessions, and move on when the module&apos;s self-check still
             holds on a second day.
           </p>
-          {/*
-            The lines the lessons share word for word (UNIVERSAL_LESSON_TEXT in
-            lib/voice-lessons.ts), said once here; the lesson pages leave them out.
-          */}
+          {/* Lines every lesson shared (UNIVERSAL_LESSON_TEXT and the compiler's filter), said once here. */}
           <div className="mt-5 max-w-3xl" data-course-rules>
             <h3 className="text-lg">The same rules in every lesson</h3>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-mut">
@@ -123,10 +121,27 @@ export default function VoiceCoursePage() {
                 singer showing you a technique.
               </li>
               <li>Note the key and setup you used, so the next comparison is fair.</li>
+              <li>
+                Say what will count as complete before you practise, and keep
+                every attempt inside the range and duration you can repeat
+                comfortably.
+              </li>
+              <li>
+                After each take, compare it with the material and write one
+                smaller correction for next time.
+              </li>
               <li>Treat a missing or uncertain reading as missing, never as a pass.</li>
               <li>
+                Every self-check is a self-report, not an automatic assessment:
+                nothing here produces an automatic pitch, rhythm, register, tone
+                or safety result.
+              </li>
+              <li>
                 Unless a self-check says otherwise, it is ready when you can
-                describe the result and choose one useful next attempt.
+                describe the result and choose one useful next attempt. Not
+                ready? Repeat a smaller version on a fresh attempt rather than
+                forcing the checkpoint, unless the lesson&apos;s own stop rule
+                says otherwise.
               </li>
             </ul>
           </div>
@@ -160,7 +175,8 @@ export default function VoiceCoursePage() {
             data-course-stage={stage.catalog.id}
             className="space-y-4"
           >
-            <div className="max-w-3xl">
+            <div className="flex max-w-3xl items-start justify-between gap-4">
+              <div>
               <SectionLabel>Stage {stage.catalog.stage}</SectionLabel>
               <h2 id={`stage-${stage.catalog.stage}`} className="mt-3 text-2xl">
                 {stage.href ? (
@@ -172,6 +188,10 @@ export default function VoiceCoursePage() {
                 )}
               </h2>
               <p className="mt-2 text-mut">{stage.catalog.subtitle}</p>
+              </div>
+              {STAGE_FIGURES[stage.catalog.id] && (
+                <ReferenceFigure kind={STAGE_FIGURES[stage.catalog.id]} className="mt-1 hidden sm:block" />
+              )}
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {stage.modules.map((module) => {

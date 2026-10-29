@@ -8,6 +8,7 @@ import { useAudioPrefs } from "@/lib/audio/devices";
 import { playSequence } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
+import { MicGate } from "@/components/ui";
 import {
   generateMelody,
   hasSavedRange,
@@ -23,9 +24,7 @@ import {
   RoundFeedback,
   ShellBar,
   ShellButton,
-  ShellMicGate,
   StepDone,
-  SummaryView,
   useActiveStart,
   useEarSession,
   type OnEarComplete,
@@ -45,7 +44,7 @@ export function MelodyEchoGame({
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
-  onComplete?: OnEarComplete;
+  onComplete: OnEarComplete;
 }) {
   const session = useEarSession();
   const ownPitch = usePitch();
@@ -206,34 +205,15 @@ export function MelodyEchoGame({
   }, [session.done, listening, ownsMic, stop]);
 
   if (session.done) {
-    if (onComplete) {
-      return (
-        <StepDone
-          game="melody-echo"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onExit={onExit}
-          onComplete={onComplete}
-        />
-      );
-    }
     return (
-      <div className="mx-auto max-w-2xl">
-        <SummaryView
-          game="melody-echo"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onReplay={() => {
-            session.reset();
-            setMelody(null);
-            setPhase("listen");
-            void start();
-          }}
-          onExit={onExit}
-        />
-      </div>
+      <StepDone
+        game="melody-echo"
+        difficulty={difficulty}
+        session={session}
+        startedAt={playClock}
+        onExit={onExit}
+        onComplete={onComplete}
+      />
     );
   }
 
@@ -242,7 +222,8 @@ export function MelodyEchoGame({
   if (!listening) {
     return (
       <GameShell game="melody-echo" difficulty={difficulty} session={session} onExit={onExit}>
-        <ShellMicGate
+        <MicGate
+          tone="session"
           title="This game listens to you sing"
           description="You'll hear a short melody, then sing it back note for note."
           onEnable={() => void start()}

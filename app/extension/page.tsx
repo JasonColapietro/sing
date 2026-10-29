@@ -91,7 +91,7 @@ const FAQ = [
   },
   {
     q: "Does Suede Sing use my voice to train AI?",
-    a: "No. Suede Sing contains no machine learning model: pitch is measured with an autocorrelation algorithm running locally in the browser. The Chrome extension discards each audio frame as soon as it is analyzed, and on the website any take you choose to record stays on your device. No audio leaves your device, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
+    a: "No. Suede Sing contains no machine learning model: pitch is measured with an autocorrelation algorithm running locally in your browser, and no audio leaves your device.",
   },
   {
     q: "Does the extension record or upload my voice?",

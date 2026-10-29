@@ -83,7 +83,7 @@ export type ProgramItem =
    * what to sing when it is not a verse and a chorus of a song.
    */
   | { kind: "recorder"; take?: string }
-  /** A few minutes of ear training: the Quick ear workout, pitch match and both recognition games. */
+  /** A few minutes of ear training: the Quick ear routine, pitch match and both recognition games. */
   | { kind: "ear" };
 
 export interface ProgramDay {
@@ -165,7 +165,7 @@ export function dayNeedsPro(program: Program, index: number): boolean {
  * A recorded take, a verse and a chorus or a shorter named one, plus saving
  * it under a name you can find later: an estimate too.
  */
-export const RECORDER_SEC = 120;
+const RECORDER_SEC = 120;
 
 /**
  * Ear training, as chapter 15 asks: "three or four minutes a session" of
@@ -192,7 +192,7 @@ export const EAR_RECOGNITION_GAMES: readonly string[] = ["Interval ID", "Higher 
  * The range test is self-paced — a slide down and a slide up, held two seconds
  * at each end — so its length is an estimate, like the sustain attempt's.
  */
-export const RANGE_TEST_SEC = 120;
+const RANGE_TEST_SEC = 120;
 
 /**
  * The setting a lone drill row states, carried in its link so the room opens
@@ -813,7 +813,7 @@ export function itemSeconds(item: ProgramItem): number {
   }
 }
 
-export function daySeconds(d: ProgramDay): number {
+function daySeconds(d: ProgramDay): number {
   return d.items.reduce((a, item) => a + itemSeconds(item), 0);
 }
 
@@ -1201,7 +1201,7 @@ export function itemStepHref(item: ProgramItem, k: number): string {
 }
 
 /** The local calendar day of an ISO timestamp, as lib/progress.ts files a session. */
-export function localDayOf(iso: string): string {
+function localDayOf(iso: string): string {
   const d = new Date(iso);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }

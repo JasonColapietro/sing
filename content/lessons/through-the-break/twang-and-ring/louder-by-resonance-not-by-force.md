@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Carrying power is mostly a matter of resonance rather than loudness: a voice with more energy in the bright upper band, where hearing is sharpest, cuts through without being pushed. Twang gets there by narrowing the space just above the vocal folds, which brightens the tone by reshaping the tube rather than by driving more air or squeezing harder. Pressed phonation, more squeeze at the folds than the note needs, also sounds intense but costs effort and tires the voice; one rough check is that brightness from resonance costs you nothing and still works when you sing the same phrase quietly.
+Carrying power is mostly resonance, not loudness: a voice with more energy in the bright upper band, where hearing is sharpest, cuts through without being pushed. Twang gets there by narrowing the space just above the vocal folds, which brightens the tone by reshaping the tube, not by driving more air or squeezing harder. Pressed phonation, more squeeze than the note needs, also sounds intense but tires the voice. Brightness from resonance costs nothing and survives singing the phrase quietly.
 
 ## Steps
 

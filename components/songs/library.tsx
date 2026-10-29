@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { PRO_SONGS, SONGS, type Song } from "./data";
 import type { ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
@@ -60,6 +60,7 @@ import { pickForTaste, tasteGenreOptions } from "@/lib/song-taste";
 import { rangeTestHref } from "@/lib/site";
 import { saveTaste, skipTaste, useTaste } from "./taste";
 import { PickedForYou, TasteQuiz } from "./taste-quiz";
+import { MelodyContour } from "@/components/figures";
 
 /**
  * The songbook browser.
@@ -264,6 +265,7 @@ function SongCard({
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-lg">{song.title}</h3>
         <div className="flex shrink-0 items-center gap-1.5">
+          <MelodyContour notes={song.notes} className="mr-1" />
           {mastered && <MasteredMark />}
           {locked && <LockMark />}
           <HeartButton active={favorite} title={song.title} onClick={onFavorite} />
@@ -336,7 +338,8 @@ export function Library({
   visitUnlockedSongId,
 }: {
   progress: ProgressState;
-  onSelect: (song: Song) => void;
+  /** `autoStart`: a card's Sing opens the player straight into the count-in. */
+  onSelect: (song: Song, opts?: { autoStart?: boolean }) => void;
   /** A song explicitly linked into this visit; entitlement still limits the catalog. */
   visitUnlockedSongId?: string | null;
   /**
@@ -433,13 +436,12 @@ export function Library({
     [accessible, visible, mastered],
   );
 
-  function start(song: Song) {
+  function start(song: Song, autoStart = false) {
     if (!startableIds.has(song.id)) return;
-    // Recorded here as well as (optionally) in the caller: the recently-sung
-    // row must not look dead just because the wiring hasn't landed. The store
-    // keys on song id, so recording twice for one start is a no-op.
+    // Recorded here too (idempotent per id), so the recently-sung row never looks dead.
     recordSongPlayed(song.id);
-    onSelect(song);
+    if (autoStart) onSelect(song, { autoStart: true });
+    else onSelect(song);
   }
 
   function surprise() {
@@ -480,25 +482,31 @@ export function Library({
     [recents, accessible, mastered, visitUnlockedSongId],
   );
 
+  const quiz =
+    taste === null || editingTaste ? (
+      <TasteQuiz
+        genres={tasteGenres}
+        initial={taste?.kind === "answered" ? taste : undefined}
+        skipLabel={taste === null ? "Skip for now" : "Cancel"}
+        onSave={(answers) => {
+          saveTaste(answers);
+          setEditingTaste(false);
+        }}
+        onSkip={() => {
+          // Only a first-visit skip is recorded; cancelling an edit keeps what was saved.
+          if (taste === null) skipTaste();
+          setEditingTaste(false);
+        }}
+      />
+    ) : null;
+  // A first visit opens on a row of songs; the quiz waits under it. Changing saved answers keeps it at the top.
+  const quizFirst = quiz !== null && (editingTaste || taste !== null);
+
   return (
     <div className="space-y-8">
-      {taste === null || editingTaste ? (
-        <TasteQuiz
-          genres={tasteGenres}
-          initial={taste?.kind === "answered" ? taste : undefined}
-          skipLabel={taste === null ? "Skip for now" : "Cancel"}
-          onSave={(answers) => {
-            saveTaste(answers);
-            setEditingTaste(false);
-          }}
-          onSkip={() => {
-            // Cancelling an edit keeps what was saved; only a first-visit skip
-            // is recorded, so the quiz stops asking.
-            if (taste === null) skipTaste();
-            setEditingTaste(false);
-          }}
-        />
-      ) : taste.kind === "answered" ? (
+      {quizFirst ? (
+        quiz
+      ) : taste === null ? null : taste.kind === "answered" ? (
         // Hidden while filtering, like the recents row: the singer is
         // searching for something specific and did not ask for suggestions.
         active === 0 && picks.length > 0 && (
@@ -653,8 +661,9 @@ export function Library({
           </div>
         ) : (
           <div className="mt-4 space-y-8">
-            {bandSections.map(({ band, songs: bandSongs, open, unlock }) => (
-              <section key={band} aria-label={`${BAND_LABEL[band]} band`}>
+            {bandSections.map(({ band, songs: bandSongs, open, unlock }, i) => (
+              <Fragment key={band}>
+              <section aria-label={`${BAND_LABEL[band]} band`}>
                 <div className="flex flex-wrap items-center gap-2">
                   <SectionLabel>{BAND_LABEL[band]}</SectionLabel>
                   <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -676,7 +685,7 @@ export function Library({
                       locked={!startableIds.has(song.id)}
                       visitUnlocked={!open && song.id === visitUnlockedSongId}
                       pro={isPro && !SONGS.some((s) => s.id === song.id)}
-                      onStart={() => start(song)}
+                      onStart={() => start(song, true)}
                       onFavorite={() => toggleFavorite(song.id)}
                       onQueue={() =>
                         setlist.ids.includes(song.id)
@@ -687,15 +696,13 @@ export function Library({
                   ))}
                 </div>
               </section>
+              {i === 0 && !quizFirst && quiz}
+              </Fragment>
             ))}
           </div>
         )}
 
-        {/* The songbook is no longer the paywall — all 26 melodies are free,
-            because six public-domain folk tunes held back from someone who
-            already had twenty was a gate that argued against buying. Each
-            song's best score and score trend are free too, so what Pro adds
-            here is the per-note report the song runs feed. */}
+        {/* Every melody is free; what Pro adds here is the per-note report the runs feed. */}
         <FreeOnly>
           <ProInlineNudge>
             Pro adds every song you sing to your per-note accuracy report

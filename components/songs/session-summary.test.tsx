@@ -88,6 +88,24 @@ describe("the song summary", () => {
   });
 });
 
+describe("a summary reached at the free cap", () => {
+  it("demotes Sing again to an outline button that says why it cannot start", () => {
+    // The filled violet button scrolled to a wall below the fold; a primary button that cannot do its job.
+    const reason = "Free practice is used for today. It resets at midnight; the free studio is still open.";
+    const html = renderToStaticMarkup(
+      <SessionSummary data={data(70)} onAgain={() => {}} onLibrary={() => {}} againUnavailable={reason} />,
+    );
+    const again = html.match(/<button[^>]*>Sing again<\/button>/)![0];
+    expect(again).toContain('aria-disabled="true"');
+    expect(again).toMatch(/aria-describedby="([^"]+)"/);
+    expect(again).not.toContain("bg-violet ");
+    const id = again.match(/aria-describedby="([^"]+)"/)![1];
+    expect(html).toContain(`<p id="${id}" class="w-full text-sm text-mut">${reason}</p>`);
+    // Under the cap the button is the filled primary and nothing describes it.
+    expect(render(data(70))).not.toContain('aria-disabled="true"');
+  });
+});
+
 describe("an unscored song summary", () => {
   beforeEach(() => {
     state.progress = null;

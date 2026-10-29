@@ -136,11 +136,6 @@ export default async function AtlasChapterPage({
           >
             ← Contents
           </Link>
-          {tryIt && (
-            <LinkButton href={RANGE_TEST_HREF} size="md">
-              {tryIt.label}
-            </LinkButton>
-          )}
         </div>
       }
     >
@@ -220,12 +215,9 @@ export default async function AtlasChapterPage({
                   . {nextFree.summary}
                 </p>
               )}
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-4">
                 <LinkButton href="/pro#buy" size="md">
                   {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
-                </LinkButton>
-                <LinkButton href="/atlas" prefetch={false} variant="outline" size="md">
-                  Back to contents
                 </LinkButton>
               </div>
             </Card>

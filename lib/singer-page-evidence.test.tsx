@@ -256,9 +256,11 @@ describe("singer-page evidence and provenance", () => {
 
     expect(voiceType).toHaveLength(1);
     expect(visibleHtml).toContain(voiceType[0].acceptedAnswer.text);
-    expect(answers).toHaveLength(5);
+    expect(answers).toHaveLength(4);
+    // The shared caveat is the section's lede, said once above the answers.
+    expect(visibleHtml).toContain("as a reported reference span, not an independently verified physiological limit.");
     for (const answer of answers) {
-      expect(answer).toContain("reported reference span");
+      expect(answer).toMatch(/reported (?:ceiling|floor)|in (?:this|the) catalog/);
       expect(answer.toLowerCase()).not.toMatch(
         /\b(full voice|falsetto|head voice|whistle register)\b/,
       );

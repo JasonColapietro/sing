@@ -35,7 +35,7 @@ const noDayOnServer = () => null;
  * rather than one effect later. A page left open overnight re-reads it at
  * midnight, once a minute and when the tab comes back (subscribePracticeDay).
  */
-export function useLocalDay(): string | null {
+function useLocalDay(): string | null {
   return useSyncExternalStore(subscribePracticeDay, localDay, noDayOnServer);
 }
 

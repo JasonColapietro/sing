@@ -3,14 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { audioNow } from "@/lib/audio/context";
 import { clickAt } from "@/lib/audio/synth";
-import { logSession, type LogResult } from "@/lib/progress";
-import { Button, Card, Pill, ProgressBar, Stat } from "@/components/ui";
+import { logSession } from "@/lib/progress";
 import { SessionButton, SessionShell } from "@/components/practice/session-shell";
-import { RewardNote } from "./reward";
 import { recordBreathBest } from "./store";
 import { FARINELLI_START_N, type BreathDrillResult } from "./routines";
 
-type Mode = "setup" | "running" | "done";
+type Mode = "setup" | "running";
 
 const PHASE_LABELS = ["Inhale", "Hold", "Exhale"] as const;
 const START_N = FARINELLI_START_N;
@@ -71,28 +69,20 @@ export function FarinelliDrill({
   autoStart = false,
   onComplete,
   onExit,
-  variant = "page",
 }: {
   /** Run this top count instead of the singer's own pick. */
   preset?: { cap: number };
   /** Skip the setup card and start on mount — a routine step, not a visit. */
   autoStart?: boolean;
-  /** Report what was done instead of drawing a "done" card. */
-  onComplete?: (result: BreathDrillResult) => void;
+  /** What was done; the runner and the path both put a results screen after it. */
+  onComplete: (result: BreathDrillResult) => void;
   /** Leaving before anything ran — there is nothing to report. */
-  onExit?: () => void;
-  variant?: "page" | "session";
+  onExit: () => void;
 }) {
   const [mode, setMode] = useState<Mode>("setup");
   const [cap, setCap] = useState(preset?.cap ?? 8);
   const [sound, setSound] = useState(true);
   const [run, setRun] = useState<RunFrame | null>(null);
-  const [summary, setSummary] = useState<{
-    sec: number;
-    rounds: number;
-    topN: number;
-    logged: LogResult | null;
-  } | null>(null);
 
   const [beats, setBeats] = useState<Beat[]>([]);
   const rafRef = useRef(0);
@@ -130,24 +120,13 @@ export function FarinelliDrill({
     const topN = reached?.n ?? START_N;
     // A best is earned by finishing the climb, not by starting it.
     if (!early) recordBreathBest({ farinelliCap: topN });
-    const done = completeRef.current;
-    if (done) {
-      done({
-        durationSec: sec,
-        score: null,
-        logged,
-        // The count actually reached in the seconds actually run.
-        label: `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} · top count ${topN}`,
-      });
-      return;
-    }
-    setSummary({
-      sec,
-      rounds: reached?.round ?? 0,
-      topN,
+    completeRef.current({
+      durationSec: sec,
+      score: null,
       logged,
+      // The count actually reached in the seconds actually run.
+      label: `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} · top count ${topN}`,
     });
-    setMode("done");
   };
 
   const begin = () => {
@@ -155,7 +134,6 @@ export function FarinelliDrill({
     setBeats(newBeats);
     t0Ref.current = audioNow() + LEAD_SEC; // audio clock is the master clock
     nextClickRef.current = 0;
-    setSummary(null);
     setRun({ beatIdx: -1, elapsed: -LEAD_SEC });
     setMode("running");
 
@@ -186,10 +164,7 @@ export function FarinelliDrill({
     rafRef.current = requestAnimationFrame(loop);
   };
 
-  // A routine step starts itself. Start and teardown live in ONE effect: a
-  // ref guard here left the drill dead under React's development double-mount
-  // (the simulated unmount ran cleanup, the guard refused to restart), and an
-  // effect that owns its own cleanup restarts cleanly instead.
+  // A routine step starts itself; start and teardown share one effect so dev double-mount restarts it.
   useEffect(() => {
     if (!autoStart) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- begin() seeds the run frame the loop it starts will overwrite next tick
@@ -205,286 +180,124 @@ export function FarinelliDrill({
   const beat = beatIdx >= 0 ? beats[beatIdx] : null;
   const progress = beats.length ? (Math.max(0, beatIdx) / beats.length) * 100 : 0;
 
-  /* ---------------------------------------------------------------- *
-   * Session — the full-screen dark surface.
-   * ---------------------------------------------------------------- */
-  if (variant === "session") {
-    const closeSession = () => {
-      if (mode === "running") finish(run?.elapsed ?? 0, beats, true);
-      else onExit?.();
-    };
+  const closeSession = () => {
+    if (mode === "running") finish(run?.elapsed ?? 0, beats, true);
+    else onExit();
+  };
 
-    return (
-      <SessionShell
-        title="Farinelli drill"
-        subtitle={`Top count ${cap}`}
-        progress={mode === "running" ? progress : 0}
-        onClose={closeSession}
-        closeLabel={mode === "running" ? "End drill" : "Leave"}
-        topRight={
-          beat ? (
-            <span className="tabular font-mono text-xs text-[var(--s-dim)]">
-              round {beat.round}/{totalRounds}
-            </span>
-          ) : undefined
-        }
-        bottom={
-          <div className="flex items-center justify-center gap-3">
-            <SessionButton
-              label={sound ? "Click on" : "Click off"}
-              onClick={() => setSound((s) => !s)}
-              pressed={sound}
-            >
-              <ClickGlyph on={sound} />
-            </SessionButton>
-            <SessionButton label="End" onClick={closeSession} tone="danger">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <rect x="6" y="6" width="12" height="12" rx="2" />
-              </svg>
-            </SessionButton>
-          </div>
-        }
-      >
-        {mode === "running" ? (
-          <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 px-4 py-3 text-center">
-            {beat ? (
-              <div
-                className="flex flex-col items-center gap-3"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <div className="font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-none">
-                  {PHASE_LABELS[beat.phase]}
-                </div>
-                <div className="tabular font-mono text-[clamp(3.5rem,16vw,7rem)] leading-none text-[var(--s-voice)]">
-                  {beat.count}
-                  <span className="mx-3 text-[0.45em] text-[var(--s-dim)]">/</span>
-                  <span className="text-[0.45em] text-[var(--s-mut)]">{beat.n}</span>
-                </div>
-              </div>
-            ) : (
-              <div
-                className="flex flex-col items-center gap-3"
-                role="status"
-                aria-live="polite"
-              >
-                <div className="font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-none">
-                  Ready
-                </div>
-                <p className="max-w-xs text-sm text-[var(--s-mut)]">
-                  Exhale fully. The inhale starts on the first count.
-                </p>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-5 py-6 text-center">
-            <p className="max-w-sm text-sm text-[var(--s-mut)]">
-              Inhale for four counts, hold for four with the ribs and throat
-              open, exhale for four, then add a count each round. Counts tick
-              at one a second. No microphone needed.
-            </p>
-            <div className="w-full max-w-sm text-left">
-              <label
-                htmlFor="farinelli-cap-session"
-                className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]"
-              >
-                Top count: the drill climbs from 4 to here
-              </label>
-              <div className="mt-2 flex items-center gap-3">
-                <input
-                  id="farinelli-cap-session"
-                  type="range"
-                  min={8}
-                  max={12}
-                  step={1}
-                  value={cap}
-                  onChange={(e) => setCap(Number(e.target.value))}
-                  className="h-11 w-full accent-[var(--s-voice)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
-                />
-                <span className="tabular font-mono text-lg text-[var(--s-voice)]">
-                  {cap}
-                </span>
-              </div>
-              <p className="tabular mt-1.5 font-mono text-xs text-[var(--s-dim)]">
-                {totalRounds} rounds · about{" "}
-                {Math.round((buildBeats(cap).length / 60) * 10) / 10} min
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={begin}
-              className="min-h-11 rounded-full bg-[var(--s-ok)] px-8 text-base font-medium text-[oklch(0.15_0.02_155)] transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
-            >
-              Begin
-            </button>
-          </div>
-        )}
-      </SessionShell>
-    );
-  }
-
-  /* ---------------------------------------------------------------- *
-   * Page — the drill exactly as the room has always shown it.
-   * ---------------------------------------------------------------- */
-
-  // ---- setup ----
-  if (mode === "setup") {
-    const preview = buildBeats(cap);
-    const mins = Math.round((preview.length / 60) * 10) / 10;
-    return (
-      <Card>
-        <h3 className="text-xl">Farinelli drill</h3>
-        <p className="mt-2 max-w-lg text-sm text-mut">
-          A classic singer&rsquo;s exercise: inhale for four counts, hold for
-          four with the throat open, exhale for four. Each round adds one
-          count, so the breath gets longer as you go. Counts tick at one per
-          second. No microphone needed.
-        </p>
-        <div className="mt-5">
-          <label
-            htmlFor="farinelli-cap"
-            className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
-          >
-            Top count: the drill climbs from 4 to here
-          </label>
-          <div className="mt-2 flex items-center gap-3">
-            <input
-              id="farinelli-cap"
-              type="range"
-              min={8}
-              max={12}
-              step={1}
-              value={cap}
-              onChange={(e) => setCap(Number(e.target.value))}
-              className="w-full max-w-[220px] accent-[var(--color-cool)]"
-            />
-            <span className="tabular font-mono text-lg text-cool">{cap}</span>
-          </div>
-          <p className="tabular mt-1.5 font-mono text-xs text-dim">
-            {totalRounds} rounds · about {mins} min
-          </p>
-        </div>
-        <div className="mt-4 flex items-center gap-3">
-          <Button
-            size="sm"
-            variant={sound ? "violet" : "outline"}
-            aria-pressed={sound}
-            onClick={() => setSound((s) => !s)}
-          >
-            {sound ? "Count clicks on" : "Count clicks off"}
-          </Button>
-        </div>
-        <Button variant="violet" size="lg" className="mt-6" onClick={begin}>
-          Begin
-        </Button>
-      </Card>
-    );
-  }
-
-  // ---- done ----
-  if (mode === "done" && summary) {
-    return (
-      <Card>
-        <div className="flex flex-col items-center gap-4 py-8 text-center">
-          <h3 className="text-xl">Drill complete</h3>
-          <div className="flex gap-8">
-            <Stat
-              label="Time"
-              value={`${Math.floor(summary.sec / 60)}:${String(summary.sec % 60).padStart(2, "0")}`}
-              tone="cool"
-            />
-            <Stat label="Rounds" value={summary.rounds} />
-            <Stat label="Top count" value={summary.topN} tone="violet" />
-          </div>
-          {summary.logged ? (
-            <RewardNote result={summary.logged} />
-          ) : (
-            <p className="text-xs text-dim">
-              Drills under {MIN_LOG_SEC} seconds aren&rsquo;t logged.
-            </p>
-          )}
-          <div className="flex gap-2">
-            <Button variant="violet" onClick={begin}>
-              Go again
-            </Button>
-            <Button variant="outline" onClick={() => setMode("setup")}>
-              Change settings
-            </Button>
-          </div>
-        </div>
-      </Card>
-    );
-  }
-
-  // ---- running ----
   return (
-    <Card>
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-xl">Farinelli drill</h3>
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            aria-pressed={sound}
+    <SessionShell
+      title="Farinelli drill"
+      subtitle={`Top count ${cap}`}
+      progress={mode === "running" ? progress : 0}
+      onClose={closeSession}
+      closeLabel="Exit drill"
+      topRight={
+        beat ? (
+          <span className="tabular font-mono text-xs text-[var(--s-dim)]">
+            round {beat.round}/{totalRounds}
+          </span>
+        ) : undefined
+      }
+      bottom={
+        <div className="flex items-center justify-center gap-3">
+          <SessionButton
+            label={sound ? "Click on" : "Click off"}
             onClick={() => setSound((s) => !s)}
+            pressed={sound}
           >
-            {sound ? "Clicks on" : "Clicks off"}
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => finish(run?.elapsed ?? 0, beats, true)}
-          >
-            Stop
-          </Button>
+            <ClickGlyph on={sound} />
+          </SessionButton>
+          <SessionButton label="End" onClick={closeSession} tone="danger">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <rect x="6" y="6" width="12" height="12" rx="2" />
+            </svg>
+          </SessionButton>
         </div>
-      </div>
-
-      <div className="mt-6 flex flex-col items-center gap-4">
-        {beat ? (
-          <>
+      }
+    >
+      {mode === "running" ? (
+        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 px-4 py-3 text-center">
+          {beat ? (
             <div
-              className="flex flex-col items-center gap-1"
+              className="flex flex-col items-center gap-3"
               role="status"
               aria-live="polite"
               aria-atomic="true"
             >
-              <div className="text-2xl text-ink">
-                {PHASE_LABELS[beat.phase]}&hellip;
+              <div className="font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-none">
+                {PHASE_LABELS[beat.phase]}
               </div>
-              <div className="tabular font-mono text-6xl text-cool sm:text-7xl">
+              <div className="tabular font-mono text-[clamp(3.5rem,16vw,7rem)] leading-none text-[var(--s-voice)]">
                 {beat.count}
-                <span className="mx-2 text-3xl text-dim">/</span>
-                <span className="text-3xl text-mut">{beat.n}</span>
+                <span className="mx-3 text-[0.45em] text-[var(--s-dim)]">/</span>
+                <span className="text-[0.45em] text-[var(--s-mut)]">{beat.n}</span>
               </div>
             </div>
-            <Pill tone="cool">
-              round {beat.round} of {totalRounds} · {beat.n} counts
-            </Pill>
-          </>
-        ) : (
-          <div
-            className="flex flex-col items-center gap-1 py-6"
-            role="status"
-            aria-live="polite"
-          >
-            <div className="text-2xl text-ink">Ready&hellip;</div>
-            <p className="text-sm text-mut">Exhale fully. Inhale starts on the first count.</p>
-          </div>
-        )}
-
-        <div className="w-full max-w-sm">
-          <ProgressBar value={progress} label="Drill progress" tone="cool" />
+          ) : (
+            <div
+              className="flex flex-col items-center gap-3"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-none">
+                Ready
+              </div>
+              <p className="max-w-xs text-sm text-[var(--s-mut)]">
+                Exhale fully. The inhale starts on the first count.
+              </p>
+            </div>
+          )}
         </div>
-      </div>
-    </Card>
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-5 py-6 text-center">
+          <p className="max-w-sm text-sm text-[var(--s-mut)]">
+            Inhale for four counts, hold for four with the ribs and throat
+            open, exhale for four, then add a count each round. Counts tick
+            at one a second. No microphone needed.
+          </p>
+          <div className="w-full max-w-sm text-left">
+            <label
+              htmlFor="farinelli-cap-session"
+              className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]"
+            >
+              Top count: the drill climbs from 4 to here
+            </label>
+            <div className="mt-2 flex items-center gap-3">
+              <input
+                id="farinelli-cap-session"
+                type="range"
+                min={8}
+                max={12}
+                step={1}
+                value={cap}
+                onChange={(e) => setCap(Number(e.target.value))}
+                className="h-11 w-full accent-[var(--s-voice)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
+              />
+              <span className="tabular font-mono text-lg text-[var(--s-voice)]">
+                {cap}
+              </span>
+            </div>
+            <p className="tabular mt-1.5 font-mono text-xs text-[var(--s-dim)]">
+              {totalRounds} rounds · about{" "}
+              {Math.round((buildBeats(cap).length / 60) * 10) / 10} min
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={begin}
+            className="min-h-11 rounded-full bg-[var(--s-ok)] px-8 text-base font-medium text-[oklch(0.15_0.02_155)] transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
+          >
+            Start
+          </button>
+        </div>
+      )}
+    </SessionShell>
   );
 }

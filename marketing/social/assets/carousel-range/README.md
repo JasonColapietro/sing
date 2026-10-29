@@ -6,6 +6,7 @@ post 2** in [instagram.md](../../instagram.md), and it doubles as the
 Facebook W2 "voice-type explainer" — the shareable-into-groups post.
 
 Upload `slide-1.png` … `slide-6.png` in order. No design work needed.
+Render them first: `node marketing/social/assets/carousel-range/render.mjs` (the PNGs are not committed).
 
 | Slide | Does |
 |---|---|

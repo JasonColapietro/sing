@@ -8,28 +8,14 @@ const COMPETITORS = [
   "30 Day Singer",
 ] as const;
 
-/** [Suede Sing, Yousician, Sing Sharp, Vocaberry, Singing Carrots, 30 Day Singer] */
+/**
+ * [Suede Sing, Yousician, Sing Sharp, Vocaberry, Singing Carrots, 30 Day Singer]
+ * Only the rows where the columns differ: a row of five "yes" marks says
+ * nothing about Suede Sing.
+ */
 const ROWS: Array<{ label: string; marks: [Mark, Mark, Mark, Mark, Mark, Mark] }> = [
   {
-    label: "Real-time pitch feedback",
-    marks: ["yes", "yes", "yes", "yes", "yes", "no"],
-  },
-  {
-    label: "Vocal range test",
-    marks: ["yes", "yes", "yes", "yes", "yes", "no"],
-  },
-  {
-    label: "Guided warmups",
-    marks: ["yes", "yes", "yes", "yes", "part", "yes"],
-  },
-  {
-    label: "Ear training",
-    marks: ["yes", "yes", "yes", "part", "yes", "part"],
-  },
-  {
-    // Singing Carrots corrected part → yes on the August 2026 recheck: they
-    // ship "Sustain & Breath training" as a named practice feature, so the
-    // "unclear from public info" hedge no longer applies to them.
+    // Singing Carrots: "Sustain & Breath training" is a named feature (August 2026 recheck).
     label: "Breath training",
     marks: ["yes", "part", "yes", "part", "yes", "part"],
   },
@@ -44,10 +30,6 @@ const ROWS: Array<{ label: string; marks: [Mark, Mark, Mark, Mark, Mark, Mark] }
   {
     label: "Auto-transpose to your range",
     marks: ["yes", "yes", "part", "yes", "part", "no"],
-  },
-  {
-    label: "Progress tracking",
-    marks: ["yes", "yes", "part", "yes", "yes", "part"],
   },
   {
     label: "Works on the web, no install required",
@@ -82,15 +64,9 @@ function MarkCell({ mark }: { mark: Mark }) {
 export default function ComparisonTable() {
   return (
     <div className="w-full min-w-0 [contain:layout]">
-      {/* The table needs 720px; the section gives it (viewport - 48px), so 768px
-          is the exact width where it stops overflowing — zero slack, and media
-          queries measure the viewport *including* a classic scrollbar while the
-          content box is sized without it, so md: would drop both affordances
-          ~15px early on desktops with non-overlay scrollbars. 800px keeps the
-          slack. Below it the scrollbar is suppressed by no-scrollbar and iOS
-          overlay bars only appear mid-scroll, so the fade and the cue are the
-          only signal that five competitor columns exist off to the right —
-          keep them on the same threshold. */}
+      {/* The table needs 720px; 800px leaves slack for a classic scrollbar.
+          Below it the fade and this cue are the only sign of the columns off
+          to the right, so both switch on the same threshold. */}
       <p className="mb-3 font-mono text-xs text-dim min-[800px]:hidden">
         Swipe for {COMPETITORS.length} competitors <span aria-hidden>→</span>
       </p>

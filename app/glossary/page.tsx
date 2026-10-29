@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
-import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
+import { AUTHOR_NODE } from "@/lib/author";
 import { BOOK_CONTENTS } from "@/lib/book-data";
 import {
   roomLabel,
@@ -15,6 +15,8 @@ import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { EXERCISES } from "@/components/warmups/exercises";
+import { AuthorByline } from "@/components/book/byline";
+import { GLOSSARY_FIGURES, ReferenceFigure } from "@/components/learn/reference-figure";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -40,9 +42,6 @@ export const metadata: Metadata = withCanonicalOpenGraph({
  * intro above it (the guides and song pages link the test the same way).
  */
 const RANGE_TEST_HREF = rangeTestHref();
-
-/** The definition the opening paragraph quotes, so the answer is the page's own. */
-const PASSAGGIO = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");
 
 /**
  * The free warmup an entry names, resolved by id. Only the free catalogue is
@@ -87,11 +86,7 @@ export default function GlossaryPage() {
     <PageShell
       kicker="Free reference"
       title="Singing terms glossary: what each vocal term means"
-      subtitle={`What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each, with the room where you can see each one at work.${
-        PASSAGGIO
-          ? ` Passaggio, for example, is ${PASSAGGIO.definition.charAt(0).toLowerCase()}${PASSAGGIO.definition.slice(1)}`
-          : ""
-      }`}
+      subtitle={`What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each, with the room where you can see each one at work.`}
     >
       <script
         type="application/ld+json"
@@ -101,26 +96,8 @@ export default function GlossaryPage() {
       <div className="space-y-6">
         <Card>
           {/* The visible counterpart of the DefinedTermSet's author node. */}
-          <p className="mb-3 text-sm text-mut">
-            By{" "}
-            <a
-              href={AUTHOR_NODE.url}
-              rel="author"
-              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
-            >
-              {AUTHOR_NAME}
-            </a>
-          </p>
-          <p className="max-w-3xl text-mut">
-            Vocal teaching runs on borrowed words. Half of them arrived from
-            three different traditions that never agreed with each other, and
-            the rest describe a sensation rather than a mechanism. This page
-            takes the {SING_GLOSSARY_TERMS.length} that turn up in this app (on the
-            range result, in the studio readout, across the singer pages) and
-            gives each one a single sentence, plus the place it shows up so the
-            definition has somewhere to land.
-          </p>
-          <p className="mt-3 max-w-3xl text-sm text-mut">
+          <AuthorByline lead="Written by" className="mb-4" />
+          <p className="max-w-3xl text-sm text-mut">
             Definitions only. The exercises live in the{" "}
             <Link href="/warmups" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
               warmups
@@ -151,10 +128,17 @@ export default function GlossaryPage() {
 
         {SING_GLOSSARY.map((section) => (
           <Card key={section.heading}>
-            <h2 id={termId(section.heading)} className="scroll-mt-20 text-xl">
-              {section.heading}
-            </h2>
-            <p className="mt-2 max-w-3xl text-sm text-mut">{section.blurb}</p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 id={termId(section.heading)} className="scroll-mt-20 text-xl">
+                  {section.heading}
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm text-mut">{section.blurb}</p>
+              </div>
+              {GLOSSARY_FIGURES[section.heading] && (
+                <ReferenceFigure kind={GLOSSARY_FIGURES[section.heading]} className="hidden sm:block" />
+              )}
+            </div>
             <div className="mt-5 divide-y divide-line/50">
               {section.entries.map((entry) => {
                 const drill = drillFor(entry.drill);

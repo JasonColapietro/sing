@@ -86,10 +86,11 @@ vi.mock("./session", () => {
   return {
     useEarSession: () => session,
     useActiveStart: () => [0, fixture.restartClock],
-    GameShell: "game-shell", ShellMicGate: "mic-gate", ShellButton: "shell-button",
-    ShellBar: "shell-bar", RoundFeedback: "feedback", StepDone: "step-done", SummaryView: "summary",
+    GameShell: "game-shell", ShellButton: "shell-button",
+    ShellBar: "shell-bar", RoundFeedback: "feedback", StepDone: "step-done",
   };
 });
+vi.mock("@/components/ui", () => ({ MicGate: "mic-gate" }));
 
 import { PitchMatchGame } from "./pitch-match-game";
 import { MelodyEchoGame } from "./melody-echo-game";
@@ -149,7 +150,7 @@ describe("a microphone disconnected during an ear game", () => {
     ["Note catcher", NoteCatcherGame],
   ] as const)("%s cannot score or finish behind the retry gate", (_name, Game) => {
     // Call the component itself so its hooks, rather than JSX creation, run.
-    const draw = () => hooks.render(() => Game({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop }));
+    const draw = () => hooks.render(() => Game({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop, onComplete: noop }));
     draw();
     runFor(500, draw);
     fixture.pitch.listening = false;
@@ -164,7 +165,7 @@ describe("a microphone disconnected during an ear game", () => {
     ["Pitch match", PitchMatchGame],
     ["Melody echo", MelodyEchoGame],
   ] as const)("%s gives the replayed round a fresh answer window on reconnect", (_name, Game) => {
-    const draw = () => hooks.render(() => Game({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop }));
+    const draw = () => hooks.render(() => Game({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop, onComplete: noop }));
     draw(); runFor(500, draw);
     fixture.pitch.listening = false; draw(); runFor(10_000, draw);
     fixture.pitch.listening = true;
@@ -180,7 +181,7 @@ describe("a microphone disconnected during an ear game", () => {
     ["Pitch match", PitchMatchGame],
     ["Melody echo", MelodyEchoGame],
   ] as const)("%s ignores answer/replay shortcuts while the retry gate owns the keyboard", (_name, Game) => {
-    const draw = () => hooks.render(() => Game({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop }));
+    const draw = () => hooks.render(() => Game({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop, onComplete: noop }));
     draw(); runFor(500, draw);
     fixture.pitch.listening = false; draw();
     const soundsBefore = fixture.playTone.mock.calls.length + fixture.playSequence.mock.calls.length;
@@ -193,7 +194,7 @@ describe("a microphone disconnected during an ear game", () => {
   });
 
   it("reconnects Note catcher without dealing over the existing run", async () => {
-    const draw = () => hooks.render(() => NoteCatcherGame({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop }));
+    const draw = () => hooks.render(() => NoteCatcherGame({ difficulty: "easy", pitch: fixture.pitch as never, onExit: noop, onComplete: noop }));
     const view = () => find(draw(), NoteCatcherCanvas)!.props.viewRef as { current: CatcherView };
     draw(); runFor(500, draw);
     const before = view().current;

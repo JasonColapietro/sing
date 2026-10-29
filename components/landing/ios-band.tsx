@@ -3,101 +3,30 @@ import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 
-const SHOTS = [
-  {
-    src: "/shot-01-start-the-session.png",
-    alt: "Suede Voice iPhone app: starting a practice session",
-    caption: "Start a session",
-  },
-  {
-    src: "/shot-02-hear-it-sing-it-back.png",
-    alt: "Suede Voice iPhone app: hearing a reference note and singing it back",
-    caption: "Hear it, sing it back",
-  },
-  {
-    src: "/shot-05-track-the-work.png",
-    alt: "Suede Voice iPhone app: progress tracking across sessions",
-    caption: "Track the work",
-  },
-];
-
-/** Keep these capabilities aligned with the current /voice companion page. */
-const FEATURES = [
-  {
-    term: "Find your vocal range",
-    def: "Find the low and high notes you can sing. Use the result as a starting point for practice and choosing songs.",
-  },
-  {
-    term: "Give practice a direction",
-    def: "Work through vocal exercises for warmups, pitch accuracy, breath support, and register transitions. Pick a drill and build a routine you can return to.",
-  },
-  {
-    term: "Hear your progress",
-    def: "On iPhone, follow a live pitch trace, record takes on your device, and compare your measured range with famous singers in the range library.",
-  },
-  {
-    term: "Register analysis on iPhone",
-    def: "The iPhone app has its own practice tools, recorder and register analysis. Features and purchase options can differ between platforms; each store lists the current details.",
-  },
-];
-
+/**
+ * One strip for the phone companion: the label, one sentence, the badge and
+ * one product image. The platform disclaimer lives on /voice.
+ */
 export function IosBand() {
   return (
     <section id="app" className="border-t border-line bg-panel/40">
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <SectionLabel className="mb-4">{APP_NAME} · iPhone companion</SectionLabel>
-        <h2 className="max-w-2xl text-2xl sm:text-3xl">
-          Keep the browser studio. Add deeper analysis on iPhone.
-        </h2>
-        <p className="mt-3 max-w-2xl text-mut">
-          The web studio gives you live pitch and range testing with no daily
-          clock. {APP_NAME}, the optional phone companion, has its own
-          practice tools; the iPhone app adds register analysis.
-        </p>
-
-        {/* The source captures are 268x582; rendering them any larger just
-            upscales a small PNG into a blurry one, so they cap at native size. */}
-        {/* One frame on a phone (three ran to over two screens); the
-            panel2 ground stands in for the lazily loaded capture. */}
-        <ul className="mt-8 grid justify-items-center gap-6 sm:grid-cols-3">
-          {SHOTS.map((s, i) => (
-            <li key={s.src} className={`w-full max-w-[268px] ${i > 0 ? "max-sm:hidden" : ""}`}>
-              <div className="overflow-hidden rounded-2xl border border-line bg-panel2">
-                <Image
-                  src={s.src}
-                  alt={s.alt}
-                  width={268}
-                  height={582}
-                  sizes="268px"
-                  className="h-auto w-full"
-                />
-              </div>
-              <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                {s.caption}
-              </p>
-            </li>
-          ))}
-        </ul>
-
-        <dl className="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2">
-          {FEATURES.map((m) => (
-            <div key={m.term}>
-              <dt className="text-base font-extrabold text-ink">
-                {m.term}
-              </dt>
-              <dd className="mt-1 text-sm text-mut">{m.def}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <div className="mt-9 flex flex-wrap items-center gap-4">
-          <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">
-            Explore Suede Voice for iPhone and Android
-          </Link>
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-12 sm:grid-cols-[1fr_auto] sm:px-6 sm:py-14">
+        <div className="max-w-2xl">
+          <SectionLabel hairline className="mb-4">iPhone companion</SectionLabel>
+          <h2 className="text-2xl sm:text-3xl">Also on iPhone: {APP_NAME}</h2>
+          <p className="mt-3 text-mut">
+            The web studio gives you live pitch and range testing with no daily
+            clock;{" "}
+            <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">
+              {APP_NAME} for iPhone and Android
+            </Link>{" "}
+            has its own practice tools, and the iPhone app adds register
+            analysis.
+          </p>
           <a
             href={APP_STORE_URL}
             aria-label={`View ${APP_NAME} on the App Store`}
-            className="inline-block rounded-[10px] transition-opacity hover:opacity-85"
+            className="mt-6 inline-block rounded-[10px] transition-opacity hover:opacity-85"
           >
             <Image
               src="/app-store-badge.svg"
@@ -107,6 +36,18 @@ export function IosBand() {
             />
           </a>
         </div>
+        {/* The range room, captured from this site at phone width: the
+            result the app and the browser both start from. */}
+        <figure className="figure mx-auto w-full max-w-[220px] overflow-hidden rounded-2xl border border-line bg-panel p-2 sm:mx-0">
+          <Image
+            src="/room-range.png"
+            alt="Suede Sing's range room on a phone: a measured range drawn on a keyboard"
+            width={390}
+            height={844}
+            sizes="220px"
+            className="h-auto w-full rounded-xl"
+          />
+        </figure>
       </div>
     </section>
   );

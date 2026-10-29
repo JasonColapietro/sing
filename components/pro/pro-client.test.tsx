@@ -78,7 +78,7 @@ describe("Pro purchase choices", () => {
     // The hero carries the price and jumps straight to the buy card.
     expect(html).toMatch(/<a[^>]*href="#buy"[^>]*>Get lifetime Pro: \$79 once<\/a>/);
     expect(html).toMatch(/<div[^>]*id="buy"/);
-    expect(html).toContain("$79 once for lifetime access");
+    expect(html).toContain("One payment. Lifetime Pro. No renewal.");
     expect(html).toContain(
       "No daily limit on guided practice: warmups, ear training, breath and songs",
     );
@@ -170,7 +170,7 @@ describe("Pro purchase choices", () => {
 
   it("does not start the ending-plan check while a purchase is being confirmed", () => {
     // On the return from buying lifetime the check would ask about the old
-    // subscription; lib/pro-entitlement.test.ts covers the reply being
+    // subscription; lib/pro-revalidation.test.ts covers the reply being
     // dropped, and this keeps the second $79 button from flashing meanwhile.
     // Not gated on the welcome: after a restored key for a plan that is still
     // ending, the lifetime offer has to show.
@@ -331,7 +331,7 @@ describe("restoring Pro on a new browser", () => {
       <WelcomePanel how="restore" proKey="suede-pro_test" periodEnd={null} />,
     );
     expect(html).toContain("Pro is unlocked on this browser");
-    expect(html).not.toContain("Welcome to the gold channel");
+    expect(html).not.toContain("Welcome to Suede Pro");
     expect(html).toMatch(/href="\/book"/);
     expect(html).toMatch(/href="\/atlas"/);
     expect(html).toContain("suede-pro_test");
@@ -350,7 +350,7 @@ describe("restoring Pro on a new browser", () => {
     const html = renderToStaticMarkup(
       <WelcomePanel how="purchase" proKey="suede-pro_test" periodEnd={null} />,
     );
-    expect(html).toContain("Welcome to the gold channel");
+    expect(html).toContain("Welcome to Suede Pro");
     expect(html).toContain("Your Pro key");
   });
 
@@ -396,7 +396,31 @@ describe("Pro sales copy on the page", () => {
     const html = renderToStaticMarkup(<ProClient />);
     expect(html).not.toContain("Pro keeps the months");
     expect(html).not.toContain("long record of your own voice");
-    expect(html).toContain("Pro charts the months behind it");
+    expect(html).toContain("Pro shows you the months behind");
+  });
+
+  it("says pay-once in three places, and the checkout and on-device facts once each", () => {
+    // The hero button, the buy-card price line and the final mono line carry
+    // the offer; nothing else restates it, and no surface says "gold channel".
+    const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
+    const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+    // The price on the three buttons (hero, buy card, final CTA), nowhere else.
+    expect(text.match(/\$79 once/g)).toHaveLength(3);
+    expect(text.match(/Get lifetime Pro: \$79 once/g)).toHaveLength(3);
+    expect(text.match(/One payment\. Lifetime Pro\. No renewal\./g)).toHaveLength(1);
+    expect(text.match(/One payment · Never renews/g)).toHaveLength(1);
+    expect(text).not.toContain("$79 once for lifetime access");
+    expect(text).not.toMatch(/pay once/i);
+    expect(text.match(/Secure checkout by Stripe/g)).toHaveLength(1);
+    expect(text.match(/never leaves? your device/gi)).toHaveLength(1);
+    expect(text).not.toMatch(/gold channel/i);
+    expect(html).toContain("Suede Pro · Early Access");
+    expect(html).toContain(">Pricing<");
+    // Exits are demoted: a text link in the hero, the studio link in the final mono line.
+    expect(html).toMatch(/<a[^>]*href="\/studio"[^>]*>or keep practicing free<\/a>/);
+    expect(html).not.toContain(">Back to the studio</a>\n");
+    expect(html.match(/>Keep practicing free</g)).toHaveLength(1);
+    expect(html).toMatch(/One payment<span[^>]*>·<\/span>Never renews<span[^>]*>·<\/span><a[^>]*href="\/studio"[^>]*>Back to the studio<\/a>/);
   });
 
   it("sells the per-note chart as one chart, not one charted over months", () => {
@@ -419,6 +443,7 @@ describe("Pro sales copy on the page", () => {
     expect(wrapper).toBeGreaterThan(-1);
     expect(html.slice(wrapper, button)).toContain("sm:order-2");
     expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Suede Pro is the coach on top/);
+    expect(html).not.toContain("once with no renewal");
   });
 });
 

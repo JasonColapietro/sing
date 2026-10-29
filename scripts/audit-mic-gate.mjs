@@ -40,6 +40,16 @@ const ALERT = 'main [role="alert"]';
 // listening starts. Routine and daily-plan controls are separate entry points.
 const PATH_ROWS = 'main li > button[aria-describedby~="practice-mic-note"]';
 
+/** A newcomer's /warmups folds the path under "Every exercise": open it, as a singer would. */
+async function openPath(page) {
+  // Through the page's own DOM, so it is a no-op wherever there is no fold (and on the CLI test's stub page).
+  await page.evaluate(() => {
+    for (const d of document.querySelectorAll("details")) {
+      if (!d.open && /^Every exercise/.test(d.querySelector("summary")?.textContent?.trim() ?? "")) d.querySelector("summary")?.click();
+    }
+  }).catch(() => {});
+}
+
 /** Refuse the mic the way a blocked site permission does, before app code runs. */
 const REFUSE_MIC = `
   localStorage.clear();
@@ -138,6 +148,7 @@ console.log("\n/warmups — every exercise row starts the mic");
 {
   const { ctx, page } = await freshPage();
   await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
+  await openPath(page);
 
   const titles = await page.locator(PATH_ROWS).locator("span.font-medium").allTextContents();
   check("catalogue is readable before any mic prompt", titles.length > 0,
@@ -150,6 +161,7 @@ console.log("\n/warmups — every exercise row starts the mic");
   for (const [index, title] of titles.entries()) {
     // Reload per row so the alert starts absent every time.
     await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
+    await openPath(page);
     const row = page.locator(PATH_ROWS).nth(index);
     const r = await pressAndMeasure(page, row);
     const rowBox = await row.boundingBox();
@@ -169,6 +181,7 @@ console.log("\n/warmups — the gate card's own button");
 {
   const { ctx, page } = await freshPage();
   await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
+  await openPath(page);
   const r = await pressAndMeasure(page,
     page.getByRole("button", { name: "Enable microphone" }));
   check("one alert, on screen", r.count === 1 && r.onScreen, describe(r));
@@ -183,6 +196,7 @@ console.log("\n/warmups — switching between path, continue card and gate sourc
 {
   const { ctx, page } = await freshPage();
   await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
+  await openPath(page);
   const rows = page.locator(PATH_ROWS);
   const count = await rows.count();
   check("exercise rows exist for repeated permission checks", count > 0);

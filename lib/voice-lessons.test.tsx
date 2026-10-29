@@ -874,8 +874,11 @@ describe("the pages", () => {
           params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
         }),
       );
-      expect(html, l.id).toContain("What this does not show");
-      expect(html, l.id).toContain("data-voice-safety");
+      // The shared line is left out where the lesson's own stop rule names the doctor.
+      const ownReferral = [l.selfCheck.ifNotReady, ...l.mistakes.map((m) => m.recovery)].some((t) =>
+        t.includes(DOCTOR_REFERRAL),
+      );
+      expect(html.includes("data-voice-safety"), l.id).toBe(!ownReferral);
       if (l.type === "concept") expect(html, l.id).toContain("data-lesson-answer");
       for (const step of shownSteps(l)) expect(html).toContain(step.title.replace(/&/g, "&amp;"));
       // Hoarseness that will not clear needs the folds examined, so the
@@ -1120,7 +1123,7 @@ describe("the pages", () => {
     const published = new Set([VOICE_LEARN_PATH, ...Object.values(coursePaths()).flat()]);
     const links = hrefs(html).filter((h) => h.startsWith(VOICE_LEARN_PATH));
     expect(links.length).toBeGreaterThan(1);
-    for (const href of links) expect(published.has(href), href).toBe(true);
+    for (const href of links) expect(published.has(href.split("#")[0]), href).toBe(true);
   });
 
   it("say sing measures a module only when the contract says it can", async () => {

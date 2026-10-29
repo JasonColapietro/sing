@@ -20,7 +20,7 @@ import {
 } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { CompanionButtons, ModulePractice } from "@/components/learn/module-practice";
-import { VoiceSafetyNote } from "@/components/learn/safety-note";
+import { SAFETY_LINE, SafetyLine } from "@/components/learn/safety-note";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 
 interface Params {
@@ -50,12 +50,7 @@ function minuteArticle(minutes: number): "A" | "An" {
   return /^(?:8\d*|11|18)$/.test(String(minutes)) ? "An" : "A";
 }
 
-/**
- * The objective, then what and where the lesson is. Shown under the h1 and used
- * as the search snippet, so the first thing a reader and a crawler meet is the
- * same answer. Many objectives are one short line ("Three ways to attack the
- * same note."), which on their own say nothing about the page.
- */
+/** The search snippet: the objective, then what and where the lesson is (the subtitle shows the objective alone). */
 function lessonAnswer({ stage, module, lesson }: Found): string {
   const body = lesson.body;
   return `${body.objective} ${minuteArticle(body.minutes)} ${body.minutes}-minute ${DESCRIPTION_KIND[body.type] ?? "lesson"} from ${module.catalog.name}, Stage ${stage.catalog.stage} of the free Suede Sing voice course.`;
@@ -71,26 +66,20 @@ export async function generateMetadata({
   if (!found) return {};
   const { body } = found.lesson;
   const moduleName = found.module.catalog.name;
-  // fitTitle() alone sheds the whole tail, which left 94 of 102 lessons in
-  // search as a bare phrase ("Drift Correction") with nothing saying it is a
-  // singing lesson. Keep "Voice Lesson" whenever the budget allows: with the
-  // site name if it fits, else without it, since saying what the page is
-  // matters more in a result than saying whose it is. Only a title too long
-  // for even that falls back to the bare name, which keeps the site name.
+  // Keep "Voice Lesson" whenever the budget allows; only an over-long name drops it.
   const withModule = `${body.title} · ${moduleName} Voice Lesson`;
   const short = `${body.title} · Voice Lesson`;
   const templated = [withModule, short].find((t) => t.length <= MAX_TITLE_BODY);
   return withCanonicalOpenGraph({
     title: templated ?? (short.length <= MAX_TITLE ? { absolute: short } : body.title),
-    // The objective leads, as the catalog wrote it. Most objectives are one
-    // short line (64 of 102 under 100 characters), so the second sentence says
-    // what and where the page is, from the same fields the kicker shows;
-    // fitDescription drops it whole when the objective needs the room.
     description: lessonAnswer(found),
     keywords: lessonKeywords({ name: body.title, group: found.module.catalog.name }),
     alternates: { canonical: `${SITE_URL}${lessonHref(body)}` },
   });
 }
+
+/** What each of the port's four blocks does, for the timing line. */
+const BLOCK_ROLES = ["set up", "isolate", "practise", "review"];
 
 const TYPE_LABEL: Record<string, string> = {
   concept: "Concept",
@@ -117,12 +106,10 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   // The room this lesson's own steps send the singer to, which for an
   // exercise practised in the recorder is not the module's range test.
   const companion = practice ? lessonCompanion(practice, lesson.id) : undefined;
-  // The course-wide lines (UNIVERSAL_LESSON_TEXT) are stated once on
-  // /learn/voice; here they would bury what this lesson says of its own.
+  // Course-wide lines (UNIVERSAL_LESSON_TEXT) are said once on /learn/voice.
   const own = (text: string) => !UNIVERSAL_LESSON_TEXT.has(text);
   const steps = shownSteps(lesson);
-  // The port repeats a step's look/listen checks word for word under the next
-  // step; print each check once, under the first step that sets it.
+  // Print each look/listen check once, under the first step that sets it.
   const printedChecks = new Set<string>();
   const stepChecks = steps.map((step) => {
     const fresh = (text: string) => own(text) && !printedChecks.has(text);
@@ -134,7 +121,14 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
     return checks;
   });
   const mistakes = lesson.mistakes.filter((mk) => own(mk.recovery));
+  const doctor = SAFETY_LINE.slice(SAFETY_LINE.indexOf("a doctor who"), -1);
+  const namesDoctor = [lesson.selfCheck.ifNotReady, ...mistakes.map((mk) => mk.recovery)].some((t) =>
+    t.includes(doctor),
+  );
   const criteria = lesson.selfCheck.criteria.filter(own);
+  // The compiler blanks the port's template blocks; four timings then read as one line.
+  const ownBlocks = lesson.blocks.some((b) => b.instruction);
+  const { shows, doesNotShow, ifNotReady } = lesson.selfCheck;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -171,12 +165,11 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
     <PageShell
       kicker={`Stage ${stage.catalog.stage} · ${module.catalog.name} · ${TYPE_LABEL[lesson.type] ?? lesson.type} · ${lesson.minutes} min`}
       title={lesson.title}
-      subtitle={lessonAnswer(found)}
+      subtitle={lesson.objective}
       actions={
         companion ? (
-          // The room first, for a reader who came to sing: the panel further
-          // down says what the module's room measures.
-          <CompanionButtons companion={companion} size="lg" />
+          // The room first; the practice panel below carries the one cap note.
+          <CompanionButtons companion={companion} size="lg" capNote={false} />
         ) : undefined
       }
     >
@@ -260,20 +253,28 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
         <Card>
           <section aria-labelledby="blocks" className="max-w-2xl">
             <h2 id="blocks" className="text-xl">
-              Practice blocks
+              {lesson.minutes} minutes, {lesson.blocks.length} blocks
             </h2>
             <p className="mt-1 text-sm text-mut">
-              A guide to the {lesson.minutes} minutes, rests and review included.
-              Pause or repeat any block.
+              Rests and review included. Pause or repeat any block.
             </p>
-            <ol className="mt-3 space-y-2 text-sm">
-              {lesson.blocks.map((b) => (
-                <li key={b.instruction} className="flex gap-3">
-                  <span className="w-12 shrink-0 font-mono text-dim">{b.seconds} s</span>
-                  <span className="text-mut">{b.instruction}</span>
-                </li>
-              ))}
-            </ol>
+            {ownBlocks ? (
+              <ol className="mt-3 space-y-2 text-sm">
+                {lesson.blocks.map((b, i) => (
+                  <li key={`${i}-${b.instruction}`} className="flex gap-3">
+                    <span className="w-12 shrink-0 font-mono text-dim">{b.seconds} s</span>
+                    <span className="text-mut">{b.instruction || BLOCK_ROLES[i] || "practise"}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="mt-3 font-mono text-sm text-mut" data-block-line>
+                {lesson.minutes} min:{" "}
+                {lesson.blocks
+                  .map((b, i) => `${b.seconds} s ${BLOCK_ROLES[i] ?? "practise"}`)
+                  .join(" · ")}
+              </p>
+            )}
           </section>
         </Card>
 
@@ -281,15 +282,10 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
           <Card>
             <section aria-labelledby="recover" className="max-w-2xl">
               <h2 id="recover" className="text-xl">
-                If it goes wrong
+                When it goes wrong
               </h2>
               <ul className="mt-3 space-y-3 text-sm">
-                {/*
-                  The port gave every lesson the same generic symptom; its
-                  recovery names its own ("If …", "Stop …"), so the shared
-                  observation is left out rather than printed over an
-                  answer to something else.
-                */}
+                {/* The shared generic symptom is left out; each recovery names its own. */}
                 {mistakes.map((mk) => (
                   <li key={mk.recovery}>
                     {own(mk.observation) && <p className="text-ink">{mk.observation}</p>}
@@ -304,7 +300,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
         <Card>
           <section aria-labelledby="self-check" className="max-w-2xl" data-self-check>
             <h2 id="self-check" className="text-xl">
-              Self-check
+              Did it work? Judge by ear
             </h2>
             {criteria.length > 0 && (
               <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-mut">
@@ -320,20 +316,27 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                   <dd className="text-mut">{lesson.selfCheck.readyWhen}</dd>
                 </div>
               )}
-              <div>
-                <dt className="font-medium text-ink">If you&apos;re not ready</dt>
-                <dd className="text-mut">{lesson.selfCheck.ifNotReady}</dd>
-              </div>
-              <div>
-                <dt className="font-medium text-ink">What this shows</dt>
-                <dd className="text-mut">{lesson.selfCheck.shows}</dd>
-              </div>
-              <div>
-                <dt className="font-medium text-ink">What this does not show</dt>
-                <dd className="text-mut" data-does-not-show>
-                  {lesson.selfCheck.doesNotShow}
-                </dd>
-              </div>
+              {ifNotReady && (
+                <div>
+                  <dt className="font-medium text-ink">If you&apos;re not ready</dt>
+                  <dd className="text-mut">{ifNotReady}</dd>
+                </div>
+              )}
+              {/* Often the first criterion restated; printed only when it says more. */}
+              {shows && !criteria.includes(shows) && (
+                <div>
+                  <dt className="font-medium text-ink">What this shows</dt>
+                  <dd className="text-mut">{shows}</dd>
+                </div>
+              )}
+              {doesNotShow && (
+                <div>
+                  <dt className="font-medium text-ink">What this does not show</dt>
+                  <dd className="text-mut" data-does-not-show>
+                    {doesNotShow}
+                  </dd>
+                </div>
+              )}
             </dl>
           </section>
         </Card>
@@ -368,7 +371,8 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
             .
           </p>
         )}
-        <VoiceSafetyNote />
+        {/* Left out where the lesson's own recovery already names the doctor. */}
+        {!namesDoctor && <SafetyLine />}
       </div>
     </PageShell>
   );

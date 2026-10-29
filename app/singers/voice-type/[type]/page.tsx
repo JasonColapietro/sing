@@ -17,7 +17,7 @@ import {
 import { REFERENCE_BANDS, statsFor } from "@/lib/singers-analysis";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
-import { VOICE_TYPE_HUB_COPY, fillTokens, splitContrast } from "@/lib/singer-hub-copy";
+import { HUB_FIGURES_NOTE, VOICE_TYPE_HUB_COPY, fillTokens, splitContrast } from "@/lib/singer-hub-copy";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
@@ -336,8 +336,7 @@ export default async function VoiceTypePage({
           </ul>
           <p className="mt-5 max-w-prose text-xs text-dim">
             Voice categories are guides borrowed from choral and operatic
-            practice. Most artist labels and endpoints in this catalog await
-            individual evidence review; open a profile for its source status.
+            practice. {HUB_FIGURES_NOTE}
           </p>
         </Card>
 

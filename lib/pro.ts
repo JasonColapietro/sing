@@ -560,71 +560,44 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "coach",
     title: "Adaptive coach plan",
-    // The free plan is built the same way and shows its first two steps
-    // (components/progress/coach.tsx, PLAN_ROWS "Coach plan"), so the perk is
-    // the rest of the plan, not the planning. buildPlan's steps come from
-    // scores, weak notes, the range test's age and yesterday's minutes; the
-    // streak drives only the banner and the rest-day note, so it is not named
-    // as an input to the plan.
-    desc: "The whole daily practice plan, not just the first two steps the free plan shows, built from your scores, weak notes, how recent your range test is, and how much you sang yesterday.",
+    // The free plan shows the first two steps of the same plan (PLAN_ROWS
+    // "Coach plan"); the perk is the rest of it, never the planning itself.
+    desc: "The coach's full daily plan: every step, built from your own scores, weak notes, how recent your range test is, and how much you sang yesterday.",
   },
   {
     id: "analytics",
     title: "Deep vocal analytics",
-    // No heatmap claim here. "Pitch heatmaps of every session" shipped in this
-    // list for months and existed in no file — the only heatmap in the repo is
-    // the practice-days calendar, which is free and ungated. A subscriber can
-    // falsify a line like that in sixty seconds, and the one they catch is what
-    // makes them doubt the perks that were true.
+    // No heatmap claim: the only heatmap in the repo is the free practice calendar.
     desc: "Per-note accuracy, and your range charted over months rather than one test at a time.",
   },
   {
     id: "takes",
     title: "Take pitch analysis",
-    // The overlay draws two takes' pitch on one chart with gridlines only at
-    // octave Cs; it has no tuning measure. The one intonation number is the
-    // single-take panel's share within 25 cents of the nearest note
-    // (lib/audio/analyze-take.ts), not of a target melody, so "which keeper
-    // sat in tune" was a verdict the feature cannot give.
-    desc: "A pitch trace of every recorded take with the share of its sung pitch within 25 cents of a note, and an A/B overlay that draws two takes' pitch on one chart.",
+    // The overlay has no tuning measure, so it never says which take sat in tune.
+    desc: "A pitch trace of every take, and two takes overlaid to compare.",
   },
   {
     id: "songs",
     title: "Every song, no daily limit",
-    // The songbook itself moved to free — six public-domain folk tunes were a
-    // gate that argued against buying. So is each song's own record: the song
-    // summary shows every singer their personal best and a sparkline of past
-    // scores, and library cards show the best score. This perk once sold
-    // "scoring history for each one", which a free singer could see directly
-    // under the line that sold it. What Pro really adds here is no daily limit
-    // (songs share the free plan's guided-practice minutes, so "all free"
-    // without the cap read as unlimited), and that a scored song run's
-    // per-note tallies feed the Pro-only "Accuracy by note" chart on
-    // /progress. No cadence promise: the catalog is a checked-in array, so "new
-    // songs every week" is a claim only a weekly deploy could keep.
-    desc: `All ${SONG_COUNT} songs are free, with a personal best and score trend for each, inside the free plan's ${FREE_DAILY_MINUTES} free minutes a day. Pro lifts that limit and feeds every scored note into your per-note accuracy chart.`,
+    // Each song's best score and trend are free; the limit and the per-note chart are Pro's.
+    desc: "Sing every song past the daily limit; every scored note feeds your accuracy chart.",
   },
   {
     id: "warmups",
     title: "Pro warmup packs",
-    // Exactly what PRO_PACKS holds: three technique packs, one of each, fitted
-    // to no genre and no voice type. This line once sold "genre and voice-type
-    // routines" and plural builders that do not exist. It also makes no fit
-    // claim: without a saved range the packs run on the nominal ladder.
+    // Exactly what PRO_PACKS holds: no genre, voice-type or range-fit claim.
     desc: `${PRO_PACK_COUNT} extra sets, ${PRO_EXERCISES} exercises: belt prep, a head-voice builder and a mix builder.`,
   },
   {
     id: "book",
     title: "Two books, with PDFs",
-    desc: `${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (${ATLAS_VOICE_COUNT} singer profiles: reported range, tone and technique). Both open in full the moment you upgrade, and both as PDFs to keep.`,
+    desc: `${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words: The Measured Voice and The Voice Atlas (${ATLAS_VOICE_COUNT} singer profiles), in full, with both PDFs to keep.`,
   },
   {
     id: "history",
     title: "Cloud sync",
-    // Song mastery (suede-sing:mastered:v2), the ear and breath path bests
-    // (suede-sing:ear-best:v1, suede-sing:breath-bests:v1) and program place
-    // live in their own browser keys, outside the synced progress record.
-    desc: "Your sessions, streaks, scores and range follow you across devices, backed up automatically. Song mastery, ear-training and breath path stars, and your place in a program stay in the browser where you earned them.",
+    // What stays in the browser (song mastery, path stars, program place) is in PRO_FAQ.
+    desc: "Sessions, streaks, scores and range follow you across devices.",
   },
 ];
 
@@ -637,11 +610,11 @@ export const PLAN_ROWS: Array<{
   { label: "Practice rooms (all ten)", free: "Included", pro: "Included" },
   {
     label: "Guided practice (warmups, ear, breath, songs)",
-    free: "5 minutes a day",
+    free: `${FREE_DAILY_MINUTES} minutes a day`,
     pro: "No daily limit",
   },
   { label: "Range test + voice-type estimate", free: "Included", pro: "Included" },
-  { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis per take" },
+  { label: "Recorder + A/B compare", free: "Included", pro: "+ pitch analysis per take" },
   // Each song's best score and score trend are free (the song summary and the
   // library cards show them), so the Pro cell names the one thing Pro adds:
   // a scored run's notes in the per-note accuracy chart. Kept short: every

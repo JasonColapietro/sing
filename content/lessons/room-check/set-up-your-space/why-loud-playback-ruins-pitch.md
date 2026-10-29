@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-The pitch reading works by finding the one repeating pattern in whatever the microphone hears, so it is only as good as the sound that reaches it. A reference or a song playing through a speaker reaches the microphone along with your voice, and the reading becomes a blend of the two: it can lean toward the reference and flatter you, or find a note while you are silent. Stop playback before you sing, keep the speaker low or use closed headphones, and judge only takes that hold your voice alone.
+The pitch reading finds the one repeating pattern in whatever the microphone hears, so it is only as good as the sound reaching it. A speaker playing a reference reaches the microphone with your voice, and the reading becomes a blend: it can lean toward the reference and flatter you, or find a note while you are silent. Stop playback before you sing, keep the speaker low or wear closed headphones, and judge only takes that hold your voice alone.
 
 ## Steps
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
+import { Fragment } from "react";
 import {
   BOOK_CONTENTS,
   BOOK_PARTS,
@@ -11,7 +12,11 @@ import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { PROGRAMME_PART } from "@/lib/programme-exit-tests";
 import { SITE_URL } from "@/lib/site";
+import { AuthorByline } from "@/components/book/byline";
+import { BookCover } from "@/components/book/cover";
 import { BookCta } from "@/components/book/cta";
+import { PullQuote } from "@/components/book/pull-quote";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { BookProgramNote } from "@/components/book/program-link";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -70,7 +75,12 @@ export default function BookPage() {
       // In the header, not at the foot of the first card: on a phone the card's
       // stats and paragraphs pushed "Read a free chapter" a screen and a half
       // below the subtitle that promises it.
-      actions={<BookCta />}
+      actions={
+        <div className="flex items-end gap-5 lg:max-w-sm lg:flex-col lg:items-start">
+          <BookCover title={BOOK_TITLE} author={AUTHOR_NAME} kicker="A singing book" />
+          <BookCta />
+        </div>
+      }
     >
       <script
         type="application/ld+json"
@@ -88,17 +98,7 @@ export default function BookPage() {
             />
             <Stat label="Parts" value={BOOK_PARTS.length} tone="cool" />
           </div>
-          <p className="mt-5 text-sm text-mut">
-            Written by{" "}
-            <a
-              href="https://jasoncolapietro.com"
-              rel="author"
-              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
-            >
-              {AUTHOR_NAME}
-            </a>
-            . Published by Suede AI.
-          </p>
+          <AuthorByline className="mt-5">. Published by Suede AI.</AuthorByline>
           <p className="mt-5 max-w-2xl text-mut">
             Twenty-three chapters on how the voice works, how to read the
             numbers your own sessions produce, a twelve-week program built from
@@ -114,7 +114,16 @@ export default function BookPage() {
         </Card>
 
         {BOOK_PARTS.map((part, i) => (
-          <Card key={part.part}>
+          <Fragment key={part.part}>
+          {/* One sentence from chapter 7 between the first two parts. */}
+          {i === 1 && (
+            <PullQuote
+              quote="You know your tessitura by feel more than by measurement."
+              emphasis="feel"
+              byline="Chapter 7 · Your range is not one number"
+            />
+          )}
+          <Card>
             <SectionLabel>
               Part {["one", "two", "three", "four", "five"][i] ?? i + 1}
             </SectionLabel>
@@ -153,6 +162,7 @@ export default function BookPage() {
               <BookProgramNote scope="plan" className="mt-4 max-w-2xl text-sm text-mut" />
             )}
           </Card>
+          </Fragment>
         ))}
 
         <Card>
@@ -171,14 +181,7 @@ export default function BookPage() {
         {/* The contents end on a next step: the header's pair again. */}
         <BookCta />
 
-        <p className="max-w-2xl text-xs text-dim">
-          This book is about practice, not medicine. Nothing here diagnoses or
-          treats anything. If singing hurts, if you are hoarse and it will not
-          clear, or if you ever see blood, that is a question for a doctor who
-          can examine the vocal folds, such as an ENT or laryngologist. There
-          is no waiting period, and you do not need to be sure it is serious
-          before you go.
-        </p>
+        <SafetyLine />
       </div>
     </PageShell>
   );

@@ -35,6 +35,7 @@ import {
   type Routine,
 } from "./routines";
 import { PRO_PACKS_ANCHOR } from "@/lib/pro-inventory";
+import { PatternGlyph, patternShape } from "./pattern-glyph";
 
 /** How many exercise names the strip under a routine shows before "+N". */
 const STRIP_MAX = 3;
@@ -60,16 +61,18 @@ export function routineStats(
 }
 
 function StepStrip({ routine, max = STRIP_MAX }: { routine: Routine; max?: number }) {
-  const titles = routine.steps.map((s) => stepExercise(s).title);
-  const shown = titles.slice(0, max);
-  const more = titles.length - shown.length;
+  const exercises = routine.steps.map(stepExercise);
+  const shown = exercises.slice(0, max);
+  const more = exercises.length - shown.length;
   return (
-    // Desktop only: on a phone the thirteen cards each carried stars, a
-    // status, a two-line meta row and this strip, and the grid ran long.
+    // Desktop only: on a phone the cards ran long with this strip.
     <ol className="mt-4 hidden flex-wrap gap-1.5 sm:flex" aria-label="Exercises in this routine">
-      {shown.map((t, i) => (
-        <li key={`${t}-${i}`}>
-          <Pill tone="mut">{t}</Pill>
+      {shown.map((ex, i) => (
+        <li key={`${ex.id}-${i}`}>
+          <Pill tone="mut">
+            <PatternGlyph shape={patternShape(ex)} className="h-4 w-4" />
+            {ex.title}
+          </Pill>
         </li>
       ))}
       {more > 0 && (
@@ -178,14 +181,7 @@ export function RoutineGrid({
   );
 }
 
-/**
- * The path: the tiers as levels, one row per exercise, the stars it has
- * earned, and a Next pill on the first rung still without one.
- *
- * A free singer sees the Pro packs as one locked level naming the packs, not
- * their exercises — the pack names and descriptions are all that has ever
- * crossed the paywall, and listing the drills inside would be the leak.
- */
+/** The path: tiers as levels, one row per exercise; a free singer sees the Pro packs as one locked level naming only the packs. */
 export function PathSection({
   progress,
   onSelect,
@@ -219,6 +215,7 @@ export function PathSection({
     return {
       id: ex.id,
       title: ex.title,
+      figure: <PatternGlyph shape={patternShape(ex)} />,
       meta: `${ladder} · ~${estimateMinutes(ex, roots.length)} min${ex.glide ? " · Glide" : ""}`,
       stars: starsForExercise(progress, ex.title),
       mic: !micReady,

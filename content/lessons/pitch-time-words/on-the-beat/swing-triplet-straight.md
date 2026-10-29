@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Straight, triplet and swing are three ways of dividing the same steady beat. Straight splits each beat into two equal halves, counted 1-and; triplet splits it into three equal parts, counted 1-trip-let; swing keeps the first and third of those three parts, so each pair of notes becomes long-short. The beat itself does not move in any of them, which is why you tap it while you sing: only the subdivision changes, and that is what makes a phrase feel even, rolling or swung.
+Straight, triplet and swing are three ways of dividing the same steady beat. Straight splits each beat into two equal halves, counted 1-and; triplet splits it into three equal parts, counted 1-trip-let; swing keeps the first and third of those parts, so each pair of notes becomes long-short. The beat never moves, which is why you tap it while you sing: only the subdivision changes, and that is what makes a phrase feel even, rolling or swung.
 
 ## Steps
 

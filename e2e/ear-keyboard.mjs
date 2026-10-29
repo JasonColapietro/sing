@@ -57,7 +57,7 @@ try {
         "Hear again keeps the result until the singer chooses Next round");
       await game.getByRole("button", { name: "Next round", exact: true }).press("Enter");
       await game.getByRole("button", { name: "Next round", exact: true }).waitFor({ state: "hidden" });
-      await game.getByRole("button", { name: "Quit game", exact: true }).press("Enter");
+      await game.getByRole("button", { name: "Exit game", exact: true }).press("Enter");
       await game.waitFor({ state: "hidden" });
       assert.deepEqual(errors, []);
       console.log(`PASS ${name}: Enter activates Hear again, Next round, and Quit without hijacking`);

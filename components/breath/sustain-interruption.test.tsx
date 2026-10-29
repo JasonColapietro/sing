@@ -91,7 +91,7 @@ function mount(attempts = 1) {
   let tree: ReactNode;
   const pitch = { listening: true, error: null, frame: { t: now, volume: 0 }, latest: { current: { t: now, volume: 0 } } } as unknown as UsePitchResult;
   const render = () => {
-    tree = hooks.render(() => SustainTest({ variant: "session", pitch, preset: { attempts }, onComplete: fixture.complete, onExit() {} }));
+    tree = hooks.render(() => SustainTest({ pitch, preset: { attempts }, onComplete: fixture.complete, onExit() {} }));
   };
   render();
   const advance = (ms: number) => { now += ms; vi.advanceTimersByTime(ms); render(); };

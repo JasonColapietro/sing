@@ -12,7 +12,7 @@ around it is done.
 | [instagram.md](instagram.md) | Handle, bio, pillars, first 9 posts, scripted Reel, hashtag test, 30-day calendar, growth tactics, measurement |
 | [facebook.md](facebook.md) | Page identity, setup fields, IG↔FB linking, first 5 posts, Groups strategy, 30-day calendar, measurement |
 | [geo-wiring.md](geo-wiring.md) | Entity-consistency rules + staged `sameAs` / llms.txt patches (apply after the accounts exist) |
-| [assets/](assets/) | `avatar-512.png` (both platforms), `fb-cover-1640x720.png` (+ HTML source and re-render script) |
+| [assets/](assets/) | `avatar-512.png` (both platforms; `scripts/build-icons.mjs` writes it) and the cover source: `node marketing/social/assets/render-cover.mjs` writes `fb-cover-1640x720.png`. Rendered PNGs are not committed; every carousel folder has a `render.mjs` that writes its slides from `slides.html`. |
 | [assets/carousel-range/](assets/carousel-range/README.md) | **Post 2, finished** — six 1080×1350 slides, caption, and per-slide alt text. Upload and go. |
 | [assets/carousel-book/](assets/carousel-book/README.md) | **Post 6, finished** — six slides from chapter one of The Measured Voice, quotation-checked. |
 | [assets/carousel-numbers/](assets/carousel-numbers/README.md) | **Bonus post, finished** — seven slides from chapter twelve, "When the numbers lie to you". |

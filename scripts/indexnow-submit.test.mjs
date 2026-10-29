@@ -1,4 +1,5 @@
-import { test } from "node:test";
+// Collected by vitest under `npm test`; `node scripts/indexnow-submit.test.mjs` still works alone.
+const { test } = await import(process.env.VITEST ? "vitest" : "node:test");
 import assert from "node:assert/strict";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

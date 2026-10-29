@@ -80,15 +80,8 @@ function offerFor(plan: CheckoutPlan) {
 const OFFERS = [offerFor("monthly"), offerFor("lifetime")];
 
 /**
- * The page that states the price carried no structured data at all, so the
- * question an answer engine is most likely to be asked about this app — what
- * Pro costs — had no machine-readable answer anywhere on the site. The
- * homepage's SoftwareApplication offer is the free studio, priced 0, which
- * says nothing about the paid tier.
- *
- * The prices here are the prices the page renders — both read PRICING. The
- * FAQ is built from PRO_FAQ, the same array the page displays, so the marked-up
- * answers cannot drift from the visible ones.
+ * The machine-readable price: both read PRICING, and the FAQ is built from
+ * PRO_FAQ, the array the page displays, so the markup cannot drift.
  */
 const PRO_JSON_LD = {
   "@context": "https://schema.org",
@@ -145,11 +138,8 @@ const PRO_JSON_LD = {
       "@id": `${SITE_URL}/pro#product`,
       name: "Suede Pro",
       description:
-        // Song scores and their trend are free on every song summary, so the
-        // paid tier is not described by them. The free plan shows the first
-        // two coach steps each day, so planning is described as the full plan,
-        // not as something only Pro has (lib/pro.ts PLAN_ROWS "Coach plan").
-        "The full adaptive daily practice plan (the free plan shows its first two steps), per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, no daily limit on guided practice, cloud sync, and two books with PDFs.",
+        // Song scores and their trend are free, so they never describe the paid tier.
+        "The coach's full daily practice plan, every step built from your own scores, per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, no daily limit on guided practice, cloud sync, and two books with PDFs.",
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web Browser",
       publisher: { "@id": "https://suedeai.ai/#organization" },

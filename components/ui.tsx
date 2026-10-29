@@ -23,14 +23,30 @@ const LABEL_TONES = {
   rec: "border-rec/40 text-rec",
 } as const;
 
+/**
+ * The in-body form of the label: the same mono text with a short gold
+ * hairline before it and no box. A room page stacks eight to twelve
+ * section labels, and as bordered pills they were the most visible thing on
+ * the page; the pill now marks only a page's kicker (PageShell).
+ */
+const HAIRLINE_CLASS =
+  "inline-flex items-center gap-2.5 font-mono text-label uppercase tracking-[0.14em] before:h-px before:w-6 before:shrink-0 before:bg-amber before:content-['']";
+const HAIRLINE_TONES = {
+  violet: "text-violet-ink",
+  rec: "text-rec",
+} as const;
+
 export function SectionLabel({
   children,
   className,
   heading,
+  hairline = false,
   tone = "violet",
 }: {
   children: ReactNode;
   className?: string;
+  /** Mono text with a gold hairline instead of the bordered pill. */
+  hairline?: boolean;
   tone?: keyof typeof LABEL_TONES;
   /**
    * Also announce the label as an h2 to assistive tech, for a section whose
@@ -38,23 +54,20 @@ export function SectionLabel({
    */
   heading?: boolean;
 }) {
+  const classes = hairline
+    ? cn(HAIRLINE_CLASS, HAIRLINE_TONES[tone], className)
+    : cn(LABEL_CLASS, LABEL_TONES[tone], className);
   if (heading) {
     return (
       <>
         <h2 className="sr-only">{children}</h2>
-        <span aria-hidden="true" className={cn(LABEL_CLASS, LABEL_TONES[tone], className)}>
+        <span aria-hidden="true" className={classes}>
           {children}
         </span>
       </>
     );
   }
-  return (
-    <span
-      className={cn(LABEL_CLASS, LABEL_TONES[tone], className)}
-    >
-      {children}
-    </span>
-  );
+  return <span className={classes}>{children}</span>;
 }
 
 /** Standard page container + header. Every app page starts with this. */
@@ -139,7 +152,7 @@ export function SectionHeading({
   const Heading = level === 3 ? "h3" : "h2";
   return (
     <div className={cn("max-w-2xl", className)}>
-      {label && <SectionLabel className="mb-4">{label}</SectionLabel>}
+      {label && <SectionLabel hairline className="mb-4">{label}</SectionLabel>}
       {/* An h3 takes the card-title face by default; this one is the same
           editorial tier as the h2, so it says so. */}
       <Heading id={id} className={level === 3 ? "font-display text-2xl font-normal sm:text-3xl" : "text-2xl sm:text-3xl"}>
@@ -473,18 +486,11 @@ function MicGlyph() {
 export const MIC_PRIVACY = "Audio is analyzed on this device and never uploaded.";
 
 /**
- * The shape a practice room asks for the microphone in: badge, what the room
- * does, where the audio goes, one button, and the failure underneath it.
- *
- * Failures render through MicAlert rather than a local `<p role="alert">`, so
- * every room inherits the scroll-into-view behaviour that component exists to
- * provide — an ear game's refusal used to announce itself and then sit wherever
- * it happened to be.
- *
- * Not every gate belongs here. `SongsMicGate` doubles as the /songs Suspense
- * fallback and is sized against it, /warmups carries an exercise list and a
- * safety line inside its gate, and the recorder's gate is a permission state
- * machine. Those are rooms whose gate is doing more than gating.
+ * The one shape a practice room asks for the microphone in: badge, what the
+ * room does, where the audio goes, one button, the failure underneath it
+ * (MicAlert, for its scroll-into-view). `tone="session"` draws it on the dark
+ * session tokens inside a SessionShell. SongsMicGate (a Suspense fallback)
+ * and the warmups gate card (exercise list, safety line) stay their own.
  */
 export function MicGate({
   title,
@@ -496,6 +502,8 @@ export function MicGate({
   error = null,
   secondary,
   footer,
+  audioSetup,
+  tone = "page",
   bare = false,
   className,
 }: {
@@ -512,30 +520,69 @@ export function MicGate({
   secondary?: ReactNode;
   /** The quiet Pro line, passed in so this file stays dependency-free. */
   footer?: ReactNode;
+  /** The device picker (AudioSetup), rendered under the buttons. */
+  audioSetup?: ReactNode;
+  /** `session`: the dark tokens of SessionShell; the gate is then always bare. */
+  tone?: "page" | "session";
   /** Set when the room already sits inside a Card, so none nests. */
   bare?: boolean;
   className?: string;
 }) {
+  const session = tone === "session";
+  const t = session
+    ? {
+        badge: "border-[var(--s-line2)] bg-[var(--s-elev)] text-[var(--s-voice)]",
+        title: "text-[var(--s-ink)]",
+        desc: "text-[var(--s-mut)]",
+        privacy: "text-[var(--s-dim)]",
+        alert: "text-[var(--s-rec)]",
+      }
+    : {
+        badge: "border-line2 bg-panel2 text-violet-ink",
+        title: "",
+        desc: "text-mut",
+        privacy: "text-dim",
+        alert: "text-rec",
+      };
   const body = (
     <>
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-violet-ink">
+      <div className={cn("mx-auto flex h-14 w-14 items-center justify-center rounded-full border", t.badge)}>
         <MicGlyph />
       </div>
-      <h2 className="mt-5 text-2xl">{title}</h2>
-      <p className="mx-auto mt-2 max-w-md text-mut">{description}</p>
-      <p className="mt-2 text-xs text-dim">{privacy}</p>
+      <h2 className={cn("mt-5 text-2xl", t.title)}>{title}</h2>
+      <p className={cn("mx-auto mt-2 max-w-md", t.desc)}>{description}</p>
+      <p className={cn("mt-2 text-xs", t.privacy)}>{privacy}</p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button variant="rec" size="lg" onClick={onEnable} disabled={disabled}>
-          {error ? "Try again" : enableLabel}
-        </Button>
+        {session ? (
+          <button
+            type="button"
+            onClick={onEnable}
+            disabled={disabled}
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-transparent bg-[var(--s-ok)] px-5 py-2 text-sm text-[oklch(0.16_0.03_155)] transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)] disabled:opacity-40"
+          >
+            {error ? "Try again" : enableLabel}
+          </button>
+        ) : (
+          <Button variant="rec" size="lg" onClick={onEnable} disabled={disabled}>
+            {error ? "Try again" : enableLabel}
+          </Button>
+        )}
         {secondary}
       </div>
       {error && (
-        <MicAlert message={error} className="mx-auto mt-4 max-w-md text-sm text-rec" />
+        <MicAlert message={error} className={cn("mx-auto mt-4 max-w-md text-sm", t.alert)} />
       )}
+      {audioSetup && <div className="mx-auto mt-6 max-w-xl text-left">{audioSetup}</div>}
       {footer && <div className="mt-4">{footer}</div>}
     </>
   );
+  // In a session the gate fills the shell's body and scrolls there, so a short window never puts the button under the bottom bar.
+  if (session)
+    return (
+      <div className={cn("flex min-h-0 flex-1 flex-col overflow-y-auto px-5 py-6 text-center", className)}>
+        <div className="my-auto">{body}</div>
+      </div>
+    );
   if (bare) return <div className={cn("py-8 text-center", className)}>{body}</div>;
   return <Card className={cn("mx-auto max-w-2xl py-10 text-center", className)}>{body}</Card>;
 }

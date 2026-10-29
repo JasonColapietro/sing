@@ -179,7 +179,13 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
     a: `No daily limit on guided practice, and both books in full (${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas), plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
   },
   {
+    q: "What does cloud sync carry, and what stays in this browser?",
+    // The keys outside the synced progress record: suede-sing:mastered:v2,
+    // ear-best:v1, breath-bests:v1 and program:v1.
+    a: "Sync carries your progress record: sessions, streaks, scores and range tests. Song mastery marks, ear-training and breath path stars, and your place in a program stay in the browser where you earned them, and recordings stay on the device that made them.",
+  },
+  {
     q: "How much does Suede Pro cost?",
-    a: `Suede Pro is a single ${formatPrice(PRICING.lifetime.amount)} payment for lifetime access, with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing subscribers keep renewing at the price they signed up at and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
+    a: `Suede Pro is ${formatPrice(PRICING.lifetime.amount)} for lifetime access. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing subscribers keep renewing at the price they signed up at and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
   },
 ];

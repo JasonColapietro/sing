@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
+import { Fragment } from "react";
 import {
   ATLAS_CONTENTS,
   ATLAS_PARTS,
@@ -13,6 +14,10 @@ import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { balancedChunks } from "@/lib/singers-core";
 import { SINGERS_LITE } from "@/lib/singers-lite";
 import { AtlasCta } from "@/components/atlas/cta";
+import { AuthorByline } from "@/components/book/byline";
+import { BookCover } from "@/components/book/cover";
+import { PullQuote } from "@/components/book/pull-quote";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { RosterFold } from "@/components/atlas/roster-fold";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -174,7 +179,12 @@ export default function AtlasPage() {
       subtitle={`${ATLAS_TITLE} is a ${ATLAS_CONTENTS.length}-chapter book on the range, tone and technique of ${ATLAS_SINGER_COUNT} singers: who sings what, how it sounds, and how to borrow it safely. The contents and the first three chapters are free.`}
       // In the header, so the free chapter the subtitle promises is one tap
       // away on the first phone screen rather than below the stats and prose.
-      actions={<AtlasCta />}
+      actions={
+        <div className="flex items-end gap-5 lg:max-w-sm lg:flex-col lg:items-start">
+          <BookCover title={ATLAS_TITLE} author={AUTHOR_NAME} kicker="How famous singers sing" />
+          <AtlasCta />
+        </div>
+      }
     >
       <script
         type="application/ld+json"
@@ -192,17 +202,7 @@ export default function AtlasPage() {
             />
             <Stat label="Parts" value={ATLAS_PARTS.length} tone="cool" />
           </div>
-          <p className="mt-5 text-sm text-mut">
-            Written by{" "}
-            <a
-              href="https://jasoncolapietro.com"
-              rel="author"
-              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
-            >
-              {AUTHOR_NAME}
-            </a>
-            . Published by Suede AI.
-          </p>
+          <AuthorByline className="mt-5">. Published by Suede AI.</AuthorByline>
           <p className="mt-5 max-w-3xl text-mut">
             This is the written study rather than the chart. The numbers on one
             keyboard, searchable and with your own range overlaid, are the{" "}
@@ -251,7 +251,16 @@ export default function AtlasPage() {
         </Card>
 
         {ATLAS_PARTS.map((part, i) => (
-          <Card key={part.part}>
+          <Fragment key={part.part}>
+          {/* One sentence from chapter 1 between the first two parts. */}
+          {i === 1 && (
+            <PullQuote
+              quote="The atlas is a map of other people's territory. The point of a map is to plan your own route, not to stand on it."
+              emphasis="own"
+              byline="Chapter 1 · How to read an entry"
+            />
+          )}
+          <Card>
             <SectionLabel>Part {PART_WORDS[i] ?? i + 1}</SectionLabel>
             <h2 className="mt-3 text-xl">{part.part}</h2>
             <ol className="mt-4 divide-y divide-line/50">
@@ -290,6 +299,7 @@ export default function AtlasPage() {
               ))}
             </ol>
           </Card>
+          </Fragment>
         ))}
 
         <Card>
@@ -309,11 +319,9 @@ export default function AtlasPage() {
           Ranges are commonly cited figures compiled from recordings and public
           discussion, not lab measurements, and the extremes are one-off
           recorded moments rather than anyone&rsquo;s everyday voice. The
-          technique notes describe how voices sound on record. Nothing here is
-          medical advice, and a voice that hurts, stays hoarse, or loses easy
-          notes is a question for a doctor who can examine the vocal folds,
-          such as an ENT or laryngologist, not a practice plan.
+          technique notes describe how voices sound on record.
         </p>
+        <SafetyLine />
       </div>
     </PageShell>
   );

@@ -209,6 +209,12 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
  * routine's, and from "Minor five-note scale". Today's three are links, not
  * buttons, and start at the plan's tempo, so they must not be what this hits.
  */
+/** A newcomer's /warmups folds the path under "Every exercise": open it, as a singer would, before reaching for a row. */
+async function openPath(page) {
+  const fold = page.locator("details").filter({ has: page.locator("summary", { hasText: /^Every exercise/ }) });
+  if ((await fold.count()) > 0 && !(await fold.first().evaluate((d) => d.open))) await fold.first().locator("summary").click();
+}
+
 function pathRow(page, title) {
   return page.getByRole("button", { name: new RegExp(`^${escapeRe(title)}`) });
 }
@@ -219,6 +225,7 @@ function pathRow(page, title) {
  * below is scoped to it.
  */
 async function startExercise(page, title) {
+  await openPath(page);
   await pathRow(page, title).click();
   const session = page.getByRole("dialog", { name: title, exact: true });
   await session.waitFor({ state: "visible", timeout: 20_000 });
@@ -281,6 +288,7 @@ console.log("\n1. a silent mic scores nothing, guide at full");
   let backAtLibrary = true;
   try {
     await session.waitFor({ state: "hidden", timeout: 30_000 });
+    await openPath(page);
     await pathRow(page, "Sustained hold").waitFor({ state: "visible", timeout: 5_000 });
   } catch {
     backAtLibrary = false;

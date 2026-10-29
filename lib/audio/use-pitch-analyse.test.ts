@@ -126,7 +126,7 @@ afterEach(() => {
 
 describe("usePitch with analysis paused", () => {
   it("keeps the stream open but runs no analysis and makes no per-frame update", async () => {
-    // The ear workout holds one stream from its first singing step to its
+    // The ear routine holds one stream from its first singing step to its
     // results; through Interval ID, Higher or lower and the slides it used to
     // re-render on every animation frame.
     let pitch = runtime.render(() => usePitch({ analyse: true }));

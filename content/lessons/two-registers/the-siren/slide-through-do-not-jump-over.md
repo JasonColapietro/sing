@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-As you slide upward, the folds have to shift gradually from a thicker setup to a thinner one, and around your transition the resonance that was helping the sound also drops away. Push through that and the change that could have spread over several notes happens on one, which you hear as a crack or a sudden flip. A slow, quiet slide gives the handover time to spread out; a fast one only skips past the seam, so slowing down is how you hear it and how you smooth it.
+As you slide upward, the folds shift gradually from a thicker setup to a thinner one, and around your transition the resonance that was helping the sound drops away. Push through that and the change that could have spread over several notes happens on one: a crack or a flip. A slow, quiet slide gives the handover time to spread out; a fast one skips past the seam. Slowing down is how you hear it and smooth it.
 
 ## Steps
 

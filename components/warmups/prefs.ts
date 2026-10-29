@@ -82,7 +82,7 @@ export function getWarmupPrefs(): WarmupPrefs {
   return loadPrefs();
 }
 
-export function subscribeWarmupPrefs(cb: () => void): () => void {
+function subscribeWarmupPrefs(cb: () => void): () => void {
   listeners.add(cb);
   return () => listeners.delete(cb);
 }

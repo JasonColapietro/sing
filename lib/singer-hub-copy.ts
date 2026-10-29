@@ -33,6 +33,10 @@
  */
 import type { VoiceKind } from "@/lib/singers-core";
 
+/** The one truthful sentence every hub says about its figures (voice-type hubs, genre hubs, records). */
+export const HUB_FIGURES_NOTE =
+  "Every profile's figures are commonly cited spans confirmed against the catalog, not recordings checked note by note; open a profile for what its sources support.";
+
 export interface HubCopy {
   /** Two sentences on what is specific to this hub. Rendered, and used as the CollectionPage description. */
   intro: string;

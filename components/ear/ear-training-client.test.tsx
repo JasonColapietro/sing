@@ -16,8 +16,8 @@ describe("the ear room on a deep link's first load", () => {
     for (const part of [
       'id="free-cap"',
       "Free guided practice today",
-      "Today&#x27;s ear workout",
-      "Ear training workouts",
+      "Today&#x27;s ear routine",
+      "Ear training routines",
       "Three stars on every game",
       "need a microphone",
     ]) {

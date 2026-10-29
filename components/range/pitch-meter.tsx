@@ -15,6 +15,7 @@ import { createPracticeClock } from "@/lib/practice-clock";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { Button, Card, LinkButton, MicGate, SectionLabel } from "@/components/ui";
+import { FigureFrame, RangeFigure } from "@/components/figures";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { LevelMeter } from "@/components/studio/level-meter";
 import { recoveryRangeNote, staleRangeProgramNote } from "@/components/practice/program-range-note";
@@ -604,6 +605,12 @@ export function PitchMeter({
           error={error}
         />
         <AudioSetup className="mx-auto mt-6 max-w-md" />
+        {/* Below the gate so the start button and any mic error stay on a phone's first screen after a #start link. */}
+        {low === null && (
+          <FigureFrame className="mx-auto mt-8 max-w-2xl" caption="What the range test draws for you">
+            <RangeFigure />
+          </FigureFrame>
+        )}
       </div>
     );
   }

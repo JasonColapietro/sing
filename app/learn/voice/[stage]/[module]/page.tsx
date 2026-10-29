@@ -17,7 +17,7 @@ import {
 } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { ModulePractice } from "@/components/learn/module-practice";
-import { VoiceSafetyNote } from "@/components/learn/safety-note";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { Card, PageShell } from "@/components/ui";
 
 interface Params {
@@ -94,9 +94,9 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
 
   return (
     <PageShell
-      kicker={`Stage ${stage.catalog.stage} · ${stage.catalog.name}`}
+      kicker={`Stage ${stage.catalog.stage} · ${stage.catalog.name} · ${module.lessons.length} lessons · ${moduleMinutes(module)} min`}
       title={`${module.catalog.name}: voice lessons on ${lowerFirst(module.catalog.skill)}`}
-      subtitle={`${module.lessons.length} short, free lessons, ${moduleMinutes(module)} minutes in all, from stage ${stage.catalog.stage} of the voice course, ${stage.catalog.name}. Each one ends in a self-check you judge by ear.`}
+      subtitle={`By the end you can say: I ${module.catalog.promise}`}
     >
       <script
         type="application/ld+json"
@@ -112,11 +112,10 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
       <div className="space-y-6">
         <Card>
           <div className="max-w-3xl">
-            <h2 className="text-xl">What you&apos;ll be able to say</h2>
-            <p className="mt-2 text-mut" data-module-outcome>
+            <p className="sr-only" data-module-outcome>
               I {module.catalog.promise}
             </p>
-            <h2 className="mt-6 text-xl">Lessons</h2>
+            <h2 className="text-xl">Lessons</h2>
             <ol className="mt-3 space-y-3">
               {module.lessons.map((lesson, i) => (
                 <li key={lesson.catalog.id} className="flex gap-3">
@@ -167,7 +166,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
             </Link>
           )}
         </nav>
-        <VoiceSafetyNote />
+        <SafetyLine />
       </div>
     </PageShell>
   );

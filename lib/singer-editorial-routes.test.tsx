@@ -102,14 +102,16 @@ describe("singer editorial trust routes", () => {
     expect(html).toContain('href="/singers/olivia-rodrigo#evidence"');
   });
 
-  it("uses the same disclaimer on the singer hub and an artist page", async () => {
+  it("states the catalog caveat on the hub, and once in an artist page's evidence card", async () => {
     const hub = renderToStaticMarkup(<SingersPage />);
     const artist = renderToStaticMarkup(
-      await SingerPage({ params: Promise.resolve({ slug: "adele" }) }),
+      await SingerPage({ params: Promise.resolve({ slug: "rihanna" }) }),
     );
 
     expect(hub).toContain(SINGER_RANGE_DISCLAIMER);
-    expect(artist).toContain(SINGER_RANGE_DISCLAIMER);
+    expect(artist).toContain("no recording or score has been checked for both endpoints");
+    const visible = artist.replace(/<script[\s\S]*?<\/script>/g, "");
+    expect(visible.split("not an independently verified physiological limit").length - 1).toBe(2);
   });
 
   it("renders every singer hub FAQ question as a visible heading with matching schema text", () => {
@@ -159,11 +161,7 @@ describe("singer sitemap editorial freshness", () => {
       expect(entry.lastModified).toBe(getSingerPageLastModified(singer.slug));
       expect(entry.lastModified).toBe(dataRevised && dataRevised > floor ? dataRevised : floor);
     }
-    // Round 8 moved Alex Warren's range (A2–F#4 → G2–A4) and, with it, catalog
-    // facts on three other reviewed pages (SINGER_DATA_REVISED, 2026-10-13).
-    // The shared template's words changed again on 2026-10-26 (the comparison
-    // card), which is later than every data revision, so today the template
-    // date is every reviewed page's lastmod. The data dates stay recorded.
+    // The template revision is later than every data revision, so it is every reviewed page's lastmod.
     for (const slug of ["alex-warren", "reba-mcentire", "sam-smith", "arijit-singh"]) {
       expect(SINGER_DATA_REVISED[slug]).toBe("2026-10-13");
       expect(getSingerPageLastModified(slug)).toBe(SINGER_PAGE_REVISED);

@@ -4,14 +4,19 @@ import { useEffect, useRef } from "react";
 import { midiToLabel } from "@/lib/audio/notes";
 import { monoFontStack } from "@/lib/chart-colors";
 import type { Segment } from "./exercises";
-import type { TracePoint } from "./note-lane-canvas";
+
+/** One sung sample: pattern seconds and the midi heard, null when unvoiced. */
+export interface TracePoint {
+  t: number;
+  midi: number | null;
+}
 
 /**
  * The note highway: target notes flow right-to-left toward a fixed playhead,
  * the way every real-time singing trainer draws them (Yousician, Simply Sing).
  * The singer's job is to be on the bar when it reaches the line.
  *
- * Same data as the static NoteLaneCanvas — segments in pattern seconds, the
+ * Segments in pattern seconds, the
  * cursor's position in the pattern, the live pitch and its trail, and per-
  * segment in-tune seconds — drawn on a canvas so it can move at frame rate.
  * The playhead sits a third of the way across so about two-thirds of the

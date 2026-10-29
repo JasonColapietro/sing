@@ -35,28 +35,18 @@ async function pageFingerprint(slug: string): Promise<string> {
 }
 
 /**
- * Each reviewed singer page, pinned to what it said on the day its
- * sitemap lastmod and JSON-LD dateModified name. Round 8 corrected Alex
- * Warren's range, which also moved catalog ranks on three other reviewed
- * pages, and the dates stayed put; rounds 2 and 3 had already fixed the same
- * drift once each.
- *
- * When this fails, the page's content changed. Set the ship date in
- * SINGER_DATA_REVISED (lib/singer-evidence.ts) for each page whose figures
- * moved, or bump SINGER_PAGE_REVISED when the shared template's words changed,
- * then update the fingerprint and the date here together.
+ * Each reviewed page pinned to what it said on its lastmod day. When this
+ * fails, date the change (SINGER_DATA_REVISED or SINGER_PAGE_REVISED) and
+ * re-pin the fingerprint and date together.
  */
 const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
-  // 2026-10-27: the opening now leads with "<name>’s reported vocal range is"
-  // and the voice card links the Atlas chapter, so SINGER_PAGE_REVISED moved.
-  // 2026-10-27: re-pinned for punctuation only (em dashes out of the shared
-  // template); no content change, so the lastmod stays.
-  "olivia-rodrigo": { fingerprint: "8d13c982ab571843", lastModified: "2026-10-27" },
-  "reba-mcentire": { fingerprint: "519b9f407a1249d6", lastModified: "2026-10-27" },
-  "alex-warren": { fingerprint: "79cb8bf98f7458b0", lastModified: "2026-10-27" },
-  "sam-smith": { fingerprint: "61fe8889d9efb215", lastModified: "2026-10-27" },
-  "arijit-singh": { fingerprint: "5d5167bceea438d9", lastModified: "2026-10-27" },
-  adele: { fingerprint: "c5436e7219c6c973", lastModified: "2026-10-27" },
+  // 2026-10-28: one answer, one caveat (answer card gone, FAQ lede, merged similar voices).
+  "olivia-rodrigo": { fingerprint: "bfdb138c51316636", lastModified: "2026-10-28" },
+  "reba-mcentire": { fingerprint: "840cde73679f52cb", lastModified: "2026-10-28" },
+  "alex-warren": { fingerprint: "6ff6f190c7e5b4ff", lastModified: "2026-10-28" },
+  "sam-smith": { fingerprint: "004774a8aebeccab", lastModified: "2026-10-28" },
+  "arijit-singh": { fingerprint: "f0524325da012fb4", lastModified: "2026-10-28" },
+  adele: { fingerprint: "e4e7f591a69543e4", lastModified: "2026-10-28" },
 };
 
 describe("reviewed singer page freshness", () => {

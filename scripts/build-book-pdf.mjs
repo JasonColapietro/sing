@@ -21,7 +21,7 @@
  * identical between the passes and the numbers land where they were measured.
  */
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
@@ -292,8 +292,21 @@ const coverHtml = () => `<section class="cover">
 const styles = `
   @page { size: A5; margin: 18mm 16mm; }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Liberation Sans is listed first on purpose. It is Helvetica's metric twin
+     and is absent on a Mac, where the stack falls through to Helvetica Neue as
+     before. On Linux, Chromium takes fontconfig's answer for the *first* family
+     it asks about, whatever that answer is, so with "Helvetica Neue" first the
+     book was set in a random fallback (DejaVu, Inter) and reflowed from 150 to
+     161 pages. Naming the installed twin first keeps the pagination. */
+  body { margin: 0; font-family: "Liberation Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
          color: #20201d; font-size: 10.5pt; line-height: 1.62; }
+  /* Chromium builds the PDF outline (bookmarks) from the accessibility name of
+     each heading, and that name is assembled from the laid-out line fragments
+     with the collapsible space at every soft wrap thrown away: "The passaggio:
+     where it breaks andwhy". pre-wrap keeps the wrap-point space as a preserved
+     (hanging) character, so it reaches the bookmark. The generated headings
+     carry no stray whitespace of their own, so nothing else changes. */
+  h1, h2, h3, h4 { white-space: pre-wrap; }
   .cover { height: 92vh; display: flex; flex-direction: column;
            page-break-after: always; border-top: 2.5pt solid #9d3f33; padding-top: 9mm; }
   .cover .kicker { font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
@@ -400,7 +413,7 @@ const styles = `
   .colo-meta a { color: #9d3f33; text-decoration: none; }
 `;
 
-const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta charset="utf-8">
+const documentHtml = (pages, face) => `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>${esc(TITLE)}</title><style>${styles}</style></head><body>
   ${coverHtml()}
   ${contentsHtml(pages)}
@@ -417,7 +430,7 @@ const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta char
     <p>${esc(TITLE)} — ${esc(SUBTITLE)}. Written for Suede Sing, the browser vocal
     studio, and included with a Suede Pro subscription. ${chapters.length} chapters
     in ${parts.length} parts.</p>
-    <p>Set in Helvetica Neue with monospace labels, and typeset from the same
+    <p>Set in ${esc(face)} with monospace labels, and typeset from the same
     source text the app reads, so the book and the in-app chapters can never
     disagree. Every contents row, part list, cross-reference and chapter footer
     in this file is a live link.</p>
@@ -501,14 +514,36 @@ function locateOpeners(pdfPath) {
   return found;
 }
 
+/**
+ * The typeface the body actually printed in, read back from pass one, so the
+ * colophon tells the truth on whichever machine built the file (Helvetica Neue
+ * on a Mac, Liberation Sans on Linux) instead of asserting a face it may not
+ * have. The body font is the first non-monospace face in the embedded list.
+ */
+function bodyFace(pdfPath) {
+  const rows = execFileSync("pdffonts", [pdfPath], { encoding: "utf8" })
+    .split("\n")
+    .slice(2)
+    .map((l) => l.split(/\s+/)[0]?.replace(/^[A-Z]{6}\+/, ""))
+    .filter((n) => n && !/mono|menlo|courier/i.test(n));
+  const base = rows[0]?.replace(/[-,].*$/, "");
+  if (!base) return "a sans-serif face";
+  return (
+    { DejaVuSans: "DejaVu Sans", HelveticaNeue: "Helvetica Neue" }[base] ??
+    base.replace(/([a-z])([A-Z])/g, "$1 $2")
+  );
+}
+
 // Pass one: placeholder page numbers, only so the contents can be measured.
 const scratch = mkdtempSync(join(tmpdir(), "book-pdf-"));
 const probe = join(scratch, "probe.pdf");
-await render(documentHtml(null), probe);
+await render(documentHtml(null, "a sans-serif face"), probe);
 const pages = locateOpeners(probe);
+const face = bodyFace(probe);
 
-// Pass two: the real thing.
-await render(documentHtml(pages), OUT);
+// Pass two: the real thing. Only the colophon (its own final page) changes
+// besides the numbers, and the page-count check below guards the rest.
+await render(documentHtml(pages, face), OUT);
 await browser.close();
 
 // The numbers are only trustworthy if pass two paginates exactly like pass one.
@@ -529,9 +564,5 @@ const words = chapters.reduce(
   0,
 );
 console.log(
-  `wrote ${OUT} — ${chapters.length} chapters, ${words} words, ${finalPages} pages`,
-);
-writeFileSync(
-  "public/the-measured-voice.txt",
-  `${TITLE}\n${SUBTITLE}\n\n${chapters.length} chapters, ${words} words.\n`,
+  `wrote ${OUT} — ${chapters.length} chapters, ${words} words, ${finalPages} pages, set in ${face}`,
 );

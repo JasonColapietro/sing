@@ -9,17 +9,10 @@ import Home from "@/app/page";
 import { StartingPaths } from "./paths";
 
 /**
- * The free plan already charts the average score by week ("Score trend — by
- * week" on /progress). Pro's accuracy chart is one tally per note with no
- * time axis (components/progress/pro-charts.tsx), and its range chart plots
- * tests about six weeks apart. Round 11 took "accuracy as a trend" out of
- * /studio, /songs, the warmup summaries, /pro and llms.txt; restoring the
- * original homepage brought it back in the Pro teaser and the second path.
- *
- * The coach is the same: the free plan is built the same way and shows its
- * first two steps, usually led by the weak-note siren (lib/pro.ts PRO_PERKS
- * "coach"), so what Pro adds is the rest of the plan, not planning around
- * weak notes.
+ * Pro's accuracy chart is one tally per note with no time axis, only the
+ * range is charted over time, and the free coach shows the first two steps
+ * of the same plan: the copy sells the rest of the plan as a benefit, never
+ * the gating rule and never a trend the free plan already draws.
  */
 const OVERCLAIM = /accuracy trends?|accuracy over time|week over week|range growth|(?:suggests practice|rebuilds itself) around your weak notes/i;
 
@@ -34,15 +27,17 @@ describe("the homepage sells Pro for what Pro adds", () => {
     expect(home).not.toMatch(OVERCLAIM);
   });
 
-  it("sells the rest of the coach's plan, not the plan the free card already shows", () => {
-    expect(home).toContain("The whole daily practice plan, not just the first two steps the free plan shows");
+  it("sells the coach's plan as a benefit, and keeps the gating rule to the /pro table", () => {
+    expect(home).toContain("The coach&#x27;s full daily plan: every step, built from your own scores.".replace("&#x27;", "'"));
+    expect(home).not.toMatch(/first two steps/i);
   });
 
   it("says the same in the 'If you already sing' path", () => {
     const paths = read(renderToStaticMarkup(<StartingPaths />));
     expect(paths).toContain(
-      "Pro adds a per-note accuracy chart, charts your range tests over months, and opens the coach's whole daily plan, not just its first two steps.",
+      "Pro adds a per-note accuracy chart, charts your range tests over months, and the coach's full daily plan: every step, built from your own scores.",
     );
+    expect(paths).not.toMatch(/first two steps/i);
     expect(paths).not.toMatch(OVERCLAIM);
   });
 });

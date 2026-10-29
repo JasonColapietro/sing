@@ -1,10 +1,11 @@
 "use client";
 
-import { isCapped, useFreeCap } from "@/lib/free-cap";
+import { isCapped, sizeToAllowance, useFreeCap } from "@/lib/free-cap";
 import { getProState } from "@/lib/pro";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
-import { DeepLinkSlot, deepLinkMarker, useDeepLinkRead } from "@/components/prepaint";
+import { useCappedStart } from "@/components/practice/use-capped-start";
 import { liveStreak } from "@/components/account/save-state";
+import { DeepLinkSlot, deepLinkMarker, useDeepLinkRead } from "@/components/prepaint";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, PageShell, Pill, SectionLabel } from "@/components/ui";
@@ -35,6 +36,7 @@ import {
   GAME_MIC,
   earRoutineById,
   earRoutineMinutes,
+  earRoutineSeconds,
   recommendEarRoutine,
   type EarRoutine,
 } from "./routines";
@@ -62,12 +64,14 @@ const GAME_ORDER: GameId[] = [
 /** Computed once: the songbook is static, and so is which songs it offers. */
 const CHASE_SONGS = chaseSongs();
 
-/** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
-function showCapWall() {
-  document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
+/** "4 games · ~7 min · mic at step 3": the mic is first asked inside the first game that listens. */
+export function routineMeta(routine: EarRoutine): string {
+  const micAt = routine.steps.findIndex((s) => GAME_MIC[s.game]);
+  const base = `${routine.steps.length} games · ~${earRoutineMinutes(routine)} min`;
+  return micAt < 0 ? base : `${base} · mic at step ${micAt + 1}`;
 }
 
-/** Stars for a whole workout: the average of its steps' best scores. */
+/** Stars for a whole routine: the average of its steps' best scores. */
 function routineStars(
   routine: EarRoutine,
   bests: Record<string, number>,
@@ -82,24 +86,9 @@ export default function EarTrainingClient() {
   const [bests, setBests] = useState<Record<string, number>>({});
   const progress = useProgress();
   const cap = useFreeCap();
-  /**
-   * Every way into a game or workout, so a capped singer meets the wall, not a
-   * mic prompt. A capped tap scrolls to the wall: a Start that does nothing
-   * reads as a broken page, not as a fair limit.
-   */
-  const start = useCallback(
-    (next: Active) => {
-      if (cap.capped) {
-        showCapWall();
-        return;
-      }
-      setActive(next);
-    },
-    [cap.capped],
-  );
-  const unavailableReason = cap.capped
-    ? "Free practice is used for today. It resets at midnight; the free studio is still open."
-    : undefined;
+  // Every way into a game or routine: a capped singer meets the wall, not a mic prompt.
+  const { guard, reason: unavailableReason } = useCappedStart(cap);
+  const start = useMemo(() => guard((next: Active) => setActive(next)), [guard]);
   const { goalSec } = useDailyGoal();
   const goalDoneSec = useGoalDoneSec(progress);
   // The stored count outlives a lapsed streak; only a live one is named.
@@ -107,10 +96,7 @@ export default function EarTrainingClient() {
 
   const refreshBests = useCallback(() => setBests(readBests()), []);
   useEffect(() => {
-    // Deliberately deferred to an effect: reading localStorage during the
-    // lazy initializer would return real scores on the client but {} on the
-    // server, causing a hydration mismatch on this route's SSR-prerendered
-    // HTML shell.
+    // localStorage, so read in an effect: a lazy initializer would mismatch the prerender.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshBests();
   }, [refreshBests]);
@@ -120,16 +106,11 @@ export default function EarTrainingClient() {
     refreshBests();
   }, [refreshBests]);
 
-  // A program day links its ear item at a whole workout, as
-  // /ear-training?routine=quick (lib/programs.ts itemHref), the way the breath
-  // and warmup rooms take ?routine=. Read once after mount rather than with
-  // useSearchParams, which would need a Suspense boundary that blanks this
-  // route's prerendered copy. The cap is asked of the stores, not of `cap`,
-  // which is still the prerender's in the hydration commit. Until it has run,
-  // the room's front page carries the deep-link marker: on a link's first
-  // load the pre-paint script has hidden it, so the workout opens over a page
-  // that never painted it (components/prepaint.tsx), as on /breath.
+  // /ear-training?routine=<id> (a program day): read once after mount, not with
+  // useSearchParams (its Suspense boundary blanks the prerendered copy). The cap
+  // is asked of the stores: `cap` is still the prerender's in this commit.
   const [handledDeepLink, setHandledDeepLink] = useState(false);
+  // Until it has run, the front page carries the deep-link marker the pre-paint script hides on a link's first load.
   useDeepLinkRead(handledDeepLink);
   useEffect(() => {
     if (handledDeepLink) return;
@@ -141,17 +122,20 @@ export default function EarTrainingClient() {
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [handledDeepLink]);
 
-  // "Practised ear today" is what decides between the top-up and the full
-  // workout, so it asks about ear sessions specifically, not practice at large.
+  // Ear sessions specifically: they decide between the top-up and the full routine.
   const earToday = useMemo(() => {
     const today = localDay();
     return progress.sessions.some((s) => s.type === "ear" && s.day === today);
   }, [progress.sessions]);
 
-  const recommended = useMemo(
-    () => recommendEarRoutine({ practicedToday: earToday }),
-    [earToday],
-  );
+  // Sized to the free minutes left: the daily routine (406 s) outlasts a fresh
+  // allowance (300 s) and would end on the cap slide before its last game.
+  const recommended = useMemo(() => {
+    const preferred = recommendEarRoutine({ practicedToday: earToday });
+    return cap.capped
+      ? preferred
+      : sizeToAllowance(preferred, [earRoutineById("quick")], earRoutineSeconds, cap.leftSec);
+  }, [earToday, cap.capped, cap.leftSec]);
 
   /**
    * The path: one level per difficulty with the five games as its rows, then
@@ -222,10 +206,7 @@ export default function EarTrainingClient() {
       "Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each.",
   };
 
-  // A workout or a game runs in the full-screen session surface, a portal
-  // over the page. The page under it keeps the room's heading and a screen of
-  // empty page, the same block a deep link's first load paints in place of
-  // the front page, so opening a program row's workout moves nothing there.
+  // A session is a portal over the page; the page under it keeps the heading and the deep-link slot, so opening a link moves nothing.
   if (active) {
     return (
       <PageShell {...heading}>
@@ -254,16 +235,13 @@ export default function EarTrainingClient() {
         <CapWall cap={cap} className="mb-6" />
         <FreeAllowance cap={cap} className="mb-4" />
         <ContinueCard
-          // At the cap the button already says when; a top-up kicker would
-          // offer a workout that cannot start (as on /warmups). The card still
-          // shows today's pick, so it keeps today's kicker, not tomorrow's.
-          kicker={earToday && !cap.capped ? "Top up today" : "Today's ear workout"}
+          kicker={earToday && !cap.capped ? "Top up today" : "Today's ear routine"}
           title={recommended.name}
           tagline={recommended.tagline}
-          meta={`${recommended.steps.length} games · ~${earRoutineMinutes(recommended)} min`}
+          meta={routineMeta(recommended)}
           stepTitles={recommended.steps.map((s) => GAME_NAMES[s.game])}
           onStart={() => start({ kind: "routine", routine: recommended })}
-          startLabel={cap.capped ? "Available tomorrow" : "Start workout"}
+          startLabel={cap.capped ? "Available tomorrow" : "Start routine"}
           unavailableReason={unavailableReason}
           micReady
           error={null}
@@ -281,7 +259,7 @@ export default function EarTrainingClient() {
 
         <section className="mt-10">
           <div className="flex flex-wrap items-center gap-2">
-            <SectionLabel heading>Ear training workouts</SectionLabel>
+            <SectionLabel heading>Ear training routines</SectionLabel>
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Pick a length, press start
             </span>
@@ -304,7 +282,7 @@ export default function EarTrainingClient() {
                     {r.steps.length} games
                     <span className="mx-2 text-line2">·</span>~{earRoutineMinutes(r)} min
                   </p>
-                  <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="Games in this workout">
+                  <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="Games in this routine">
                     {r.steps.map((s, i) => (
                       <li key={`${s.game}-${s.difficulty}-${i}`}>
                         <Pill tone="mut">{GAME_NAMES[s.game]}</Pill>

@@ -83,11 +83,15 @@ describe("the free-practice wall", () => {
     expect(html.indexOf('href="/pro#restore"')).toBeGreaterThan(html.indexOf('href="/pro#buy"'));
   });
 
-  it("ends the day with a reason to come back, and promises no account", () => {
+  it("ends the day with a reason to come back, in one sentence, and promises no account", () => {
     const html = wall();
-    expect(html).toContain("The free plan includes 5 minutes of guided practice a day");
-    expect(html).toContain("opens at midnight");
-    expect(html).toMatch(/<a[^>]*href="\/progress"[^>]*>See your streak<\/a>/);
+    expect(html).toContain("That&#x27;s today&#x27;s 5 free minutes");
+    expect(html).toContain("Today counts toward your streak");
+    expect(html).toContain("opens again at midnight");
+    // The heading says five; the counter line and the streak button are gone.
+    expect(html).not.toContain("5:00 of 5:00");
+    expect(html).not.toContain("See your streak");
+    expect(html).not.toMatch(/<a[^>]*href="\/progress"/);
     expect(html).not.toMatch(/free accounts?/i);
   });
 
@@ -119,9 +123,7 @@ describe("the free-practice wall", () => {
     expect(html).toMatch(/^<div id="free-cap" class="scroll-mt-24 mb-6" data-prepaint-plan="capped"/);
     expect(paintedFor(html, { plan: "free" })).toBe("");
     expect(paintedFor(html, { plan: "pro" })).toBe("");
-    // At the wall the time used is the whole allowance, whatever the
-    // prerender's empty log says.
-    expect(wordsPainted(html)).toContain("5:00 of 5:00 used today");
+    expect(wordsPainted(html)).toContain("That&#x27;s today&#x27;s 5 free minutes");
     expect(html).toContain("p.streakClause");
   });
 
@@ -132,7 +134,7 @@ describe("the free-practice wall", () => {
     // for the opening of /warmups, /breath, /ear-training and /songs.
     const html = renderToStaticMarkup(<CapWall cap={open} className="mb-6" />);
     expect(staticText(html)).toBe("");
-    expect(html).toContain('data-prepaint-text="That&#x27;s your 5 free minutes for today"');
+    expect(html).toContain('data-prepaint-text="That&#x27;s today&#x27;s 5 free minutes"');
     // Painted, it is the hydrated wall exactly, so the swap at hydration
     // moves nothing: the same elements, classes and words.
     const prepainted = wordsPainted(html)
@@ -156,16 +158,15 @@ describe("the free-practice wall on a phone", () => {
 
   it("orders the ways forward straight under the heading, ahead of the explanation", () => {
     // After the explanation, the actions sat under a 375×667 phone's tab bar.
-    expect(classOf(html, "That&#x27;s your 5 free minutes for today")).toMatch(/\border-1\b/);
+    expect(classOf(html, "That&#x27;s today&#x27;s 5 free minutes")).toMatch(/\border-1\b/);
     expect(html).toContain('class="order-2 mt-5 flex w-full flex-col gap-3 sm:order-none sm:mt-0 sm:w-auto"');
-    expect(classOf(html, "The free plan includes")).toMatch(/\border-3\b.*\bmt-5\b.*\bsm:mt-2\b/);
-    expect(classOf(html, "of 5:00 used")).toMatch(/\border-3\b/);
+    expect(classOf(html, "Today counts toward your streak")).toMatch(/\border-3\b.*\bmt-5\b.*\bsm:mt-2\b/);
   });
 
   it("keeps the order to phones and leaves DOM order alone", () => {
     expect(html.match(/class="contents sm:block sm:max-w-xl"/g)).toHaveLength(1);
     expect(html).toContain('class="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-6"');
-    expect(html.indexOf("The free plan includes")).toBeLessThan(html.indexOf("Keep practicing today with Pro"));
+    expect(html.indexOf("Today counts toward your streak")).toBeLessThan(html.indexOf("Keep practicing today with Pro"));
   });
 });
 

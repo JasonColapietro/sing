@@ -83,6 +83,10 @@ export function micJustAnswered(prev: MicAsk, next: MicAsk): boolean {
   return gone && answered;
 }
 
+/** The reason a capped "Sing again" cannot start, said beside the button. */
+const CAPPED_REASON =
+  "Free practice is used for today. It resets at midnight; the free studio is still open.";
+
 /** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
 function showCapWall() {
   document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -139,6 +143,8 @@ export function SongsClient() {
   // Bumped on every start so a repeat of the same song still counts as a play;
   // the effect below keys off it as well as the song identity.
   const [playToken, setPlayToken] = useState(0);
+  // A library card's Sing opens straight into the count-in; every other start opens on Play.
+  const [autoStart, setAutoStart] = useState(false);
 
   // Every start — a library card, the dice, the setlist, "Sing again", a deep
   // link — lands with Play on screen. Switching views kept the library's
@@ -202,9 +208,9 @@ export function SongsClient() {
 
   /**
    * `again`: a restart from the summary, which keeps how the last run was set
-   * up. Resolves true when the run started.
+   * up. `autoStart`: open into the count-in. Resolves true when the run started.
    */
-  async function startSong(song: Song, again = false): Promise<boolean> {
+  async function startSong(song: Song, again = false, autoStart = false): Promise<boolean> {
     // Song practice is guided practice: the free day's five minutes apply.
     if (cap.capped) {
       showCapWall();
@@ -242,6 +248,7 @@ export function SongsClient() {
     setActiveSong(song);
     setSummary(null);
     replaceTake(undefined);
+    setAutoStart(autoStart);
     setView("practice");
     setPlayToken((t) => t + 1);
     return true;
@@ -301,6 +308,7 @@ export function SongsClient() {
     if (deepLinkSong && linkedId && !cap.capped) {
       setActiveSong(deepLinkSong);
       setSummary(null);
+      setAutoStart(false);
       setView("practice");
       setPlayToken((t) => t + 1);
     }
@@ -395,7 +403,7 @@ export function SongsClient() {
         <Library
           progress={progress}
           visitUnlockedSongId={linkedId}
-          onSelect={(song) => void startSong(song)}
+          onSelect={(song, opts) => void startSong(song, false, opts?.autoStart ?? false)}
           browse={browse}
           onBrowseChange={setBrowse}
         />
@@ -410,6 +418,7 @@ export function SongsClient() {
           setup={setupForSong(setup, activeSong.id)}
           pitch={pitch}
           range={progress.range}
+          autoStart={autoStart}
           mode={mode}
           onModeChange={setMode}
           pass={pass}
@@ -449,6 +458,7 @@ export function SongsClient() {
           data={summary}
           take={take}
           onAgain={() => void startSongById(summary.song.id, true)}
+          againUnavailable={cap.capped ? CAPPED_REASON : undefined}
           // A run sung without a microphone ends on advice to turn it on, so
           // the summary carries the control. It starts the run the way "Sing
           // again" does — through the cap and the ladder (which still lets

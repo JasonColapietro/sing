@@ -114,12 +114,11 @@ try {
     const drill = page.getByRole("dialog", { name: "Sustain test", exact: true });
     await drill.getByRole("button", { name: "Enable microphone", exact: true }).click();
     await page.waitForFunction(() => window.__pendingMicCount() === 1);
-    await drill.getByRole("button", { name: "End drill", exact: true }).click();
-    // The room's own heading stays mounted under a session (the page keeps it
-    // beneath the full-screen surface), so waiting for it would prove nothing:
-    // wait for the drill to close and the room's home view to come back.
+    await drill.getByRole("button", { name: "Exit drill", exact: true }).click();
+    // The room's heading stays mounted under a session, so wait for the drill
+    // to close and the room's home view to come back.
     await drill.waitFor({ state: "detached" });
-    await page.getByRole("heading", { name: "Breath sets", exact: true }).waitFor();
+    await page.getByRole("heading", { name: "Breath routines", exact: true }).waitFor();
     await page.evaluate(() => window.__grantPendingMic());
     await page.waitForFunction(() => {
       const state = window.__cancelledMicState();
@@ -127,7 +126,7 @@ try {
     }, null, { timeout: 5000 });
     assert.equal(await drill.count(), 0, "late permission does not reopen the drill");
     assert.deepEqual(errors, []);
-    console.log("PASS breath drill: late permission after End drill is released on home");
+    console.log("PASS breath drill: late permission after Exit drill is released on home");
   } finally {
     await context.close();
   }

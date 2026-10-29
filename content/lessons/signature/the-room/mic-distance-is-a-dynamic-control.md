@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A microphone hears distance as loudness: move from a hand's width to arm's length and it hears a different instrument. That makes distance a control you can use, keeping a quiet line close and easing back a little for a big note, instead of pushing the quiet line or squeezing the loud one; too close and loud notes distort, too far and quiet ones disappear. Hearing yourself matters as much: if the monitors or the room let you down, you sing louder by reflex, so sorting out how you hear your own voice comes before anything else when there is an audience.
+A microphone hears distance as loudness: move from a hand's width to arm's length and it hears a different instrument. That makes distance a control: keep a quiet line close and ease back for a big note instead of pushing the quiet line or squeezing the loud one. Too close and loud notes distort; too far and quiet ones vanish. Hearing yourself matters as much: if the monitors let you down, you sing louder by reflex. Sort that out first.
 
 ## Steps
 

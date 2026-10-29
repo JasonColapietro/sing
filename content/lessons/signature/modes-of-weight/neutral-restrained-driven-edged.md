@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-These are four production choices you can make on a note, separate from how high it is. Neutral is your easy, speech-like default; restrained is the same note held back, softer and more contained; driven is fuller and more speech-like, like calling across a room at a moderate level; edged is brighter and more cutting, still not loud. Neutral and restrained work across your range, while driven and edged get harder the higher you go, so try them low in your range first and leave edged until a teacher has heard it.
+These are four production choices you can make on a note, separate from how high it is. Neutral is your easy, speech-like default; restrained is the same note held back, softer and more contained; driven is fuller, like calling across a room; edged is brighter and more cutting, still not loud. Neutral and restrained work across your range; driven and edged get harder higher up, so try them low first and leave edged until a teacher has heard it.
 
 ## Steps
 

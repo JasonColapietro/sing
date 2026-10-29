@@ -1,7 +1,8 @@
 "use client";
 
-import { formatClock, useFreeCap } from "@/lib/free-cap";
+import { formatClock, sizeToAllowance, useFreeCap } from "@/lib/free-cap";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
+import { useCappedStart } from "@/components/practice/use-capped-start";
 import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useMemo, useState } from "react";
@@ -21,7 +22,7 @@ import { SessionSummary } from "./session-summary";
 import { RoutineRunner, type RoutineSummaryData } from "./routine-runner";
 import { RoutineSummary } from "./routine-summary";
 import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
-import { recentWarmupResults, routineReason, routineSeconds, routineStartingTempo, recommendRoutine, routineById, sizeRoutineToAllowance, stepExercise, type Routine } from "./routines";
+import { recentWarmupResults, routineReason, routineSeconds, routineStartingTempo, recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
 import { DailyThreeCard, DailyThreeCardPlaceholder } from "./daily-three-card";
 import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
@@ -32,13 +33,7 @@ import { DeepLinkSlot, deepLinkMarker, prepaintMarker, useDeepLinkRead, useHydra
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
 
-/**
- * Whether this exercise may be started at all. Membership in EXERCISES is the
- * paywall; everything inside a pack needs an active Pro entitlement. Every
- * entry point that isn't a path row — a deep link, a "next exercise", the
- * results screen's Practice button — routes through here, so none of them can
- * become the one that leaks a pack.
- */
+/** The paywall: free exercises are in EXERCISES, anything in a pack needs Pro. Every entry point routes through here. */
 function canStart(ex: WarmupExercise): boolean {
   if (EXERCISES.some((e) => e.id === ex.id)) return true;
   return getProState().active;
@@ -60,13 +55,7 @@ export function linkedRepCount(raw: string | null | undefined): number | null {
   return Number.isInteger(n) && n >= 1 && n <= 30 ? n : null;
 }
 
-/**
- * Why an exercise closed itself: the player heard no note for two reps in a
- * row and nothing had been sung, so it left without logging (ExercisePlayer's
- * "silent" exit). The routine summary says the same for a run where nothing
- * scored; a single exercise has no summary, so the room's home says it, with
- * the input level beside it so "it isn't hearing me" is not a guess.
- */
+/** Why a single exercise closed itself (the player's "silent" exit), with the input level beside it. */
 export function SilentStopNote({
   title,
   listening,
@@ -123,12 +112,9 @@ export function WarmupsClient() {
   const micReady = pitch.listening || (micAllowed && !pitch.error);
   const progress = useProgress();
   const isPro = useIsPro();
-  // Five free minutes of guided practice a day; every way into a session
-  // checks it, so a capped singer sees the wall rather than a mic prompt.
+  // Every way into a session is guarded, so a capped singer sees the wall rather than a mic prompt.
   const cap = useFreeCap();
-  const unavailableReason = cap.capped
-    ? "Free practice is used for today. It resets at midnight; the free studio is still open."
-    : undefined;
+  const { guard, reason: unavailableReason } = useCappedStart(cap);
   const { goalSec } = useDailyGoal();
   // On free, the ring counts the guided minutes the goal is clamped to, not
   // time in the uncapped studio.
@@ -224,18 +210,13 @@ export function WarmupsClient() {
 
   const practicedToday = progress.sessions.some((s) => s.day === localDay());
   const routineContext = { practicedToday, hour: hour ?? 12, recent: recentWarmupResults(progress.sessions) };
-  // While Recovery week runs, today's warmup is the week's own quiet set.
-  // The usual pick reads the last three scores, and the week's easy sets
-  // score well, so it would answer a rested week with the Full warmup's
-  // octave siren and arpeggios: the push the /progress coach leaves out for
-  // this week (components/practice/program-day.ts recoveryWeekOf).
+  // While Recovery week runs, today's warmup is the week's own quiet set (components/practice/program-day.ts recoveryWeekOf).
   const recovering = activeProgram ? recoveryWeekOf(activeProgram) : null;
-  // A free singer's guided session has to be one they can finish. The daily
-  // and full sets run past the five free minutes, so a first session would end
-  // on the cap slide halfway through; when the pick does not fit what is left
-  // today, the shorter morning set takes its place, if that fits.
+  // Sized to the free minutes left: a set that outlasts them ends on the cap slide.
   const preferred = (recovering ? routineById("recovery") : null) ?? recommendRoutine(routineContext);
-  const recommended = cap.capped ? preferred : sizeRoutineToAllowance(preferred, cap.leftSec);
+  const recommended = cap.capped
+    ? preferred
+    : sizeToAllowance(preferred, [routineById("morning")], routineSeconds, cap.leftSec);
   const sizedToAllowance = recommended !== preferred;
   // Stars are a floored average of the steps' bests, so a routine sung once
   // at middling scores can read zero; `best` says whether any step was sung.
@@ -290,15 +271,14 @@ export function WarmupsClient() {
   );
   const dailyDone = dailyPlan ? dailyThreeDone(dailyPlan, progress.sessions) : [];
 
-  function startExercise(ex: WarmupExercise, tempo: DailyTempo = 1) {
-    if (cap.capped) return;
+  const startExercise = guard((ex: WarmupExercise, tempo: DailyTempo = 1) => {
     setSilentStop(null);
     setActiveEx(ex);
     setActiveTempo(tempo);
     setActiveReps(null);
     setSummary(null);
     setView("session");
-  }
+  });
 
   function startExerciseById(id: string) {
     const ex = ALL_EXERCISES.find((e) => e.id === id);
@@ -307,15 +287,15 @@ export function WarmupsClient() {
     void selectExercise(ex, "summary");
   }
 
-  function startRoutine(r: Routine) {
-    if (!canStartRoutine(r) || cap.capped) return;
+  const startRoutine = guard((r: Routine) => {
+    if (!canStartRoutine(r)) return;
     setSilentStop(null);
     setActiveRoutine(r);
     setRoutineStartStep(0);
     setRoutineWarmIn(false);
     setRoutineSummary(null);
     setView("routine");
-  }
+  });
 
   // What a cold visitor picked while the mic was still off, held until
   // permission lands. Without it their choice is thrown away by the prompt.
@@ -331,11 +311,10 @@ export function WarmupsClient() {
   // the singer was actually looking.
   const [errorAt, setErrorAt] = useState<ErrorAt>({ kind: "gate" });
 
-  async function selectExercise(
+  const selectExercise = guard(async (
     ex: WarmupExercise,
     from: "path" | "continue" | "summary" = "path",
-  ) {
-    if (cap.capped) return;
+  ) => {
     if (pitch.listening) {
       startExercise(ex);
       return;
@@ -352,11 +331,11 @@ export function WarmupsClient() {
     );
     const ok = await pitch.start();
     if (!ok) setPending(null);
-  }
+  });
 
   /** A row in today's three: the exercise at the tempo the plan set for it. */
-  async function selectDailyPick(p: DailyPick, from: "today" | "summary" = "today") {
-    if (cap.capped || !canStart(p.exercise)) return;
+  const selectDailyPick = guard(async (p: DailyPick, from: "today" | "summary" = "today") => {
+    if (!canStart(p.exercise)) return;
     if (pitch.listening) {
       startExercise(p.exercise, p.tempo);
       return;
@@ -365,10 +344,10 @@ export function WarmupsClient() {
     setErrorAt(from === "summary" ? { kind: "summary" } : { kind: "daily", id: p.exercise.id });
     const ok = await pitch.start();
     if (!ok) setPending(null);
-  }
+  });
 
-  async function selectRoutine(r: Routine, from: "today" | "grid" | "summary") {
-    if (!canStartRoutine(r) || cap.capped) return;
+  const selectRoutine = guard(async (r: Routine, from: "today" | "grid" | "summary") => {
+    if (!canStartRoutine(r)) return;
     if (pitch.listening) {
       startRoutine(r);
       return;
@@ -383,15 +362,13 @@ export function WarmupsClient() {
     );
     const ok = await pitch.start();
     if (!ok) setPending(null);
-  }
+  });
 
-  // The gate card's button, which is its own place on screen. Set before the
-  // await, but nothing renders during it: start() clears the error first.
-  function startFromGate() {
-    if (cap.capped) return;
+  // The gate card's button, which is its own place on screen.
+  const startFromGate = guard(() => {
     setErrorAt({ kind: "gate" });
     void pitch.start();
-  }
+  });
 
   const deepLinkEx = deepLink?.exercise
     ? (ALL_EXERCISES.find((e) => e.id === deepLink.exercise) ?? null)
@@ -579,6 +556,44 @@ export function WarmupsClient() {
     </>
   );
 
+  // today is null until mount (the plan is seeded by the viewer's local date);
+  // the placeholder keeps the card's slot so nothing below it jumps.
+  const dailyThree = (
+    <>
+      {today === null && <DailyThreeCardPlaceholder />}
+      {dailyPlan && (
+        <DailyThreeCard
+          plan={dailyPlan}
+          done={dailyDone}
+          onStart={(p) => void selectDailyPick(p)}
+          error={errorAt.kind === "daily" ? pitch.error : null}
+          errorExerciseId={errorAt.kind === "daily" ? errorAt.id : null}
+          unavailableReason={unavailableReason}
+        />
+      )}
+    </>
+  );
+  const routineGrid = (
+    <RoutineGrid
+      progress={progress}
+      onStart={(r) => void selectRoutine(r, "grid")}
+      error={errorAt.kind === "routine" ? pitch.error : null}
+      errorRoutineId={errorAt.kind === "routine" ? errorAt.id : null}
+      unavailableReason={unavailableReason}
+    />
+  );
+  const pathSection = (
+    <PathSection
+      progress={progress}
+      onSelect={selectExercise}
+      micReady={micReady}
+      error={errorAt.kind === "exercise" ? pitch.error : null}
+      errorExerciseId={errorAt.kind === "exercise" ? errorAt.id : null}
+      unavailableReason={unavailableReason}
+      recovering={recovering}
+    />
+  );
+
   return (
     <PageShell
       kicker="Warmups"
@@ -621,11 +636,7 @@ export function WarmupsClient() {
             programLeads && activeProgram && <ProgramEntryCard active={activeProgram} />
           )}
           {newToWarmups ? (
-            // Someone who has never sung a warmup has no path to continue.
-            // The homepage's "Start workout" and the Lessons tab promise a
-            // short routine that ends, so the first button here starts one:
-            // the recommended set, sized to the free minutes. One gentle
-            // exercise on its own would walk until End.
+            // A newcomer has no path to continue: the first button starts the recommended routine, sized to the free minutes.
             <ContinueCard
               kicker="Start here"
               title={recommended.name}
@@ -639,7 +650,7 @@ export function WarmupsClient() {
               streakBest={progress.streak.best}
               micReady={micReady}
               unavailableReason={unavailableReason}
-              startLabel={cap.capped ? "Available tomorrow" : micReady ? "Start warmup" : "Enable mic and start"}
+              startLabel={cap.capped ? "Available tomorrow" : micReady ? "Start routine" : "Enable mic and start"}
               error={errorAt.kind === "today" ? pitch.error : null}
               onStart={() => void selectRoutine(recommended, "today")}
             >
@@ -670,20 +681,8 @@ export function WarmupsClient() {
               />
             )
           )}
-          {/* today is null until mount (the plan is seeded by the viewer's
-              local date); the placeholder keeps the card's slot so nothing
-              below it jumps when the plan arrives. */}
-          {today === null && <DailyThreeCardPlaceholder />}
-          {dailyPlan && (
-            <DailyThreeCard
-              plan={dailyPlan}
-              done={dailyDone}
-              onStart={(p) => void selectDailyPick(p)}
-              error={errorAt.kind === "daily" ? pitch.error : null}
-              errorExerciseId={errorAt.kind === "daily" ? errorAt.id : null}
-              unavailableReason={unavailableReason}
-            />
-          )}
+          {/* Same place for every singer: the server renders a newcomer, so moving it by history shifted the page on hydration. */}
+          {dailyThree}
           {/* A newcomer's top card is this routine already; it is offered once. */}
           {!newToWarmups && (
             <ContinueCard
@@ -699,7 +698,7 @@ export function WarmupsClient() {
               streakBest={progress.streak.best}
               micReady={micReady}
               unavailableReason={unavailableReason}
-              startLabel={cap.capped ? "Available tomorrow" : micReady ? "Start warmup" : "Enable mic and start"}
+              startLabel={cap.capped ? "Available tomorrow" : micReady ? "Start routine" : "Enable mic and start"}
               error={errorAt.kind === "today" ? pitch.error : null}
               onStart={() => void selectRoutine(recommended, "today")}
             >
@@ -743,23 +742,35 @@ export function WarmupsClient() {
             </div>
           )}
 
-          <RoutineGrid
-            progress={progress}
-            onStart={(r) => void selectRoutine(r, "grid")}
-            error={errorAt.kind === "routine" ? pitch.error : null}
-            errorRoutineId={errorAt.kind === "routine" ? errorAt.id : null}
-            unavailableReason={unavailableReason}
-          />
-
-          <PathSection
-            progress={progress}
-            onSelect={selectExercise}
-            micReady={micReady}
-            error={errorAt.kind === "exercise" ? pitch.error : null}
-            errorExerciseId={errorAt.kind === "exercise" ? errorAt.id : null}
-            unavailableReason={unavailableReason}
-            recovering={recovering}
-          />
+          {newToWarmups ? (
+            // A newcomer's catalogue stays in the HTML, folded, so nothing is
+            // lost to a link or a search and the grid is never the first thing read.
+            <>
+              <details className="group rounded-3xl border border-line bg-panel">
+                <summary className="cursor-pointer list-none px-5 py-4 text-lg outline-offset-2 focus-visible:outline-2 focus-visible:outline-violet">
+                  All routines
+                  <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    pick a length
+                  </span>
+                </summary>
+                <div className="border-t border-line px-5 py-5">{routineGrid}</div>
+              </details>
+              <details className="group rounded-3xl border border-line bg-panel">
+                <summary className="cursor-pointer list-none px-5 py-4 text-lg outline-offset-2 focus-visible:outline-2 focus-visible:outline-violet">
+                  Every exercise
+                  <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    the path, one ladder at a time
+                  </span>
+                </summary>
+                <div className="border-t border-line px-5 py-5">{pathSection}</div>
+              </details>
+            </>
+          ) : (
+            <>
+              {routineGrid}
+              {pathSection}
+            </>
+          )}
         </div>
       )}
       {/* Shown only on a deep link's first load, until the room has read it. */}
@@ -816,7 +827,6 @@ export function WarmupsClient() {
           initialTempo={activeTempo}
           pitch={pitch}
           range={progress.range}
-          variant="session"
           onFinish={(data) => {
             setSummary(data);
             setView("summary");

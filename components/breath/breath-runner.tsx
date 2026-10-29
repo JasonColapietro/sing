@@ -3,7 +3,8 @@
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { emitProResult } from "@/lib/pro-signal";
-import { denseStepResults, withStepResult } from "@/components/practice/step-results";
+import { StepIntroSlide } from "@/components/practice/step-intro";
+import { useStepRunner } from "@/components/practice/step-runner";
 import { formatClock, useFreeCap, type FreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { liveStreak } from "@/components/account/save-state";
@@ -12,7 +13,6 @@ import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { useIdleMicRelease } from "@/lib/audio/use-idle-mic-release";
 import { useProgress, type Achievement } from "@/lib/progress";
-import { SessionShell } from "@/components/practice/session-shell";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { BoxBreathing } from "./box-breathing";
@@ -41,18 +41,6 @@ import { starsForBox, starsForCue, starsForFarinelli, starsForSustain } from "./
 
 type Stars = 0 | 1 | 2 | 3;
 
-/**
- * Where the runner is: reading the card for step `step`, doing it, or done.
- *
- * Steps advance themselves — the intro card starts on a timer, every drill is
- * bounded and reports when it is over — so a breath routine runs to the end
- * without the singer touching anything.
- */
-type RunnerPhase =
-  | { kind: "intro"; step: number }
-  | { kind: "play"; step: number }
-  | { kind: "done" };
-
 /** One drill, rendered on the session surface, wired to whoever owns the ending. */
 function StepDrill({
   step,
@@ -71,7 +59,6 @@ function StepDrill({
     case "box":
       return (
         <BoxBreathing
-          variant="session"
           autoStart={autoStart}
           preset={{ side: step.side, minutes: step.minutes }}
           onComplete={onComplete}
@@ -81,7 +68,6 @@ function StepDrill({
     case "farinelli":
       return (
         <FarinelliDrill
-          variant="session"
           autoStart={autoStart}
           preset={{ cap: step.cap }}
           onComplete={onComplete}
@@ -101,9 +87,7 @@ function StepDrill({
     default:
       return (
         <SustainTest
-          variant="session"
           pitch={pitch}
-          autoStart={autoStart}
           preset={{ attempts: step.attempts }}
           onComplete={onComplete}
           onExit={onExit}
@@ -112,16 +96,13 @@ function StepDrill({
   }
 }
 
+/** Stars for one drill, from how far it was taken, on the path's own bands. */
 /**
  * The free minutes left today, for a step's intro card, when they run out
- * before the rest of the set does; null on Pro and while they cover it.
+ * before the rest of the routine does; null on Pro and while they cover it.
  *
- * A program row opens a set straight into this runner (/breath?routine=daily),
- * past the room's own allowance line, and Daily breath alone runs past five
- * minutes, so without it the cap slide took the sustain test's place with no
- * countdown. It is a plain readout of the time left, the label the warmup
- * runner's intro clock switches to in the same case (routine-runner.tsx
- * introClockLabel).
+ * A program row opens a routine straight into this runner, past the room's
+ * own allowance line, so the intro shows the countdown the cap would cut.
  */
 export function breathIntroFreeLeft(
   routine: BreathRoutine,
@@ -134,128 +115,6 @@ export function breathIntroFreeLeft(
   return cap.leftSec < setLeftSec ? `${formatClock(cap.leftSec)} free left today` : null;
 }
 
-/**
- * The card between steps: what is next, what it does, and the preset it will
- * run. It starts the step on its own after BREATH_STEP_INTRO_SEC so the routine
- * keeps its own pace; the two buttons are for a singer who wants to move sooner.
- */
-function StepIntro({
-  step,
-  stepIndex,
-  stepCount,
-  progress,
-  freeLeft,
-  onStart,
-  onSkip,
-  onQuit,
-}: {
-  step: BreathStep;
-  stepIndex: number;
-  stepCount: number;
-  progress: number;
-  /** breathIntroFreeLeft: the free minutes left, when the set outlasts them. */
-  freeLeft: string | null;
-  onStart: () => void;
-  onSkip: () => void;
-  onQuit: () => void;
-}) {
-  // Ten updates a second is smooth enough for a four-second bar and cheap
-  // enough to ignore.
-  const [pct, setPct] = useState(0);
-  useEffect(() => {
-    const t0 = performance.now();
-    const holdMs = BREATH_STEP_INTRO_SEC * 1000;
-    const id = window.setInterval(() => {
-      const p = Math.min(100, ((performance.now() - t0) / holdMs) * 100);
-      setPct(p);
-      if (p >= 100) {
-        window.clearInterval(id);
-        onStart();
-      }
-    }, 100);
-    return () => window.clearInterval(id);
-    // Runs once per intro: the card is keyed by step, so a new step is a new
-    // mount and a fresh timer. onStart is stable for the card's lifetime.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const secondsLeft = Math.max(
-    1,
-    Math.ceil(BREATH_STEP_INTRO_SEC - (pct / 100) * BREATH_STEP_INTRO_SEC),
-  );
-
-  return (
-    <SessionShell
-      title={breathStepTitle(step)}
-      subtitle={`Step ${stepIndex + 1} of ${stepCount}`}
-      progress={progress}
-      onClose={onQuit}
-      closeLabel="Leave routine"
-      topRight={
-        freeLeft ? (
-          <span className="tabular font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
-            {freeLeft}
-          </span>
-        ) : undefined
-      }
-    >
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-5 py-6 text-center">
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-          {stepIndex === 0 ? "First up" : "Up next"} · Step {stepIndex + 1} of{" "}
-          {stepCount}
-        </span>
-        <h2 className="font-display text-[clamp(2rem,7vw,3rem)]">
-          {breathStepTitle(step)}
-        </h2>
-        <p className="max-w-md text-[var(--s-mut)]">
-          {breathDrillDesc(step.drill)}
-        </p>
-        <p className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-          {breathStepSummary(step)}
-          <span className="mx-2 text-[var(--s-line2)]">·</span>~
-          {Math.round(breathStepSeconds(step))}s
-        </p>
-        <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={onStart}
-            className="min-h-11 rounded-full bg-[var(--s-ok)] px-7 text-base font-medium text-[oklch(0.15_0.02_155)] transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
-          >
-            Start now
-          </button>
-          <button
-            type="button"
-            onClick={onSkip}
-            className="min-h-11 rounded-full border border-[var(--s-line2)] px-6 text-sm text-[var(--s-mut)] transition-colors hover:bg-[var(--s-over)] hover:text-[var(--s-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-amber)]"
-          >
-            Skip this one
-          </button>
-        </div>
-        <div className="mt-3 w-full max-w-xs">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--s-over)]">
-            <div
-              className="h-full rounded-full bg-[var(--s-amber)] transition-[width] duration-100 ease-linear"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-          <p className="tabular mt-2 font-mono text-xs text-[var(--s-dim)]">
-            Starting in {secondsLeft}
-          </p>
-        </div>
-      </div>
-    </SessionShell>
-  );
-}
-
-/**
- * Stars for one drill, read out of what it actually did.
- *
- * The two guided drills report no score, so the alternative was to hand out
- * three stars for finishing — and "finishing" includes pressing End three
- * seconds in. Every drill reports the seconds it ran, and every drill's star
- * bands are already written in terms of how far it was taken, so the run is
- * measured against the same bands the path uses.
- */
 function starsForDrillResult(drill: BreathDrillId, r: BreathDrillResult): Stars {
   switch (drill) {
     case "box":
@@ -284,16 +143,7 @@ function mergeAchievements(results: (BreathDrillResult | null)[]): Achievement[]
   return out;
 }
 
-/**
- * Stars when nothing in the routine was scored.
- *
- * Three of the four breath drills have no score at all — box breathing, the
- * Farinelli climb and breathe-and-sing are pass/fail by doing them — so a
- * routine of those would
- * otherwise land on a blank results screen. Finishing everything is three
- * stars, most of it two, any of it one. That is the honest reading of a set
- * whose only measure is whether the singer stayed with it.
- */
+/** Stars when nothing was scored: all done is three, most two, any one. */
 export function starsForCompletion(done: number, total: number): Stars {
   if (total <= 0 || done <= 0) return 0;
   if (done >= total) return 3;
@@ -344,14 +194,7 @@ function ShortSustainNote({ held }: { held: number }) {
   );
 }
 
-/**
- * The offer at the end of a breath set, after the results and the tone link
- * and never over a control that starts the next drill. On the paper ground
- * the warmup summary gives it (routine-summary.tsx): the nudge is built from
- * the site's paper tokens and the results screen is dark. `empty:hidden`
- * because the nudge self-hides for Pro members, who would otherwise get a
- * blank cream block.
- */
+/** The Pro offer after a breath routine, on a paper panel; `empty:hidden` since it self-hides on Pro. */
 function BreathProNudge() {
   return (
     <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
@@ -378,12 +221,7 @@ export function breathRunSubtitle(doneSteps: number, firstStep: number, stepCoun
   return ran === 1 ? `Step ${stepCount} done` : `Steps ${firstStep + 1}–${stepCount} done`;
 }
 
-/**
- * The end of a breath set. Once the free minutes are spent, whether the cap
- * stopped the set or its last step used them up, "Play again" could only
- * reopen the cap slide, so it is left off and the note says why the set
- * stopped and when it opens again.
- */
+/** The end of a breath routine; once the free minutes are spent "Play again" is left off, the note says why. */
 export function BreathRunResults({
   routine,
   results,
@@ -489,108 +327,76 @@ export function BreathRunner({
 }) {
   const cap = useFreeCap();
   const stepCount = routine.steps.length;
-  const [runId, setRunId] = useState(0);
-  // The step this run opened on; "again" runs the whole set.
-  const [firstStep, setFirstStep] = useState(() => Math.min(Math.max(0, startStep), stepCount - 1));
-  const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: firstStep });
-  const [results, setResults] = useState<(BreathDrillResult | null)[]>([]);
-  // The step the cap slide stood in for, once it has; null otherwise.
-  const [capStoppedAt, setCapStoppedAt] = useState<number | null>(null);
+  const runner = useStepRunner<BreathDrillResult>(stepCount, { capped, startStep });
+  const { phase, results } = runner;
 
-  function closeStep(i: number, data: BreathDrillResult | null) {
-    // Dense: a run opened at a later step closes its first one past index 0.
-    setResults(withStepResult(results, i, data, stepCount));
-    setPhase(i + 1 < stepCount ? { kind: "intro", step: i + 1 } : { kind: "done" });
-  }
-
-  /**
-   * The X on an intro card: leave, but never throw away work already done.
-   * `capAt` is the step whose intro the cap slide replaced, when it did.
-   */
-  function leave(capAt?: number) {
-    if (results.some((r) => r != null)) {
-      setResults(denseStepResults(results, stepCount));
-      setCapStoppedAt(capAt ?? null);
-      setPhase({ kind: "done" });
-    } else onExit();
-  }
-
-  // The studio holds one stream for the whole set and closed it only on the
-  // way back to the room, so the results screen and the cap slide kept the
-  // recording light on for as long as they stayed up. Out of a drill it now
-  // closes after the usual idle wait; a drill that needs it asks again.
+  // Out of a drill the mic closes after the usual idle wait; a drill that needs it asks again.
   useIdleMicRelease({
     listening: pitch.listening,
     hold: phase.kind === "play" || (phase.kind === "intro" && !capped),
     stop: pitch.stop,
   });
 
-  function again() {
-    setResults([]);
-    setFirstStep(0);
-    setCapStoppedAt(null);
-    setPhase({ kind: "intro", step: 0 });
-    setRunId((n) => n + 1);
-  }
+  // The X on an intro card: leave, but never throw away work already done.
+  const leave = (capAt?: number) => {
+    if (runner.quit(capAt) === null) onExit();
+  };
 
   if (phase.kind === "done") {
     return (
       <BreathRunResults
         routine={routine}
         results={results}
-        firstStep={firstStep}
-        capStoppedAt={capStoppedAt}
+        firstStep={runner.firstStep}
+        capStoppedAt={runner.capStoppedAt}
         capped={capped}
         onContinue={onExit}
-        onAgain={again}
+        onAgain={runner.again}
       />
     );
   }
 
   const step = routine.steps[phase.step];
-  // The bar tracks the routine, not the drill: each drill draws its own
-  // progress inside its own shell, and a bar that restarted three times would
-  // say nothing about how far through the set the singer is.
-  const stepProgress = (phase.step / stepCount) * 100;
 
   if (phase.kind === "intro") {
-    // Between steps only: a drill under way finishes and logs first. This
-    // step and the ones after it are then not reached, rather than skipped.
-    if (capped) return <CapSlide cap={cap} onExit={() => leave(phase.step)} />;
+    if (runner.atCapSlide) return <CapSlide cap={cap} onExit={() => leave(phase.step)} />;
     return (
-      <StepIntro
-        key={`${runId}-${phase.step}`}
-        step={step}
+      <StepIntroSlide
+        key={runner.stepKey}
+        routineName={routine.name}
         stepIndex={phase.step}
         stepCount={stepCount}
-        progress={stepProgress}
-        freeLeft={breathIntroFreeLeft(routine, phase.step, cap)}
-        onStart={() => setPhase({ kind: "play", step: phase.step })}
-        onSkip={() => closeStep(phase.step, null)}
+        title={breathStepTitle(step)}
+        meta={
+          <>
+            {breathStepSummary(step)}
+            <span className="mx-2 text-[var(--s-line2)]">·</span>~{Math.round(breathStepSeconds(step))}s
+          </>
+        }
+        clockLabel={breathIntroFreeLeft(routine, phase.step, cap) ?? undefined}
+        holdSec={BREATH_STEP_INTRO_SEC}
+        onStart={() => runner.play(phase.step)}
+        onSkip={() => runner.closeStep(phase.step, null)}
         onQuit={() => leave()}
-      />
+      >
+        <p className="mx-auto mt-4 max-w-md text-[var(--s-mut)]">{breathDrillDesc(step.drill)}</p>
+      </StepIntroSlide>
     );
   }
 
   return (
     <StepDrill
-      key={`${runId}-${phase.step}`}
+      key={runner.stepKey}
       step={step}
       pitch={pitch}
       autoStart
-      onComplete={(r) => closeStep(phase.step, r)}
-      onExit={() => closeStep(phase.step, null)}
+      onComplete={(r) => runner.closeStep(phase.step, r)}
+      onExit={() => runner.closeStep(phase.step, null)}
     />
   );
 }
 
-/**
- * One drill on its own, chosen from the path.
- *
- * It gets its normal setup — a singer who picked "Box breathing" out of a list
- * wants to say how long for — and the same results screen a routine ends on, so
- * the path and the workouts grid agree on what finishing something looks like.
- */
+/** One drill on its own, chosen from the path: its setup card, then the routine's results screen. */
 export function BreathDrillSession({
   capped = false,
   drill,
@@ -598,11 +404,7 @@ export function BreathDrillSession({
   pitch,
   onExit,
 }: {
-  /**
-   * The free allowance is spent. A drill under way still finishes and logs,
-   * but its results offer no "Play again": that would start a new session
-   * past the cap, which every other way into the room refuses.
-   */
+  /** The free allowance is spent: the results offer no "Play again". */
   capped?: boolean;
   drill: BreathDrillId;
   /** A setting a link asked for, such as a program day's five-count square; it seeds the setup card. */
@@ -617,11 +419,7 @@ export function BreathDrillSession({
   const { goalSec } = useDailyGoal();
   const goalDoneSec = useGoalDoneSec(progress);
 
-  // The path's rows are drills, not presets, so without a linked preset the
-  // step handed to StepDrill carries the setup card's usual starting values.
-  // Either way autoStart is false: the preset only seeds the card, and the
-  // singer can still change it before starting. Breathe and sing reads its
-  // note length from here.
+  // A linked preset only seeds the setup card; the singer can still change it.
   const step: BreathStep =
     preset && preset.drill === drill
       ? preset

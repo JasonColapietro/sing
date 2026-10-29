@@ -131,7 +131,7 @@ export const QUERY_OWNERSHIP: readonly QueryCluster[] = [
         href: "/recorder",
         question: "Can I cut a take, compare two and keep the good one?",
         scopeLine:
-          "This is the take recorder: one room with one job, which is cutting a take, comparing two of them and keeping the ones worth keeping.",
+          "This is the recorder: one room with one job, which is cutting a take, comparing two of them and keeping the ones worth keeping.",
         descriptionMark: "voice recorder for singers",
       },
       {

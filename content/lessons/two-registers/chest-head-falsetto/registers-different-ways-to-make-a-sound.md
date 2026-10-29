@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A register is a way of setting up the vocal folds, and each setup handles one band of pitches well and gives out above it. In chest voice, the setup you speak in, the folds are shorter and thicker and close firmly, giving a full, speech-like tone; in head voice they are stretched longer and thinner but still close, giving a lighter tone that can still ring; in falsetto they are stretched without closing completely, so air leaks through and the sound is airy and hard to sing loudly. No single setup covers a whole range, which is why you have more than one, and the skill is choosing between them on purpose rather than hauling one past its ceiling.
+A register is a way of setting up the vocal folds; each setup handles one band of pitches well and gives out above it. In chest voice, the setup you speak in, the folds are shorter and thicker and close firmly: a full, speech-like tone. In head voice they stretch longer and thinner but still close: lighter, and it can still ring. In falsetto they stretch without closing fully, so the sound is airy. No setup covers a whole range.
 
 ## Steps
 

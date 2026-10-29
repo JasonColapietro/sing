@@ -42,9 +42,18 @@ npm test
 npm run build
 ```
 
-Browser checks run against a running server (default `http://localhost:3000`):
-`npm run e2e`, plus `e2e:mobile`, `e2e:pitch`, `e2e:vibrato`, `e2e:programs`
-and `e2e:breath`.
+The browser checks run against the production build on port 3100, through
+the same runner CI calls (`.github/workflows/ci.yml`):
+
+```bash
+npm start -- --port 3100     # in another shell, after npm run build
+node e2e/suite.mjs journeys  # or mobile-audit, desktop-audit, audio, layout-shift, layout-shift-finished
+```
+
+Single checks take any base URL (default `http://localhost:3000`): `npm run
+e2e`, plus `e2e:mobile`, `e2e:pitch`, `e2e:vibrato`, `e2e:programs` and
+`e2e:breath`. `npm run compile` regenerates the committed `lib/*-data.ts` from
+`content/` and `data/`; `npm test` fails when one is stale.
 
 ## Payments (Suede Pro)
 
@@ -236,9 +245,10 @@ since those are inlined at build time:
 bash scripts/deploy-prod.sh
 ```
 
-It refuses to run unless the tree is clean and at `origin/main`. That guard
-exists because `vercel --prod` uploads the working directory rather than a git
-ref, so running it from a stale worktree silently rolls production back.
+It runs lint, tsc and the tests, builds once locally with the production env
+(`vercel pull` + `vercel build`) and uploads that output with `vercel deploy
+--prebuilt`. What it deploys is this checkout, so run it from a clean
+`origin/main`.
 
 ### Domain and canonical URLs
 

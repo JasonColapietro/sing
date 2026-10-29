@@ -1,7 +1,10 @@
 /**
  * Compile content/atlas/*.md + data/singers/*.json into lib/atlas-data.ts.
  *
- * Usage: node scripts/compile-atlas.mjs
+ * Usage: node scripts/compile-atlas.mjs [--check]
+ *
+ * `--check` writes nothing and fails if lib/atlas-data.ts is stale, which is
+ * what lib/generated-data.test.ts runs.
  *
  * The Voice Atlas is the second book: method chapters up front, then genre
  * chapters whose bodies are an intro essay followed by structured singer
@@ -14,9 +17,10 @@
  * Run scripts/compile-singers.mjs first — it owns validation of the batches.
  * This script trusts them and only re-derives what it needs.
  */
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { CHECK, emit } from "./generated-output.mjs";
 
 const CONTENT = "content/atlas";
 const DATA = "data/singers";
@@ -631,11 +635,12 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
 export const ATLAS_WORDS = ${chapters.reduce((n, c) => n + c.words, 0)};
 `;
 
-writeFileSync(new URL("../lib/atlas-data.ts", import.meta.url), out);
+const stale = emit(new URL("../lib/atlas-data.ts", import.meta.url), out, "compile-atlas.mjs");
+if (stale) problems.push(stale);
 
 const totalEntries = chapters.reduce((n, c) => n + c.entries.length, 0);
 console.log(
-  `wrote ${chapters.length} chapters, ${totalEntries} singer entries, ${chapters.reduce((n, c) => n + c.words, 0)} words`,
+  `${CHECK ? "checked" : "wrote"} ${chapters.length} chapters, ${totalEntries} singer entries, ${chapters.reduce((n, c) => n + c.words, 0)} words`,
 );
 if (problems.length) {
   console.log(`\n${problems.length} problems:`);

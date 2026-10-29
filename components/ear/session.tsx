@@ -1,13 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Button, Card, MIC_PRIVACY, Pill, Stat } from "@/components/ui";
-import { MicAlert } from "@/components/mic-alert";
-import { ProCrescendoNudge } from "@/components/pro/gate";
 import { SessionShell } from "@/components/practice/session-shell";
 import { logSession, type Achievement } from "@/lib/progress";
 import { emitProResult } from "@/lib/pro-signal";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { trackHiddenTime } from "@/components/practice/hidden-time";
 import {
   createActiveTimer,
@@ -135,7 +131,7 @@ export function GameShell({
       }
       progress={(session.results.length / ROUNDS) * 100}
       onClose={onExit}
-      closeLabel="Quit game"
+      closeLabel="Exit game"
       topRight={<ScoreChip score={session.score} streak={session.streak} />}
     >
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-10 pt-2 sm:px-6">
@@ -146,7 +142,7 @@ export function GameShell({
 }
 
 /** Score, and the run of correct answers behind it, for the top bar. */
-export function ScoreChip({ score, streak }: { score: number; streak: number }) {
+function ScoreChip({ score, streak }: { score: number; streak: number }) {
   return (
     <div className="flex items-center gap-2">
       <span
@@ -290,54 +286,6 @@ export function ShellBar({
   );
 }
 
-/**
- * The microphone gate, on the dark surface.
- *
- * The shared `MicGate` is the same gate in the site's warm palette — its ink,
- * its panel and its dim type are all fixed browns, which read as smudges on
- * the session's dark ground. This is that gate's content (badge, what the
- * game does, where the audio goes, one button, the failure under it) drawn on
- * the session tokens, so the surface stays continuous from the top bar down.
- * The privacy sentence is imported, not restated, so there is still exactly
- * one of it in the app.
- */
-export function ShellMicGate({
-  title,
-  description,
-  onEnable,
-  error = null,
-}: {
-  title: string;
-  description: string;
-  onEnable: () => void;
-  error?: string | null;
-}) {
-  return (
-    <div className="py-10 text-center">
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[var(--s-line2)] bg-[var(--s-elev)] text-[var(--s-voice)]">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="9" y="3" width="6" height="11" rx="3" stroke="currentColor" strokeWidth="1.8" />
-          <path d="M5 11a7 7 0 0 0 14 0M12 18v3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
-      </div>
-      <h2 className="mt-5 text-2xl text-[var(--s-ink)]">{title}</h2>
-      <p className="mx-auto mt-2 max-w-md text-[var(--s-mut)]">{description}</p>
-      <p className="mt-2 text-xs text-[var(--s-dim)]">{MIC_PRIVACY}</p>
-      <div className="mt-6 flex justify-center">
-        <ShellButton tone="primary" onClick={onEnable}>
-          {error ? "Try again" : "Enable microphone"}
-        </ShellButton>
-      </div>
-      {error && (
-        <MicAlert
-          message={error}
-          className="mx-auto mt-4 max-w-md text-sm text-[var(--s-rec)]"
-        />
-      )}
-    </div>
-  );
-}
-
 /* ---------------- round feedback ---------------- */
 
 export function RoundFeedback({
@@ -383,18 +331,7 @@ export function RoundFeedback({
  */
 export type PlayStart = number | ActiveTimer;
 
-/**
- * The turn-based games' play clock, started at mount; the second value
- * restarts it for a replay or once the mic is on. Note catcher keeps its own,
- * which also excludes its pause screen.
- *
- * Time the tab spends hidden is left out (hidden-time.ts), and so is idle time
- * on a visible screen (active-clock.ts): a stretch of more than thirty seconds
- * with no tap, click or key press and no finished round counts as thirty
- * seconds. `roundEvent` is the game's count of finished rounds, so a Pitch
- * match or Melody echo round that ends on its own, with the singer singing
- * rather than tapping, counts as activity too.
- */
+/** The turn-based games' play clock: hidden time and idle stretches past thirty seconds are left out; `roundEvent` counts finished rounds as activity. */
 export function useActiveStart(roundEvent: number): [ActiveTimer, () => void] {
   const [timer] = useState(() => createActiveTimer(performance.now()));
   useEffect(() => {
@@ -416,18 +353,7 @@ export function useActiveStart(roundEvent: number): [ActiveTimer, () => void] {
   return [timer, restart];
 }
 
-/**
- * Seconds of a finished game to log as practice.
- *
- * The turn-based games wait as long as it takes for a tap: a singer who puts
- * the phone down mid-game leaves the screen on and visible, and that wait is
- * not practice. It must not use up a free singer's daily minutes or earn XP.
- * Their timer (useActiveStart) already leaves out hidden time and any idle
- * stretch past thirty seconds; as a backstop they are also held to three
- * times their observed length (EAR_GAME_SECONDS), far more than an honest
- * slow run needs. Note catcher runs on its own clock and already leaves its
- * paused time out.
- */
+/** Seconds of a finished game to log: the turn-based games are held to three times their usual length as a backstop against a phone put down mid-game. */
 export function earSessionSeconds(game: GameId, startedAt: PlayStart, now: number): number {
   const ms = typeof startedAt === "number" ? now - startedAt : startedAt.elapsedMs(now);
   const raw = Math.round(ms / 1000);
@@ -445,15 +371,8 @@ export interface EarLogResult {
   logged: boolean;
 }
 
-/**
- * Write one finished game to the progress store, exactly once.
- *
- * Both endings need this and neither may do it twice: the card summary that a
- * game shows when it was started on its own, and the silent step-done that
- * hands the numbers to a routine runner. The write lives here so there is one
- * `logSession` per game however the game was reached.
- */
-export function useLogEarSession(
+/** Write one finished game to the progress store, exactly once. */
+function useLogEarSession(
   game: GameId,
   difficulty: Difficulty,
   session: EarSession,
@@ -542,108 +461,5 @@ export function StepDone({
         Scoring your round…
       </p>
     </GameShell>
-  );
-}
-
-/* ---------------- summary ---------------- */
-
-/**
- * The original card summary, on the site's palette.
- *
- * Every route in the app now finishes a game through `ResultsScreen` instead,
- * but this stays exported and behaviourally unchanged: it is what a game
- * renders when it is mounted with no `onComplete`, which is how anything
- * outside this folder has always used them.
- */
-export function SummaryView({
-  game,
-  difficulty,
-  session,
-  startedAt,
-  onReplay,
-  onExit,
-  variant,
-}: {
-  game: GameId;
-  difficulty: Difficulty;
-  session: EarSession;
-  /** When play began, or the game's play clock, for session duration. */
-  startedAt: PlayStart;
-  onReplay: () => void;
-  onExit: () => void;
-  variant?: EarVariant;
-}) {
-  const { xpGained, newAchievements, newBest } = useLogEarSession(
-    game,
-    difficulty,
-    session,
-    startedAt,
-    variant,
-  );
-
-  return (
-    <Card>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="text-lg">Session complete</h3>
-        {newBest && <Pill tone="violet">New personal best</Pill>}
-      </div>
-      <div className="mt-5 grid grid-cols-3 gap-4">
-        <Stat
-          label="Score"
-          value={
-            <>
-              {session.score}
-              <span className="text-base text-dim">/100</span>
-            </>
-          }
-          tone={session.score >= 70 ? "ok" : "ink"}
-        />
-        <Stat label="Best streak" value={session.bestStreak} tone="violet" />
-        <Stat label="XP earned" value={`+${xpGained}`} tone="cool" />
-      </div>
-      <div className="mt-5 flex gap-1.5" aria-label="Round results">
-        {session.results.map((r, i) => (
-          <span
-            key={i}
-            title={`Round ${i + 1}: ${r ? "correct" : "missed"}`}
-            className={`h-2 flex-1 rounded-full ${r ? "bg-ok" : "bg-line2"}`}
-          />
-        ))}
-      </div>
-      {newAchievements.length > 0 && (
-        <div className="mt-5 space-y-2">
-          {newAchievements.map((a) => (
-            <div
-              key={a.id}
-              className="flex items-center gap-3 rounded-2xl border border-violet/40 bg-panel2 px-4 py-3"
-            >
-              <span className="text-xl" aria-hidden="true">
-                {a.icon}
-              </span>
-              <div>
-                <div className="text-sm text-violet-ink">{a.title}</div>
-                <div className="text-xs text-mut">{a.desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="mt-5">
-        <ProCrescendoNudge
-          line="Pro removes the daily limit and unlocks your full daily plan"
-          title="Build the rest of your practice"
-          body={`Pro removes the ${FREE_DAILY_MINUTES}-minute daily limit on guided practice and unlocks your full daily Coach plan, range history, take analysis and the pro warmup packs.`}
-          context="Ear training"
-        />
-      </div>
-      <div className="mt-6 flex gap-2">
-        <Button variant="violet" onClick={onReplay}>
-          Play again
-        </Button>
-        <Button variant="outline" onClick={onExit}>
-          All games
-        </Button>
-      </div>
-    </Card>
   );
 }

@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Around your transition, a strong harmonic of the note you are singing meets the main resonance of the vowel and then climbs past it, and the reinforcement drops out from under the sound. Shading the vowel a little toward the neutral middle moves that resonance so the crossing stays smooth: a bright “ee” opens slightly toward “ih”, an “oo” toward “oh”, and a wide “ah” rounds slightly toward “aw”. Use the smallest change that works; listeners rebuild a word from context generously, but if they can hear the word change, you have gone too far.
+Around your transition, a strong harmonic of the note meets the main resonance of the vowel and climbs past it, and the reinforcement drops out from under the sound. Shading the vowel toward the neutral middle moves that resonance so the crossing stays smooth: a bright “ee” opens toward “ih”, an “oo” toward “oh”, a wide “ah” rounds toward “aw”. Use the smallest change that works; if listeners hear the word change, you went too far.
 
 ## Steps
 

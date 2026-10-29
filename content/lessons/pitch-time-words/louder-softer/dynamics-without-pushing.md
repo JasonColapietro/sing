@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Getting louder takes breath pressure and fold closure rising together, and much of what makes a voice carry is resonance, the ring in the tone, rather than sheer effort. Getting quieter takes the same steady breath under a smaller sound, not a slide into breathiness. Pushing is the throat doing the work instead: the tone tightens, the pitch creeps sharp, and the neck feels different on the loud note than on the quiet one. If your neck feels about the same at every level, the dynamics are coming from the right place.
+Getting louder takes breath pressure and fold closure rising together, and much of what makes a voice carry is resonance, not effort. Getting quieter takes the same steady breath under a smaller sound, not a slide into breathiness. Pushing is the throat doing the work: the tone tightens, the pitch creeps sharp, the neck feels different on the loud note. If your neck feels the same at every level, the dynamics come from the right place.
 
 ## Steps
 

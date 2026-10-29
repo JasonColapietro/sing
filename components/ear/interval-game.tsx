@@ -18,7 +18,6 @@ import {
   RoundFeedback,
   ShellButton,
   StepDone,
-  SummaryView,
   useActiveStart,
   useEarSession,
   type OnEarComplete,
@@ -42,7 +41,7 @@ export function IntervalGame({
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
-  onComplete?: OnEarComplete;
+  onComplete: OnEarComplete;
 }) {
   const session = useEarSession();
   const options = INTERVAL_SETS[difficulty];
@@ -50,8 +49,7 @@ export function IntervalGame({
 
   const [round, setRound] = useState<Round>(() => makeRound(difficulty));
   const [answered, setAnswered] = useState<number | null>(null);
-  const [key, setKey] = useState(0); // remount trigger for replay
-  const [playClock, restartClock] = useActiveStart(session.results.length);
+  const [playClock] = useActiveStart(session.results.length);
 
   const play = useCallback(() => {
     if (harmonic) {
@@ -69,7 +67,7 @@ export function IntervalGame({
   useEffect(() => {
     if (!session.done) play();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [round, key]);
+  }, [round]);
 
   const answer = useCallback(
     (semi: number) => {
@@ -106,38 +104,16 @@ export function IntervalGame({
     return () => window.removeEventListener("keydown", onKey);
   }, [answer, next, play, options, session.done]);
 
-  const replayAll = () => {
-    session.reset();
-    setAnswered(null);
-    setRound(makeRound(difficulty));
-    restartClock();
-    setKey((k) => k + 1);
-  };
-
   if (session.done) {
-    if (onComplete) {
-      return (
-        <StepDone
-          game="interval"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onExit={onExit}
-          onComplete={onComplete}
-        />
-      );
-    }
     return (
-      <div className="mx-auto max-w-2xl">
-        <SummaryView
-          game="interval"
-          difficulty={difficulty}
-          session={session}
-          startedAt={playClock}
-          onReplay={replayAll}
-          onExit={onExit}
-        />
-      </div>
+      <StepDone
+        game="interval"
+        difficulty={difficulty}
+        session={session}
+        startedAt={playClock}
+        onExit={onExit}
+        onComplete={onComplete}
+      />
     );
   }
 

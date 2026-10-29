@@ -614,7 +614,7 @@ export function ResultView({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <SectionLabel>Your range</SectionLabel>
-            <div className="tabular mt-3 font-mono text-5xl font-bold sm:text-7xl">
+            <div className="mt-3 font-mono text-5xl sm:text-6xl tabular tracking-tight">
               {midiToLabel(lowMidi)}
               <span className="text-dim">–</span>
               {midiToLabel(highMidi)}

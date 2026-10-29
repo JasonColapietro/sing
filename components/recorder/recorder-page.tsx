@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   EmptyState,
+  LinkButton,
   PageShell,
   Pill,
   SectionLabel,
@@ -33,6 +34,7 @@ import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
+import { FigureFrame, WaveformFigure } from "@/components/figures";
 import { createRecorderMic, createTakeMutations, startRecorder } from "./runtime";
 
 // 5 minute take limit. The page subtitle says so ("takes of up to five
@@ -320,13 +322,7 @@ export default function RecorderPageClient() {
   }, [selectedId, abPicks, takes, ensurePeaks, ensureAnalysis, isPro]);
 
   // --- mic ---
-  /**
-   * The microphone went away mid-session (unplugged, a headset dropped). The
-   * runtime has already released the dead stream; a take in progress is
-   * stopped so whatever it captured is saved, and the deck goes back to the
-   * gate with a Try again rather than offering REC on a stream that can
-   * record nothing.
-   */
+  /** The mic went away mid-session: a take in progress is saved and the deck goes back to the gate's Try again. */
   const onMicEnded = useCallback(() => {
     if (!mountedRef.current) return;
     window.clearInterval(countTimerRef.current);
@@ -359,21 +355,7 @@ export default function RecorderPageClient() {
     );
   }, []);
 
-  /**
-   * Routed through the shared `openMic` rather than calling getUserMedia here.
-   *
-   * This room kept its own copy of the permission-error table, and it had
-   * drifted exactly the way lib/audio/mic.ts warns about: no NotReadableError
-   * and no AbortError, so the most common repeat-visit failure — a mic held by
-   * a call in another tab, which Safari reports as AbortError — fell through to
-   * "Check your input settings and try again", advice for a problem the singer
-   * did not have. It also missed the Firefox aliases and the insecure-origin
-   * check.
-   *
-   * The bigger reason is the device picker: this room bypassed it entirely, so
-   * a singer who had chosen their interface everywhere else was still recorded
-   * through the laptop lid mic here, with nothing on screen saying so.
-   */
+  /** Through the shared openMic: one permission-error table (lib/audio/mic.ts) and the device picker, which this room used to bypass. */
   const enableMic = useCallback(async () => {
     setMicState("requesting");
     setMicError(null);
@@ -764,7 +746,7 @@ export default function RecorderPageClient() {
 
   return (
     <PageShell
-      kicker="Practice studio"
+      kicker="Recorder"
       title="Voice recorder for singing practice"
       subtitle="Record yourself singing in takes of up to five minutes, listen back, A/B two takes and star the ones worth keeping. Free with no daily limit, and every take stays on this device."
       actions={
@@ -966,6 +948,28 @@ export default function RecorderPageClient() {
             </Card>
           )}
 
+          {/* Where a take goes next: the only follow-ups used to be the review and A/B. */}
+          {takes.length > 0 && (
+            <Card>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <SectionLabel>Next</SectionLabel>
+                  <p className="mt-2 max-w-md text-sm text-mut">
+                    Sing the same phrase into the analyzer to see its harmonics and tone, or take it against a melody.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <LinkButton href="/analyze" variant="outline" size="sm">
+                    See your tone
+                  </LinkButton>
+                  <LinkButton href="/songs" variant="ghost" size="sm">
+                    Sing a song
+                  </LinkButton>
+                </div>
+              </div>
+            </Card>
+          )}
+
           {/* Playback of selected take */}
           {selectedTake && (
             <Card>
@@ -1028,16 +1032,7 @@ export default function RecorderPageClient() {
             </Card>
           )}
 
-          {/* Only once a take exists, and only once the self-review card has
-              been answered or skipped: that card is the one thing competing
-              for this moment, and it asks for something the singer gets more
-              out of. Sitting here, after the deck, the review and the
-              playback, it is downstream of everything that matters about a
-              take and still two cards clear of the locked pitch panel below.
-
-              The label stays "Your practice record" on purpose. This room is
-              full of audio, and "Take saved" here would read as an offer to
-              back up the recordings, which an account does not do. */}
+          {/* After a take and once the self-review is answered or skipped; "Your practice record", not "Take saved", because an account does not back up audio. */}
           <AccountSavePrompt when={takes.length > 0 && !reviewTake} />
 
           {/* A/B compare */}
@@ -1180,14 +1175,7 @@ export default function RecorderPageClient() {
             </Card>
           )}
 
-          {/* The free plan's preview of Pro's pitch panel. In the server HTML
-              behind the pre-paint "not-pro" marker (components/prepaint.tsx)
-              rather than in <FreeOnly>, which mounts it after hydration: about
-              240px arriving at the foot of the deck column pushed the takes
-              list under it off a 768px tablet's screen and the page's closing
-              sections down on a tall desktop (CLS 0.03 to 0.04 for every free
-              visitor). The inline script hides it before the first paint for
-              a Pro singer; from hydration on the real entitlement decides. */}
+          {/* The free preview of Pro's pitch panel, behind the pre-paint not-pro marker so it is in the first paint (CLS 0.03 to 0.04 otherwise). */}
           {(!hydrated || !isPro) && (
             <div {...prepaintMarker(hydrated, { plan: "not-pro" })}>
               <LockedPanel label="Take pitch analysis">
@@ -1315,10 +1303,16 @@ export default function RecorderPageClient() {
             {takes.length === 0 && loadingTakes ? (
               <p role="status" className="py-6 text-sm text-mut">Loading your takes…</p>
             ) : takes.length === 0 && !loadError ? (
-              <EmptyState
-                title="No takes yet. Hit record"
-                hint="Your takes will show up here with playback, stars, and downloads. They stay on this device."
-              />
+              <>
+                {/* What a take looks like here, before there is one. */}
+                <FigureFrame className="mb-3" caption="A saved take, as this list shows it">
+                  <WaveformFigure />
+                </FigureFrame>
+                <EmptyState
+                  title="No takes yet. Hit record"
+                  hint="Your takes will show up here with playback, stars, and downloads. They stay on this device."
+                />
+              </>
             ) : (
               <ul className="no-scrollbar max-h-[70vh] space-y-2 overflow-y-auto">
                 {takes.map((take) => (

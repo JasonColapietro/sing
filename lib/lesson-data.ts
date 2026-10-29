@@ -1,9 +1,9 @@
 /**
  * GENERATED FILE — edit the markdown under content/lessons and re-run scripts/compile-lessons.mjs.
  *
- * The voice curriculum's lesson bodies, ported from GuitarHub and keyed to the
- * lesson IDs in contracts/suede-voice-curriculum.json. Every lesson is free to
- * read, so unlike the book there is no gated half.
+ * The voice curriculum's lesson bodies, keyed to the lesson IDs in
+ * contracts/suede-voice-curriculum.json. Lines the port repeated on most
+ * lessons are dropped at compile time; /learn/voice states them once.
  */
 
 export interface LessonStep {
@@ -37,12 +37,13 @@ export interface Lesson {
   references: string[];
   steps: LessonStep[];
   mistakes: Array<{ observation: string; recovery: string }>;
-  /** Timed blocks that add up to `minutes`. */
+  /** Timed blocks that add up to `minutes`; an empty instruction is the port's template, drawn as timing only. */
   blocks: Array<{ seconds: number; instruction: string }>;
   selfCheck: {
     criteria: string[];
     readyWhen: string;
     ifNotReady: string;
+    /** May be empty once the shared lines are dropped. */
     shows: string;
     doesNotShow: string;
   };
@@ -83,7 +84,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "Reference sound can enter the microphone along with your voice. Compare your setup with playback stopped.",
-    "explanation": "The pitch reading works by finding the one repeating pattern in whatever the microphone hears, so it is only as good as the sound that reaches it. A reference or a song playing through a speaker reaches the microphone along with your voice, and the reading becomes a blend of the two: it can lean toward the reference and flatter you, or find a note while you are silent. Stop playback before you sing, keep the speaker low or use closed headphones, and judge only takes that hold your voice alone.",
+    "explanation": "The pitch reading finds the one repeating pattern in whatever the microphone hears, so it is only as good as the sound reaching it. A speaker playing a reference reaches the microphone with your voice, and the reading becomes a blend: it can lean toward the reference and flatter you, or find a note while you are silent. Stop playback before you sing, keep the speaker low or wear closed headphones, and judge only takes that hold your voice alone.",
     "prerequisites": [],
     "references": [
       "nidcd-voice-care",
@@ -92,7 +93,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -104,7 +105,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Room setup and clean input",
-        "body": "Reference sound can enter the microphone along with your voice. Compare your setup with playback stopped. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Reference sound can enter the microphone along with your voice. Compare your setup with playback stopped.",
         "look": "The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.",
         "listen": "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment."
       },
@@ -116,7 +117,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared a quiet recording with my initial room setup and could hear my voice clearly. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared a quiet recording with my initial room setup and could hear my voice clearly.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -134,19 +135,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Why Loud Playback Ruins Pitch.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Isolate the room setup and clean input target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Practice or record the complete “Why Loud Playback Ruins Pitch” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -156,9 +157,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared a quiet recording with my initial room setup and could hear my voice clearly. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem."
+      "ifNotReady": "If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound.",
+      "shows": "I compared a quiet recording with my initial room setup and could hear my voice clearly.",
+      "doesNotShow": "Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem."
     }
   },
   {
@@ -183,7 +184,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -195,7 +196,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Room setup and clean input",
-        "body": "Turn playback down, decide on headphones, and give the mic a quiet room. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Turn playback down, decide on headphones, and give the mic a quiet room.",
         "look": "The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.",
         "listen": "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment."
       },
@@ -207,7 +208,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared a quiet recording with my initial room setup and could hear my voice clearly. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared a quiet recording with my initial room setup and could hear my voice clearly.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -225,19 +226,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Device Volume and Headphones.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the room setup and clean input target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Device Volume and Headphones” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -247,9 +248,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared a quiet recording with my initial room setup and could hear my voice clearly. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem."
+      "ifNotReady": "If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound.",
+      "shows": "I compared a quiet recording with my initial room setup and could hear my voice clearly.",
+      "doesNotShow": "Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem."
     }
   },
   {
@@ -274,7 +275,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -286,7 +287,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Room setup and clean input",
-        "body": "A take with only your voice in it, with nothing else playing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A take with only your voice in it, with nothing else playing.",
         "look": "The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.",
         "listen": "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment."
       },
@@ -298,7 +299,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared a quiet recording with my initial room setup and could hear my voice clearly. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared a quiet recording with my initial room setup and could hear my voice clearly.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -316,19 +317,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Clear Recording.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the room setup and clean input target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Self-Check: A Clear Recording” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -338,9 +339,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "A recording made with playback stopped holds only your voice, with no reference tone, echo or clipping, on the device and in the room you will practice in.",
-      "ifNotReady": "If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared a quiet recording with my initial room setup and could hear my voice clearly. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem."
+      "ifNotReady": "If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound.",
+      "shows": "I compared a quiet recording with my initial room setup and could hear my voice clearly.",
+      "doesNotShow": "Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem."
     }
   },
   {
@@ -354,7 +355,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "Comfortable, not extreme. The number we want is one you can repeat next month.",
-    "explanation": "The range test asks for your two ends one at a time: hold a comfortable note, slide down to your lowest, then slide up to your highest. Only notes you could let someone else hear count, with a clear pitch you could hold for a beat or two, so the creak below your lowest sung note and a squeezed top note both stay out. Stop each slide where the next note would need effort rather than height: that is a reading you can repeat next month, which an extreme reached once is not.",
+    "explanation": "The range test asks for your two ends one at a time: hold a comfortable note, slide down to your lowest, then up to your highest. Only notes you could let someone else hear count, held clearly for a beat or two; the creak below your lowest sung note and a squeezed top note stay out. Stop each slide where the next note would need effort rather than height: that reading repeats next month; an extreme reached once does not.",
     "prerequisites": [
       "v-l1-m1-04"
     ],
@@ -365,7 +366,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Reading your range test is listed there too.",
+        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. The reading Reading your range test is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -377,7 +378,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "Comfortable, not extreme. The number we want is one you can repeat next month. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Comfortable, not extreme. The number we want is one you can repeat next month.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -389,7 +390,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -407,19 +408,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Low First, High Second, Neither Forced.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Isolate the range scan and voice type target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Practice or record the complete “Low First, High Second, Neither Forced” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -429,9 +430,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once."
+      "ifNotReady": "If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note.",
+      "shows": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.",
+      "doesNotShow": "Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once."
     }
   },
   {
@@ -456,7 +457,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Reading your range test is listed there too.",
+        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. The reading Reading your range test is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -468,7 +469,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "Slide to your lowest comfortable note, then your highest. Stop before strain, every time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Slide to your lowest comfortable note, then your highest. Stop before strain, every time.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -480,7 +481,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -498,19 +499,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Slide Down, Slide Up.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the range scan and voice type target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Slide Down, Slide Up” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -520,9 +521,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once."
+      "ifNotReady": "If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note.",
+      "shows": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.",
+      "doesNotShow": "Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once."
     }
   },
   {
@@ -547,7 +548,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Reading your range test is listed there too.",
+        "body": "Open the practice material on this page and choose First hum or Easy fourth siren. The reading Reading your range test is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -559,7 +560,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "An estimated voice type and both ends of your range, to fit every later exercise to. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "An estimated voice type and both ends of your range, to fit every later exercise to.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -571,7 +572,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -589,19 +590,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Comfortable Range.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the range scan and voice type target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Self-Check: Comfortable Range” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -611,9 +612,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have written down one easy low note and one easy high note you could sing again tomorrow, and the range test has saved a result.",
-      "ifNotReady": "If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once."
+      "ifNotReady": "If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note.",
+      "shows": "I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.",
+      "doesNotShow": "Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once."
     }
   },
   {
@@ -627,7 +628,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "What to move and what to leave alone.",
-    "explanation": "On an easy breath in, the diaphragm flattens and the lower ribs swing out to the sides, so the movement you see is around the lower ribs and the belly; the shoulders and neck have no job to do. A breath that lifts the shoulders raises the upper chest with neck and shoulder muscles: a lot of effort for not much air, and tension right beside the larynx. On the way out, let the ribs stay wide a little longer than they want to and come in gradually: that slow release is what keeps a hiss, and later a sung note, even.",
+    "explanation": "On an easy breath in, the diaphragm flattens and the lower ribs swing out, so the movement you see is around the lower ribs and belly; the shoulders and neck have no job. A breath that lifts the shoulders raises the upper chest with neck muscles: much effort for little air, and tension beside the larynx. On the way out, let the ribs stay wide a little longer; that slow release keeps a hiss, and later a note, even.",
     "prerequisites": [
       "v-l1-m2-04"
     ],
@@ -650,7 +651,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "What to move and what to leave alone. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "What to move and what to leave alone.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -662,7 +663,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -684,15 +685,15 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 45,
-        "instruction": "Isolate the low breath and rib expansion target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Practice or record the complete “Ribs Out, Shoulders Still” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -702,9 +703,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Airflow in liters, lung capacity, respiratory health, singing support, or freedom from tension."
+      "ifNotReady": "If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration.",
+      "shows": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath.",
+      "doesNotShow": "Airflow in liters, lung capacity, respiratory health, singing support, or freedom from tension."
     }
   },
   {
@@ -741,7 +742,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -753,7 +754,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -775,15 +776,15 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the low breath and rib expansion target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Hiss for Twelve” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -793,9 +794,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Airflow in liters, lung capacity, respiratory health, singing support, or freedom from tension."
+      "ifNotReady": "If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration.",
+      "shows": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath.",
+      "doesNotShow": "Airflow in liters, lung capacity, respiratory health, singing support, or freedom from tension."
     }
   },
   {
@@ -832,7 +833,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -844,7 +845,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -866,15 +867,15 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the low breath and rib expansion target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Self-Check: An Even Hiss” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -884,9 +885,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, three hisses in a row stay even to your ear from start to finish and end with air to spare, shoulders down.",
-      "ifNotReady": "If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Airflow in liters, lung capacity, respiratory health, singing support, or freedom from tension."
+      "ifNotReady": "If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration.",
+      "shows": "I counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath.",
+      "doesNotShow": "Airflow in liters, lung capacity, respiratory health, singing support, or freedom from tension."
     }
   },
   {
@@ -911,7 +912,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -923,7 +924,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Semi-occluded warm-up",
-        "body": "Explore how a straw or lip trill changes the feeling of a gentle sound; comfort is your cue to continue. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Explore how a straw or lip trill changes the feeling of a gentle sound; comfort is your cue to continue.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -935,7 +936,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -953,19 +954,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Back Pressure Does the Work.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Isolate the semi-occluded warm-up target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Practice or record the complete “Back Pressure Does the Work” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -975,9 +976,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absence of strain, correct laryngeal behavior, vocal health, or readiness for a wider or louder exercise."
+      "ifNotReady": "If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going.",
+      "shows": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts.",
+      "doesNotShow": "Absence of strain, correct laryngeal behavior, vocal health, or readiness for a wider or louder exercise."
     }
   },
   {
@@ -1002,7 +1003,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1014,7 +1015,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Semi-occluded warm-up",
-        "body": "Sirens through a straw, top to bottom, no break. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Sirens through a straw, top to bottom, no break.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -1026,7 +1027,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1044,19 +1045,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Straw Slides.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the semi-occluded warm-up target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Straw Slides” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1066,9 +1067,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absence of strain, correct laryngeal behavior, vocal health, or readiness for a wider or louder exercise."
+      "ifNotReady": "If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going.",
+      "shows": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts.",
+      "doesNotShow": "Absence of strain, correct laryngeal behavior, vocal health, or readiness for a wider or louder exercise."
     }
   },
   {
@@ -1093,7 +1094,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Straw scale or Lip-trill arpeggio. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1105,7 +1106,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Semi-occluded warm-up",
-        "body": "An easy straw or lip-trill pattern across a comfortable span. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "An easy straw or lip-trill pattern across a comfortable span.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -1117,7 +1118,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1135,19 +1136,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: An Easy Straw Pattern.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the semi-occluded warm-up target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Self-Check: An Easy Straw Pattern” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1157,9 +1158,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, the straw or lip-trill pattern runs its whole span without the buzz stopping and feels easier than the same notes on a vowel.",
-      "ifNotReady": "If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absence of strain, correct laryngeal behavior, vocal health, or readiness for a wider or louder exercise."
+      "ifNotReady": "If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going.",
+      "shows": "I tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts.",
+      "doesNotShow": "Absence of strain, correct laryngeal behavior, vocal health, or readiness for a wider or louder exercise."
     }
   },
   {
@@ -1173,7 +1174,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique.",
-    "explanation": "An onset is how a note starts, and there are three basic ways to start one. A breathy onset lets air through before the folds meet, so a small “h” comes first; a hard, or glottal, onset closes the folds before the air arrives and releases them with a little click; a balanced onset starts the breath and the sound together. This module trains the balanced one, on its pitch from the first moment, because sliding up into a note from below is a separate habit, a scoop, and onset work is where it gets fixed.",
+    "explanation": "An onset is how a note starts, and there are three basic ways. A breathy onset lets air through before the folds meet, so a small “h” comes first; a hard, or glottal, onset closes the folds before the air arrives and releases them with a click; a balanced onset starts breath and sound together. This module trains the balanced one, on its pitch from the first moment; sliding up from below is a scoop, and onset work fixes it.",
     "prerequisites": [
       "v-l2-m1-06"
     ],
@@ -1184,7 +1185,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1196,7 +1197,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Onset and pitch matching",
-        "body": "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare an easy onset with a previous attempt; the synthesized reference supplies pitch, not a demonstration of vocal technique.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1208,7 +1209,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1226,19 +1227,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Onset Without the Click.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Isolate the onset and pitch matching target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Practice or record the complete “Onset Without the Click” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1248,9 +1249,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Which onset mechanism you used, freedom from strain, tone quality, or accuracy when no confident pitch was detected."
+      "ifNotReady": "If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard.",
+      "shows": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
+      "doesNotShow": "Which onset mechanism you used, freedom from strain, tone quality, or accuracy when no confident pitch was detected."
     }
   },
   {
@@ -1275,7 +1276,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1287,7 +1288,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Onset and pitch matching",
-        "body": "Arrive on the note, do not slide up to it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Arrive on the note, do not slide up to it.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1299,7 +1300,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1317,19 +1318,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Match Five, No Scoop.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the onset and pitch matching target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Match Five, No Scoop” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1339,9 +1340,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Which onset mechanism you used, freedom from strain, tone quality, or accuracy when no confident pitch was detected."
+      "ifNotReady": "If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard.",
+      "shows": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
+      "doesNotShow": "Which onset mechanism you used, freedom from strain, tone quality, or accuracy when no confident pitch was detected."
     }
   },
   {
@@ -1366,7 +1367,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Five-note scale or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1378,7 +1379,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Onset and pitch matching",
-        "body": "Hear the supplied five-note scale, then sing from silence. Compare the pitches by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Hear the supplied five-note scale, then sing from silence. Compare the pitches by ear.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1390,7 +1391,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1408,19 +1409,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Match the Five-Note Pattern.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the onset and pitch matching target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Self-Check: Match the Five-Note Pattern” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1430,9 +1431,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, you sing the five-note pattern from silence three times in a row and, on playback, every note starts on its pitch rather than sliding up into it.",
-      "ifNotReady": "If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Which onset mechanism you used, freedom from strain, tone quality, or accuracy when no confident pitch was detected."
+      "ifNotReady": "If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard.",
+      "shows": "I heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear.",
+      "doesNotShow": "Which onset mechanism you used, freedom from strain, tone quality, or accuracy when no confident pitch was detected."
     }
   },
   {
@@ -1446,7 +1447,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "Listen for drift on a short, comfortable hold and change one thing at a time.",
-    "explanation": "A held note usually drifts for a reason you can change: the breath pressure under it falls away as the air runs out, and the pitch sags with it. Keeping it steady means keeping that pressure even, with the ribs staying open and the release slow, which is a coordination you build with short, repeated holds rather than something a voice either has or lacks. A small, regular wave around one pitch is vibrato and is fine; a slow lean away from the note is drift, so hold only as long as the end still sounds like the start.",
+    "explanation": "A held note usually drifts for a reason you can change: the breath pressure under it falls as the air runs out, and the pitch sags with it. Keeping it steady means keeping that pressure even, ribs open and release slow, a coordination built with short, repeated holds, not a gift. A small, regular wave around one pitch is vibrato and is fine; a slow lean away is drift. Hold only while the end sounds like the start.",
     "prerequisites": [
       "v-l2-m2-06"
     ],
@@ -1457,7 +1458,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1469,7 +1470,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained tone",
-        "body": "Listen for drift on a short, comfortable hold and change one thing at a time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Listen for drift on a short, comfortable hold and change one thing at a time.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1481,7 +1482,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1499,19 +1500,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Steady Is a Skill, Not a Talent.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Isolate the sustained tone target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Practice or record the complete “Steady Is a Skill, Not a Talent” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1521,9 +1522,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Why the pitch moved, breath technique, vibrato quality, tone quality, or freedom from strain."
+      "ifNotReady": "If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing.",
+      "shows": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds.",
+      "doesNotShow": "Why the pitch moved, breath technique, vibrato quality, tone quality, or freedom from strain."
     }
   },
   {
@@ -1548,7 +1549,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1560,7 +1561,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained tone",
-        "body": "Use the supplied sustained reference for short holds, resting between them. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Use the supplied sustained reference for short holds, resting between them.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1572,7 +1573,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1590,19 +1591,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Note Per Bar.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the sustained tone target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “One Note Per Bar” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1612,9 +1613,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Why the pitch moved, breath technique, vibrato quality, tone quality, or freedom from strain."
+      "ifNotReady": "If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing.",
+      "shows": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds.",
+      "doesNotShow": "Why the pitch moved, breath technique, vibrato quality, tone quality, or freedom from strain."
     }
   },
   {
@@ -1639,7 +1640,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold or Soft sustain. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1651,7 +1652,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained tone",
-        "body": "Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1663,7 +1664,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1681,19 +1682,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Steady Short Hold.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the sustained tone target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Self-Check: A Steady Short Hold” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1703,9 +1704,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, three short holds in a row start and end on the same pitch to your ear at a comfortable volume.",
-      "ifNotReady": "If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Why the pitch moved, breath technique, vibrato quality, tone quality, or freedom from strain."
+      "ifNotReady": "If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing.",
+      "shows": "I matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds.",
+      "doesNotShow": "Why the pitch moved, breath technique, vibrato quality, tone quality, or freedom from strain."
     }
   },
   {
@@ -1719,7 +1720,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "The song moves to you. This is the singing equivalent of a capo.",
-    "explanation": "A recording's key was chosen for one singer on one set of days, so it is a fact about that session, not about the song, and changing it is ordinary practice. Move the whole song up or down by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the highest note comes without a push and the lowest is still clearly audible. Once you have taken the range test, songs open fitted to your measured range and you can shift them a semitone at a time; without a saved range they open in the written key and are scored in either octave.",
+    "explanation": "A recording's key was chosen for one singer on one set of days: a fact about that session, not the song, and changing it is ordinary practice. Move the whole song by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the top comes without a push. After a range test, songs open fitted to your range; without one, in the written key.",
     "prerequisites": [
       "v-l2-m3-06"
     ],
@@ -1730,7 +1731,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Choosing songs that actually fit is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1742,7 +1743,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: First repertoire",
-        "body": "The song moves to you. This is the singing equivalent of a capo. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "The song moves to you. This is the singing equivalent of a capo.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },
@@ -1754,7 +1755,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1772,19 +1773,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Your Key, Not the Record's Key.”"
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Isolate the first repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Practice or record the complete “Your Key, Not the Record's Key” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 45,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1794,9 +1795,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If one phrase repeatedly tightens or disappears, transpose again or shorten the phrase. A famous key is never more important than a usable one. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Register identity, absence of a register break, vocal health, stylistic quality, or mastery at another tempo."
+      "ifNotReady": "If one phrase repeatedly tightens or disappears, transpose again or shorten the phrase. A famous key is never more important than a usable one.",
+      "shows": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable.",
+      "doesNotShow": "Register identity, absence of a register break, vocal health, stylistic quality, or mastery at another tempo."
     }
   },
   {
@@ -1821,7 +1822,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Choosing songs that actually fit is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1833,7 +1834,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: First repertoire",
-        "body": "Rehearse the supplied Amazing Grace phrase and study arrangement. Choose a comfortable key before singing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied Amazing Grace phrase and study arrangement. Choose a comfortable key before singing.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },
@@ -1845,7 +1846,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1863,19 +1864,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Amazing Grace: Phrase to Study.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the first repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Amazing Grace: Phrase to Study” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1885,9 +1886,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If one phrase repeatedly tightens or disappears, transpose again or shorten the phrase. A famous key is never more important than a usable one. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Register identity, absence of a register break, vocal health, stylistic quality, or mastery at another tempo."
+      "ifNotReady": "If one phrase repeatedly tightens or disappears, transpose again or shorten the phrase. A famous key is never more important than a usable one.",
+      "shows": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable.",
+      "doesNotShow": "Register identity, absence of a register break, vocal health, stylistic quality, or mastery at another tempo."
     }
   },
   {
@@ -1912,7 +1913,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Choosing songs that actually fit is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -1924,7 +1925,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: First repertoire",
-        "body": "Sing the supplied study arrangement through after hearing its reference; note any place you stopped. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Sing the supplied study arrangement through after hearing its reference; note any place you stopped.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },
@@ -1936,7 +1937,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -1954,19 +1955,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Amazing Grace Study.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the first repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Your Amazing Grace Study” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -1976,9 +1977,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You sing the study through in your chosen key with no stops, neither end needed a push, and you have written that key down.",
-      "ifNotReady": "If one phrase repeatedly tightens or disappears, transpose again or shorten the phrase. A famous key is never more important than a usable one. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Register identity, absence of a register break, vocal health, stylistic quality, or mastery at another tempo."
+      "ifNotReady": "If one phrase repeatedly tightens or disappears, transpose again or shorten the phrase. A famous key is never more important than a usable one.",
+      "shows": "I rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable.",
+      "doesNotShow": "Register identity, absence of a register break, vocal health, stylistic quality, or mastery at another tempo."
     }
   },
   {
@@ -1992,7 +1993,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "What actually changes inside, and what each one is for.",
-    "explanation": "A register is a way of setting up the vocal folds, and each setup handles one band of pitches well and gives out above it. In chest voice, the setup you speak in, the folds are shorter and thicker and close firmly, giving a full, speech-like tone; in head voice they are stretched longer and thinner but still close, giving a lighter tone that can still ring; in falsetto they are stretched without closing completely, so air leaks through and the sound is airy and hard to sing loudly. No single setup covers a whole range, which is why you have more than one, and the skill is choosing between them on purpose rather than hauling one past its ceiling.",
+    "explanation": "A register is a way of setting up the vocal folds; each setup handles one band of pitches well and gives out above it. In chest voice, the setup you speak in, the folds are shorter and thicker and close firmly: a full, speech-like tone. In head voice they stretch longer and thinner but still close: lighter, and it can still ring. In falsetto they stretch without closing fully, so the sound is airy. No setup covers a whole range.",
     "prerequisites": [
       "v-l2-m4-06"
     ],
@@ -2003,7 +2004,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2015,7 +2016,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register identification",
-        "body": "What actually changes inside, and what each one is for. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "What actually changes inside, and what each one is for.",
         "look": "Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.",
         "listen": "Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference."
       },
@@ -2027,7 +2028,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two easy productions of the same pitch and could describe the audible difference. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two easy productions of the same pitch and could describe the audible difference.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2045,19 +2046,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Registers: Different Ways to Make a Sound.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the register identification target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Registers: Different Ways to Make a Sound” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2067,9 +2068,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two easy productions of the same pitch and could describe the audible difference. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio."
+      "ifNotReady": "If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller.",
+      "shows": "I compared two easy productions of the same pitch and could describe the audible difference.",
+      "doesNotShow": "Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio."
     }
   },
   {
@@ -2094,7 +2095,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2106,7 +2107,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register identification",
-        "body": "One note, switched deliberately between mechanisms. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "One note, switched deliberately between mechanisms.",
         "look": "Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.",
         "listen": "Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference."
       },
@@ -2118,7 +2119,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two easy productions of the same pitch and could describe the audible difference. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two easy productions of the same pitch and could describe the audible difference.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2136,19 +2137,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Same Pitch, Two Ways.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the register identification target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Same Pitch, Two Ways” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2158,9 +2159,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two easy productions of the same pitch and could describe the audible difference. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio."
+      "ifNotReady": "If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller.",
+      "shows": "I compared two easy productions of the same pitch and could describe the audible difference.",
+      "doesNotShow": "Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio."
     }
   },
   {
@@ -2185,7 +2186,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Humming thirds or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2197,7 +2198,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register identification",
-        "body": "Before recording, roll a die six times and write the order (odd = fuller, even = lighter); switch on each cue in that order, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Before recording, roll a die six times and write the order (odd = fuller, even = lighter); switch on each cue in that order, both directions.",
         "look": "Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.",
         "listen": "Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference."
       },
@@ -2209,7 +2210,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two easy productions of the same pitch and could describe the audible difference. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two easy productions of the same pitch and could describe the audible difference.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2227,19 +2228,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Switch on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the register identification target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Switch on Cue” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2249,9 +2250,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On playback of one take, each of the six switches in your rolled order lands on the sound it called for, fuller or lighter, at the same pitch and in both directions, without getting louder to make the change.",
-      "ifNotReady": "If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two easy productions of the same pitch and could describe the audible difference. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio."
+      "ifNotReady": "If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller.",
+      "shows": "I compared two easy productions of the same pitch and could describe the audible difference.",
+      "doesNotShow": "Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio."
     }
   },
   {
@@ -2265,7 +2266,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "A crack is a gear change you did not plan.",
-    "explanation": "As you slide upward, the folds have to shift gradually from a thicker setup to a thinner one, and around your transition the resonance that was helping the sound also drops away. Push through that and the change that could have spread over several notes happens on one, which you hear as a crack or a sudden flip. A slow, quiet slide gives the handover time to spread out; a fast one only skips past the seam, so slowing down is how you hear it and how you smooth it.",
+    "explanation": "As you slide upward, the folds shift gradually from a thicker setup to a thinner one, and around your transition the resonance that was helping the sound drops away. Push through that and the change that could have spread over several notes happens on one: a crack or a flip. A slow, quiet slide gives the handover time to spread out; a fast one skips past the seam. Slowing down is how you hear it and smooth it.",
     "prerequisites": [
       "v-l3-m1-07"
     ],
@@ -2276,7 +2277,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2288,7 +2289,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register blending",
-        "body": "A crack is a gear change you did not plan. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A crack is a gear change you did not plan.",
         "look": "Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2300,7 +2301,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2318,19 +2319,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Slide Through, Do Not Jump Over.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the register blending target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Slide Through, Do Not Jump Over” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2340,9 +2341,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absence of a register crack from a voiced-run number; the app shows pitch but does not detect register breaks."
+      "ifNotReady": "If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight.",
+      "shows": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel.",
+      "doesNotShow": "Absence of a register crack from a voiced-run number; the app shows pitch but does not detect register breaks."
     }
   },
   {
@@ -2367,7 +2368,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2379,7 +2380,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register blending",
-        "body": "Slow slides. Speed hides the break instead of fixing it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Slow slides. Speed hides the break instead of fixing it.",
         "look": "Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2391,7 +2392,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2409,19 +2410,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Octave Sirens, Three Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the register blending target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Octave Sirens, Three Vowels” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2431,9 +2432,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absence of a register crack from a voiced-run number; the app shows pitch but does not detect register breaks."
+      "ifNotReady": "If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight.",
+      "shows": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel.",
+      "doesNotShow": "Absence of a register crack from a voiced-run number; the app shows pitch but does not detect register breaks."
     }
   },
   {
@@ -2458,7 +2459,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2470,7 +2471,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Register blending",
-        "body": "Three vowels, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Three vowels, both directions.",
         "look": "Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2482,7 +2483,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2500,19 +2501,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Up and Down, Listening for a Crack.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the register blending target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Up and Down, Listening for a Crack” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2522,9 +2523,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, three slow sirens in a row, one on each vowel, sound continuous to you on playback, up and down, at conversational volume.",
-      "ifNotReady": "If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absence of a register crack from a voiced-run number; the app shows pitch but does not detect register breaks."
+      "ifNotReady": "If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight.",
+      "shows": "I followed a comfortable portion of the siren up and down and listened for continuity on each vowel.",
+      "doesNotShow": "Absence of a register crack from a voiced-run number; the app shows pitch but does not detect register breaks."
     }
   },
   {
@@ -2538,7 +2539,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why some vowels feel free and others close the throat.",
-    "explanation": "A vowel is a shape of the throat and mouth that makes some of the voice's frequencies louder than others; the pitch comes from the folds and stays the same. Each vowel puts its resonances in a different place, so on the same note some shapes sit easily and others fight the pitch, and the closed vowels “ee” and “oo” run out of room first as you go higher. When one vowel tightens, keep the jaw released and the tongue forward and make that shape a little smaller or more open, rather than pushing harder, so the tone stays related from vowel to vowel.",
+    "explanation": "A vowel is a shape of the throat and mouth that makes some of the voice's frequencies louder than others; the pitch comes from the folds and stays the same. Each vowel puts its resonances in a different place, so on one note some shapes sit easily and others fight the pitch; “ee” and “oo” run out of room first. When one tightens, keep the jaw released and the tongue forward and open the shape a little.",
     "prerequisites": [
       "v-l3-m2-07"
     ],
@@ -2549,7 +2550,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2561,7 +2562,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel shapes and placement",
-        "body": "Why some vowels feel free and others close the throat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why some vowels feel free and others close the throat.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -2573,7 +2574,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the same short pattern on five vowels and compared the resulting tone by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I sang the same short pattern on five vowels and compared the resulting tone by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2591,19 +2592,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Five Shapes, One Tone.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the vowel shapes and placement target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Five Shapes, One Tone” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2613,9 +2614,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I sang the same short pattern on five vowels and compared the resulting tone by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, resonance placement, or tone consistency measured by the app."
+      "ifNotReady": "If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly.",
+      "shows": "I sang the same short pattern on five vowels and compared the resulting tone by ear.",
+      "doesNotShow": "Formant values, vowel identity, resonance placement, or tone consistency measured by the app."
     }
   },
   {
@@ -2640,7 +2641,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2652,7 +2653,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel shapes and placement",
-        "body": "Same melody, five vowels, tone matched across all of them. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Same melody, five vowels, tone matched across all of them.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -2664,7 +2665,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the same short pattern on five vowels and compared the resulting tone by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I sang the same short pattern on five vowels and compared the resulting tone by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2682,19 +2683,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Phrase on Five Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the vowel shapes and placement target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Phrase on Five Vowels” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2704,9 +2705,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I sang the same short pattern on five vowels and compared the resulting tone by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, resonance placement, or tone consistency measured by the app."
+      "ifNotReady": "If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly.",
+      "shows": "I sang the same short pattern on five vowels and compared the resulting tone by ear.",
+      "doesNotShow": "Formant values, vowel identity, resonance placement, or tone consistency measured by the app."
     }
   },
   {
@@ -2731,7 +2732,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Hung-ee-mm or Legato triad. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2743,7 +2744,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel shapes and placement",
-        "body": "Judged by your own ear against your own recording. No vowel or formant tracking exists to score this for you. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Judged by your own ear against your own recording. No vowel or formant tracking exists to score this for you.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -2755,7 +2756,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the same short pattern on five vowels and compared the resulting tone by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I sang the same short pattern on five vowels and compared the resulting tone by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2773,19 +2774,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Tone Across Five Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the vowel shapes and placement target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Tone Across Five Vowels” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2795,9 +2796,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On playback, the same phrase on all five vowels keeps one pitch and a related tone, with every vowel still recognizable and none of them pinched, spread or pushed louder than the rest.",
-      "ifNotReady": "If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I sang the same short pattern on five vowels and compared the resulting tone by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, resonance placement, or tone consistency measured by the app."
+      "ifNotReady": "If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly.",
+      "shows": "I sang the same short pattern on five vowels and compared the resulting tone by ear.",
+      "doesNotShow": "Formant values, vowel identity, resonance placement, or tone consistency measured by the app."
     }
   },
   {
@@ -2811,7 +2812,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why this song needs the siren you just built.",
-    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody right onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing that crossing the way you practiced the siren, quieter and on a narrow vowel, rather than pushing the upper notes.",
+    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing it as you practised the siren: quietly.",
     "prerequisites": [
       "v-l3-m3-07"
     ],
@@ -2822,7 +2823,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.",
+        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. The reading Choosing songs that actually fit is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2834,7 +2835,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Two-register repertoire",
-        "body": "Why this song needs the siren you just built. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why this song needs the siren you just built.",
         "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
@@ -2846,7 +2847,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2864,19 +2865,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “A Wider Phrase, One Comfortable Key.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the two-register repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “A Wider Phrase, One Comfortable Key” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2886,9 +2887,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Which register was used, absence of a register break, vowel strategy, or freedom from strain."
+      "ifNotReady": "If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric.",
+      "shows": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed.",
+      "doesNotShow": "Which register was used, absence of a register break, vowel strategy, or freedom from strain."
     }
   },
   {
@@ -2913,7 +2914,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.",
+        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. The reading Choosing songs that actually fit is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -2925,7 +2926,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Two-register repertoire",
-        "body": "Pick a key so the register change lands where yours is. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Pick a key so the register change lands where yours is.",
         "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
@@ -2937,7 +2938,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -2955,19 +2956,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Deep River: A Wider Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the two-register repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Deep River: A Wider Phrase” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -2977,9 +2978,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Which register was used, absence of a register break, vowel strategy, or freedom from strain."
+      "ifNotReady": "If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric.",
+      "shows": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed.",
+      "doesNotShow": "Which register was used, absence of a register break, vowel strategy, or freedom from strain."
     }
   },
   {
@@ -3004,7 +3005,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.",
+        "body": "Open the practice material on this page and choose Deep River or Auld Lang Syne. The reading Choosing songs that actually fit is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3016,7 +3017,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Two-register repertoire",
-        "body": "Rehearse the supplied phrase through and compare the connection by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied phrase through and compare the connection by ear.",
         "look": "The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.",
         "listen": "The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear."
       },
@@ -3028,7 +3029,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3046,19 +3047,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Connected Wider Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the two-register repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: A Connected Wider Phrase” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3068,9 +3069,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You sing the Deep River phrase through in your chosen key in one take, and on playback the crossing stays connected, with no stop, crack or push, while the low notes stay clearly audible.",
-      "ifNotReady": "If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Which register was used, absence of a register break, vowel strategy, or freedom from strain."
+      "ifNotReady": "If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric.",
+      "shows": "I rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed.",
+      "doesNotShow": "Which register was used, absence of a register break, vowel strategy, or freedom from strain."
     }
   },
   {
@@ -3084,7 +3085,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Three different problems that get called the same thing.",
-    "explanation": "Breathy, nasal and tight all get called a bad tone, but they are three different sounds. Breathy is a haze of air in the tone, usually from vocal folds that are not meeting fully. Nasal is sound colored by the nose, though a pinched, bright tone often only seems nasal: pinch your nose on an “ah”, and if the sound changes, some of it was going through the nose. Tight, or pressed, is more squeeze than the note needs, heard as a hard, effortful tone rather than a louder one. The three can overlap, and the ear cannot always tell what causes them, so this lesson trains you to name the sound you hear before you try to change it.",
+    "explanation": "Breathy, nasal and tight all get called a bad tone, but they are three different sounds. Breathy is a haze of air in the tone, usually from folds not meeting fully. Nasal is sound coloured by the nose, though a pinched, bright tone often only seems nasal: pinch your nose on an “ah”; if the sound changes, some was going through the nose. Tight, or pressed, is more squeeze than the note needs. Name the sound before you change it.",
     "prerequisites": [
       "v-l3-m4-07"
     ],
@@ -3095,7 +3096,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
+        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3107,7 +3108,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Breathiness, nasality, tension",
-        "body": "Three different problems that get called the same thing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Three different problems that get called the same thing.",
         "look": "The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.",
         "listen": "Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap."
       },
@@ -3119,7 +3120,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3137,19 +3138,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Breathy, Nasal, Tight: Tell Them Apart.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the breathiness, nasality, tension target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Breathy, Nasal, Tight: Tell Them Apart” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3160,8 +3161,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
+      "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
+      "doesNotShow": "Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
   },
   {
@@ -3186,7 +3187,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
+        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3198,7 +3199,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Breathiness, nasality, tension",
-        "body": "Targeted release before targeted effort. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Targeted release before targeted effort.",
         "look": "The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.",
         "listen": "Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap."
       },
@@ -3210,7 +3211,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3228,19 +3229,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Release the Jaw and Tongue.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the breathiness, nasality, tension target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Release the Jaw and Tongue” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3251,8 +3252,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
+      "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
+      "doesNotShow": "Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
   },
   {
@@ -3277,7 +3278,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
+        "body": "Open the practice material on this page and choose Tongue-trill descent or Soft sustain. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3289,7 +3290,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Breathiness, nasality, tension",
-        "body": "Use the same short phrase for the relaxed baseline and the changed example, then compare both in the same recording. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Use the same short phrase for the relaxed baseline and the changed example, then compare both in the same recording.",
         "look": "The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.",
         "listen": "Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap."
       },
@@ -3301,7 +3302,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3319,19 +3320,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Compare With Your Baseline.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the breathiness, nasality, tension target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Compare With Your Baseline” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3342,8 +3343,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "In one recording, you sing your baseline and one deliberate change, name the difference you hear as breathy, nasal or tight, and return to a baseline that sounds like the first, with no hoarseness or lingering effort afterward.",
       "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
+      "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound.",
+      "doesNotShow": "Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
   },
   {
@@ -3357,7 +3358,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer.",
-    "explanation": "Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head for a moment before you make a sound. A voice that starts without that picture tends to search for the note, sliding up into it or settling on a neighboring pitch, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you are judging, so the comparison with the reference is honest.",
+    "explanation": "Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head before you make a sound. A voice that starts without that picture searches for the note, sliding up into it or settling on a neighbour, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you judge, so the comparison stays honest.",
     "prerequisites": [
       "v-l3-m5-07"
     ],
@@ -3368,7 +3369,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3380,7 +3381,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained intonation",
-        "body": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change."
       },
@@ -3392,7 +3393,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3410,19 +3411,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Hear the Pitch Before You Sing.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the sustained intonation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Hear the Pitch Before You Sing” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3432,9 +3433,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
+      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center.",
+      "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
+      "doesNotShow": "Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
     }
   },
   {
@@ -3459,7 +3460,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3471,7 +3472,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained intonation",
-        "body": "Hear the sustained reference, sing from silence, then compare another fresh attempt by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Hear the sustained reference, sing from silence, then compare another fresh attempt by ear.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change."
       },
@@ -3483,7 +3484,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3501,19 +3502,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Drift Correction.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the sustained intonation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Drift Correction” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3523,9 +3524,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
+      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center.",
+      "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
+      "doesNotShow": "Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
     }
   },
   {
@@ -3550,7 +3551,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3562,7 +3563,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained intonation",
-        "body": "Choose one note from the supplied study to improve, then compare a fresh attempt by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Choose one note from the supplied study to improve, then compare a fresh attempt by ear.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change."
       },
@@ -3574,7 +3575,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3592,19 +3593,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Intonation by Listening.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the sustained intonation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Intonation by Listening” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3614,9 +3615,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On playback you can name one note of the study that sat sharp or flat, and a fresh attempt at that note, sung from silence after hearing the reference once, sounds settled on it without a scoop.",
-      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
+      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center.",
+      "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear.",
+      "doesNotShow": "Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
     }
   },
   {
@@ -3630,7 +3631,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Three feels, heard back to back, named.",
-    "explanation": "Straight, triplet and swing are three ways of dividing the same steady beat. Straight splits each beat into two equal halves, counted 1-and; triplet splits it into three equal parts, counted 1-trip-let; swing keeps the first and third of those three parts, so each pair of notes becomes long-short. The beat itself does not move in any of them, which is why you tap it while you sing: only the subdivision changes, and that is what makes a phrase feel even, rolling or swung.",
+    "explanation": "Straight, triplet and swing are three ways of dividing the same steady beat. Straight splits each beat into two equal halves, counted 1-and; triplet splits it into three equal parts, counted 1-trip-let; swing keeps the first and third of those parts, so each pair of notes becomes long-short. The beat never moves, which is why you tap it while you sing: only the subdivision changes, and that is what makes a phrase feel even, rolling or swung.",
     "prerequisites": [
       "v-l4-m1-07"
     ],
@@ -3641,7 +3642,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3665,7 +3666,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3683,19 +3684,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Swing, Triplet, Straight.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the rhythm and subdivision target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Swing, Triplet, Straight” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3705,9 +3706,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets."
+      "ifNotReady": "If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody.",
+      "shows": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear.",
+      "doesNotShow": "Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets."
     }
   },
   {
@@ -3732,7 +3733,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3744,7 +3745,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Rhythm and subdivision",
-        "body": "Rhythm without pitch first. Pitch hides timing errors. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rhythm without pitch first. Pitch hides timing errors.",
         "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
@@ -3756,7 +3757,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3774,19 +3775,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Clap It, Then Sing It.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the rhythm and subdivision target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Clap It, Then Sing It” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3796,9 +3797,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets."
+      "ifNotReady": "If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody.",
+      "shows": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear.",
+      "doesNotShow": "Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets."
     }
   },
   {
@@ -3823,7 +3824,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3835,7 +3836,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Rhythm and subdivision",
-        "body": "Checked against your tapped pulse by ear. Onset timing is not automatically scored. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Checked against your tapped pulse by ear. Onset timing is not automatically scored.",
         "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
@@ -3847,7 +3848,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3865,19 +3866,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Count, Clap, Sing.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the rhythm and subdivision target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Count, Clap, Sing” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3887,9 +3888,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On playback of one take of the Swing Low, Sweet Chariot phrase, every entry written on a tap lands with your recorded taps, the “i” of “char-i-ot” and every second note of “comin' for to carry” land halfway between two taps, held notes last their full count, and the melody version keeps the same pulse as the clapped version.",
-      "ifNotReady": "If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets."
+      "ifNotReady": "If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody.",
+      "shows": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear.",
+      "doesNotShow": "Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets."
     }
   },
   {
@@ -3903,7 +3904,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Pitch and time get all the attention. Words are where amateur performances actually fail.",
-    "explanation": "Pitch and tone ride on the vowels; the words live mostly on the consonants, the quick stops, hums and hisses between vowels. Singers listen for pitch, but listeners hear everything else, and a lyric they cannot make out is lost however well it was tuned. Nothing in Suede Sing analyzes consonants or scores how clear your words are, so this is the axis you judge by ear: consonants quick, clear and on time, then straight back to the vowel so the line stays connected.",
+    "explanation": "Pitch and tone ride on the vowels; the words live on the consonants, the quick stops, hums and hisses between them. Singers listen for pitch, but listeners hear everything else, and a lyric they cannot make out is lost however well it was tuned. Nothing in Suede Sing analyses consonants or scores how clear your words are, so you judge this axis by ear: consonants quick, clear and on time, then straight back to the vowel.",
     "prerequisites": [
       "v-l4-m2-07"
     ],
@@ -3914,7 +3915,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -3926,7 +3927,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Diction and intelligible words",
-        "body": "Pitch and time get all the attention. Words are where amateur performances actually fail. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Pitch and time get all the attention. Words are where amateur performances actually fail.",
         "look": "The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.",
         "listen": "A listener can write down the words from the recording without seeing the lyric."
       },
@@ -3938,7 +3939,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -3956,19 +3957,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Consonants Are the Axis Nobody Scores.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the clear, intelligible diction target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Consonants Are the Axis Nobody Scores” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -3978,9 +3979,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health."
+      "ifNotReady": "If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo.",
+      "shows": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
+      "doesNotShow": "A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health."
     }
   },
   {
@@ -4005,7 +4006,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4017,7 +4018,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Diction and intelligible words",
-        "body": "Dense text at rising tempo without losing the vowel line. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Dense text at rising tempo without losing the vowel line.",
         "look": "The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.",
         "listen": "A listener can write down the words from the recording without seeing the lyric."
       },
@@ -4029,7 +4030,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4047,19 +4048,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Consonant Sprint.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the clear, intelligible diction target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Consonant Sprint” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4069,9 +4070,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health."
+      "ifNotReady": "If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo.",
+      "shows": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
+      "doesNotShow": "A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health."
     }
   },
   {
@@ -4096,7 +4097,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Yankee Doodle or Old MacDonald Had a Farm. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4108,7 +4109,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Diction and intelligible words",
-        "body": "Listen to the recording for understandable words; clarity is your own judgment. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Listen to the recording for understandable words; clarity is your own judgment.",
         "look": "The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.",
         "listen": "A listener can write down the words from the recording without seeing the lyric."
       },
@@ -4120,7 +4121,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4138,19 +4139,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Clear Words in a Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the clear, intelligible diction target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Clear Words in a Phrase” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4160,9 +4161,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "Someone who has not seen the lyric, or you a day later without looking at it, can write down every word of the recorded phrase from playback at the tempo you sang it.",
-      "ifNotReady": "If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health."
+      "ifNotReady": "If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo.",
+      "shows": "I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.",
+      "doesNotShow": "A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health."
     }
   },
   {
@@ -4176,7 +4177,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Three ways to attack the same note.",
-    "explanation": "These are three ways to shape the start or length of a note while its pitch and timing stay where they are written. A grace note is a quick note a step above or below that falls straight into the main note; staccato cuts the note short, with a little silence after it; an accent gives the note a firmer, clearer start from the breath, not a much louder sound or a squeeze in the throat. Each changes how the line feels without changing the tune, which is why they are worth having on cue.",
+    "explanation": "These are three ways to shape the start or length of a note while its pitch and timing stay as written. A grace note is a quick note a step above or below that falls straight into the main note; staccato cuts the note short, with a little silence after; an accent gives the note a firmer start from the breath, not a louder sound or a squeezed throat. Each changes how the line feels, not the tune.",
     "prerequisites": [
       "v-l4-m3-07"
     ],
@@ -4187,7 +4188,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4199,7 +4200,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Grace notes, staccato, accent",
-        "body": "Three ways to attack the same note. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Three ways to attack the same note.",
         "look": "The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.",
         "listen": "The three versions are distinguishable in playback without one simply being much louder than the others."
       },
@@ -4211,7 +4212,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4229,19 +4230,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Grace Notes, Staccato, Accent.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the grace notes, staccato, accent target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Grace Notes, Staccato, Accent” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4251,9 +4252,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain."
+      "ifNotReady": "If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line.",
+      "shows": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.",
+      "doesNotShow": "Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain."
     }
   },
   {
@@ -4278,7 +4279,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4290,7 +4291,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Grace notes, staccato, accent",
-        "body": "Switch articulation without switching pitch or tempo. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Switch articulation without switching pitch or tempo.",
         "look": "The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.",
         "listen": "The three versions are distinguishable in playback without one simply being much louder than the others."
       },
@@ -4302,7 +4303,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4320,19 +4321,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Same Phrase, Three Ways.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the grace notes, staccato, accent target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Same Phrase, Three Ways” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4342,9 +4343,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain."
+      "ifNotReady": "If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line.",
+      "shows": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.",
+      "doesNotShow": "Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain."
     }
   },
   {
@@ -4369,7 +4370,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Staccato gug. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4381,7 +4382,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Grace notes, staccato, accent",
-        "body": "Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn.",
         "look": "The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.",
         "listen": "The three versions are distinguishable in playback without one simply being much louder than the others."
       },
@@ -4393,7 +4394,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4411,19 +4412,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Articulations on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the grace notes, staccato, accent target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Three Articulations on Cue” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4433,9 +4434,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take sung in the order you drew, you can name each articulation from playback without checking the slips, and the phrase keeps the same pitch and tempo in all three.",
-      "ifNotReady": "If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain."
+      "ifNotReady": "If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line.",
+      "shows": "I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.",
+      "doesNotShow": "Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain."
     }
   },
   {
@@ -4449,7 +4450,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Loud from resonance, quiet from support, neither from the throat.",
-    "explanation": "Getting louder takes breath pressure and fold closure rising together, and much of what makes a voice carry is resonance, the ring in the tone, rather than sheer effort. Getting quieter takes the same steady breath under a smaller sound, not a slide into breathiness. Pushing is the throat doing the work instead: the tone tightens, the pitch creeps sharp, and the neck feels different on the loud note than on the quiet one. If your neck feels about the same at every level, the dynamics are coming from the right place.",
+    "explanation": "Getting louder takes breath pressure and fold closure rising together, and much of what makes a voice carry is resonance, not effort. Getting quieter takes the same steady breath under a smaller sound, not a slide into breathiness. Pushing is the throat doing the work: the tone tightens, the pitch creeps sharp, the neck feels different on the loud note. If your neck feels the same at every level, the dynamics come from the right place.",
     "prerequisites": [
       "v-l4-m4-07"
     ],
@@ -4460,7 +4461,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4472,7 +4473,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Dynamics without pushing",
-        "body": "Loud from resonance, quiet from support, neither from the throat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Loud from resonance, quiet from support, neither from the throat.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
         "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
@@ -4484,7 +4485,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4502,19 +4503,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Dynamics Without Pushing.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the dynamics without pushing target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Dynamics Without Pushing” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4524,9 +4525,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
+      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears.",
+      "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
+      "doesNotShow": "Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
     }
   },
   {
@@ -4551,7 +4552,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4563,7 +4564,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Dynamics without pushing",
-        "body": "A song that lives or dies on its dynamic arc. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A song that lives or dies on its dynamic arc.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
         "listen": "The second phrase is audibly fuller than the first while the pitch stays centered."
       },
@@ -4575,7 +4576,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4593,19 +4594,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Dynamic Ballad.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the dynamics without pushing target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Dynamic Ballad” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4615,9 +4616,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
+      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears.",
+      "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
+      "doesNotShow": "Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
     }
   },
   {
@@ -4642,7 +4643,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4654,7 +4655,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Dynamics without pushing",
-        "body": "Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
         "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
@@ -4666,7 +4667,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4684,19 +4685,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Levels, One Note.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the dynamics without pushing target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Four Levels, One Note” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4706,9 +4707,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take on one comfortable note, you can put the four levels in order from playback alone, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.",
-      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
+      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears.",
+      "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
+      "doesNotShow": "Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
     }
   },
   {
@@ -4722,7 +4723,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type.",
-    "explanation": "Your passaggio is the zone of two to four notes where the voice has to hand over from a thicker fold setup to a thinner one while the resonance that was helping the sound drops away, so notes start to need effort, thin out or crack. It sits where your own folds and vocal tract put it: often near the published zone for your voice type, but it can land a semitone or more either side, and it shifts with the vowel and the volume. For contralto, mezzo and soprano the published zones mark where a belt or full mix changes gear; a quiet slide will often find an earlier, lighter shift out of chest voice first, somewhere around E4 to G4, at or below the published zone, and that is expected rather than a failed search. A range test reports only your two ends, so you find this zone by ear on a slow, quiet slide, starting from the note where the effort first rises.",
+    "explanation": "Your passaggio is the two-to-four-note zone where the voice hands over from a thicker fold setup to a thinner one and the resonance that was helping drops away, so notes need effort, thin out or crack. It sits near the published zone for your voice type and moves with vowel and volume. In higher voices a quiet slide finds a lighter shift around E4 to G4 before the published belt zone. Find yours by ear on a slow, quiet slide.",
     "prerequisites": [
       "v-l4-m5-07"
     ],
@@ -4733,7 +4734,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading The passaggio: where it breaks and why is listed there too.",
+        "body": "Open the practice material on this page and choose Ng siren to the fifth. The reading The passaggio: where it breaks and why is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4745,7 +4746,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Locating your own transition zone",
-        "body": "Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4757,7 +4758,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I listened for my own transition during a small comfortable slide and noted where it became less easy. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I listened for my own transition during a small comfortable slide and noted where it became less easy.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4775,19 +4776,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Where Your Voice Changes Gear.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the locating your own transition zone target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Where Your Voice Changes Gear” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4797,9 +4798,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I listened for my own transition during a small comfortable slide and noted where it became less easy. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Primo or secondo passaggio pitches computed from a range scan; Suede measures range extremes, not passaggi."
+      "ifNotReady": "If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing.",
+      "shows": "I listened for my own transition during a small comfortable slide and noted where it became less easy.",
+      "doesNotShow": "Primo or secondo passaggio pitches computed from a range scan; Suede measures range extremes, not passaggi."
     }
   },
   {
@@ -4824,7 +4825,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading The passaggio: where it breaks and why is listed there too.",
+        "body": "Open the practice material on this page and choose Ng siren to the fifth. The reading The passaggio: where it breaks and why is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4836,7 +4837,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Locating your own transition zone",
-        "body": "Approach each from below and above until you can hear the shift coming. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Approach each from below and above until you can hear the shift coming.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4848,7 +4849,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I listened for my own transition during a small comfortable slide and noted where it became less easy. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I listened for my own transition during a small comfortable slide and noted where it became less easy.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4866,19 +4867,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Find Your Zone.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the locating your own transition zone target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Find Your Zone” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4888,9 +4889,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I listened for my own transition during a small comfortable slide and noted where it became less easy. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Primo or secondo passaggio pitches computed from a range scan; Suede measures range extremes, not passaggi."
+      "ifNotReady": "If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing.",
+      "shows": "I listened for my own transition during a small comfortable slide and noted where it became less easy.",
+      "doesNotShow": "Primo or secondo passaggio pitches computed from a range scan; Suede measures range extremes, not passaggi."
     }
   },
   {
@@ -4915,7 +4916,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading The passaggio: where it breaks and why is listed there too.",
+        "body": "Open the practice material on this page and choose Ng siren to the fifth. The reading The passaggio: where it breaks and why is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4927,7 +4928,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Locating your own transition zone",
-        "body": "Located by ear, then crossed in both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Located by ear, then crossed in both directions.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4939,7 +4940,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I listened for my own transition during a small comfortable slide and noted where it became less easy. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I listened for my own transition during a small comfortable slide and noted where it became less easy.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4957,19 +4958,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Cross It On Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the locating your own transition zone target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Cross It On Cue” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -4979,9 +4980,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can name the note where your effort first rises, and on two different days you cross that zone on a quiet slide in both directions, three times in a row, without a crack or a push.",
-      "ifNotReady": "If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I listened for my own transition during a small comfortable slide and noted where it became less easy. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Primo or secondo passaggio pitches computed from a range scan; Suede measures range extremes, not passaggi."
+      "ifNotReady": "If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing.",
+      "shows": "I listened for my own transition during a small comfortable slide and noted where it became less easy.",
+      "doesNotShow": "Primo or secondo passaggio pitches computed from a range scan; Suede measures range extremes, not passaggi."
     }
   },
   {
@@ -4995,7 +4996,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Small shape adjustments that keep the crossing smooth and the lyric intelligible.",
-    "explanation": "Around your transition, a strong harmonic of the note you are singing meets the main resonance of the vowel and then climbs past it, and the reinforcement drops out from under the sound. Shading the vowel a little toward the neutral middle moves that resonance so the crossing stays smooth: a bright “ee” opens slightly toward “ih”, an “oo” toward “oh”, and a wide “ah” rounds slightly toward “aw”. Use the smallest change that works; listeners rebuild a word from context generously, but if they can hear the word change, you have gone too far.",
+    "explanation": "Around your transition, a strong harmonic of the note meets the main resonance of the vowel and climbs past it, and the reinforcement drops out from under the sound. Shading the vowel toward the neutral middle moves that resonance so the crossing stays smooth: a bright “ee” opens toward “ih”, an “oo” toward “oh”, a wide “ah” rounds toward “aw”. Use the smallest change that works; if listeners hear the word change, you went too far.",
     "prerequisites": [
       "v-l5-m1-07"
     ],
@@ -5006,7 +5007,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5018,7 +5019,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel modification",
-        "body": "Small shape adjustments that keep the crossing smooth and the lyric intelligible. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Small shape adjustments that keep the crossing smooth and the lyric intelligible.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -5030,7 +5031,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5048,19 +5049,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Change the Vowel, Keep the Word.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the vowel modification target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Change the Vowel, Keep the Word” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5070,9 +5071,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, a measured register break, or freedom from strain."
+      "ifNotReady": "If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there.",
+      "shows": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
+      "doesNotShow": "Formant values, vowel identity, a measured register break, or freedom from strain."
     }
   },
   {
@@ -5097,7 +5098,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5109,7 +5110,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel modification",
-        "body": "Modified and unmodified, heard side by side. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Modified and unmodified, heard side by side.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -5121,7 +5122,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5139,19 +5140,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Crossing on Three Vowels.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the vowel modification target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Crossing on Three Vowels” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5161,9 +5162,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, a measured register break, or freedom from strain."
+      "ifNotReady": "If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there.",
+      "shows": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
+      "doesNotShow": "Formant values, vowel identity, a measured register break, or freedom from strain."
     }
   },
   {
@@ -5188,7 +5189,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Ng siren to the fifth or Gentle fifth siren. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5200,7 +5201,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vowel modification",
-        "body": "Both directions across the zone. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Both directions across the zone.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -5212,7 +5213,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5230,19 +5231,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Vowels Through the Break.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the vowel modification target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Three Vowels Through the Break” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5252,9 +5253,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On playback, one word on each of three vowels crosses your zone in both directions with the pitch connected and the word still recognizable, using the smallest vowel change that works.",
-      "ifNotReady": "If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, a measured register break, or freedom from strain."
+      "ifNotReady": "If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there.",
+      "shows": "I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.",
+      "doesNotShow": "Formant values, vowel identity, a measured register break, or freedom from strain."
     }
   },
   {
@@ -5268,7 +5269,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Where carrying power actually comes from, and why pressed phonation is the costly way to fake it.",
-    "explanation": "Carrying power is mostly a matter of resonance rather than loudness: a voice with more energy in the bright upper band, where hearing is sharpest, cuts through without being pushed. Twang gets there by narrowing the space just above the vocal folds, which brightens the tone by reshaping the tube rather than by driving more air or squeezing harder. Pressed phonation, more squeeze at the folds than the note needs, also sounds intense but costs effort and tires the voice; one rough check is that brightness from resonance costs you nothing and still works when you sing the same phrase quietly.",
+    "explanation": "Carrying power is mostly resonance, not loudness: a voice with more energy in the bright upper band, where hearing is sharpest, cuts through without being pushed. Twang gets there by narrowing the space just above the vocal folds, which brightens the tone by reshaping the tube, not by driving more air or squeezing harder. Pressed phonation, more squeeze than the note needs, also sounds intense but tires the voice. Brightness from resonance costs nothing and survives singing the phrase quietly.",
     "prerequisites": [
       "v-l5-m2-07"
     ],
@@ -5279,7 +5280,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Humming thirds. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5291,7 +5292,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Resonance over force",
-        "body": "Where carrying power actually comes from, and why pressed phonation is the costly way to fake it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Where carrying power actually comes from, and why pressed phonation is the costly way to fake it.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5303,7 +5304,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two easy tones on the same pitch and described a change in brightness by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two easy tones on the same pitch and described a change in brightness by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5321,19 +5322,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Louder by Resonance, Not by Force.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the resonance over force target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Louder by Resonance, Not by Force” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5343,9 +5344,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
+      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated.",
+      "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear.",
+      "doesNotShow": "Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
     }
   },
   {
@@ -5370,7 +5371,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Humming thirds. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5382,7 +5383,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Resonance over force",
-        "body": "More carrying power without more push. Ring is a change of resonance, not a change of effort. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "More carrying power without more push. Ring is a change of resonance, not a change of effort.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5394,7 +5395,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two easy tones on the same pitch and described a change in brightness by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two easy tones on the same pitch and described a change in brightness by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5412,19 +5413,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Ring Without Pressing.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the resonance over force target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Ring Without Pressing” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5434,9 +5435,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
+      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated.",
+      "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear.",
+      "doesNotShow": "Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
     }
   },
   {
@@ -5461,7 +5462,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Humming thirds. Hear the reference, choose a comfortable key, then stop it before singing. The reading Resonance, placement and the vowel is listed there too.",
+        "body": "Open the practice material on this page and choose Humming thirds. The reading Resonance, placement and the vowel is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5473,7 +5474,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Resonance over force",
-        "body": "The second example sounds brighter, not just louder, at the same microphone distance. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "The second example sounds brighter, not just louder, at the same microphone distance.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5485,7 +5486,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two easy tones on the same pitch and described a change in brightness by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two easy tones on the same pitch and described a change in brightness by ear.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5503,19 +5504,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Brightness Without Pushing.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the resonance over force target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Brightness Without Pushing” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5525,9 +5526,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take at a fixed microphone distance, the second example sounds brighter than the baseline rather than just louder, and you can sing it again quietly with no grip in the throat.",
-      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
+      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated.",
+      "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear.",
+      "doesNotShow": "Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
     }
   },
   {
@@ -5541,7 +5542,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time.",
-    "explanation": "A shout gets its size from more air and more squeeze at the folds, so as it climbs it turns tight, goes sharp or cracks, and it tires the voice. Mix is the middle ground between chest and head voice, part fold setup and part vowel and resonance, where the transition can be crossed without a seam, and a belt carries a chest-like sound higher by getting brighter rather than by pushing. The difference you can hear is in repetition: an easy call sounds the same the third time, a shout costs more each time, and any grip in the throat means stop and go lighter.",
+    "explanation": "A shout gets its size from more air and more squeeze at the folds, so as it climbs it turns tight, goes sharp or cracks, and it tires the voice. Mix is the middle ground between chest and head voice, part fold setup and part vowel and resonance, where the transition crosses without a seam; a belt carries a chest-like sound higher by getting brighter, not by pushing. An easy call sounds the same the third time.",
     "prerequisites": [
       "v-l5-m3-07"
     ],
@@ -5552,7 +5553,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5564,7 +5565,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5576,7 +5577,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5594,19 +5595,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “The Difference You Can Hear.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the comfortable mixed-voice coordination target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “The Difference You Can Hear” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5617,8 +5618,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
-      "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
+      "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
+      "doesNotShow": "Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
   },
   {
@@ -5643,7 +5644,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5655,7 +5656,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "A short supplied pattern that crosses your transition zone — pick the key that puts it there. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A short supplied pattern that crosses your transition zone — pick the key that puts it there.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5667,7 +5668,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5685,19 +5686,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “An Easy Pattern Through Your Transition.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the comfortable mixed-voice coordination target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “An Easy Pattern Through Your Transition” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5708,8 +5709,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
-      "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
+      "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
+      "doesNotShow": "Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
   },
   {
@@ -5734,7 +5735,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.",
+        "body": "Open the practice material on this page and choose Legato triad or Wee from the fifth. The reading Registers, and why they exist is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5746,7 +5747,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "Hold six comfortable seconds, then report effort and stop on any warning sign. The app does not verify strain. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Hold six comfortable seconds, then report effort and stop on any warning sign. The app does not verify strain.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5758,7 +5759,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5776,19 +5777,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Easy Tone and Effort.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the comfortable mixed-voice coordination target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Easy Tone and Effort” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5799,8 +5800,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "Three times in a row, the pattern crosses your transition at moderate volume with the same easy, call-like effort you have below it, you hold its top note for six comfortable seconds, and your speaking voice feels unchanged afterward.",
       "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
-      "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
+      "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort.",
+      "doesNotShow": "Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
   },
   {
@@ -5814,7 +5815,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing.",
-    "explanation": "Improvising is easiest to start as an answer: a short call sets the key and the pulse, and you reply with a phrase of your own that ends on the home note. Limiting the answer to five notes of the scale, 1, 2, 3, 5 and 6, leaves fewer wrong choices, so your attention can go to rhythm, direction and where you land. Change one of those at a time and the answer stays connected to the call while still being yours.",
+    "explanation": "Improvising is easiest to start as an answer: a short call sets the key and the pulse, and you reply with a phrase of your own that ends on the home note. Limiting the answer to five notes of the scale, 1, 2, 3, 5 and 6, leaves fewer wrong choices, so your attention goes to rhythm, direction and where you land. Change one of those at a time and the answer stays connected to the call while still yours.",
     "prerequisites": [
       "v-l5-m4-07"
     ],
@@ -5825,7 +5826,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5837,7 +5838,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Four-bar improvisation",
-        "body": "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5849,7 +5850,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5867,19 +5868,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Improvising Is Answering.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the four-bar improvisation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Improvising Is Answering” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5889,9 +5890,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised."
+      "ifNotReady": "If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars.",
+      "shows": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending.",
+      "doesNotShow": "Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised."
     }
   },
   {
@@ -5916,7 +5917,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -5928,7 +5929,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Four-bar improvisation",
-        "body": "Call and response before free improvisation. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Call and response before free improvisation.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5940,7 +5941,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -5958,19 +5959,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Sing the Answer.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the four-bar improvisation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Sing the Answer” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -5980,9 +5981,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised."
+      "ifNotReady": "If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars.",
+      "shows": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending.",
+      "doesNotShow": "Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised."
     }
   },
   {
@@ -6007,7 +6008,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Pentatonic run or Minor five-note scale. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6019,7 +6020,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Four-bar improvisation",
-        "body": "Keep a tapped four-beat pulse through four bars, including your rests. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Keep a tapped four-beat pulse through four bars, including your rests.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -6031,7 +6032,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6049,19 +6050,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Answering Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the four-bar improvisation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Self-Check: Your Answering Phrase” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6071,9 +6072,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, you sing call and answer as four bars in one take, keeping the tapped pulse through the rests, and a different answer each day ends on the tonic.",
-      "ifNotReady": "If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised."
+      "ifNotReady": "If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars.",
+      "shows": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending.",
+      "doesNotShow": "Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised."
     }
   },
   {
@@ -6087,7 +6088,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why slow practice is the only route to fast runs.",
-    "explanation": "A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practiced fast learns the smear along with the notes. The route to a clean fast run is to sing the pattern slowly enough that every note lands, then raise the tempo in small steps and drop back the moment a middle note blurs into a slide.",
+    "explanation": "A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practised fast learns the smear along with the notes. Sing the pattern slowly enough that every note lands, raise the tempo in small steps, and drop back the moment a middle note blurs into a slide.",
     "prerequisites": [
       "v-l5-m5-07"
     ],
@@ -6098,7 +6099,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6110,7 +6111,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melodic agility",
-        "body": "Why slow practice is the only route to fast runs. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why slow practice is the only route to fast runs.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6122,7 +6123,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6140,19 +6141,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “A Run Is a Scale in a Hurry.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the melodic agility target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “A Run Is a Scale in a Hurry” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6162,9 +6163,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
+      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again.",
+      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
+      "doesNotShow": "Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
     }
   },
   {
@@ -6189,7 +6190,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6201,7 +6202,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melodic agility",
-        "body": "Rehearse slowly and move on only when you can hear separate, repeatable notes. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse slowly and move on only when you can hear separate, repeatable notes.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6213,7 +6214,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6231,19 +6232,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Turnaround, Slow to Fast.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the melodic agility target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Turnaround, Slow to Fast” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6253,9 +6254,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
+      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again.",
+      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
+      "doesNotShow": "Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
     }
   },
   {
@@ -6280,7 +6281,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6292,7 +6293,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melodic agility",
-        "body": "Every note landing, not smeared. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Every note landing, not smeared.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6304,7 +6305,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6322,19 +6323,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Clear Agility Pattern.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the melodic agility target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Self-Check: A Clear Agility Pattern” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6344,9 +6345,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, three reps in a row of the 1–2–3–2–1 turn at your current tempo play back with every note on its own pitch, the 2 included in both directions.",
-      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
+      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again.",
+      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
+      "doesNotShow": "Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
     }
   },
   {
@@ -6360,7 +6361,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Melisma, and why it needs a stable vowel underneath.",
-    "explanation": "Melisma is several notes sung on one syllable, the way a run carries a single word. The vowel is what carries all of those notes, and a vowel is a shape of the tongue, jaw and lips, so if that shape moves on every note the color flickers and the line starts to sound like new syllables or a smear. Hold one vowel shape still and let only the pitch move; that steady vowel is what lets each note sound separate and still belong to the same word.",
+    "explanation": "Melisma is several notes sung on one syllable, the way a run carries a single word. The vowel carries every note, and a vowel is a shape of tongue, jaw and lips; move that shape on each note and the colour flickers into new syllables or a smear. Hold one vowel shape still and let only the pitch move. That steady vowel lets each note sound separate and still belong to the same word.",
     "prerequisites": [
       "v-l6-m1-08"
     ],
@@ -6371,7 +6372,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hoo descent. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Hoo descent. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6383,7 +6384,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melisma",
-        "body": "Melisma, and why it needs a stable vowel underneath. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Melisma, and why it needs a stable vowel underneath.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6395,7 +6396,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6413,19 +6414,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Syllable, Many Notes.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the melisma target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “One Syllable, Many Notes” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6435,9 +6436,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
+      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo.",
+      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
+      "doesNotShow": "Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
     }
   },
   {
@@ -6462,7 +6463,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hoo descent. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Hoo descent. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6474,7 +6475,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melisma",
-        "body": "Four-note patterns across the scale, both directions. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Four-note patterns across the scale, both directions.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6486,7 +6487,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6504,19 +6505,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Four-Note Ladder.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the melisma target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “Four-Note Ladder” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6526,9 +6527,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
+      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo.",
+      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
+      "doesNotShow": "Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
     }
   },
   {
@@ -6553,7 +6554,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Hoo descent. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Hoo descent. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6565,7 +6566,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Melisma",
-        "body": "Listen for each of the four displayed pitches; this is a self-check without an automatic score. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Listen for each of the four displayed pitches; this is a self-check without an automatic score.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6577,7 +6578,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6595,19 +6596,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Notes on One Syllable.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the melisma target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Self-Check: Four Notes on One Syllable” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6617,9 +6618,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, three reps in a row of Hoo descent on one unbroken “oo” play back as four separate pitches, with no new syllable or vowel change between them.",
-      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
+      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo.",
+      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
+      "doesNotShow": "Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
     }
   },
   {
@@ -6633,7 +6634,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Vibrato has three parameters. Controlling them is what separates it from a wobble.",
-    "explanation": "Vibrato is a small, regular swing in pitch around the note's center, with three separate dials: rate is how many times a second the pitch swings, from a fast flutter to a slow wave; extent is how far above and below the center it moves, from a narrow shimmer to a wide wobble; and onset is when it starts, straight away or after a stretch of straight tone. What separates vibrato from an unsteady note is regularity, an even rate and extent around a steady center. The Vibrato hold warm-up shows how fast and how wide your pitch moved after each hold, but nothing times the onset, so that dial is yours to judge. It is also the easiest one to practice first, because it begins from a plain, straight note.",
+    "explanation": "Vibrato is a small, regular swing in pitch around the note's centre, with three dials: rate, how many swings a second; extent, how far above and below the centre it moves; and onset, when it starts, at once or after a stretch of straight tone. Regularity separates vibrato from an unsteady note. The Vibrato hold warm-up reports rate and extent after each hold; nothing times the onset, so that dial is yours to judge, and the easiest to practise first.",
     "prerequisites": [
       "v-l6-m2-08"
     ],
@@ -6644,7 +6645,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Vibrato hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Vibrato hold. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6656,7 +6657,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vibrato control",
-        "body": "Vibrato has three parameters. Controlling them is what separates it from a wobble. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Vibrato has three parameters. Controlling them is what separates it from a wobble.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6668,7 +6669,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6686,19 +6687,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Rate, Extent, Onset.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the vibrato control target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Rate, Extent, Onset” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6708,9 +6709,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
+      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed.",
+      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
+      "doesNotShow": "Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
     }
   },
   {
@@ -6735,7 +6736,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Vibrato hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Vibrato hold. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6747,7 +6748,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vibrato control",
-        "body": "Start straight, introduce vibrato deliberately, stop it again. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Start straight, introduce vibrato deliberately, stop it again.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6759,7 +6760,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6777,19 +6778,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Straight Then Vibrato.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the vibrato control target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “Straight Then Vibrato” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6799,9 +6800,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
+      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed.",
+      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
+      "doesNotShow": "Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
     }
   },
   {
@@ -6826,7 +6827,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Vibrato hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Vibrato hold. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6838,7 +6839,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vibrato control",
-        "body": "Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6850,7 +6851,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6868,19 +6869,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Straight to Vibrato on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the vibrato control target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Self-Check: Straight to Vibrato on Cue” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6891,8 +6892,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "On two different days, in three holds in a row, you start straight, let the vibrato in at the count you chose before singing, and return to straight tone before the release, with no jaw or belly shake.",
       "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, work with a teacher before adding speed, and repeat a smaller version on another fresh attempt rather than forcing the checkpoint. If no vibrato comes on its own yet, that is not a fault to fix here: keep the holds straight, steady and easy, move on to the next module, and come back to this one in a few weeks rather than shaking one in.",
-      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
+      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
+      "doesNotShow": "Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
     }
   },
   {
@@ -6906,7 +6907,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Naming them is what turns habits into choices.",
-    "explanation": "Scoops, falls, bends and slides are four small pitch gestures that decorate a melody without changing it. A scoop starts a little below the note and slides up into it; a fall drops away in pitch off the end of a note; a bend pushes the pitch slightly off the note and brings it back; a slide glides from one written note to the next. An accidental scoop is the voice searching for the note, the habit Stage 2 trained out; a scoop you name and place where you meant it is a choice, and that is the whole difference.",
+    "explanation": "Scoops, falls, bends and slides are four small pitch gestures that decorate a melody without changing it. A scoop starts below the note and slides up into it; a fall drops away off the end of a note; a bend pushes the pitch slightly off and brings it back; a slide glides from one written note to the next. An accidental scoop is the voice searching for the note. A scoop you name and place is a choice.",
     "prerequisites": [
       "v-l6-m3-08"
     ],
@@ -6917,7 +6918,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6929,7 +6930,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Ornament vocabulary",
-        "body": "Naming them is what turns habits into choices. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Naming them is what turns habits into choices.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
         "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
       },
@@ -6941,7 +6942,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6959,19 +6960,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Four Ornaments, Named.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the ornament vocabulary target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Four Ornaments, Named” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -6981,9 +6982,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
+      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase.",
+      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
+      "doesNotShow": "Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
     }
   },
   {
@@ -7008,7 +7009,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7020,7 +7021,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Ornament vocabulary",
-        "body": "Choose and say the ornament yourself before the next phrase; there is no automatic spoken cue. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Choose and say the ornament yourself before the next phrase; there is no automatic spoken cue.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
         "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
       },
@@ -7032,7 +7033,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7050,19 +7051,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Ornament on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the ornament vocabulary target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “Ornament on Cue” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7072,9 +7073,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
+      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase.",
+      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
+      "doesNotShow": "Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
     }
   },
   {
@@ -7099,7 +7100,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7111,7 +7112,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Ornament vocabulary",
-        "body": "All four, placed where you marked them before singing. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "All four, placed where you marked them before singing.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
         "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
       },
@@ -7123,7 +7124,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7141,19 +7142,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Ornaments, One Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the ornament vocabulary target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Self-Check: Four Ornaments, One Phrase” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7163,9 +7164,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take of one phrase, all four ornaments land where you marked them beforehand, you can name each one on playback, and the melody returns to its written notes after each.",
-      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
+      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase.",
+      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
+      "doesNotShow": "Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
     }
   },
   {
@@ -7179,7 +7180,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Blue thirds and sevenths, and how they resolve toward the tonic.",
-    "explanation": "Blue notes are the third and seventh of the scale sung flat of their major-scale pitches, or bent somewhere between the minor and major versions; blues and soul phrasing lives in that space between the written pitches. They sound like feeling because they lean against the tonic, the home note, so a phrase that leans on a flat third or flat seventh and then settles on the tonic sounds like tension let go. What separates a blue note from a flat one is intent: you aim for it and land it, rather than sagging into it.",
+    "explanation": "Blue notes are the third and seventh of the scale sung flat, or bent between their minor and major pitches; blues and soul phrasing lives in that gap. They sound like feeling because they lean against the tonic, so a phrase that leans on a flat third or seventh and then settles home sounds like tension let go. Intent separates a blue note from a flat one: you aim for it and land it rather than sagging into it.",
     "prerequisites": [
       "v-l6-m4-08"
     ],
@@ -7190,7 +7191,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7202,7 +7203,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "Blue thirds and sevenths, and how they resolve toward the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Blue thirds and sevenths, and how they resolve toward the tonic.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7214,7 +7215,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7232,19 +7233,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “The Notes That Sound Like Feeling.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the eight-bar improvisation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “The Notes That Sound Like Feeling” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7254,9 +7255,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
+      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
+      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
+      "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },
   {
@@ -7281,7 +7282,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7293,7 +7294,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "Bend into them deliberately rather than arriving flat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Bend into them deliberately rather than arriving flat.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7305,7 +7306,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7323,19 +7324,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Blue Thirds and Sevenths.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the eight-bar improvisation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “Blue Thirds and Sevenths” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7345,9 +7346,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
+      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
+      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
+      "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },
   {
@@ -7372,7 +7373,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7384,7 +7385,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7396,7 +7397,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7414,19 +7415,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Improvised Phrases.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the eight-bar improvisation target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “Self-Check: Your Improvised Phrases” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7436,9 +7437,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "One recorded take holds eight bars against your tapped pulse, builds its answer from the two-bar call rather than wandering, and ends on the tonic you heard before recording.",
-      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
+      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
+      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
+      "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },
   {
@@ -7452,7 +7453,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Range and agility at the same time, which is the actual difficulty.",
-    "explanation": "An ornament that is easy in the middle of your voice gets harder near the top or bottom, because the edges of your range already take most of your control. That is the real difficulty of a phrase with both a wide leap and an ornament: each demand is manageable alone, and they compete when they arrive together. So choose a key where both ends of the phrase are repeatable, rehearse the leap and the ornament separately, and keep the top lighter rather than louder when you join them.",
+    "explanation": "An ornament that is easy in the middle of your voice gets harder near the edges, because the edges already take most of your control. That is the difficulty of a phrase with a wide leap and an ornament: each is manageable alone, and they compete when they arrive together. Choose a key where both ends are repeatable, rehearse the leap and the ornament separately, and keep the top lighter, not louder, when you join them.",
     "prerequisites": [
       "v-l6-m5-08"
     ],
@@ -7463,7 +7464,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.",
+        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Transposition without shame is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7475,7 +7476,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Extended-range repertoire",
-        "body": "Range and agility at the same time, which is the actual difficulty. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Range and agility at the same time, which is the actual difficulty.",
         "look": "The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.",
         "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
       },
@@ -7487,7 +7488,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7505,19 +7506,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 30,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Range and Ornaments in a Short Phrase.”"
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the extended-range repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Practice or record the complete “Range and Ornaments in a Short Phrase” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7527,9 +7528,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
+      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced.",
+      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
+      "doesNotShow": "Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
     }
   },
   {
@@ -7554,7 +7555,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.",
+        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Transposition without shame is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7566,7 +7567,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Extended-range repertoire",
-        "body": "Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear.",
         "look": "The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.",
         "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
       },
@@ -7578,7 +7579,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7596,19 +7597,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Phrase and Ornament Study.”"
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Isolate the extended-range repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 180,
-        "instruction": "Practice or record the complete “Phrase and Ornament Study” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7618,9 +7619,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
+      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced.",
+      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
+      "doesNotShow": "Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
     }
   },
   {
@@ -7645,7 +7646,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.",
+        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). The reading Transposition without shame is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7657,7 +7658,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Extended-range repertoire",
-        "body": "Review your supplied study and describe which small ornament stayed clear. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Review your supplied study and describe which small ornament stayed clear.",
         "look": "The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.",
         "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
       },
@@ -7669,7 +7670,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7687,19 +7688,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Ornamented Study.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the extended-range repertoire target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “Self-Check: Your Ornamented Study” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7709,9 +7710,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "One uninterrupted take of the study, in your chosen key, has every ornament you marked audible where you marked it, the melody intact, and neither end of the range needing a push.",
-      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
+      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced.",
+      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
+      "doesNotShow": "Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
     }
   },
   {
@@ -7725,7 +7726,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Whispering is on the harmful list. So is talking over noise. Neither is obvious.",
-    "explanation": "Water reaches your voice slowly: steady drinking across the day shows up in how singing feels, while a glass just before you sing does little for the next twenty minutes. Dry air counts too, and the NIDCD's Taking Care of Your Voice guidance, listed in the sources below, suggests a humidifier at home, especially in winter or a dry climate. The same guidance names whispering and talking over noise as things to avoid, since both put stress on the voice, and most voice fatigue comes from talking rather than singing, above all talking over noise. So rest your voice with silence rather than a whisper, and count a loud evening of conversation as voice use.",
+    "explanation": "Water reaches your voice slowly: steady drinking across the day shows up in how singing feels; a glass just before you sing does little. Dry air counts too, so the NIDCD's Taking Care of Your Voice guidance, in the sources below, suggests a humidifier at home. It also says avoid whispering and talking over noise; both stress the voice, and most fatigue comes from talking. Rest with silence, not a whisper, and count a loud evening out as voice use.",
     "prerequisites": [
       "v-l6-m6-08"
     ],
@@ -7736,7 +7737,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. Hear the reference, choose a comfortable key, then stop it before singing. The reading Stamina, warming up, and not hurting yourself is listed there too.",
+        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. The reading Stamina, warming up, and not hurting yourself is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7748,7 +7749,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vocal health",
-        "body": "Whispering is on the harmful list. So is talking over noise. Neither is obvious. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Whispering is on the harmful list. So is talking over noise. Neither is obvious.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7760,7 +7761,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7778,19 +7779,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Hydration, Humidity, and Why Whispering Hurts.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the vocal health target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Hydration, Humidity, and Why Whispering Hurts” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7801,8 +7802,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
+      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
+      "doesNotShow": "Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
   },
   {
@@ -7827,7 +7828,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. Hear the reference, choose a comfortable key, then stop it before singing. The reading Stamina, warming up, and not hurting yourself is listed there too.",
+        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. The reading Stamina, warming up, and not hurting yourself is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7839,7 +7840,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vocal health",
-        "body": "Assemble a routine from the drills you already own, ordered correctly. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Assemble a routine from the drills you already own, ordered correctly.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7851,7 +7852,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7869,19 +7870,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Build Your Own Warm-Up.”"
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Isolate the vocal health target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 180,
-        "instruction": "Practice or record the complete “Build Your Own Warm-Up” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7892,8 +7893,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
+      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
+      "doesNotShow": "Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
   },
   {
@@ -7918,7 +7919,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. Hear the reference, choose a comfortable key, then stop it before singing. The reading Stamina, warming up, and not hurting yourself is listed there too.",
+        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. The reading Stamina, warming up, and not hurting yourself is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7930,7 +7931,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vocal health",
-        "body": "Assemble a short warm-up with rests and write down the warning signs that would make you stop, before you move on to effects. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Assemble a short warm-up with rests and write down the warning signs that would make you stop, before you move on to effects.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7942,7 +7943,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -7960,19 +7961,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Warm-Up and Stop Plan.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the vocal health target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Self-Check: Warm-Up and Stop Plan” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -7983,8 +7984,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.",
       "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
+      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
+      "doesNotShow": "Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
   },
   {
@@ -7998,7 +7999,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Onset, vibrato, diction, and placement, decided per genre.",
-    "explanation": "A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat and how each phrase is shaped. Genres tend to make those decisions differently; straight tone that lets vibrato in late is common in modern pop and jazz, while vibrato from the start of the note is more usual in opera and much of musical theater. Copy what singers decide rather than what they are made of: your timbre comes from the shape of your own throat and mouth, so the same choices sung in your body sound like you, which is the point.",
+    "explanation": "A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres decide differently: straight tone that lets vibrato in late is common in pop and jazz; vibrato from the start is usual in opera and musical theatre. Copy what singers decide, not what they are made of; the same choices in your body sound like you.",
     "prerequisites": [
       "v-l7-m1-08"
     ],
@@ -8009,7 +8010,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. The reading How to borrow a voice is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8021,7 +8022,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Genre choices",
-        "body": "Onset, vibrato, diction, and placement, decided per genre. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Onset, vibrato, diction, and placement, decided per genre.",
         "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
         "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
       },
@@ -8033,7 +8034,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8051,19 +8052,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Style Is a Set of Choices, Not a Sound.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the genre choices target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Style Is a Set of Choices, Not a Sound” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8073,9 +8074,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
+      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice.",
+      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
+      "doesNotShow": "Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
     }
   },
   {
@@ -8100,7 +8101,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. The reading How to borrow a voice is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8112,7 +8113,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Genre choices",
-        "body": "One melody, two complete stylistic treatments. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "One melody, two complete stylistic treatments.",
         "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
         "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
       },
@@ -8124,7 +8125,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8142,19 +8143,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Same Song, Two Rooms.”"
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Isolate the genre choices target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 180,
-        "instruction": "Practice or record the complete “Same Song, Two Rooms” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8164,9 +8165,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
+      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice.",
+      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
+      "doesNotShow": "Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
     }
   },
   {
@@ -8191,7 +8192,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. The reading How to borrow a voice is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8203,7 +8204,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Genre choices",
-        "body": "Both recognisable, both yours. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Both recognisable, both yours.",
         "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
         "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
       },
@@ -8215,7 +8216,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8233,19 +8234,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: One Song, Two Styles.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the genre choices target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “Self-Check: One Song, Two Styles” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8255,9 +8256,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "One take holds the same phrase in both styles, you can name at least two written choices that differ between them, and both still sound like your own voice at a comfortable volume.",
-      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
+      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice.",
+      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
+      "doesNotShow": "Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
     }
   },
   {
@@ -8271,7 +8272,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 6,
     "objective": "Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first.",
-    "explanation": "These are four production choices you can make on a note, separate from how high it is. Neutral is your easy, speech-like default; restrained is the same note held back, softer and more contained; driven is fuller and more speech-like, like calling across a room at a moderate level; edged is brighter and more cutting, still not loud. Neutral and restrained work across your range, while driven and edged get harder the higher you go, so try them low in your range first and leave edged until a teacher has heard it.",
+    "explanation": "These are four production choices you can make on a note, separate from how high it is. Neutral is your easy, speech-like default; restrained is the same note held back, softer and more contained; driven is fuller, like calling across a room; edged is brighter and more cutting, still not loud. Neutral and restrained work across your range; driven and edged get harder higher up, so try them low first and leave edged until a teacher has heard it.",
     "prerequisites": [
       "v-l7-m2-08"
     ],
@@ -8282,7 +8283,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Soft sustain. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8294,7 +8295,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Weight and mode switching",
-        "body": "Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first.",
         "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
         "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
       },
@@ -8306,7 +8307,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8324,19 +8325,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Neutral, Restrained, Driven, Edged.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the weight and mode switching target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Neutral, Restrained, Driven, Edged” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8346,9 +8347,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
+      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label.",
+      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
+      "doesNotShow": "Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
     }
   },
   {
@@ -8373,7 +8374,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Soft sustain. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8385,7 +8386,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Weight and mode switching",
-        "body": "Same phrase, same pitch, different weight. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Same phrase, same pitch, different weight.",
         "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
         "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
       },
@@ -8397,7 +8398,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8415,19 +8416,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Phrase, Three Weights.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the weight and mode switching target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
-        "instruction": "Practice or record the complete “One Phrase, Three Weights” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8437,9 +8438,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
+      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label.",
+      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
+      "doesNotShow": "Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
     }
   },
   {
@@ -8464,7 +8465,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Soft sustain. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8476,7 +8477,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Weight and mode switching",
-        "body": "Before recording, draw the order from slips marked neutral, restrained and driven, with a return to easy neutral voice between attempts. Strain is not measured. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Before recording, draw the order from slips marked neutral, restrained and driven, with a return to easy neutral voice between attempts. Strain is not measured.",
         "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
         "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
       },
@@ -8488,7 +8489,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8506,19 +8507,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Modes on Cue.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the weight and mode switching target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Self-Check: Three Modes on Cue” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8528,9 +8529,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take sung in the order you drew, you can tell neutral, restrained and driven apart on playback without the slips, each attempt returned to easy neutral before the next, and your speaking voice afterward is unchanged.",
-      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
+      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label.",
+      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
+      "doesNotShow": "Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
     }
   },
   {
@@ -8544,7 +8545,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 6,
     "objective": "The physiology, the specific ways it goes wrong, and why you should review the health module first.",
-    "explanation": "A growl is noise laid over the sung note, and it can come from two places that sound the same from the audience: structures above the vocal folds fluttering in the airstream while the folds keep vibrating normally underneath, or the folds themselves being slammed together under pressure, which is how voices get hurt. You cannot reliably teach yourself the difference from text, this lesson included, which is why a growl is learned with a qualified teacher listening and why the health module comes first. Until then the rule is simple: grit that leaves you hoarse afterward was the wrong kind, and pain means stop.",
+    "explanation": "A growl is noise laid over the sung note, and it can come from two places that sound the same from the audience: structures above the vocal folds fluttering in the airstream while the folds vibrate normally, or the folds themselves slammed together under pressure, which is how voices get hurt. You cannot learn the difference from text, so learn a growl with a qualified teacher listening. Grit that leaves you hoarse was the wrong kind, and pain means stop.",
     "prerequisites": [
       "v-l7-m3-08",
       "v-l7-m1-08"
@@ -8556,7 +8557,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8568,7 +8569,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Effects safety and a stop plan",
-        "body": "The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "The physiology, the specific ways it goes wrong, and why you should review the health module first.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
@@ -8580,7 +8581,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8610,7 +8611,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8621,8 +8622,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
-      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
+      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
+      "doesNotShow": "Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
   },
   {
@@ -8647,7 +8648,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8659,7 +8660,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Effects safety and a stop plan",
-        "body": "Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
@@ -8671,7 +8672,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8701,7 +8702,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8712,8 +8713,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
-      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
+      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
+      "doesNotShow": "Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
   },
   {
@@ -8738,7 +8739,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8750,7 +8751,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Effects safety and a stop plan",
-        "body": "Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
@@ -8762,7 +8763,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8792,7 +8793,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8803,8 +8804,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.",
       "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
-      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
+      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
+      "doesNotShow": "Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
   },
   {
@@ -8818,7 +8819,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app.",
-    "explanation": "The highest and lowest notes you can make are set largely by your anatomy, and practice does not redesign anatomy; what it changes is your access to notes that were already there but badly coordinated. The edges follow the middle and rarely lead it, which is why range work comes this late, once the middle is reliable. Add one semitone at a time, count it only when it is comfortable on three separate days, and compare readings over months rather than sessions.",
+    "explanation": "Your highest and lowest notes are set largely by anatomy, and practice does not redesign anatomy; it changes your access to notes that were already there but badly coordinated. The edges follow the middle and rarely lead it, which is why range work comes this late, once the middle is reliable. Add one semitone at a time, count it only when it is comfortable on three separate days, and compare readings over months rather than sessions.",
     "prerequisites": [
       "v-l7-m4-08"
     ],
@@ -8829,7 +8830,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading Tracking change over months, not days is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. The reading Tracking change over months, not days is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8841,7 +8842,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range extension",
-        "body": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
@@ -8853,7 +8854,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8871,19 +8872,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Range Grows at the Edges, Slowly.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the range extension target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Range Grows at the Edges, Slowly” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8894,8 +8895,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
+      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
+      "doesNotShow": "Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
     }
   },
   {
@@ -8920,7 +8921,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading Tracking change over months, not days is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. The reading Tracking change over months, not days is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -8932,7 +8933,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range extension",
-        "body": "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
@@ -8944,7 +8945,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -8962,11 +8963,11 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 60,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Semitone at a Time.”"
+        "instruction": ""
       },
       {
         "seconds": 105,
-        "instruction": "Isolate the range extension target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 165,
@@ -8974,7 +8975,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -8985,8 +8986,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
+      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
+      "doesNotShow": "Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
     }
   },
   {
@@ -9011,7 +9012,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading Tracking change over months, not days is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. The reading Tracking change over months, not days is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -9023,7 +9024,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range extension",
-        "body": "Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
@@ -9035,7 +9036,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -9053,19 +9054,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Compare Your Comfortable Range.”"
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the range extension target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Practice or record the complete “Self-Check: Compare Your Comfortable Range” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 90,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -9076,8 +9077,8 @@ export const LESSONS: Lesson[] = [
       ],
       "readyWhen": "You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.",
       "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
-      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
+      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
+      "doesNotShow": "Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
     }
   },
   {
@@ -9091,7 +9092,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Working the mic, monitors, and what changes when there is an audience.",
-    "explanation": "A microphone hears distance as loudness: move from a hand's width to arm's length and it hears a different instrument. That makes distance a control you can use, keeping a quiet line close and easing back a little for a big note, instead of pushing the quiet line or squeezing the loud one; too close and loud notes distort, too far and quiet ones disappear. Hearing yourself matters as much: if the monitors or the room let you down, you sing louder by reflex, so sorting out how you hear your own voice comes before anything else when there is an audience.",
+    "explanation": "A microphone hears distance as loudness: move from a hand's width to arm's length and it hears a different instrument. That makes distance a control: keep a quiet line close and ease back for a big note instead of pushing the quiet line or squeezing the loud one. Too close and loud notes distort; too far and quiet ones vanish. Hearing yourself matters as much: if the monitors let you down, you sing louder by reflex. Sort that out first.",
     "prerequisites": [
       "v-l7-m5-08"
     ],
@@ -9102,7 +9103,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). The reading Building a set you can survive is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -9114,7 +9115,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Performance and mic technique",
-        "body": "Working the mic, monitors, and what changes when there is an audience. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Working the mic, monitors, and what changes when there is an audience.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
@@ -9126,7 +9127,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -9144,19 +9145,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 45,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Mic Distance Is a Dynamic Control.”"
+        "instruction": ""
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the performance and mic technique target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Practice or record the complete “Mic Distance Is a Dynamic Control” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 60,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -9166,9 +9167,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
+      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume.",
+      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
+      "doesNotShow": "Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
     }
   },
   {
@@ -9193,7 +9194,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). The reading Building a set you can survive is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -9205,7 +9206,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Performance and mic technique",
-        "body": "Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
@@ -9217,7 +9218,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -9235,19 +9236,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 75,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Microphone and Phrase Rehearsal.”"
+        "instruction": ""
       },
       {
         "seconds": 135,
-        "instruction": "Isolate the performance and mic technique target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 210,
-        "instruction": "Practice or record the complete “Microphone and Phrase Rehearsal” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -9257,9 +9258,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
+      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume.",
+      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
+      "doesNotShow": "Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
     }
   },
   {
@@ -9284,7 +9285,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.",
+        "body": "Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). The reading Building a set you can survive is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -9296,7 +9297,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Performance and mic technique",
-        "body": "Rehearse the supplied study arrangement and compare microphone distance or phrasing on separate takes. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rehearse the supplied study arrangement and compare microphone distance or phrasing on separate takes.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
@@ -9308,7 +9309,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Review your own attempt",
-        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -9326,19 +9327,19 @@ export const LESSONS: Lesson[] = [
     "blocks": [
       {
         "seconds": 90,
-        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Performance Study.”"
+        "instruction": ""
       },
       {
         "seconds": 150,
-        "instruction": "Isolate the performance and mic technique target in short, comfortable examples."
+        "instruction": ""
       },
       {
         "seconds": 240,
-        "instruction": "Practice or record the complete “Self-Check: Your Performance Study” task, resetting between attempts."
+        "instruction": ""
       },
       {
         "seconds": 120,
-        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+        "instruction": ""
       }
     ],
     "selfCheck": {
@@ -9348,9 +9349,9 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "One uninterrupted take of the whole study, at a fixed microphone distance you chose by comparing takes, stays understandable from its first entry to its final release, with no distorted loud notes or lost quiet ones.",
-      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
-      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
+      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume.",
+      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
+      "doesNotShow": "Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
     }
   }
 ];

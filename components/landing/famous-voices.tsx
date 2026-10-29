@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
-import { hasDocumentedSourceReview, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
+import { RangeMini } from "@/components/singers/range-mini";
+import { hasDocumentedSourceReview } from "@/lib/singer-evidence";
 import { rangeLabel, singerBySlug } from "@/lib/singers";
 
 /**
- * A compact set of direct homepage paths into the singer catalog.
- *
- * Reviewed profiles lead as an editorial recommendation. All public profiles
- * are indexable and keep their evidence status visible; VOICES below keeps
- * reviewed cards first even if a later review changes which ones they are.
+ * Eight direct homepage paths into the singer catalog: a name, the reported
+ * span in words, and the span as a bar on the shared C2-C6 axis. Every
+ * public profile is indexable; the evidence status lives on the profile.
  */
 const FEATURED = [
   "adele",
@@ -19,37 +18,12 @@ const FEATURED = [
   "arijit-singh",
   "freddie-mercury",
   "whitney-houston",
-  "mariah-carey",
-  "jeff-buckley",
-  "beyonce",
-  "michael-jackson",
-  "aretha-franklin",
-  "taylor-swift",
-  "billie-eilish",
-  "ariana-grande",
-  "bruno-mars",
-  "celine-dion",
-  "stevie-wonder",
-  "prince",
-  "axl-rose",
-  "chris-cornell",
-  "dimash-kudaibergen",
-  "damiano-david",
 ] as const;
 
-const EVIDENCE_FEATURED = new Set<string>([
-  "olivia-rodrigo",
-  "reba-mcentire",
-  "alex-warren",
-  "sam-smith",
-  "arijit-singh",
-]);
-
 /**
- * Resolved at module load so a slug that stops existing — a rename in a
- * data/singers batch, a singer dropped from the library — breaks the build
- * instead of silently thinning the homepage's outbound links, which is exactly
- * the failure this section exists to prevent.
+ * Resolved at module load so a slug that stops existing (a rename in a
+ * data/singers batch) breaks the build instead of thinning the homepage's
+ * outbound links.
  */
 const VOICES = FEATURED.map((slug) => {
   const singer = singerBySlug(slug);
@@ -58,40 +32,23 @@ const VOICES = FEATURED.map((slug) => {
       `famous-voices: no singer for slug "${slug}". Update FEATURED when a data/singers batch renames or drops an entry.`,
     );
   }
-  const needsEvidenceCopy = EVIDENCE_FEATURED.has(singer.slug);
-  if (needsEvidenceCopy && !hasDocumentedSourceReview(singer.slug)) {
-    throw new Error(
-      `famous-voices: missing reviewed evidence for promoted singer "${singer.slug}".`,
-    );
-  }
-  return {
-    singer,
-    reviewed: hasDocumentedSourceReview(singer.slug),
-    evidenceCopy: needsEvidenceCopy ? voiceTypeEvidenceCopy(singer) : undefined,
-  };
+  return { singer, reviewed: hasDocumentedSourceReview(singer.slug) };
   // Stable: reviewed profiles first, FEATURED order within each.
 }).sort((a, b) => Number(b.reviewed) - Number(a.reviewed));
 
 export function FamousVoices() {
   return (
     <section className="border-t border-line">
-      {/* py-12 on a phone, where the page's own section gap is mt-12 too; the
-          bottom padding is the whole gap to the Pro panel that follows. */}
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
-            {/* The same tape label the Pro panel below wears; this was the one
-                section label on the page drawn as a grey mono box. */}
-            <SectionLabel className="mb-4">Reported ranges</SectionLabel>
+            <SectionLabel hairline className="mb-4">Reported ranges</SectionLabel>
             <h2 className="text-2xl sm:text-3xl">
               Start with a voice you already know
             </h2>
-            {/* No count of reviewed profiles here: VOICES re-sorts as reviews
-                land, and a number in this sentence would go stale with them. */}
             <p className="mt-3 text-mut">
-              Each range is the span a singer is commonly cited as covering.
-              Open a profile for its available source evidence and the span on
-              a keyboard, then run the range test and put your voice beside it.
+              Open any singer to see their range on a keyboard, then take the
+              range test and put yours beside it.
             </p>
           </div>
           <Link
@@ -103,65 +60,29 @@ export function FamousVoices() {
           </Link>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="/singers/voice-type/contralto"
-            prefetch={false}
-            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink transition-colors hover:border-violet hover:bg-panel2"
-          >
-            Contralto singers and their vocal ranges
-          </Link>
-          <Link
-            href="/atlas/vocal-range-by-voice-type"
-            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink transition-colors hover:border-violet hover:bg-panel2"
-          >
-            Compare vocal ranges by voice type
-          </Link>
-        </div>
-
-        {/* Eight on a phone: the full list ran to two and a half screens, and
-            "Browse every voice" above it reaches the rest. Hidden, not cut,
-            so the links a crawler reads are unchanged. */}
-        <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {VOICES.map(({ singer, reviewed, evidenceCopy }, i) => (
-            <li key={singer.slug} className={i >= 8 ? "max-sm:hidden" : undefined}>
-              {/* A reviewed singer carries a sentence of evidence and a longer
-                  range label. Side by side, the shrink-0 label left that
-                  sentence a column a few words wide — fourteen lines tall on a
-                  phone — so those rows stack: name, evidence, then the span. */}
-              {/* prefetch={false}: otherwise every card that scrolls into view
-                  fetches its singer route in the background, a whole grid of
-                  requests on a phone for pages few visitors open next. The
-                  <a href> a crawler reads is unchanged. */}
+        <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {VOICES.map(({ singer }) => (
+            <li key={singer.slug}>
+              {/* prefetch={false}: a grid of cards scrolling into view would
+                  fetch eight singer routes in the background. */}
               <Link
                 href={`/singers/${singer.slug}`}
                 prefetch={false}
-                className={`lift group flex h-full rounded-xl border border-line bg-panel px-4 py-3 hover:border-violet/50 ${
-                  evidenceCopy
-                    ? "flex-col gap-2"
-                    : "items-baseline justify-between gap-3"
-                }`}
+                className="lift group flex h-full flex-col gap-3 rounded-xl border border-line bg-panel px-4 py-3 hover:border-violet/50"
               >
-                <span className="min-w-0">
-                  <span className="block truncate text-ink transition-colors group-hover:text-violet-ink">
+                <span className="flex items-baseline justify-between gap-3">
+                  <span className="min-w-0 truncate text-ink transition-colors group-hover:text-violet-ink">
                     {singer.name}
                   </span>
-                  <span
-                    className={`mt-0.5 block text-xs text-dim ${evidenceCopy ? "leading-relaxed" : ""}`}
-                  >
-                    {/* An unreviewed voice type is the catalog's label, as
-                        the profile it links to calls it, not a finding. */}
-                    {evidenceCopy ??
-                      (reviewed
-                        ? singer.voiceType
-                        : `Catalog label: ${singer.voiceType}`)}
+                  <span className="tabular shrink-0 font-mono text-xs text-mut">
+                    {rangeLabel(singer)}
                   </span>
                 </span>
-                <span className="tabular shrink-0 font-mono text-xs text-mut">
-                  {evidenceCopy
-                    ? `Reported reference span: ${rangeLabel(singer)}`
-                    : rangeLabel(singer)}
-                </span>
+                <RangeMini
+                  low={singer.lowMidi}
+                  high={singer.highMidi}
+                  beltMidi={singer.beltMidi}
+                />
               </Link>
             </li>
           ))}

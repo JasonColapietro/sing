@@ -22,7 +22,7 @@ export interface Crumb {
  * visible breadcrumb nav should emit one, so the markup describes navigation a
  * reader can see rather than a hierarchy invented for the crawler.
  */
-export function breadcrumbListJsonLd(crumbs: readonly Crumb[]) {
+function breadcrumbListJsonLd(crumbs: readonly Crumb[]) {
   return {
     "@type": "BreadcrumbList",
     itemListElement: crumbs.map((crumb, i) => ({

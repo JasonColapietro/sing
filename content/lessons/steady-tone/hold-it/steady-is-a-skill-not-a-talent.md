@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A held note usually drifts for a reason you can change: the breath pressure under it falls away as the air runs out, and the pitch sags with it. Keeping it steady means keeping that pressure even, with the ribs staying open and the release slow, which is a coordination you build with short, repeated holds rather than something a voice either has or lacks. A small, regular wave around one pitch is vibrato and is fine; a slow lean away from the note is drift, so hold only as long as the end still sounds like the start.
+A held note usually drifts for a reason you can change: the breath pressure under it falls as the air runs out, and the pitch sags with it. Keeping it steady means keeping that pressure even, ribs open and release slow, a coordination built with short, repeated holds, not a gift. A small, regular wave around one pitch is vibrato and is fine; a slow lean away is drift. Hold only while the end sounds like the start.
 
 ## Steps
 

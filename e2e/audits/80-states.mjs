@@ -298,9 +298,9 @@ async function checkDestructiveActions(ctx, findings) {
 async function openEarTrainingGame(page) {
   // The ear room is a learning path now (components/practice/learn-home.tsx):
   // each game is a row button whose text is its title plus a one-line
-  // description. The workout cards above the path are also buttons and also
+  // description. The routine cards above the path are also buttons and also
   // name "Pitch match" in their step strip, so they are excluded by the
-  // "N games · ~M min" meta line only a workout card carries.
+  // "N games · ~M min" meta line only a routine card carries.
   const row = page
     .getByRole("button")
     .filter({ hasText: "Pitch match" })
@@ -318,7 +318,7 @@ async function openEarTrainingGame(page) {
 /**
  * /breath asks for the microphone only inside a drill that needs it: every
  * breath set opens on a silent drill, so the room's own start buttons read
- * "Start breathing" and never call getUserMedia. Opening "Sustain test" (the
+ * "Start routine" and never call getUserMedia. Opening "Sustain test" (the
  * first mic drill in the path, components/breath/drills.ts) puts its
  * "Enable microphone" button on screen. Without this the probe found no
  * control and the room's refusal state went unaudited.

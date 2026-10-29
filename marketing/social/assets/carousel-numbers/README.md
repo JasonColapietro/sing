@@ -1,5 +1,7 @@
 # Carousel: "When the numbers lie to you."
 
+Render the slides first: `node marketing/social/assets/carousel-numbers/render.mjs` (the PNGs are not committed).
+
 Seven slides, 1080×1350. From chapter 12 of The Measured Voice — free, served
 unpaywalled at `/book/when-numbers-lie`.
 

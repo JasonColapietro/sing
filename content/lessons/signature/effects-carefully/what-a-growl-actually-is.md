@@ -13,13 +13,13 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A growl is noise laid over the sung note, and it can come from two places that sound the same from the audience: structures above the vocal folds fluttering in the airstream while the folds keep vibrating normally underneath, or the folds themselves being slammed together under pressure, which is how voices get hurt. You cannot reliably teach yourself the difference from text, this lesson included, which is why a growl is learned with a qualified teacher listening and why the health module comes first. Until then the rule is simple: grit that leaves you hoarse afterward was the wrong kind, and pain means stop.
+A growl is noise laid over the sung note, and it can come from two places that sound the same from the audience: structures above the vocal folds fluttering in the airstream while the folds vibrate normally, or the folds themselves slammed together under pressure, which is how voices get hurt. You cannot learn the difference from text, so learn a growl with a qualified teacher listening. Grit that leaves you hoarse was the wrong kind, and pain means stop.
 
 ## Steps
 
 ### Start with the stop rules
 
-Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
+Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: For the planning task, work from the stop rules on this page; you do not need to make a pitched sound.

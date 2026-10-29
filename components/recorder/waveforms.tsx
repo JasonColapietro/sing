@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import type { Peaks } from "./wav";
 
 const PANEL = "#fffaf2";
-const LINE = "#ddd4c4";
+const LINE = "#d6cbb7";
 const AMBER = "#c59642";
 const AMBER_DIM = "rgba(197, 150, 66, 0.32)";
 

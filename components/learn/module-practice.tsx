@@ -22,16 +22,12 @@ import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { PracticeCount } from "@/components/learn/practice-count";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 
-/**
- * What each measurement means, in a singer's words. Only measurements the
- * contract reports as implemented appear here; the test holds this list to it.
- */
+/** What each implemented measurement means, in a singer's words; the test holds this list to the contract. */
 export const MEASUREMENT_WORDS: Record<string, string> = {
   rangeExtremes: "the lowest and highest clear notes the range test heard you hold in one session",
   sustainSeconds:
     "how long one sustain lasts, in seconds. The timer reads loudness, so a steady hiss counts as well as a sung note",
-  // The scoring window is not the definition of in tune: it passes a phrase
-  // sung clearly flat (book chapter 9), and the studio's green zone is tighter.
+  // The scoring window passes a clearly flat note; the studio's green zone is the goal.
   centsFromTarget: `how far each note sits from its target, in cents. Scoring counts a note as a hit anywhere within ${TOLERANCE_CENTS} cents, a wide window that still passes a clearly flat note; the studio's green zone, ±${IN_TUNE_CENTS} cents, is the in-tune goal`,
   inTuneHoldTime: `how long you hold a note within ${TOLERANCE_CENTS} cents of the target`,
   scorePercent: `the share of each note you held within ${TOLERANCE_CENTS} cents of the target`,
@@ -41,12 +37,7 @@ export const MEASUREMENT_WORDS: Record<string, string> = {
     "how many vocal fold cycles a session used. It measures load, and there is no published safe ceiling to compare it with",
 };
 
-/**
- * Said wherever a lesson sends someone into a room that draws on the free
- * daily allowance (warm-ups, ear training, breath, songs), so the limit is
- * never a surprise halfway through a free lesson. `full` adds which rooms
- * have no clock, for the practice panel where there is room to say it.
- */
+/** Said beside a button into a room that draws on the free daily allowance; `full` names the rooms with no clock. */
 export function GuidedCapNote({ full = false }: { full?: boolean }) {
   return (
     <p className="text-xs text-dim" data-guided-cap>
@@ -60,21 +51,19 @@ export function GuidedCapNote({ full = false }: { full?: boolean }) {
   );
 }
 
-/**
- * The buttons into a lesson's room. The range test comes after the warm-up
- * the lessons prescribe, because a cold voice under-reports at both ends and
- * the result replaces the saved range; the warm-up is guided practice, so the
- * allowance is said beside it. Every other room is one button.
- */
+/** The buttons into a lesson's room; the warm-up precedes a range test (a cold voice under-reports). */
 export function CompanionButtons({
   companion,
   size,
   full = false,
+  capNote = true,
 }: {
   companion: Companion;
   size: "md" | "lg";
   /** Passed to GuidedCapNote: also name the rooms that have no clock. */
   full?: boolean;
+  /** False where another copy of the buttons lower on the page carries the note. */
+  capNote?: boolean;
 }) {
   if (warmsUpFirst(companion)) {
     return (
@@ -87,14 +76,16 @@ export function CompanionButtons({
             Then take the range test once
           </LinkButton>
         </div>
-        <p className="text-xs text-dim" data-guided-cap>
-          The Morning reset is about four minutes of guided practice, out of
-          the free plan&apos;s {FREE_DAILY_MINUTES} minutes a day;{" "}
-          <Link href="/pro" className="underline hover:text-ink">
-            Pro
-          </Link>{" "}
-          removes the limit. The range test itself has no clock.
-        </p>
+        {capNote && (
+          <p className="text-xs text-dim" data-guided-cap>
+            The Morning reset is about four minutes of guided practice, out of
+            the free plan&apos;s {FREE_DAILY_MINUTES} minutes a day;{" "}
+            <Link href="/pro" className="underline hover:text-ink">
+              Pro
+            </Link>{" "}
+            removes the limit. The range test itself has no clock.
+          </p>
+        )}
       </div>
     );
   }
@@ -103,7 +94,7 @@ export function CompanionButtons({
       <LinkButton href={companionHref(companion)} size={size}>
         Open {companionLabel(companion)}
       </LinkButton>
-      {isGuidedPractice(companion) && <GuidedCapNote full={full} />}
+      {capNote && isGuidedPractice(companion) && <GuidedCapNote full={full} />}
     </div>
   );
 }
@@ -121,8 +112,7 @@ export function ModulePractice({
   const { basis, companion } = practice;
   const match = practiceMatch(companion);
   const material = moduleMaterial(moduleId);
-  // A lesson practised somewhere else says so here, so the panel's room
-  // and the page's first button never read as two answers to one question.
+  // A lesson practised elsewhere says so, or the two buttons read as two answers.
   const lessonRoom = lessonId ? practice.lessonCompanion?.[lessonId] : undefined;
 
   return (

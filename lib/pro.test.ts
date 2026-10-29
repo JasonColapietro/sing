@@ -18,12 +18,11 @@ import {
   startCheckout,
   startedCheckout,
 } from "./pro";
-import { PRICING as SHARED_PRICING } from "./pro-shared";
+import { PRICING as SHARED_PRICING, PRO_FAQ } from "./pro-shared";
 import { ATLAS_CONTENTS } from "./atlas-data";
 import { BOOK_CONTENTS } from "./book-data";
 import { PRO_SONGS, SONGS } from "@/components/songs/data";
 import { PRO_PACKS } from "@/components/warmups/exercises";
-import { FREE_DAILY_MINUTES } from "./practice-limits";
 
 describe("PRICING", () => {
   it("re-exports the shared price rather than keeping a second copy", () => {
@@ -97,22 +96,26 @@ describe("Pro sales copy", () => {
     expect(analytics.free).toMatch(/trend/);
   });
 
-  it("names every record that a sync leaves in the browser", () => {
+  it("names every record that a sync leaves in the browser, in the FAQ", () => {
     // The ear and breath paths' stars come from their own browser keys
     // (components/ear/lib.ts, components/breath/store.ts), which neither the
     // backup file nor Pro sync carries, so a second device shows them unplayed.
+    // The perk card sells the sync in one line; the limit is a FAQ answer.
     const sync = PRO_PERKS.find((p) => p.id === "history")!;
-    expect(sync.desc).toContain(
-      "Song mastery, ear-training and breath path stars, and your place in a program stay in the browser where you earned them.",
+    expect(sync.desc).toBe("Sessions, streaks, scores and range follow you across devices.");
+    const faq = PRO_FAQ.find((f) => /what stays in this browser/i.test(f.q))!;
+    expect(faq.a).toContain(
+      "Song mastery marks, ear-training and breath path stars, and your place in a program stay in the browser where you earned them",
     );
   });
 
-  it("says songs share the free daily minutes when it calls them free", () => {
+  it("sells songs by the limit Pro lifts, never as free with no cap beside it", () => {
     // Songs are guided practice, so on the free plan they run on the daily
     // allowance. "All 26 songs are free" with no cap beside it read as
-    // unlimited, and left out the one thing Pro changes about them.
+    // unlimited; the perk now names only what Pro changes about them.
     const songs = PRO_PERKS.find((p) => p.id === "songs")!;
-    expect(songs.desc).toContain(`${FREE_DAILY_MINUTES} free minutes a day`);
+    expect(songs.desc).not.toMatch(/are free/i);
+    expect(songs.desc).toMatch(/daily limit/);
     expect(`${songs.title} ${songs.desc}`).toMatch(/no daily limit|lifts that limit/i);
   });
 

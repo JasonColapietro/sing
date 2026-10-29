@@ -92,10 +92,9 @@ review step, and the page shows it.
 
 ## Where the text came from
 
-Ported from GuitarHub (`JasonColapietro/suede-guitar-hub`,
-`lib/learning/data/voice-instruction.json` as of its #47) by
-`scripts/port-voice-lessons.mjs`. The text is copied, not rewritten, except for
-sentences that pointed at GuitarHub's own lesson panel (its practice material
-tab, per-lesson recorder and saved self-check). Those are swapped for their sing
-equivalents; the script lists each substitution. Rewording beyond that is done
-here, in the markdown, and is visible in review.
+Ported once from GuitarHub (`JasonColapietro/suede-guitar-hub`,
+`lib/learning/data/voice-instruction.json` as of its #47); the one-off port
+script has since been removed. Sentences that pointed at GuitarHub's own lesson
+panel were swapped for their sing equivalents at port time. All rewording is
+done here, in the markdown, and is visible in review; lines still shared by most
+lessons are dropped at compile time (scripts/compile-lessons.mjs).

@@ -3,7 +3,8 @@
 #
 #   bash scripts/git-identity.sh
 #
-# .claude/settings.json runs this at the start of every Claude Code session.
+# .claude/settings.json runs this from its SessionStart hook, in sessions where
+# hooks fire; a human clone runs it once by hand.
 # Cloud containers set a global git identity of "Claude <noreply@anthropic.com>"
 # and sign with a key registered to that address; this overrides both for this
 # repo only (repo-local config wins over ~/.gitconfig):

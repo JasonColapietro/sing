@@ -88,7 +88,8 @@ export function HubChart({
               const width = Math.max(0.8, pct(s.highMidi + 1) - left);
               const beltPct = fullVoicePct(s);
               return (
-                <li key={s.slug} className="cv-auto">
+                // Reserve the row's real height (71px stacked, 48.5px on one line) so rows rendering on scroll move nothing.
+                <li key={s.slug} className="[content-visibility:auto] [contain-intrinsic-size:auto_71px] sm:[contain-intrinsic-size:auto_48.5px]">
                   {/* prefetch off: a hub lists up to 300 singers, and the
                       default fetched each page's payload on scroll. */}
                   <Link

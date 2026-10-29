@@ -6,6 +6,7 @@ import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
+import { MicGate } from "@/components/ui";
 import { SONGS } from "@/components/songs/data";
 import { phraseName } from "@/components/songs/lib";
 import { centsToTarget, hasSavedRange, ROUNDS, type Difficulty } from "./lib";
@@ -27,9 +28,7 @@ import { NoteCatcherCanvas, type CatcherView } from "./note-catcher-canvas";
 import {
   GameShell,
   ShellButton,
-  ShellMicGate,
   StepDone,
-  SummaryView,
   useEarSession,
   type EarVariant,
   type OnEarComplete,
@@ -91,7 +90,7 @@ export function NoteCatcherGame({
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
-  onComplete?: OnEarComplete;
+  onComplete: OnEarComplete;
 }) {
   const session = useEarSession();
   const ownPitch = usePitch();
@@ -297,36 +296,16 @@ export function NoteCatcherGame({
   }, [autoBegin, begin]);
 
   if (session.done) {
-    if (onComplete) {
-      return (
-        <StepDone
-          game="note-catcher"
-          difficulty={difficulty}
-          session={session}
-          startedAt={startedAt}
-          onExit={onExit}
-          onComplete={onComplete}
-          variant={variant}
-        />
-      );
-    }
     return (
-      <div className="mx-auto max-w-2xl">
-        <SummaryView
-          game="note-catcher"
-          difficulty={difficulty}
-          session={session}
-          startedAt={startedAt}
-          variant={variant}
-          onReplay={() => {
-            session.reset();
-            setPhase("idle");
-            setTargets(null);
-            void start().then((ok) => ok && begin());
-          }}
-          onExit={onExit}
-        />
-      </div>
+      <StepDone
+        game="note-catcher"
+        difficulty={difficulty}
+        session={session}
+        startedAt={startedAt}
+        onExit={onExit}
+        onComplete={onComplete}
+        variant={variant}
+      />
     );
   }
 
@@ -348,7 +327,8 @@ export function NoteCatcherGame({
             Get ready…
           </p>
         ) : (
-          <ShellMicGate
+          <MicGate
+            tone="session"
             title={song ? `Chase the notes of ${song.title}` : "This game listens to you sing"}
             description={
               song

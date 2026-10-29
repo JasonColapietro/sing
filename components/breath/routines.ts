@@ -248,21 +248,6 @@ export function breathRoutineMinutes(r: BreathRoutine): number {
   return Math.max(1, Math.round(breathRoutineSeconds(r) / 60));
 }
 
-/**
- * The recommendation sized to the free guided practice left today, the same
- * rule as warmups' sizeRoutineToAllowance. A set that runs past the allowance
- * stops on the cap slide before its sustain test, the only step that scores,
- * so a free singer's first set would end on a sales slide instead of a score.
- * When `preferred` does not fit in `leftSec`, the quick set takes its place if
- * that one fits; otherwise nothing shorter would finish either, and the pick
- * stands. Pro passes Infinity and always gets `preferred`.
- */
-export function sizeBreathRoutineToAllowance(preferred: BreathRoutine, leftSec: number): BreathRoutine {
-  if (breathRoutineSeconds(preferred) <= leftSec) return preferred;
-  const quick = breathRoutineById("quick");
-  return quick && breathRoutineSeconds(quick) <= leftSec ? quick : preferred;
-}
-
 /** The drill's own name, as it appears everywhere in the room. */
 export function breathDrillTitle(drill: BreathDrillId): string {
   switch (drill) {

@@ -40,7 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.suede-graph-flo-xr/
 
-# Agent-team ledgers (local orchestration state)
-.suede-team/
+# e2e/suite.mjs output (CI uploads it as an artifact)
+/browser-results/

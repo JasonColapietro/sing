@@ -11,7 +11,7 @@
  * contents double as the book's free index.
  */
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
@@ -577,8 +577,4 @@ const words = chapters.reduce((n, c) => n + c.words, 0);
 const entryCount = chapters.reduce((n, c) => n + c.entries.length, 0);
 console.log(
   `wrote ${OUT} — ${chapters.length} chapters, ${entryCount} entries, ${words} words, ${finalPages} pages`,
-);
-writeFileSync(
-  "public/the-voice-atlas.txt",
-  `${ATLAS_TITLE}\n${ATLAS_SUBTITLE}\n\n${chapters.length} chapters, ${words} words.\n`,
 );

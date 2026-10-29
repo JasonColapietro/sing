@@ -3,9 +3,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/ui";
 import { AUTHOR_NAME } from "@/lib/author";
+import { COOL } from "@/lib/chart-colors";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
-import { formatPrice, PRICING } from "@/lib/pro-shared";
-import { NotPro } from "@/components/pro/gate";
+
+/**
+ * The settling trace (the curve family of components/v2-glyph.tsx), drawn in
+ * the empty band under the hero copy so it never crosses text.
+ */
+function SettlingTrace() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 1600 100"
+      preserveAspectRatio="none"
+      className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-12 w-full sm:h-16"
+      style={{ opacity: 0.22 }}
+    >
+      <path
+        d="M -20 72 C 200 68, 360 90, 540 58 C 720 24, 920 18, 1120 36 C 1280 50, 1420 52, 1620 50"
+        fill="none"
+        stroke={COOL}
+        strokeWidth="2"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
 
 /** The original paper-and-portrait presentation with current product copy. */
 export function HeroSplit() {
@@ -31,19 +55,11 @@ export function HeroSplit() {
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(247,240,231,0.98)_0%,rgba(247,240,231,0.94)_58%,rgba(247,240,231,0.54)_78%,rgba(247,240,231,0.20)_100%)] max-sm:bg-[linear-gradient(180deg,rgba(247,240,231,0.72)_0%,rgba(247,240,231,0.94)_46%,rgba(247,240,231,0.99)_70%)]"
       />
+      <SettlingTrace />
 
       <div className="animate-fadeup relative mx-auto w-full max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pb-20 sm:pt-32">
-        {/* The 4.0 release link. It cannot join the label line below: that
-            line is inside the H1, so a link there would put "What's new"
-            into the page's main heading, and the line has no room for it
-            anyway (on a 375px phone it already wraps with 42px spare, and
-            at 1280px the gap before the portrait is 152px). So it sits on
-            its own row in the top padding, absolutely positioned: the
-            padding was empty, and an absolute box adds no height, so the
-            start buttons stay exactly where they were at every width
-            (measured at 320, 375, 768 and 1280). top-6 on phones and
-            sm:top-20 leave 16px and 24px above the label. The pill's
-            panel fill keeps violet-ink readable over the phone portrait. */}
+        {/* Absolutely positioned in the top padding so the start buttons keep
+            their place at every width. */}
         <Link
           href="/changelog"
           prefetch={false}
@@ -55,15 +71,14 @@ export function HeroSplit() {
           <span aria-hidden="true">·</span>{" "}
           What&apos;s new
         </Link>
-        {/* Keep the original portrait and display headline while carrying the
-            current search intent and the direct-to-tool start actions. */}
+        <span className="block font-mono text-label uppercase leading-normal tracking-[0.16em] text-violet-ink">
+          Suede Sing
+        </span>
+        {/* The search term stays in the H1 (lib/on-page-seo.test.tsx), as a
+            small lead-in over the display headline. */}
         <h1 id="hero-title">
-          <span className="block font-mono text-label uppercase leading-normal tracking-[0.16em] text-violet-ink">
-            Suede Sing
-            <span className="mx-2 text-line2" aria-hidden>
-              ·
-            </span>
-            <span className="text-dim">Online singing practice with live pitch feedback</span>
+          <span className="mt-1 block font-mono text-label uppercase leading-normal tracking-[0.16em] text-dim">
+            Online singing practice with live pitch feedback
           </span>
           <span className="mt-4 block max-w-[19ch] text-[clamp(2.5rem,5.6vw,4.25rem)] leading-[1.04] tracking-[-0.025em]">
             Sing one note. See exactly what came out.
@@ -80,48 +95,19 @@ export function HeroSplit() {
           </LinkButton>
         </div>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-mut sm:text-xl">
-          Practice singing in your browser with live pitch feedback, guided
-          warmups, and songs in your key. Hear a note, sing it back, and see
-          where your voice lands.
-        </p>
-        {/* The price sits beside the one limit the free plan has, on the
-            first screen: it used to appear nowhere above the Pro teaser in
-            section seven. The phone companion has its own band below. */}
-        <p className="mt-5 max-w-xl text-sm text-mut">
-          The pitch meter and range test are free with no time limit. Guided
-          practice includes {FREE_DAILY_MINUTES} free minutes a day
-          {/* A Pro owner has no limit to remove: the clause goes, the
-              sentence still ends cleanly. */}
-          <NotPro>
-            ;{" "}
-            <Link
-              href="/pro#buy"
-              className="text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
-            >
-              Pro removes the limit, {formatPrice(PRICING.lifetime.amount)} once
-            </Link>
-          </NotPro>
-          . Audio stays on your device.
+          Hear a note, sing it back, and watch where your voice lands. The
+          pitch meter and range test are free with no time limit; guided
+          practice gives you {FREE_DAILY_MINUTES} free minutes a day.
         </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">
           No install
           <span className="mx-2 text-line2">·</span>No ads
-          <span className="mx-2 text-line2">·</span>
-          <Link
-            href="/singers"
-            prefetch={false}
-            className="text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
-          >
-            Famous singers&apos; ranges
-          </Link>
+          <span className="mx-2 text-line2">·</span>Audio stays on your device
         </p>
       </div>
 
-      {/* Identify the founder in the portrait using the current canonical bio.
-          The focus ring sits inside the pill: outside it, it would land on the
-          photo, where the red ring measured 2.7:1. After the content in the
-          source, though drawn over the portrait: first, it was the first Tab
-          stop in main, ahead of the heading and the start buttons. */}
+      {/* The founder in the portrait. After the content in the source so it
+          is not the first Tab stop; the focus ring sits inside the pill. */}
       <p className="pointer-events-none absolute bottom-5 right-4 z-10 hidden sm:block sm:right-6">
         <a
           href="https://suedeai.ai/founder"

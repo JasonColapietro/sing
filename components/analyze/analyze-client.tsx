@@ -21,6 +21,7 @@ import {
   useDose,
 } from "@/lib/audio/vocal-dose";
 import { Spectrogram } from "./spectrogram";
+import { SpectrogramFigure } from "@/components/figures";
 import { Tone } from "./tone";
 import { VocalLoad, fmtTime } from "./vocal-load";
 
@@ -196,12 +197,17 @@ export default function AnalyzeClient() {
               {RING_LO_HZ / 1000}–{RING_HI_HZ / 1000}k marked
             </span>
           </div>
-          <Spectrogram
-            latest={latest}
-            running={listening}
-            sampleRate={sampleRate}
-            className="block h-[260px] w-full sm:h-[320px]"
-          />
+          {/* A sample painted into the canvas's space until the mic has run once. */}
+          {everListened || listening ? (
+            <Spectrogram
+              latest={latest}
+              running={listening}
+              sampleRate={sampleRate}
+              className="block h-[260px] w-full sm:h-[320px]"
+            />
+          ) : (
+            <SpectrogramFigure className="h-[260px] sm:h-[320px]" />
+          )}
           <p className="max-w-prose border-t border-line px-4 py-3 text-xs text-mut">
             Time runs left to right, pitch bottom to top. Stacked lines are the
             harmonics of one note; the stack jumping is a register change, and a

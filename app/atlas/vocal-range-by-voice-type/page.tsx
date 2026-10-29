@@ -18,6 +18,7 @@ import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
+import { SafetyLine } from "@/components/learn/safety-note";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -575,11 +576,9 @@ export default function VocalRangeByVoiceTypePage() {
         <p className="max-w-3xl text-xs text-dim">
           Voice categories are guides borrowed from choral and operatic
           practice, not boxes, and plenty of singers are filed differently by
-          different sources. Nothing here is medical advice — a voice that
-          hurts, stays hoarse, or loses easy notes is a question for a doctor
-          who can examine the vocal folds, such as an ENT or laryngologist, not
-          a practice plan.
+          different sources.
         </p>
+        <SafetyLine />
       </div>
     </PageShell>
   );
