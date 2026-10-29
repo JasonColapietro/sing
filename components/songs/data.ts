@@ -61,7 +61,7 @@ export const SONGS: Song[] = [
     title: "Ode to Joy",
     origin: "Beethoven, Symphony No. 9 (1824); hymn text 1907",
     publicDomain:
-      "Beethoven’s melody dates from 1824 and he died in 1827; the “Joyful, joyful” hymn text by Henry van Dyke was published in 1907.",
+      "Beethoven’s melody dates from 1824 and he died in 1827; Henry van Dyke wrote the “Joyful, joyful” hymn text in 1907 and first published it in 1911.",
     bpm: 120,
     beatsPerBar: 4,
     defaultKeyRootMidi: 60,

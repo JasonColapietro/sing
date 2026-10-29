@@ -149,10 +149,12 @@ function answerSentence(song: Song): string {
     : song.arrangementOf
       ? `The selected lines of “${song.title}”`
       : `“${song.title}”`;
-  const transcription = !isPhrase(song) && song.arrangementOf
+  const lines = !isPhrase(song) && song.arrangementOf !== undefined;
+  const transcription = lines
     ? "are transcribed here with their"
     : "is transcribed here with its";
-  return `${what} ${transcription} tonic on ${f.tonic} at ${song.bpm} bpm, ${song.beatsPerBar} beats to the bar. Its ${f.noteCount} notes run ${f.lowLabel} to ${f.highLabel}: ${f.rangeSemis} semitones with ${leapPhrase(f.leaps)}. That span and those leaps rate it ${f.difficulty.toLowerCase()} to sing. A full ${f.loops}-pass session takes about ${formatMinSec(f.sessionSec)}.`;
+  const passes = f.loops === 1 ? "one-pass" : `${f.loops}-pass`;
+  return `${what} ${transcription} tonic on ${f.tonic} at ${song.bpm} bpm, ${song.beatsPerBar} beats to the bar. ${lines ? "Their" : "Its"} ${f.noteCount} notes run ${f.lowLabel} to ${f.highLabel}: ${f.rangeSemis} semitones with ${leapPhrase(f.leaps)}. That span and those leaps rate it ${f.difficulty.toLowerCase()} to sing. A full ${passes} session takes about ${formatMinSec(f.sessionSec)}.`;
 }
 
 export async function generateMetadata({
