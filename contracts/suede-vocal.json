@@ -2581,7 +2581,7 @@
       },
       {
         "id": "daily",
-        "name": "Daily ear workout",
+        "name": "Daily ear routine",
         "steps": [
           {
             "game": "higher-lower",
@@ -2604,7 +2604,7 @@
       },
       {
         "id": "full",
-        "name": "Full ear workout",
+        "name": "Full ear routine",
         "steps": [
           {
             "game": "higher-lower",
