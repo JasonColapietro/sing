@@ -145,7 +145,7 @@ describe("who deals Note catcher's run in a routine", () => {
   });
 });
 
-describe("when a routine's open microphone is analysed", () => {
+describe("when a routine's open microphone is analyzed", () => {
   it("only while a game that listens is played, never on a slide, a tapping game or the results", () => {
     // The stream stays open from the first singing step to the results, so
     // no step asks for the mic again; the analysis loop, which updated state

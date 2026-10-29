@@ -701,7 +701,7 @@ function Example({ children }: { children: ReactNode }) {
   return (
     <div>
       <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-        Example · yours fills in as you practise
+        Example · yours fills in as you practice
       </p>
       <div aria-hidden="true" className="pointer-events-none select-none opacity-25">
         {children}

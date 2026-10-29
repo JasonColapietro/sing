@@ -48,7 +48,7 @@ export function BreathGatePanel({
       {stale && (
         <p className={`max-w-sm text-center text-sm ${muted}`}>
           No breath heard in {BREATH_FALLBACK_SEC} seconds. Quiet breaths and
-          some mics don&rsquo;t carry one — start without breath detection and
+          some mics don&rsquo;t carry one. Start without breath detection and
           the timer runs on sound alone.
         </p>
       )}

@@ -95,9 +95,12 @@ describe("the pitch meter after Stop mic", () => {
   it("reads whether a retest is due when the mic starts, not during render", () => {
     const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
     const begin = src.slice(src.indexOf("const begin = async"), src.indexOf("const reset = () =>"));
-    expect(begin).toContain("const now = Date.now();");
-    expect(begin).toContain("setMicStartedAt(now);");
-    expect(begin).toContain("setRetestDue(rangeRetestDue(range, now));");
+    expect(begin).toContain("readRetestRule();");
+    // The rule the meter shares with the studio (useRangeRetestRule).
+    const read = src.slice(src.indexOf("const readRetestRule = useCallback("), src.indexOf("}, [range]);", src.indexOf("const readRetestRule")));
+    expect(read).toContain("const now = Date.now();");
+    expect(read).toContain("setMicStartedAt(now);");
+    expect(read).toContain("setRetestDue(rangeRetestDue(range, now));");
     // Both prompts follow it, less a retest a running program schedules: the
     // live panel and the stopped card.
     expect(src).toContain("const offerRetest = retestDue && programNote === null;");
@@ -174,8 +177,8 @@ describe("the pitch meter after Stop mic", () => {
     expect(src).toContain("const readsProgram = staleSaved || unmeasuredInProgram;");
     expect(src).toContain("const unmeasuredInProgram = micStartedAt !== null && !rangeSaved && programKept;");
     expect(src).toMatch(/const probe = readsProgram \? \(\s*<ProgramRangeProbe /);
-    const begin = src.slice(src.indexOf("const begin = async"), src.indexOf("const reset = () =>"));
-    expect(begin).toContain("setProgramKept(programStored());");
+    const read = src.slice(src.indexOf("const readRetestRule = useCallback("), src.indexOf("}, [range]);", src.indexOf("const readRetestRule")));
+    expect(read).toContain("setProgramKept(programStored());");
     expect(src).toContain("window.localStorage.getItem(PREPAINT_KEYS.program)");
     const note = readFileSync(new URL("../practice/program-range-note.ts", import.meta.url), "utf8");
     expect(note).not.toMatch(/from "@\/lib\/programs"/);

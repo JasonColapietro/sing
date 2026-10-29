@@ -28,7 +28,7 @@ export default function AnalyzePage() {
             The practice tools tab
           </Link>{" "}
           is where the metronome, keyboard and drone live, and it does not
-          analyse anything you sing.
+          analyze anything you sing.
         </p>
       </section>
       <RoomRailBand current="/analyze" />

@@ -679,8 +679,14 @@ export function WarmupsClient() {
             </ContinueCard>
           ) : (
             nextExercise && (
+              // Today's warmup, below, is the room's one filled start: the
+              // finite daily routine. This card's single endless exercise is
+              // the outline alternative, and the streak is said here only,
+              // where the newcomer's card (the server HTML) says it too, so
+              // the card keeps its height at hydration.
               <ContinueCard
                 kicker="Continue your path"
+                secondary
                 streakDays={streakDays}
                 streakBest={progress.streak.best}
                 title={nextExercise.title}
@@ -706,6 +712,7 @@ export function WarmupsClient() {
           {!newToWarmups && (
             <ContinueCard
               kicker="Today's warmup"
+              showStreak={false}
               title={recommended.name}
               tagline={recommended.tagline}
               meta={<RoutineMeta routine={recommended} />}

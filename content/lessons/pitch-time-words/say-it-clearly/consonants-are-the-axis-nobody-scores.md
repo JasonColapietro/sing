@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Pitch and tone ride on the vowels; the words live on the consonants, the quick stops, hums and hisses between them. Singers listen for pitch, but listeners hear everything else, and a lyric they cannot make out is lost however well it was tuned. Nothing in Suede Sing analyses consonants or scores how clear your words are, so you judge this axis by ear: consonants quick, clear and on time, then straight back to the vowel.
+Pitch and tone ride on the vowels; the words live on the consonants, the quick stops, hums and hisses between them. Singers listen for pitch, but listeners hear everything else, and a lyric they cannot make out is lost however well it was tuned. Nothing in Suede Sing analyzes consonants or scores how clear your words are, so you judge this axis by ear: consonants quick, clear and on time, then straight back to the vowel.
 
 ## Steps
 

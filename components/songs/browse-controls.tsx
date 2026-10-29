@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import type { SessionLog, VocalRange } from "@/lib/progress";
 import { Button, Card, FIELD_CLASS_NAME } from "@/components/ui";
 import type { Song, SongBand, SongForm } from "./types";
@@ -285,6 +285,24 @@ export function BrowseControls({
   const searchId = useId();
   const sortId = useId();
   const active = activeFilterCount(state);
+  /** Chips chosen in the rows under "More filters". */
+  const chipFilters =
+    state.band.length +
+    state.difficulty.length +
+    state.form.length +
+    state.genre.length +
+    state.era.length +
+    state.language.length;
+  /**
+   * The six chip rows sat open above the first band of songs, so after "Pick
+   * a song first" a 375x667 phone met its first Sing button about 1,590px
+   * down. They fold under "More filters", open from the start only when a
+   * chip is already chosen (a shared or restored filter), and after a tap the
+   * singer's own open or closed wins, so un-ticking the last chip never folds
+   * the rows away under their finger.
+   */
+  const [moreOpen, setMoreOpen] = useState<boolean | null>(null);
+  const showMore = moreOpen ?? chipFilters > 0;
 
   return (
     <Card className="space-y-4">
@@ -361,84 +379,91 @@ export function BrowseControls({
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {options.band.length > 1 && (
-          <ChipRow label="Band">
-            {options.band.map((b) => (
-              <Chip
-                key={b}
-                label={BAND_LABEL[b]}
-                active={state.band.includes(b)}
-                onClick={() => onChange({ ...state, band: toggleValue(state.band, b) })}
-              />
-            ))}
-          </ChipRow>
-        )}
-        {options.difficulty.length > 1 && (
-          <ChipRow label="Difficulty">
-            {options.difficulty.map((d) => (
-              <Chip
-                key={d}
-                label={d}
-                active={state.difficulty.includes(d)}
-                onClick={() =>
-                  onChange({ ...state, difficulty: toggleValue(state.difficulty, d) })
-                }
-              />
-            ))}
-          </ChipRow>
-        )}
-        {options.form.length > 1 && (
-          <ChipRow label="Form">
-            {options.form.map((f) => (
-              <Chip
-                key={f}
-                label={formLabel(f)}
-                active={state.form.includes(f)}
-                onClick={() => onChange({ ...state, form: toggleValue(state.form, f) })}
-              />
-            ))}
-          </ChipRow>
-        )}
-        {options.genre.length > 1 && (
-          <ChipRow label="Genre">
-            {options.genre.map((g) => (
-              <Chip
-                key={g}
-                label={g}
-                active={state.genre.includes(g)}
-                onClick={() => onChange({ ...state, genre: toggleValue(state.genre, g) })}
-              />
-            ))}
-          </ChipRow>
-        )}
-        {options.era.length > 1 && (
-          <ChipRow label="Era">
-            {options.era.map((e) => (
-              <Chip
-                key={e}
-                label={e}
-                active={state.era.includes(e)}
-                onClick={() => onChange({ ...state, era: toggleValue(state.era, e) })}
-              />
-            ))}
-          </ChipRow>
-        )}
-        {options.language.length > 1 && (
-          <ChipRow label="Language">
-            {options.language.map((l) => (
-              <Chip
-                key={l}
-                label={l}
-                active={state.language.includes(l)}
-                onClick={() =>
-                  onChange({ ...state, language: toggleValue(state.language, l) })
-                }
-              />
-            ))}
-          </ChipRow>
-        )}
-      </div>
+      <details open={showMore} onToggle={(e) => setMoreOpen(e.currentTarget.open)}>
+        <summary className="min-h-11 cursor-pointer py-2 font-mono text-label uppercase tracking-[0.14em] text-violet-ink">
+          More filters{chipFilters > 0 ? ` (${chipFilters})` : ""}
+        </summary>
+        {/* Exactly this class string: browse-controls-layout.test.tsx holds the
+            phone track to grid-cols-1. */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {options.band.length > 1 && (
+            <ChipRow label="Band">
+              {options.band.map((b) => (
+                <Chip
+                  key={b}
+                  label={BAND_LABEL[b]}
+                  active={state.band.includes(b)}
+                  onClick={() => onChange({ ...state, band: toggleValue(state.band, b) })}
+                />
+              ))}
+            </ChipRow>
+          )}
+          {options.difficulty.length > 1 && (
+            <ChipRow label="Difficulty">
+              {options.difficulty.map((d) => (
+                <Chip
+                  key={d}
+                  label={d}
+                  active={state.difficulty.includes(d)}
+                  onClick={() =>
+                    onChange({ ...state, difficulty: toggleValue(state.difficulty, d) })
+                  }
+                />
+              ))}
+            </ChipRow>
+          )}
+          {options.form.length > 1 && (
+            <ChipRow label="Form">
+              {options.form.map((f) => (
+                <Chip
+                  key={f}
+                  label={formLabel(f)}
+                  active={state.form.includes(f)}
+                  onClick={() => onChange({ ...state, form: toggleValue(state.form, f) })}
+                />
+              ))}
+            </ChipRow>
+          )}
+          {options.genre.length > 1 && (
+            <ChipRow label="Genre">
+              {options.genre.map((g) => (
+                <Chip
+                  key={g}
+                  label={g}
+                  active={state.genre.includes(g)}
+                  onClick={() => onChange({ ...state, genre: toggleValue(state.genre, g) })}
+                />
+              ))}
+            </ChipRow>
+          )}
+          {options.era.length > 1 && (
+            <ChipRow label="Era">
+              {options.era.map((e) => (
+                <Chip
+                  key={e}
+                  label={e}
+                  active={state.era.includes(e)}
+                  onClick={() => onChange({ ...state, era: toggleValue(state.era, e) })}
+                />
+              ))}
+            </ChipRow>
+          )}
+          {options.language.length > 1 && (
+            <ChipRow label="Language">
+              {options.language.map((l) => (
+                <Chip
+                  key={l}
+                  label={l}
+                  active={state.language.includes(l)}
+                  onClick={() =>
+                    onChange({ ...state, language: toggleValue(state.language, l) })
+                  }
+                />
+              ))}
+            </ChipRow>
+          )}
+        </div>
+      </details>
     </Card>
   );
 }

@@ -251,7 +251,7 @@ export function ResultsScreen({
             <span>
               <span className="block text-sm font-semibold text-[var(--s-ink)]">See your tone</span>
               <span className="mt-0.5 block text-xs text-[var(--s-mut)]">
-                Spectrogram, harmonics and today&apos;s vocal load — what your voice
+                Spectrogram, harmonics and today&apos;s vocal load: what your voice
                 looked like, not just how close it was.
               </span>
             </span>

@@ -72,6 +72,7 @@ import {
   VOICE_LEARN_PATH,
   coursePaths,
   lessonHref,
+  notReadyAdvice,
   shownSteps,
 } from "@/lib/voice-lessons";
 
@@ -870,11 +871,15 @@ describe("the pages", () => {
           params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
         }),
       );
-      // The shared line is left out where the lesson's own stop rule names the doctor.
-      const ownReferral = [l.selfCheck.ifNotReady, ...l.mistakes.map((m) => m.recovery)].some((t) =>
-        t.includes(DOCTOR_REFERRAL),
-      );
-      expect(html.includes("data-voice-safety"), l.id).toBe(!ownReferral);
+      // Every lesson keeps the shared safety line and its stop-rules link,
+      // the health and effects lessons most of all: their steps point at it.
+      expect(html.includes("data-voice-safety"), l.id).toBe(true);
+      expect(html, l.id).toContain('href="/learn/voice#safety"');
+      expect(html, l.id).toMatch(/\bblood\b/);
+      // #259's conventions: American spelling and no em dashes in what a reader sees.
+      const text = html.replace(/<[^>]+>/g, " ");
+      expect(text, l.id).not.toMatch(/\b(?:practis|colour|centre|neighbour|recognis|judgement|theatre)/i);
+      expect(text, l.id).not.toContain("—");
       if (l.type === "concept") expect(html, l.id).toContain("data-lesson-answer");
       for (const step of shownSteps(l)) expect(html).toContain(step.title.replace(/&/g, "&amp;"));
       // Hoarseness that will not clear needs the folds examined, so the
@@ -918,7 +923,11 @@ describe("the pages", () => {
       if (!UNIVERSAL_LESSON_TEXT.has(l.selfCheck.readyWhen)) {
         expect(html, l.id).toContain(escape(l.selfCheck.readyWhen));
       }
-      expect(html, l.id).toContain(escape(l.selfCheck.ifNotReady));
+      // The advice is all on the page, each sentence once (a recovery is not repeated under it).
+      for (const sentence of l.selfCheck.ifNotReady.split(/(?<=[.!?])\s+(?=[A-Z“"(])/)) {
+        expect(html, l.id).toContain(escape(sentence));
+        expect(html.split(escape(sentence)).length - 1, `${l.id} repeats "${sentence}"`).toBe(1);
+      }
     }
     const course = renderToStaticMarkup(<VoiceCoursePage />);
     expect(course).toContain("data-course-rules");
@@ -926,6 +935,19 @@ describe("the pages", () => {
     expect(course).toContain("never as a pass");
     // The disclosure the shared Listen line carried on every lesson.
     expect(course).toMatch(/Reference notes are synthesized pitches, not recordings of a\s+singer/);
+  });
+
+  it("say a lesson's not-ready advice once, not again after its own recovery", () => {
+    const l = LESSONS.find((x) => x.id === "v-l7-m1-01")!;
+    const recovery = l.mistakes[0].recovery;
+    expect(l.selfCheck.ifNotReady.startsWith(recovery)).toBe(true);
+    expect(notReadyAdvice(l, [recovery])).toBe(
+      "Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+    );
+    expect(notReadyAdvice(l, [])).toBe(l.selfCheck.ifNotReady);
+    const same = LESSONS.filter((x) => x.mistakes.some((m) => m.recovery === x.selfCheck.ifNotReady));
+    expect(same.length).toBeGreaterThan(50);
+    for (const x of same) expect(notReadyAdvice(x, x.mistakes.map((m) => m.recovery)), x.id).toBe("");
   });
 
   /**

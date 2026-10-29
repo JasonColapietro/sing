@@ -185,7 +185,7 @@ export function HigherLowerGame({
           <span className="text-[var(--s-dim)]">Answer with the arrow keys for speed.</span>
         ) : answered === correctAnswer ? (
           <span style={{ color: "var(--s-ok)" }}>
-            Correct — it was {SAID[correctAnswer]}.
+            Correct, it was {SAID[correctAnswer]}.
           </span>
         ) : (
           <span className="text-[var(--s-mut)]">

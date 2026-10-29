@@ -35,3 +35,34 @@ describe("the browse card's chip rows", () => {
     expect(html).toMatch(/role="group" aria-label="Genre" class="[^"]*overflow-x-auto/);
   });
 });
+
+describe("the browse card's chip rows on a first visit", () => {
+  const render = (state: typeof DEFAULT_BROWSE) =>
+    renderToStaticMarkup(
+      <BrowseControls
+        state={state}
+        onChange={() => {}}
+        options={browseOptions(ALL_SONGS)}
+        hasRange={false}
+        onSurprise={() => {}}
+        resultCount={ALL_SONGS.length}
+        totalCount={ALL_SONGS.length}
+        favoriteCount={0}
+      />,
+    );
+
+  it("fold under More filters, so the first band of songs is not pushed down by six open rows", () => {
+    const html = render(DEFAULT_BROWSE);
+    expect(html).toMatch(/<details><summary[^>]*>More filters<\/summary><div class="grid grid-cols-1 gap-3 sm:grid-cols-2">/);
+    // Search, sort and the quick chips stay outside it.
+    const folded = html.slice(html.indexOf("<details"));
+    expect(folded).not.toContain('type="search"');
+    expect(folded).not.toContain("Fits my range");
+  });
+
+  it("open from the start when a chip is already chosen, and say how many", () => {
+    const genre = browseOptions(ALL_SONGS).genre[0];
+    const html = render({ ...DEFAULT_BROWSE, genre: [genre] });
+    expect(html).toMatch(/<details open=""><summary[^>]*>More filters \(1\)<\/summary>/);
+  });
+});

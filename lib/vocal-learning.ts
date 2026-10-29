@@ -17,7 +17,7 @@ export interface VocalLearningPath {
 export const VOCAL_LEARNING_PATHS: readonly VocalLearningPath[] = [
   {
     title: "Follow a step-by-step course",
-    need: "Work through seven stages of short voice lessons, each with a self-check and a room to practise in, from room setup to style.",
+    need: "Work through seven stages of short voice lessons, each with a self-check and a room to practice in, from room setup to style.",
     href: "/learn/voice",
     action: "Start the voice lessons",
   },

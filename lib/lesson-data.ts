@@ -445,7 +445,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions, with a normal breath and a full release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness or the urge to chase a number.\n\nPractise the slides in the recorder first, as this module's first lesson does. Then repeat each once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end. Neither room changes your saved range; a finished range test replaces it and refits your warm-ups and songs. Take it once, warmed up, for the self-check, and keep retests weeks apart.",
+        "body": "Work in short repetitions, with a normal breath and a full release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness or the urge to chase a number.\n\nPractice the slides in the recorder first, as this module's first lesson does. Then repeat each once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end. Neither room changes your saved range; a finished range test replaces it and refits your warm-ups and songs. Take it once, warmed up, for the self-check, and keep retests weeks apart.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -1630,7 +1630,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "The song moves to you. This is the singing equivalent of a capo.",
-    "explanation": "A recording's key was chosen for one singer on one set of days: a fact about that session, not the song, and changing it is ordinary practice. Move the whole song by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the top comes without a push. After a range test, songs open fitted to your range; without one, in the written key.",
+    "explanation": "A recording's key was chosen for one singer on one set of days: a fact about that session, not the song. Move the whole song by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the top comes without a push. After a range test, songs open fitted to your range; without one, they open in the written key and are scored in either octave.",
     "prerequisites": [
       "v-l2-m3-06"
     ],
@@ -2668,7 +2668,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why this song needs the siren you just built.",
-    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing it as you practised the siren: quietly.",
+    "explanation": "A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where the high and low phrases both fit, mark the crossing phrase, and sing it as you practiced the siren: quietly, on a narrow vowel.",
     "prerequisites": [
       "v-l3-m3-07"
     ],
@@ -2923,7 +2923,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Three different problems that get called the same thing.",
-    "explanation": "Breathy, nasal and tight all get called a bad tone, but they are three different sounds. Breathy is a haze of air in the tone, usually from folds not meeting fully. Nasal is sound coloured by the nose, though a pinched, bright tone often only seems nasal: pinch your nose on an “ah”; if the sound changes, some was going through the nose. Tight, or pressed, is more squeeze than the note needs. Name the sound before you change it.",
+    "explanation": "Breathy, nasal and tight all get called a bad tone, but they are three different sounds. Breathy is a haze of air in the tone, usually from folds not meeting fully. Nasal is sound colored by the nose, though a pinched, bright tone often only seems nasal: pinch your nose on an “ah”; if the sound changes, some was going through the nose. Tight, or pressed, is more squeeze than the note needs. Name the sound before you change it.",
     "prerequisites": [
       "v-l3-m4-07"
     ],
@@ -3178,7 +3178,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Compare your note with the synthesized reference and listen for whether your next attempt settles closer.",
-    "explanation": "Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head before you make a sound. A voice that starts without that picture searches for the note, sliding up into it or settling on a neighbour, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you judge, so the comparison stays honest.",
+    "explanation": "Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head before you make a sound. A voice that starts without that picture searches for the note, sliding up into it or settling on a neighboring pitch, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you judge, so the comparison stays honest.",
     "prerequisites": [
       "v-l3-m5-07"
     ],
@@ -3688,7 +3688,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Pitch and time get all the attention. Words are where amateur performances actually fail.",
-    "explanation": "Pitch and tone ride on the vowels; the words live on the consonants, the quick stops, hums and hisses between them. Singers listen for pitch, but listeners hear everything else, and a lyric they cannot make out is lost however well it was tuned. Nothing in Suede Sing analyses consonants or scores how clear your words are, so you judge this axis by ear: consonants quick, clear and on time, then straight back to the vowel.",
+    "explanation": "Pitch and tone ride on the vowels; the words live on the consonants, the quick stops, hums and hisses between them. Singers listen for pitch, but listeners hear everything else, and a lyric they cannot make out is lost however well it was tuned. Nothing in Suede Sing analyzes consonants or scores how clear your words are, so you judge this axis by ear: consonants quick, clear and on time, then straight back to the vowel.",
     "prerequisites": [
       "v-l4-m2-07"
     ],
@@ -4453,7 +4453,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type.",
-    "explanation": "Your passaggio is the two-to-four-note zone where the voice hands over from a thicker fold setup to a thinner one and the resonance that was helping drops away, so notes need effort, thin out or crack. It sits near the published zone for your voice type and moves with vowel and volume. In higher voices a quiet slide finds a lighter shift around E4 to G4 before the published belt zone. Find yours by ear on a slow, quiet slide.",
+    "explanation": "Your passaggio is the two-to-four-note zone where the voice hands over from a thicker fold setup to a thinner one and the resonance that helped drops away, so notes need effort, thin out or crack. It often sits near your voice type's published zone, but can land a semitone or more either side and moves with vowel and volume. Contraltos, mezzos and sopranos often meet a lighter shift first, around E4 to G4. Find yours on a slow, quiet slide.",
     "prerequisites": [
       "v-l4-m5-07"
     ],
@@ -4963,7 +4963,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Where carrying power actually comes from, and why pressed phonation is the costly way to fake it.",
-    "explanation": "Carrying power is mostly resonance, not loudness: a voice with more energy in the bright upper band, where hearing is sharpest, cuts through without being pushed. Twang gets there by narrowing the space just above the vocal folds, which brightens the tone by reshaping the tube, not by driving more air or squeezing harder. Pressed phonation, more squeeze than the note needs, also sounds intense but tires the voice. Brightness from resonance costs nothing and survives singing the phrase quietly.",
+    "explanation": "Carrying power is mostly resonance, not loudness: a voice with more energy in the bright upper band, where hearing is sharpest, cuts through without being pushed. Twang narrows the space just above the vocal folds, brightening the tone by reshaping the tube, not by more air or a harder squeeze. Pressed phonation, more squeeze than the note needs, also sounds intense but tires the voice. One rough check: brightness from resonance survives quiet singing; if it needs a grip, stop.",
     "prerequisites": [
       "v-l5-m2-07"
     ],
@@ -5218,7 +5218,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time.",
-    "explanation": "A shout gets its size from more air and more squeeze at the folds, so as it climbs it turns tight, goes sharp or cracks, and it tires the voice. Mix is the middle ground between chest and head voice, part fold setup and part vowel and resonance, where the transition crosses without a seam; a belt carries a chest-like sound higher by getting brighter, not by pushing. An easy call sounds the same the third time.",
+    "explanation": "A shout gets its size from more air and more squeeze at the folds, so as it climbs it turns tight, goes sharp or cracks, and tires the voice. Mix is the middle ground between chest and head voice, part fold setup, part resonance, where the transition crosses without a seam; a belt carries a chest-like sound higher by getting brighter, not by pushing. An easy call sounds the same the third time; any grip in the throat means stop.",
     "prerequisites": [
       "v-l5-m3-07"
     ],
@@ -5241,7 +5241,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Record the climb in one take in the [recorder](/recorder). Pitch is the only thing that changes, so on playback listen for the first note where the call starts to sound like a shout: harder, louder without getting brighter, or tight. That note is where to lighten next time. To put a name on it, climb back to that step once more, lightly, in the [pitch studio](/studio), which shows each note as you sing it. Never chase a belt label by adding throat pressure.",
+        "body": "Say “hey!” as if calling a friend across a quiet room: a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Record the climb in one take in the [recorder](/recorder). Pitch is the only thing that changes, so on playback listen for the first note where the call starts to sound like a shout: harder, louder without getting brighter, or tight. That note is where to lighten next time. To put a name on it, climb back to that step once more, lightly, in the [pitch studio](/studio), which shows each note as you sing it. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5302,7 +5302,7 @@ export const LESSONS: Lesson[] = [
     "title": "An Easy Pattern Through Your Transition",
     "type": "exercise",
     "minutes": 6,
-    "objective": "A short supplied pattern that crosses your transition zone — pick the key that puts it there.",
+    "objective": "A short supplied pattern that crosses your transition zone. Pick the key that puts it there.",
     "explanation": "",
     "prerequisites": [
       "v-l5-m4-01"
@@ -5320,13 +5320,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "A short supplied pattern that crosses your transition zone — pick the key that puts it there.",
+        "body": "A short supplied pattern that crosses your transition zone. Pick the key that puts it there.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
       {
         "title": "Build the pattern in pieces",
-        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Legato triad or Wee from the fifth. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take in the [recorder](/recorder). Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
+        "body": "Say “hey!” as if calling a friend across a quiet room: a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Legato triad or Wee from the fifth. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take in the [recorder](/recorder). Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5411,7 +5411,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition and move it up one semitone at a time only while it stays as easy as speaking, to find the last easy step; if it starts to need a push, let it lighten instead. Then hear the pattern you chose, Legato triad or Wee from the fifth, in the key that puts its top note just above your transition but never above that last easy step, and stop the reference. State the checkpoint target and record one uninterrupted attempt in the [recorder](/recorder): the pattern three times in a row at moderate volume, holding its top note for six comfortable seconds each time, with a quiet breath between. Keep the result even when it does not pass. Never chase a belt label by adding throat pressure.",
+        "body": "Say “hey!” as if calling a friend across a quiet room: a call, not a shout. Sing that “hey” on a comfortable note below your transition and move it up one semitone at a time only while it stays as easy as speaking, to find the last easy step; if it starts to need a push, let it lighten instead. Then hear the pattern you chose, Legato triad or Wee from the fifth, in the key that puts its top note just above your transition but never above that last easy step, and stop the reference. State the checkpoint target and record one uninterrupted attempt in the [recorder](/recorder): the pattern three times in a row at moderate volume, holding its top note for six comfortable seconds each time, with a quiet breath between. Keep the result even when it does not pass. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5496,7 +5496,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Tap four steady beats per bar. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Sing those four bars twice in one take, with a bar of tapped rest between: the second time, keep every note the same and change only the rhythm of bar 3, for example by holding one note for two beats. Listen back for whether both versions still sound like an answer that lands home on 1. Once that is familiar, invent a different answer from the same note set, varying one element—rhythm, direction, or ending—while keeping the same key center. Record your takes in the recorder.",
+        "body": "Tap four steady beats per bar. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Sing those four bars twice in one take, with a bar of tapped rest between: the second time, keep every note the same and change only the rhythm of bar 3, for example by holding one note for two beats. Listen back for whether both versions still sound like an answer that lands home on 1. Once that is familiar, invent a different answer from the same note set, varying one element (rhythm, direction or ending) while keeping the same key center. Record your takes in the recorder.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5581,7 +5581,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Answer a short call, leave space, then vary one element—rhythm, direction, or ending—while keeping the same key center. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Once that is familiar, invent a different answer from the same note set. Record call and answer together in one take.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Answer a short call, leave space, then vary one element (rhythm, direction or ending) while keeping the same key center. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Once that is familiar, invent a different answer from the same note set. Record call and answer together in one take.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5666,7 +5666,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Answer a short call, leave space, then vary one element—rhythm, direction, or ending—while keeping the same key center. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Once that is familiar, invent a different answer from the same note set. Record call and answer together in one take.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Answer a short call, leave space, then vary one element (rhythm, direction or ending) while keeping the same key center. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Once that is familiar, invent a different answer from the same note set. Record call and answer together in one take.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5728,7 +5728,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Why slow practice is the only route to fast runs.",
-    "explanation": "A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practised fast learns the smear along with the notes. Sing the pattern slowly enough that every note lands, raise the tempo in small steps, and drop back the moment a middle note blurs into a slide.",
+    "explanation": "A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practiced fast learns the smear along with the notes. Sing the pattern slowly enough that every note lands, raise the tempo in small steps, and drop back the moment a middle note blurs into a slide.",
     "prerequisites": [
       "v-l5-m5-07"
     ],
@@ -5983,7 +5983,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Melisma, and why it needs a stable vowel underneath.",
-    "explanation": "Melisma is several notes sung on one syllable, the way a run carries a single word. The vowel carries every note, and a vowel is a shape of tongue, jaw and lips; move that shape on each note and the colour flickers into new syllables or a smear. Hold one vowel shape still and let only the pitch move. That steady vowel lets each note sound separate and still belong to the same word.",
+    "explanation": "Melisma is several notes sung on one syllable, the way a run carries a single word. The vowel carries every note, and a vowel is a shape of tongue, jaw and lips; move that shape on each note and the color flickers into new syllables or a smear. Hold one vowel shape still and let only the pitch move. That steady vowel lets each note sound separate and still belong to the same word.",
     "prerequisites": [
       "v-l6-m1-08"
     ],
@@ -6238,7 +6238,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Vibrato has three parameters. Controlling them is what separates it from a wobble.",
-    "explanation": "Vibrato is a small, regular swing in pitch around the note's centre, with three dials: rate, how many swings a second; extent, how far above and below the centre it moves; and onset, when it starts, at once or after a stretch of straight tone. Regularity separates vibrato from an unsteady note. The Vibrato hold warm-up reports rate and extent after each hold; nothing times the onset, so that dial is yours to judge, and the easiest to practise first.",
+    "explanation": "Vibrato is a small, regular swing in pitch around the note's center, with three dials: rate, how many swings a second; extent, how far above and below the center it moves; and onset, when it starts, at once or after a stretch of straight tone. Regularity separates vibrato from an unsteady note. The Vibrato hold warm-up reports rate and extent after each hold; nothing times the onset, so that dial is yours to judge, and the easiest to practice first.",
     "prerequisites": [
       "v-l6-m2-08"
     ],
@@ -7496,7 +7496,7 @@ export const LESSONS: Lesson[] = [
         "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
-      "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.",
+      "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear, or any blood, means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.",
       "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
       "doesNotShow": "Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
@@ -7513,7 +7513,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Onset, vibrato, diction, and placement, decided per genre.",
-    "explanation": "A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres decide differently: straight tone that lets vibrato in late is common in pop and jazz; vibrato from the start is usual in opera and musical theatre. Copy what singers decide, not what they are made of; the same choices in your body sound like you.",
+    "explanation": "A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat. Genres decide differently: straight tone that lets vibrato in late is common in pop and jazz; vibrato from the start is usual in opera and musical theater. Copy what singers decide, not what they are made of; the same choices in your body sound like you.",
     "prerequisites": [
       "v-l7-m1-08"
     ],
@@ -7682,7 +7682,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: One Song, Two Styles",
     "type": "checkpoint",
     "minutes": 7,
-    "objective": "Both recognisable, both yours.",
+    "objective": "Both recognizable, both yours.",
     "explanation": "",
     "prerequisites": [
       "v-l7-m2-05"
@@ -7700,7 +7700,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Genre choices",
-        "body": "Both recognisable, both yours.",
+        "body": "Both recognizable, both yours.",
         "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
         "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
       },
@@ -8035,7 +8035,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under When it goes wrong and the safety line at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist; any blood means stop and see that doctor. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8052,7 +8052,7 @@ export const LESSONS: Lesson[] = [
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
       {
-        "title": "Use prior supervision—or observe",
+        "title": "Use prior supervision, or observe",
         "body": "Do not learn or imitate a new vocal effect from this lesson. For “What a Growl Actually Is,” either review an effect already taught to you by a qualified teacher at the prescribed dose, or complete the anatomy, listening, warning-sign, and stop-plan work without producing the effect. For an already-taught effect only, begin and end on the teacher's clean baseline and use the dose they prescribed. Otherwise compare your own earlier supervised recordings, name the audible change, and write the stop plan without imitating it.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
@@ -8126,7 +8126,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under When it goes wrong and the safety line at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist; any blood means stop and see that doctor. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8143,7 +8143,7 @@ export const LESSONS: Lesson[] = [
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
       {
-        "title": "Use prior supervision—or observe",
+        "title": "Use prior supervision, or observe",
         "body": "Do not learn or imitate a new vocal effect from this lesson. For “Effects: Listening and a Stop Plan,” either review an effect already taught to you by a qualified teacher at the prescribed dose, or complete the anatomy, listening, warning-sign, and stop-plan work without producing the effect. For an already-taught effect only, begin and end on the teacher's clean baseline and use the dose they prescribed. Otherwise compare your own earlier supervised recordings, name the audible change, and write the stop plan without imitating it.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
@@ -8217,7 +8217,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under When it goes wrong and the safety line at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist; any blood means stop and see that doctor. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8234,7 +8234,7 @@ export const LESSONS: Lesson[] = [
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
       },
       {
-        "title": "Use prior supervision—or observe",
+        "title": "Use prior supervision, or observe",
         "body": "Do not learn or imitate a new vocal effect from this lesson. For “Self-Check: Your Effects Stop Plan,” either review an effect already taught to you by a qualified teacher at the prescribed dose, or complete the anatomy, listening, warning-sign, and stop-plan work without producing the effect. For an already-taught effect only, begin and end on the teacher's clean baseline and use the dose they prescribed. Otherwise compare your own earlier supervised recordings, name the audible change, and write the stop plan without imitating it.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
@@ -8280,7 +8280,7 @@ export const LESSONS: Lesson[] = [
         "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
-      "readyWhen": "Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.",
+      "readyWhen": "Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice, any blood), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.",
       "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
       "doesNotShow": "Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."

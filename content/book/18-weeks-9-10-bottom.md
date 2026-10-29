@@ -11,7 +11,7 @@ After two weeks of adding height, this block goes the other way and slows down. 
 
 Weeks 7 and 8 asked you to keep weight off the top. The low register asks for the opposite discipline, and most singers find it harder, because the instinct is so specific and so wrong: when a note is low, people reach down for it.
 
-Reaching down has a recognisable set of symptoms. The jaw drops further than the vowel needs. The chin tucks. The larynx gets pressed downward to manufacture depth. The tone goes darker and woofier inside your own skull, and thinner on playback than the note a semitone above it. You are adding effort to a mechanism that sounds best when it is left mostly alone.
+Reaching down has a recognizable set of symptoms. The jaw drops further than the vowel needs. The chin tucks. The larynx gets pressed downward to manufacture depth. The tone goes darker and woofier inside your own skull, and thinner on playback than the note a semitone above it. You are adding effort to a mechanism that sounds best when it is left mostly alone.
 
 What is happening down there is the reverse of the top. The folds are shorter, thicker and slacker, and they vibrate in a way that does not want much pressure underneath. Push more air at a low note and it does not get bigger. It gets rough, or it gives out and drops into a rattle. Low notes are made by release.
 

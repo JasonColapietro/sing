@@ -1001,11 +1001,17 @@ export function ProClient() {
                 {/* On a phone the buttons come straight after the headline;
                     nothing in the paragraph is focusable, so tab order holds. */}
                 <div className="flex flex-col">
-                  {/* "Shows", never "keeps": free stores the same record; Pro is the view across it. */}
+                  {/* "Charts", never "keeps": free stores the same record; Pro is
+                      the view across it. Free already draws the weekly score
+                      trend and shows the first two coach steps
+                      (components/progress/coach.tsx), so neither is sold here as
+                      Pro's. Only the range is charted over months; the per-note
+                      chart is one tally with no time axis. */}
                   <p className="order-2 mt-5 max-w-xl text-lg text-mut sm:order-1 sm:mt-4">
-                    Free shows you today&apos;s score. Pro shows you the months
-                    behind it and plans every step of tomorrow, from your own
-                    scores and range tests.
+                    Free scores every session, charts your weekly trend and
+                    plans the first two steps of each day. Pro charts your range
+                    over months, adds a per-note accuracy chart, and lays out
+                    every step of the daily plan.
                   </p>
                   <div className="order-1 mt-6 flex flex-wrap items-center gap-4 sm:order-2 sm:mt-7">
                     {/* The priced button buys: it opens Stripe, as the card's does.

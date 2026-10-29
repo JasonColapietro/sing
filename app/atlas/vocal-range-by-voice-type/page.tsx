@@ -193,7 +193,7 @@ function typeAnswer(row: Row): string {
 
   return [
     `A ${row.lower} is ${note.summary}.`,
-    `The conventional ${row.lower} range is ${row.band} — two octaves, the span these categories are traditionally defined across.`,
+    `The conventional ${row.lower} range is ${row.band}: two octaves, the span these categories are traditionally defined across.`,
     row.caveat
       ? `${row.caveat} It is usually placed around ${row.passaggio}.`
       : `The passaggio, where the voice changes gear between registers, usually falls around ${row.passaggio}.`,
@@ -215,11 +215,11 @@ const FAQ: Faq[] = [
   })),
   {
     q: "What is the difference between vocal range and voice type?",
-    a: "They are two different measurements and neither one implies the other. Vocal range is the distance between the lowest and highest notes a singer can produce at all — a pair of extremes, often one-off moments on a record. Voice type is a judgment about tessitura: the band of pitches where the voice sits comfortably for a long time, together with its timbre and weight. A soprano with a practiced low extension can show a lower floor than a contralto who never records down there, and neither label is wrong. This is why a range test tells you your range but can only estimate your type.",
+    a: "They are two different measurements and neither one implies the other. Vocal range is the distance between the lowest and highest notes a singer can produce at all: a pair of extremes, often one-off moments on a record. Voice type is a judgment about tessitura: the band of pitches where the voice sits comfortably for a long time, together with its timbre and weight. A soprano with a practiced low extension can show a lower floor than a contralto who never records down there, and neither label is wrong. This is why a range test tells you your range but can only estimate your type.",
   },
   {
     q: "How do I find out my own voice type?",
-    a: "Start with your range: Suede Sing's free browser range test at https://sing.suedeai.ai/range takes about two minutes and reports the lowest and highest clear notes it hears in that session, your span in semitones, and an estimate of which of six of these types, bass to soprano, has the band that overlaps that span most closely (it never names bass-baritone or countertenor). The test finds the edges of your voice, not where it is easy, so afterwards sing a few phrases you know and note where the voice feels comfortable: that band, together with your tone and where the voice changes gear, is what a voice type describes. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
+    a: "Start with your range: Suede Sing's free browser range test at https://sing.suedeai.ai/range takes about two minutes and reports the lowest and highest clear notes it hears in that session, your span in semitones, and an estimate of which of six of these types, bass to soprano, has the band that overlaps that span most closely (it never names bass-baritone or countertenor). The test finds the edges of your voice, not where it is easy, so afterwards sing a few phrases you know and note where the voice feels comfortable: that band, together with your tone and where the voice changes gear, is what a voice type describes. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labeled baritone.",
   },
   {
     q: "What is a passaggio?",
@@ -227,7 +227,7 @@ const FAQ: Faq[] = [
     // one that can drift from the table. Built from the same constant the
     // table renders: the hand-typed version of this sentence outlived a
     // correction to the figures once already.
-    a: `The passaggio is the pitch zone where a singing voice changes gear between registers — it runs from where the voice has to start shedding weight up to where chest voice stops working the way it did and a lighter production has to take over. It is a few notes wide rather than a single note, and it is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly ${row("Bass").passaggio} for a bass, ${row("Baritone").passaggio} for a baritone, ${row("Tenor").passaggio} for a tenor, ${row("Mezzo-soprano").passaggio} for a mezzo-soprano, and ${row("Soprano").passaggio} for a soprano. For mezzo-sopranos and sopranos those figures are the commercial-singing zone where a belt or mix changes gear; ${EARLIER_SHIFT}. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.`,
+    a: `The passaggio is the pitch zone where a singing voice changes gear between registers. It runs from where the voice has to start shedding weight up to where chest voice stops working the way it did and a lighter production has to take over. It is a few notes wide rather than a single note, and it is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly ${row("Bass").passaggio} for a bass, ${row("Baritone").passaggio} for a baritone, ${row("Tenor").passaggio} for a tenor, ${row("Mezzo-soprano").passaggio} for a mezzo-soprano, and ${row("Soprano").passaggio} for a soprano. For mezzo-sopranos and sopranos those figures are the commercial-singing zone where a belt or mix changes gear; ${EARLIER_SHIFT}. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.`,
   },
 ];
 
@@ -340,7 +340,7 @@ export default function VocalRangeByVoiceTypePage() {
             Each of the eight traditional categories is defined across two
             octaves, from the bass at {row("Bass").band} to the soprano at{" "}
             {row("Soprano").band}, and the table below gives all eight along with the{" "}
-            <em>passaggio</em> — the zone where that voice changes gear between
+            <em>passaggio</em>, the zone where that voice changes gear between
             registers, which predicts what a singer finds hard far better than
             the extremes do.
           </p>
@@ -363,7 +363,7 @@ export default function VocalRangeByVoiceTypePage() {
               library of {SINGERS.length} cited singers
             </Link>{" "}
             behind this page is full of exactly that pattern. The categories are
-            a starting shelf, not a verdict — and in popular music, sung into a
+            a starting shelf, not a verdict, and in popular music, sung into a
             microphone, they are looser still.
           </p>
         </Card>
@@ -469,7 +469,7 @@ export default function VocalRangeByVoiceTypePage() {
           </div>
 
           <p className="mt-5 max-w-3xl text-xs text-dim">
-            Example singers are not the most famous of each category — they are
+            Example singers are not the most famous of each category; they are
             the three whose cited ranges sit closest to the conventional band.
             Singers whose catalog label was disputed on individual review are
             left out. Their figures are commonly cited approximations compiled
@@ -486,7 +486,7 @@ export default function VocalRangeByVoiceTypePage() {
                   </span>
                 ))}{" "}
                 the library holds {EXAMPLE_COUNT} voices or fewer, so those rows
-                are the whole population rather than a selection from it — true
+                are the whole population rather than a selection from it: true
                 to the record, in which these categories really are that rare,
                 but not a claim that the singers named are typical.
               </>
@@ -538,23 +538,23 @@ export default function VocalRangeByVoiceTypePage() {
                 className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
               >
                 Voice types in the wild
-              </Link>{" "}
-              — the atlas chapter behind this page: why a pop mezzo and an opera
+              </Link>
+              : the atlas chapter behind this page: why a pop mezzo and an opera
               mezzo are different claims, and how to guess your own type without
               a teacher. Free.
             </li>
             <li>
               <Link href={rangeTestHref()} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 The free range test
-              </Link>{" "}
-              — about two minutes in the browser gives you your own two numbers to
+              </Link>
+              : about two minutes in the browser gives you your own two numbers to
               read this table with.
             </li>
             <li>
               <Link href="/singers" prefetch={false} className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 All {SINGERS.length} singers
-              </Link>{" "}
-              — or jump to{" "}
+              </Link>
+              , or jump to{" "}
               {ROWS.map((row, i) => (
                 <span key={row.voice}>
                   {i > 0 && (i === ROWS.length - 1 ? " and " : ", ")}
@@ -572,8 +572,8 @@ export default function VocalRangeByVoiceTypePage() {
             <li>
               <Link href="/glossary" className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet">
                 The glossary
-              </Link>{" "}
-              — passaggio, tessitura, belt and the rest, defined.
+              </Link>
+              : passaggio, tessitura, belt and the rest, defined.
             </li>
           </ul>
         </Card>

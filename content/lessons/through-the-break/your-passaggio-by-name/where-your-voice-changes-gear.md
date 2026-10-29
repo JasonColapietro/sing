@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-Your passaggio is the two-to-four-note zone where the voice hands over from a thicker fold setup to a thinner one and the resonance that was helping drops away, so notes need effort, thin out or crack. It sits near the published zone for your voice type and moves with vowel and volume. In higher voices a quiet slide finds a lighter shift around E4 to G4 before the published belt zone. Find yours by ear on a slow, quiet slide.
+Your passaggio is the two-to-four-note zone where the voice hands over from a thicker fold setup to a thinner one and the resonance that helped drops away, so notes need effort, thin out or crack. It often sits near your voice type's published zone, but can land a semitone or more either side and moves with vowel and volume. Contraltos, mezzos and sopranos often meet a lighter shift first, around E4 to G4. Find yours on a slow, quiet slide.
 
 ## Steps
 

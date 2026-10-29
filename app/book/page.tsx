@@ -71,7 +71,7 @@ export default function BookPage() {
     <PageShell
       kicker={`Included with Pro · ${FREE_COUNT} chapters free`}
       title={`${BOOK_TITLE}: a singing book on how your voice works and how to train it`}
-      subtitle={`${BOOK_TITLE} is a ${BOOK_CONTENTS.length}-chapter singing book by ${AUTHOR_NAME}: how the voice works, how to read the numbers your own practice produces, a twelve-week program, and how to choose songs that fit. The contents and ${FREE_COUNT} chapters are free; the rest comes with Suede Sing Pro.`}
+      subtitle={`${BOOK_TITLE} is a ${BOOK_CONTENTS.length}-chapter singing book by ${AUTHOR_NAME}: how the voice works, how to read the numbers your own practice produces, a twelve-week program, and how to choose songs that fit. The contents and ${FREE_COUNT} chapters are free; the rest comes with Suede Pro.`}
       // In the header, not at the foot of the first card: on a phone the card's
       // stats and paragraphs pushed "Read a free chapter" a screen and a half
       // below the subtitle that promises it.

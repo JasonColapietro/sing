@@ -58,7 +58,7 @@ describe("a fresh record", () => {
       expect(html, dead).not.toContain(dead);
     }
     expect(html.match(/>(Find your range|Take the range test)</g) ?? []).toHaveLength(1);
-    expect(html.match(/Example · yours fills in as you practise/g)).toHaveLength(2);
+    expect(html.match(/Example · yours fills in as you practice/g)).toHaveLength(2);
     expect(html).toContain('aria-hidden="true" class="pointer-events-none select-none opacity-25"');
   });
 });

@@ -37,7 +37,7 @@ That data is good for four things.
 
 **Which notes are persistently weak.** A note that reads badly once was a bad rep. A note that reads badly across twenty sessions is a coordination gap, and it is exactly what Coach's daily plan keeps circling back to.
 
-**Whether you are actually practising.** Streaks and session counts are the boring numbers on the page and also the hardest to argue with. Intending to practise remembers itself as practising. The practice calendar does not.
+**Whether you are actually practicing.** Streaks and session counts are the boring numbers on the page and also the hardest to argue with. Intending to practice remembers itself as practicing. The practice calendar does not.
 
 **Before-and-after on a recording.** A number gives you one dimension. A take from twelve weeks ago, lined up against one from today with A/B compare in the Recorder, gives you tone, steadiness, phrasing and confidence at once. It is the least precise measurement in the app and often the most honest.
 
@@ -67,7 +67,7 @@ Give it time before you change your practice on the strength of what you see. Fo
 
 ## The uncomfortable part
 
-Long stretches of a trained voice look like nothing is happening. You practise four times a week for two months and the chart is a horizontal band with scatter in it. That is ordinary, and it is not evidence the practice is wasted. Coordination consolidates quietly, and the change often shows up first in things the app never measures: less dread before the high note, a phrase you get through without thinking about air, a song that used to feel like a fight.
+Long stretches of a trained voice look like nothing is happening. You practice four times a week for two months and the chart is a horizontal band with scatter in it. That is ordinary, and it is not evidence the practice is wasted. Coordination consolidates quietly, and the change often shows up first in things the app never measures: less dread before the high note, a phrase you get through without thinking about air, a song that used to feel like a fight.
 
 The chart is a slow instrument pointed at a slow process. Read over months, it is worth trusting. Checked daily, it mostly reports what you had for dinner.
 

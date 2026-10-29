@@ -17,7 +17,7 @@ Placement is where the sound seems to resonate — a sensation with fuzzy physic
 
 ## Vibrato: rate, width, delay
 
-Vibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Delay*: immediate (opera, most of musical theatre) versus delayed, with straight tone first and bloom on beat three, the default across modern pop and jazz from Billie Eilish to Samara Joy. When an entry says "vibrato arrives late," that is the dial it means. All three are trainable; a delayed start is a good first one to practise, because it begins from a plain, straight tone.
+Vibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Delay*: immediate (opera, most of musical theatre) versus delayed, with straight tone first and bloom on beat three, the default across modern pop and jazz from Billie Eilish to Samara Joy. When an entry says "vibrato arrives late," that is the dial it means. All three are trainable; a delayed start is a good first one to practice, because it begins from a plain, straight tone.
 
 ## Onset
 
@@ -41,7 +41,7 @@ A slight sob placed in the tone — the larynx tilting into the posture of weepi
 
 ## Register colors
 
-Words the entries use for where a note is made rather than how it is flavoured.
+Words the entries use for where a note is made rather than how it is flavored.
 
 | Term | Where it is made | Hear it in |
 |---|---|---|

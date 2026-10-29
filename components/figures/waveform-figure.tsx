@@ -33,7 +33,7 @@ export function WaveformFigure({ className }: { className?: string }) {
     <svg
       viewBox={`0 0 ${W} ${H}`}
       role="img"
-      aria-label="Example of a saved take in the recorder: an amber waveform strip labelled Take 2, with the playhead fourteen seconds in. Sample data, not your recording."
+      aria-label="Example of a saved take in the recorder: an amber waveform strip labeled Take 2, with the playhead fourteen seconds in. Sample data, not your recording."
       className={cn("block w-full", className)}
     >
       <rect x="0" y="0" width={W} height={H} fill={PANEL} />

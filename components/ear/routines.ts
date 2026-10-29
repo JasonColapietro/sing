@@ -51,7 +51,7 @@ export const GAME_TRAINS: Record<GameId, string> = {
 };
 
 export const GAME_DESC: Record<GameId, string> = {
-  interval: "Two notes play — name the distance between them.",
+  interval: "Two notes play. Name the distance between them.",
   // The game's window is far wider than the ±15-cent in-tune zone, so this
   // names the band, as the warm-up summaries do, rather than saying "in tune".
   "pitch-match": `Hear a note, sing it back, and hold it steady within ${pitchMatchTolerance("medium")} cents of the target (${pitchMatchTolerance("hard")} on Hard).`,
@@ -59,7 +59,7 @@ export const GAME_DESC: Record<GameId, string> = {
   // Easy draws gaps of 3–7 semitones (higher-lower-game.tsx), so "tiny gaps"
   // described the hardest level on the easiest step of Quick ear.
   "higher-lower": "Was the second note higher or lower? Quick rounds; the gap shrinks from a few notes on Easy to a semitone, or none at all, on Hard.",
-  "note-catcher": "Your voice steers a marker — catch each note as it slides in.",
+  "note-catcher": "Your voice steers a marker. Catch each note as it slides in.",
 };
 
 /** The three games that listen to you. */

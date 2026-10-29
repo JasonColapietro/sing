@@ -398,8 +398,12 @@ describe("a finished Recovery week", () => {
     expect(html).toContain(`All ${rw.days.length} days done. If your voice feels back to ordinary`);
     expect(html).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
     expect(html).not.toContain("Run it again from day 1");
-    // The restart stays (its variant is an open owner decision), with no go-back.
+    // The restart stays, as an outline button (as The Measured Voice's), so
+    // no filled button pushes another Recovery week, with no go-back.
     expect(html).toContain("Restart from day 1");
+    const restart = /<button[^>]*>Restart from day 1<\/button>/.exec(html)?.[0];
+    expect(restart).toContain("border-field");
+    expect(restart).not.toContain("bg-violet-ink");
     expect(html).not.toContain("Repeat weeks");
     // The entry card on /warmups and /progress points at that line rather
     // than suggesting another run, and never says a bare "a doctor".

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
@@ -24,6 +24,10 @@ import { MicAlert } from "@/components/mic-alert";
 import { FigureFrame, RangeFigure } from "@/components/figures";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { focusIfDropped } from "@/lib/audio/mic-focus";
+import { useIsPro } from "@/lib/pro";
+import { useHydrated } from "@/components/prepaint";
+import { recoveryRangeLine, recoveryRangeNote } from "@/components/practice/program-range-note";
+import { ProgramRangeProbe, programStored } from "./pitch-meter";
 import { PianoStrip } from "./piano-strip";
 import { freshInputHint, nextInputHint } from "./pitch-meter-hint";
 import { ResultView, type SaveSummary } from "./result-view";
@@ -139,9 +143,25 @@ function ListeningPill() {
   );
 }
 
+/** The range test asks only whether Recovery week runs, not for the program's next test. */
+const ignoreProgramRange = () => {};
+
 export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
   const { frame, listening, error, start, stop } = usePitch();
   const progress = useProgress();
+  const isPro = useIsPro();
+  /**
+   * Recovery week's name while it runs, and when that was read. Client-only:
+   * the program is read from this browser's storage after hydration, through
+   * the /range meter's own lazily loaded probe, and only for a browser that
+   * holds a program record, so the prerender and the pre-paint are unchanged.
+   */
+  const hydrated = useHydrated();
+  const [recovery, setRecovery] = useState<{ name: string; at: number } | null>(null);
+  const onRecovering = useCallback(
+    (name: string | null) => setRecovery(name === null ? null : { name, at: Date.now() }),
+    [],
+  );
 
   const [stage, setStage] = useState<Stage>("intro");
   const [anchorMidi, setAnchorMidi] = useState<number | null>(null);
@@ -376,6 +396,20 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
   const liveLabel = frame.note?.label ?? "—";
   const savedRange = progress.range;
   const counted = countedRange(anchorMidi, lowFound, highFound);
+  const probe =
+    hydrated && stage === "intro" && programStored() ? (
+      <ProgramRangeProbe isPro={isPro} onProgramRange={ignoreProgramRange} onRecovering={onRecovering} />
+    ) : null;
+  /**
+   * During Recovery week the /progress coach and the pitch meter say to leave
+   * the range test until the week is over; the guided tab says so too, above
+   * its start button, without blocking it: the singer may still choose to run
+   * it. A current range has no age to state, so it gets the reason alone.
+   */
+  const recoveryNote =
+    recovery && stage === "intro"
+      ? (recoveryRangeNote(savedRange, recovery.name, recovery.at) ?? recoveryRangeLine(recovery.name))
+      : null;
 
   // Only while the mic is actually on: a mic that stops mid-test (unplugged,
   // a headset dropped) ends the stream, and the pill used to stay lit over
@@ -407,6 +441,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     <>
       {/* Where "Start over" scrolls back to: the top of the intro. */}
       <div ref={topRef} />
+      {probe}
       {stage !== "intro" && (
         <div className="mb-6">
           <StepIndicator stage={stage} />
@@ -475,11 +510,10 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
             <p className="mt-2 max-w-xl text-sm text-rec">
               Use a comfortable volume. Stop if a note causes pain or strain.
             </p>
-            {/* The result shape above the start button; the saved card above already draws a real one. */}
-            {(savedRange.lowMidi === undefined || savedRange.highMidi === undefined) && (
-              <FigureFrame className="mt-5 max-w-xl" caption="What the test draws for you">
-                <RangeFigure />
-              </FigureFrame>
+            {recoveryNote && (
+              <p className="mt-3 max-w-xl text-sm text-mut" data-recovery-range-note>
+                {recoveryNote}
+              </p>
             )}
             <div className="mt-5">
               <Button variant="rec" size="lg" onClick={() => beginFrom("intro")}>
@@ -492,6 +526,15 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               savedRange.lowMidi === undefined ||
               savedRange.highMidi === undefined) &&
               introAlert}
+            {/* The result shape, under the start button and any mic error so
+                both stay on a 375x667 phone's first screen after a #start
+                link, as on the pitch meter. The saved card above already
+                draws a real one. */}
+            {(savedRange.lowMidi === undefined || savedRange.highMidi === undefined) && (
+              <FigureFrame className="mt-6 max-w-xl" caption="What the test draws for you">
+                <RangeFigure />
+              </FigureFrame>
+            )}
             {/* The room where the input device matters most. A laptop lid mic
                 rolls off exactly the low end a bass is trying to prove, so the
                 test hands back a range short at the bottom and the singer has

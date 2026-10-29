@@ -245,7 +245,7 @@ export function MelodyEchoGame({
             </span>
           )}
           {phase === "sing" &&
-            `Sing it back — ${melody?.length ?? 0} notes, one at a time.`}
+            `Sing it back: ${melody?.length ?? 0} notes, one at a time.`}
           {phase === "result" &&
             (octaveAgnostic ? "Any octave counted." : "Exact notes counted.")}
         </p>

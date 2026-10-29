@@ -39,8 +39,8 @@ export function SyncControls() {
       setNotice({
         kind: "ok",
         text: mergedRemote
-          ? "Synced — progress from your other devices is merged in."
-          : "Synced — this device's progress is backed up.",
+          ? "Synced: progress from your other devices is merged in."
+          : "Synced: this device's progress is backed up.",
       });
     } catch (error) {
       setNotice({

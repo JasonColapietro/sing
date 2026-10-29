@@ -312,7 +312,7 @@ try {
     const max = Number(await to.getAttribute("max"));
     await from.fill("2");
     await to.fill(String(Math.min(max, 8)));
-    const helper = page.getByText(/^Looping .+ 4× — only those notes are played and scored\.$/);
+    const helper = page.getByText(/^Looping .+ 4×: only those notes are played and scored\.$/);
     await helper.waitFor();
     assert.match(await helper.innerText(), /^Looping (Bars? \d+(–\d+)?|.+) 4×/);
     // Dragging the start past the end pushes the end along instead of inverting the loop.
@@ -360,7 +360,7 @@ try {
     await main.getByRole("button", { name: "Save to the recorder", exact: true }).click();
     await main.getByRole("button", { name: "Saved to the recorder", exact: true }).waitFor();
     await main.getByRole("link", { name: "Open the recorder", exact: true }).click();
-    await page.getByText(/^Silent Night — /).first().waitFor({ timeout: 15_000 });
+    await page.getByText(/^Silent Night · /).first().waitFor({ timeout: 15_000 });
     assert.deepEqual(errors, []);
     console.log("PASS take: recorded run, playable take in the summary, saved to the recorder");
     await context.close();

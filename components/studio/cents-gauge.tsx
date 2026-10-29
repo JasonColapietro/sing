@@ -37,7 +37,7 @@ export function CentsGauge({ cents }: { cents: number | null }) {
   const active = cents !== null;
   const angle = active ? Math.max(-50, Math.min(50, cents)) : 0;
   const label = active
-    ? `${cents > 0 ? "+" : ""}${cents} cents ${Math.abs(cents) <= 15 ? "— in tune" : cents > 0 ? "sharp" : "flat"}`
+    ? `${cents > 0 ? "+" : ""}${cents} cents${Math.abs(cents) <= 15 ? ", in tune" : cents > 0 ? " sharp" : " flat"}`
     : "No note detected";
 
   return (

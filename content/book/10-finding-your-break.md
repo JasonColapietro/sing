@@ -17,7 +17,7 @@ Start in your middle, somewhere you can talk-sing without thinking. Use an "ng" 
 
 Do that three or four times, watching three separate things.
 
-The first is what you hear. Somewhere on the way up the sound stops being one continuous colour. It may thin, hollow out, brighten suddenly, or flip outright to something lighter and less connected. That change has an address. Slide again, slower, and name the note it happens on.
+The first is what you hear. Somewhere on the way up the sound stops being one continuous color. It may thin, hollow out, brighten suddenly, or flip outright to something lighter and less connected. That change has an address. Slide again, slower, and name the note it happens on.
 
 The second is what you feel. Below the transition the buzz sits low and broad — chest, throat, the front of the face. Above it, it climbs and narrows. Somewhere in between, the effort jumps: the same quiet slide suddenly asks more of you, or you catch yourself bracing. For many singers that jump arrives a semitone or two below the audible change, which makes it the earlier of the two warnings.
 
@@ -33,7 +33,7 @@ The range test is doing a different job. It is hunting for the outer edges, but 
 
 Take it the way chapter 8 describes, then look back at where the ascent got difficult. The note where you had to change something to keep going often sits at or just above your transition. And if your range history in Progress shows a top note parked in the same place across retests while the climb up to it has got easier, that flat line may be the transition rather than a true ceiling.
 
-With Pro, the per-note accuracy chart in Progress is the sharpest tool here. A band three or four semitones wide where notes land within 50 cents of the target less often than their neighbours is worth a second look: your ear knows the pitch, and the coordination is what is wobbling. Treat a dip in the middle of an otherwise even profile as a transition until something else explains it better.
+With Pro, the per-note accuracy chart in Progress is the sharpest tool here. A band three or four semitones wide where notes land within 50 cents of the target less often than their neighbors is worth a second look: your ear knows the pitch, and the coordination is what is wobbling. Treat a dip in the middle of an otherwise even profile as a transition until something else explains it better.
 
 ## Belt ceilings, in practice
 

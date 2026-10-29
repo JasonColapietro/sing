@@ -66,7 +66,7 @@ I assembled a short warm-up with rests and wrote the warning signs that would ma
 - The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.
+Ready when: You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear, or any blood, means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.
 
 If not ready: If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 

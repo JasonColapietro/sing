@@ -9,7 +9,7 @@ The range test asks you to sing down until you run out of bottom, then up until 
 
 ## What the test is actually measuring
 
-The test measures the lowest and highest notes you would let another person hear — today, in this room, with the voice you warmed up or did not. That is the entire claim. It is not your absolute range, because the creaks and scrapings at either end are sounds rather than notes. It is not measuring your potential, your talent, or the range you would have on a better day. Those exist. No measurement reaches them.
+The test measures the lowest and highest notes you would let another person hear: today, in this room, with the voice you warmed up or did not. That is the entire claim. It is not your absolute range, because the creaks and scrapings at either end are sounds rather than notes. It is not measuring your potential, your talent, or the range you would have on a better day. Those exist. No measurement reaches them.
 
 ::figure range-test | What the range test reports: a lowest note, a highest note, and every key between them.
 
@@ -21,7 +21,7 @@ Treat the two numbers like a bathroom scale. Real, useful across months, close t
 
 Honest means the same conditions every time, and the same definition of a note every time.
 
-**Warm up first, without going long.** A cold voice under-reports at both ends, and the bottom in particular needs a few minutes before it speaks cleanly. Run a short set from the warmups library, then test. Do not test after an hour of hard singing either — that reads low for its own reasons. Pick a length and keep using it.
+**Warm up first, without going long.** A cold voice under-reports at both ends, and the bottom in particular needs a few minutes before it speaks cleanly. Run a short set from the warmups library, then test. Do not test after an hour of hard singing either. That reads low for its own reasons. Pick a length and keep using it.
 
 **Same distance from the phone.** Mic distance changes what the detector hears. Quiet low notes need the mic close or they never register at all, and loud high notes with the mic close can distort into something the pitch detector cannot lock onto. A hand's span from your mouth, held roughly still, is a workable habit. Write down what you chose. You are after repeatability, not perfection.
 
@@ -35,7 +35,7 @@ Honest means the same conditions every time, and the same definition of a note e
 
 Count falsetto the same way every time: including it can move your top note by several semitones.
 
-**Stop before the edge, not after it.** If a note feels like effort rather than height, you are done. The reading you get by stopping honestly is the one you can reproduce next month; the one you get by grinding out a final semitone is not. And if reaching for the top hurts, that is not a data problem — stop.
+**Stop before the edge, not after it.** If a note feels like effort rather than height, you are done. The reading you get by stopping honestly is the one you can reproduce next month; the one you get by grinding out a final semitone is not. And if reaching for the top hurts, that is not a data problem. Stop.
 
 ## When the result looks wrong
 
@@ -45,9 +45,9 @@ A disappointing result usually has a boring explanation. Work through these befo
 
 **Time of day.** Many voices sit lower and feel thicker in the morning, then loosen over the following hours. Test at roughly the same hour each time, or accept that a morning test and an evening test are two different tests.
 
-**Pushing.** Effort at the top narrows range rather than extending it. Press, and the mechanism thickens exactly where it needs to thin, so the top note arrives earlier and sounds worse on the way. If your top went down after a stretch of hard practice, a tired voice or over-pressing explains that more often than lost range does: rest, and retest after a night's sleep. If the top dropped suddenly, or is still down once you have rested, that is no longer a measurement question. Like pain or hoarseness that will not clear, a sudden or lasting loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist — chapter six says more.
+**Pushing.** Effort at the top narrows range rather than extending it. Press, and the mechanism thickens exactly where it needs to thin, so the top note arrives earlier and sounds worse on the way. If your top went down after a stretch of hard practice, a tired voice or over-pressing explains that more often than lost range does: rest, and retest after a night's sleep. If the top dropped suddenly, or is still down once you have rested, that is no longer a measurement question. Like pain or hoarseness that will not clear, a sudden or lasting loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist. Chapter six says more.
 
-**The room and the phone.** A live bathroom, a fan, a fridge, a phone lying face down on a duvet — each of them costs you notes at the quiet end. Test in the same room when you can. Chapter 12 holds the full measurement checklist and goes further into the ways rooms lie to you.
+**The room and the phone.** A live bathroom, a fan, a fridge, a phone lying face down on a duvet: each of them costs you notes at the quiet end. Test in the same room when you can. Chapter 12 holds the full measurement checklist and goes further into the ways rooms lie to you.
 
 **Rushing the edges.** Some people sweep through the last few notes too fast for anything to lock on. Give each note near the edge a moment to settle before deciding it is not there.
 
@@ -59,9 +59,9 @@ You get a label, and the test calls it the closest fit. That word is doing real 
 
 The label is a rough classification based on where your two edges fall. It leans high when your top notes were falsetto: the test counts them, as it should for a range, but the bass, baritone and tenor bands describe full voice, so a baritone whose falsetto carried the top often reads as a tenor. As shorthand the label earns its keep: a starting key, a direction to browse repertoire, which end of the piano to look at first.
 
-What it is not is an identity, a ceiling, or a verdict. Classical classification uses far more than two numbers — tessitura, timbre, where the transitions sit, how the voice holds up under sustained load — and even then teachers disagree, and singers get reclassified years into a career. A label derived from two extremes on a phone is a first approximation.
+What it is not is an identity, a ceiling, or a verdict. Classical classification uses far more than two numbers (tessitura, timbre, where the transitions sit, how the voice holds up under sustained load), and even then teachers disagree, and singers get reclassified years into a career. A label derived from two extremes on a phone is a first approximation.
 
-The failure mode is letting the label decide what you attempt. A baritone label does not put high notes off-limits. It says your comfortable centre probably sits lower than a tenor's. That centre is the thing that actually decides whether a song fits, and the test does not measure it — the result's "Start in the middle" band is only your two edges, trimmed: a starting guess. The chapters on choosing songs return to this.
+The failure mode is letting the label decide what you attempt. A baritone label does not put high notes off-limits. It says your comfortable center probably sits lower than a tenor's. That center is the thing that actually decides whether a song fits, and the test does not measure it. The result's "Start in the middle" band is only your two edges, trimmed: a starting guess. The chapters on choosing songs return to this.
 
 If the label changes between tests, that is usually your edges wobbling across a category boundary rather than your voice changing type. Do not celebrate it, do not mourn it.
 
@@ -69,12 +69,12 @@ If the label changes between tests, that is usually your edges wobbling across a
 
 Fix the protocol first: same warmup, same room, same mic distance, same time of day, same rule about what counts. Then leave it alone. A rough protocol you actually repeat is worth more than a perfect one you manage once.
 
-The programme retests three times: week one for a baseline, the end of week six, and the start of week twelve. Testing more often than that mostly measures noise — and there is a subtler cost, which is that frequent testing quietly becomes daily edge-pushing, and the edges are the worst place to spend practice time. Every range test makes a small demand on the top of your voice. Do not make it a habit.
+The program retests three times: week one for a baseline, the end of week six, and the start of week twelve. Testing more often than that mostly measures noise, and there is a subtler cost, which is that frequent testing quietly becomes daily edge-pushing, and the edges are the worst place to spend practice time. Every range test makes a small demand on the top of your voice. Do not make it a habit.
 
 When you look back over your tests (Pro charts them in Progress; on the free plan, keep each low note, high note and date in your notebook), read the shape of the line across several tests rather than the gap between the last two. Three readings leaning the same way say more than one jump, and one jump usually means a condition changed rather than a voice. Chapter 11 covers how long to wait before concluding anything.
 
-Record the context somewhere too — a line in a notebook is enough. Tested with a cold. Tested after a late night. Tested in a hotel room. In three months you will not remember, and the bare reading will look like information.
+Record the context somewhere too: a line in a notebook is enough. Tested with a cold. Tested after a late night. Tested in a hotel room. In three months you will not remember, and the bare reading will look like information.
 
 ## Try this
 
-Open the [warmups library](/warmups), run a short set, then take the [range test](/range?mode=range#start) — this time stopping the moment a note needs effort rather than height, and counting only pitches you could hold for two beats. Write down the two notes and the date, compare them against the last reading you wrote down if you have one, and note which of the two you took more honestly.
+Open the [warmups library](/warmups), run a short set, then take the [range test](/range?mode=range#start), this time stopping the moment a note needs effort rather than height, and counting only pitches you could hold for two beats. Write down the two notes and the date, compare them against the last reading you wrote down if you have one, and note which of the two you took more honestly.

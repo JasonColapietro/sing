@@ -182,13 +182,13 @@ const HOME_JSON_LD = {
 const SESSION_SHOTS = [
   {
     src: "/room-studio.png",
-    alt: "The pitch studio on a phone: a live pitch trace against the target note",
-    caption: "Studio: the note you sang, live",
+    alt: "The pitch studio on a phone: the 'See your pitch live' start screen under an example trace",
+    caption: "Studio: see your pitch live",
   },
   {
     src: "/room-progress.png",
-    alt: "The progress room on a phone: streak, range card and the coach's plan",
-    caption: "Progress: what to sing tomorrow",
+    alt: "The progress room on a phone: today's session plan and a practice calendar",
+    caption: "Progress: what to sing next",
   },
 ];
 
@@ -334,7 +334,7 @@ export default function Home() {
 
           <figure className="mx-auto mt-14 max-w-2xl">
             <figcaption className="font-mono text-label uppercase tracking-[0.14em] text-dim">
-              What a session looks like
+              What a session looks like · sample data
             </figcaption>
             <ul className="mt-5 grid grid-cols-2 gap-4 sm:gap-6">
               {SESSION_SHOTS.map((shot) => (

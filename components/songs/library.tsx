@@ -429,7 +429,7 @@ export function Library({
           songs: visible.filter((s) => bandForSong(s) === band),
           open: bandOpen(band, mastered, accessible),
           unlock: below
-            ? `${done} of ${BAND_UNLOCK_MASTERED} songs in “${BAND_LABEL[below]}” mastered — master ${Math.max(BAND_UNLOCK_MASTERED - done, 0)} more to open this band.`
+            ? `${done} of ${BAND_UNLOCK_MASTERED} songs in “${BAND_LABEL[below]}” mastered. Master ${Math.max(BAND_UNLOCK_MASTERED - done, 0)} more to open this band.`
             : "",
         };
       }).filter((section) => section.songs.length > 0),

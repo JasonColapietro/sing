@@ -102,7 +102,7 @@ export function VocalLoad({
       </div>
 
       <p className="mt-5 text-xs text-mut">
-        Cycle dose counts how many times your vocal folds opened and closed —
+        Cycle dose counts how many times your vocal folds opened and closed:
         pitch multiplied by the time you were actually sounding. An hour spent
         high in your range puts the folds through far more cycles than an hour
         spent low, which is why a stopwatch alone tends to understate a

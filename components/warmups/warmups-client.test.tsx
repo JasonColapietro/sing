@@ -269,6 +269,25 @@ describe("the first card a newcomer sees", () => {
     expect(html).not.toContain("it keeps going until you press End");
   });
 
+  it("gives a returning singer one filled start button and one streak chip", () => {
+    state.progress = {
+      ...DEFAULT_PROGRESS,
+      sessions: [
+        { id: "s1", type: "warmup", date: "2026-09-01T09:00:00.000Z", day: "2026-09-01", durationSec: 120, score: 70, detail: "First hum", xp: 20 },
+      ],
+    };
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("Continue your path");
+    expect(html).toContain("Today&#x27;s warmup");
+    const starts = [...html.matchAll(/<button[^>]*class="([^"]*)"[^>]*>(Enable mic and start|Start exercise|Start routine|Start)<\/button>/g)];
+    expect(starts).toHaveLength(2);
+    // Today's warmup, the finite daily routine, is the one filled start.
+    expect(starts.filter((m) => m[1].includes("bg-rec"))).toHaveLength(1);
+    const path = html.slice(html.indexOf("Continue your path"), html.indexOf("Today&#x27;s warmup"));
+    expect(path).toMatch(/<button[^>]*border-field[^>]*>(Enable mic and start|Start exercise)<\/button>/);
+    expect(html.match(/Start a streak today|-day streak|Best streak/g) ?? []).toHaveLength(1);
+  });
+
   it("claims only that the audio stays on the device", () => {
     const html = renderToStaticMarkup(<WarmupsClient />);
     expect(html).toContain("your audio never leaves this device");

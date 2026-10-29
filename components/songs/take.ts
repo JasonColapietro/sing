@@ -42,10 +42,10 @@ export interface TakeRecorder {
   discard(): void;
 }
 
-/** "Silent Night — Sep 23", the name a saved take gets in the Recordings room. */
+/** "Silent Night · Sep 23", the name a saved take gets in the Recordings room. */
 export function songTakeName(songTitle: string, at: Date): string {
   const date = at.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  return `${songTitle} — ${date}`;
+  return `${songTitle} · ${date}`;
 }
 
 export function releaseTake(take: TakeState | null | undefined): void {

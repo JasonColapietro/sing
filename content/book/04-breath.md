@@ -53,9 +53,9 @@ Loud is where this gets tested. Getting louder does mean more airflow and more p
 
 A correction worth trying on a pressed sound: think of the volume as coming from the ribs staying open longer, not from a harder push. It is a mental relabel more than a mechanical change, and it tends to take the squeeze out anyway.
 
-## Practising it away from pitch
+## Practicing it away from pitch
 
-Breath work is one of the few things worth practising with no singing attached, because you can watch the pressure directly instead of guessing at it through tone.
+Breath work is one of the few things worth practicing with no singing attached, because you can watch the pressure directly instead of guessing at it through tone.
 
 Slow exhales on a hiss, a lip trill, or a straw into a glass of water all do the same thing: they put a small resistance in front of the airstream so you have something to meter against. The straw and the lip trill have a further advantage. The back pressure they create makes hard blowing obvious. You cannot blast through a lip trill — it just stops.
 

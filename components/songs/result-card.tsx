@@ -72,7 +72,7 @@ export function shareText(
 ): string {
   const figures = [`Score ${score}/100`, ...stats.map((s) => `${s.label} ${s.value}`)];
   return [
-    `Suede Sing — "${title}"`,
+    `Suede Sing: "${title}"`,
     `Grade ${grade.grade} · ${starGlyphs(scale.stars, scale.max)} (${scale.stars}/${scale.max})`,
     figures.join(" · "),
     ...(subtitle ? [subtitle] : []),
@@ -139,7 +139,7 @@ export function ShareableResult({
 
   async function handleShare() {
     try {
-      await navigator.share({ title: `Suede Sing — ${title}`, text, url: link });
+      await navigator.share({ title: `Suede Sing: ${title}`, text, url: link });
     } catch {
       // User cancelled or the OS declined — Copy result stays available.
     }
@@ -193,7 +193,7 @@ export function ShareableResult({
               Share
             </Button>
           )}
-          {copyState === "error" && <Pill tone="rec">Couldn&rsquo;t copy — try again</Pill>}
+          {copyState === "error" && <Pill tone="rec">Couldn&rsquo;t copy. Try again</Pill>}
           <span aria-live="polite" className="sr-only">
             {copyState === "copied" ? "Result copied to clipboard" : ""}
           </span>

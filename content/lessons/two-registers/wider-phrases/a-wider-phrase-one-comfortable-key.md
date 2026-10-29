@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing it as you practised the siren: quietly.
+A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody onto the join. Pick a key where the high and low phrases both fit, mark the crossing phrase, and sing it as you practiced the siren: quietly, on a narrow vowel.
 
 ## Steps
 

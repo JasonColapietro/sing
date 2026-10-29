@@ -46,7 +46,7 @@ export function TakeReview({ take: state }: { take: TakeState }) {
       ) : (
         <>
           <p className="mt-3 text-sm text-mut">
-            Just your voice, as the microphone heard it — {take.durationSec.toFixed(0)} s.
+            Just your voice, as the microphone heard it: {take.durationSec.toFixed(0)} s.
           </p>
           {/* Native controls: keyboard, scrubbing and screen-reader support come free. */}
           <audio controls src={take.url} className="mt-3 w-full" aria-label={`Your take of ${take.songTitle}`} />

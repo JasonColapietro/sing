@@ -122,10 +122,13 @@ export default function SingerMethodologyPage() {
         <Card>
           <h2 className="text-xl">Disputes, confidence, and human review</h2>
           <p className="mt-3 max-w-3xl text-mut">
-            Reviewed records name a human dataset editor, a review date, sources, and a confidence
-            level: limited, moderate, or high. A disputed record means the evidence
-            was reviewed and does not support a settled catalog claim. Pending records have not
-            received that individual review.
+            Source-reviewed records name a human dataset editor, a review date, sources, and a
+            confidence level: limited, moderate, or high. A disputed record means the evidence
+            was reviewed and does not support a settled catalog claim. Records marked Review
+            confirmed carry an owner confirmation of an earlier catalog review: they name the
+            editor and confirmation date, but list no sources and do not verify either endpoint
+            against a recording or score. A profile marked Individual review pending has had
+            neither.
           </p>
           <p className="mt-3 max-w-3xl text-mut">
             Most profiles read &ldquo;Review confirmed&rdquo;. That means the site&apos;s owner

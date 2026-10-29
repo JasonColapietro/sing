@@ -29,7 +29,7 @@ import RecordsImage, {
   generateImageMetadata as recordsImageMetadata,
 } from "@/app/singers/records/opengraph-image";
 import { generateImageMetadata as singersIndexImageMetadata } from "@/app/singers/opengraph-image";
-import { songBySlug } from "@/components/songs/data";
+import { SONGS, songBySlug } from "@/components/songs/data";
 import { HUB_OG_CARD_REVISION } from "@/components/singers/og-card";
 import {
   genreCardProps,
@@ -100,7 +100,8 @@ describe("per-page share cards are versioned by what they draw", () => {
     const s = singerBySlug("alex-warren")!;
     const html = await drawn(SingerImage({ params: Promise.resolve({ slug: s.slug }) }));
     const text = singerCardText(s);
-    expect(text.notes).toBe("G2 — A4");
+    // Ranges use an en dash, like the page the card previews.
+    expect(text.notes).toBe("G2–A4");
     for (const line of [text.name, text.notes, text.span, text.status]) {
       expect(html).toContain(line);
     }
@@ -151,6 +152,12 @@ describe("per-page share cards are versioned by what they draw", () => {
     const full = songBySlug("amazing-grace-full")!;
     expect(full.form).toBe("full");
     expect(songCardText(full).footer).toMatch(/^\d+ semitones · /);
+  });
+
+  it("draws no em dash in any song or singer card text", () => {
+    for (const song of SONGS) expect(JSON.stringify(songCardText(song))).not.toContain("—");
+    for (const s of SINGERS) expect(JSON.stringify(singerCardText(s))).not.toContain("—");
+    expect(songCardText(songBySlug("silent-night")!).notes).toBe("E4–G4");
   });
 
   it("draws exactly the song text its version is built from", async () => {

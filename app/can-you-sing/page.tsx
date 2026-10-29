@@ -66,7 +66,7 @@ export default function CanYouSingHub() {
         itemListElement: songs.map((s, i) => ({
           "@type": "ListItem",
           position: i + 1,
-          name: `${s.title} — ${s.artist}`,
+          name: `${s.title} by ${s.artist}`,
           url: `${pageUrl}/${s.slug}`,
         })),
       },

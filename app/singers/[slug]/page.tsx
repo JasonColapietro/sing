@@ -461,7 +461,9 @@ export default async function SingerPage({
                     className="inline-flex min-h-11 items-center text-violet-ink underline-offset-4 hover:underline"
                     href={`/can-you-sing/${song.slug}`}
                   >
-                    {song.title} vocal range: {popRangeLabel(song)} in {song.key}
+                    {song.title}
+                    {song.artist !== s.name ? ` (${song.artist} recording)` : ""} vocal range:{" "}
+                    {popRangeLabel(song)} in {song.key}
                   </Link>
                 </li>
               ))}
@@ -630,7 +632,7 @@ export default async function SingerPage({
         {/* Similar voices by type and range centre, then the voices sharing an exact endpoint. */}
         <Card>
           <SectionLabel>Similar voices</SectionLabel>
-          <h2 className="mt-3 text-xl">Who else reaches these notes</h2>
+          <h2 className="mt-3 text-xl">Voices with a similar catalog range</h2>
           <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((r) => (
               <li key={r.slug}>
@@ -652,7 +654,7 @@ export default async function SingerPage({
                       {rangeLabel(r)}
                     </span>
                   </span>
-                  <RangeMini low={r.lowMidi} high={r.highMidi} beltMidi={r.beltMidi} className="mt-2" />
+                  <RangeMini low={r.lowMidi} high={r.highMidi} className="mt-2" />
                 </Link>
               </li>
             ))}
