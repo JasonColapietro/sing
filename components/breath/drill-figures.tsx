@@ -53,8 +53,8 @@ function CueFigure() {
     <>
       <path d="M6 24c4 0 6 10 10 10s6-10 8-10" fill="none" stroke={DIM} strokeWidth="1.5" strokeLinecap="round" />
       <path d="M28 24h22" stroke={COOL} strokeWidth="2.5" strokeLinecap="round" />
-      <text x="10" y="46" {...LABEL}>breathe</text>
-      <text x="32" y="46" {...LABEL}>sing</text>
+      <text x="15" y="46" {...LABEL} textAnchor="middle">breathe</text>
+      <text x="39" y="46" {...LABEL} textAnchor="middle">sing</text>
     </>
   );
 }

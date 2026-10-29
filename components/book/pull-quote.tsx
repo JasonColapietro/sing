@@ -27,7 +27,7 @@ export function PullQuote({
     <figure className="relative mx-auto max-w-2xl px-2 py-6 sm:py-10">
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -left-1 -top-4 select-none font-display text-[96px] leading-none text-amber sm:-left-6"
+        className="pointer-events-none absolute -left-1 -top-4 select-none font-display text-[96px] leading-none text-amber-ink sm:-left-6"
       >
         “
       </span>

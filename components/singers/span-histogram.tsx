@@ -1,4 +1,4 @@
-import { AMBER, COOL, DIM, LINE2 } from "@/lib/chart-colors";
+import { AMBER, AMBER_INK, COOL, DIM, LINE2 } from "@/lib/chart-colors";
 import type { SpanHistogram } from "@/lib/singer-catalog-position";
 
 const W = 300;
@@ -55,7 +55,7 @@ export function SpanHistogramFigure({
         x={Math.min(W - 30, Math.max(30, medianX))}
         y={H - 2}
         fontSize={8}
-        fill={AMBER}
+        fill={AMBER_INK}
         fontFamily="var(--font-mono)"
         textAnchor="middle"
       >
