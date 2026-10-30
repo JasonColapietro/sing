@@ -323,7 +323,7 @@ export function getSingerLastModified(slug: string): string | undefined {
 }
 
 /** Hand-set date of the last shared-template content change; never a build timestamp. */
-export const SINGER_PAGE_REVISED = "2026-10-29";
+export const SINGER_PAGE_REVISED = "2026-10-30";
 
 /** Days a reviewed page's words moved after SINGER_PAGE_REVISED because catalog figures moved (not a review date). */
 export const SINGER_DATA_REVISED: Readonly<Record<string, string>> = {
