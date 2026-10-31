@@ -440,3 +440,35 @@ programs order; the v4.0 pill and card; em dashes in chapter bodies; contract
 consumers re-sync; Stripe Dashboard settings; allowing sing.suedeai.ai in
 this environment's network policy; deleting the stale remote
 `funnel-polish` branch.
+
+## Singer pages as thick vocal-range answers, 2026-10-30
+
+Branch `seo/singer-vocal-range-pages` off `main` at `a8604eb`. Search Console
+(Aug 18) listed 284 of the ~421 profiles then live as "Discovered, currently
+not indexed". The pages were already server-rendered, indexable, canonical and
+in the sitemap; the problem was substance. Visible text ran 576 to 965 words
+(median 614), and only about 9% of it survived masking the name, notes and
+numbers: the same caveat sentences with values swapped in.
+
+- `lib/singer-range-profile.ts` builds the explainer from catalog numbers
+  only: 88-key piano key numbers, white/black key counts, each endpoint against
+  middle C, endpoint frequencies and their ratio, octaves touched, the whistle
+  flag; the singer against the median floor and ceiling of their catalog
+  voice-type group (left out for the five reviewed voice-type corrections) and
+  which of the eight textbook bands the span covers; songs from POP_SONGS that
+  fit as written; keyboard neighbors.
+- The profile renders three new sections (`#piano`, `#voice-type-comparison`,
+  `#practice` with one range-test CTA), shared semitones on each similar-voice
+  card, a "Nearest reported floors" chip row, and a sixth FAQ question, "Who
+  has a similar vocal range to X?", in the visible list and the FAQPage markup.
+  WebPage JSON-LD gains `about` pointing at the Person node.
+- Keyboard neighbors use a window that shifts at the ends of the order, so
+  every profile is linked from at least three others. Before, 50 profiles had
+  fewer than three inbound profile links and 11 had none.
+- Titles, H1s and snippets are unchanged: they already lead with
+  "<Singer> Vocal Range: Reported <low>–<high>" and are pinned by
+  lib/singer-page-search-intent.test.tsx, the CTR pilot included.
+- SINGER_PAGE_REVISED is 2026-10-30; freshness pins re-pinned.
+- Built site: median 1,091 visible words per profile (min 936), median
+  page-unique 6-word sequences 132 to 242.
+- Guard: lib/singer-range-profile.test.tsx renders all 636 profiles.

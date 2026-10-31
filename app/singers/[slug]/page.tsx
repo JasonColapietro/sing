@@ -29,7 +29,17 @@ import { fitDescription } from "@/lib/meta-fit";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
+import {
+  keyboardNeighbors,
+  keyboardParagraphs,
+  sharedSemitones,
+  similarRangeAnswer,
+  songsInRange,
+  songsInRangeCount,
+  voiceTypeParagraphs,
+} from "@/lib/singer-range-profile";
+import { POP_SONGS } from "@/lib/pop-songs";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import { RangeMini } from "@/components/singers/range-mini";
@@ -194,6 +204,7 @@ export async function generateMetadata({
 }
 
 const VOICE_TYPE_QUESTION = (s: SingerRecord) => `What voice type is ${s.name}?`;
+const SIMILAR_QUESTION = (s: SingerRecord) => `Who has a similar vocal range to ${s.name}?`;
 
 interface SingerFaq {
   /** The shared caveat, said once above the list. */
@@ -220,6 +231,7 @@ function singerFaq(s: SingerRecord): SingerFaq {
         { q: `What is ${s.name}’s lowest note?`, a: `${low} is the reported floor. No reviewed source here establishes it as ${s.name}’s lowest note.` },
         { q: `How many octaves can ${s.name} sing?`, a: `About ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of ${s.name}’s working range.` },
         { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
+        { q: SIMILAR_QUESTION(s), a: similarRangeAnswer(s, !hasReviewedVoiceTypeCorrection(s)) },
       ],
     };
   }
@@ -246,6 +258,7 @@ function singerFaq(s: SingerRecord): SingerFaq {
         a: `About ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer’s full working range.`,
       },
       { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
+      { q: SIMILAR_QUESTION(s), a: similarRangeAnswer(s, !hasReviewedVoiceTypeCorrection(s)) },
     ],
   };
 }
@@ -276,6 +289,13 @@ export default async function SingerPage({
   // Up to eight chips across the two sub-rows.
   const lowMates = allLow.slice(0, allHigh.length ? 4 : 8);
   const highMates = allHigh.slice(0, allLow.length ? 4 : 8);
+  // The range explainer, computed from the catalog's numbers (lib/singer-range-profile).
+  const labelSettled = !hasReviewedVoiceTypeCorrection(s);
+  const keyboard = keyboardParagraphs(s);
+  const typeComparison = voiceTypeParagraphs(s, labelSettled);
+  const neighbors = keyboardNeighbors(s);
+  const fittingSongs = songsInRange(s);
+  const fittingCount = songsInRangeCount(s);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = queryAlignedDescription(s);
@@ -327,6 +347,7 @@ export default async function SingerPage({
             item: breadcrumb.url,
           })),
         },
+        about: { "@id": `${pageUrl}#person` },
         mainEntity: { "@id": `${pageUrl}#person` },
       },
       {
@@ -451,6 +472,31 @@ export default async function SingerPage({
         <div id="you-vs" className="scroll-mt-20">
           <CompareWithMe s={rangeProps} />
         </div>
+
+        {/* The range explained from the catalog's numbers alone: keys, pitch, octaves. */}
+        <Card>
+          <h2 id="piano" className="scroll-mt-24 text-xl">
+            {s.name}&rsquo;s vocal range on the piano
+          </h2>
+          <div className="mt-3 max-w-3xl space-y-3 text-sm text-mut">
+            {keyboard.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <h2 id="voice-type-comparison" className="scroll-mt-24 text-xl">
+            {labelSettled
+              ? `How ${s.name}’s range compares with other ${pluralVoice(s.voiceType.toLowerCase())}`
+              : `How ${s.name}’s range lines up with the textbook voice types`}
+          </h2>
+          <div className="mt-3 max-w-3xl space-y-3 text-sm text-mut">
+            {typeComparison.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+          </div>
+        </Card>
 
         {/* Songs in the range catalog by this artist */}
         {popSongsByArtistSlug(s.slug).length > 0 && (
@@ -666,6 +712,9 @@ export default async function SingerPage({
                     </span>
                   </span>
                   <RangeMini low={r.lowMidi} high={r.highMidi} className="mt-2" />
+                  <span className="mt-2 block text-xs text-mut">
+                    Shares {sharedSemitones(s, r)} of {s.name}&rsquo;s {semis} semitones
+                  </span>
                 </Link>
               </li>
             ))}
@@ -732,6 +781,33 @@ export default async function SingerPage({
               )}
             </div>
           )}
+          {/* Nearest floors on the keyboard: a shifting window, so every profile is linked from others. */}
+          {neighbors.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-base">
+                Nearest reported floors to {midiToLabel(s.lowMidi)}
+              </h3>
+              <p className="mt-1 text-sm text-mut">
+                The catalog ordered by lowest note, then highest: the voices on either side of {s.name}.
+              </p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {neighbors.map((m) => (
+                  <li key={m.slug}>
+                    <Link
+                      href={`/singers/${m.slug}`}
+                      prefetch={false}
+                      className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
+                    >
+                      {m.name}
+                      <span className="tabular font-mono text-[10px] text-dim">
+                        {rangeLabel(m)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {/* No prefetch: a hub's payload is its whole chart. */}
           <div className="mt-5 flex flex-wrap gap-3">
             <LinkButton
@@ -752,6 +828,45 @@ export default async function SingerPage({
                 {s.genres[0]} voices
               </LinkButton>
             )}
+          </div>
+        </Card>
+
+        {/* One start, at the end of the read: the range test that overlays the visitor on this singer. */}
+        <Card className="border-violet/40">
+          <h2 id="practice" className="scroll-mt-24 text-xl">
+            Sing in {s.name}&rsquo;s range with Suede Sing
+          </h2>
+          {fittingSongs.length > 0 && (
+            <>
+              <p className="mt-3 max-w-3xl text-sm text-mut">
+                {fittingCount} of the {POP_SONGS.length} songs in the Suede Sing song catalog sit
+                inside {s.name}&rsquo;s reported {rangeLabel(s)} as written. The widest of them:
+              </p>
+              <ul className="mt-3 space-y-1">
+                {fittingSongs.map((song) => (
+                  <li key={song.slug} className="text-sm">
+                    <Link
+                      href={`/can-you-sing/${song.slug}`}
+                      prefetch={false}
+                      className="inline-flex min-h-11 items-center text-violet-ink underline-offset-4 hover:underline"
+                    >
+                      {song.title} ({song.artist}): {popRangeLabel(song)} in {song.key}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          <p className="mt-3 max-w-3xl text-sm text-mut">
+            Take the free two-minute range test and Suede Sing lays your lowest and highest
+            notes over {s.name}&rsquo;s {rangeLabel(s)} on the same keyboard. You see which of
+            these notes you already own and which to train next, then warm up and practice
+            right in your browser.
+          </p>
+          <div className="mt-5">
+            <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
+              Test my range against {s.name} →
+            </LinkButton>
           </div>
         </Card>
       </div>

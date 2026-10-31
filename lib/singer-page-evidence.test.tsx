@@ -256,7 +256,8 @@ describe("singer-page evidence and provenance", () => {
 
     expect(voiceType).toHaveLength(1);
     expect(visibleHtml).toContain(voiceType[0].acceptedAnswer.text);
-    expect(answers).toHaveLength(4);
+    // Highest, lowest, how high, octaves, and who has a similar range.
+    expect(answers).toHaveLength(5);
     // The shared caveat is the section's lede, said once above the answers.
     expect(visibleHtml).toContain("as a reported reference span, not an independently verified physiological limit.");
     for (const answer of answers) {
