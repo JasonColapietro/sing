@@ -223,8 +223,13 @@ describe("shared-floor and shared-ceiling chips show the closest voices, not the
     for (const s of SINGERS) {
       const { allLow, allHigh, lowMates, highMates } = endpointMates(s);
       const shown = new Set([...relatedSingers(s), ...keyboardNeighbors(s)].map((o) => o.slug));
-      const check = (mates: typeof lowMates, all: typeof allLow, gap: (o: (typeof all)[number]) => number) => {
-        const candidates = all.filter((o) => !shown.has(o.slug));
+      const check = (
+        mates: typeof lowMates,
+        all: typeof allLow,
+        gap: (o: (typeof all)[number]) => number,
+        also: ReadonlySet<string> = new Set(),
+      ) => {
+        const candidates = all.filter((o) => !shown.has(o.slug) && !also.has(o.slug));
         // Every chip comes from the full list; none is a card or neighbor already on the page.
         for (const m of mates) expect(all).toContain(m);
         expect(mates.filter((m) => shown.has(m.slug))).toEqual([]);
@@ -241,10 +246,14 @@ describe("shared-floor and shared-ceiling chips show the closest voices, not the
         return candidates.length;
       };
       const lowCandidates = check(lowMates, allLow, (o) => Math.abs(o.highMidi - s.highMidi));
-      const highCandidates = check(highMates, allHigh, (o) => Math.abs(o.lowMidi - s.lowMidi));
-      // The page's budget: four per row when both rows exist, eight when one does.
-      expect(lowMates).toHaveLength(Math.min(lowCandidates, allHigh.length ? 4 : 8));
-      expect(highMates).toHaveLength(Math.min(highCandidates, allLow.length ? 4 : 8));
+      // A voice sharing both endpoints shows once, in the floor row.
+      const inLow = new Set(lowMates.map((o) => o.slug));
+      expect(highMates.filter((m) => inLow.has(m.slug)), s.slug).toEqual([]);
+      const highCandidates = check(highMates, allHigh, (o) => Math.abs(o.lowMidi - s.lowMidi), inLow);
+      // Eight chips across the two rows: four each, or eight in one row when
+      // the other has nothing left to show, so no slot is lost to the exclusions.
+      expect(lowMates).toHaveLength(Math.min(lowCandidates, highCandidates ? 4 : 8));
+      expect(highMates).toHaveLength(Math.min(highCandidates, lowMates.length ? 4 : 8));
     }
   });
 

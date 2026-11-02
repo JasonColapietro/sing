@@ -735,7 +735,7 @@ export function PitchMeter({
           <Card className="mb-4">
             <SectionLabel>Last run</SectionLabel>
             <p role="status" className="mt-2 text-sm text-mut">
-              {`+${lastLog.xpGained} XP, saved to your progress. No note was held long enough to mark your lowest and highest: hold one easy note for a moment and it shows here.`}
+              {`+${lastLog.xpGained} XP, saved to your progress. No held note is marked yet: hold one easy note for a moment and your lowest and highest show here.`}
             </p>
             <RangeNextStep
               retestDue={offerRetest}

@@ -151,7 +151,7 @@ describe("the pitch meter after a saved Stop that held no note", () => {
     const page = text(tree);
     expect(page).not.toContain("Held so far");
     expect(page).toContain(SAVED);
-    expect(page).toContain("No note was held long enough to mark your lowest and highest");
+    expect(page).toContain("No held note is marked yet");
     expect(page).not.toContain("No note was heard");
     expect(page).not.toMatch(/\u2014/);
     // The save is announced, as the silent card's word is.

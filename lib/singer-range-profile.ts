@@ -255,9 +255,16 @@ export function endpointMates(s: Singer): {
     mates
       .filter((o) => !shown.has(o.slug))
       .sort((a, b) => gap(a) - gap(b) || a.name.localeCompare(b.name));
-  // Up to eight chips across the two sub-rows.
-  const lowMates = closest(allLow, (o) => Math.abs(o.highMidi - s.highMidi)).slice(0, allHigh.length ? 4 : 8);
-  const highMates = closest(allHigh, (o) => Math.abs(o.lowMidi - s.lowMidi)).slice(0, allLow.length ? 4 : 8);
+  // Up to eight chips across the two sub-rows: four each, or all eight in one
+  // row when the other has none to show. A voice sharing both the floor and
+  // the ceiling leads both sorts, so it is shown once, in the floor row.
+  const lowAvail = closest(allLow, (o) => Math.abs(o.highMidi - s.highMidi));
+  const highAvail = closest(allHigh, (o) => Math.abs(o.lowMidi - s.lowMidi));
+  let lowMates = lowAvail.slice(0, 4);
+  const inLow = new Set(lowMates.map((o) => o.slug));
+  const highLeft = highAvail.filter((o) => !inLow.has(o.slug));
+  if (highLeft.length === 0) lowMates = lowAvail.slice(0, 8);
+  const highMates = highLeft.slice(0, lowMates.length ? 4 : 8);
   return { allLow, allHigh, lowMates, highMates };
 }
 
