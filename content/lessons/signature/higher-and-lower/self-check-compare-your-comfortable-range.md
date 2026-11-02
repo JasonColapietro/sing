@@ -36,7 +36,7 @@ Compare your observation with an earlier comfortable range; a new note is not re
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today, and give it three attempts at most, with a few seconds' rest between them; if none of the three is easy, it is not today's note. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.
 
 - Look: Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.
 - Listen: Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days.
@@ -50,7 +50,7 @@ I sang Small three-note climb with its top on today's easy high note and its bot
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress.
+- The target disappears when the range, volume, speed, or duration increases. => If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -68,7 +68,7 @@ I sang Small three-note climb with its top on today's easy high note and its bot
 
 Ready when: You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.
 
-If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
+If not ready: If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I sang Small three-note climb with its top on today's easy high note and its bottom on today's easy low note, and compared both with my earlier baseline without forcing an extension. This is a self-report, not an automatic assessment.
 

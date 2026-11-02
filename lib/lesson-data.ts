@@ -6682,13 +6682,13 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Ornament vocabulary",
         "body": "All four, placed where you marked them before singing.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
-        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+        "listen": "In the one take, each of the four ornaments sounds different from the others, the melody returns to its written notes after each, and the words stay intact."
       },
       {
         "title": "Make one evidence take",
         "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on, then record the phrase once in the [recorder](/recorder) with all four at the places you marked, so you can name each one on playback. Keep scoops, falls, bends, and slides small and intentional.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
-        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+        "listen": "In the one take, each of the four ornaments sounds different from the others, the melody returns to its written notes after each, and the words stay intact."
       },
       {
         "title": "Review your own attempt",
@@ -6728,7 +6728,7 @@ export const LESSONS: Lesson[] = [
     "selfCheck": {
       "criteria": [
         "I sang one phrase with a scoop, a fall, a bend and a slide at the places I marked, and named each one on playback.",
-        "The four versions are recognizably different and the underlying words and melody remain intact.",
+        "In the one take, each of the four ornaments sounds different from the others, the melody returns to its written notes after each, and the words stay intact.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take of one phrase, all four ornaments land where you marked them beforehand, you can name each one on playback, and the melody returns to its written notes after each.",
@@ -8490,7 +8490,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today, and give it three attempts at most, with a few seconds' rest between them; if none of the three is easy, it is not today's note. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.",
         "look": "Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.",
         "listen": "Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days."
       },
@@ -8504,7 +8504,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress."
+        "recovery": "If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -8536,7 +8536,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.",
-      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I sang Small three-note climb with its top on today's easy high note and its bottom on today's easy low note, and compared both with my earlier baseline without forcing an extension.",
       "doesNotShow": "Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
     }

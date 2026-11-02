@@ -11,12 +11,12 @@ import { useProgress, type Achievement } from "@/lib/progress";
 import { SITE_URL } from "@/lib/site";
 import { emitProResult } from "@/lib/pro-signal";
 import type { RoutineSummaryData } from "./routine-runner";
-import { routineMinutes, stepExercise } from "./routines";
+import { routineMinutes, stepExercise, warmInStep } from "./routines";
 
 /**
  * One row per step. Steps before a `?step=` link's were not part of this run.
  * A warm-in (warmInStep) is sung in the first row's place, as a few reps of
- * that exercise rather than the whole step, so its row says so: otherwise a
+ * its own exercise rather than the whole step, so its row names it: otherwise a
  * scored step 1 next to "not in this run" on step 2 reads as a mistake.
  * Steps from the one the cap slide stood in for were never reached, which is
  * not the same as skipped: the singer chose nothing there.
@@ -27,7 +27,7 @@ export function routineSummaryRows(data: RoutineSummaryData): ResultRow[] {
     const r = steps[i] ?? null;
     const title = stepExercise(s).title;
     return {
-      label: i === 0 && warmIn && r ? `Warm-in: ${title}` : title,
+      label: i === 0 && warmIn && r ? `Warm-in: ${stepExercise(warmInStep(routine)).title}` : title,
       score: r ? r.avgScore : null,
       note:
         i < startStep

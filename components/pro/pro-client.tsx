@@ -142,6 +142,21 @@ function revealPlans() {
   );
 }
 
+/**
+ * A buyer back from a cancelled checkout wants to try again, so their landing
+ * puts the price card's buy button in view; for a newcomer the cancel note
+ * sits just above it. From the plans heading the button fell under a phone's
+ * bottom edge. A pass holder's "Keep Pro for life" sits at the foot of the
+ * card, so theirs is brought to the middle of the screen instead.
+ */
+function revealBuy() {
+  requestAnimationFrame(() => {
+    const keep = document.getElementById("buy-keep");
+    if (keep) keep.scrollIntoView({ block: "center" });
+    else document.getElementById("buy")?.scrollIntoView({ block: "start" });
+  });
+}
+
 /** Opens the "Already have Pro?" form before a link's own jump reaches it. */
 function openRestore() {
   const details = document.getElementById("restore");
@@ -725,7 +740,8 @@ export function ProClient() {
       if (landing.kind === "none") return;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- the checkout outcome only exists in the URL, so it can only be read after hydration
       setReturnNote(landing.kind);
-      revealPlans();
+      if (landing.kind === "cancelled") revealBuy();
+      else revealPlans();
       return;
     }
 
@@ -1262,7 +1278,7 @@ export function ProClient() {
                       </p>
                     )}
                     {(onPass || lapsing) && (
-                      <div className="mt-2">
+                      <div id="buy-keep" className="mt-2">
                         {buyControls(
                           lifetimePurchase
                             ? `Keep Pro for life: ${price} once`

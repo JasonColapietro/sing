@@ -239,6 +239,26 @@ export function isFreeExercise(id: string): boolean {
   return EXERCISES.some((e) => e.id === id);
 }
 
+/** At most this many reps of the warm-in warm a cold voice in. */
+export const WARM_IN_MAX_REPS = 6;
+
+/** The gentle free exercise a routine whose own first exercise is not one warms in on. */
+export const WARM_IN_FALLBACK_ID = "lip-trill-scale";
+
+/**
+ * The warm-in a routine opened part-way sings first on a cold day: its own
+ * first exercise, shortened, when that is a free beginner exercise; otherwise
+ * (a Pro pack opening on, say, an octave slide through the break) a few
+ * lip-trill arpeggios, so "a few easy reps" stays true.
+ */
+export function warmInStep(routine: Routine): RoutineStep {
+  const first = routine.steps[0];
+  if (isFreeExercise(first.exerciseId) && stepExercise(first).tier === "beginner") {
+    return { exerciseId: first.exerciseId, reps: Math.min(WARM_IN_MAX_REPS, first.reps) };
+  }
+  return { exerciseId: WARM_IN_FALLBACK_ID, reps: WARM_IN_MAX_REPS };
+}
+
 /**
  * Seconds the intro card holds before a step starts itself. Long enough to
  * read the title and the tip, short enough that a singer who has done this

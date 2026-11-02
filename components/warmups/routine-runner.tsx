@@ -18,8 +18,8 @@ import {
   STEP_INTRO_SEC,
   stepExercise,
   stepSeconds,
+  warmInStep,
   type Routine,
-  type RoutineStep,
 } from "./routines";
 
 /**
@@ -64,14 +64,7 @@ export function stepStartingTempo(ex: WarmupExercise, start: 0.75 | 1 | 1.25): 0
   return start < 1 ? (Math.max(start, slowestOneBreathTempo(ex)) as 0.75 | 1) : start;
 }
 
-/** At most this many reps of a routine's first exercise warm a cold voice in. */
-export const WARM_IN_MAX_REPS = 6;
-
-/** The warm-in a routine opened part-way sings first on a cold day: its own first exercise, shortened. */
-export function warmInStep(routine: Routine): RoutineStep {
-  const first = routine.steps[0];
-  return { exerciseId: first.exerciseId, reps: Math.min(WARM_IN_MAX_REPS, first.reps) };
-}
+export { WARM_IN_MAX_REPS, warmInStep } from "./routines";
 
 export interface RoutineSummaryData {
   routine: Routine;
@@ -129,9 +122,15 @@ export function RoutineRunner({
   const [startingTempo] = useState(initialTempo);
   const cap = useFreeCap();
   const [firstStep] = useState(() => Math.min(Math.max(0, startStep), stepCount - 1));
-  // Captured once: a first exercise the saved range cannot hold would only be skipped, so it never warms in.
+  // Captured once: a warm-in the saved range cannot hold would only be skipped, so it never warms in.
   const [warmInFirst] = useState(
-    () => warmIn && firstStep > 0 && !tooWideForRange(stepExercise(routine.steps[0]), range),
+    () =>
+      warmIn &&
+      firstStep > 0 &&
+      // Resuming on the warm-in's own exercise (the Full warmup's lip trills)
+      // is already the gentle start; singing it twice in a row is not.
+      warmInStep(routine).exerciseId !== routine.steps[firstStep].exerciseId &&
+      !tooWideForRange(stepExercise(warmInStep(routine)), range),
   );
   // True while the warm-in is the step on screen; it runs as step 0.
   const [warming, setWarming] = useState(warmInFirst);
@@ -191,7 +190,7 @@ export function RoutineRunner({
   const afterWarmIn = warmInFirst && !warming && stepIndex === firstStep;
   const prev = stepIndex > firstStep || afterWarmIn ? (results[afterWarmIn ? 0 : stepIndex - 1] ?? null) : null;
   const prevEx = afterWarmIn
-    ? stepExercise(routine.steps[0])
+    ? stepExercise(warmInStep(routine))
     : stepIndex > firstStep
       ? stepExercise(routine.steps[stepIndex - 1])
       : null;

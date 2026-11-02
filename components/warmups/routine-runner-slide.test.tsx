@@ -17,7 +17,7 @@ vi.mock("@/components/practice/session-shell", () => ({
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import type { VocalRange } from "@/lib/progress";
 import { RoutineRunner, WARM_IN_MAX_REPS, warmInStep } from "./routine-runner";
-import { SKIP_INTRO_SEC, STEP_INTRO_SEC, routineById } from "./routines";
+import { ROUTINES, SKIP_INTRO_SEC, STEP_INTRO_SEC, isFreeExercise, routineById, stepExercise } from "./routines";
 
 /** Quick's third step is the N run, a twelfth. */
 function slide(range: VocalRange): string {
@@ -96,5 +96,59 @@ describe("a routine opened part-way through on a cold day", () => {
     expect(warmInStep(routineById("high-notes")!)).toEqual({ exerciseId: "lip-trill-scale", reps: 6 });
     expect(warmInStep(routineById("morning")!).reps).toBe(6);
     expect(warmInStep(routineById("recovery")!).reps).toBe(6);
+  });
+
+  it("keeps a free routine's own first exercise when it is a free beginner one", () => {
+    for (const r of ROUTINES) {
+      const first = r.steps[0];
+      if (!isFreeExercise(first.exerciseId) || stepExercise(first).tier !== "beginner") continue;
+      expect(warmInStep(r)).toEqual({ exerciseId: first.exerciseId, reps: Math.min(WARM_IN_MAX_REPS, first.reps) });
+    }
+    expect(warmInStep(routineById("morning")!).exerciseId).toBe("morning-hum");
+  });
+
+  it("warms a Pro routine in on lip trills, never its first exercise through the break", () => {
+    const mix = routineById("mix")!;
+    expect(mix.steps[0].exerciseId).toBe("mix-ng-slide");
+    expect(warmInStep(mix)).toEqual({ exerciseId: "lip-trill-scale", reps: WARM_IN_MAX_REPS });
+    // Any first exercise that is not a free beginner one falls back too.
+    expect(warmInStep(routineById("full")!).exerciseId).toBe("lip-trill-scale");
+    const fallback = stepExercise(warmInStep(mix));
+    expect(fallback.tier).toBe("beginner");
+    expect(isFreeExercise(fallback.id)).toBe(true);
+
+    const html = renderToStaticMarkup(
+      <RoutineRunner
+        routine={mix}
+        startStep={2}
+        warmIn
+        pitch={{} as UsePitchResult}
+        range={{}}
+        onDone={() => {}}
+        onQuit={() => {}}
+      />,
+    ).replace(/<!-- -->/g, "");
+    expect(html).toContain("Warm-in: Lip-trill arpeggio");
+    expect(html).not.toContain("Ng slide through the break");
+  });
+
+  it("skips the warm-in when the step it resumes is the warm-in's own exercise", () => {
+    // Full opens on the Ng siren (not beginner), so it warms in on lip trills,
+    // which are its step 2: resuming there is already the gentle start.
+    const full = routineById("full")!;
+    expect(full.steps[1].exerciseId).toBe(warmInStep(full).exerciseId);
+    const html = renderToStaticMarkup(
+      <RoutineRunner
+        routine={full}
+        startStep={1}
+        warmIn
+        pitch={{} as UsePitchResult}
+        range={{}}
+        onDone={() => {}}
+        onQuit={() => {}}
+      />,
+    ).replace(/<!-- -->/g, "");
+    expect(html).not.toContain("Warm-in:");
+    expect(html).toContain("Lip-trill arpeggio");
   });
 });
