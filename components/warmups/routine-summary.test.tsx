@@ -13,6 +13,8 @@ const stored = vi.hoisted(() => ({ progress: null as ProgressState | null }));
 vi.mock("@/lib/pro", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/pro")>(),
   useIsPro: () => false,
+  // Hydrated: the Pro nudges render as they do on a free singer's screen.
+  useProReady: () => true,
 }));
 
 vi.mock("@/lib/progress", async (importOriginal) => {
@@ -119,6 +121,36 @@ describe("the routine summary", () => {
     // Not on a run that scored, and not once Play again is gone at the cap.
     expect(render(allSung)).not.toContain("Nothing was scored this run");
     expect(render(silent, true)).not.toContain("Nothing was scored this run");
+  });
+});
+
+describe("the Pro nudge under a routine's result", () => {
+  // An even session count after the one-time Pro moment: the full card, whose
+  // body says these scores feed tomorrow's plan.
+  const cardProgress = (): ProgressState => ({
+    ...DEFAULT_PROGRESS,
+    sessions: [{ id: "s2" }, { id: "s1" }] as unknown as ProgressState["sessions"],
+  });
+
+  it("pitches Pro on a run that scored", () => {
+    stored.progress = cardProgress();
+    const html = render(allSung);
+    expect(html).toContain("these included");
+    expect(html).toMatch(/href="\/pro#buy"/);
+  });
+
+  it("is left off a run where nothing was sung, which scored and logged nothing", () => {
+    stored.progress = cardProgress();
+    const silent: RoutineSummaryData = { routine, steps: routine.steps.map(() => null), completed: true };
+    const html = render(silent);
+    expect(html).toContain("Nothing was scored this run");
+    expect(html).toContain("Play again");
+    expect(html).not.toContain("these included");
+    expect(html).not.toContain("/pro#buy");
+    // Nor the quiet one-line form on an odd count.
+    stored.progress = { ...cardProgress(), sessions: cardProgress().sessions.slice(1) };
+    expect(render(silent)).not.toContain("/pro#buy");
+    expect(render(allSung)).toContain("/pro#buy");
   });
 });
 

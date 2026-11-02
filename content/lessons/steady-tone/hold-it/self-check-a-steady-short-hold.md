@@ -36,7 +36,7 @@ Compare the beginning and ending of a comfortable hold by ear; the warm-up's sco
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Aim for one centered pitch and an even release. Hear Sustained hold once, stop the reference, then sing your short comfortable holds in that one recorder take. Compare the start and end of each on playback; judge it by ear, not by the display.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Aim for one centered pitch and an even release. Hear Sustained hold once, stop the reference, then sing three short comfortable holds in a row in that one recorder take. Compare the start and end of each on playback; judge it by ear, not by the display. Then make the same take again on a different day: it is ready once both days pass.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.

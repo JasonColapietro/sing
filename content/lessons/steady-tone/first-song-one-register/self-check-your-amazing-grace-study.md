@@ -36,7 +36,7 @@ Sing the supplied study arrangement through after hearing its reference; note an
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep one consistent, comfortable production through the song. Work phrase by phrase, then join the form without changing key to imitate a recording.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep one consistent, comfortable production through the song. Work phrase by phrase, then join the form without changing key to imitate a recording, and sing it through with no stops. Write down the key you sang it in.
 
 - Look: The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.
 - Listen: The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.

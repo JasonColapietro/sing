@@ -316,7 +316,8 @@ export default function EarTrainingClient() {
         </section>
 
         <p className="mt-8 text-center text-xs text-dim">
-          Every finished game earns XP and counts toward your streak.
+          Every finished game earns XP and counts toward your streak, once the mic has
+          heard you sing in the games that listen.
           {" "}
           {GAME_NAMES["pitch-match"]}, {GAME_NAMES["note-catcher"].toLowerCase()} and{" "}
           {GAME_NAMES["melody-echo"].toLowerCase()} need a microphone; the other two never

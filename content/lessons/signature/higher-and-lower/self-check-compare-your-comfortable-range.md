@@ -36,7 +36,7 @@ Compare your observation with an earlier comfortable range; a new note is not re
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.

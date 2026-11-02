@@ -184,7 +184,11 @@ export function RoutineSummary({
           they would get a blank cream block where the pitch used to be. */}
       {/* At the cap the notice above already carries the priced way past
           the limit; a second, unpriced ask under it was noise. */}
-      {!capped && (
+      {/* Not on a run where nothing was sung either: its body says these
+          scores feed tomorrow's plan, and a silent run scored and logged
+          nothing. The mic note above is that screen's one job, as on the
+          song summary (components/songs/session-summary.tsx). */}
+      {!capped && sungCount > 0 && (
       <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
         <ProCrescendoNudge
           line="The coach's full daily plan: every step, built from your own scores."

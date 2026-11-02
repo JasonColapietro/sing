@@ -120,7 +120,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Pop",
     "summary": "The women who defined what a pop lead vocal is, from torch-song discipline through the belt arms race, and what their entries teach about power built to last.",
     "free": false,
-    "words": 1912,
+    "words": 1900,
     "body": "This chapter collects the women who built the job description \"pop lead vocalist\" — voices that defined eras before and just as the microphone era gave way to the streaming one. Reading their entries in sequence is watching an arms race unfold: each generation found a new way to make a chorus feel bigger, from orchestral restraint to gospel-fired melisma to the industrial-strength belt, and each new weapon became the next generation's entry requirement.\n\nThree patterns are worth holding as you read. First, nearly every founder's entry shows a wide gap between speaking-range verses and a carefully rationed peak — the older discipline of *saving it* — where modern charts often demand the peak in every chorus. That rationing is why so many of these careers ran thirty and forty years, and it is the single most borrowable habit in this chapter. Second, the tone vocabulary works overtime here: these entries lean on weight, vibrato width and placement more than agility, because the era's records were built on sustained notes you could hang a key change on. Third, read the extremes here with the first chapter's caveats: each is one recorded moment. Where an entry gives a full-voice ceiling, it is the more useful number, because it marks where the connected voice tops out, but it is still a peak, not where the songs sat; several entries in this room give none.\n\nBorrow from these voices the way the method chapter suggests: phrasing and dynamic architecture first. The founders are the atlas's best syllabus in *building* a song — where to sit low, when to open, how to make the third chorus an event without screaming the first two.",
     "entries": [
       {
@@ -137,7 +137,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Long legato lines with exact vowel placement; climaxes come from breath control, not volume.",
-        "technique": "Everything hangs on legato: notes connect with no gap, no scoop, and no restart of air, so a phrase can run long past where most singers would take a breath. The belt tops out around D5 and the range above it is sung as a lightened head tone, so climaxes come from lengthening and swelling a line rather than adding volume. Tall, exact vowels carry a slow and often delayed vibrato, while consonants land late, right on the beat — and that timing is what keeps a slow ballad from drifting.",
+        "technique": "Everything hangs on legato: notes connect with no gap, no scoop, and no restart of air, so a phrase can run long past where most singers would take a breath. The belt tops out around D5 and the range above it is sung as a lightened head tone, so climaxes come from lengthening and swelling a line rather than adding volume. Tall, exact vowels carry a slow and often delayed vibrato, while consonants land late, right on the beat, and that timing is what keeps a slow ballad from drifting.",
         "span": "3 octaves + 2"
       },
       {
@@ -154,7 +154,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Thin-edged bright tone with breathy onsets; phrasing stays conversational across the groove.",
-        "technique": "Thin cord closure gives a bright, narrow edge that cuts through a dense track without much volume behind it. Onsets are breathy, words are delivered conversationally on top of the groove, and the top of the range is reached as a light head tone rather than belted. What vibrato there is stays small, and it often disappears entirely. Ornament is sparse — a bend or a single turn, not a run. Restraint and forward placement are the whole appeal, and added soul weight or heavy melisma pulls against them.",
+        "technique": "Thin cord closure gives a bright, narrow edge that cuts through a dense track without much volume behind it. Onsets are breathy, words are delivered conversationally on top of the groove, and the top of the range is reached as a light head tone rather than belted. What vibrato there is stays small, and it often disappears entirely. Ornament is sparse: a bend or a single turn, not a run. Restraint and forward placement are the whole appeal, and added soul weight or heavy melisma pulls against them.",
         "span": "2 octaves + 9"
       },
       {
@@ -171,7 +171,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Thick low-set chest voice with wide vibrato; hard consonants, phrasing that sits behind the beat.",
-        "technique": "Weight comes from a chest register set low and thick, with a dark, almost brassy edge that carries down toward F2 without going hollow. Vibrato is wide and slow — closer to a swell than a flutter — and it tends to open up on the last beat of a held word. Consonants hit hard, and phrases sit a hair behind the beat, which reads as weight. Above the D5 belt the tone releases into something lighter. Dropping the larynx to fake that depth just produces a hooty, unfocused sound.",
+        "technique": "Weight comes from a chest register set low and thick, with a dark, almost brassy edge that carries down toward F2 without going hollow. Vibrato is wide and slow (closer to a swell than a flutter), and it tends to open up on the last beat of a held word. Consonants hit hard, and phrases sit a hair behind the beat, which reads as weight. Above the D5 belt the tone releases into something lighter. Dropping the larynx to fake that depth just produces a hooty, unfocused sound.",
         "span": "3 octaves + 4"
       },
       {
@@ -188,7 +188,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Full-bodied chest voice with clean intonation; carries weight high before easing into head voice.",
-        "technique": "Full chest weight is carried surprisingly high before the voice releases into a round head tone, and the handoff is done by easing pressure rather than by flipping — the sustained high line late in \"Blue Bayou\" shows the release clearly. Intonation is exact, onsets are firm and unaspirated, and vibrato is even and moderate in width, arriving after the pitch is established. Phrasing sits right on the beat with country-style bends on individual words. The roundness up there survives only because the height is eased into instead of forced.",
+        "technique": "Full chest weight is carried surprisingly high before the voice releases into a round head tone, and the handoff is done by easing pressure rather than by flipping: the sustained high line late in \"Blue Bayou\" shows the release clearly. Intonation is exact, onsets are firm and unaspirated, and vibrato is even and moderate in width, arriving after the pitch is established. Phrasing sits right on the beat with country-style bends on individual words. The roundness up there survives only because the height is eased into instead of forced.",
         "span": "2 octaves + 6"
       },
       {
@@ -205,7 +205,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Warm low-middle register sung close to the mic, minimal vibrato, very even air pressure.",
-        "technique": "Nearly all of it lives in the low-middle, a region most singers pass through on the way up, and it is sung close to the microphone at a conversational volume. Air pressure barely changes across a phrase, vibrato is minimal, and there is almost no scoop into notes — pitches arrive already centered. Consonants stay soft so the line never breaks. Two things ruin an imitation: transposing it up into a brighter part of the voice, and adding vibrato, which immediately makes the evenness disappear.",
+        "technique": "Nearly all of it lives in the low-middle, a region most singers pass through on the way up, and it is sung close to the microphone at a conversational volume. Air pressure barely changes across a phrase, vibrato is minimal, and there is almost no scoop into notes: pitches arrive already centered. Consonants stay soft so the line never breaks. Two things ruin an imitation: transposing it up into a brighter part of the voice, and adding vibrato, which immediately makes the evenness disappear.",
         "span": "2 octaves + 1"
       },
       {
@@ -238,8 +238,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Total Eclipse of the Heart",
         "lowSource": null,
         "highSource": "Si demain (Turn Around)",
-        "blurb": "Gravel-and-flame rock mezzo — a torn, husky rasp that turns every chorus into a storm warning.",
-        "technique": "Rasp with architecture: Tyler's distortion is constant, a torn edge riding on full chest resonance, yet the pitch line underneath is disciplined. She belts F5 with a wide-open throat and huge breath spend, letting sustains fray deliberately at the tip. Verses sit low around D3, husky and confiding, before the register slams upward toward G5 peaks. Copying the gravel by grinding the throat is the classic error — hers sits high in the mask, powered by torso-deep support.",
+        "blurb": "Gravel-and-flame rock mezzo: a torn, husky rasp that turns every chorus into a storm warning.",
+        "technique": "Rasp with architecture: Tyler's distortion is constant, a torn edge riding on full chest resonance, yet the pitch line underneath is disciplined. She belts F5 with a wide-open throat and huge breath spend, letting sustains fray deliberately at the tip. Verses sit low around D3, husky and confiding, before the register slams upward toward G5 peaks. Copying the gravel by grinding the throat is the classic error: hers sits high in the mask, powered by torso-deep support.",
         "span": "2 octaves + 5"
       },
       {
@@ -273,7 +273,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Dark chesty low notes under a hard-edged mid belt; tall vowels, vibrato held back until late.",
-        "technique": "Two clear gears: a dark, fully chested bottom that stays resonant near G2, and a hard-edged mid belt topping out around Eb5 that gets its bite from tall, slightly covered vowels rather than from shouting. Vibrato is withheld — long notes sit straight and only open up in the final moment. Onsets are firm and precise, with no scooping, and phrases are cut off cleanly. Above the belt the tone thins into head voice. That edge is built in the vowel, never in the throat.",
+        "technique": "Two clear gears: a dark, fully chested bottom that stays resonant near G2, and a hard-edged mid belt topping out around Eb5 that gets its bite from tall, slightly covered vowels rather than from shouting. Vibrato is withheld: long notes sit straight and only open up in the final moment. Onsets are firm and precise, with no scooping, and phrases are cut off cleanly. Above the belt the tone thins into head voice. That edge is built in the vowel, never in the throat.",
         "span": "3 octaves + 2"
       },
       {
@@ -290,7 +290,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Bright edgy chest notes that flip abruptly into a thin, wide-vibrato upper register.",
-        "technique": "The register change is the signature: bright, nasal-edged chest notes flip suddenly into a thin upper voice with a wide, loose vibrato, and the flip is left audible rather than smoothed over. It reads almost like a yodel on wide leaps. Lower singing is conversational and often gentle, as in \"Time After Time\"; the edge only appears when she pushes forward into the nose and mask. Students hear the flip as a crack and try to eliminate it, which removes the whole effect — practice it deliberately at low volume.",
+        "technique": "The register change is the signature: bright, nasal-edged chest notes flip suddenly into a thin upper voice with a wide, loose vibrato, and the flip is left audible rather than smoothed over. It reads almost like a yodel on wide leaps. Lower singing is conversational and often gentle, as in \"Time After Time\"; the edge only appears when she pushes forward into the nose and mask. Students hear the flip as a crack and try to eliminate it, which removes the whole effect: practice it deliberately at low volume.",
         "span": "2 octaves + 7"
       },
       {
@@ -307,7 +307,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Early records sit at speech-level chest tone; later work adds a rounder, trained middle register.",
-        "technique": "Most of the singing happens in a narrow band at speech level, delivered with a thin, bright chest tone and very little vibrato — the interest lives in rhythm and consonant placement, not in tone color. With the belt around C5 and the ceiling well above it, the upper notes come out as a light, sometimes deliberately girlish head voice rather than a pushed chest note. Later material sits rounder and lower in the throat. The rhythmic snap depends on that lightness; extra weight and vibrato blunt it immediately.",
+        "technique": "Most of the singing happens in a narrow band at speech level, delivered with a thin, bright chest tone and very little vibrato: the interest lives in rhythm and consonant placement, not in tone color. With the belt around C5 and the ceiling well above it, the upper notes come out as a light, sometimes deliberately girlish head voice rather than a pushed chest note. Later material sits rounder and lower in the throat. The rhythmic snap depends on that lightness; extra weight and vibrato blunt it immediately.",
         "span": "2 octaves + 5"
       },
       {
@@ -375,7 +375,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Bye Bye",
         "highSource": "Emotions",
         "blurb": "Breathy low register, dense upper mix, and a whistle top used as melody rather than decoration.",
-        "technique": "Three distinct sounds get stacked in one phrase: an airy, half-voiced bottom, a compressed mix that belts to around G5, and a whistle that sits far above it and functions as a written line, not a stunt. Notice how the whistle enters without a scoop or a break — the cords are already set before air moves. Riffs are fast, rhythmically placed off the beat, and articulated with the tongue rather than the throat. The usual mistake is chasing the top of \"Emotions\" before the mix underneath it is stable.",
+        "technique": "Three distinct sounds get stacked in one phrase: an airy, half-voiced bottom, a compressed mix that belts to around G5, and a whistle that sits far above it and functions as a written line, not a stunt. Notice how the whistle enters without a scoop or a break: the cords are already set before air moves. Riffs are fast, rhythmically placed off the beat, and articulated with the tongue rather than the throat. The usual mistake is chasing the top of \"Emotions\" before the mix underneath it is stable.",
         "span": "5 octaves + 2"
       },
       {
@@ -404,7 +404,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Pop",
     "summary": "The current generation of pop leads (whisper-pop, fry onsets, whistle flexes, conversational belts) and how the microphone rewrote what counts as power.",
     "free": false,
-    "words": 4975,
+    "words": 4949,
     "body": "The defining fact of modern pop singing is that the microphone finally won. Once every listener is six inches from the singer's mouth, intimacy scales better than volume, and this chapter documents the consequences: fry onsets as rhythm, whisper-verses as default, breathiness as an instrument rather than a flaw, and belts that arrive as *events* inside otherwise conversational performances. The whisper-pop generation — the entries here built on air and closeness — is not a decline from the founders' power; it is a different instrument optimized for a different playback device.\n\nThat said, the power never left. This chapter also holds the era's technicians — the whistle-register carriers, the gospel-schooled run machines, the theatre-trained belters moonlighting in pop — and their entries read like the founders' chapter with faster ornaments. The range extremes in this chapter are among the widest in the book, precisely because modern production loves a documented flex: the one whistle note, the one fry low, captured and cited forever.\n\nRead these entries with the full-voice ceiling in view. Modern pop's most common imitation injury is copying a conversational singer's *loud moments* without noticing that ninety percent of the performance happens at speech volume — or copying a whistle flex that even its owner visits once per album. The habitat is quiet; the peaks are punctuation. Borrow the verse technique first — onset control, breath-on-tone, diction that carries pitch — and treat every big note in this chapter as the founders treated theirs: rationed, placed, and paid for.",
     "entries": [
       {
@@ -506,7 +506,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Mad Love.",
         "highSource": null,
         "blurb": "Dark, weighty mezzo with gritty low notes, muscular R&B runs, and a belt that punches to G5 without thinning.",
-        "technique": "Chest-dominant and thick through the middle, this voice carries real weight up to G5 by widening the pharynx rather than pushing volume. JoJo's runs are metronomic — each note articulated from the diaphragm, not slurred — and her low A2 speaks with honest cord contact instead of fry. She flips cleanly into head voice for color, reserving whistle squeaks as ornament. Imitators usually muscle the larynx up; she keeps it neutral and lets resonance do the lifting.",
+        "technique": "Chest-dominant and thick through the middle, this voice carries real weight up to G5 by widening the pharynx rather than pushing volume. JoJo's runs are metronomic (each note articulated from the diaphragm, not slurred), and her low A2 speaks with honest cord contact instead of fry. She flips cleanly into head voice for color, reserving whistle squeaks as ornament. Imitators usually muscle the larynx up; she keeps it neutral and lets resonance do the lifting.",
         "span": "4 octaves + 1"
       },
       {
@@ -727,7 +727,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Solitaire",
         "highSource": "Mowgli's Road",
         "blurb": "Theatrical mezzo with plummy low chest, campy register leaps, and a bright, brassy top.",
-        "technique": "Drama drives the registration: MARINA drops into a plummy, almost spoken chest voice near Bb2, then vaults into bright head-voice squeals up to C#6 for punchlines. Her belts around B5 are brassy and deliberately overdriven, vibrato wide and theatrical. Vowels are posh and exaggerated, consonants bitten. She connects registers cleanly when she wants smoothness, which is what imitators miss — the leaps are choices, not breaks, and each register keeps its own steady support underneath.",
+        "technique": "Drama drives the registration: MARINA drops into a plummy, almost spoken chest voice near Bb2, then vaults into bright head-voice squeals up to C#6 for punchlines. Her belts around B5 are brassy and deliberately overdriven, vibrato wide and theatrical. Vowels are posh and exaggerated, consonants bitten. She connects registers cleanly when she wants smoothness, which is what imitators miss: the leaps are choices, not breaks, and each register keeps its own steady support underneath.",
         "span": "3 octaves + 3"
       },
       {
@@ -794,8 +794,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Oblivion",
         "lowSource": "We Appreciate Power",
         "highSource": "Circumambient",
-        "blurb": "Wispy, girlish electronic soprano — cooing head-voice choirs, soft spoken lows, and sudden piercing peaks.",
-        "technique": "Head voice does most of the work: Grimes sings in a small, breathy, girlish placement, stacking self-harmonies instead of projecting one big line. Belts near Bb5 are bright yelps, punched and released, and her occasional whistle-territory peaks toward G6 arrive as pure, needle-thin tones. Down at D3 the voice turns to soft speech. The trap in copying her is treating breathiness as weakness — the pitch centering under all that air is exact, and the mic does the projection.",
+        "blurb": "Wispy, girlish electronic soprano: cooing head-voice choirs, soft spoken lows, and sudden piercing peaks.",
+        "technique": "Head voice does most of the work: Grimes sings in a small, breathy, girlish placement, stacking self-harmonies instead of projecting one big line. Belts near Bb5 are bright yelps, punched and released, and her occasional whistle-territory peaks toward G6 arrive as pure, needle-thin tones. Down at D3 the voice turns to soft speech. The trap in copying her is treating breathiness as weakness: the pitch centering under all that air is exact, and the mic does the projection.",
         "span": "3 octaves + 5"
       },
       {
@@ -897,7 +897,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Funeral",
         "highSource": "Skippin a Beat",
         "blurb": "Gleaming Scandi-pop soprano with a laser-bright mix, athletic runs, and belts that climb to B5 while staying narrow.",
-        "technique": "Mix is everything in this instrument: Larsson narrows to a bright, twangy channel around the passaggio and rides it all the way to B5 belts that sound chesty but weigh almost nothing. Vowels get thin and forward — ee and eh shapes — as she climbs, with vibrato held off until the note lands. Runs are pattern-perfect, practiced shapes from R&B. The trap for imitators is pulling full chest upward; she trades mass for twang early and never looks back.",
+        "technique": "Mix is everything in this instrument: Larsson narrows to a bright, twangy channel around the passaggio and rides it all the way to B5 belts that sound chesty but weigh almost nothing. Vowels get thin and forward (ee and eh shapes) as she climbs, with vibrato held off until the note lands. Runs are pattern-perfect, practiced shapes from R&B. The trap for imitators is pulling full chest upward; she trades mass for twang early and never looks back.",
         "span": "2 octaves + 11"
       },
       {
@@ -913,8 +913,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "All About That Bass",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Retro-pop mezzo — chipper doo-wop chest voice, swung phrasing, and bright, sassy spoken-sung asides.",
-        "technique": "Swing rules the phrasing: Trainor sings on the back of the beat with a chipper, forward chest voice built for doo-wop bounce. Her tone is bright and slightly nasal, vowels wide and grinning, with scooped onsets as a signature. Most lines live in a compact lower-middle zone above Eb3, saving head voice near B5 for background stacks. Runs are short, bluesy turns. Copying her means committing to the retro diction — crisp, cheeky, and rhythm-locked.",
+        "blurb": "Retro-pop mezzo: chipper doo-wop chest voice, swung phrasing, and bright, sassy spoken-sung asides.",
+        "technique": "Swing rules the phrasing: Trainor sings on the back of the beat with a chipper, forward chest voice built for doo-wop bounce. Her tone is bright and slightly nasal, vowels wide and grinning, with scooped onsets as a signature. Most lines live in a compact lower-middle zone above Eb3, saving head voice near B5 for background stacks. Runs are short, bluesy turns. Copying her means committing to the retro diction: crisp, cheeky, and rhythm-locked.",
         "span": "2 octaves + 8"
       },
       {
@@ -930,8 +930,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Dollhouse",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Baby-doll alt-pop soprano — breathy, curled vowels, half-whispered chest tone, and quick falsetto flips.",
-        "technique": "Character voice comes first: Martinez curls vowels into a babyish pout, singing with a breathy, half-whispered chest tone that rarely rises above conversational volume. Her range in use is compact — F3 to D5 — so interest comes from cracks, flips into falsetto, and vocal-fry onsets used as punctuation. Vibrato is minimal, pitch glides constant. Singers copying the whisper usually lose pitch center; hers stays exact under the air, and the stylized diction never swallows the consonants.",
+        "blurb": "Baby-doll alt-pop soprano: breathy, curled vowels, half-whispered chest tone, and quick falsetto flips.",
+        "technique": "Character voice comes first: Martinez curls vowels into a babyish pout, singing with a breathy, half-whispered chest tone that rarely rises above conversational volume. Her range in use is compact (F3 to D5), so interest comes from cracks, flips into falsetto, and vocal-fry onsets used as punctuation. Vibrato is minimal, pitch glides constant. Singers copying the whisper usually lose pitch center; hers stays exact under the air, and the stylized diction never swallows the consonants.",
         "span": "1 octave + 9"
       },
       {
@@ -947,8 +947,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Runaway",
         "lowSource": "The Essence",
         "highSource": "Your Blood",
-        "blurb": "Glacial Nordic soprano — childlike, bell-clear head tones, sudden fierce chest bursts, and wide dynamic swings.",
-        "technique": "Contrast powers this voice: Aurora alternates a tiny, vibratoless, childlike head tone with abrupt full-chest exclamations around F5, often within one bar. Her placement is high and masky, consonants percussive, vowels kept pure. Head-voice sustains near E6 stay straight until the last moment, when a slow vibrato blooms. Low phrases at Eb3 are whispered more than sung. Copying her requires dynamic discipline — the loud moments only land because the quiet ones are genuinely quiet.",
+        "blurb": "Glacial Nordic soprano: childlike, bell-clear head tones, sudden fierce chest bursts, and wide dynamic swings.",
+        "technique": "Contrast powers this voice: Aurora alternates a tiny, vibratoless, childlike head tone with abrupt full-chest exclamations around F5, often within one bar. Her placement is high and masky, consonants percussive, vowels kept pure. Head-voice sustains near E6 stay straight until the last moment, when a slow vibrato blooms. Low phrases at Eb3 are whispered more than sung. Copying her requires dynamic discipline: the loud moments only land because the quiet ones are genuinely quiet.",
         "span": "3 octaves + 1"
       },
       {
@@ -965,7 +965,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "I'm Good (Blue)",
         "highSource": "I Don't Wanna Grow Up",
         "blurb": "Brassy dance-pop soprano with a hard-edged belt, husky low color, and punchy, syllabic phrasing.",
-        "technique": "Attack-first singing: Rexha hits consonants and downbeats hard, driving a brassy, slightly husky chest voice into belts at F#5 that favor edge over roundness. Her vibrato is quick and tight, mostly at phrase ends. Down near D3 she lets the tone go smoky and speech-like. Head voice appears briefly at B5 for climaxes rather than as a home base. The pitfall when copying her is jaw tension — that edge comes from twang and compression, not clenching.",
+        "technique": "Attack-first singing: Rexha hits consonants and downbeats hard, driving a brassy, slightly husky chest voice into belts at F#5 that favor edge over roundness. Her vibrato is quick and tight, mostly at phrase ends. Down near D3 she lets the tone go smoky and speech-like. Head voice appears briefly at B5 for climaxes rather than as a home base. The pitfall when copying her is jaw tension: that edge comes from twang and compression, not clenching.",
         "span": "2 octaves + 9"
       },
       {
@@ -1049,8 +1049,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Escapism.",
         "lowSource": "Escapism.",
         "highSource": "You Don't Know Me",
-        "blurb": "Jazz-schooled British mezzo — smoky conversational lows, quicksilver runs, and big torch-song belts.",
-        "technique": "Storytelling steers the technique: RAYE slips between spoken asides near C#3, jazz-inflected bends, and full theatrical belts at F5, changing register mid-sentence like a scene change. Her runs are light, fast and thrown away, more swing-era than melisma-drill; head voice floats up toward D6 for cinematic endings. Vibrato is wide and expressive, arriving late on sustains. Imitators tend to over-commit to one mode — the style lives in quick, confident switching between them.",
+        "blurb": "Jazz-schooled British mezzo: smoky conversational lows, quicksilver runs, and big torch-song belts.",
+        "technique": "Storytelling steers the technique: RAYE slips between spoken asides near C#3, jazz-inflected bends, and full theatrical belts at F5, changing register mid-sentence like a scene change. Her runs are light, fast and thrown away, more swing-era than melisma-drill; head voice floats up toward D6 for cinematic endings. Vibrato is wide and expressive, arriving late on sustains. Imitators tend to over-commit to one mode: the style lives in quick, confident switching between them.",
         "span": "3 octaves + 1"
       },
       {
@@ -1084,7 +1084,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Trampoline",
         "highSource": null,
         "blurb": "Sugar-bright pop soprano with springy mixed belts and genuine whistle-register fireworks above the staff.",
-        "technique": "Bounce characterizes the phrasing: Petras attacks notes from above with a bright, poppy mix, keeping belts around G#5 springy rather than planted. Her tone is light and glossy, vibrato shallow and fast. The party trick is a genuine whistle register — tiny, flute-like tones far above the staff toward Bb6 — entered from a stopped, high-compression setup, not slid into from head voice. Imitators strain reaching for it; the whistle needs minimal air and total jaw release.",
+        "technique": "Bounce characterizes the phrasing: Petras attacks notes from above with a bright, poppy mix, keeping belts around G#5 springy rather than planted. Her tone is light and glossy, vibrato shallow and fast. The party trick is a genuine whistle register (tiny, flute-like tones far above the staff toward Bb6), entered from a stopped, high-compression setup, not slid into from head voice. Imitators strain reaching for it; the whistle needs minimal air and total jaw release.",
         "span": "3 octaves + 8"
       },
       {
@@ -1100,8 +1100,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Sweet but Psycho",
         "lowSource": "Freaking Me Out",
         "highSource": "Kings & Queens",
-        "blurb": "Punchy dance-pop soprano — nasal-bright chest belts, clipped phrasing, and glassy head notes topping the hooks.",
-        "technique": "Twang forward, always: Ava Max sets a nasal, cutting placement that survives dense dance production, belting to F#5 with a hard, clipped attack and almost no vibrato. Sustains are straight-toned, released quickly to keep rhythmic drive. Above the belt she snaps into a glassy head voice for hook-topping notes near C#6 rather than mixing gradually. Copying the brightness by pinching the nose misses it — the sound comes from raised soft-palate twang with relaxed lips and jaw.",
+        "blurb": "Punchy dance-pop soprano: nasal-bright chest belts, clipped phrasing, and glassy head notes topping the hooks.",
+        "technique": "Twang forward, always: Ava Max sets a nasal, cutting placement that survives dense dance production, belting to F#5 with a hard, clipped attack and almost no vibrato. Sustains are straight-toned, released quickly to keep rhythmic drive. Above the belt she snaps into a glassy head voice for hook-topping notes near C#6 rather than mixing gradually. Copying the brightness by pinching the nose misses it: the sound comes from raised soft-palate twang with relaxed lips and jaw.",
         "span": "2 octaves + 9"
       },
       {
@@ -1117,8 +1117,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Selfish",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Glossy, darkened pop soprano — sultry low chest, liquid R&B runs, and cool, airy head voice.",
-        "technique": "Polish defines the sound: Beer sings with a darkened, rounded soprano placement, sliding through R&B runs legato-first, every note connected rather than punched. Her low register near C3 is intimate and slightly smoky; belts climb toward Bb5 with a covered, controlled shape, never shouty. Head voice up around C6 is cool and airy, used for texture. Copying her means resisting over-articulation — the runs blur on purpose, tuned precisely but delivered like an afterthought.",
+        "blurb": "Glossy, darkened pop soprano: sultry low chest, liquid R&B runs, and cool, airy head voice.",
+        "technique": "Polish defines the sound: Beer sings with a darkened, rounded soprano placement, sliding through R&B runs legato-first, every note connected rather than punched. Her low register near C3 is intimate and slightly smoky; belts climb toward Bb5 with a covered, controlled shape, never shouty. Head voice up around C6 is cool and airy, used for texture. Copying her means resisting over-articulation: the runs blur on purpose, tuned precisely but delivered like an afterthought.",
         "span": "3 octaves"
       },
       {
@@ -1135,7 +1135,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Elastic art-pop soprano that swoops, yodels, and glides through registers like a synthesizer with lungs.",
-        "technique": "Portamento is the calling card: Polachek glides between chest and head with bel-canto smoothness, then deliberately exposes the flip as an ornament — a controlled yodel landing anywhere up to G5 in full voice or F6 above it. Her vowels morph mid-note, treating the mouth like a filter sweep. Low phrases sink toward G#2 in a slack, speechy fry-chest blend. Students chasing the swoops usually smear pitch; hers are mapped, hitting exact targets at each end of the slide.",
+        "technique": "Portamento is the calling card: Polachek glides between chest and head with bel-canto smoothness, then deliberately exposes the flip as an ornament, a controlled yodel landing anywhere up to G5 in full voice or F6 above it. Her vowels morph mid-note, treating the mouth like a filter sweep. Low phrases sink toward G#2 in a slack, speechy fry-chest blend. Students chasing the swoops usually smear pitch; hers are mapped, hitting exact targets at each end of the slide.",
         "span": "3 octaves + 9"
       },
       {
@@ -1270,8 +1270,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Messy",
         "lowSource": "Messy",
         "highSource": "Together in Electric Dreams",
-        "blurb": "Raw, husky London mezzo — wide-open vowels, cracked edges, and yell-adjacent belts that spit feeling.",
-        "technique": "An open-throat shout, refined: Young sings on wide, undarkened vowels with a husky, grainy chest voice that cracks on purpose at emotional peaks. Belts around B4 are reached by yelling up from speech rather than mixing, which gives them urgency and bite; softer moments drop to a mumbled, fry-edged murmur near E3. Vibrato is scarce. Copying the rasp without her breath anchor wears a voice out fast — the grit rides on low, steady support and a loose jaw.",
+        "blurb": "Raw, husky London mezzo: wide-open vowels, cracked edges, and yell-adjacent belts that spit feeling.",
+        "technique": "An open-throat shout, refined: Young sings on wide, undarkened vowels with a husky, grainy chest voice that cracks on purpose at emotional peaks. Belts around B4 are reached by yelling up from speech rather than mixing, which gives them urgency and bite; softer moments drop to a mumbled, fry-edged murmur near E3. Vibrato is scarce. Copying the rasp without her breath anchor wears a voice out fast: the grit rides on low, steady support and a loose jaw.",
         "span": "2 octaves + 6"
       }
     ]
@@ -1283,7 +1283,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Pop",
     "summary": "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it.",
     "free": false,
-    "words": 4424,
+    "words": 4411,
     "body": "Male pop singing has spent seventy years migrating upward. The crooners in this chapter worked at speech pitch and made softness a technology; the soul-influenced generations pushed the tessitura into high tenor territory; and the streaming era's leads live above the staff half the night, in mixes and falsettos their grandfathers' genre would have considered exotic.\n\nTwo practical observations for the reader who sings these songs. First, the modern male pop tessitura is a tenor's habitat, and most men are baritones. That mismatch — not talent — is why the radio feels high, and the transposition rule from the method chapters is the honest fix. The baritones in this chapter who thrived did it by refusing the arms race: they built styles where depth, restraint or rhythm carried the record. Their entries are the most useful ones here for the average male voice, which is exactly why they are less famous than the freaks of altitude around them.\n\nSecond, notice how many of these entries describe falsetto as a *primary* register rather than an escape hatch. The modern pop man trains his falsetto the way the founders trained their belt — as the money register, with its own dedicated hours. If you borrow one thing from this chapter, borrow that practice allocation. The full voice you already speak with; the top floor is built.",
     "entries": [
       {
@@ -1521,7 +1521,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "The Pilot",
         "highSource": "Bruce Lee",
         "blurb": "Cheeky, brassy pop voice; punchy chest belts, crooner vibrato, and music-hall swagger.",
-        "technique": "Showmanship organizes everything: punchy chest-led phrasing, music-hall diction, and a crooner vibrato switched on for ballads and off for swagger. The low and middle registers are the strong suit — dark, booming, and articulate — while belts up to G5 arrive bright and slightly brash, and the falsetto above stays thin. Phrases end with theatrical button-like cutoffs. Copying students usually oversell the wink and undersell the support; the cheek only works because the fundamentals are square: firm breath connection, centered pitch, and consonants delivered to the back row.",
+        "technique": "Showmanship organizes everything: punchy chest-led phrasing, music-hall diction, and a crooner vibrato switched on for ballads and off for swagger. The low and middle registers are the strong suit (dark, booming, and articulate), while belts up to G5 arrive bright and slightly brash, and the falsetto above stays thin. Phrases end with theatrical button-like cutoffs. Copying students usually oversell the wink and undersell the support; the cheek only works because the fundamentals are square: firm breath connection, centered pitch, and consonants delivered to the back row.",
         "span": "3 octaves + 6"
       },
       {
@@ -1673,7 +1673,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Strip That Down",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Baritone depth with an R&B mix — clean C5 belts and cool, deliberate falsetto switches.",
+        "blurb": "Baritone depth with an R&B mix: clean C5 belts and cool, deliberate falsetto switches.",
         "technique": "Smooth R&B machinery under a pop finish: a genuine baritone bottom with an unusually developed mix that lets him belt cleanly up to C5 without weight dragging behind. Liam flips deliberately into a cool, even falsetto for hooks, and decorates lines with clipped melisma placed on the backbeat. Onsets are precise, almost quantized. Students copying him usually blur the registers; his effect depends on crisp, intentional switches between full voice and falsetto.",
         "span": "3 octaves + 9"
       },
@@ -1690,7 +1690,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Back to You",
         "lowSource": "Miss You",
         "highSource": "Just Like You",
-        "blurb": "Bright, narrow light tenor with a built-in cry — compact melodies ridden at the top of chest voice.",
+        "blurb": "Bright, narrow light tenor with a built-in cry: compact melodies ridden at the top of chest voice.",
         "technique": "Thin, bright, and instantly identifiable, this light tenor carries a permanent adolescent edge: forward placement, fast airflow, and a slight cry in every sustained vowel. Louis keeps melodies compact and rides the top of chest voice rather than mixing high, which gives choruses their strained-heart urgency. Vibrato is minimal. Copying the sound with a wide-open throat loses the character; it needs narrow vowels and a touch of nasality, kept honest by exact pitch.",
         "span": "1 octave + 9"
       },
@@ -1707,7 +1707,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Slow Hands",
         "lowSource": "Black and White",
         "highSource": "The Show",
-        "blurb": "Breath-hazed light tenor — conversational mid-range phrasing with gentle falsetto lifts.",
+        "blurb": "Breath-hazed light tenor: conversational mid-range phrasing with gentle falsetto lifts.",
         "technique": "Soft-grained and breath-led, this tenor works close to the microphone, letting air haze the edges of an otherwise centered tone. Niall writes inside his sweet spot, so phrases sit mid-range with occasional falsetto lifts, and his vibrato is light, arriving only on final sustains. Diction is relaxed, almost conversational. The mistake students make is adding polish; over-supporting kills the papery intimacy, which depends on low subglottal pressure and a barely-there onset.",
         "span": "3 octaves + 5"
       },
@@ -1758,7 +1758,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Say You Won't Let Go",
         "lowSource": "Say You Won't Let Go",
         "highSource": "Naked",
-        "blurb": "Raspy, soul-leaning baritone — gritty compressed belts an octave below his floating falsetto hooks.",
+        "blurb": "Raspy, soul-leaning baritone: gritty compressed belts an octave below his floating falsetto hooks.",
         "technique": "Rasp is the engine of this baritone. James sings with a compressed, cry-tinged mix that peaks around a B4 belt, then vaults a full octave into falsetto for hooks near the top of his range. Runs are R&B-derived, executed with laryngeal flicks rather than diaphragm pulses. His vibrato stays narrow under distortion. The trap for students is copying the grit at low breath energy; without steady airflow the texture collapses into fry and the pitch sags.",
         "span": "2 octaves + 11"
       },
@@ -1827,7 +1827,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Love Me",
         "highSource": "Love Me",
         "blurb": "Chatty, breathy tenor that smears words into melody; sudden falsetto leaps and yelped climaxes over glossy pop.",
-        "technique": "Conversation is the engine of this voice: half-spoken phrasing, smeared diction, and melodies that tumble out in irregular, chatty rhythms. The core tone is light chest with a breathy edge, flipping freely into falsetto mid-phrase without disguising the break. Climactic moments jump to yelled belts around G5, raw and uncovered. Copying the mumble is the classic mistake — underneath the casual surface the rhythmic placement is exact, and the breathiness is a controlled valve, opened and closed for emphasis rather than a default leak.",
+        "technique": "Conversation is the engine of this voice: half-spoken phrasing, smeared diction, and melodies that tumble out in irregular, chatty rhythms. The core tone is light chest with a breathy edge, flipping freely into falsetto mid-phrase without disguising the break. Climactic moments jump to yelled belts around G5, raw and uncovered. Copying the mumble is the classic mistake: underneath the casual surface the rhythmic placement is exact, and the breathiness is a controlled valve, opened and closed for emphasis rather than a default leak.",
         "span": "3 octaves + 4"
       },
       {
@@ -1843,7 +1843,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Budapest",
         "lowSource": "Only a Human",
         "highSource": "The Beautiful Dream",
-        "blurb": "Plummy, buoyant baritone — enormous-sounding vowels over short, bouncing, low-set phrases.",
+        "blurb": "Plummy, buoyant baritone: enormous-sounding vowels over short, bouncing, low-set phrases.",
         "technique": "Booming yet boyish, this baritone plays a trick: the timbre sounds enormous while the effort stays tiny. Ezra rounds his vowels into an exaggerated, plummy shape, keeps phrases short and bouncing, and almost never belts, preferring to sit low and let resonance do the projecting. Falsetto appears as light backing color up high. Copying the vowel affectation without his relaxed breath flow turns it cartoonish; the depth must stay buoyant, never pressed.",
         "span": "3 octaves + 4"
       },
@@ -1860,7 +1860,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Hold Back the River",
         "lowSource": "If You Ever Want to Be in Love",
         "highSource": "One Life",
-        "blurb": "Reedy, twang-forward tenor — percussive phrasing, raspy belts, airy falsetto over guitar-driven pop.",
+        "blurb": "Reedy, twang-forward tenor: percussive phrasing, raspy belts, airy falsetto over guitar-driven pop.",
         "technique": "Reedy and bright through the middle, this voice trades weight for edge: James keeps the tone narrow and nasal-forward so it slices over guitars, belting with rasp into the upper fourth octave and flipping to an airy falsetto above. Onsets are percussive, phrases clipped to the groove. Copying him with a thick, covered production misses the point; the sound lives in twang and forward vowels, with the throat staying loose behind the buzz.",
         "span": "3 octaves + 5"
       },
@@ -1911,7 +1911,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "You Are the Reason",
         "lowSource": "Heaven",
         "highSource": "Roots",
-        "blurb": "Cried, legato pop tenor — swelling sustains that flip into a glass-clear falsetto at the top.",
+        "blurb": "Cried, legato pop tenor: swelling sustains that flip into a glass-clear falsetto at the top.",
         "technique": "Everything here is legato: Calum joins notes with portamento-smooth onsets, swells through the middle of long tones, and releases with a taper instead of a cut. The money register is a cried, head-leaning mix in the fourth octave, flipping into pure falsetto for peaks. Vibrato is wide and emotional. Students copying him often start phrases at full volume; he begins small, which makes the climb audible and keeps the top from sounding pushed.",
         "span": "2 octaves + 2"
       },
@@ -1979,7 +1979,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "golden hour",
         "lowSource": "this is what losing someone feels like",
         "highSource": "this is what losing someone feels like",
-        "blurb": "Featherweight tenor living above the staff — sighing onsets gliding into stacked head-voice hooks.",
+        "blurb": "Featherweight tenor living above the staff: sighing onsets gliding into stacked head-voice hooks.",
         "technique": "Head voice is the main event: JVKE writes hooks that live above the staff, gliding from a light chest mix into ringing head tones and stacking falsetto harmonies over the top. His onset is soft, almost sighed, and he bends into peak notes with portamento instead of attacking them. Below the fourth octave he keeps things plain and rhythmic. Copying the top without slow siren practice ends in cracking; the transitions are the actual skill.",
         "span": "2 octaves + 5"
       },
@@ -2013,7 +2013,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Until I Found You",
         "lowSource": "High",
         "highSource": "High",
-        "blurb": "Mid-century crooner baritone — plummy slides into a bell-clear falsetto with slow-bloom vibrato.",
+        "blurb": "Mid-century crooner baritone: plummy slides into a bell-clear falsetto with slow-bloom vibrato.",
         "technique": "A time-capsule croon: Sanchez pairs a low, rounded chest voice with tall, old-radio vowels, sliding into notes the way mid-century balladeers did. The signature move is the sudden leap from that plummy bottom into a bell-clear falsetto, held straight before a slow vibrato blooms. Consonants are gentle, endings tapered. Students copying the style usually overdo the affectation and lose pitch center; his slides always land, and the larynx stays low without muffling the words.",
         "span": "2 octaves + 5"
       },
@@ -2030,7 +2030,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Daylight",
         "lowSource": "Daylight",
         "highSource": "Daylight",
-        "blurb": "Dark, echoing baritone — hymn-like sustains, octave-down doubles, haunted falsetto floats.",
+        "blurb": "Dark, echoing baritone: hymn-like sustains, octave-down doubles, haunted falsetto floats.",
         "technique": "Deep-set and resonant, this baritone gets its cathedral weight from a lowered larynx and darkened vowels rather than extreme pitch. Kushner sustains long, hymn-like tones with minimal vibrato, stacking octave doubles beneath choruses, then floats a haunted falsetto above the drone. Diction stays soft, almost swallowed. The student error is confusing depth with volume; he sings quietly into a big resonating space, and pushing the same material turns woofy and flat immediately.",
         "span": "2 octaves + 2"
       },
@@ -2094,7 +2094,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Rock, metal and alternative",
     "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades: where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
     "free": false,
-    "words": 5131,
+    "words": 5120,
     "body": "No genre generated more range mythology than classic rock, and no chapter of this atlas asks for more care in reading its figures. The wailers here — the multi-octave figures fans argue about at pub volume — earned their reputations with real, documented extremes, but the entries are careful about *mechanism*: a great deal of rock's famous altitude is reinforced falsetto, head voice driven hard, or one-off screams captured live, not chest voice defying physics. Where an entry gives a full-voice ceiling, it tells you which was which; many entries give none, and for those the technique paragraph is the better guide.\n\nThe other half of the chapter belongs to the baritones — the art-rockers, the gravel merchants, the frontmen who made menace and character do the work of altitude. Their entries carry most of this chapter's borrowable technique, because their tools transfer: phrasing against the band, vowel theatre, controlled rasp built across a phrase. The wailers' tools mostly do not transfer, which their own entries say plainly.\n\nA pattern worth noticing across both camps: the long careers in this chapter belong overwhelmingly to singers whose entries describe *distributed* effort — grit that rides on support, peaks rationed per set, intensity built through the torso rather than detonated in the throat. The short careers cluster on the other side of that line. Rock mythology celebrates abandon; rock longevity, on the evidence of these pages, was always a technician's game wearing abandon as a costume.",
     "entries": [
       {
@@ -2111,7 +2111,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Long Tall Sally",
         "blurb": "Gospel shouter's tenor: hard chest attack, heavy rasp, falsetto whoops flipped in mid-phrase.",
-        "technique": "Everything begins with a hard glottal attack — notes are punched, never eased into. The chest sound is bright, heavily rasped, and driven to the top of its working range around C5; above that he flips mid-phrase into falsetto whoops that function as exclamation rather than melody. Time sits slightly ahead of the beat and drags the band with it. The attack and that forward timing carry the style, and the rasp falls out of both.",
+        "technique": "Everything begins with a hard glottal attack: notes are punched, never eased into. The chest sound is bright, heavily rasped, and driven to the top of its working range around C5; above that he flips mid-phrase into falsetto whoops that function as exclamation rather than melody. Time sits slightly ahead of the beat and drags the band with it. The attack and that forward timing carry the style, and the rasp falls out of both.",
         "span": "3 octaves + 5"
       },
       {
@@ -2128,7 +2128,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Peace in the Valley",
         "highSource": null,
         "blurb": "Baritone with a thick chest register, wide vibrato, and a gospel-trained bottom he drops into freely.",
-        "technique": "Listen for a dark, thick baritone placed low and forward, carrying a wide, slow vibrato that arrives late in a held note. Onsets are aspirate and scooped — he slides up into pitch rather than landing on it. The bottom near G2 stays relaxed and unpressed rather than ground into a growl. Everything moves unhurried: phrases start under-sung and open out, so the loudest moment usually lands on the last line instead of the first.",
+        "technique": "Listen for a dark, thick baritone placed low and forward, carrying a wide, slow vibrato that arrives late in a held note. Onsets are aspirate and scooped: he slides up into pitch rather than landing on it. The bottom near G2 stays relaxed and unpressed rather than ground into a growl. Everything moves unhurried: phrases start under-sung and open out, so the loudest moment usually lands on the last line instead of the first.",
         "span": "2 octaves + 6"
       },
       {
@@ -2145,7 +2145,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Operatic tenor that swells from a soft low murmur to full-voice high notes with no audible break.",
-        "technique": "Rather than belting, he crescendos. A phrase can start nearly murmured down low and grow through the transition with no audible seam, so the top arrives ringing rather than shouted — the long build in Running Scared is the clearest example of that crescendo. Vibrato stays narrow and quick, legato unbroken. The tone tilts lighter as it rises instead of thickening, which is why nothing jams up at the passaggio and the climb reads as one line.",
+        "technique": "Rather than belting, he crescendos. A phrase can start nearly murmured down low and grow through the transition with no audible seam, so the top arrives ringing rather than shouted: the long build in Running Scared is the clearest example of that crescendo. Vibrato stays narrow and quick, legato unbroken. The tone tilts lighter as it rises instead of thickening, which is why nothing jams up at the passaggio and the climb reads as one line.",
         "span": "3 octaves"
       },
       {
@@ -2570,7 +2570,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Against All Odds",
         "blurb": "Grainy tenor that stays conversational down low, then shoves into a shouted chest top.",
-        "technique": "Down low the delivery stays conversational, nearly spoken, with breathy onsets and hardly any vibrato. Climbing into the top he stops blending and shoves, and the sound turns grainy and shouted with the vowel spread wide. Dynamics swing hard between those two states. Singers copying this start loud and leave themselves nowhere to go — the quiet, deliberately under-supported verses are what make the top of the chorus land.",
+        "technique": "Down low the delivery stays conversational, nearly spoken, with breathy onsets and hardly any vibrato. Climbing into the top he stops blending and shoves, and the sound turns grainy and shouted with the vowel spread wide. Dynamics swing hard between those two states. Singers copying this start loud and leave themselves nowhere to go: the quiet, deliberately under-supported verses are what make the top of the chorus land.",
         "span": "2 octaves + 8"
       },
       {
@@ -2808,7 +2808,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "There Was a Time",
         "highSource": "Ain't It Fun",
         "blurb": "Two voices in one: a low growl underneath, a thin cutting rasp on top, screams above that.",
-        "technique": "Two mechanisms do the work. Underneath sits a heavy, distorted low voice trailing into fry at the bottom; above the D5 belt the tone thins into a narrow, nasal rasp that cuts rather than fills, and the screams past that are almost pure edge with no weight behind them. Phrasing drags behind the beat, then snaps forward. The common mistake is squeezing the throat to find the rasp — compression makes that noise, not force.",
+        "technique": "Two mechanisms do the work. Underneath sits a heavy, distorted low voice trailing into fry at the bottom; above the D5 belt the tone thins into a narrow, nasal rasp that cuts rather than fills, and the screams past that are almost pure edge with no weight behind them. Phrasing drags behind the beat, then snaps forward. The common mistake is squeezing the throat to find the rasp: compression makes that noise, not force.",
         "span": "5 octaves + 5"
       },
       {
@@ -2842,7 +2842,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Bullets",
         "highSource": "Running to Stand Still",
         "blurb": "Cavernous, chesty baritone with heavy vibrato and rounded, darkened vowels; sounds carved from granite.",
-        "technique": "Weight defines this baritone: a cavernous, chesty production with rounded, darkened vowels, heavy vibrato, and a low larynx that gives every phrase an oaken thickness. The voice moves in broad strokes — long sustains, slow scoops into pitch, and belts around C5 delivered with maximum chest engagement. Head voice barely features. Students copying the darkness usually swallow the sound entirely; the depth here still projects because the tone stays connected to breath and the vowels, though covered, keep a firm forward core rather than sinking into the throat.",
+        "technique": "Weight defines this baritone: a cavernous, chesty production with rounded, darkened vowels, heavy vibrato, and a low larynx that gives every phrase an oaken thickness. The voice moves in broad strokes: long sustains, slow scoops into pitch, and belts around C5 delivered with maximum chest engagement. Head voice barely features. Students copying the darkness usually swallow the sound entirely; the depth here still projects because the tone stays connected to breath and the vowels, though covered, keep a firm forward core rather than sinking into the throat.",
         "span": "3 octaves"
       },
       {
@@ -2876,7 +2876,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Gypsy Woman",
         "highSource": "Pour Me",
         "blurb": "Feathery light tenor that floats into falsetto; gentle onsets, hymn-like phrasing, warm mid-range built for singalongs.",
-        "technique": "Light head-dominant production defines this instrument: a slim chest voice carried gently up to a soft mix, then an easy flip into falsetto that does most of the top-end work. Onsets are breathy, vibrato minimal, phrasing hymn-like and legato. The Eb5 area marks the practical ceiling of full voice; above it everything releases into airy head tone. Students copying him usually over-sing the falsetto — the trick is releasing air pressure early, keeping the larynx neutral, and letting resonance stay forward and bright rather than pushing chest weight upward.",
+        "technique": "Light head-dominant production defines this instrument: a slim chest voice carried gently up to a soft mix, then an easy flip into falsetto that does most of the top-end work. Onsets are breathy, vibrato minimal, phrasing hymn-like and legato. The Eb5 area marks the practical ceiling of full voice; above it everything releases into airy head tone. Students copying him usually over-sing the falsetto: the trick is releasing air pressure early, keeping the larynx neutral, and letting resonance stay forward and bright rather than pushing chest weight upward.",
         "span": "3 octaves + 10"
       },
       {
@@ -2893,7 +2893,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Coin for the Ferryman",
         "highSource": "Legs",
         "blurb": "Gravel-coated baritone with a compressed, distorted edge; low thick verses that erupt into sustained high grit.",
-        "technique": "Grit is the signature: a compressed, distorted baritone that stays overdriven from the first syllable, with a rasp produced above the folds rather than on them. Verses sit low and thick; choruses leap upward into sustained belts around D5 that hold their distortion without collapsing. Vibrato is minimal, phrasing square and anthemic. Singers copying the rasp by squeezing the throat lose their voice within a set — the distortion needs high breath energy, a lifted soft palate, and a clean underlying tone that could sing the line unfuzzed.",
+        "technique": "Grit is the signature: a compressed, distorted baritone that stays overdriven from the first syllable, with a rasp produced above the folds rather than on them. Verses sit low and thick; choruses leap upward into sustained belts around D5 that hold their distortion without collapsing. Vibrato is minimal, phrasing square and anthemic. Singers copying the rasp by squeezing the throat lose their voice within a set: the distortion needs high breath energy, a lifted soft palate, and a clean underlying tone that could sing the line unfuzzed.",
         "span": "3 octaves + 7"
       },
       {
@@ -2910,7 +2910,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Over and Over and Over",
         "highSource": "Corporation",
         "blurb": "Wiry, unhinged tenor wail; bluesy bent notes, sudden register leaps, and piercing flageolet squeals.",
-        "technique": "Wildness masks precision here: a wiry, thin-toned tenor that leaps registers mid-phrase, bending blues intervals and cracking on purpose. Chest belts around E5 are tight and piercing, while the extreme top is flageolet — a whistle-like squeal treated as an effect, not a melody register. Onsets are explosive, vibrato nearly absent, dynamics all-or-nothing. Students copying the mania usually let pitch collapse; underneath the flailing the intonation is exact, and the register flips are timed rhythmic choices, landed with the same discipline as a guitar fill.",
+        "technique": "Wildness masks precision here: a wiry, thin-toned tenor that leaps registers mid-phrase, bending blues intervals and cracking on purpose. Chest belts around E5 are tight and piercing, while the extreme top is flageolet: a whistle-like squeal treated as an effect, not a melody register. Onsets are explosive, vibrato nearly absent, dynamics all-or-nothing. Students copying the mania usually let pitch collapse; underneath the flailing the intonation is exact, and the register flips are timed rhythmic choices, landed with the same discipline as a guitar fill.",
         "span": "4 octaves + 5"
       },
       {
@@ -2927,7 +2927,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Milk",
         "highSource": "Black Thumbnail",
         "blurb": "Frayed, strangled-sounding tenor rasp; slurred Southern phrasing that cracks open into falsetto.",
-        "technique": "Fraying is the aesthetic: a strangled, raspy tenor with slurred Southern diction, where words melt into open vowel sounds and the edge of the voice always sounds about to tear. Power concentrates up to A4, delivered with a tight, cry-like compression; above that the voice releases into a soft, well-controlled falsetto around E5. Vibrato is narrow and fast when it appears. Copying the rasp first is backwards — the underlying line is smooth and supported, and the tearing quality comes from vowel shape and compression, not from real throat strain.",
+        "technique": "Fraying is the aesthetic: a strangled, raspy tenor with slurred Southern diction, where words melt into open vowel sounds and the edge of the voice always sounds about to tear. Power concentrates up to A4, delivered with a tight, cry-like compression; above that the voice releases into a soft, well-controlled falsetto around E5. Vibrato is narrow and fast when it appears. Copying the rasp first is backwards: the underlying line is smooth and supported, and the tearing quality comes from vowel shape and compression, not from real throat strain.",
         "span": "2 octaves + 7"
       },
       {
@@ -2944,7 +2944,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Bones",
         "highSource": "Neon Tiger",
         "blurb": "Bright, theatrical tenor with a trembling edge; thick sustained tones held high over glittering synth-rock choruses.",
-        "technique": "Drama drives this tenor: tall vowels, firm onsets, and long sustained tones held with a fast, shimmering vibrato. The middle register is thick and trumpet-like, pushed forward against synth walls, and belts up to E5 keep full chest weight with wide-open mouth shapes. Head voice appears rarely; the instrument prefers to stay heavy. Singers copying him tend to spread the vowel on the big notes — he narrows instead, keeping the sound tall and rounded, and he releases phrases cleanly rather than sliding off pitch.",
+        "technique": "Drama drives this tenor: tall vowels, firm onsets, and long sustained tones held with a fast, shimmering vibrato. The middle register is thick and trumpet-like, pushed forward against synth walls, and belts up to E5 keep full chest weight with wide-open mouth shapes. Head voice appears rarely; the instrument prefers to stay heavy. Singers copying him tend to spread the vowel on the big notes: he narrows instead, keeping the sound tall and rounded, and he releases phrases cleanly rather than sliding off pitch.",
         "span": "3 octaves + 2"
       },
       {
@@ -3007,7 +3007,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Rock, metal and alternative",
     "summary": "The women who fronted rock bands on their own terms, from belters and banshees to deadpan cool, and what their entries teach about projection over a loud stage.",
     "free": false,
-    "words": 1588,
+    "words": 1587,
     "body": "The women in this chapter solved a problem the pop chapters never had to face at the same intensity: being heard, nightly, over drum kits and full stacks, in an era when the monitor engineer was optional and the audience was not. The solutions in these entries are a curriculum in projection. Some went through the middle of the noise — chest-dominant belts with enough twang to cut steel. Some went over it, in sirening head-voice registers the band could not touch. And some refused the fight entirely, planting a deadpan cool in the mix and letting the band rage around it.\n\nRead these entries for the *mechanics of cut*: forward placement, narrow vowels at volume, brightness used as a weapon rather than a color. The belters here get louder by getting brighter — the sustainable trick the safety chapter endorses — because the unsustainable version did not produce four-decade careers, and several of these are four-decade careers.\n\nThere is also a tonal range in this chapter the genre's reputation hides. Between the banshees and the shouters sit smoke, rasp, torch and chill: voices that redefined toughness as timbre rather than volume. If your instrument is not a natural belt, those entries are your entry point to this chapter — proof that fronting loud music is a placement problem and an attitude problem before it is ever a decibel problem.",
     "entries": [
       {
@@ -3126,7 +3126,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Speech-level snarl in a narrow chest band; drive comes from consonants and timing, not pitch.",
-        "technique": "Drive comes from the consonants. She sings at speech level in a narrow chest band, snarling the front of each word and clipping the ends, so rhythm rather than pitch carries the energy. Vibrato is nearly absent and the vowel stays bright and tight. Trying to make it pretty, or adding runs, kills the effect — it depends on staying blunt and dead on the groove.",
+        "technique": "Drive comes from the consonants. She sings at speech level in a narrow chest band, snarling the front of each word and clipping the ends, so rhythm rather than pitch carries the energy. Vibrato is nearly absent and the vowel stays bright and tight. Trying to make it pretty, or adding runs, kills the effect: it depends on staying blunt and dead on the groove.",
         "span": "1 octave + 8"
       },
       {
@@ -3291,7 +3291,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Rock, metal and alternative",
     "summary": "Refusing to sing beautifully became its own technique, from post-punk monotone to grunge catharsis. This chapter covers what that refusal actually requires.",
     "free": false,
-    "words": 3131,
+    "words": 3115,
     "body": "This chapter documents the great rebellion against pretty singing, and its central irony: refusing conventional beauty turned out to require its own exacting techniques. The post-punk baritones stripped away vibrato, ornament and warmth until a semitone of movement carried a song — and discovered that controlled affectlessness is harder than emoting. The new wave croons rebuilt theatrical singing out of irony and synthesizers. And the grunge generation weaponized the break itself — yarls, cracks, howls from clean to distorted inside one phrase — turning what classical training spends years erasing into the genre's most copied gesture.\n\nThe entries here contain the atlas's highest concentration of *deliberate imperfection*, and the technique paragraphs keep making the same point from different angles: the imperfections are placed. The crack lands on the chosen word. The flat affect holds its pitch center. The scream is supported underneath exactly like a belt. What separated the era's lasting voices from its casualties was whether the chaos was a costume over control or the real thing — and the entries do not romanticize which was which.\n\nBorrow from these voices with the safety chapter open. Phrasing, restraint and register-flip expressiveness transfer cheaply; the sustained distorted catharsis at the chapter's grunge end is the most expensive sound in this book outside metal, and the entries of the singers who produced it sustainably all describe the same foundation: enormous breath support wearing a torn shirt.",
     "entries": [
       {
@@ -3359,7 +3359,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "The Crying Game",
         "highSource": "Number One",
         "blurb": "Plush blue-eyed-soul voice; low, languid phrasing with a reggae lilt and a conversational croon.",
-        "technique": "Languor is the calling card: a plush, low-set soul voice delivered with conversational ease, reggae-tinged phrasing that drags luxuriously behind the beat, and vowels kept round and plummy. Chest voice tops out near B4, warm rather than forceful, with the area above handled in a soft, veiled head tone. Vibrato is gentle and late. Students copying him push for power and ruin the effect — the style depends on under-singing: light onsets, generous breath flow, and emotional weight carried by timing and diction instead of volume.",
+        "technique": "Languor is the calling card: a plush, low-set soul voice delivered with conversational ease, reggae-tinged phrasing that drags luxuriously behind the beat, and vowels kept round and plummy. Chest voice tops out near B4, warm rather than forceful, with the area above handled in a soft, veiled head tone. Vibrato is gentle and late. Students copying him push for power and ruin the effect; the style depends on under-singing: light onsets, generous breath flow, and emotional weight carried by timing and diction instead of volume.",
         "span": "3 octaves + 7"
       },
       {
@@ -3393,7 +3393,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Narrow baritone built for rhythmic talk-singing; thin falsetto used as color on choruses.",
-        "technique": "Range is not the point. Most lines live inside a fifth, and the interest is rhythmic — talk-singing locked to sixteenth-note subdivisions with consonants used percussively, verses holding a flat pitch center on purpose. Choruses lift into a thin falsetto used as color rather than weight, with the full sound topping out around A4. Adding melodic ornament is exactly the wrong instinct; tighten the subdivision instead.",
+        "technique": "Range is not the point. Most lines live inside a fifth, and the interest is rhythmic: talk-singing locked to sixteenth-note subdivisions with consonants used percussively, verses holding a flat pitch center on purpose. Choruses lift into a thin falsetto used as color rather than weight, with the full sound topping out around A4. Adding melodic ornament is exactly the wrong instinct; tighten the subdivision instead.",
         "span": "2 octaves + 11"
       },
       {
@@ -3427,7 +3427,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Everything",
         "highSource": "Zero-2-0",
         "blurb": "Sultry, breathy baritone that purrs low and snarls high; swaggering pitch bends and raw, clean belts.",
-        "technique": "Seduction lives in the low register: a breathy, sing-talky baritone that purrs just above speech, with pitch bends and behind-the-beat phrasing doing the persuasion. The upper register is striking by contrast — clean yet raw belts up to C5, snarled vowels, and virtually no falsetto anywhere. Onsets are soft, consonants feline, dynamics built on restraint until the chorus opens. Students copying him overdo the breathiness and lose pitch core; the whisper quality sits on an exactly tuned center, and the swagger comes from rhythmic placement, not from volume.",
+        "technique": "Seduction lives in the low register: a breathy, sing-talky baritone that purrs just above speech, with pitch bends and behind-the-beat phrasing doing the persuasion. The upper register is striking by contrast: clean yet raw belts up to C5, snarled vowels, and virtually no falsetto anywhere. Onsets are soft, consonants feline, dynamics built on restraint until the chorus opens. Students copying him overdo the breathiness and lose pitch core; the whisper quality sits on an exactly tuned center, and the swagger comes from rhythmic placement, not from volume.",
         "span": "3 octaves + 7"
       },
       {
@@ -3478,7 +3478,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Love, Hate, Love",
         "blurb": "Nasal-edged baritone with a heavy chest push; his stacked harmonies with Cantrell define the sound.",
-        "technique": "Nasal buzz carries the tone forward while the weight underneath stays thick and baritone-heavy, which is why the voice reads as pressed even at moderate volume. He holds long notes nearly straight, letting a slow wide vibrato in at the very end, and doubles himself in close harmony that demands identical vowels take after take. Copying the nasality by pinching the throat is the usual mistake — it belongs in the resonance, not the larynx.",
+        "technique": "Nasal buzz carries the tone forward while the weight underneath stays thick and baritone-heavy, which is why the voice reads as pressed even at moderate volume. He holds long notes nearly straight, letting a slow wide vibrato in at the very end, and doubles himself in close harmony that demands identical vowels take after take. Copying the nasality by pinching the throat is the usual mistake: it belongs in the resonance, not the larynx.",
         "span": "3 octaves + 3"
       },
       {
@@ -3546,7 +3546,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Light tenor that flips early into a thin, airy falsetto; small vibrato, softened consonants.",
-        "technique": "Weight stays light and the flip into falsetto happens early, well below where a tenor could still push, and that early flip is the character of the sound. Breath stays in the tone, consonants soften almost to nothing, and vibrato is small and shallow. Trying to keep chest voice alive all the way to that F5 is the usual error — the top is meant to thin out and go quiet, not open up.",
+        "technique": "Weight stays light and the flip into falsetto happens early, well below where a tenor could still push, and that early flip is the character of the sound. Breath stays in the tone, consonants soften almost to nothing, and vibrato is small and shallow. Trying to keep chest voice alive all the way to that F5 is the usual error: the top is meant to thin out and go quiet, not open up.",
         "span": "3 octaves"
       },
       {
@@ -3563,7 +3563,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Snarling nasal tenor with a put-on accent; a narrow band worked hard, almost entirely in chest.",
-        "technique": "A narrow band worked hard — nearly all of it chest, from F2 up to around C5 — with a nasal snarl and a stylized vowel shift that bends words away from his speaking accent. Tone is straight, with almost no vibrato, and onsets clip tight to the guitar's eighth notes. Copying this means committing to the sneer; sung prettily, the notes survive and the entire character disappears.",
+        "technique": "A narrow band worked hard (nearly all of it chest, from F2 up to around C5), with a nasal snarl and a stylized vowel shift that bends words away from his speaking accent. Tone is straight, with almost no vibrato, and onsets clip tight to the guitar's eighth notes. Copying this means committing to the sneer; sung prettily, the notes survive and the entire character disappears.",
         "span": "2 octaves + 7"
       },
       {
@@ -3580,7 +3580,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Grace",
         "blurb": "Very wide tenor with seamless falsetto shifts, long melisma, and near-whispered dynamic drops.",
-        "technique": "Listen for how little seam there is between mix and falsetto: the shift happens inside a vowel rather than between notes, which is what lets long melismatic runs stay even. Dynamics drop to almost nothing and rebuild, audible throughout his reading of Hallelujah, and vibrato arrives late and narrow. Height comes from releasing pressure, not adding it — students push for the top and the ornaments stiffen into steps.",
+        "technique": "Listen for how little seam there is between mix and falsetto: the shift happens inside a vowel rather than between notes, which is what lets long melismatic runs stay even. Dynamics drop to almost nothing and rebuild, audible throughout his reading of Hallelujah, and vibrato arrives late and narrow. Height comes from releasing pressure, not adding it: students push for the top and the ornaments stiffen into steps.",
         "span": "3 octaves + 10"
       },
       {
@@ -3597,7 +3597,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Ooh",
         "highSource": "Devotion",
         "blurb": "Plain-spoken, boyish tenor; deadpan verses, power-chord-wide choruses, and clean falsetto tops.",
-        "technique": "Plainness is deliberate: a boyish, unaffected tenor delivered almost without vibrato, singing melodic leaps with the flat affect of someone reading aloud. The tone is clean and slightly nasal, diction precise, dynamics restrained even when the guitars are enormous. Falsetto is pure and unadorned, used for tops rather than drama, with full voice reaching G5 when a chorus demands it. Copying students add expression and miss the point — the charm is the deadpan, so the pitch must be exact, the rhythm square, and every phrase completely unornamented.",
+        "technique": "Plainness is deliberate: a boyish, unaffected tenor delivered almost without vibrato, singing melodic leaps with the flat affect of someone reading aloud. The tone is clean and slightly nasal, diction precise, dynamics restrained even when the guitars are enormous. Falsetto is pure and unadorned, used for tops rather than drama, with full voice reaching G5 when a chorus demands it. Copying students add expression and miss the point: the charm is the deadpan, so the pitch must be exact, the rhythm square, and every phrase completely unornamented.",
         "span": "3 octaves + 4"
       },
       {
@@ -3665,7 +3665,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Contralto anchored in a husky low register; conversational timing with sudden gravel on peaks.",
-        "technique": "Speech shapes the phrasing — timing stretches and compresses against the beat, and diction stays crisp even at the husky bottom of the range. Weight is chest-heavy with a low, settled larynx, and gravel shows up only at the peaks of a line, then clears. Smoothing it into legato is the error; the lines are meant to arrive unevenly, with abrupt dynamic surges instead of a steady swell.",
+        "technique": "Speech shapes the phrasing: timing stretches and compresses against the beat, and diction stays crisp even at the husky bottom of the range. Weight is chest-heavy with a low, settled larynx, and gravel shows up only at the peaks of a line, then clears. Smoothing it into legato is the error; the lines are meant to arrive unevenly, with abrupt dynamic surges instead of a steady swell.",
         "span": "2 octaves + 9"
       },
       {
@@ -3699,7 +3699,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Operatic-leaning baritone with fast register jumps, trills, and pinched nasal placement.",
-        "technique": "Wide leaps between a heavy chest bottom and a pinched, bright head tone happen fast and land exactly on the beat — the theatrics are metrically strict. Add trills, staccato glottal attacks, exaggerated vowel shapes, and syllables fired at speed. Copy the character and the rhythm is the first thing to go. The full-voice ceiling sits near B4; everything above it is deliberately narrow and forward rather than powered.",
+        "technique": "Wide leaps between a heavy chest bottom and a pinched, bright head tone happen fast and land exactly on the beat: the theatrics are metrically strict. Add trills, staccato glottal attacks, exaggerated vowel shapes, and syllables fired at speed. Copy the character and the rhythm is the first thing to go. The full-voice ceiling sits near B4; everything above it is deliberately narrow and forward rather than powered.",
         "span": "3 octaves + 7"
       },
       {
@@ -3716,7 +3716,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Given Up",
         "blurb": "Clean tenor with a rasp layer and screamed extension; abrupt switch between sung and torn tone.",
-        "technique": "Two tones operate here and they work as separate systems. Underneath is a bright, cleanly supported tenor with precise onsets and nearly straight tone up to that E5 belt; over it sits a distorted scream that reaches higher without the clean voice going with it. Manufacturing the rasp in the throat itself muddies both — the clean line has to stay intact underneath the distortion.",
+        "technique": "Two tones operate here and they work as separate systems. Underneath is a bright, cleanly supported tenor with precise onsets and nearly straight tone up to that E5 belt; over it sits a distorted scream that reaches higher without the clean voice going with it. Manufacturing the rasp in the throat itself muddies both: the clean line has to stay intact underneath the distortion.",
         "span": "3 octaves + 2"
       },
       {
@@ -3784,7 +3784,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Why'd You Only Call Me When You're High?",
         "highSource": "Four Out of Five",
         "blurb": "Louche croon with lazy slides, thick Sheffield vowels, and a smoky falsetto reserved for late-night hooks.",
-        "technique": "Crooning defines the approach: a low, lazy delivery built on slides, scoops, and back-of-the-mouth vowels that blur one word into the next. The chest voice is warm and conversational, sitting in a narrow comfortable band, with portamento doing the expressive work instead of vibrato. Falsetto arrives as a deliberate contrast — soft, distant, slightly detached. Students copying him often exaggerate the slur until pitch centers vanish; the slides actually land precisely on target, and the swagger comes from timing behind the beat, not from approximate tuning.",
+        "technique": "Crooning defines the approach: a low, lazy delivery built on slides, scoops, and back-of-the-mouth vowels that blur one word into the next. The chest voice is warm and conversational, sitting in a narrow comfortable band, with portamento doing the expressive work instead of vibrato. Falsetto arrives as a deliberate contrast: soft, distant, slightly detached. Students copying him often exaggerate the slur until pitch centers vanish; the slides actually land precisely on target, and the swagger comes from timing behind the beat, not from approximate tuning.",
         "span": "3 octaves + 3"
       },
       {
@@ -3818,7 +3818,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Next Semester",
         "highSource": "Let Me Do it For You",
         "blurb": "Reedy, conversational tenor that jumps from rap cadence to strained-on-purpose belts and airy falsetto hooks.",
-        "technique": "Speech-level singing is the foundation here: rap cadence, sung hooks, and shouted climaxes all sit on the same conversational placement. The tone is reedy and slightly nasal, with fast, tight phrasing and almost no vibrato until a note is sustained. Belts around D5 are bright, twangy, and deliberately strained-sounding, while the falsetto above is thin and airy. A student copying the strain literally will blow out quickly — the distress is acted through vowel shading and dynamics, not through actual throat squeeze, and the support underneath stays constant.",
+        "technique": "Speech-level singing is the foundation here: rap cadence, sung hooks, and shouted climaxes all sit on the same conversational placement. The tone is reedy and slightly nasal, with fast, tight phrasing and almost no vibrato until a note is sustained. Belts around D5 are bright, twangy, and deliberately strained-sounding, while the falsetto above is thin and airy. A student copying the strain literally will blow out quickly: the distress is acted through vowel shading and dynamics, not through actual throat squeeze, and the support underneath stays constant.",
         "span": "3 octaves + 8"
       },
       {
@@ -3834,8 +3834,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Nobody",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Restrained indie soprano — clean, steady, almost vibratoless lines that break into raw chest cries.",
-        "technique": "Stillness is the discipline: Mitski holds long, even tones with minimal vibrato, placing the voice in a clear, unornamented middle that reads as calm until it doesn't. Climaxes push into open chest toward F#5, slightly raw by design, while verses sit low near E3 in a darkened, rounded timbre. Onsets are soft, releases unadorned. The common error in imitation is adding expression; her power is subtraction — perfectly level lines that make the eventual crack devastating.",
+        "blurb": "Restrained indie soprano: clean, steady, almost vibratoless lines that break into raw chest cries.",
+        "technique": "Stillness is the discipline: Mitski holds long, even tones with minimal vibrato, placing the voice in a clear, unornamented middle that reads as calm until it doesn't. Climaxes push into open chest toward F#5, slightly raw by design, while verses sit low near E3 in a darkened, rounded timbre. Onsets are soft, releases unadorned. The common error in imitation is adding expression; her power is subtraction: perfectly level lines that make the eventual crack devastating.",
         "span": "2 octaves + 2"
       }
     ]
@@ -3847,7 +3847,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Rock, metal and alternative",
     "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
     "free": false,
-    "words": 3161,
+    "words": 3155,
     "body": "Metal is where rock's altitude arms race went professional. The air-raid sirens in this chapter sustain pitches, night after night, that classic rock visited on special occasions — and the entries make clear how: this is trained singing, head voice and reinforced mix developed with an athlete's discipline, far closer to operatic production than the leather suggests. The genre even reimported opera directly, in the symphonic wing's classically schooled sopranos, making this the one chapter where conservatory technique and blast beats share a stage.\n\nThe other pole is the low theatre: growls, screams and bass-baritone menace. The sustainable versions documented here are false-cord techniques — noise generated above the folds while the instrument underneath stays healthy — and the entries treat them as the skilled work they are. Between the poles sit the shape-shifters who cover the whole map in one set, clean to brutal and back, which may be the most complete technical package in modern singing.\n\nTwo things to take from this chapter even if you never sing a note of metal. First, vowel discipline: extreme range at extreme volume forces narrow, consistent vowels, and every entry's altitude depends on them. Second, the scheduling: metal singers tour harder than almost anyone, and the durable ones ration their extremes with actuarial precision — the highest scream and the lowest growl appear where the set needs them, not wherever enthusiasm strikes. That is the safety chapter's whole argument, demonstrated at the sport's highest level.",
     "entries": [
       {
@@ -3914,7 +3914,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Mother",
         "lowSource": "Cat People (Putting Out the Fire)",
         "highSource": "SkinCarver",
-        "blurb": "Bluesy, brooding croon-to-howl — an Elvis-shaped baritone soaked in doom and punk menace.",
+        "blurb": "Bluesy, brooding croon-to-howl: an Elvis-shaped baritone soaked in doom and punk menace.",
         "technique": "Elvis phrasing, punk engine: a chesty baritone crooned through rounded, retro vowels, with a wide lounge-singer vibrato snapped shut by hard glottal accents. He belts through the fourth octave to C#5 on pure chest, adding rasp by overdriving fold closure rather than false-fold layering, which gives the growl its bluesy, vocal-cord bite. Melisma is minimal; lines swing in long crooned arcs punctuated by barked releases. The classic student error is imitating the sneer instead of the support; the swagger is a byproduct of huge, steady airflow.",
         "span": "3 octaves + 2"
       },
@@ -4050,7 +4050,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Black No. 1",
         "lowSource": "Cinnamon Girl",
         "highSource": "Xero Tolerance",
-        "blurb": "Cavernous bass-baritone rumble — a gothic crooner's drawl that sinks to subterranean lows.",
+        "blurb": "Cavernous bass-baritone rumble: a gothic crooner's drawl that sinks to subterranean lows.",
         "technique": "Depth here is architecture, not effect: a true low voice resonating in an unusually long vocal tract, sung with lazy, legato onsets and a crooner's micro-vibrato. He parks the larynx low and lets subglottal space do the amplifying, down to F1 at the extreme. Full voice tops out around G#4 before deliberate distortion takes over for dramatic peaks. Phrasing drags languidly behind the beat, vowels stretched wide. Students chase the lows by pressing down; the notes only speak when the throat stays open, the volume modest, and the air slow.",
         "span": "4 octaves + 2"
       },
@@ -4254,7 +4254,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Can You Feel My Heart",
         "lowSource": "Parasite Eve",
         "highSource": "Wonderful Life",
-        "blurb": "Torn-paper screams beside fragile, confessional cleans — an emo-metal voice built on texture over polish.",
+        "blurb": "Torn-paper screams beside fragile, confessional cleans: an emo-metal voice built on texture over polish.",
         "technique": "Texture outranks polish: the harsh vocabulary spans false-fold screams, pitched fry, and mid-range shouts, all riding real pitch centers rather than noise, while the cleans stay deliberately plain; thin, slightly flat-footed, and confessional, topping out around Bb4. Onsets in clean passages are breathy; in harsh passages the distortion starts above the folds before the vowel opens. Phrasing favors blunt, spoken rhythm over melisma. The student error is scraping the true cords to copy the screams and shouting the cleans; both modes depend on low air pressure and a relaxed, open throat.",
         "span": "3 octaves + 5"
       },
@@ -4288,7 +4288,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "In the End",
         "lowSource": "Ribcage",
         "highSource": "Shadows Die",
-        "blurb": "Deep, resonant rock baritone — crypt-low verses that swell into anthemic, fist-up choruses.",
+        "blurb": "Deep, resonant rock baritone: crypt-low verses that swell into anthemic, fist-up choruses.",
         "technique": "Low resonance carries the brand: a young, dark baritone sung from the chest with the larynx relaxed and vowels rounded toward speech. Verses sit deliberately deep, almost spoken, with firm glottal onsets; choruses lift into an anthemic, open-throated call built for crowd doubling rather than agility. Vibrato is minimal, sustains straight and broad. Falsetto appears only as decoration at phrase tops. The usual mistake is manufacturing depth by swallowing the tone; his lows project because the sound stays forward and the jaw stays loose, even at the bottom of the staff.",
         "span": "3 octaves + 3"
       },
@@ -4305,7 +4305,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Square Hammer",
         "lowSource": "Darkness at the Heart of My Love",
         "highSource": "Life Eternal",
-        "blurb": "Suave, theatrical baritone croon — pop smoothness draped over doomy riffs, rising to keening falsetto peaks.",
+        "blurb": "Suave, theatrical baritone croon: pop smoothness draped over doomy riffs, rising to keening falsetto peaks.",
         "technique": "Croon first, metal second: the baritone sits mid-larynx with rounded, Europop vowels, gentle legato onsets, and a fast flicker of vibrato at phrase ends. Chest voice carries melody up to about D5 before he pivots to a heady falsetto for peaks near G#5, always landing the flip on a vowel, never a consonant. Dynamics stay conversational; drama comes from arrangement, not push. Singers copying him oversell the theatricality and go operatic; the recorded voice is intimate, slightly nasal, and disciplined about vowel consistency across register shifts.",
         "span": "3 octaves + 6"
       },
@@ -4373,7 +4373,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Highway Tune",
         "lowSource": "The Ocean",
         "highSource": "The Cold Wind",
-        "blurb": "Reedy, banshee-bright wail straight from the Plant school — piercing high cries over boogie riffs.",
+        "blurb": "Reedy, banshee-bright wail straight from the Plant school: piercing high cries over boogie riffs.",
         "technique": "Wail placement rules: a compact tenor squeezed into an intensely bright, nasal channel, with heavy twang and a high tongue creating the siren-like cut. He sustains full-voice cries high above the staff, tips into falsetto for peaks near C#6, and decorates with fast blues curls and yelped octave leaps. Vibrato is quick and shallow; onsets often slide upward into the note. Volume is loud but the mechanism is small. Students imitate the sound by screaming wide-mouthed and blow out; the cry comes from narrowing, not force, with the soft palate high and air metered.",
         "span": "3 octaves + 1"
       }
@@ -4386,7 +4386,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The men who made secular music testify (church-trained tenors, velvet baritones and the falsetto tradition) and the phrasing lessons every genre stole from them.",
     "free": false,
-    "words": 3298,
+    "words": 3296,
     "body": "Almost every voice in this chapter learned its trade in church, and it shows in the shared toolkit: call-and-response phrasing, melisma as testimony rather than decoration, the shout built and released like a sermon's climax, and the falsetto — soul's great signature — floated above the congregation as the sound of feeling exceeding words. When the entries here describe a run, a delayed resolution, or a note bent on approach, they are describing gospel technique wearing a secular suit, and every genre in this book from country to K-pop has picked its pockets.\n\nThe chapter divides by register strategy. The high tenors pushed chest voice to its ceiling and lived there, urgent and bright. The falsetto specialists made the top floor the main residence. The velvet baritones — soul's quiet aristocracy — did the opposite work, perfecting warmth, diction and restraint at speech pitch. And the shouters ran the full gospel dynamic arc in every song. Where entries give a full-voice ceiling, reading those ceilings side by side is a lesson in how many different machines can produce the same emotional result; most entries in this chapter give none, and for those the technique paragraph is the better guide.\n\nWhat transfers most cheaply from this chapter is timing. Soul phrasing — behind the beat, conversational, syllables placed like a drummer's ghost notes — can be practiced by any voice at any volume, and the entries repeatedly identify it as the trait imitators miss while they chase the runs. Learn one verse's timing exactly before touching a single ornament; that order is the chapter's consensus advice.",
     "entries": [
       {
@@ -4811,7 +4811,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "What's Going On",
         "highSource": "Crazy",
         "blurb": "Husky, grained tenor; smoky low register blooming into ringing, rounded high sustains.",
-        "technique": "Grain and warmth define the sound: a husky tenor whose low register is smoky and intimate, blooming upward into rounded, ringing sustains. Melisma is used sparingly but with complete control, each run landing softly inside the beat. The passaggio is smoothed almost invisibly — notes migrate from chest warmth into heady mix without any audible gear change, with falsetto reserved for the very top around G5. Copying the huskiness with deliberate breathiness collapses the tone; his texture comes from the instrument itself, over steady support and tall, unhurried vowels.",
+        "technique": "Grain and warmth define the sound: a husky tenor whose low register is smoky and intimate, blooming upward into rounded, ringing sustains. Melisma is used sparingly but with complete control, each run landing softly inside the beat. The passaggio is smoothed almost invisibly: notes migrate from chest warmth into heady mix without any audible gear change, with falsetto reserved for the very top around G5. Copying the huskiness with deliberate breathiness collapses the tone; his texture comes from the instrument itself, over steady support and tall, unhurried vowels.",
         "span": "3 octaves + 4"
       },
       {
@@ -4963,7 +4963,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Human",
         "lowSource": "Bitter End",
         "highSource": "Talking to Myself",
-        "blurb": "Huge gospel-blues baritone — preacher phrasing, blues bends, soft wooly falsetto contrast.",
+        "blurb": "Huge gospel-blues baritone: preacher phrasing, blues bends, soft wooly falsetto contrast.",
         "technique": "Gospel weight anchors everything: a wide, dark baritone delivered with huge breath support and a chest that stays engaged high into the belt. Rory shapes phrases like a preacher, swelling into downbeats, ornamenting with short blues bends instead of long runs. His falsetto is soft and wooly, used for contrast. Singers copying the size go straight to shouting; the mass comes from low-body anchoring and open pharyngeal space, with the throat surprisingly unclenched.",
         "span": "3 octaves + 4"
       }
@@ -4976,7 +4976,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The women who set the bar for vocal authority, from torch and church to quiet storm, and the complete techniques their entries document.",
     "free": false,
-    "words": 2584,
+    "words": 2580,
     "body": "If you could keep only one chapter of this atlas as a singing syllabus, keep this one. The women here hold, between them, every tool the book's vocabulary chapter defines: church-fired belts and runs, jazz-schooled bends and behind-the-beat cool, whisper-close quiet storm, rasp deployed as punctuation, and dynamic control that moves from confession to command inside a bar. The entries read like a curriculum because the tradition *was* one — each generation studied the last in church basements and on record, and the lineage is audible entry to entry.\n\nNotice two structural facts as you read. First, the tessituras here sit lower than pop's: mezzo territory, speech-adjacent, which is why this chapter's technique transfers so well to average voices — the wonders are being worked in range you probably own. The stratospheric moments exist, and the cited extremes record them, but the authority lives in the middle, in tone and timing. Second, the ornament density is deceptive. The technique paragraphs keep measuring how *few* notes the greatest runs contain and how precisely they land; melisma in this tradition is architecture, resolved like harmony, not decoration sprayed over it.\n\nBorrow in the order the entries suggest: tone first (weight, placement, the cry), timing second, runs last and slowed to quarter notes until exact. This chapter punishes approximation more than any other in the book, because every listener alive has its standards in their ears.",
     "entries": [
       {
@@ -5281,7 +5281,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Video",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Woody, low-lying contralto calm — acoustic soul sung at speaking weight with sparse ornament.",
+        "blurb": "Woody, low-lying contralto calm: acoustic soul sung at speaking weight with sparse ornament.",
         "technique": "India.Arie keeps the larynx low and the tone woody, singing acoustic-guitar phrases in a true contralto tessitura. Her onset is simultaneous and unforced, dynamics stay inside a narrow, intimate band, and ornaments are sparse, placed only where the lyric asks. Chest resonance dominates even on upper passages, which she rounds rather than brightens. Students copying her mistake quiet for unsupported; the stillness requires steady appoggio, tall vowels, and the patience to leave space unfilled.",
         "span": "3 octaves + 3"
       },
@@ -5315,7 +5315,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "You Had Me",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Smoky, grainy soul mezzo — cool and husky down low, gutsy and warm in the belt.",
+        "blurb": "Smoky, grainy soul mezzo: cool and husky down low, gutsy and warm in the belt.",
         "technique": "Grit is the organizing principle: Stone adds rasp by compressing at the cords, then releases into clean warmth mid-phrase for contrast. Her low range near C3 keeps a cool, smoky cover, while belts toward G5 open into a wide, gospel-shaped vowel with fast vibrato arriving late. Runs are loose and behind the beat, more sung speech than drill. Copying her rasp with throat squeeze causes fatigue; the distortion rides on steady airflow and a released jaw.",
         "span": "2 octaves + 7"
       },
@@ -5384,7 +5384,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Bright-edged mezzo with a trumpet-like belt, tight fast vibrato, and hymn-like directness.",
-        "technique": "Economy defines this voice: Sandé chooses one placement — forward, bright, slightly brassy — and commits, so every note from D3 to F5 sounds like the same instrument. Her vibrato is narrow and quick, switched on at phrase ends. Belts keep weight and character right up to F5 without widening, and melisma is deployed sparingly, in short gospel-rooted cells. Students copying her overdecorate; the style is declamatory, hymn-plain, with consonants planted and every vowel fully voiced.",
+        "technique": "Economy defines this voice: Sandé chooses one placement (forward, bright, slightly brassy) and commits, so every note from D3 to F5 sounds like the same instrument. Her vibrato is narrow and quick, switched on at phrase ends. Belts keep weight and character right up to F5 without widening, and melisma is deployed sparingly, in short gospel-rooted cells. Students copying her overdecorate; the style is declamatory, hymn-plain, with consonants planted and every vowel fully voiced.",
         "span": "2 octaves + 3"
       },
       {
@@ -5430,7 +5430,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The streaming era's R&B (falsetto confessions, whisper-runs, baritone outliers and produced nonchalance) and how the genre traded the shout for the microphone's trust.",
     "free": false,
-    "words": 4482,
+    "words": 4480,
     "body": "Modern R&B is soul rebuilt for headphones. The church lineage is intact — listen to the harmony stacks and the run grammar — but the delivery contract changed: where the classic tradition projected to the back pew, this generation confides at six inches, and the entries here document the consequences. Falsetto became the lead register rather than the special effect. Runs learned to decay into breath. Nonchalance became a produced aesthetic, sloppiness engineered with studio precision. And a counter-movement of baritones planted flags in the cellar, proving the genre had been renting only the top half of the male voice for a generation.\n\nThe technique paragraphs in this chapter return constantly to one theme: the apparent casualness is exact. The flips land on chosen syllables; the mumble holds its pitch centers; the stacked harmonies that make one voice sound like a choir require the lead to tune like a section player. Modern R&B is the atlas's clearest demonstration that *relaxed* and *imprecise* are different properties, and that the first is manufactured from the second's opposite.\n\nFor the practicing singer this is the most immediately usable chapter in the soul wing. The volumes are conversational, the tessituras moderate, the tools — onset control, register blending, breath-as-texture — all safe to drill at home. What it demands instead is patience with detail: the loop method from the borrower's chapter, run at short phrase length, is the only way the exactness underneath this style becomes audible enough to copy.",
     "entries": [
       {
@@ -5446,7 +5446,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Try Again",
         "lowSource": "Death of a Playa",
         "highSource": "Never Comin' Back",
-        "blurb": "Cool, airy head-mix glide over stuttering beats — intimacy and precision instead of power.",
+        "blurb": "Cool, airy head-mix glide over stuttering beats: intimacy and precision instead of power.",
         "technique": "Aaliyah floats a small, cool head-mix over intricate rhythmic phrasing, singing softly enough that the microphone does the projection. Her onsets are aspirate and gentle, runs are compact and precise rather than showy, and harmony stacks carry much of the color. The belt tops out around G#5 but she rarely leans on it, preferring restraint. Students copying her often whisper instead of phonating; the trick is a clear, connected tone at low volume, with breath moving constantly underneath.",
         "span": "2 octaves + 8"
       },
@@ -5565,7 +5565,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Goodies",
         "lowSource": "Girl Gang",
         "highSource": "Up & Down",
-        "blurb": "Light, reedy tone clipped tight to the beat — a dancer's voice, quick and cool.",
+        "blurb": "Light, reedy tone clipped tight to the beat: a dancer's voice, quick and cool.",
         "technique": "Ciara treats the voice as part of the choreography: light, reedy, and rhythmically clipped, with consonants placed exactly on the beat. She sings mostly in a nimble low mix, harmonizing her lower notes and saving the thin, bright top for accents. Runs are fast, small-interval, and always land on the grid. Students copying her add too much weight; the style needs a lifted soft palate, minimal air pressure, and breath planned around dance movement.",
         "span": "2 octaves + 11"
       },
@@ -6224,7 +6224,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The source tradition and the ensemble athletes: where the runs, the shout and the squall come from, plus the a cappella specialists who turned blend itself into virtuosity.",
     "free": false,
-    "words": 2528,
+    "words": 2522,
     "body": "Everything the soul chapters borrowed, this chapter owns outright. Gospel is the source code: the run grammar that resolves like harmony, the shout built in waves, the squall — that controlled, ecstatic break at the top of a climb — and the dynamic arc that takes a room from silence to shaking in four minutes. The entries here describe the tradition's specialists at full strength, and the technical headline is stamina-with-abandon: these are the book's most demanding sustained sings, delivered weekly for decades, which is only possible because the abandon rides on ferocious, invisible support.\n\nThe chapter's second population is the a cappella and ensemble athletes — voices whose virtuosity is *blend*: tuning to each other in real time, trading lead and section roles, covering bass-to-whistle territory between a handful of people with no instruments to hide behind. Their entries are the atlas's best documentation of skills solo singing never tests: locking vowels with another voice, balancing to a chord, hearing yourself as a part.\n\nTwo borrowings recommend themselves. From the gospel wing, take the *build*: pick any song you sing and design its dynamics as a staircase the way these entries describe, arriving at full voice only when the song has earned it. From the ensemble wing, take the humility drill: record a simple melody, stack one harmony under it, and re-sing the lead to fit the chord. Every voice in this chapter got its authority from serving a room first; the technique follows the posture.",
     "entries": [
       {
@@ -6411,7 +6411,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Take Me to the King",
         "highSource": "God Provides",
         "blurb": "Massive gospel soprano that moves from grounded alto warmth to ringing, sustained climaxes without strain.",
-        "technique": "Mann builds every climax from the breath down: wide ribcage anchor, low-larynx warmth in the verses, then a mixed belt that keeps thyroid tilt so the top rings instead of shouting. Her vibrato is broad and slow, arriving after a straight-tone hold. Runs are deliberate — fewer notes, heavier landings. Near F3 she speaks on pitch; approaching C#6 she narrows the vowel and lets resonance do the sizing. The copying error is volume-first belting; her loudness is a byproduct of anchored breath and a released jaw, never a push from the throat.",
+        "technique": "Mann builds every climax from the breath down: wide ribcage anchor, low-larynx warmth in the verses, then a mixed belt that keeps thyroid tilt so the top rings instead of shouting. Her vibrato is broad and slow, arriving after a straight-tone hold. Runs are deliberate: fewer notes, heavier landings. Near F3 she speaks on pitch; approaching C#6 she narrows the vowel and lets resonance do the sizing. The copying error is volume-first belting; her loudness is a byproduct of anchored breath and a released jaw, never a push from the throat.",
         "span": "2 octaves + 8"
       },
       {
@@ -6462,7 +6462,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "My Testimony",
         "highSource": "The Best in Me",
         "blurb": "Preacher's baritone that builds from spoken grit to sustained, wide-vibrato cries at the top of the belt.",
-        "technique": "Sapp preaches and sings with one mechanism: speech-quality onset, mask-forward placement, and phrases that accelerate like sentences rather than scan like bars. His baritone sits dark and grounded near D#2, but the climactic cries ascend in mix, wide vibrato blooming only at the sustain. He repeats motifs with rising intensity — same notes, more compression — which is the gospel build imitators rush. Students also over-darken the tone to sound weighty; his depth comes from breath anchoring, not vowel swallowing. Practice sustained vowels that crescendo without spreading, then add the growl as color, last.",
+        "technique": "Sapp preaches and sings with one mechanism: speech-quality onset, mask-forward placement, and phrases that accelerate like sentences rather than scan like bars. His baritone sits dark and grounded near D#2, but the climactic cries ascend in mix, wide vibrato blooming only at the sustain. He repeats motifs with rising intensity (same notes, more compression), which is the gospel build imitators rush. Students also over-darken the tone to sound weighty; his depth comes from breath anchoring, not vowel swallowing. Practice sustained vowels that crescendo without spreading, then add the growl as color, last.",
         "span": "3 octaves + 2"
       },
       {
@@ -6513,7 +6513,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Can't Nobody",
         "highSource": "Worthy",
         "blurb": "Husky piano-man gospel tenor; murmured lows, pleading melisma, and belts that arrive like answered prayers.",
-        "technique": "Norful phrases from the piano bench: rubato breaths, suspended silences, and melodic lines that resolve just behind the harmony. The core sound is a husky, compressed mix with a raised-chest belt that pleads rather than proclaims. His lows toward D2 are murmured chest tones close to the mic; his top near D#5 arrives through staged repetition, each pass a step more compressed. Melisma is fast but gravity-bound, always falling back to the tonic. Imitators oversing the runs and miss the restraint — most of his intensity is dynamic contrast, a whisper set right before a wail.",
+        "technique": "Norful phrases from the piano bench: rubato breaths, suspended silences, and melodic lines that resolve just behind the harmony. The core sound is a husky, compressed mix with a raised-chest belt that pleads rather than proclaims. His lows toward D2 are murmured chest tones close to the mic; his top near D#5 arrives through staged repetition, each pass a step more compressed. Melisma is fast but gravity-bound, always falling back to the tonic. Imitators oversing the runs and miss the restraint: most of his intensity is dynamic contrast, a whisper set right before a wail.",
         "span": "3 octaves + 1"
       },
       {
@@ -6530,7 +6530,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Lonesome Road",
         "highSource": "Lonesome Road",
         "blurb": "Subterranean basso profondo rumble that blurs into pure vibration; Guinness lists him for lows deeper than human hearing.",
-        "technique": "Storms anchors everything in slack, low-pressure vocal folds: subglottal pressure stays tiny, closure stays gentle, and the tone drops toward B0 as fry and true phonation blur together. Resonance comes from a lowered larynx and huge pharyngeal space, not force. Above D4 he flips to a soft, unforced falsetto rather than pushing chest. Students copying him usually squeeze the throat chasing depth; he releases instead, letting air pass slowly and the folds go slack. Slow airflow, tall posture, zero neck tension — the depth is a relaxation trick, not a strength trick.",
+        "technique": "Storms anchors everything in slack, low-pressure vocal folds: subglottal pressure stays tiny, closure stays gentle, and the tone drops toward B0 as fry and true phonation blur together. Resonance comes from a lowered larynx and huge pharyngeal space, not force. Above D4 he flips to a soft, unforced falsetto rather than pushing chest. Students copying him usually squeeze the throat chasing depth; he releases instead, letting air pass slowly and the folds go slack. Slow airflow, tall posture, zero neck tension: the depth is a relaxation trick, not a strength trick.",
         "span": "4 octaves"
       },
       {
@@ -6615,7 +6615,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Valhalla Calling",
         "highSource": "Peaches",
         "blurb": "Cavernous, woofer-deep bass with a grinning croon on top and playful fry drops far below the staff.",
-        "technique": "Castellucci builds his sound on subharmonic and fry blends: near B0 he lets the folds beat at half rate, keeping the jaw loose so the pitch reads lower than the effort. His speaking-level mix carries to about E4 before he hands off to a bright, character-driven falsetto up to Bb5. Onsets are playful and percussive — he treats consonants as rhythm. The trap for imitators is muscling the low notes with pressed compression; his lows are quiet at the source and loud in the mic. Close-mic craft, relaxed larynx, exaggerated diction: that is the engine.",
+        "technique": "Castellucci builds his sound on subharmonic and fry blends: near B0 he lets the folds beat at half rate, keeping the jaw loose so the pitch reads lower than the effort. His speaking-level mix carries to about E4 before he hands off to a bright, character-driven falsetto up to Bb5. Onsets are playful and percussive: he treats consonants as rhythm. The trap for imitators is muscling the low notes with pressed compression; his lows are quiet at the source and loud in the mic. Close-mic craft, relaxed larynx, exaggerated diction: that is the engine.",
         "span": "4 octaves + 11"
       },
       {
@@ -6661,7 +6661,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Country, folk and jazz",
     "summary": "Twang as technology, the accent as instrument, and storytelling tessitura make up country's vocal toolkit, from honky-tonk cries to stadium baritones.",
     "free": false,
-    "words": 4309,
+    "words": 4289,
     "body": "Country is the most misunderstood technique chapter in the book, because its defining sound — twang — gets heard as an accent when it is actually an acoustic technology. That bright, narrow, penetrating buzz is what let unamplified voices cut through honky-tonk noise, and the modern genre kept it as identity: the entries here describe voices getting *louder by getting narrower*, from the classic criers to the current stadium baritones. The related signature, the break — that quick flip into falsetto and back, the yodel's descendant — turns up across generations as country's preferred emotional punctuation, always placed, never accidental.\n\nThe other structural fact is tessitura: country lives at speech pitch more faithfully than any other genre here, because the genre's contract is storytelling and stories are told, not belted. That makes this chapter the most singable chapter in the atlas for average voices, and it makes the accent question unavoidable. The entries treat regional vowel color as part of the instrument — as load-bearing as any placement choice — and the borrower's advice that follows from them is blunt: work on the vowels or pick different repertoire, because neutralizing them removes the actual sound.\n\nWhat this chapter teaches beyond its borders: diction under drawl (every word lands despite the slur), dynamic honesty (peaks rationed to where the story peaks), and the discipline of sitting in a narrow, comfortable band for forty minutes and making variety out of phrasing instead of altitude. Every genre's singers get better at their own music after a month in this room.",
     "entries": [
       {
@@ -6694,7 +6694,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "He Stopped Loving Her Today",
         "lowSource": "Radio Lover",
         "highSource": "Couldn't Love Have Picked a Better Place to Die",
-        "blurb": "Pinched, bending baritone that curls every syllable — grief carried through ornament and sudden drops to the bottom of the staff.",
+        "blurb": "Pinched, bending baritone that curls every syllable: grief carried through ornament and sudden drops to the bottom of the staff.",
         "technique": "Jones bends pitch the way a steel player bends strings: he scoops into a syllable, curls it through a triplet, and clips it with a hard glottal stop. The tone stays pinched and nasal up top while the jaw drops for sudden dives toward B1. Keep the larynx loose and let vowels distort; students who sing his lines cleanly miss the point, because the ornament carries the grief, not the lyric.",
         "span": "3 octaves"
       },
@@ -6746,7 +6746,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Nasal Appalachian mezzo, hard consonants, a bent and talking approach to the melody line.",
-        "technique": "You hear the nose first: placement is high and forward, vowels flattened toward speech, consonants struck hard enough to become part of the rhythm. Melody gets bent, notes approached from under and pushed up into, sometimes talked more than sung. Chest-weighted tone covers most of the G3-D5 span with no flip into anything lighter. Round the vowels out and the accent goes with them, and the accent is where the feeling actually lives.",
+        "technique": "You hear the nose first: placement is high and forward, vowels flattened toward speech, consonants struck hard enough to become part of the rhythm. Melody gets bent, notes approached from under and pushed up into, sometimes talked more than sung. Chest-weighted tone covers most of the G3–D5 span with no flip into anything lighter. Round the vowels out and the accent goes with them, and the accent is where the feeling actually lives.",
         "span": "1 octave + 7"
       },
       {
@@ -6847,7 +6847,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Rhinestone Cowboy",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Bright, exact session-singer tenor — clean onsets, even vibrato, and pop polish over country heartbreak.",
+        "blurb": "Bright, exact session-singer tenor: clean onsets, even vibrato, and pop polish over country heartbreak.",
         "technique": "Campbell sings like a session player thinks: dead-center pitch, even vibrato saved for the tail of long tones, and consonants placed exactly on the beat. The tone is bright, forward, and unforced through the passaggio, with a light head-voice turn instead of a push above the staff. Copy the restraint first; students usually oversell the big phrases he undersells, and the Nashville polish collapses into karaoke.",
         "span": "2 octaves + 4"
       },
@@ -6966,7 +6966,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "No One Else on Earth",
         "lowSource": "She Is His Only Need",
         "highSource": "Love By Grace",
-        "blurb": "Thick gospel-blues contralto — growled onsets, wide vibrato, a murmur that swells to a roar.",
+        "blurb": "Thick gospel-blues contralto: growled onsets, wide vibrato, a murmur that swells to a roar.",
         "technique": "Judd plants her sound in a thick contralto chest voice colored by gospel and blues: growled onsets, back-phrased lines, and a wide vibrato that opens up on held notes. She swells from a murmur to a roar within a single phrase while the pitch center never drifts. Students copying her start at the roar; the power reads because it emerges from genuine softness, with the throat staying open.",
         "span": "2 octaves"
       },
@@ -7034,8 +7034,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Chattahoochee",
         "lowSource": "It's Five O'Clock Somewhere",
         "highSource": "Who's Cheatin' Who",
-        "blurb": "Easy Georgia drawl over a mid-set honky-tonk baritone — scooped vowels, lazy vibrato, exact pitch.",
-        "technique": "Jackson keeps everything in an easy honky-tonk drawl: wide Georgia vowels, gentle scoops into almost every downbeat, and a lazy vibrato that barely waves. The voice sits mid-baritone and never pushes; high phrases are leaned into with twang rather than belted. What students miss is the vowel work — he sings the accent, bending words into two-syllable shapes, and the pitch stays exact underneath all that drawl.",
+        "blurb": "Easy Georgia drawl over a mid-set honky-tonk baritone: scooped vowels, lazy vibrato, exact pitch.",
+        "technique": "Jackson keeps everything in an easy honky-tonk drawl: wide Georgia vowels, gentle scoops into almost every downbeat, and a lazy vibrato that barely waves. The voice sits mid-baritone and never pushes; high phrases are leaned into with twang rather than belted. What students miss is the vowel work: he sings the accent, bending words into two-syllable shapes, and the pitch stays exact underneath all that drawl.",
         "span": "2 octaves + 7"
       },
       {
@@ -7051,7 +7051,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "She's in Love with the Boy",
         "lowSource": "Where Your Road Leads",
         "highSource": "In Another's Eyes",
-        "blurb": "Round, exact mezzo with seamless registers — long legato swells and dead-center intonation.",
+        "blurb": "Round, exact mezzo with seamless registers: long legato swells and dead-center intonation.",
         "technique": "Yearwood owns one of country's most exact instruments: intonation dead center, long legato lines, and dynamic swells that build across whole verses rather than single notes. Her chest voice is round and unforced, and she crosses into head voice with no seam, keeping vibrato even throughout. Students copying her focus on the big finishes; the discipline is in the quiet bars, where every vowel stays perfectly matched.",
         "span": "2 octaves + 7"
       },
@@ -7085,7 +7085,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Breathe",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Warm mezzo with a bright, tall belt and seamless head-voice release — pop-clean diction over country warmth.",
+        "blurb": "Warm mezzo with a bright, tall belt and seamless head-voice release: pop-clean diction over country warmth.",
         "technique": "Hill balances a warm lower-middle register against a bright, spread belt that stays plumb up to F5. Her onsets are precise, her vibrato even and unhurried, and she moves between chest and head with a smooth mix instead of an audible gear change. Diction stays polished, almost pop-clean. Students copying her tend to widen the belt vowels too early; she keeps them tall until the phrase peaks, then releases into head voice.",
         "span": "2 octaves + 10"
       },
@@ -7102,7 +7102,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Live Like You Were Dying",
         "lowSource": "She's My Kind of Rain",
         "highSource": "Last Dollar (Fly Away)",
-        "blurb": "Nasal, twang-forward baritone that cuts the mix on resonance, not power — talk-sung verses, sliding choruses.",
+        "blurb": "Nasal, twang-forward baritone that cuts the mix on resonance, not power: talk-sung verses, sliding choruses.",
         "technique": "McGraw leans on a nasal, twang-forward placement that keeps a modest voice cutting through loud band mixes. He speaks-sings the verses, slides up into choruses, and lets the vibrato stay tight and fast. The sound is more resonance than power: cheekbone buzz, narrow vowels, relaxed jaw. Students chasing his tone usually add throat weight; the twang should come from the soft palate area, not from pressure.",
         "span": "2 octaves + 6"
       },
@@ -7153,7 +7153,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "You're Gonna Miss This",
         "lowSource": "Ladies Love Country Boys",
         "highSource": "Then They Do",
-        "blurb": "Boom-deep chest voice with a cutting nasal twang — thunder low, spoken swagger up the middle.",
+        "blurb": "Boom-deep chest voice with a cutting nasal twang: thunder low, spoken swagger up the middle.",
         "technique": "Adkins drives a huge, dark chest voice with a pronounced nasal twang riding on top, so the sound is both cavernous and cutting. He speaks phrases low in the range, then swells into sustained tones with a slow vibrato. The low notes stay connected to breath rather than dropping into fry. Students copying him confuse loud with deep; his resonance comes from tracheal space and posture, not shouting.",
         "span": "2 octaves + 5"
       },
@@ -7170,7 +7170,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "No Shoes, No Shirt, No Problems",
         "lowSource": "Hemingway's Whiskey",
         "highSource": "You Had Me from Hello",
-        "blurb": "Light, sanded tenor that sits in the pocket — conversational mids, quiet low drops, falsetto used as color.",
+        "blurb": "Light, sanded tenor that sits in the pocket: conversational mids, quiet low drops, falsetto used as color.",
         "technique": "Chesney works a light, reedy tenor that sits conversationally in the middle of the staff and rarely strains for drama. The tone is sanded smooth, slightly nasal, with quick decays and little vibrato until a note is held. He drops surprisingly low in quiet ballad verses and floats falsetto for color rather than height. Students overdo his ease as blandness; the skill is diction and groove placed exactly on the band's pocket.",
         "span": "2 octaves + 3"
       },
@@ -7187,7 +7187,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Somebody Like You",
         "lowSource": "Gettin' in the Way",
         "highSource": "Raise the Barn",
-        "blurb": "Husky low tenor with pop phrasing — twangy mid-octave belts and a breathy falsetto for color.",
+        "blurb": "Husky low tenor with pop phrasing: twangy mid-octave belts and a breathy falsetto for color.",
         "technique": "Urban is a low-set tenor who sings close to speech, with a husky edge and pop-style phrasing that lands just behind the guitar groove. His belt carries into the mid-fourth octave on pure twang, and above that he flips to a breathy falsetto for color. Onsets are soft, endings often fall away. The mistake students make is muscling his high lines; he narrows the vowel and keeps the volume moderate.",
         "span": "3 octaves + 4"
       },
@@ -7204,7 +7204,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "God's Country",
         "lowSource": "Neon Light",
         "highSource": "That Thing We Do",
-        "blurb": "Warm, roomy baritone with slow-burn vibrato — resonant lows and a light country curl up top.",
+        "blurb": "Warm, roomy baritone with slow-burn vibrato: resonant lows and a light country curl up top.",
         "technique": "Shelton anchors his sound in a wide-open chest voice with a big, slow-burn vibrato and generous back-vowel space. Low phrases toward D2 stay resonant because he keeps the soft palate high instead of swallowing the tone. Up top he mixes surprisingly light, sliding into notes with a country curl. Students copying him overdo the darkness; his warmth comes from space, not from pressing the larynx down.",
         "span": "2 octaves + 11"
       },
@@ -7221,7 +7221,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Your Man",
         "lowSource": null,
         "highSource": "Haywire",
-        "blurb": "Cavernous, relaxed bass-baritone — subterranean lows that bloom instead of fry, topped by a mellow belt.",
+        "blurb": "Cavernous, relaxed bass-baritone: subterranean lows that bloom instead of fry, topped by a mellow belt.",
         "technique": "Turner produces his depth with a low, stable larynx and enormous pharyngeal space, letting notes near Ab1 bloom instead of fry. The voice stays velar-dark yet clearly pitched, with a slow, wide vibrato on sustained tones. His upper range is a mellow, rounded belt he uses sparingly. Students imitating him press the larynx down and growl; the real sound is relaxed, resonant, and quieter than it seems.",
         "span": "3 octaves + 5"
       },
@@ -7255,7 +7255,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "The House That Built Me",
         "lowSource": "Mama's Broken Heart",
         "highSource": "Somethin' Bad",
-        "blurb": "Bright, pressurized chest-mix with a controlled snarl — intimacy to full blast inside one phrase.",
+        "blurb": "Bright, pressurized chest-mix with a controlled snarl: intimacy to full blast inside one phrase.",
         "technique": "Lambert trades range for pressure: a bright, brassy chest-mix driven hard through the middle of the voice, with Texas vowels and a controlled snarl on consonants. Quiet verses turn suddenly intimate, almost airy, before she slams back to full voice. Vibrato stays narrow. The student error is treating her belt as anger; the volume is supported and placed forward, never squeezed at the throat.",
         "span": "1 octave + 10"
       },
@@ -7323,7 +7323,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Heaven",
         "lowSource": "Short Skirt Weather",
         "highSource": "Heaven",
-        "blurb": "Plush low baritone with pop-R&B phrasing — dark tone, soft onsets, melody kept close to speech.",
+        "blurb": "Plush low baritone with pop-R&B phrasing: dark tone, soft onsets, melody kept close to speech.",
         "technique": "Brown blends a plush low register with pop-R&B phrasing: melisma kept short, consonants soft, rhythm slightly behind the beat. The voice is naturally dark, with a rounded, almost sung-spoken onset and minimal vibrato. He rarely leaves the staff, so the interest lives in tone shading. Students copying him chase depth by darkening artificially; his low notes stay bright-cored and forward even at the bottom.",
         "span": "2 octaves + 1"
       },
@@ -7357,8 +7357,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Feathered Indians",
         "lowSource": "Tirtha Yatra",
         "highSource": "Greatest Story Ever Told (live)",
-        "blurb": "Keening Appalachian tenor — hard twang, bleating vibrato, deliberate cracks into high lonesome falsetto.",
-        "technique": "Childers sings with a hard, keening Appalachian twang: bright, nasal, and pushed right at the front of the face. He belts to about A4 in full voice, cracks deliberately into falsetto above it, and lets pitch bend sharp-side on emotional peaks. Vibrato is fast and bleating. The trap for students is politeness — clean, rounded vowels erase the mountain edge that defines the whole sound.",
+        "blurb": "Keening Appalachian tenor: hard twang, bleating vibrato, deliberate cracks into high lonesome falsetto.",
+        "technique": "Childers sings with a hard, keening Appalachian twang: bright, nasal, and pushed right at the front of the face. He belts to about A4 in full voice, cracks deliberately into falsetto above it, and lets pitch bend sharp-side on emotional peaks. Vibrato is fast and bleating. The trap for students is politeness: clean, rounded vowels erase the mountain edge that defines the whole sound.",
         "span": "3 octaves + 8"
       },
       {
@@ -7391,7 +7391,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "'Til You Can't",
         "lowSource": "On My Way to You",
         "highSource": "On My Way to You",
-        "blurb": "Arena-strength rodeo baritone — fast tight vibrato, hard consonants, choruses ridden at the top of chest.",
+        "blurb": "Arena-strength rodeo baritone: fast tight vibrato, hard consonants, choruses ridden at the top of chest.",
         "technique": "Johnson pushes a rodeo-strength baritone with a fast, tight vibrato and hard consonant attacks that read from the back of an arena. He rides the top of chest voice for whole choruses, narrowing vowels to keep the ring without spreading. Verses drop to a low, breath-heavy croon. Students copying him hold nothing back and blow out; he banks energy in verses so the final chorus still has headroom.",
         "span": "2 octaves + 2"
       },
@@ -7408,7 +7408,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Dead of Night",
         "lowSource": "Big Sky",
         "highSource": "Any Turn",
-        "blurb": "Reverb-drenched western baritone croon — long slides, theatrical vibrato, keening high climaxes.",
+        "blurb": "Reverb-drenched western baritone croon: long slides, theatrical vibrato, keening high climaxes.",
         "technique": "Peck croons in a deep, reverb-loving baritone modeled on classic western balladeers: long portamento slides, exaggerated vibrato, and theatrical dynamic swells. He keeps the soft palate high for a plummy, rounded tone, then vaults into a keening upper register for climaxes. The yodel-adjacent breaks are deliberate ornaments. Students copying him underestimate the breath cost of those slow slides; each phrase is one unbroken column of air.",
         "span": "3 octaves + 2"
       },
@@ -7442,7 +7442,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Heart Like a Truck",
         "lowSource": "Heart Like a Truck",
         "highSource": "Heart Like a Truck",
-        "blurb": "Brassy, nasal chest-mix in a thick Louisiana drawl — vowel bends carry the groove and the attitude.",
+        "blurb": "Brassy, nasal chest-mix in a thick Louisiana drawl: vowel bends carry the groove and the attitude.",
         "technique": "Wilson sings through a broad Louisiana drawl with the twang cranked high: nasal, brassy, and proudly regional. Her chest-mix stays thick through the middle, and she bends into notes with quick country scoops, adding a rasp flare on emphasis. Vibrato is moderate and late. Students copying her flatten the accent to be safe; the vowel bends are structural, carrying both the groove and the attitude.",
         "span": "1 octave + 4"
       },
@@ -7472,7 +7472,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Country, folk and jazz",
     "summary": "The confiders: voices built to serve words, from coffeehouse sopranos to gravel philosophers, and how modest instruments built long careers here.",
     "free": false,
-    "words": 3108,
+    "words": 3099,
     "body": "This chapter houses the atlas's most persuasive argument that a voice is a delivery system before it is an instrument. The songwriters here include some of the narrowest cited ranges in the book alongside some of the most idiosyncratic timbres — reedy, cracked, nasal, whispered, weathered — and nearly every one of them built a longer, deeper catalog than singers with twice the span. The entries explain how: when the contract is *believe me* rather than *behold me*, intimacy, diction and timing do the work that range does elsewhere, and eccentricity of tone stops being a flaw and becomes a signature.\n\nTechnically the chapter rewards close reading. The fingerpicked generations developed conversational rubato — phrases stretched against steady guitar — that is among the subtlest timing work in the book. The head-voice sopranos of the tradition float text on almost no weight, an economy worth studying by every voice that oversings. And the low end of the chapter, the gravel philosophers, demonstrates how far pure grain and placement can carry melody-adjacent speech.\n\nThe borrowing advice is almost suspiciously cheap: this is the one chapter whose core techniques — quiet, clarity, honest timing — can be practiced by any voice on day one without risk. The hard part is tolerance for exposure. No production, no band, no volume to hide in; the loop-recording drill from the method chapter is merciless here, which is exactly why a month of folk repertoire audits your fundamentals better than any exercise book.",
     "entries": [
       {
@@ -7624,7 +7624,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Downtown Train",
         "lowSource": "Crossroads",
         "highSource": "$29.00",
-        "blurb": "Gravel-crusted rasp — a junkyard bass-baritone that growls, barks and croons through carnival shadows.",
+        "blurb": "Gravel-crusted rasp: a junkyard bass-baritone that growls, barks and croons through carnival shadows.",
         "technique": "Sandpaper is cultivated here, not accidental: a bass-baritone driven through deliberate ventricular-fold engagement, so grit coats every sustained tone. Beneath the gravel sits real control; chest voice to about G4, a coarse, hooting falsetto above it, and lows that bottom near A1 on slow, wide-open vowels. Onsets growl into pitch from underneath; phrasing staggers like a carnival barker, rushing and dragging inside the bar. Students shred their voices scraping for the texture; the rasp must come from above the folds, with the true cords vibrating cleanly underneath.",
         "span": "3 octaves + 10"
       },
@@ -7710,7 +7710,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Who Will Save Your Soul",
         "blurb": "Clear folk soprano that glides between plainspoken chest tone, yodel flips, and a floating, quasi-operatic head voice.",
-        "technique": "Register flips are the signature here: Jewel treats the break as an instrument, yodeling across it on purpose with split-second accuracy. Her chest voice stays conversational and word-led, then the head voice blooms suddenly at the top, pure and vibrato-warmed toward E6. Breath control is exceptional — long folk phrases taper without wobble. Singers copying her tend to smooth out the flip; the style needs a deliberate, audible register change, plus low-larynx ease down at E3.",
+        "technique": "Register flips are the signature here: Jewel treats the break as an instrument, yodeling across it on purpose with split-second accuracy. Her chest voice stays conversational and word-led, then the head voice blooms suddenly at the top, pure and vibrato-warmed toward E6. Breath control is exceptional: long folk phrases taper without wobble. Singers copying her tend to smooth out the flip; the style needs a deliberate, audible register change, plus low-larynx ease down at E3.",
         "span": "3 octaves"
       },
       {
@@ -7744,7 +7744,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Contralto with slow, wide vibrato and a hollow, flute-like sustain that carries most of the expression.",
-        "technique": "The vibrato is the instrument: slow, wide, and present almost from the onset rather than arriving at the tail of a note. Tone stays hollow and flute-like, with a lot of air in the sound and very little chest weight even down at the bottom of the range. Phrases are sustained rather than rhythmic, and pitch is allowed to bend into a note instead of landing square on it. Copying the wobble by shaking the jaw is the usual mistake — it comes from a released, low-pressure breath, not from muscle.",
+        "technique": "The vibrato is the instrument: slow, wide, and present almost from the onset rather than arriving at the tail of a note. Tone stays hollow and flute-like, with a lot of air in the sound and very little chest weight even down at the bottom of the range. Phrases are sustained rather than rhythmic, and pitch is allowed to bend into a note instead of landing square on it. Copying the wobble by shaking the jaw is the usual mistake: it comes from a released, low-pressure breath, not from muscle.",
         "span": "2 octaves + 8"
       },
       {
@@ -7760,7 +7760,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Chicago",
         "lowSource": "Concerning the UFO Sighting Near Highland, Illinois",
         "highSource": "Concerning the UFO Sighting Near Highland, Illinois",
-        "blurb": "Whisper-soft indie tenor — breathy falsetto home base, close self-harmonies, zero-vibrato calm.",
+        "blurb": "Whisper-soft indie tenor: breathy falsetto home base, close self-harmonies, zero-vibrato calm.",
         "technique": "Hushed almost to a whisper, this tenor treats falsetto and breathy head tone as home base, dropping to full voice only for grounding phrases near the bottom of the staff. Sufjan double-tracks himself in close harmony, keeps vibrato out entirely, and shapes lines in long, even eighth-note ribbons. Consonants are feathered so nothing punctures the calm. Imitators who add projection break the spell; the technique is sustained quiet phonation with unwavering pitch.",
         "span": "1 octave + 10"
       },
@@ -7845,7 +7845,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Let Her Go",
         "lowSource": "Home",
         "highSource": "Let Her Go",
-        "blurb": "Thin, nasal folk tenor — mask-bright storyteller tone, crisp diction, barely any vibrato.",
+        "blurb": "Thin, nasal folk tenor: mask-bright storyteller tone, crisp diction, barely any vibrato.",
         "technique": "Nasal by choice, precise by habit: Passenger sends nearly all resonance into the mask, producing that thin, folk-teller brightness that reads as intimate at any volume. Range demands are modest, but the phrasing is exacting, with lyrics front-loaded and consonants crisp against fingerpicking. Sustains use straight tone first, a flicker of vibrato last. Students copying the nasality often pinch the soft palate shut; his version keeps a relaxed throat, so the twang never turns shrill.",
         "span": "2 octaves + 6"
       },
@@ -7879,7 +7879,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Riptide",
         "lowSource": "Red Eye",
         "highSource": "Missing Piece",
-        "blurb": "Grainy, rounded indie tenor — lazy onsets, yawny vowels, and a feathery falsetto flip.",
+        "blurb": "Grainy, rounded indie tenor: lazy onsets, yawny vowels, and a feathery falsetto flip.",
         "technique": "Sunny, grainy, and conversational, this tenor works a small tessitura with a distinctive yawn-tinged vowel shape that rounds every line. Vance leans on straight tone, letting the ukulele-strum rhythm carry momentum, and lifts into a feathery falsetto for color rather than climax. The register change is audible and left charmingly exposed. Copying him too cleanly sterilizes the sound; the slight vowel distortion and lazy onset are the identity, sitting just behind the beat.",
         "span": "2 octaves + 10"
       },
@@ -7913,7 +7913,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Sofia",
         "lowSource": "Sofia",
         "highSource": "Sofia",
-        "blurb": "Murmuring, low-lit contralto — near-speech volume, stepwise melodies, endings that dissolve into breath.",
+        "blurb": "Murmuring, low-lit contralto: near-speech volume, stepwise melodies, endings that dissolve into breath.",
         "technique": "Murmured close-mic singing raised to a method: Clairo phonates at near-speech volume in a low, warm register, letting breath and room tone become part of the timbre. Melodies move stepwise, vibrato is nearly absent, and phrase endings dissolve instead of resolving. The upper limit stays a gentle mixed head tone. Copying this by simply singing quietly misses the core: her pitch and rhythm are exact, and the softness is compression, not collapse.",
         "span": "1 octave + 5"
       },
@@ -7930,7 +7930,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Motion Sickness",
         "lowSource": null,
         "highSource": "When the Party's Over",
-        "blurb": "Hushed, close-mic indie soprano — feathery straight tone, murmured lows, and rare, aching belts.",
+        "blurb": "Hushed, close-mic indie soprano: feathery straight tone, murmured lows, and rare, aching belts.",
         "technique": "Whisper-adjacent singing, done with control: Bridgers keeps subglottal pressure low, letting air haze the tone while pitch stays dead center. Her straight-tone sustains barely waver, doubling into ghostly unisons. Lines sit speech-low near C#3, and when she finally opens into a D5 belt the contrast does the emotional work. Consonants are soft, phrase ends often fall off pitch deliberately. Imitators push volume for feeling; her dynamic ceiling is low, and the mic supplies the size.",
         "span": "2 octaves + 3"
       },
@@ -7964,7 +7964,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "ceilings",
         "lowSource": "ceilings",
         "highSource": "ceilings",
-        "blurb": "Hushed, air-first mezzo — speechy low tessitura, jazz-tinged passing tones, brief clear head-voice peaks.",
+        "blurb": "Hushed, air-first mezzo: speechy low tessitura, jazz-tinged passing tones, brief clear head-voice peaks.",
         "technique": "Feather-light onsets define the style: Lizzy begins tones with air already moving, so notes seem to fade in rather than start. She sits in a low, speechy mezzo tessitura, orbiting a few steps around the melody with jazz-tinged passing tones, and saves her clear head voice for brief, unforced peaks. Dynamics stay hushed. Students copying her usually whisper; she is quiet but fully phonated, with pitch dead-center under all that air.",
         "span": "1 octave + 9"
       },
@@ -8011,7 +8011,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Country, folk and jazz",
     "summary": "Horn-players with lyrics: time feel, delayed vibrato, harmonic ears and the microphone's first great singers, from the songbook era to the new jazz generation.",
     "free": false,
-    "words": 2728,
+    "words": 2712,
     "body": "Jazz singing's founding move was treating the voice as one of the horns: entitled to reharmonize, obligated to swing, and judged on time feel above all. The entries in this chapter keep returning to that judgment. What separates these voices is rarely range — the cited spans here are moderate by atlas standards — and almost always *placement in time*: behind the beat without dragging, ahead without rushing, syllables laid against the ride cymbal with a drummer's intent. That skill, more than any sound, is what the technique paragraphs try to make practicable.\n\nThe chapter also documents the microphone's first great partnership. The crooners and song stylists here invented close-mic singing — speech-level dynamics, tone over projection, the audible smile — decades before pop rediscovered it, and their entries are the cheapest master class in microphone technique the book contains. Alongside them sit the virtuosi: the scat athletes with instrumentalists' harmonic ears, and the ballad specialists whose delayed, even vibrato and straight-tone control remain the reference for every genre's slow songs. The new jazz generation at the chapter's end proves the toolkit still mints careers.\n\nBorrow in this order: time feel first (sing any standard against a metronome placing every syllable deliberately late, then deliberately early, until placement is a choice), straight-tone-then-bloom vibrato second, and harmonic ambition last. And note the chapter's quietest lesson — almost nobody here belts. Authority in this tradition is earned at conversational volume, which makes it the safest advanced chapter in the book.",
     "entries": [
       {
@@ -8028,7 +8028,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Gravel-and-air rasp, trumpet-shaped phrasing, scat treated as a second horn chorus.",
-        "technique": "Two instruments share one technique. The rasp is constant — a dense, gravelly tone with audible air behind it — and phrases are shaped like trumpet lines: short, punched, built around a rhythmic idea rather than a lyric line. Scat syllables are chosen for attack, hard consonants where a horn would tongue a note. Vibrato is fast and shallow, applied at the end of held notes. Singers imitating the gravel push it from the throat, which tires fast and misses the point: the phrasing is what carries it, not the texture.",
+        "technique": "Two instruments share one technique. The rasp is constant (a dense, gravelly tone with audible air behind it), and phrases are shaped like trumpet lines: short, punched, built around a rhythmic idea rather than a lyric line. Scat syllables are chosen for attack, hard consonants where a horn would tongue a note. Vibrato is fast and shallow, applied at the end of held notes. Singers imitating the gravel push it from the throat, which tires fast and misses the point: the phrasing is what carries it, not the texture.",
         "span": "2 octaves + 2"
       },
       {
@@ -8113,7 +8113,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Conversational baritone, long legato lines, breath control that carries a phrase past the bar.",
-        "technique": "Listen for how little happens at the onset: air and tone start together, no scoop, and the vowel carries almost the whole note before a narrow vibrato arrives at the very end. Lines are built to run past the obvious breath point, so the phrase, not the bar, sets the shape. The top of the range opens out rather than getting louder — an A4 is sung, never belted. The swagger is the easy part to copy; the consonant timing underneath it is the actual work.",
+        "technique": "Listen for how little happens at the onset: air and tone start together, no scoop, and the vowel carries almost the whole note before a narrow vibrato arrives at the very end. Lines are built to run past the obvious breath point, so the phrase, not the bar, sets the shape. The top of the range opens out rather than getting louder: an A4 is sung, never belted. The swagger is the easy part to copy; the consonant timing underneath it is the actual work.",
         "span": "2 octaves + 2"
       },
       {
@@ -8130,7 +8130,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Fever",
         "highSource": "My Dear Acquaintance (A Happy New Year)",
         "blurb": "Cool, hushed contralto purr that trades volume for pulse; a whisper riding a finger-snap groove.",
-        "technique": "Lee subtracts until only the essential pulse remains: short phrases, straight tone, and a dynamic ceiling barely above speech. Her onsets are aspirate by design, each phrase beginning as breath that condenses into pitch. Rhythm does the seduction — she places syllables a fraction late, then snaps one exactly on the beat. The D3 bottom is a spoken shadow; rare climbs toward A5 stay cool and unpressed. Students copying her add volume, vibrato and ornament, which destroys the effect. The study here is restraint: hold the groove, trust the microphone, and make silence do half the singing.",
+        "technique": "Lee subtracts until only the essential pulse remains: short phrases, straight tone, and a dynamic ceiling barely above speech. Her onsets are aspirate by design, each phrase beginning as breath that condenses into pitch. Rhythm does the seduction: she places syllables a fraction late, then snaps one exactly on the beat. The D3 bottom is a spoken shadow; rare climbs toward A5 stay cool and unpressed. Students copying her add volume, vibrato and ornament, which destroys the effect. The study here is restraint: hold the groove, trust the microphone, and make silence do half the singing.",
         "span": "2 octaves + 7"
       },
       {
@@ -8147,7 +8147,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Soft-focus tone with almost no edge, paired with fast and accurate bebop scat lines.",
-        "technique": "Almost no edge in the tone — the sound is soft-focused, closer to a flugelhorn than a trumpet, with breath and tone blended so evenly that onsets barely register. Then the scat arrives, fast and harmonically exact, articulated at the front of the mouth so the consonants can keep up with the tempo. Above the staff he thins instead of pushing. Chase the smoothness alone and the rhythmic precision that makes it swing goes missing.",
+        "technique": "Almost no edge in the tone: the sound is soft-focused, closer to a flugelhorn than a trumpet, with breath and tone blended so evenly that onsets barely register. Then the scat arrives, fast and harmonically exact, articulated at the front of the mouth so the consonants can keep up with the tempo. Above the staff he thins instead of pushing. Chase the smoothness alone and the rhythmic precision that makes it swing goes missing.",
         "span": "2 octaves + 5"
       },
       {
@@ -8164,7 +8164,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Operatic weight low down, controlled vibrato, a top she floats onto instead of pushing.",
-        "technique": "Weight is the first thing to notice — the bottom of the range is genuinely dark and covered, closer to a trained contralto than a band singer. Vibrato is wide but metered, switched on and off deliberately. Rather than pushing toward C6 she lightens and floats, then drops back into chest inside a single phrase for contrast. The common mistake is manufacturing that darkness by pressing the larynx down; it comes from space, not force.",
+        "technique": "Weight is the first thing to notice: the bottom of the range is genuinely dark and covered, closer to a trained contralto than a band singer. Vibrato is wide but metered, switched on and off deliberately. Rather than pushing toward C6 she lightens and floats, then drops back into chest inside a single phrase for contrast. The common mistake is manufacturing that darkness by pressing the larynx down; it comes from space, not force.",
         "span": "2 octaves + 9"
       },
       {
@@ -8181,7 +8181,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Low-set relaxed baritone, slid entrances, phrases deliberately lagging the beat.",
-        "technique": "Everything sits low and loose. Entrances are scooped from below, phrases lag behind the band and catch up by the end of the line, and the whole thing is delivered at conversational volume close to the microphone. Vibrato is slow and shallow. Rhythm is the hardest part to steal — match the tone but sing on top of the beat, and the ease disappears immediately.",
+        "technique": "Everything sits low and loose. Entrances are scooped from below, phrases lag behind the band and catch up by the end of the line, and the whole thing is delivered at conversational volume close to the microphone. Vibrato is slow and shallow. Rhythm is the hardest part to steal: match the tone but sing on top of the beat, and the ease disappears immediately.",
         "span": "2 octaves + 2"
       },
       {
@@ -8198,7 +8198,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Manhattan",
         "highSource": "Blue Gardenia",
         "blurb": "Bright, brassy, gospel-cut mezzo with razor diction; every syllable lands like a snapped snare.",
-        "technique": "Washington places everything in the mask: bright, twangy, almost brass-section resonance with total consonant clarity. Her vibrato is fast and shallow, switched on the instant a note stabilizes. Phrasing is strict — she sings on the front of the beat, bends a blue third, then cuts the note clean with no fade. Gospel-style ornaments stay small and rhythmic, never washy. The common copying mistake is adding smoke and slide; her power is precision. Keep the soft palate high, the tone pointed, and end each note on purpose, not by decay.",
+        "technique": "Washington places everything in the mask: bright, twangy, almost brass-section resonance with total consonant clarity. Her vibrato is fast and shallow, switched on the instant a note stabilizes. Phrasing is strict: she sings on the front of the beat, bends a blue third, then cuts the note clean with no fade. Gospel-style ornaments stay small and rhythmic, never washy. The common copying mistake is adding smoke and slide; her power is precision. Keep the soft palate high, the tone pointed, and end each note on purpose, not by decay.",
         "span": "2 octaves + 1"
       },
       {
@@ -8232,7 +8232,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "I Love You",
         "highSource": "'S Wonderful",
         "blurb": "Smoky close-mic contralto, barely more than a warm murmur: all breath, intimacy, and after-midnight calm.",
-        "technique": "London works entirely inside a two-octave whisper: intimate, breath-heavy phonation with the microphone doing the projection a hall would normally demand. Her fold closure is deliberately incomplete, so every note carries air alongside tone. Phrasing is conversational rubato — she lags the pulse, letting the guitar walk ahead. The C#3 lows are nearly spoken; the C#5 top is a soft head-mix, never a lift in volume. Imitators equate breathiness with weakness and overblow it into fog; hers is controlled, pitched precisely at the center. Practice quiet sustained tones at close range until pitch survives the air.",
+        "technique": "London works entirely inside a two-octave whisper: intimate, breath-heavy phonation with the microphone doing the projection a hall would normally demand. Her fold closure is deliberately incomplete, so every note carries air alongside tone. Phrasing is conversational rubato: she lags the pulse, letting the guitar walk ahead. The C#3 lows are nearly spoken; the C#5 top is a soft head-mix, never a lift in volume. Imitators equate breathiness with weakness and overblow it into fog; hers is controlled, pitched precisely at the center. Practice quiet sustained tones at close range until pitch survives the air.",
         "span": "2 octaves"
       },
       {
@@ -8266,7 +8266,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "More",
         "highSource": "Splish Splash",
         "blurb": "Finger-snapping swing baritone with punchy attack, big-band drive, and a rock-and-roll edge when he wants it.",
-        "technique": "Darin attacks consonants like a drummer: hard onsets, clipped releases, and a swing placement that pushes the front of the beat where crooners lean back. The baritone core is bright and forward, with vibrato saved for held finales. He modulates energy by key change rather than volume — each lift resets the excitement. Down at G2 he growls conversationally; the rare E5 spike is a thrown-off falsetto exclamation, not a built note. Copyists smooth him out and lose the aggression: the style needs punchy diction, short phrase cells, and total rhythmic commitment on every syllable.",
+        "technique": "Darin attacks consonants like a drummer: hard onsets, clipped releases, and a swing placement that pushes the front of the beat where crooners lean back. The baritone core is bright and forward, with vibrato saved for held finales. He modulates energy by key change rather than volume: each lift resets the excitement. Down at G2 he growls conversationally; the rare E5 spike is a thrown-off falsetto exclamation, not a built note. Copyists smooth him out and lose the aggression: the style needs punchy diction, short phrase cells, and total rhythmic commitment on every syllable.",
         "span": "2 octaves + 9"
       },
       {
@@ -8300,7 +8300,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Mouth-percussion textures under a light tenor that flips to falsetto without a seam.",
-        "technique": "Percussion is part of the singing here rather than a separate layer: clicks, pops and breath sounds get placed inside the melodic line, so rhythm and tune come out of one mechanism. The tenor itself is light and forward, and the move into falsetto is deliberately seamless — no break, no drop in volume, which is how the compass reaches A5. Bends and slides are constant. The usual trap is copying the effects until the melody stops being legible.",
+        "technique": "Percussion is part of the singing here rather than a separate layer: clicks, pops and breath sounds get placed inside the melodic line, so rhythm and tune come out of one mechanism. The tenor itself is light and forward, and the move into falsetto is deliberately seamless: no break, no drop in volume, which is how the compass reaches A5. Bends and slides are constant. The usual trap is copying the effects until the melody stops being legible.",
         "span": "3 octaves + 2"
       },
       {
@@ -8317,7 +8317,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Alternates chest bass and high falsetto mid-phrase, chest-slapping his own rhythm track.",
-        "technique": "Alternating registers mid-phrase is the whole trick. Low chest notes are attacked with a glottal stop for a plucked, bass-like sound; above the G4 belt ceiling the voice releases into a light, well-supported falsetto that climbs a long way. Rhythm comes from body percussion and from breath sounds placed between the pitches. The demand is not range but instant switching — slur the transition and the illusion of two separate instruments collapses.",
+        "technique": "Alternating registers mid-phrase is the whole trick. Low chest notes are attacked with a glottal stop for a plucked, bass-like sound; above the G4 belt ceiling the voice releases into a light, well-supported falsetto that climbs a long way. Rhythm comes from body percussion and from breath sounds placed between the pitches. The demand is not range but instant switching: slur the transition and the illusion of two separate instruments collapses.",
         "span": "4 octaves"
       },
       {
@@ -8334,7 +8334,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Nothin' New for New Year (for Me)",
         "highSource": "When My Heart Finds Christmas",
         "blurb": "Relaxed New Orleans crooner baritone: light swing, conversational phrasing, a grin you can hear in the tone.",
-        "technique": "Connick sings the way he talks: mid-larynx, speech-level placement, short forward vowels, and a swing feel that lands slightly behind the beat. Vibrato is narrow and late, applied at phrase ends like a garnish. Down near E2 he thins to a dry, conversational rumble; toward A#4 he brightens the vowel instead of pushing volume. Students copying him overdo the croon and lose the rhythm section in their phrasing — his line is percussive first, pretty second. Keep the tongue lazy, the consonants crisp, and let the band set the air pressure.",
+        "technique": "Connick sings the way he talks: mid-larynx, speech-level placement, short forward vowels, and a swing feel that lands slightly behind the beat. Vibrato is narrow and late, applied at phrase ends like a garnish. Down near E2 he thins to a dry, conversational rumble; toward A#4 he brightens the vowel instead of pushing volume. Students copying him overdo the croon and lose the rhythm section in their phrasing: his line is percussive first, pretty second. Keep the tongue lazy, the consonants crisp, and let the band set the air pressure.",
         "span": "2 octaves + 6"
       },
       {
@@ -8351,7 +8351,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Elastic jazz-soul voice that dives into foggy lows, then flicks up to a needle-fine whistle register without a seam.",
-        "technique": "Ferrell moves through registers as one continuous dial: chest blends to head with no audible seam, belt compression releases above D5, and the whistle sits on top like a harmonic she can land on from anywhere. Her lows near G2 are foggy and air-rich by choice; her onsets are often breathy, then compressed mid-note. Melisma stays legato — runs are pitch bends with checkpoints, not note stacks. Imitators chase the extremes and skip the middle: the D7 only speaks because her passaggio is drilled to evenness. Train the join, not the peaks.",
+        "technique": "Ferrell moves through registers as one continuous dial: chest blends to head with no audible seam, belt compression releases above D5, and the whistle sits on top like a harmonic she can land on from anywhere. Her lows near G2 are foggy and air-rich by choice; her onsets are often breathy, then compressed mid-note. Melisma stays legato: runs are pitch bends with checkpoints, not note stacks. Imitators chase the extremes and skip the middle: the D7 only speaks because her passaggio is drilled to evenness. Train the join, not the peaks.",
         "span": "4 octaves + 7"
       },
       {
@@ -8402,7 +8402,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Crooner baritone with a pop-sized top; well-supported, lightly swung, very even tone.",
-        "technique": "Very even from bottom to top: no obvious seam, no thinning at A4, and consistent breath support under every note. Onsets are lightly aspirate, the swing is understated, and vibrato stays regular and unhurried. Ad-libs at the end of a chorus bring a little grit over a clear pitch. Evenness is the difficulty — it demands the same air pressure and the same vowel shape everywhere, which is duller to practice than it is to hear.",
+        "technique": "Very even from bottom to top: no obvious seam, no thinning at A4, and consistent breath support under every note. Onsets are lightly aspirate, the swing is understated, and vibrato stays regular and unhurried. Ad-libs at the end of a chorus bring a little grit over a clear pitch. Evenness is the difficulty: it demands the same air pressure and the same vowel shape everywhere, which is duller to practice than it is to hear.",
         "span": "2 octaves + 2"
       },
       {
@@ -8436,7 +8436,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Thick baritone with a gospel-shout attack on top and a resonant, grounded bottom octave.",
-        "technique": "Thick, round and low-placed, with a bottom octave that resonates rather than rumbles. The top of the range takes a gospel-shout attack: firm onset, forward vowel, an occasional growl laid over a clear pitch. Melisma is used sparingly and almost always on a strong beat. Liquid Spirit puts the shout and the grounded bottom in the same take. Build the low end first — that shout over a thin bottom just sounds strained.",
+        "technique": "Thick, round and low-placed, with a bottom octave that resonates rather than rumbles. The top of the range takes a gospel-shout attack: firm onset, forward vowel, an occasional growl laid over a clear pitch. Melisma is used sparingly and almost always on a strong beat. Liquid Spirit puts the shout and the grounded bottom in the same take. Build the low end first: that shout over a thin bottom just sounds strained.",
         "span": "2 octaves + 2"
       },
       {
@@ -8482,7 +8482,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The trained voice",
     "summary": "The unamplified athletes: what filling a hall without a microphone actually requires, why opera ranges look modest, and what every amplified singer can steal from the fach system.",
     "free": false,
-    "words": 2858,
+    "words": 2852,
     "body": "Opera is the control group of this atlas. Every other chapter documents voices shaped by the microphone; this one documents what the human voice does when it must fill a three-thousand-seat hall over an orchestra with no help at all. The answer is a technology — squillo, the resonance cluster that lets a voice knife through eighty instruments — and a discipline of breath, vowel and register unification that takes a decade to install. The entries here describe its results: voices even and intentional from bottom to top, projection as a trained acoustic trick rather than effort.\n\nNotice that most of the cited ranges look *modest* next to the pop chapters. That reflects the job: an opera singer is hired for the span they can produce at full, hall-filling quality, night after night, not for the furthest note they have ever reached. The first chapter's caveats still apply, though. A cited top here can be a famous interpolation rather than a written note, or come from a recording made outside the opera house. Read against the atlas's method chapters, this chapter is what \"full voice to the top of the figure\" looks like as a career requirement — which is why so few entries carry a separate belt ceiling.\n\nFor the amplified singer, the transferable goods are the fundamentals at their highest development: breath as management, vowels as architecture, registers welded seamless, and the fach system's deep wisdom — voices last when they are cast within their weight class. You do not need squillo to sing pop. You will never regret borrowing the practice habits that build it.",
     "entries": [
       {
@@ -8567,7 +8567,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Steel-bright dramatic soprano that rides a Wagner orchestra with trumpet-like top notes and zero wobble.",
-        "technique": "Nilsson projects on alignment, not muscle: a laser-focused core resonance that cuts a hundred-piece orchestra because the overtones cluster around the singer's formant. Her tone is nearly straight, vibrato tight and fast, intonation dead center for hours at a time. Attacks above the staff are direct — no scoop, no crescendo into the note, just placement. The middle near C#3 stays lean rather than plush. Toward D6 the sound gains edge instead of spread. Imitators add heft and wobble trying to sound dramatic; the actual mechanism is ruthless efficiency — small vibrating mass, enormous acoustic focus, tireless breath.",
+        "technique": "Nilsson projects on alignment, not muscle: a laser-focused core resonance that cuts a hundred-piece orchestra because the overtones cluster around the singer's formant. Her tone is nearly straight, vibrato tight and fast, intonation dead center for hours at a time. Attacks above the staff are direct: no scoop, no crescendo into the note, just placement. The middle near C#3 stays lean rather than plush. Toward D6 the sound gains edge instead of spread. Imitators add heft and wobble trying to sound dramatic; the actual mechanism is ruthless efficiency: small vibrating mass, enormous acoustic focus, tireless breath.",
         "span": "3 octaves + 1"
       },
       {
@@ -8720,7 +8720,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Semiramide",
         "highSource": "Semiramide",
         "blurb": "Ink-dark operatic bass with athletic coloratura; cavernous depth that stays focused, agile, and theatrical.",
-        "technique": "Ramey pairs true bass depth with bel canto agility: the larynx stays low and stable while the articulation happens at the breath, so runs stay clean at speed without the tone lightening. His legato is instrument-like — vowels connect under the consonants, vibrato continuous and even down to Eb2. At the top near F4 he covers early, keeping roundness instead of spreading. Ornamented passagework is sung full voice, never marked. The student error is treating agility and depth as a trade-off; his coordination shows they share one requirement: minimal pressure, maximal resonance space, and rhythmically exact airflow.",
+        "technique": "Ramey pairs true bass depth with bel canto agility: the larynx stays low and stable while the articulation happens at the breath, so runs stay clean at speed without the tone lightening. His legato is instrument-like: vowels connect under the consonants, vibrato continuous and even down to Eb2. At the top near F4 he covers early, keeping roundness instead of spreading. Ornamented passagework is sung full voice, never marked. The student error is treating agility and depth as a trade-off; his coordination shows they share one requirement: minimal pressure, maximal resonance space, and rhythmically exact airflow.",
         "span": "2 octaves + 2"
       },
       {
@@ -8754,7 +8754,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Der Hölle Rache",
         "blurb": "Feather-light lyric coloratura with silvery spin; ornaments ripple out in even, weightless beads.",
-        "technique": "Jo produces the lightest possible full tone: minimal vocal-fold mass, high head-dominant resonance from the middle register up, and ornaments articulated by airflow pulses rather than throat taps. Her trills are genuinely two pitches, measured and even. Above the staff to F6 the voice narrows to a spinning thread that still projects because the squillo stays centered. Low phrases near A3 are deliberately underweighted — she never borrows chest to fake size. Imitators press for volume and lose the float; the correct study is messa di voce on small vowels until dynamics move without weight.",
+        "technique": "Jo produces the lightest possible full tone: minimal vocal-fold mass, high head-dominant resonance from the middle register up, and ornaments articulated by airflow pulses rather than throat taps. Her trills are genuinely two pitches, measured and even. Above the staff to F6 the voice narrows to a spinning thread that still projects because the squillo stays centered. Low phrases near A3 are deliberately underweighted: she never borrows chest to fake size. Imitators press for volume and lose the float; the correct study is messa di voce on small vowels until dynamics move without weight.",
         "span": "2 octaves + 8"
       },
       {
@@ -8924,7 +8924,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Frühlingsstimmen",
         "blurb": "Glittering German coloratura: laser staccati above high C, a warm lyric middle, and theatrical bite in every run.",
-        "technique": "Damrau's coloratura runs on appoggio breath support and a high, forward point of resonance: staccati above the staff are released from the body, not chipped from the throat. Her onset is clean and glottal-light, the vibrato even and quick, and text stays vivid even in fioritura — consonants ride on top of a legato air column. Low phrases near Bb3 stay slender rather than chesty. What students get wrong is treating the top as a separate mechanism; her G#6 is the same narrow, spinning column as her middle, just smaller vowels and firmer support.",
+        "technique": "Damrau's coloratura runs on appoggio breath support and a high, forward point of resonance: staccati above the staff are released from the body, not chipped from the throat. Her onset is clean and glottal-light, the vibrato even and quick, and text stays vivid even in fioritura: consonants ride on top of a legato air column. Low phrases near Bb3 stay slender rather than chesty. What students get wrong is treating the top as a separate mechanism; her G#6 is the same narrow, spinning column as her middle, just smaller vowels and firmer support.",
         "span": "2 octaves + 10"
       },
       {
@@ -8958,7 +8958,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Pure Imagination",
         "highSource": "Imaginer",
         "blurb": "Dark, veiled crossover soprano; a small instrument with an adult's slow vibrato and long legato lines.",
-        "technique": "Evancho darkens her vowels deliberately: low larynx, covered tone, and a slow, wide vibrato that reads far older than the instrument producing it. The sound is veiled rather than brilliant — air is allowed through the fold closure as a stylistic wash. Phrases arc in long crescendo-decrescendo shapes with portamento connecting intervals. Near G#3 the sound is barely voiced; at A5 it opens into a rounded head tone without metallic edge. The imitation trap is manufacturing maturity by weight; the workable lesson is her legato discipline and unhurried phrase pacing, not the darkened color itself.",
+        "technique": "Evancho darkens her vowels deliberately: low larynx, covered tone, and a slow, wide vibrato that reads far older than the instrument producing it. The sound is veiled rather than brilliant: air is allowed through the fold closure as a stylistic wash. Phrases arc in long crescendo-decrescendo shapes with portamento connecting intervals. Near G#3 the sound is barely voiced; at A5 it opens into a rounded head tone without metallic edge. The imitation trap is manufacturing maturity by weight; the workable lesson is her legato discipline and unhurried phrase pacing, not the darkened color itself.",
         "span": "2 octaves + 1"
       }
     ]
@@ -8970,7 +8970,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The trained voice",
     "summary": "Eight shows a week: the belt as a certified skill, legit versus contemporary technique, and why theater singers are the book's masters of sustainable intensity.",
     "free": false,
-    "words": 2675,
+    "words": 2672,
     "body": "Musical theatre is where the belt became a licensed profession. The women and men in this chapter deliver climactic full-voice singing on a schedule no other genre attempts — eight shows a week, months at a stretch — and that schedule is the invisible author of every technique their entries describe. Theatre belting is mix engineering under another name: chest-quality brightness carried on head-voice efficiency, narrow vowels at the top, intensity that reads as maximum while spending far less than maximum. When an entry here describes a famous eleven-o'clock note, it is describing a note designed to be repeatable, which is a different and harder achievement than a note designed to be recorded once.\n\nThe chapter spans the tradition's two dialects. Legit technique — the classically rooted, vibrato-forward sound of the older repertoire — sits beside the contemporary belt that took over as pop scores arrived, and several entries document careers fluent in both, switching styles per show the way session players switch instruments. Diction is the shared constant: every word to the back row, over an orchestra, without amplification's help for most of the form's history.\n\nSteal three things from this chapter regardless of your genre. The marking discipline: theatre singers rehearse at partial voice and perform at full, the exact opposite of amateurs who blow out in rehearsal. The vowel modification at volume, documented entry after entry. And the acting posture — every phrase delivered as a thought occurring now — which is, on the evidence of this book, the cheapest upgrade available to technically solid singers who somehow remain boring.",
     "entries": [
       {
@@ -9207,7 +9207,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Buttons",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Athletic pop-theatre soprano — muscular belts, precise melisma, and a head voice that opens into whistle territory.",
+        "blurb": "Athletic pop-theatre soprano: muscular belts, precise melisma, and a head voice that opens into whistle territory.",
         "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theatre discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble.",
         "span": "3 octaves + 6"
       },
@@ -9394,8 +9394,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Tonight",
         "lowSource": null,
         "highSource": "Grown-Up Christmas List",
-        "blurb": "Classic musical-theatre soprano — warm chest lows, a poised legit mix, and clear, ringing head voice.",
-        "technique": "Legit placement, modern mix: Zegler supports a classic theatre soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes — the sound reads bigger than it is because placement, not pressure, carries it.",
+        "blurb": "Classic musical-theatre soprano: warm chest lows, a poised legit mix, and clear, ringing head voice.",
+        "technique": "Legit placement, modern mix: Zegler supports a classic theatre soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes: the sound reads bigger than it is because placement, not pressure, carries it.",
         "span": "3 octaves + 3"
       }
     ]
@@ -9407,7 +9407,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The world's voices",
     "summary": "A continent of vocal traditions, from ranchera's long breath to reggaetón's rhythmic speech, with their signature techniques and the bilingual generation remixing all of them.",
     "free": false,
-    "words": 3342,
+    "words": 3338,
     "body": "This chapter covers more distinct vocal traditions than any other in the book, because \"Latin\" is a market category laid over a continent of genres. The entries span:\n\n- **Ranchera:** enormous single-breath phrases and controlled quiebre cracks.\n- **Bolero and balada:** velvet croons.\n- **Salsa:** improvising soneros, phrasing against clave like horn players.\n- **Tropical pop:** bright, danceable belts.\n- **The folk traditions:** singer-poets.\n- **Urbano:** melody compressed into rhythmic, Auto-Tune-glossed speech, the voice as a percussion instrument with vowels.\n\nReading across them, two shared technical values emerge. Breath length: several of these traditions treat the long, unbroken phrase as the fundamental unit of expression, and their entries describe support work that would satisfy an opera coach. And vowel purity: Spanish's five clean vowels give these voices their characteristic directness of tone — no diphthong drift, resonance stable across the note — which is a borrowable discipline for singers in any language and the single fastest fix for muddy sustained notes.\n\nThe chapter's present tense belongs to the bilingual generation, moving between English and Spanish phonetics inside one song and using the switch as a color change. Their entries, alongside the corridos revival's raw regional timbres, make this the atlas's best demonstration that tradition and experiment are not opposites: every modern sound in this chapter is built directly on one of the old techniques, usually within audible distance of it.",
     "entries": [
       {
@@ -9730,7 +9730,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Nasal-edged chest voice with a fast natural vibrato and Arabic-inflected melisma.",
-        "technique": "Nasal placement is the whole sound — the tone stays forward and slightly pinched, which lets a fast, narrow vibrato ride on a chesty middle. Ornaments come from Arabic-style melisma: quick microtonal slides and trills threaded between beats. Above the E5 belt she flips into a light, hooty upper register rather than pushing. Students chase the buzz by squeezing the throat, but that buzz belongs in the mask with the larynx loose.",
+        "technique": "Nasal placement is the whole sound: the tone stays forward and slightly pinched, which lets a fast, narrow vibrato ride on a chesty middle. Ornaments come from Arabic-style melisma: quick microtonal slides and trills threaded between beats. Above the E5 belt she flips into a light, hooty upper register rather than pushing. Students chase the buzz by squeezing the throat, but that buzz belongs in the mask with the larynx loose.",
         "span": "2 octaves + 10"
       },
       {
@@ -9798,7 +9798,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "La Gran Señora",
         "highSource": "Resulta",
         "blurb": "Blunt, brassy banda mezzo that spits consonants, bends notes like norteño accordion lines and belts heartbreak head-on.",
-        "technique": "Rivera attacks consonants hard and sings vowels with a blunt, open chest that stays engaged from C3 up to belted peaks near E5. Her ornaments come from banda phrasing: quick bends, falling releases, and a sobbed break she deploys on emotional peaks like punctuation. Vibrato is fast and pressed. She trades polish for presence — slightly pushed, deliberately raw. Students copying her round off the edges; the style demands consonant aggression and a chest-dominant mix held higher than is comfortable.",
+        "technique": "Rivera attacks consonants hard and sings vowels with a blunt, open chest that stays engaged from C3 up to belted peaks near E5. Her ornaments come from banda phrasing: quick bends, falling releases, and a sobbed break she deploys on emotional peaks like punctuation. Vibrato is fast and pressed. She trades polish for presence: slightly pushed, deliberately raw. Students copying her round off the edges; the style demands consonant aggression and a chest-dominant mix held higher than is comfortable.",
         "span": "2 octaves + 4"
       },
       {
@@ -9917,7 +9917,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "¡Que Suerte!",
         "blurb": "Bright young mariachi mezzo with a fast vibrato, crisp Spanish diction and clean sustained ranchera cries.",
-        "technique": "Aguilar sings ranchera with a schooled, upright production: tall vowels, clean legato, and a quick, tight vibrato she can start or still at will. Sustained cries up at G5 stay in a bright, forward mix rather than open shout, while her Eb3 chest lows keep spoken warmth. Ornamentation is classic mariachi — falsete flips, turns, sobbed onsets — executed with precision. Students copying her usually oversize the voice; her control reads bigger than her actual mass, which is the entire lesson.",
+        "technique": "Aguilar sings ranchera with a schooled, upright production: tall vowels, clean legato, and a quick, tight vibrato she can start or still at will. Sustained cries up at G5 stay in a bright, forward mix rather than open shout, while her Eb3 chest lows keep spoken warmth. Ornamentation is classic mariachi (falsete flips, turns, sobbed onsets), executed with precision. Students copying her usually oversize the voice; her control reads bigger than her actual mass, which is the entire lesson.",
         "span": "2 octaves + 4"
       },
       {
@@ -10014,7 +10014,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The world's voices",
     "summary": "Precision singing at industrial standards: the idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers.",
     "free": false,
-    "words": 4366,
+    "words": 4354,
     "body": "The center of this chapter is the idol system's product: singers trained from adolescence to dance at full output while delivering studio-grade vocals, auditioned annually against thousands, and drilled in ensemble discipline — hitting your line in a seven-way harmony after sprint choreography is a skill no Western tradition certifies. The main-vocal entries here describe the results: immaculate pitch under cardio load, mixed belts engineered for nightly repetition, and an agility standard set by survival shows where a shaky run ends a career. Alongside them, the ballad specialists of the Korean tradition sustain climactic belts that draw directly on trot and gospel lineages.\n\nJapan's wing runs on different physics: a domestic industry so large it never needed export, producing genre-fluent stylists — city-pop sophistication, vocaloid-influenced precision at inhuman syllable rates, singer-songwriters swinging between woody lows and weightless falsetto. The chapter's remaining seats belong to the global outliers: playback legends whose ornament systems predate and outclass most Western melisma, and the multi-octave phenomena who tour the world on pure vocal spectacle.\n\nWhat this chapter teaches best is *standards*: these industries quantify vocal skill — pitch under motion, harmony accuracy, consistency across two hundred shows — more explicitly than anywhere else in the book. The borrowable practice is theirs: drill songs while moving, record everything, and treat consistency as the metric, because a voice that performs at its average is worth more than one that performs at its best.",
     "entries": [
       {
@@ -10099,7 +10099,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "愛你痛到不知痛",
         "blurb": "Rich Cantopop baritone with a metallic core, crooner phrasing and high notes pushed with open-throated ease.",
-        "technique": "Cheung centers everything on mid-range tone shaping: thick, resonant chest with a faint metallic ring, vowels rounded, vibrato settled and even. He works the octave above E3 for most of a song, spending climactic pushes toward C5 sparingly, approached with covered vowels and a firm breath lean. Dynamics do the storytelling — he crescendos through held notes instead of re-attacking them. Students copying him underrate his consonant timing; the crooner smoothness rides on precisely released word endings.",
+        "technique": "Cheung centers everything on mid-range tone shaping: thick, resonant chest with a faint metallic ring, vowels rounded, vibrato settled and even. He works the octave above E3 for most of a song, spending climactic pushes toward C5 sparingly, approached with covered vowels and a firm breath lean. Dynamics do the storytelling: he crescendos through held notes instead of re-attacking them. Students copying him underrate his consonant timing; the crooner smoothness rides on precisely released word endings.",
         "span": "1 octave + 8"
       },
       {
@@ -10116,7 +10116,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "如果雲知道 (The Cloud Knows)",
         "highSource": null,
         "blurb": "Cool, weightless alt-pop voice: breathy attacks, sliding ornaments and a detached shimmer borrowed from dream-pop.",
-        "technique": "Wong sings off the breath deliberately: soft onsets, tone half-air and half-core, so notes seem to condense out of the track rather than start. Pitch is ornamented with slow slides and small falls, borrowed from dream-pop and Chinese inflection alike. Her comfortable band runs from about E3 to D5, and she rarely presses; dynamics move by microphone distance instead of muscle. Vibrato is minimal, almost incidental. Students copying the breathiness collapse support entirely — hers floats on a quietly firm column.",
+        "technique": "Wong sings off the breath deliberately: soft onsets, tone half-air and half-core, so notes seem to condense out of the track rather than start. Pitch is ornamented with slow slides and small falls, borrowed from dream-pop and Chinese inflection alike. Her comfortable band runs from about E3 to D5, and she rarely presses; dynamics move by microphone distance instead of muscle. Vibrato is minimal, almost incidental. Students copying the breathiness collapse support entirely: hers floats on a quietly firm column.",
         "span": "1 octave + 10"
       },
       {
@@ -10234,7 +10234,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Only One",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Light, glassy soprano built for dance-pop — quick vibrato, crisp consonants, pitch locked to the beat.",
+        "blurb": "Light, glassy soprano built for dance-pop: quick vibrato, crisp consonants, pitch locked to the beat.",
         "technique": "A dancer's voice first: light, bright, and rhythm-locked, built to stay steady through movement. BoA mixes brightly with a lifted palate in the upper fourth octave, then shifts head-dominant above the fifth-octave line, where the sound turns glassy. Vibrato is shallow and quick. Those copying her often oversing; the style depends on crisp consonants, short phrases, and pitch that lands exactly on the grid, with agility kept simple rather than florid.",
         "span": "2 octaves + 11"
       },
@@ -10506,7 +10506,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "That's Okay",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Soft-grained lyric tenor — warm low register, immaculate tuning, quick precise runs kept quiet and close.",
+        "blurb": "Soft-grained lyric tenor: warm low register, immaculate tuning, quick precise runs kept quiet and close.",
         "technique": "Warm and rounded even at speaking pitch, this voice sits low for a tenor and gains its color from a relaxed jaw and tall vowels. D.O. ornaments melodies with short, precise runs, placing each passing note rather than smearing. Vibrato arrives late on held tones, narrow and calm. Imitators tend to breathe shallowly and chase his darkness by depressing the larynx; the actual sound is forward, unforced, and conversational up through the mid-fourth octave.",
         "span": "3 octaves + 1"
       },
@@ -10524,7 +10524,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Nasal baritone with a flat deadpan low register that tightens into a strained, plaintive high belt.",
-        "technique": "Two registers, deliberately unblended. The low register is flat and nearly deadpan, nasal and close-mic'd, with almost no vibrato. The upper register tightens into a strained, plaintive quality that keeps a hard edge instead of opening out — full voice is cited to about A4, and the tension is the intended effect rather than a fault. Consonants are clipped to serve rhythm, and phrases sit tight to the grid. Students copy the strain by squeezing the throat; the sound depends on breath support underneath it, or it goes hoarse within a song.",
+        "technique": "Two registers, deliberately unblended. The low register is flat and nearly deadpan, nasal and close-mic'd, with almost no vibrato. The upper register tightens into a strained, plaintive quality that keeps a hard edge instead of opening out: full voice is cited to about A4, and the tension is the intended effect rather than a fault. Consonants are clipped to serve rhythm, and phrases sit tight to the grid. Students copy the strain by squeezing the throat; the sound depends on breath support underneath it, or it goes hoarse within a song.",
         "span": "2 octaves + 9"
       },
       {
@@ -10575,7 +10575,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Shape-shifting art-pop tenor that leaps from murmured verses to wailing rock climaxes and floated falsetto.",
-        "technique": "Hua switches vocal costumes per song: breathy croon, punk shout, operatic float, sometimes within one arc from G2 up to Bb5. His default is a bright, forward tenor with quick vibrato, but he distorts on purpose — rasp, cry breaks, yodel-like flips — as arrangement choices, each cleanly supported underneath. High sustained wails sit in reinforced mix, not pure falsetto. Students copying the effects first end up forcing; the effects only work stacked on stable, unglamorous fundamentals.",
+        "technique": "Hua switches vocal costumes per song: breathy croon, punk shout, operatic float, sometimes within one arc from G2 up to Bb5. His default is a bright, forward tenor with quick vibrato, but he distorts on purpose (rasp, cry breaks, yodel-like flips) as arrangement choices, each cleanly supported underneath. High sustained wails sit in reinforced mix, not pure falsetto. Students copying the effects first end up forcing; the effects only work stacked on stable, unglamorous fundamentals.",
         "span": "3 octaves + 3"
       },
       {
@@ -10608,7 +10608,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Epiphany",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Light, airy tenor with a plaintive edge — glassy falsetto peaks and long, even sustains over BTS ballads.",
+        "blurb": "Light, airy tenor with a plaintive edge: glassy falsetto peaks and long, even sustains over BTS ballads.",
         "technique": "A light tenor instrument that blooms above the staff: Jin keeps the larynx steady and lets air lead the tone, so sustained notes carry a slow, even vibrato instead of push. His falsetto is unusually connected to chest, and he glides between the two without a flip. Students copying him usually over-darken the low range; he keeps Bb2 territory soft and speech-like, saving pressure for climactic head-voice peaks.",
         "span": "3 octaves + 1"
       },
@@ -10643,7 +10643,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Dark, husky baritone that sits speech-close and thins to airy falsetto instead of pushing chest.",
-        "technique": "The voice sits close to speech: dark, husky, slightly behind the beat, with a lot of breath mixed into the tone even at low volume. Full voice is cited to around A4, and rather than push chest higher he thins deliberately into an airy falsetto above that, keeping the volume low so the change reads as intimacy rather than strain. Onsets are soft, almost sighed. The common error is adding weight to imitate the darkness — the color comes from a relaxed, low larynx and a quiet breath, not from pressing.",
+        "technique": "The voice sits close to speech: dark, husky, slightly behind the beat, with a lot of breath mixed into the tone even at low volume. Full voice is cited to around A4, and rather than push chest higher he thins deliberately into an airy falsetto above that, keeping the volume low so the change reads as intimacy rather than strain. Onsets are soft, almost sighed. The common error is adding weight to imitate the darkness: the color comes from a relaxed, low larynx and a quiet breath, not from pressing.",
         "span": "3 octaves"
       },
       {
@@ -10659,7 +10659,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Spit It Out",
         "lowSource": null,
         "highSource": "Road to Sampo",
-        "blurb": "Cutting, mask-bright soprano — chesty mix that stays full to the top, with crisp rhythmic phrasing.",
+        "blurb": "Cutting, mask-bright soprano: chesty mix that stays full to the top, with crisp rhythmic phrasing.",
         "technique": "Bright, forward placement defines this soprano: the tone cuts through dense arrangements because she keeps resonance in the mask and vowels narrow. Her chest-dominant mix climbs unusually high, holding full-voice intensity to F#5 before head voice takes the last step. Phrasing is rhythmically exact, with ornaments used sparingly. Students copying her usually spread the vowel as they ascend and lose the ring; she narrows instead, letting brightness rather than volume create the cut.",
         "span": "2 octaves + 1"
       },
@@ -10676,7 +10676,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Like Water",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Bright R&B soprano — compressed belts, clean head-voice peaks, and a documented whistle top above the staff.",
+        "blurb": "Bright R&B soprano: compressed belts, clean head-voice peaks, and a documented whistle top above the staff.",
         "technique": "An R&B-schooled soprano who treats registers as one continuous hallway: chest stays bright and compressed, the mix carries belts toward G#5, and head voice takes over cleanly rather than thinning out. Her runs are counted, landing on chord tones, and she shades dynamics inside single syllables. The common copying mistake is shouting the belt; Wendy leans on breath compression and narrow vowels, which is why the top stays ringing instead of spread.",
         "span": "4 octaves + 2"
       },
@@ -10727,7 +10727,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Utopia",
         "lowSource": "Hug Me",
         "highSource": null,
-        "blurb": "Full-throated K-pop belter — steel-cored mix that holds fifth-octave notes in full voice mid-choreography.",
+        "blurb": "Full-throated K-pop belter: steel-cored mix that holds fifth-octave notes in full voice mid-choreography.",
         "technique": "Built around a thick, pressurized mix, this tenor belts where most voices flip: sustained A5 phrases arrive in full voice with a fast, tight vibrato and no audible register seam. Onsets are clean and glottal-light even at maximum volume, and he holds pitch while moving hard through choreography-level breath demands. Copying the belt without his low-breath anchoring produces strain fast; the power comes from compression at the body, not squeeze at the throat.",
         "span": "3 octaves + 5"
       },
@@ -10791,7 +10791,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The world's voices",
     "summary": "Groove-first singing, from patois phrasing and Afrobeats' melodic economy to amapiano's smoothness and the continent's great griot and mbalax voices.",
     "free": false,
-    "words": 2078,
+    "words": 2068,
     "body": "Every tradition in this chapter starts from the same premise: the groove is the lead instrument, and the voice's first job is to sit inside it correctly. Reggae's founders phrase against the one-drop with a horn section's patience, patois vowels rounding the tone; the toasters and dancehall deejays turn the voice fully percussive. Afrobeats' modern stars work by melodic economy — short cells, repeated and mutated, placed with producer-level precision against log drums and shakers — and the entries describe high, bright placements engineered to cut through dense percussion at streaming loudness rather than stage volume. The amapiano-adjacent voices go the other way, gliding breath-soft over the drums. And the elder statesmen of the continent's traditions — griot lineages, mbalax, Afro-jazz — contribute some of the book's most distinctive tonal signatures: keening, reedy, ecstatic colors carrying centuries of technique with no conservatory paperwork.\n\nAcross all of it, ornament is rhythmic before it is melodic. Where gospel bends pitch to intensify harmony, these traditions bend *time* — a syllable dragged a sixteenth, a run compressed to land on the drum's ghost note — and the technique paragraphs keep directing imitators to the drum pattern first, melody second.\n\nThe practical borrowings: melodic economy (build a hook from four notes and make interest through placement), percussive diction at low volume, and the placement lesson — brightness as audibility engineering. This chapter's voices are heard over the busiest rhythm beds in the book while rarely singing loud, which is a trick every over-singer should study.",
     "entries": [
       {
@@ -10842,7 +10842,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Bright gospel-leaning tenor; open vowels, long sustained upper notes, wide vibrato at phrase ends.",
-        "technique": "Open vowels and a lifted soft palate give this tenor its gospel brightness — forward, ringing, never covered. Attacks are clean and unscooped, phrases climb rather than sit, and long upper notes take a wide, slow vibrato that only switches on once the pitch has settled. Many Rivers to Cross shows that habit plainly. Bring the vibrato in too early and the straight-tone arrival that makes the note land disappears.",
+        "technique": "Open vowels and a lifted soft palate give this tenor its gospel brightness: forward, ringing, never covered. Attacks are clean and unscooped, phrases climb rather than sit, and long upper notes take a wide, slow vibrato that only switches on once the pitch has settled. Many Rivers to Cross shows that habit plainly. Bring the vibrato in too early and the straight-tone arrival that makes the note land disappears.",
         "span": "2 octaves + 7"
       },
       {
@@ -10876,7 +10876,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Light nasal-forward tenor; clipped offbeat phrasing, thin bright top, easy slides into head voice.",
-        "technique": "Tone sits high in the nose and front of the mouth, light for a tenor reaching C5 — placement carries it, not pressure. Onsets are soft, often slightly breathy, and consonants get clipped so syllables land in the gaps left by the drum and bass. Vibrato stays narrow and arrives late. Above the staff he thins into head voice rather than belting. Students copy the vowels and miss the offbeat, which is where this voice actually lives.",
+        "technique": "Tone sits high in the nose and front of the mouth, light for a tenor reaching C5: placement carries it, not pressure. Onsets are soft, often slightly breathy, and consonants get clipped so syllables land in the gaps left by the drum and bass. Vibrato stays narrow and arrives late. Above the staff he thins into head voice rather than belting. Students copy the vowels and miss the offbeat, which is where this voice actually lives.",
         "span": "2 octaves + 7"
       },
       {
@@ -10910,7 +10910,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Round warm tenor with a smooth chest-to-head handoff mid-phrase and quick falsetto flips.",
-        "technique": "Two numbers explain this voice: a belt topping out near Bb4 and a range that keeps going to D5. Everything above the belt is head voice or a quick falsetto flip, and the handoff happens mid-phrase with no audible seam. Tone is round and warm, onsets gentle, vibrato even and moderate. Ornaments stay small — a turn, a scoop into a sustained note — and the highest notes arrive light rather than muscled up in chest.",
+        "technique": "Two numbers explain this voice: a belt topping out near Bb4 and a range that keeps going to D5. Everything above the belt is head voice or a quick falsetto flip, and the handoff happens mid-phrase with no audible seam. Tone is round and warm, onsets gentle, vibrato even and moderate. Ornaments stay small (a turn, a scoop into a sustained note), and the highest notes arrive light rather than muscled up in chest.",
         "span": "2 octaves + 7"
       },
       {
@@ -10944,7 +10944,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Flat-toned contralto pitched near speech; hard consonants, dry chest resonance, vibrato withheld.",
-        "technique": "This contralto sits near speaking pitch and stays there, flat and dry and deliberately unwarmed. Chest resonance is present but never blooms, vibrato is withheld almost entirely, and consonants are struck hard so lines come out clipped and mechanical. Long notes hold straight through with no swell. Anyone imitating it tends to add expression — a vibrato, a crescendo, a lift toward Bb4 — and the coolness that carries the sound evaporates.",
+        "technique": "This contralto sits near speaking pitch and stays there, flat and dry and deliberately unwarmed. Chest resonance is present but never blooms, vibrato is withheld almost entirely, and consonants are struck hard so lines come out clipped and mechanical. Long notes hold straight through with no swell. Anyone imitating it tends to add expression (a vibrato, a crescendo, a lift toward Bb4), and the coolness that carries the sound evaporates.",
         "span": "1 octave + 8"
       },
       {
@@ -10978,7 +10978,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Brassy forward mezzo with heavy chest projection; percussive diction, long loud held notes.",
-        "technique": "Forward placement and a brassy core carry this mezzo, with real chest projection and a percussive attack on every consonant. Held notes stay loud and steady, driven from the breath rather than squeezed in the throat, and the belt carries to about C5 before the tone lightens on its way to E5. Rhythm is exact, usually locked to the drums. Undersinging it does not work — that volume needs full support to stay in tune.",
+        "technique": "Forward placement and a brassy core carry this mezzo, with real chest projection and a percussive attack on every consonant. Held notes stay loud and steady, driven from the breath rather than squeezed in the throat, and the belt carries to about C5 before the tone lightens on its way to E5. Rhythm is exact, usually locked to the drums. Undersinging it does not work: that volume needs full support to stay in tune.",
         "span": "2 octaves"
       },
       {
@@ -11012,7 +11012,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Smoky low contralto sung softly close to the mic; conversational, unhurried, vibrato minimal.",
-        "technique": "Sung inches from the microphone at low volume, this contralto trades projection for detail — you hear the breath, the consonants, the smoke in the lower middle. Onsets are soft, the tempo unhurried, and phrases float a little behind the accompaniment. Vibrato is minimal and vowels stay dark and loose. Push it any louder and the intimacy that makes those low notes work is gone.",
+        "technique": "Sung inches from the microphone at low volume, this contralto trades projection for detail: you hear the breath, the consonants, the smoke in the lower middle. Onsets are soft, the tempo unhurried, and phrases float a little behind the accompaniment. Vibrato is minimal and vowels stay dark and loose. Push it any louder and the intimacy that makes those low notes work is gone.",
         "span": "1 octave + 8"
       },
       {
@@ -11046,7 +11046,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Very deep gravel bass-baritone used percussively; half-spoken toasting, few sustained pitches.",
-        "technique": "Rhythm and texture do nearly everything here. The voice works as a percussion instrument: half-spoken toasting, very few sustained pitches, and a gravelly bottom that stays close to the microphone instead of projecting. Onsets are dry and consonant-driven, and the top of the stated range barely gets used. The usual mistake is pushing volume to find the depth — the depth comes from a relaxed low placement and a quiet, close delivery.",
+        "technique": "Rhythm and texture do nearly everything here. The voice works as a percussion instrument: half-spoken toasting, very few sustained pitches, and a gravelly bottom that stays close to the microphone instead of projecting. Onsets are dry and consonant-driven, and the top of the stated range barely gets used. The usual mistake is pushing volume to find the depth: the depth comes from a relaxed low placement and a quiet, close delivery.",
         "span": "2 octaves + 1"
       },
       {
@@ -11080,7 +11080,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Warm baritone with a smoky edge; drags behind the beat, then drops to soft airy falsetto.",
-        "technique": "A baritone with smoke through the middle and a relaxed, unforced onset. Phrases sit behind the beat, syllables stretched lazily across the groove, and lines often finish by dropping into a soft, airy falsetto instead of climbing in chest. Vibrato is barely present. That rhythmic drag is the hard part to copy — sing right on the beat and the whole thing tightens up and loses its slouch.",
+        "technique": "A baritone with smoke through the middle and a relaxed, unforced onset. Phrases sit behind the beat, syllables stretched lazily across the groove, and lines often finish by dropping into a soft, airy falsetto instead of climbing in chest. Vibrato is barely present. That rhythmic drag is the hard part to copy: sing right on the beat and the whole thing tightens up and loses its slouch.",
         "span": "2 octaves + 7"
       },
       {
@@ -11261,7 +11261,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Pop",
     "summary": "The women who defined what a pop lead vocal is, from torch-song discipline through the belt arms race, and what their entries teach about power built to last.",
     "free": false,
-    "words": 1912,
+    "words": 1900,
     "singers": [
       {
         "slug": "barbra-streisand",
@@ -11384,7 +11384,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Pop",
     "summary": "The current generation of pop leads (whisper-pop, fry onsets, whistle flexes, conversational belts) and how the microphone rewrote what counts as power.",
     "free": false,
-    "words": 4975,
+    "words": 4949,
     "singers": [
       {
         "slug": "beyonce",
@@ -11752,7 +11752,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Pop",
     "summary": "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it.",
     "free": false,
-    "words": 4424,
+    "words": 4411,
     "singers": [
       {
         "slug": "brian-wilson",
@@ -12092,7 +12092,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Rock, metal and alternative",
     "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades: where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
     "free": false,
-    "words": 5131,
+    "words": 5120,
     "singers": [
       {
         "slug": "little-richard",
@@ -12474,7 +12474,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Rock, metal and alternative",
     "summary": "The women who fronted rock bands on their own terms, from belters and banshees to deadpan cool, and what their entries teach about projection over a loud stage.",
     "free": false,
-    "words": 1588,
+    "words": 1587,
     "singers": [
       {
         "slug": "tina-turner",
@@ -12597,7 +12597,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Rock, metal and alternative",
     "summary": "Refusing to sing beautifully became its own technique, from post-punk monotone to grunge catharsis. This chapter covers what that refusal actually requires.",
     "free": false,
-    "words": 3131,
+    "words": 3115,
     "singers": [
       {
         "slug": "ian-curtis",
@@ -12832,7 +12832,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Rock, metal and alternative",
     "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
     "free": false,
-    "words": 3161,
+    "words": 3155,
     "singers": [
       {
         "slug": "ozzy-osbourne",
@@ -13060,7 +13060,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The men who made secular music testify (church-trained tenors, velvet baritones and the falsetto tradition) and the phrasing lessons every genre stole from them.",
     "free": false,
-    "words": 3298,
+    "words": 3296,
     "singers": [
       {
         "slug": "ray-charles",
@@ -13309,7 +13309,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The women who set the bar for vocal authority, from torch and church to quiet storm, and the complete techniques their entries document.",
     "free": false,
-    "words": 2584,
+    "words": 2580,
     "singers": [
       {
         "slug": "etta-james",
@@ -13502,7 +13502,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The streaming era's R&B (falsetto confessions, whisper-runs, baritone outliers and produced nonchalance) and how the genre traded the shout for the microphone's trust.",
     "free": false,
-    "words": 4482,
+    "words": 4480,
     "singers": [
       {
         "slug": "aaliyah",
@@ -13835,7 +13835,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The source tradition and the ensemble athletes: where the runs, the shout and the squall come from, plus the a cappella specialists who turned blend itself into virtuosity.",
     "free": false,
-    "words": 2528,
+    "words": 2522,
     "singers": [
       {
         "slug": "mahalia-jackson",
@@ -14021,7 +14021,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Country, folk and jazz",
     "summary": "Twang as technology, the accent as instrument, and storytelling tessitura make up country's vocal toolkit, from honky-tonk cries to stadium baritones.",
     "free": false,
-    "words": 4309,
+    "words": 4289,
     "singers": [
       {
         "slug": "hank-williams",
@@ -14361,7 +14361,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Country, folk and jazz",
     "summary": "The confiders: voices built to serve words, from coffeehouse sopranos to gravel philosophers, and how modest instruments built long careers here.",
     "free": false,
-    "words": 3108,
+    "words": 3099,
     "singers": [
       {
         "slug": "joan-baez",
@@ -14589,7 +14589,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Country, folk and jazz",
     "summary": "Horn-players with lyrics: time feel, delayed vibrato, harmonic ears and the microphone's first great singers, from the songbook era to the new jazz generation.",
     "free": false,
-    "words": 2728,
+    "words": 2712,
     "singers": [
       {
         "slug": "louis-armstrong",
@@ -14789,7 +14789,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The trained voice",
     "summary": "The unamplified athletes: what filling a hall without a microphone actually requires, why opera ranges look modest, and what every amplified singer can steal from the fach system.",
     "free": false,
-    "words": 2858,
+    "words": 2852,
     "singers": [
       {
         "slug": "enrico-caruso",
@@ -14996,7 +14996,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The trained voice",
     "summary": "Eight shows a week: the belt as a certified skill, legit versus contemporary technique, and why theater singers are the book's masters of sustainable intensity.",
     "free": false,
-    "words": 2675,
+    "words": 2672,
     "singers": [
       {
         "slug": "ethel-merman",
@@ -15182,7 +15182,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The world's voices",
     "summary": "A continent of vocal traditions, from ranchera's long breath to reggaetón's rhythmic speech, with their signature techniques and the bilingual generation remixing all of them.",
     "free": false,
-    "words": 3342,
+    "words": 3338,
     "singers": [
       {
         "slug": "celia-cruz",
@@ -15438,7 +15438,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The world's voices",
     "summary": "Precision singing at industrial standards: the idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers.",
     "free": false,
-    "words": 4366,
+    "words": 4354,
     "singers": [
       {
         "slug": "edith-piaf",
@@ -15764,7 +15764,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The world's voices",
     "summary": "Groove-first singing, from patois phrasing and Afrobeats' melodic economy to amapiano's smoothness and the continent's great griot and mbalax voices.",
     "free": false,
-    "words": 2078,
+    "words": 2068,
     "singers": [
       {
         "slug": "miriam-makeba",
@@ -15949,4 +15949,4 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
     [],
   );
 
-export const ATLAS_WORDS = 70856;
+export const ATLAS_WORDS = 70677;

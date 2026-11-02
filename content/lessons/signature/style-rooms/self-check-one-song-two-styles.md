@@ -22,7 +22,7 @@ Open the practice material on this page and choose Amazing Grace (Opening Lines,
 
 ### Set a safe baseline
 
-Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.
+Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing, and write down at least two choices that will differ between them.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.

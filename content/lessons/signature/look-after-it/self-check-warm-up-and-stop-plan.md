@@ -36,7 +36,7 @@ Assemble a short warm-up with rests and write down the warning signs that would 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound. Write the warm-up down in order, from quiet and mid-range to wider and then fuller, with rests, and write the stop list beside it: pain means stop that session; any blood, or a sudden loss of range or voice, means a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness that does not clear means the same doctor. After running it, check whether your voice feels at least as easy as before.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.

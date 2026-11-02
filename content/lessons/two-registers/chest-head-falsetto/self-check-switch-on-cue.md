@@ -36,7 +36,7 @@ Before recording, roll a die six times and write the order (odd = fuller, even =
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Put the order you rolled where you can see it; if it never changes from fuller to lighter or back, roll again. On one comfortable note from Humming thirds, sing six short notes, one per roll, fuller or lighter as each roll says, with a quiet breath between them, matching pitch and volume as closely as practical. Record all six in one take in the [recorder](/recorder) so every change is there on playback.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Put the order you rolled where you can see it; if it does not change at least once from fuller to lighter and at least once from lighter to fuller, roll again. On one comfortable note from Humming thirds, sing six short notes, one per roll, fuller or lighter as each roll says, with a quiet breath between them, matching pitch and volume as closely as practical. Record all six in one take in the [recorder](/recorder) so every change is there on playback.
 
 - Look: Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.
 - Listen: Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.

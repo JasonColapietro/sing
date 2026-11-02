@@ -36,7 +36,7 @@ Listen to the recording for understandable words; clarity is your own judgment. 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep consonants quick and vowels connected. Increase tempo only while every word remains understandable on playback.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep consonants quick and vowels connected. Increase tempo only while every word remains understandable on playback. Then have someone who has not seen the lyric, or yourself a day later without looking at it, write down every word of the recorded phrase from playback.
 
 - Look: The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.
 - Listen: A listener can write down the words from the recording without seeing the lyric.

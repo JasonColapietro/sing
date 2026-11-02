@@ -234,16 +234,40 @@ export function keyboardNeighbors(s: Singer, count = 6, all: Singer[] = SINGERS)
 
 /** Catalog songs (not this artist's own) that sit inside the reported span as written, widest first. */
 export function songsInRange(s: Singer, limit = 5, songs: readonly PopSong[] = POP_SONGS): PopSong[] {
-  return songs
-    .filter((song) => !song.artistSlugs.includes(s.slug))
+  return otherArtistSongs(s, songs)
     .filter((song) => popFit(song, s).verdict === "fits")
     .sort((a, b) => span(b) - span(a) || a.title.localeCompare(b.title))
     .slice(0, limit);
 }
 
-/** How many catalog songs, of all of them, fit inside the span as written. */
+/** Catalog songs by other artists: the set songsInRange picks from and songsInRangeCount counts. */
+export function otherArtistSongs(s: Singer, songs: readonly PopSong[] = POP_SONGS): PopSong[] {
+  return songs.filter((song) => !song.artistSlugs.includes(s.slug));
+}
+
+/**
+ * How many catalog songs by other artists fit inside the span as written: the
+ * same set songsInRange lists from, so "the widest of them" never skips one
+ * the count included (Whitney Houston's own I Will Always Love You did).
+ */
 export function songsInRangeCount(s: Singer, songs: readonly PopSong[] = POP_SONGS): number {
-  return songs.filter((song) => popFit(song, s).verdict === "fits").length;
+  return otherArtistSongs(s, songs).filter((song) => popFit(song, s).verdict === "fits").length;
+}
+
+/**
+ * The lead above the songs-in-range list. These are the /can-you-sing range
+ * pages, which chart a popular song's key and range and hold no melody, so the
+ * sentence names them as that and never as songs to sing in the app.
+ */
+export function songsInRangeLead(s: Singer, songs: readonly PopSong[] = POP_SONGS): string {
+  const total = otherArtistSongs(s, songs).length;
+  const count = songsInRangeCount(s, songs);
+  const shown = songsInRange(s, undefined, songs).length;
+  const pages = `popular songs by other artists on Suede Sing’s song-range pages`;
+  const where = `${s.name}’s reported ${rangeLabel(s)} as written`;
+  if (count === 1) return `1 of the ${total} ${pages} sits inside ${where}:`;
+  const lead = count === total ? `All ${total} ${pages} sit inside ${where}.` : `${count} of the ${total} ${pages} sit inside ${where}.`;
+  return `${lead} ${shown < count ? `The ${shown} widest:` : "Widest first:"}`;
 }
 
 /** Semitones two catalog ranges share. */
@@ -251,14 +275,17 @@ export function sharedSemitones(a: Singer, b: Singer): number {
   return rangeOverlap(a.lowMidi, a.highMidi, b.lowMidi, b.highMidi);
 }
 
-/** The FAQ answer to "Who has a similar vocal range to X?", from the similar-voice cards. */
-export function similarRangeAnswer(s: Singer, labelSettled: boolean): string {
+/**
+ * The FAQ answer to "Who has a similar vocal range to X?", from the
+ * similar-voice cards. It states relatedSingers' rule and no other: nearest
+ * reported floor and ceiling first. The catalog label only breaks ties, so the
+ * answer never says the matches share a voice type (since round 20 most
+ * profiles' top three include another label).
+ */
+export function similarRangeAnswer(s: Singer): string {
   const top = relatedSingers(s).slice(0, 3);
   const names = joinNames(top.map((o) => `${o.name} (${rangeLabel(o)})`));
-  const how = labelSettled
-    ? `matched by voice type and nearest reported endpoints`
-    : `matched by catalog label and nearest reported endpoints`;
-  return `The closest reported ranges to ${s.name}’s ${rangeLabel(s)} in this catalog belong to ${names}, ${how}.`;
+  return `The closest reported ranges to ${s.name}’s ${rangeLabel(s)} in this catalog belong to ${names}, ranked by how close their reported lowest and highest notes are to ${s.name}’s.`;
 }
 
 /**

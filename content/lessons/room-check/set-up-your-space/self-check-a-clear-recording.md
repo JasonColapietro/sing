@@ -36,7 +36,7 @@ A take with only your voice in it, with nothing else playing. Say what will coun
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Make one comfortable sustained sound, then leave a full quiet gap before the next. Change only one room or device setting at a time so you can hear what fixed the input.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Make one comfortable sustained sound, then leave a full quiet gap before the next. Change only one room or device setting at a time so you can hear what fixed the input. Record on the device and in the room you will practice in, and on playback listen for any reference tone, echo or clipping.
 
 - Look: The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.
 - Listen: Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.

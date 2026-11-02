@@ -65,7 +65,7 @@ Expect this on some days and not others, and expect the good days to be scattere
 
 There will be several. Here is the order to try things.
 
-Go quieter. Half the volume you think is reasonable, then half again. Volume is the first thing to rule out.
+Go quieter. Half the volume you think is reasonable, then half again, but keep it voiced enough for the pitch trace to follow. Volume is the first thing to rule out.
 
 Go lower. Move the whole exercise down two or three semitones and work under the transition instead of through it. A session spent below the break is not a wasted session.
 
