@@ -32,18 +32,18 @@ Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. 
 Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four levels in your take form an audible progression while pitch stays centered.
+- Listen: Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered.
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short. On playback alone, put the four levels in order and check that the pitch stays centered at each.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance, not by squeezing the throat. Before recording, number four slips 1 (quietest) to 4 (fullest), shuffle them, and sing one short sample per slip in the order drawn, with a breath between. On playback, without looking at the slips, number each sample 1 to 4, then check your numbers against the slips and that the pitch stays centered at each.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four levels in your take form an audible progression while pitch stays centered.
+- Listen: Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered.
 
 ### Review your own attempt
 
-I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang four levels on one comfortable note in the order I drew, by changing breath-energy and resonance rather than pushing the volume, and numbered them from playback. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,14 +62,14 @@ I sang four levels on one comfortable note, from quiet to full, by changing brea
 
 ## Self-check
 
-- I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume.
-- The four levels in your take form an audible progression while pitch stays centered.
+- I sang four levels on one comfortable note in the order I drew, by changing breath-energy and resonance rather than pushing the volume, and numbered them from playback.
+- Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: In one take on one comfortable note, you can put the four levels in order from playback alone, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.
+Ready when: In one take on one comfortable note, sung in the order you drew, you can number all four levels from playback without the slips, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.
 
 If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume. This is a self-report, not an automatic assessment.
+What this shows: I sang four levels on one comfortable note in the order I drew, by changing breath-energy and resonance rather than pushing the volume, and numbered them from playback. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain.

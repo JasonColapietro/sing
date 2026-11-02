@@ -337,7 +337,7 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
   "v-l6-m4": {
     basis: selfCheck(
       "ornamentClassification",
-      "That you placed the ornaments where you meant to. Nothing labels a turn, a slide or a trill, though the pitch trace shows the gesture.",
+      "That you placed the ornaments where you meant to. Nothing labels a scoop, a fall, a bend or a slide, though the pitch trace shows the gesture.",
     ),
     companion: { room: "studio" },
     studies: ["chromatic-neighbor", "legato-triad"],

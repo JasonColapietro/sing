@@ -40,14 +40,14 @@ Blue thirds and sevenths, and how they resolve toward the tonic. Say what will c
 
 ### Hear the distinction
 
-From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, start a touch below it and bend up into it on purpose before returning to 1. Change only how you arrive at the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.
+From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, start a touch below it and bend up into it on purpose before returning to 1. Change only how you arrive at the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
 
 ### Review your own attempt
 
-I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer, and checked that each phrase ended on the tonic. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpo
 
 ## Self-check
 
-- I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer, and checked that each phrase ended on the tonic.
+- I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.
 - The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer, and checked that each phrase ended on the tonic. This is a self-report, not an automatic assessment.
+What this shows: I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised.

@@ -2651,7 +2651,7 @@ export const LESSONS: Lesson[] = [
         "Each vowel remains intelligible while the phrase keeps a related tone and pitch center.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
-      "readyWhen": "On playback, the same phrase on all five vowels keeps one pitch and a related tone, with every vowel still recognizable and none of them pinched, spread or pushed louder than the rest.",
+      "readyWhen": "On playback, the same phrase on all five vowels keeps the same pitches on every vowel and a related tone, with every vowel still recognizable and none of them pinched, spread or pushed louder than the rest.",
       "ifNotReady": "If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly.",
       "shows": "I sang the same pitch pattern on each of the five vowels without spreading, swallowing or changing volume, and compared the tone by ear.",
       "doesNotShow": "Formant values, vowel identity, resonance placement, or tone consistency measured by the app."
@@ -4387,17 +4387,17 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Dynamics without pushing",
         "body": "Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four levels in your take form an audible progression while pitch stays centered."
+        "listen": "Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered."
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short. On playback alone, put the four levels in order and check that the pitch stays centered at each.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance, not by squeezing the throat. Before recording, number four slips 1 (quietest) to 4 (fullest), shuffle them, and sing one short sample per slip in the order drawn, with a breath between. On playback, without looking at the slips, number each sample 1 to 4, then check your numbers against the slips and that the pitch stays centered at each.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four levels in your take form an audible progression while pitch stays centered."
+        "listen": "Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered."
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume.",
+        "body": "I sang four levels on one comfortable note in the order I drew, by changing breath-energy and resonance rather than pushing the volume, and numbered them from playback.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -4432,13 +4432,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume.",
-        "The four levels in your take form an audible progression while pitch stays centered.",
+        "I sang four levels on one comfortable note in the order I drew, by changing breath-energy and resonance rather than pushing the volume, and numbered them from playback.",
+        "Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
-      "readyWhen": "In one take on one comfortable note, you can put the four levels in order from playback alone, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.",
+      "readyWhen": "In one take on one comfortable note, sung in the order you drew, you can number all four levels from playback without the slips, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.",
       "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears.",
-      "shows": "I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume.",
+      "shows": "I sang four levels on one comfortable note in the order I drew, by changing breath-energy and resonance rather than pushing the volume, and numbered them from playback.",
       "doesNotShow": "Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
     }
   },
@@ -6771,13 +6771,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, start a touch below it and bend up into it on purpose before returning to 1. Change only how you arrive at the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
+        "body": "From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, start a touch below it and bend up into it on purpose before returning to 1. Change only how you arrive at the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer, and checked that each phrase ended on the tonic.",
+        "body": "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6812,13 +6812,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer, and checked that each phrase ended on the tonic.",
+        "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
         "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
-      "shows": "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer, and checked that each phrase ended on the tonic.",
+      "shows": "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
       "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },
@@ -6856,13 +6856,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.",
+        "body": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6897,13 +6897,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.",
+        "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
         "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
-      "shows": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.",
+      "shows": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
       "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },

@@ -395,7 +395,7 @@ export const EAR_GUIDE: GuideContent = {
   body: [
     "Singing in tune is not only a throat skill. The sequence is hear the target, predict the muscular gesture that produces it, then check the result against what you meant. Training the first link supports the whole chain, which is why a singer who drifts flat may need interval work as much as more singing.",
     "Interval recognition is the core drill: hear two notes and name the distance between them. Pitch matching is the singer's version: hear a note, sing it back, and get told how close you landed in cents. Melody playback extends both to short phrases, which is where memory joins the skill.",
-    "Progress here is measurable. Every game is scored on its ten rounds, each finished game goes into your practice log, and your best score is kept for each game at each level, so a trend can show up in the numbers before you notice it in a song.",
+    "Progress here is measurable. Every game is scored on its ten rounds. A finished game goes into your practice log and keeps your best score for each game at each level (a game that listens counts once the mic has heard you sing), so a trend can show up in the numbers before you notice it in a song.",
   ],
   howTo: {
     name: "How to train your ear as a singer",
@@ -700,7 +700,7 @@ export const RECORDER_GUIDE: GuideContent = {
     {
       href: "/progress",
       label: "Progress",
-      note: "Put takes next to your scores over time.",
+      note: "Recording time shows in your recent sessions and practice mix, beside your scored practice.",
     },
     {
       href: "/studio",
@@ -921,9 +921,9 @@ export const STUDIO_GUIDE: GuideContent = {
       note: "Scored patterns that apply the same feedback.",
     },
     {
-      href: rangeTestHref(),
-      label: "Range test",
-      note: "Measure your lowest and highest notes, then start your pitch work in the middle of them.",
+      href: "/ear-training",
+      label: "Ear training",
+      note: "Fix the target if you can't hear it, not just the production.",
     },
     {
       href: "/book/when-numbers-lie",

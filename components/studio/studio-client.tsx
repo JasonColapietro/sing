@@ -513,7 +513,7 @@ export function StudioClient() {
             </ul>
             <p className="mt-4 text-xs text-dim">
               Practice logs to your XP once a session reaches {MIN_LOG_SEC}{" "}
-              seconds.
+              seconds with a note heard.
             </p>
           </div>
         </>

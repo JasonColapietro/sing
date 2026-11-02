@@ -36,14 +36,14 @@ Bend into them deliberately rather than arriving flat. Say what will count as co
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.
+Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
 
 ### Review your own attempt
 
-I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I sang the supplied call and answer against my tapped pulse, placing each flat 3
 
 ## Self-check
 
-- I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.
+- I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.
 - The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic. This is a self-report, not an automatic assessment.
+What this shows: I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised.

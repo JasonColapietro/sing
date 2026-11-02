@@ -42,7 +42,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Voice Atlas",
     chapters: 27,
-    words: 70677,
+    words: 70715,
     free: 3,
     pdfMb: 5.0,
     href: "/atlas",

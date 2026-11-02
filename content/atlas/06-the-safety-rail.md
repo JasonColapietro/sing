@@ -25,7 +25,7 @@ The belt is not inherently dangerous; the belt *schedule* is. One F5 proves noth
 
 ## The signals that mean stop
 
-Practice that is working feels like effort in the torso and freedom in the throat. The reverse — comfort in the body, gripping in the throat — means the setup is wrong, whatever the sound says. Beyond that, three bright lines.
+Practice that is working feels easy in the throat: your neck feels about the same on a loud note as on a quiet one. Gripping in the throat means the setup is wrong, whatever the sound says, and the fix is to ease back to a steadier sound you can make without the grip, then rebuild, rather than to add effort from the body. Beyond that, three bright lines.
 
 | Sign | What it means | What to do |
 |---|---|---|
