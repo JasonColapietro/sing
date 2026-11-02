@@ -6832,7 +6832,7 @@ export const LESSONS: Lesson[] = [
     "title": "Blue Thirds and Sevenths",
     "type": "exercise",
     "minutes": 7,
-    "objective": "Bend into them deliberately rather than arriving flat.",
+    "objective": "Land them deliberately, and bend up from them on purpose, rather than arriving flat.",
     "explanation": "",
     "prerequisites": [
       "v-l6-m5-01"
@@ -6850,7 +6850,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "Bend into them deliberately rather than arriving flat.",
+        "body": "Land them deliberately, and bend up from them on purpose, rather than arriving flat.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
