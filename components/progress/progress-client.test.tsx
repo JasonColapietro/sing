@@ -71,3 +71,10 @@ describe("erasing browser progress", () => {
     expect(SOURCE).toMatch(/ref=\{confirmRef\}\s+id="erase-confirm"/);
   });
 });
+
+describe("importing a backup file", () => {
+  it("records the file, so the save prompt does not call this browser the only copy", () => {
+    // Behaviour is covered in components/account/download-backup.test.ts.
+    expect(SOURCE).toMatch(/const ok = importProgress\(json\);[\s\S]*?recordImportedBackupFile\(json, prior\);[\s\S]*?setImportNotice\(\{\s*kind: "ok"/);
+  });
+});

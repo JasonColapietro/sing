@@ -400,7 +400,7 @@ describe("the lesson data", () => {
       "v-l6-m4-01": [/plain/, /ornament at the place (you|I) marked/],
       "v-l6-m4-04": [/one ornament at the place (you|I) marked/, /plain/],
       "v-l6-m4-08": [/at the places (you|I) marked/, /each one on playback/],
-      "v-l6-m5-01": [/1, flat 3, 1/, /bend(ing)? up into it on purpose/, /call and answer/],
+      "v-l6-m5-01": [/1, flat 3, 1/, /bend(ing)? it up on purpose( a little)? toward the major third/, /call and answer/],
       "v-l6-m5-04": [/call and answer/, /flat 7/, /of (your|my) own/],
       "v-l6-m5-08": [/call and answer/, /eight/, /of (your|my) own/],
       "v-l6-m6-01": [/plain/, /one small scoop or fall/, /top note/],

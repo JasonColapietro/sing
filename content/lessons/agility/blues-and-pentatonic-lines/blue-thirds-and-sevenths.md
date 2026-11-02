@@ -5,7 +5,7 @@ stage: "v-l6"
 title: "Blue Thirds and Sevenths"
 type: "exercise"
 minutes: 7
-objective: "Bend into them deliberately rather than arriving flat."
+objective: "Land them deliberately, and bend up from them on purpose, rather than arriving flat."
 prerequisites: "v-l6-m5-01"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,7 +29,7 @@ Hear Minor five-note scale in a comfortable key and remember its first note (1),
 
 ### Name the target: Eight-bar improvisation
 
-Bend into them deliberately rather than arriving flat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
+Land them deliberately, and bend up from them on purpose, rather than arriving flat. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.

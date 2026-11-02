@@ -4646,7 +4646,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Then slide through it once more in the [pitch studio](/studio), which names the note as you sing it, and write down the first note where effort rises on the way up and where the sound settles on the way down. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names. Finish the recorder take with three quiet slides in a row through your zone in both directions. Then make the same take again on a different day: it is ready once both days pass.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass: approach the transition from below and above on a hum or narrow vowel, then make three quiet slides in a row through it in both directions, and stop the take. Then slide through it once more in the [pitch studio](/studio), which names the note as you sing it, and write down the first note where effort rises on the way up and where the sound settles on the way down. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -6771,13 +6771,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, start a touch below it and bend up into it on purpose before returning to 1. Change only how you arrive at the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
+        "body": "From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, land on the flat 3, then bend it up on purpose a little toward the major third, stopping short of it, and let it settle back before returning to 1. Change only what you do on the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
+        "body": "I sang 1, flat 3, 1 once placing the flat 3 and once bending it up on purpose toward the major third, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6812,13 +6812,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
+        "I sang 1, flat 3, 1 once placing the flat 3 and once bending it up on purpose toward the major third, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
         "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
-      "shows": "I sang 1, flat 3, 1 once placing the flat 3 and once bending up into it on purpose, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
+      "shows": "I sang 1, flat 3, 1 once placing the flat 3 and once bending it up on purpose toward the major third, then sang the supplied call and answer and the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that each phrase ended on the tonic.",
       "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },
@@ -6832,7 +6832,7 @@ export const LESSONS: Lesson[] = [
     "title": "Blue Thirds and Sevenths",
     "type": "exercise",
     "minutes": 7,
-    "objective": "Bend into them deliberately rather than arriving flat.",
+    "objective": "Land them deliberately, and bend up from them on purpose, rather than arriving flat.",
     "explanation": "",
     "prerequisites": [
       "v-l6-m5-01"
@@ -6850,7 +6850,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "Bend into them deliberately rather than arriving flat.",
+        "body": "Land them deliberately, and bend up from them on purpose, rather than arriving flat.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -6935,7 +6935,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic.",
+        "body": "Eight bars in one take: the supplied call and answer, then the call again with a two-bar answer of your own from 1, flat 3, 5 and flat 7, keeping the tapped pulse and ending on the tonic.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -8485,14 +8485,14 @@ export const LESSONS: Lesson[] = [
       {
         "title": "Name the target: Range extension",
         "body": "Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection.",
-        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
-        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+        "look": "Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.",
+        "listen": "Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days."
       },
       {
         "title": "Make one evidence take",
         "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.",
-        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
-        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+        "look": "Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.",
+        "listen": "Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days."
       },
       {
         "title": "Review your own attempt",
@@ -8532,7 +8532,7 @@ export const LESSONS: Lesson[] = [
     "selfCheck": {
       "criteria": [
         "I sang Small three-note climb with its top on today's easy high note and its bottom on today's easy low note, and compared both with my earlier baseline without forcing an extension.",
-        "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.",
+        "Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.",

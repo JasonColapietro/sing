@@ -54,10 +54,6 @@ export function SongsMicGate({
   const deepLinked = heading !== "Sing along and see every note you hit";
   const gate = (
     <>
-      {/* The room's instrument first, at the size and in the frame /studio uses. */}
-      <FigureFrame className="mx-auto mb-6 max-w-2xl" caption="What a run looks like">
-        <PianoRollFigure />
-      </FigureFrame>
       <Card>
         <div>
           <h2 className="text-lg sm:text-xl">{heading}</h2>
@@ -92,6 +88,11 @@ export function SongsMicGate({
           <ProWhisper className="mt-4" />
         </div>
       </Card>
+      {/* Below the gate, as on /studio and the /range pitch meter, so both
+          buttons and any mic error stay on a small phone's first screen. */}
+      <FigureFrame className="mx-auto mt-8 max-w-2xl" caption="What a run looks like">
+        <PianoRollFigure />
+      </FigureFrame>
     </>
   );
   return (
