@@ -143,7 +143,7 @@ export function singersByGenre(g: string): Singer[] {
  * must describe a person — a singer, musician or actor — or the title gets
  * an override.
  *
- * Re-checked 2026-11-02 against all 633 titles: Jeremy Jordan's article moved
+ * Re-checked 2026-11-02 against all 633 sameAs titles (636 singers, three with no personal article): Jeremy Jordan's article moved
  * to a dated title, David Phelps is a disambiguation page, and Geoff
  * Castellucci has no article.
  */
