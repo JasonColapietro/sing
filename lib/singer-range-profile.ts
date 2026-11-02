@@ -232,6 +232,35 @@ export function keyboardNeighbors(s: Singer, count = 6, all: Singer[] = SINGERS)
   return order.slice(start, start + count + 1).filter((o) => o.slug !== s.slug);
 }
 
+/**
+ * The "Also listed from <floor>" and "Also listed up to <ceiling>" chips.
+ * allLow and allHigh are every other profile sharing the exact floor or
+ * ceiling, which the page counts in full. The chips show the closest of them:
+ * a shared floor sorted by how near the ceiling is, a shared ceiling by how
+ * near the floor is, then by name. Profiles already linked by the
+ * similar-voice cards or the keyboard neighbors are left out, so the chips add
+ * new links rather than repeat ones. Alphabetical order used to hand most of
+ * the catalog's chip links to the few names that sort first.
+ */
+export function endpointMates(s: Singer): {
+  allLow: Singer[];
+  allHigh: Singer[];
+  lowMates: Singer[];
+  highMates: Singer[];
+} {
+  const allLow = sharesLow(s);
+  const allHigh = sharesHigh(s);
+  const shown = new Set([...relatedSingers(s), ...keyboardNeighbors(s)].map((o) => o.slug));
+  const closest = (mates: Singer[], gap: (o: Singer) => number) =>
+    mates
+      .filter((o) => !shown.has(o.slug))
+      .sort((a, b) => gap(a) - gap(b) || a.name.localeCompare(b.name));
+  // Up to eight chips across the two sub-rows.
+  const lowMates = closest(allLow, (o) => Math.abs(o.highMidi - s.highMidi)).slice(0, allHigh.length ? 4 : 8);
+  const highMates = closest(allHigh, (o) => Math.abs(o.lowMidi - s.lowMidi)).slice(0, allLow.length ? 4 : 8);
+  return { allLow, allHigh, lowMates, highMates };
+}
+
 /** Catalog songs (not this artist's own) that sit inside the reported span as written, widest first. */
 export function songsInRange(s: Singer, limit = 5, songs: readonly PopSong[] = POP_SONGS): PopSong[] {
   return otherArtistSongs(s, songs)
@@ -294,12 +323,11 @@ export function similarRangeAnswer(s: Singer): string {
  * the page, so the inbound-link guard measures what is rendered.
  */
 export function linkedSingerSlugs(s: Singer): string[] {
-  const allLow = sharesLow(s);
-  const allHigh = sharesHigh(s);
+  const { lowMates, highMates } = endpointMates(s);
   return [
     ...relatedSingers(s),
-    ...allLow.slice(0, allHigh.length ? 4 : 8),
-    ...allHigh.slice(0, allLow.length ? 4 : 8),
+    ...lowMates,
+    ...highMates,
     ...keyboardNeighbors(s),
   ].map((o) => o.slug);
 }

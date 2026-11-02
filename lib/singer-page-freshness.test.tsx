@@ -40,18 +40,20 @@ async function pageFingerprint(slug: string): Promise<string> {
  * re-pin the fingerprint and date together.
  */
 const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
+  // 2026-11-02: shared-floor and shared-ceiling chips list the closest voices (not the first names
+  // alphabetically) and skip ones already linked as similar-voice cards or keyboard neighbors.
   // 2026-10-30: vocal range on the piano, comparison with the voice type and the textbook bands,
   // shared semitones on the similar-voice cards, keyboard neighbors, songs that fit, similar-range FAQ.
   // 2026-10-29: similar-voice heading says what picks the cards, other artists' recordings credited;
   // round 18: similar voices picked by nearest endpoints, the span histogram captioned;
   // round 20: similar voices ranked by range distance first, the label only breaking ties;
   // round 21: the similar-range FAQ states that rule, the songs card names the range pages and counts what it lists, and the closing line names what the comparison chart draws.
-  "olivia-rodrigo": { fingerprint: "cb1f9552b99fba21", lastModified: "2026-11-02" },
-  "reba-mcentire": { fingerprint: "e641bc5d739f273e", lastModified: "2026-11-02" },
-  "alex-warren": { fingerprint: "d5a8b2fe0ae772c3", lastModified: "2026-11-02" },
-  "sam-smith": { fingerprint: "4e82dff974e79e27", lastModified: "2026-11-02" },
-  "arijit-singh": { fingerprint: "94108542985d9439", lastModified: "2026-11-02" },
-  adele: { fingerprint: "982f94b31718ddf6", lastModified: "2026-11-02" },
+  "olivia-rodrigo": { fingerprint: "08d96827d747012b", lastModified: "2026-11-02" },
+  "reba-mcentire": { fingerprint: "bd1538c93b6ec313", lastModified: "2026-11-02" },
+  "alex-warren": { fingerprint: "c1d3fa3685405ca9", lastModified: "2026-11-02" },
+  "sam-smith": { fingerprint: "23cc45ae1161f0e1", lastModified: "2026-11-02" },
+  "arijit-singh": { fingerprint: "949ae38099898f1a", lastModified: "2026-11-02" },
+  adele: { fingerprint: "30fd89dfee0b20b3", lastModified: "2026-11-02" },
 };
 
 describe("reviewed singer page freshness", () => {
