@@ -2190,8 +2190,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Agitata da due venti",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rapid-fire coloratura driven by audible diaphragm pulses; small, tightly focused mezzo core.",
-    "technique": "Every note in a run is re-articulated by a small pulse from the body, and you can hear it: the coloratura sounds beaded rather than smeared. The core tone is compact and tightly focused instead of large, onsets are crisp, vibrato quick. Students go wrong in two directions, either slurring the runs into one smooth stream or producing the pulses with the throat rather than the breath."
+    "blurb": "Rapid-fire coloratura with every note audibly re-articulated; small, tightly focused mezzo core.",
+    "technique": "Every note in a run is re-articulated by a small pulse in the breath, and you can hear it: the coloratura sounds beaded rather than smeared. The core tone is compact and tightly focused instead of large, onsets are crisp, vibrato quick. Students go wrong in two directions, either slurring the runs into one smooth stream or producing the pulses with the throat rather than the breath."
   },
   {
     "slug": "ceelo-green",
@@ -3287,7 +3287,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "An Evening I Will Not Forget",
     "highSource": "Kiss Me",
     "blurb": "Gravelly low baritone that erupts into compressed chest belts and high keening falsetto.",
-    "technique": "Gravel rides on top of a genuinely low-set baritone: Dermot speaks-sings near the bottom of the staff, then drives choruses with a compressed chest belt around A4 that distorts at the edges by design. Above that he flips into a keening falsetto that contrasts sharply with the growl. Imitators usually manufacture rasp with throat squeeze; his grit comes from airflow against firm folds, and the pitch center never wavers underneath the texture."
+    "technique": "Gravel rides on top of a genuinely low-set baritone: Dermot speaks-sings near the bottom of the staff, then drives choruses with a compressed chest belt around A4 that distorts at the edges by design. Above that he flips into a keening falsetto that contrasts sharply with the growl. Imitators usually manufacture rasp with throat squeeze; his grit rides on steady airflow over a clean tone, and the pitch center never wavers underneath the texture."
   },
   {
     "slug": "devin-townsend",
@@ -5995,7 +5995,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Mad Love.",
     "highSource": null,
     "blurb": "Dark, weighty mezzo with gritty low notes, muscular R&B runs, and a belt that punches to G5 without thinning.",
-    "technique": "Chest-dominant and thick through the middle, this voice carries real weight up to G5 by widening the pharynx rather than pushing volume. JoJo's runs are metronomic (each note articulated from the diaphragm, not slurred), and her low A2 speaks with honest cord contact instead of fry. She flips cleanly into head voice for color, reserving whistle squeaks as ornament. Imitators usually muscle the larynx up; she keeps it neutral and lets resonance do the lifting."
+    "technique": "Chest-dominant and thick through the middle, this voice carries real weight up to G5 by widening the pharynx rather than pushing volume. JoJo's runs are metronomic (each note articulated separately, not slurred), and her low A2 speaks with honest cord contact instead of fry. She flips cleanly into head voice for color, reserving whistle squeaks as ornament. Imitators usually muscle the larynx up; she keeps it neutral and lets resonance do the lifting."
   },
   {
     "slug": "jon-anderson",
@@ -6075,7 +6075,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Dead Bodies Everywhere",
     "highSource": "Dead Bodies Everywhere",
     "blurb": "Shape-shifting nu-metal voice: breathy croons, scatted syllables, growls and anguished high wails from one throat.",
-    "technique": "Registration whiplash defines this instrument: breathy, low-larynx croons drop into pitched fry at the bottom, flip into throat-wide growls, then leap to keening cries around C5. His scat passages are percussive nonsense syllables driven by diaphragm pulses, closer to beatboxing than melody. Distortion comes from false-fold rattle layered over real pitch, so even the barks track the key. Phrasing lurches deliberately between whisper and wail with almost no vibrato. Students copying the growls usually grind their true folds; the aggression must sit above the tone, never inside it."
+    "technique": "Registration whiplash defines this instrument: breathy, low-larynx croons drop into pitched fry at the bottom, flip into throat-wide growls, then leap to keening cries around C5. His scat passages are percussive nonsense syllables driven by short breath pulses, closer to beatboxing than melody. Distortion comes from false-fold rattle layered over real pitch, so even the barks track the key. Phrasing lurches deliberately between whisper and wail with almost no vibrato. Students copying the growls usually grind their true folds; the aggression must sit above the tone, never inside it."
   },
   {
     "slug": "jonathan-groff",
@@ -6114,7 +6114,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Hug Me",
     "highSource": null,
     "blurb": "Full-throated K-pop belter: steel-cored mix that holds fifth-octave notes in full voice mid-choreography.",
-    "technique": "Built around a thick, pressurized mix, this tenor belts where most voices flip: sustained A5 phrases arrive in full voice with a fast, tight vibrato and no audible register seam. Onsets are clean and glottal-light even at maximum volume, and he holds pitch while moving hard through choreography-level breath demands. Copying the belt without his low-breath anchoring produces strain fast; the power comes from compression at the body, not squeeze at the throat."
+    "technique": "Built around a thick, pressurized mix, this tenor belts where most voices flip: sustained A5 phrases arrive in full voice with a fast, tight vibrato and no audible register seam. Onsets are clean and glottal-light even at maximum volume, and he holds pitch while moving hard through choreography-level breath demands. Copying the belt without his low-breath anchoring produces strain fast; the power comes from steady breath pressure and resonance, not squeeze at the throat."
   },
   {
     "slug": "jonghyun",
@@ -6279,7 +6279,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Smoky, grainy soul mezzo: cool and husky down low, gutsy and warm in the belt.",
-    "technique": "Grit is the organizing principle: Stone adds rasp by compressing at the cords, then releases into clean warmth mid-phrase for contrast. Her low range near C3 keeps a cool, smoky cover, while belts toward G5 open into a wide, gospel-shaped vowel with fast vibrato arriving late. Runs are loose and behind the beat, more sung speech than drill. Copying her rasp with throat squeeze causes fatigue; the distortion rides on steady airflow and a released jaw."
+    "technique": "Grit is the organizing principle: Stone layers rasp onto the front of phrases, then releases into clean warmth mid-phrase for contrast. Her low range near C3 keeps a cool, smoky cover, while belts toward G5 open into a wide, gospel-shaped vowel with fast vibrato arriving late. Runs are loose and behind the beat, more sung speech than drill. Copying her rasp with throat squeeze causes fatigue; the distortion rides on steady airflow and a released jaw."
   },
   {
     "slug": "juan-diego-florez",
@@ -6299,7 +6299,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Bel canto's high-C machine: a light, agile leggero tenor that fires nine full-voice C5s in one aria, every night, no falsetto.",
-    "technique": "Leggero lightness makes the altitude possible: the instrument is deliberately lean, brilliant and forward, never carrying more weight up the scale than the top can support, which is how nine full-voice high Cs in a single aria stay repeatable across a career. Coloratura runs are articulated from the diaphragm, each note struck, not smeared. The lesson for any voice is proportion: match the weight you carry upward to what your lightest top note can hold. Heavier is not better; sustainable is better."
+    "technique": "Leggero lightness makes the altitude possible: the instrument is deliberately lean, brilliant and forward, never carrying more weight up the scale than the top can support, which is how nine full-voice high Cs in a single aria stay repeatable across a career. Coloratura runs are articulated note by note, each one struck, not smeared. The lesson for any voice is proportion: match the weight you carry upward to what your lightest top note can hold. Heavier is not better; sustainable is better."
   },
   {
     "slug": "juan-gabriel",
@@ -8862,7 +8862,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Dark, weighty chest voice with a husky edge, driving church-bred runs straight through the beat.",
-    "technique": "Monica anchors phrases in a dense chest voice that keeps its rasp and weight down where speech lives. Her onset is firm, almost spoken, and she drives melisma from the diaphragm so each note of a run lands separately. The mix carries chest color surprisingly high before flipping late into head voice. Students copying her tend to imitate the grit by squeezing the throat; the darkness comes from low placement and relaxed pharyngeal space, not pressure."
+    "technique": "Monica anchors phrases in a dense chest voice that keeps its rasp and weight down where speech lives. Her onset is firm, almost spoken, and she articulates melisma so each note of a run lands separately. The mix carries chest color surprisingly high before flipping late into head voice. Students copying her tend to imitate the grit by squeezing the throat; the darkness comes from low placement and relaxed pharyngeal space, not pressure."
   },
   {
     "slug": "montserrat-caballe",
@@ -9738,7 +9738,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Cinnamon Girl",
     "highSource": "Xero Tolerance",
     "blurb": "Cavernous bass-baritone rumble: a gothic crooner's drawl that sinks to subterranean lows.",
-    "technique": "Depth here is architecture, not effect: a true low voice resonating in an unusually long vocal tract, sung with lazy, legato onsets and a crooner's micro-vibrato. He parks the larynx low and lets subglottal space do the amplifying, down to F1 at the extreme. Full voice tops out around G#4 before deliberate distortion takes over for dramatic peaks. Phrasing drags languidly behind the beat, vowels stretched wide. Students chase the lows by pressing down; the notes only speak when the throat stays open, the volume modest, and the air slow."
+    "technique": "Depth here is architecture, not effect: a true low voice resonating in an unusually long vocal tract, sung with lazy, legato onsets and a crooner's micro-vibrato. He parks the larynx low and lets that long, open tract do the amplifying, down to F1 at the extreme. Full voice tops out around G#4 before deliberate distortion takes over for dramatic peaks. Phrasing drags languidly behind the beat, vowels stretched wide. Students chase the lows by pressing down; the notes only speak when the throat stays open, the volume modest, and the air slow."
   },
   {
     "slug": "peter-tosh",
@@ -12738,7 +12738,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "I'm in Love",
     "highSource": "Mustang Sally",
     "blurb": "Brass-lunged soul shouter: punched phrases, wide vowels, genuinely pitched screams.",
-    "technique": "Full-throttle Southern soul shouting: a brassy tenor driven by huge breath pressure, short punched phrases, and screams that stay genuinely pitched at the top of the range. Vowels are wide, consonants explosive, vibrato almost absent, so intensity substitutes for ornament. He rides one dynamic, loud, with strategic drops for contrast. Students copying him tear at the top; his screams are supported yells with the pharynx open, launched off the diaphragm in short bursts, never sustained past what the air can carry."
+    "technique": "Full-throttle Southern soul shouting: a brassy tenor driven by huge breath pressure, short punched phrases, and screams that stay genuinely pitched at the top of the range. Vowels are wide, consonants explosive, vibrato almost absent, so intensity substitutes for ornament. He rides one dynamic, loud, with strategic drops for contrast. Students copying him tear at the top; his screams are supported yells with the pharynx open, launched on steady breath in short bursts, never sustained past what the air can carry."
   },
   {
     "slug": "wizkid",

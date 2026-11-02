@@ -404,7 +404,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Pop",
     "summary": "The current generation of pop leads (whisper-pop, fry onsets, whistle flexes, conversational belts) and how the microphone rewrote what counts as power.",
     "free": false,
-    "words": 4949,
+    "words": 4947,
     "body": "The defining fact of modern pop singing is that the microphone finally won. Once every listener is six inches from the singer's mouth, intimacy scales better than volume, and this chapter documents the consequences: fry onsets as rhythm, whisper-verses as default, breathiness as an instrument rather than a flaw, and belts that arrive as *events* inside otherwise conversational performances. The whisper-pop generation — the entries here built on air and closeness — is not a decline from the founders' power; it is a different instrument optimized for a different playback device.\n\nThat said, the power never left. This chapter also holds the era's technicians — the whistle-register carriers, the gospel-schooled run machines, the theatre-trained belters moonlighting in pop — and their entries read like the founders' chapter with faster ornaments. The range extremes in this chapter are among the widest in the book, precisely because modern production loves a documented flex: the one whistle note, the one fry low, captured and cited forever.\n\nRead these entries with the full-voice ceiling in view. Modern pop's most common imitation injury is copying a conversational singer's *loud moments* without noticing that ninety percent of the performance happens at speech volume — or copying a whistle flex that even its owner visits once per album. The habitat is quiet; the peaks are punctuation. Borrow the verse technique first — onset control, breath-on-tone, diction that carries pitch — and treat every big note in this chapter as the founders treated theirs: rationed, placed, and paid for.",
     "entries": [
       {
@@ -506,7 +506,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Mad Love.",
         "highSource": null,
         "blurb": "Dark, weighty mezzo with gritty low notes, muscular R&B runs, and a belt that punches to G5 without thinning.",
-        "technique": "Chest-dominant and thick through the middle, this voice carries real weight up to G5 by widening the pharynx rather than pushing volume. JoJo's runs are metronomic (each note articulated from the diaphragm, not slurred), and her low A2 speaks with honest cord contact instead of fry. She flips cleanly into head voice for color, reserving whistle squeaks as ornament. Imitators usually muscle the larynx up; she keeps it neutral and lets resonance do the lifting.",
+        "technique": "Chest-dominant and thick through the middle, this voice carries real weight up to G5 by widening the pharynx rather than pushing volume. JoJo's runs are metronomic (each note articulated separately, not slurred), and her low A2 speaks with honest cord contact instead of fry. She flips cleanly into head voice for color, reserving whistle squeaks as ornament. Imitators usually muscle the larynx up; she keeps it neutral and lets resonance do the lifting.",
         "span": "4 octaves + 1"
       },
       {
@@ -3847,7 +3847,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Rock, metal and alternative",
     "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
     "free": false,
-    "words": 3155,
+    "words": 3158,
     "body": "Metal is where rock's altitude arms race went professional. The air-raid sirens in this chapter sustain pitches, night after night, that classic rock visited on special occasions — and the entries make clear how: this is trained singing, head voice and reinforced mix developed with an athlete's discipline, far closer to operatic production than the leather suggests. The genre even reimported opera directly, in the symphonic wing's classically schooled sopranos, making this the one chapter where conservatory technique and blast beats share a stage.\n\nThe other pole is the low theatre: growls, screams and bass-baritone menace. The sustainable versions documented here are false-cord techniques — noise generated above the folds while the instrument underneath stays healthy — and the entries treat them as the skilled work they are. Between the poles sit the shape-shifters who cover the whole map in one set, clean to brutal and back, which may be the most complete technical package in modern singing.\n\nTwo things to take from this chapter even if you never sing a note of metal. First, vowel discipline: extreme range at extreme volume forces narrow, consistent vowels, and every entry's altitude depends on them. Second, the scheduling: metal singers tour harder than almost anyone, and the durable ones ration their extremes with actuarial precision — the highest scream and the lowest growl appear where the set needs them, not wherever enthusiasm strikes. That is the safety chapter's whole argument, demonstrated at the sport's highest level.",
     "entries": [
       {
@@ -4051,7 +4051,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Cinnamon Girl",
         "highSource": "Xero Tolerance",
         "blurb": "Cavernous bass-baritone rumble: a gothic crooner's drawl that sinks to subterranean lows.",
-        "technique": "Depth here is architecture, not effect: a true low voice resonating in an unusually long vocal tract, sung with lazy, legato onsets and a crooner's micro-vibrato. He parks the larynx low and lets subglottal space do the amplifying, down to F1 at the extreme. Full voice tops out around G#4 before deliberate distortion takes over for dramatic peaks. Phrasing drags languidly behind the beat, vowels stretched wide. Students chase the lows by pressing down; the notes only speak when the throat stays open, the volume modest, and the air slow.",
+        "technique": "Depth here is architecture, not effect: a true low voice resonating in an unusually long vocal tract, sung with lazy, legato onsets and a crooner's micro-vibrato. He parks the larynx low and lets that long, open tract do the amplifying, down to F1 at the extreme. Full voice tops out around G#4 before deliberate distortion takes over for dramatic peaks. Phrasing drags languidly behind the beat, vowels stretched wide. Students chase the lows by pressing down; the notes only speak when the throat stays open, the volume modest, and the air slow.",
         "span": "4 octaves + 2"
       },
       {
@@ -4102,7 +4102,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Dead Bodies Everywhere",
         "highSource": "Dead Bodies Everywhere",
         "blurb": "Shape-shifting nu-metal voice: breathy croons, scatted syllables, growls and anguished high wails from one throat.",
-        "technique": "Registration whiplash defines this instrument: breathy, low-larynx croons drop into pitched fry at the bottom, flip into throat-wide growls, then leap to keening cries around C5. His scat passages are percussive nonsense syllables driven by diaphragm pulses, closer to beatboxing than melody. Distortion comes from false-fold rattle layered over real pitch, so even the barks track the key. Phrasing lurches deliberately between whisper and wail with almost no vibrato. Students copying the growls usually grind their true folds; the aggression must sit above the tone, never inside it.",
+        "technique": "Registration whiplash defines this instrument: breathy, low-larynx croons drop into pitched fry at the bottom, flip into throat-wide growls, then leap to keening cries around C5. His scat passages are percussive nonsense syllables driven by short breath pulses, closer to beatboxing than melody. Distortion comes from false-fold rattle layered over real pitch, so even the barks track the key. Phrasing lurches deliberately between whisper and wail with almost no vibrato. Students copying the growls usually grind their true folds; the aggression must sit above the tone, never inside it.",
         "span": "3 octaves + 9"
       },
       {
@@ -4590,7 +4590,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "I'm in Love",
         "highSource": "Mustang Sally",
         "blurb": "Brass-lunged soul shouter: punched phrases, wide vowels, genuinely pitched screams.",
-        "technique": "Full-throttle Southern soul shouting: a brassy tenor driven by huge breath pressure, short punched phrases, and screams that stay genuinely pitched at the top of the range. Vowels are wide, consonants explosive, vibrato almost absent, so intensity substitutes for ornament. He rides one dynamic, loud, with strategic drops for contrast. Students copying him tear at the top; his screams are supported yells with the pharynx open, launched off the diaphragm in short bursts, never sustained past what the air can carry.",
+        "technique": "Full-throttle Southern soul shouting: a brassy tenor driven by huge breath pressure, short punched phrases, and screams that stay genuinely pitched at the top of the range. Vowels are wide, consonants explosive, vibrato almost absent, so intensity substitutes for ornament. He rides one dynamic, loud, with strategic drops for contrast. Students copying him tear at the top; his screams are supported yells with the pharynx open, launched on steady breath in short bursts, never sustained past what the air can carry.",
         "span": "3 octaves + 6"
       },
       {
@@ -4976,7 +4976,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The women who set the bar for vocal authority, from torch and church to quiet storm, and the complete techniques their entries document.",
     "free": false,
-    "words": 2580,
+    "words": 2577,
     "body": "If you could keep only one chapter of this atlas as a singing syllabus, keep this one. The women here hold, between them, every tool the book's vocabulary chapter defines: church-fired belts and runs, jazz-schooled bends and behind-the-beat cool, whisper-close quiet storm, rasp deployed as punctuation, and dynamic control that moves from confession to command inside a bar. The entries read like a curriculum because the tradition *was* one — each generation studied the last in church basements and on record, and the lineage is audible entry to entry.\n\nNotice two structural facts as you read. First, the tessituras here sit lower than pop's: mezzo territory, speech-adjacent, which is why this chapter's technique transfers so well to average voices — the wonders are being worked in range you probably own. The stratospheric moments exist, and the cited extremes record them, but the authority lives in the middle, in tone and timing. Second, the ornament density is deceptive. The technique paragraphs keep measuring how *few* notes the greatest runs contain and how precisely they land; melisma in this tradition is architecture, resolved like harmony, not decoration sprayed over it.\n\nBorrow in the order the entries suggest: tone first (weight, placement, the cry), timing second, runs last and slowed to quarter notes until exact. This chapter punishes approximation more than any other in the book, because every listener alive has its standards in their ears.",
     "entries": [
       {
@@ -5180,7 +5180,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Dark, weighty chest voice with a husky edge, driving church-bred runs straight through the beat.",
-        "technique": "Monica anchors phrases in a dense chest voice that keeps its rasp and weight down where speech lives. Her onset is firm, almost spoken, and she drives melisma from the diaphragm so each note of a run lands separately. The mix carries chest color surprisingly high before flipping late into head voice. Students copying her tend to imitate the grit by squeezing the throat; the darkness comes from low placement and relaxed pharyngeal space, not pressure.",
+        "technique": "Monica anchors phrases in a dense chest voice that keeps its rasp and weight down where speech lives. Her onset is firm, almost spoken, and she articulates melisma so each note of a run lands separately. The mix carries chest color surprisingly high before flipping late into head voice. Students copying her tend to imitate the grit by squeezing the throat; the darkness comes from low placement and relaxed pharyngeal space, not pressure.",
         "span": "3 octaves"
       },
       {
@@ -5316,7 +5316,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Smoky, grainy soul mezzo: cool and husky down low, gutsy and warm in the belt.",
-        "technique": "Grit is the organizing principle: Stone adds rasp by compressing at the cords, then releases into clean warmth mid-phrase for contrast. Her low range near C3 keeps a cool, smoky cover, while belts toward G5 open into a wide, gospel-shaped vowel with fast vibrato arriving late. Runs are loose and behind the beat, more sung speech than drill. Copying her rasp with throat squeeze causes fatigue; the distortion rides on steady airflow and a released jaw.",
+        "technique": "Grit is the organizing principle: Stone layers rasp onto the front of phrases, then releases into clean warmth mid-phrase for contrast. Her low range near C3 keeps a cool, smoky cover, while belts toward G5 open into a wide, gospel-shaped vowel with fast vibrato arriving late. Runs are loose and behind the beat, more sung speech than drill. Copying her rasp with throat squeeze causes fatigue; the distortion rides on steady airflow and a released jaw.",
         "span": "2 octaves + 7"
       },
       {
@@ -7472,7 +7472,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Country, folk and jazz",
     "summary": "The confiders: voices built to serve words, from coffeehouse sopranos to gravel philosophers, and how modest instruments built long careers here.",
     "free": false,
-    "words": 3099,
+    "words": 3101,
     "body": "This chapter houses the atlas's most persuasive argument that a voice is a delivery system before it is an instrument. The songwriters here include some of the narrowest cited ranges in the book alongside some of the most idiosyncratic timbres — reedy, cracked, nasal, whispered, weathered — and nearly every one of them built a longer, deeper catalog than singers with twice the span. The entries explain how: when the contract is *believe me* rather than *behold me*, intimacy, diction and timing do the work that range does elsewhere, and eccentricity of tone stops being a flaw and becomes a signature.\n\nTechnically the chapter rewards close reading. The fingerpicked generations developed conversational rubato — phrases stretched against steady guitar — that is among the subtlest timing work in the book. The head-voice sopranos of the tradition float text on almost no weight, an economy worth studying by every voice that oversings. And the low end of the chapter, the gravel philosophers, demonstrates how far pure grain and placement can carry melody-adjacent speech.\n\nThe borrowing advice is almost suspiciously cheap: this is the one chapter whose core techniques — quiet, clarity, honest timing — can be practiced by any voice on day one without risk. The hard part is tolerance for exposure. No production, no band, no volume to hide in; the loop-recording drill from the method chapter is merciless here, which is exactly why a month of folk repertoire audits your fundamentals better than any exercise book.",
     "entries": [
       {
@@ -7948,7 +7948,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "An Evening I Will Not Forget",
         "highSource": "Kiss Me",
         "blurb": "Gravelly low baritone that erupts into compressed chest belts and high keening falsetto.",
-        "technique": "Gravel rides on top of a genuinely low-set baritone: Dermot speaks-sings near the bottom of the staff, then drives choruses with a compressed chest belt around A4 that distorts at the edges by design. Above that he flips into a keening falsetto that contrasts sharply with the growl. Imitators usually manufacture rasp with throat squeeze; his grit comes from airflow against firm folds, and the pitch center never wavers underneath the texture.",
+        "technique": "Gravel rides on top of a genuinely low-set baritone: Dermot speaks-sings near the bottom of the staff, then drives choruses with a compressed chest belt around A4 that distorts at the edges by design. Above that he flips into a keening falsetto that contrasts sharply with the growl. Imitators usually manufacture rasp with throat squeeze; his grit rides on steady airflow over a clean tone, and the pitch center never wavers underneath the texture.",
         "span": "3 octaves + 8"
       },
       {
@@ -8770,8 +8770,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Agitata da due venti",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Rapid-fire coloratura driven by audible diaphragm pulses; small, tightly focused mezzo core.",
-        "technique": "Every note in a run is re-articulated by a small pulse from the body, and you can hear it: the coloratura sounds beaded rather than smeared. The core tone is compact and tightly focused instead of large, onsets are crisp, vibrato quick. Students go wrong in two directions, either slurring the runs into one smooth stream or producing the pulses with the throat rather than the breath.",
+        "blurb": "Rapid-fire coloratura with every note audibly re-articulated; small, tightly focused mezzo core.",
+        "technique": "Every note in a run is re-articulated by a small pulse in the breath, and you can hear it: the coloratura sounds beaded rather than smeared. The core tone is compact and tightly focused instead of large, onsets are crisp, vibrato quick. Students go wrong in two directions, either slurring the runs into one smooth stream or producing the pulses with the throat rather than the breath.",
         "span": "2 octaves + 9"
       },
       {
@@ -8890,7 +8890,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Bel canto's high-C machine: a light, agile leggero tenor that fires nine full-voice C5s in one aria, every night, no falsetto.",
-        "technique": "Leggero lightness makes the altitude possible: the instrument is deliberately lean, brilliant and forward, never carrying more weight up the scale than the top can support, which is how nine full-voice high Cs in a single aria stay repeatable across a career. Coloratura runs are articulated from the diaphragm, each note struck, not smeared. The lesson for any voice is proportion: match the weight you carry upward to what your lightest top note can hold. Heavier is not better; sustainable is better.",
+        "technique": "Leggero lightness makes the altitude possible: the instrument is deliberately lean, brilliant and forward, never carrying more weight up the scale than the top can support, which is how nine full-voice high Cs in a single aria stay repeatable across a career. Coloratura runs are articulated note by note, each one struck, not smeared. The lesson for any voice is proportion: match the weight you carry upward to what your lightest top note can hold. Heavier is not better; sustainable is better.",
         "span": "2 octaves + 4"
       },
       {
@@ -10014,8 +10014,8 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The world's voices",
     "summary": "Precision singing at industrial standards: the idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers.",
     "free": false,
-    "words": 4354,
-    "body": "The center of this chapter is the idol system's product: singers trained from adolescence to dance at full output while delivering studio-grade vocals, auditioned annually against thousands, and drilled in ensemble discipline — hitting your line in a seven-way harmony after sprint choreography is a skill no Western tradition certifies. The main-vocal entries here describe the results: immaculate pitch under cardio load, mixed belts engineered for nightly repetition, and an agility standard set by survival shows where a shaky run ends a career. Alongside them, the ballad specialists of the Korean tradition sustain climactic belts that draw directly on trot and gospel lineages.\n\nJapan's wing runs on different physics: a domestic industry so large it never needed export, producing genre-fluent stylists — city-pop sophistication, vocaloid-influenced precision at inhuman syllable rates, singer-songwriters swinging between woody lows and weightless falsetto. The chapter's remaining seats belong to the global outliers: playback legends whose ornament systems predate and outclass most Western melisma, and the multi-octave phenomena who tour the world on pure vocal spectacle.\n\nWhat this chapter teaches best is *standards*: these industries quantify vocal skill — pitch under motion, harmony accuracy, consistency across two hundred shows — more explicitly than anywhere else in the book. The borrowable practice is theirs: drill songs while moving, record everything, and treat consistency as the metric, because a voice that performs at its average is worth more than one that performs at its best.",
+    "words": 4366,
+    "body": "The center of this chapter is the idol system's product: singers trained from adolescence to dance at full output while delivering studio-grade vocals, auditioned annually against thousands, and drilled in ensemble discipline — hitting your line in a seven-way harmony after sprint choreography is a skill no Western tradition certifies. The main-vocal entries here describe the results: immaculate pitch under cardio load, mixed belts engineered for nightly repetition, and an agility standard set by survival shows where a shaky run ends a career. Alongside them, the ballad specialists of the Korean tradition sustain climactic belts that draw directly on trot and gospel lineages.\n\nJapan's wing runs on different physics: a domestic industry so large it never needed export, producing genre-fluent stylists — city-pop sophistication, vocaloid-influenced precision at inhuman syllable rates, singer-songwriters swinging between woody lows and weightless falsetto. The chapter's remaining seats belong to the wider world: the Mandarin and Cantonese stars, Europe's chanson, ballad and pop voices, playback legends whose ornament systems predate and outclass most Western melisma, and the multi-octave phenomena who tour the world on pure vocal spectacle.\n\nWhat this chapter teaches best is *standards*: these industries quantify vocal skill — pitch under motion, harmony accuracy, consistency across two hundred shows — more explicitly than anywhere else in the book. The borrowable practice is theirs: drill songs while moving, record everything, and treat consistency as the metric, because a voice that performs at its average is worth more than one that performs at its best.",
     "entries": [
       {
         "slug": "edith-piaf",
@@ -10728,7 +10728,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Hug Me",
         "highSource": null,
         "blurb": "Full-throated K-pop belter: steel-cored mix that holds fifth-octave notes in full voice mid-choreography.",
-        "technique": "Built around a thick, pressurized mix, this tenor belts where most voices flip: sustained A5 phrases arrive in full voice with a fast, tight vibrato and no audible register seam. Onsets are clean and glottal-light even at maximum volume, and he holds pitch while moving hard through choreography-level breath demands. Copying the belt without his low-breath anchoring produces strain fast; the power comes from compression at the body, not squeeze at the throat.",
+        "technique": "Built around a thick, pressurized mix, this tenor belts where most voices flip: sustained A5 phrases arrive in full voice with a fast, tight vibrato and no audible register seam. Onsets are clean and glottal-light even at maximum volume, and he holds pitch while moving hard through choreography-level breath demands. Copying the belt without his low-breath anchoring produces strain fast; the power comes from steady breath pressure and resonance, not squeeze at the throat.",
         "span": "3 octaves + 5"
       },
       {
@@ -11384,7 +11384,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Pop",
     "summary": "The current generation of pop leads (whisper-pop, fry onsets, whistle flexes, conversational belts) and how the microphone rewrote what counts as power.",
     "free": false,
-    "words": 4949,
+    "words": 4947,
     "singers": [
       {
         "slug": "beyonce",
@@ -12832,7 +12832,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Rock, metal and alternative",
     "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
     "free": false,
-    "words": 3155,
+    "words": 3158,
     "singers": [
       {
         "slug": "ozzy-osbourne",
@@ -13309,7 +13309,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The women who set the bar for vocal authority, from torch and church to quiet storm, and the complete techniques their entries document.",
     "free": false,
-    "words": 2580,
+    "words": 2577,
     "singers": [
       {
         "slug": "etta-james",
@@ -14361,7 +14361,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Country, folk and jazz",
     "summary": "The confiders: voices built to serve words, from coffeehouse sopranos to gravel philosophers, and how modest instruments built long careers here.",
     "free": false,
-    "words": 3099,
+    "words": 3101,
     "singers": [
       {
         "slug": "joan-baez",
@@ -15438,7 +15438,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The world's voices",
     "summary": "Precision singing at industrial standards: the idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers.",
     "free": false,
-    "words": 4354,
+    "words": 4366,
     "singers": [
       {
         "slug": "edith-piaf",
@@ -15949,4 +15949,4 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
     [],
   );
 
-export const ATLAS_WORDS = 70715;
+export const ATLAS_WORDS = 70727;
