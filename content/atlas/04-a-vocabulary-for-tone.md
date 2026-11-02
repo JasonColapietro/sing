@@ -33,7 +33,7 @@ The controlled noise family, from a light sizzle on the tone (Myles Smith, Ander
 
 ## Twang and nasality
 
-Twang is a narrowing above the folds that adds a bright, brassy, penetrating edge — country's calling card (Morgan Wallen's curl, Dolly Parton), but also the secret cutting agent in most big pop belts. True nasality is air actually escaping through the nose; twang often gets mislabeled as nasal because both are bright. Test: pinch your nose shut mid-note. If the tone barely changes, it was twang; if it chokes, it was nasal. Both are legitimate colors — Peso Pluma builds a whole style on the pinched version — but you want to *choose* them, not default to them.
+Twang is a narrowing above the folds that adds a bright, brassy, penetrating edge — country's calling card (Morgan Wallen's curl, Dolly Parton), but also the secret cutting agent in most big pop belts. True nasality is sound passing through the nose because the soft palate has lowered and opened the nasal passage; twang often gets mislabeled as nasal because both are bright. Test: pinch your nose shut mid-note. If the tone barely changes, it was twang; if it chokes, it was nasal. Both are legitimate colors — Peso Pluma builds a whole style on the pinched version — but you want to *choose* them, not default to them.
 
 ## Cry
 

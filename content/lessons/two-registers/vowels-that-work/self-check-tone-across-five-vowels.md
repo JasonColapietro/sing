@@ -66,7 +66,7 @@ I sang the same pitch pattern on each of the five vowels without spreading, swal
 - Each vowel remains intelligible while the phrase keeps a related tone and pitch center.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: On playback, the same phrase on all five vowels keeps one pitch and a related tone, with every vowel still recognizable and none of them pinched, spread or pushed louder than the rest.
+Ready when: On playback, the same phrase on all five vowels keeps the same pitches on every vowel and a related tone, with every vowel still recognizable and none of them pinched, spread or pushed louder than the rest.
 
 If not ready: If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
