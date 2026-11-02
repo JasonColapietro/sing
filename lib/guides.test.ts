@@ -248,6 +248,21 @@ describe("product claims", () => {
     expect(a).toMatch(/in the recorder or in song practice/);
   });
 
+  /**
+   * A listening ear game, a studio session or any room the mic never heard
+   * logs nothing (components/practice/silent-session.ts). A guide that says
+   * every finished game is logged contradicts the room it sits under.
+   */
+  it("does not promise every finished game is logged", () => {
+    expect(all).not.toMatch(/each finished game goes into your practice log/i);
+    expect(guides.EAR_GUIDE.body.join(" ")).toMatch(/once the mic has heard you sing/);
+  });
+
+  /** /progress shows no recorder takes, only recording time. */
+  it("does not say /progress shows recorder takes", () => {
+    expect(all).not.toMatch(/takes next to your scores/i);
+  });
+
   it("does not urge a range retest within a few sessions", () => {
     expect(all).not.toMatch(/Retest after several practice sessions/);
     expect(guides.RANGE_GUIDE.beginner.points.join(" ")).toMatch(/few weeks/);
@@ -514,5 +529,23 @@ describe("voice-type reference links", () => {
   it("renders the reference in the /range guide's body, not only the footer", () => {
     const html = renderToStaticMarkup(createElement(ToolGuide, { guide: guides.RANGE_GUIDE }));
     expect(html).toMatch(/<a[^>]*href="\/atlas\/vocal-range-by-voice-type"[^>]*>[\s\S]*?Vocal range by voice type/);
+  });
+});
+
+/**
+ * A guide whose body diagnoses a problem as ear training links the room that
+ * trains it, so the reader can act on the diagnosis.
+ */
+describe("ear-training diagnosis links", () => {
+  const diagnosing = TOOL_GUIDES.filter(
+    (g) => g.path !== "/ear-training" && /\bear training\b/i.test(g.body.join(" ")),
+  );
+
+  it("exist", () => {
+    expect(diagnosing.map((g) => g.path)).toContain("/studio");
+  });
+
+  it.each(diagnosing.map((g) => [g.path, g] as const))("%s links /ear-training", (_, g) => {
+    expect(g.related.map((l) => l.href)).toContain("/ear-training");
   });
 });

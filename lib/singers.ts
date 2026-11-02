@@ -142,6 +142,10 @@ export function singersByGenre(g: string): Singer[] {
  * something else (Prince, Pink, Brandy, V, Rosé), so the short description
  * must describe a person — a singer, musician or actor — or the title gets
  * an override.
+ *
+ * Re-checked 2026-11-02 against all 633 titles: Jeremy Jordan's article moved
+ * to a dated title, David Phelps is a disambiguation page, and Geoff
+ * Castellucci has no article.
  */
 const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string | null> = {
   // Landed on a disambiguation page.
@@ -151,7 +155,8 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string | null> = {
   iu: "IU (singer)",
   "james-blake": "James Blake (musician)",
   "jelly-roll": "Jelly Roll (singer)",
-  "jeremy-jordan": "Jeremy Jordan (actor)",
+  "jeremy-jordan": "Jeremy Jordan (actor, born 1984)",
+  "david-phelps": "David Phelps (musician)",
   "jill-scott": "Jill Scott (singer)",
   laufey: "Laufey (singer)",
   maxwell: "Maxwell (musician)",
@@ -186,6 +191,8 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string | null> = {
   "caleb-followill": null,
   "tatiana-shmayluk": null,
   "josh-kiszka": null,
+  // No article at all (checked 2026-11-02).
+  "geoff-castellucci": null,
   "glenn-hughes": "Glenn Hughes (musician)",
   "michael-mcdonald": "Michael McDonald (musician)",
   monica: "Monica (singer)",
