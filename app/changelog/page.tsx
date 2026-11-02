@@ -180,7 +180,7 @@ const RELEASE_40_STORIES: Story[] = [
   {
     label: "Programs",
     title: "Programs you can pick back up",
-    body: "A routine you resume on a later day starts with a short warm-in of its first exercise. The Measured Voice program can go back a fortnight, and from a finished run you can repeat a single fortnight while your other check-in readings stay. The coach on Progress follows a running program's schedule instead of asking for a range test the plan has not set, and during Recovery week it leaves the range test and the octave siren out.",
+    body: "A routine you resume on a later day starts with a short warm-in: a few reps of its first exercise when that is an easy free one, otherwise a few lip-trill arpeggios. The Measured Voice program can go back a fortnight, and from a finished run you can repeat a single fortnight while your other check-in readings stay. The coach on Progress follows a running program's schedule instead of asking for a range test the plan has not set, and during Recovery week it leaves the range test and the octave siren out.",
     links: [
       { href: "/programs", text: "Choose a program" },
       { href: "/progress", text: "See your progress" },
