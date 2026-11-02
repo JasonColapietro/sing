@@ -124,7 +124,13 @@ export function RoutineRunner({
   const [firstStep] = useState(() => Math.min(Math.max(0, startStep), stepCount - 1));
   // Captured once: a warm-in the saved range cannot hold would only be skipped, so it never warms in.
   const [warmInFirst] = useState(
-    () => warmIn && firstStep > 0 && !tooWideForRange(stepExercise(warmInStep(routine)), range),
+    () =>
+      warmIn &&
+      firstStep > 0 &&
+      // Resuming on the warm-in's own exercise (the Full warmup's lip trills)
+      // is already the gentle start; singing it twice in a row is not.
+      warmInStep(routine).exerciseId !== routine.steps[firstStep].exerciseId &&
+      !tooWideForRange(stepExercise(warmInStep(routine)), range),
   );
   // True while the warm-in is the step on screen; it runs as step 0.
   const [warming, setWarming] = useState(warmInFirst);

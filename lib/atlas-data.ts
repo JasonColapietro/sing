@@ -1283,7 +1283,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Pop",
     "summary": "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it.",
     "free": false,
-    "words": 4411,
+    "words": 4413,
     "body": "Male pop singing has spent seventy years migrating upward. The crooners in this chapter worked at speech pitch and made softness a technology; the soul-influenced generations pushed the tessitura into high tenor territory; and the streaming era's leads live above the staff half the night, in mixes and falsettos their grandfathers' genre would have considered exotic.\n\nTwo practical observations for the reader who sings these songs. First, the modern male pop tessitura is a tenor's habitat, and most men are baritones. That mismatch — not talent — is why the radio feels high, and the transposition rule from the method chapters is the honest fix. The baritones in this chapter who thrived did it by refusing the arms race: they built styles where depth, restraint or rhythm carried the record. Their entries are the most useful ones here for the average male voice, which is exactly why they are less famous than the freaks of altitude around them.\n\nSecond, notice how many of these entries describe falsetto as a *primary* register rather than an escape hatch. The modern pop man trains his falsetto the way the founders trained their belt — as the money register, with its own dedicated hours. If you borrow one thing from this chapter, borrow that practice allocation. The full voice you already speak with; the top floor is built.",
     "entries": [
       {
@@ -1759,7 +1759,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Say You Won't Let Go",
         "highSource": "Naked",
         "blurb": "Raspy, soul-leaning baritone: gritty compressed belts an octave below his floating falsetto hooks.",
-        "technique": "Rasp is the engine of this baritone. James sings with a compressed, cry-tinged mix that peaks around a B4 belt, then vaults a full octave into falsetto for hooks near the top of his range. Runs are R&B-derived, executed with laryngeal flicks rather than diaphragm pulses. His vibrato stays narrow under distortion. The trap for students is copying the grit at low breath energy; without steady airflow the texture collapses into fry and the pitch sags.",
+        "technique": "Rasp is the engine of this baritone. James sings with a compressed, cry-tinged mix that peaks around a B4 belt, then vaults a full octave into falsetto for hooks near the top of his range. Runs are R&B-derived, executed with small laryngeal flicks rather than pulses of breath. His vibrato stays narrow under distortion. The trap for students is copying the grit at low breath energy; without steady airflow the texture collapses into fry and the pitch sags.",
         "span": "2 octaves + 11"
       },
       {
@@ -8924,7 +8924,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Frühlingsstimmen",
         "blurb": "Glittering German coloratura: laser staccati above high C, a warm lyric middle, and theatrical bite in every run.",
-        "technique": "Damrau's coloratura runs on appoggio breath support and a high, forward point of resonance: staccati above the staff are released from the body, not chipped from the throat. Her onset is clean and glottal-light, the vibrato even and quick, and text stays vivid even in fioritura: consonants ride on top of a legato air column. Low phrases near Bb3 stay slender rather than chesty. What students get wrong is treating the top as a separate mechanism; her G#6 is the same narrow, spinning column as her middle, just smaller vowels and firmer support.",
+        "technique": "Damrau's coloratura runs on appoggio breath support and a high, forward point of resonance: staccati above the staff are released on the breath, not chipped from the throat. Her onset is clean and glottal-light, the vibrato even and quick, and text stays vivid even in fioritura: consonants ride on top of a legato air column. Low phrases near Bb3 stay slender rather than chesty. What students get wrong is treating the top as a separate mechanism; her G#6 is the same narrow, spinning column as her middle, just smaller vowels and firmer support.",
         "span": "2 octaves + 10"
       },
       {
@@ -11752,7 +11752,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Pop",
     "summary": "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it.",
     "free": false,
-    "words": 4411,
+    "words": 4413,
     "singers": [
       {
         "slug": "brian-wilson",
@@ -15949,4 +15949,4 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
     [],
   );
 
-export const ATLAS_WORDS = 70727;
+export const ATLAS_WORDS = 70729;

@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 70727,
+      "totalWords": 70729,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -3013,7 +3013,7 @@
           "part": "Pop",
           "summary": "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it.",
           "free": false,
-          "words": 4411,
+          "words": 4413,
           "path": "/atlas/the-pop-men"
         },
         {

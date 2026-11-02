@@ -6682,13 +6682,13 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Ornament vocabulary",
         "body": "All four, placed where you marked them before singing.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
-        "listen": "In the one take, each of the four ornaments sounds different from the others, and the words and melody return to their written notes after each."
+        "listen": "In the one take, each of the four ornaments sounds different from the others, the melody returns to its written notes after each, and the words stay intact."
       },
       {
         "title": "Make one evidence take",
         "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on, then record the phrase once in the [recorder](/recorder) with all four at the places you marked, so you can name each one on playback. Keep scoops, falls, bends, and slides small and intentional.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
-        "listen": "In the one take, each of the four ornaments sounds different from the others, and the words and melody return to their written notes after each."
+        "listen": "In the one take, each of the four ornaments sounds different from the others, the melody returns to its written notes after each, and the words stay intact."
       },
       {
         "title": "Review your own attempt",
@@ -6728,7 +6728,7 @@ export const LESSONS: Lesson[] = [
     "selfCheck": {
       "criteria": [
         "I sang one phrase with a scoop, a fall, a bend and a slide at the places I marked, and named each one on playback.",
-        "In the one take, each of the four ornaments sounds different from the others, and the words and melody return to their written notes after each.",
+        "In the one take, each of the four ornaments sounds different from the others, the melody returns to its written notes after each, and the words stay intact.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take of one phrase, all four ornaments land where you marked them beforehand, you can name each one on playback, and the melody returns to its written notes after each.",

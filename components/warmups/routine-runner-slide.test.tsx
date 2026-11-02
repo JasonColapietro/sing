@@ -131,4 +131,24 @@ describe("a routine opened part-way through on a cold day", () => {
     expect(html).toContain("Warm-in: Lip-trill arpeggio");
     expect(html).not.toContain("Ng slide through the break");
   });
+
+  it("skips the warm-in when the step it resumes is the warm-in's own exercise", () => {
+    // Full opens on the Ng siren (not beginner), so it warms in on lip trills,
+    // which are its step 2: resuming there is already the gentle start.
+    const full = routineById("full")!;
+    expect(full.steps[1].exerciseId).toBe(warmInStep(full).exerciseId);
+    const html = renderToStaticMarkup(
+      <RoutineRunner
+        routine={full}
+        startStep={1}
+        warmIn
+        pitch={{} as UsePitchResult}
+        range={{}}
+        onDone={() => {}}
+        onQuit={() => {}}
+      />,
+    ).replace(/<!-- -->/g, "");
+    expect(html).not.toContain("Warm-in:");
+    expect(html).toContain("Lip-trill arpeggio");
+  });
 });

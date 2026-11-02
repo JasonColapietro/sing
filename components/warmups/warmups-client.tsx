@@ -135,8 +135,8 @@ export function WarmupsClient() {
   // between them; opening the routine there keeps the step's rep count.
   const [routineStartStep, setRoutineStartStep] = useState(0);
   // A `?step=` link opened past step 1 on a day with no warmup logged yet:
-  // the runner sings a few easy reps of the routine's first exercise before
-  // that step, so a program day the free minutes split never resumes cold on
+  // the runner sings a few easy reps (warmInStep: the routine's first
+  // exercise when it is a free beginner one, else lip trills) before that step, so a program day the free minutes split never resumes cold on
   // an octave siren the next morning.
   const [routineWarmIn, setRoutineWarmIn] = useState(false);
   const [routineSummary, setRoutineSummary] = useState<RoutineSummaryData | null>(null);
