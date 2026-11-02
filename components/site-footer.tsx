@@ -203,7 +203,7 @@ export default function SiteFooter() {
               ))}
               {HUB_GENRES.length > PHONE_GENRES && (
                 <li className="sm:hidden">
-                  <Link href="/singers" prefetch={false} className={navLinkClass}>
+                  <Link href="/singers#genres" prefetch={false} className={navLinkClass}>
                     All genres
                   </Link>
                 </li>

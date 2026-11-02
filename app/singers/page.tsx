@@ -228,7 +228,7 @@ export default function SingersPage() {
       <SingerCrawlIndex />
 
       {/* data-singer-return: a Back target the directory restores (RETURN_SCOPES). */}
-      <section data-singer-return="browse" className="mt-12">
+      <section id="genres" data-singer-return="browse" className="mt-12 scroll-mt-20">
         <h2 className="mt-8 text-xl">Browse by genre</h2>
         <ul className="mt-4 flex flex-wrap gap-2">
           {HUB_GENRES.map((g) => (
