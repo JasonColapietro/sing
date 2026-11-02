@@ -11,10 +11,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import {
   ContinueCard,
-  GoalRing,
   PathList,
   StarTrio,
-  StreakChip,
   useDailyGoal,
   useGoalDoneSec,
 } from "@/components/practice/learn-home";
@@ -252,15 +250,8 @@ export default function EarTrainingClient() {
           error={null}
           streakDays={streakDays}
           streakBest={progress.streak.best}
+          goal={{ doneSec: goalDoneSec, goalSec }}
         />
-
-        <div className="mt-6 flex flex-wrap items-center gap-4">
-          <GoalRing doneSec={goalDoneSec} goalSec={goalSec} />
-          {/* The continue card above already says "Start a streak today" (or
-              the lapsed best) whenever there is no live streak, so the chip
-              here only names a streak that exists. */}
-          {streakDays >= 1 && <StreakChip days={streakDays} best={progress.streak.best} />}
-        </div>
 
         <section className="mt-10">
           <div className="flex flex-wrap items-center gap-2">

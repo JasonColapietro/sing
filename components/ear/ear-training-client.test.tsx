@@ -60,3 +60,16 @@ describe("the ear room's promise of credit", () => {
     }
   });
 });
+
+/**
+ * The streak and the daily goal are said once, inside the continue card, as
+ * on /breath and /warmups: a second chip beside a bare goal ring repeated it
+ * a few hundred pixels further down a phone's first screen.
+ */
+describe("the ear room's streak and goal", () => {
+  it("live in the continue card, not in a second row under it", () => {
+    const html = renderToStaticMarkup(<EarTrainingClient />);
+    expect(html).toContain("Today&#x27;s goal");
+    expect(html.match(/Today&#x27;s goal/g)).toHaveLength(1);
+  });
+});
