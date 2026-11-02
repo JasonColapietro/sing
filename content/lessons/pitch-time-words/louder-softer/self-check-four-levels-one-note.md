@@ -32,14 +32,14 @@ Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. 
 Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four levels in your take form an audible progression while pitch stays centered.
+- Listen: Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered.
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Before recording, number four slips 1 (quietest) to 4 (fullest), shuffle them, and sing one short sample per slip in the order drawn, with a breath between. On playback, without looking at the slips, number each sample 1 to 4, then check your numbers against the slips and that the pitch stays centered at each.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance, not by squeezing the throat. Before recording, number four slips 1 (quietest) to 4 (fullest), shuffle them, and sing one short sample per slip in the order drawn, with a breath between. On playback, without looking at the slips, number each sample 1 to 4, then check your numbers against the slips and that the pitch stays centered at each.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four levels in your take form an audible progression while pitch stays centered.
+- Listen: Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered.
 
 ### Review your own attempt
 
@@ -63,7 +63,7 @@ I sang four levels on one comfortable note in the order I drew, by changing brea
 ## Self-check
 
 - I sang four levels on one comfortable note in the order I drew, by changing breath-energy and resonance rather than pushing the volume, and numbered them from playback.
-- The four levels in your take form an audible progression while pitch stays centered.
+- Each of the four levels in your take is distinct enough to number from playback, and pitch stays centered.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
 Ready when: In one take on one comfortable note, sung in the order you drew, you can number all four levels from playback without the slips, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.

@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 70703,
+      "totalWords": 70715,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -2983,7 +2983,7 @@
           "part": "The borrower's method",
           "summary": "The four expensive things in this book (whistle notes, extreme lows, distortion and sustained belting), what makes each risky to chase, and the warning signs that mean stop.",
           "free": false,
-          "words": 845,
+          "words": 857,
           "path": "/atlas/the-safety-rail"
         },
         {
