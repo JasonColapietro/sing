@@ -175,6 +175,18 @@ describe("a run that warmed in before a later step", () => {
   });
 });
 
+describe("a Pro routine that warmed in before a later step", () => {
+  // Mix opens on an octave slide through the break, so its warm-in is lip trills.
+  const mix = routineById("mix")!;
+  const steps = [sung("lip-trill-scale", 72), null, ...mix.steps.slice(2).map((s) => sung(s.exerciseId, 66))];
+
+  it("names the warm-in exercise actually sung, not the routine's first step", () => {
+    const rows = routineSummaryRows({ routine: mix, steps, completed: true, startStep: 2, warmIn: true });
+    expect(rows[0]).toMatchObject({ label: "Warm-in: Lip-trill arpeggio", score: 72 });
+    expect(rows[0].label).not.toContain("Ng slide");
+  });
+});
+
 describe("a routine resumed part-way by a program row", () => {
   // Morning reset carried on from step 4, the cap having stopped it at step 3
   // the day before; the warm-in is off, so steps 1–3 were never written.
