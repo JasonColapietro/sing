@@ -656,11 +656,16 @@ export function PitchMeter({
   }, [listening]);
   // The silent card is set by the stop's flush, a render after the scroll
   // above, and scroll anchoring then pushed it up under the sticky header on
-  // a phone. Bring it into view once it exists. silentStop only turns true on
-  // a stop (begin() clears it), so this never runs on the first mount.
+  // a phone. Bring it into view once it exists. So is the saved card for a
+  // run that held no note (lastLog with no low), set by the same flush. Both
+  // only turn on after a stop in this page view: silentStop and lastLog start
+  // false and null (nothing restores them on mount), so this never runs on
+  // the first mount. A run that held a note has its card already: the stop's
+  // own scroll above covers it.
   useEffect(() => {
-    if (silentStop) stoppedRef.current?.scrollIntoView({ block: "start" });
-  }, [silentStop]);
+    const savedUnheld = lastLog !== null && lowRef.current === null && !listening;
+    if (silentStop || savedUnheld) stoppedRef.current?.scrollIntoView({ block: "start" });
+  }, [silentStop, lastLog, listening]);
 
   // "Start singing" goes with the gate as the mic opens, and focus fell to
   // <body>. The live panel takes it: it is where the gate's button was, a
@@ -720,6 +725,27 @@ export function PitchMeter({
             <p role="status" className="text-sm text-mut">
               No note was heard, so nothing was logged. Sing a little louder or closer to the mic, or check the input under Audio below.
             </p>
+          </Card>
+        )}
+        {/* A run that heard notes (slides, sirens, speech) but never held
+            one long enough to mark is still saved, with XP and a streak day:
+            say so and give the next step, rather than drop the singer back
+            on the first-visit gate. */}
+        {!silentStop && low === null && lastLog && (
+          <Card className="mb-4">
+            <SectionLabel>Last run</SectionLabel>
+            <p role="status" className="mt-2 text-sm text-mut">
+              {`+${lastLog.xpGained} XP, saved to your progress. No note was held long enough to mark your lowest and highest: hold one easy note for a moment and it shows here.`}
+            </p>
+            <RangeNextStep
+              retestDue={offerRetest}
+              programNote={programNote}
+              programDayHref={programDayHref}
+              // No span was held, so the test's reason is always worth
+              // saying, but only beside the button it explains.
+              explain={Boolean(onTryRange)}
+              tryRange={onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
+            />
           </Card>
         )}
         <MicGate
