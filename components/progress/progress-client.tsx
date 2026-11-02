@@ -26,7 +26,10 @@ import {
   Stat,
 } from "@/components/ui";
 import { AccountSavePrompt } from "@/components/account/save-prompt";
-import { downloadProgressBackup } from "@/components/account/download-backup";
+import {
+  downloadProgressBackup,
+  recordImportedBackupFile,
+} from "@/components/account/download-backup";
 import { AccountBackupControls } from "./account-backup-sync";
 import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
 import { streakChipState } from "@/components/nav";
@@ -543,11 +546,15 @@ export function DataControls({
     const reader = new FileReader();
     reader.onload = () => {
       const before = getState().sessions.map((s) => s.id);
-      const ok = importProgress(String(reader.result ?? ""));
+      const json = String(reader.result ?? "");
+      const ok = importProgress(json);
       if (!ok) {
         setImportNotice({ kind: "err", text: "That file didn't parse as valid progress data." });
         return;
       }
+      // The file just restored holds everything up to its newest session, so
+      // the save prompt must not call this browser the only copy of it.
+      recordImportedBackupFile(json);
       // The import merges, but the store still keeps only the newest
       // MAX_SESSIONS, so a big file can push this browser's oldest sessions
       // out. Say so rather than claim they were all kept.

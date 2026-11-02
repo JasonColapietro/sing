@@ -48,8 +48,20 @@ export function subscribeBackupFileAt(cb: () => void): () => void {
   };
 }
 
-function recordBackupFile(): void {
-  fileAtCache = new Date().toISOString();
+/**
+ * Records a backup file as of `at` (an ISO time, default now). A download
+ * holds the record as of now. An imported file holds it as of its own newest
+ * session, which can be older than a file already on record, so an explicit
+ * date never moves the record backwards.
+ */
+export function recordBackupFile(at?: string): void {
+  if (at !== undefined) {
+    const when = Date.parse(at);
+    if (!Number.isFinite(when)) return;
+    const onRecord = Date.parse(readBackupFileAt() ?? "");
+    if (Number.isFinite(onRecord) && onRecord >= when) return;
+  }
+  fileAtCache = at ?? new Date().toISOString();
   try {
     window.localStorage.setItem(BACKUP_FILE_AT_KEY, fileAtCache);
   } catch {
@@ -79,4 +91,34 @@ export function downloadProgressBackup(): void {
   // Not revoked in the same tick: WebKit can still be reading the blob when
   // click() returns, and Safari is exactly the browser this backup is for.
   setTimeout(() => URL.revokeObjectURL(url), 40_000);
+}
+
+/**
+ * After /progress imports a backup file, records that file as of its newest
+ * session, so the save prompt does not tell a singer who just restored from a
+ * file that this browser holds the only copy. Practice newer than the file
+ * still counts against it (backupFileStatus). A date past now (a hand-edited
+ * file, or one from a device with a fast clock) is capped at now, so it cannot
+ * hide later practice from the prompt.
+ */
+export function recordImportedBackupFile(json: string): void {
+  let newest = -Infinity;
+  try {
+    const parsed: unknown = JSON.parse(json);
+    const sessions =
+      typeof parsed === "object" && parsed !== null
+        ? (parsed as { sessions?: unknown }).sessions
+        : undefined;
+    if (!Array.isArray(sessions)) return;
+    for (const s of sessions) {
+      const date =
+        typeof s === "object" && s !== null ? (s as { date?: unknown }).date : undefined;
+      const when = typeof date === "string" ? Date.parse(date) : NaN;
+      if (Number.isFinite(when) && when > newest) newest = when;
+    }
+  } catch {
+    return;
+  }
+  if (!Number.isFinite(newest)) return;
+  recordBackupFile(new Date(Math.min(newest, Date.now())).toISOString());
 }
