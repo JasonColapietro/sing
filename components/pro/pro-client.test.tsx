@@ -597,6 +597,10 @@ describe("the address /pro opens with", () => {
     // The cancel address also ends the checkout this browser began.
     const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
     expect(src).toContain('if (landing.kind === "cancelled") clearStartedCheckout();');
+    // A cancelled return lands on the buy button, which sits a screen below
+    // the plans heading on a phone; other notes still reveal the plans.
+    expect(src).toContain('if (landing.kind === "cancelled") revealBuy();\n      else revealPlans();');
+    expect(src).toMatch(/function revealBuy\(\)[^}]*getElementById\("buy"\)/);
   });
 
   it("says nothing cancelled or confirmable on a success address without a usable id", () => {
