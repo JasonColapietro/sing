@@ -601,6 +601,9 @@ describe("the address /pro opens with", () => {
     // the plans heading on a phone; other notes still reveal the plans.
     expect(src).toContain('if (landing.kind === "cancelled") revealBuy();\n      else revealPlans();');
     expect(src).toMatch(/function revealBuy\(\)[\s\S]*?getElementById\("buy-keep"\)[\s\S]*?getElementById\("buy"\)/);
+    // A pass holder's cancel note sits with their buy control, not a screen above it.
+    expect(src).toContain('{returnNote === "cancelled" && !(onPass || lapsing) && (');
+    expect(src).toMatch(/id="buy-keep"[\s\S]{0,400}returnNote === "cancelled"[\s\S]{0,300}Nothing was charged, and your Pro access is unchanged\./);
     // A pass holder's buy control, at the card's foot, is the one brought into view.
     expect(src).toContain('{(onPass || lapsing) && (\n                      <div id="buy-keep" className="mt-2">');
   });

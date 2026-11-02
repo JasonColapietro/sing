@@ -80,6 +80,8 @@ export function HeroSplit() {
             <span className="sr-only">: </span>
             Online singing practice with live pitch feedback
           </span>
+          {/* Read without layout, the two lines would run together. */}
+          <span className="sr-only">. </span>
           <span className="mt-4 block max-w-[19ch] text-[clamp(2.5rem,5.6vw,4.25rem)] leading-[1.04] tracking-[-0.025em]">
             Sing one note. See exactly what came out.
           </span>

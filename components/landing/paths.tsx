@@ -34,7 +34,7 @@ const PATHS: Path[] = [
       {
         href: rangeTestHref(),
         label: "Find my vocal range",
-        note: "After a few easy hums, find the lowest and highest clear notes you can sing today and get a voice-type estimate.",
+        note: "Hold one comfortable note, then find the lowest and highest clear notes you can sing today and get a voice-type estimate.",
       },
       {
         href: "/warmups",

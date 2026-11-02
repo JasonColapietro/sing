@@ -1144,8 +1144,8 @@ export function ProClient() {
               )}
             </div>
           )}
-          {returnNote === "cancelled" && (
-            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
+          {returnNote === "cancelled" && !(onPass || lapsing) && (
+            <p role="status" className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
               Checkout cancelled. Nothing was charged, and the free studio is
               exactly where you left it.
             </p>
@@ -1279,6 +1279,16 @@ export function ProClient() {
                     )}
                     {(onPass || lapsing) && (
                       <div id="buy-keep" className="mt-2">
+                        {/* Beside the button their cancelled return lands on,
+                            so the note is on screen and announced. */}
+                        {returnNote === "cancelled" && (
+                          <p
+                            role="status"
+                            className="mb-3 rounded-lg border border-line2 bg-panel px-3 py-2 text-center text-sm text-mut"
+                          >
+                            Checkout cancelled. Nothing was charged, and your Pro access is unchanged.
+                          </p>
+                        )}
                         {buyControls(
                           lifetimePurchase
                             ? `Keep Pro for life: ${price} once`
