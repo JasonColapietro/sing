@@ -491,6 +491,18 @@ describe("coaching copy", () => {
     }
   });
 
+  it("never asks for the same weight up a climb, or power from the body", () => {
+    // The routine intro prints desc and tip together. "Same weight on every
+    // note" sat over a tip to let the weight thin out at the octave, the
+    // fault ch.17 teaches against; "power comes from the body" in a belt drill
+    // is the abdominal push ch.4 calls squeezing, where belt size is a bright,
+    // narrowed tract (the glossary's "brightened rather than pushed").
+    const myths = /\b(?:same (?:chest )?weight|full weight|power (?:comes )?from the (?:body|diaphragm|belly|gut|core)|support (?:it )?from the (?:diaphragm|gut|belly))\b/i;
+    for (const ex of ALL_EXERCISES) {
+      expect(`${ex.desc} ${ex.tip}`, ex.id).not.toMatch(myths);
+    }
+  });
+
   it("spells out the twelfth runs' descent degree by degree, since it is not a scale", () => {
     // Major-scale degree of each semitone offset the runs use.
     const DEGREE: Record<number, number> = {

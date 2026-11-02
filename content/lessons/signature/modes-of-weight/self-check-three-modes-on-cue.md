@@ -43,7 +43,7 @@ State the checkpoint target, record one uninterrupted attempt, and keep the resu
 
 ### Review your own attempt
 
-I compared comfortable production choices in one short phrase and returned to an easy neutral sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the phrase once per slip in the order drawn, changing the weight without moving the pitch and returning to easy neutral between attempts. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I compared comfortable production choices in one short phrase and returned to an
 
 ## Self-check
 
-- I compared comfortable production choices in one short phrase and returned to an easy neutral sound.
+- I sang the phrase once per slip in the order drawn, changing the weight without moving the pitch and returning to easy neutral between attempts.
 - Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: In one take sung in the order you drew, you can tell neutral, restra
 
 If not ready: If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared comfortable production choices in one short phrase and returned to an easy neutral sound. This is a self-report, not an automatic assessment.
+What this shows: I sang the phrase once per slip in the order drawn, changing the weight without moving the pitch and returning to easy neutral between attempts. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Automatic mode classification, strain, pressed phonation, tissue health, or safe production.

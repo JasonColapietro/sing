@@ -6,7 +6,7 @@
 
 // pro-inventory has no imports of its own, so this adds no cycle and keeps the
 // module safe on both sides.
-import { TOTAL_CHAPTERS, TOTAL_WORDS } from "./pro-inventory";
+import { PRO_PROGRAM_COUNT, TOTAL_CHAPTERS, TOTAL_WORDS } from "./pro-inventory";
 
 /**
  * Where the Stripe billing portal sends a subscriber back to. The marker
@@ -161,7 +161,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Do I need Pro to get better?",
-    a: "Not to practice. Pro is for the singer who wants the record: range tests charted over time, every take analyzed, and the two books that explain what the numbers mean.",
+    a: "Not to practice. Pro is for the singer who wants the view across their record: range tests charted over time, every take analyzed, the coach's full daily plan, and the two books that explain what the numbers mean.",
   },
   {
     q: "Is my voice uploaded?",
@@ -176,7 +176,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
     // Built from the inventory, never typed: this answer is also FAQPage
     // markup, and a hard-coded count here once drifted ~21,000 words behind
     // the figure the rest of the page printed.
-    a: `No daily limit on guided practice, and both books in full (${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas), plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
+    a: `No daily limit on guided practice, the coach's full daily plan, ${PRO_PROGRAM_COUNT === 2 ? "both" : "all"} Pro programs in full, and both books in full (${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas), plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, a per-note accuracy chart, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
   },
   {
     q: "What does cloud sync carry, and what stays in this browser?",

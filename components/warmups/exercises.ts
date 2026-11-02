@@ -688,7 +688,7 @@ export const PRO_PACKS: WarmupPack[] = [
         title: "Hey on falling thirds",
         desc: 'Call and answer: a bright "hey" dropping a major third, twice.',
         tier: "intermediate",
-        tip: "Think playground call, not scream. Power comes from the body, never the throat.",
+        tip: "Think playground call, not scream. The size comes from a bright, forward \"hey\", not from pushing more air or squeezing the throat.",
         noteDur: 0.6,
         rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [rel(r, [4, 0, 4, 0])],
@@ -860,7 +860,7 @@ export const PRO_PACKS: WarmupPack[] = [
       {
         id: "mix-mum-octave",
         title: "Mum octave",
-        desc: 'A dopey "mum" through 1-3-5-8-5-3-1, same weight on every note.',
+        desc: 'A dopey "mum" through 1-3-5-8-5-3-1: the same easy effort on every note, lighter as it climbs.',
         tier: "intermediate",
         tip: "Keep it a little silly and nasal. Do not carry chest weight up to the octave; let it thin out.",
         noteDur: 0.45,

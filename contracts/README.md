@@ -62,6 +62,11 @@ kind (2026-10-12):
   "the synthesized reference" (2026-10-29), matching what the practice
   material plays, and their lessons' objectives with them. Two values
   changed and no keys, so there is no version bump.
+- The summary of `v-l2-m2-01` (Onset Without the Click) now reads "Compare a
+  breathy, a clicked and a balanced onset on one note" instead of "Compare an
+  easy onset with a previous attempt" (2026-10-29, round 20), matching the
+  three-onset take the lesson sets, and its lesson's objective with it. One
+  value changed and no keys, so there is no version bump.
 
 Don't "re-sync" those edits away: parity with GuitarHub is by stage, module
 and lesson ID, not by text. GuitarHub's copy has to be re-synced byte for byte

@@ -115,10 +115,11 @@ export default function BookPage() {
 
         {BOOK_PARTS.map((part, i) => (
           <Fragment key={part.part}>
-          {/* One sentence from chapter 7 between the first two parts. */}
+          {/* One sentence from chapter 7 between the first two parts,
+              verbatim: it must still be in content/book/07-*.md. */}
           {i === 1 && (
             <PullQuote
-              quote="You know your tessitura by feel more than by measurement."
+              quote="No test hands you your tessitura; you find it by feel."
               emphasis="feel"
               byline="Chapter 7 · Your range is not one number"
             />

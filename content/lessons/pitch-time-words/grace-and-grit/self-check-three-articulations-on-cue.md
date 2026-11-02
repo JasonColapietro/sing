@@ -43,7 +43,7 @@ State the checkpoint target, record one uninterrupted attempt, and keep the resu
 
 ### Review your own attempt
 
-I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the phrase once per slip in the order drawn, a connected grace, a short release or a clear accent, and named each one by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I used one supplied phrase to compare connected, detached, and gently accented a
 
 ## Self-check
 
-- I used one supplied phrase to compare connected, detached, and gently accented attacks by ear.
+- I sang the phrase once per slip in the order drawn, a connected grace, a short release or a clear accent, and named each one by ear.
 - The three versions are distinguishable in playback without one simply being much louder than the others.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: In one take sung in the order you drew, you can name each articulati
 
 If not ready: If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I used one supplied phrase to compare connected, detached, and gently accented attacks by ear. This is a self-report, not an automatic assessment.
+What this shows: I sang the phrase once per slip in the order drawn, a connected grace, a short release or a clear accent, and named each one by ear. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Automatic articulation classification, onset timing accuracy, stylistic quality, or absence of strain.

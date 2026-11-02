@@ -526,8 +526,8 @@ export function WelcomePanel({
             {how === "pass"
               ? `Every Pro feature is open in this browser${periodEnd ? ` until ${periodEnd}` : " for 30 days"}, and the pass ends by itself. `
               : ""}
-            Your coach starts listening on your next session. Sing one
-            warmup and watch the report build itself.
+            The coach&apos;s full plan starts with your next session. Sing
+            one warmup and watch your per-note chart fill in.
           </p>
           {/* A new key, and the line telling the buyer to save it, come
               before the next-step buttons. Below them, on a 375x667 phone,
@@ -936,8 +936,8 @@ export function ProClient() {
               <>
                 <h1 className="text-4xl sm:text-5xl">Pro is on.</h1>
                 <p className="mt-4 max-w-xl text-lg text-mut">
-                  Every session now feeds your coach report: per-note accuracy,
-                  range history, and tomorrow&apos;s plan.
+                  Your coach report now adds per-note accuracy, your range
+                  charted over months, and every step of tomorrow&apos;s plan.
                   {/* A pass holder has paid nothing, so is not thanked for paying. */}
                   {onPass
                     ? " Your pass ends on its own; lifetime Pro is below if you want to keep it."
@@ -1070,7 +1070,7 @@ export function ProClient() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel hairline className="mb-4">What Pro adds</SectionLabel>
           <h2 className="max-w-2xl text-2xl sm:text-3xl">
-            A coach&apos;s ear on every session
+            The coach&apos;s full plan, and the charts behind it
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {PRO_PERKS.map((perk) => {

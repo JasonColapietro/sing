@@ -20,7 +20,8 @@ import {
   type Difficulty,
   type GameId,
 } from "./lib";
-import { EAR_GAME_SECONDS } from "./routines";
+import { EAR_GAME_SECONDS, GAME_MIC } from "./routines";
+import { createHeardLatch, hearFrame } from "@/components/practice/silent-session";
 
 /* ---------------- session state ---------------- */
 
@@ -33,6 +34,14 @@ export interface EarSession {
   results: boolean[];
   done: boolean;
   record: (correct: boolean) => void;
+  /**
+   * A fresh voiced frame arrived: the mic heard the singer this game. The
+   * games that listen (GAME_MIC) call it, and a game of theirs that never
+   * did is not logged (useLogEarSession).
+   */
+  markHeard: () => void;
+  /** Whether the mic has heard a voice since the game began. */
+  wasHeard: () => boolean;
   reset: () => void;
 }
 
@@ -43,7 +52,15 @@ export function useEarSession(): EarSession {
     setResults((prev) => (prev.length >= ROUNDS ? prev : [...prev, correct]));
   }, []);
 
-  const reset = useCallback(() => setResults([]), []);
+  // A ref, not state: it is set from the games' animation loops, every frame.
+  const heardRef = useRef(createHeardLatch());
+  const markHeard = useCallback(() => hearFrame(heardRef.current, true), []);
+  const wasHeard = useCallback(() => heardRef.current.heard, []);
+
+  const reset = useCallback(() => {
+    heardRef.current = createHeardLatch();
+    setResults([]);
+  }, []);
 
   return useMemo<EarSession>(() => {
     let streak = 0;
@@ -60,9 +77,11 @@ export function useEarSession(): EarSession {
       results,
       done: results.length >= ROUNDS,
       record,
+      markHeard,
+      wasHeard,
       reset,
     };
-  }, [results, record, reset]);
+  }, [results, record, markHeard, wasHeard, reset]);
 }
 
 /**
@@ -78,6 +97,12 @@ export interface EarStepResult {
   xpGained: number;
   newAchievements: Achievement[];
   newBest: boolean;
+  /**
+   * The game listens and the mic heard no note all game: nothing was logged
+   * (no XP, streak day, free minutes or program tick), and its score is not
+   * the singer's. The results say so instead of grading it.
+   */
+  silent?: boolean;
 }
 
 /** The prop every game takes to run as one step of something larger. */
@@ -371,6 +396,19 @@ export interface EarLogResult {
   newBest: boolean;
   /** False until the write has happened — the moment a result can be handed on. */
   logged: boolean;
+  /** A listening game the mic heard nothing of: the write was refused. */
+  silent?: boolean;
+}
+
+/**
+ * Whether a finished game is practice to log. A game that only plays notes
+ * (interval, higher or lower) always is; one that listens is only when the
+ * mic heard a voice at some point. Pitch match and melody echo time out a
+ * silent round as a miss, and note catcher scrolls every target past the
+ * line, so a muted mic used to play itself to the end and log a 0%.
+ */
+export function earGameCredits(game: GameId, heard: boolean): boolean {
+  return !GAME_MIC[game] || heard;
 }
 
 /** Write one finished game to the progress store, exactly once. */
@@ -383,6 +421,7 @@ function useLogEarSession(
   variant?: EarVariant,
 ): EarLogResult {
   const written = useRef(false);
+  const { wasHeard } = session;
   const [result, setResult] = useState<EarLogResult>({
     xpGained: 0,
     newAchievements: [],
@@ -393,21 +432,31 @@ function useLogEarSession(
   useEffect(() => {
     if (written.current || !session.done) return;
     written.current = true;
+    // A listening game the mic heard nothing of is not practice: no XP,
+    // streak day, best, free minutes or program tick, and no Pro moment.
+    const credited = earGameCredits(game, wasHeard());
     const durationSec = earSessionSeconds(game, startedAt, performance.now());
-    const res = logSession({
-      type: "ear",
-      durationSec,
-      score: session.score,
-      detail: variant ? `${GAME_NAMES[game]} · ${variant.label}` : GAME_NAMES[game],
-    });
-    setResult({
-      xpGained: res.xpGained,
-      newAchievements: res.newAchievements,
-      newBest: saveBest(game, difficulty, session.score, variant?.key),
-      logged: true,
-    });
+    const res = credited
+      ? logSession({
+          type: "ear",
+          durationSec,
+          score: session.score,
+          detail: variant ? `${GAME_NAMES[game]} · ${variant.label}` : GAME_NAMES[game],
+        })
+      : null;
+    setResult(
+      res
+        ? {
+            xpGained: res.xpGained,
+            newAchievements: res.newAchievements,
+            newBest: saveBest(game, difficulty, session.score, variant?.key),
+            logged: true,
+          }
+        : { xpGained: 0, newAchievements: [], newBest: false, logged: true, silent: true },
+    );
+    if (!res) return;
     emitProResult();
-  }, [game, difficulty, session.done, session.score, startedAt, variant]);
+  }, [game, difficulty, session.done, session.score, wasHeard, startedAt, variant]);
 
   return result;
 }
@@ -448,6 +497,7 @@ export function StepDone({
       xpGained: log.xpGained,
       newAchievements: log.newAchievements,
       newBest: log.newBest,
+      ...(log.silent ? { silent: true } : {}),
     });
   }, [log, session, onComplete]);
 

@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I compared modified and unmodified attempts on three vowels at the same pitch and volume, and noted which small change kept the crossing easy. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I compared three vowels on a comfortable fifth slide and noted which small adjus
 
 ## Self-check
 
-- I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity.
+- I compared modified and unmodified attempts on three vowels at the same pitch and volume, and noted which small change kept the crossing easy.
 - The pitch remains connected and the lyric is still understandable across all three vowels.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared three vowels on a comfortable fifth slide and noted which small adjustment helped continuity. This is a self-report, not an automatic assessment.
+What this shows: I compared modified and unmodified attempts on three vowels at the same pitch and volume, and noted which small change kept the crossing easy. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, a measured register break, or freedom from strain.

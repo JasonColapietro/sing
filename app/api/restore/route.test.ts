@@ -12,7 +12,8 @@ const stripe = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
+const rate = vi.hoisted(() => ({ limited: null as Response | null }));
+vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => rate.limited }));
 vi.mock("@/lib/pro-key", () => ({ verifyProKey: stripe.verifyProKey }));
 vi.mock("@/lib/stripe", () => ({
   getStripe: () => ({
@@ -65,6 +66,7 @@ function restore(key = "suede-pro_key") {
 }
 
 beforeEach(() => {
+  rate.limited = null;
   for (const mock of Object.values(stripe)) mock.mockReset();
   stripe.verifyProKey.mockReturnValue({
     kind: "lifetime",
@@ -204,5 +206,36 @@ describe("POST /api/restore", () => {
     await expect(response.json()).resolves.toEqual({
       error: "Could not reach Stripe. Try again in a moment.",
     });
+  });
+
+  it("marks every answer private, no-store: the key and email, refusals, Stripe errors and the rate limit", async () => {
+    stripe.retrievePaymentIntent.mockResolvedValue({
+      id: "pi_lifetime",
+      customer: { id: "cus_owner" },
+    });
+    const success = await restore();
+    expect(await success.json()).toMatchObject({ email: "singer@example.com", proKey: "suede-pro_lifetime" });
+    expect(success.headers.get("cache-control")).toBe("private, no-store");
+
+    stripe.verifyProKey.mockReturnValue(null);
+    const invalid = await restore("nonsense");
+    expect(invalid.status).toBe(400);
+    expect(invalid.headers.get("cache-control")).toBe("private, no-store");
+
+    stripe.verifyProKey.mockReturnValue({
+      kind: "lifetime",
+      customerId: "cus_owner",
+      paymentIntentId: "pi_lifetime",
+    });
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    stripe.retrievePaymentIntent.mockRejectedValue(new Error("network"));
+    const failed = await restore();
+    expect(failed.status).toBe(502);
+    expect(failed.headers.get("cache-control")).toBe("private, no-store");
+
+    rate.limited = Response.json({ error: "Too many requests." }, { status: 429 });
+    const limited = await restore();
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("cache-control")).toBe("private, no-store");
   });
 });

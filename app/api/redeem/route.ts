@@ -5,6 +5,25 @@ import { getRedis } from "@/lib/redis";
 import { entitlementFrom, getStripe, resolvePriceId } from "@/lib/stripe";
 
 /**
+ * Every answer from this route is for one buyer's browser only: a success
+ * carries the buyer's Pro key (and email, when Stripe has one), the same
+ * payload /api/checkout and /api/entitlement mark private. So no shared cache
+ * (Vercel's edge, a proxy, a CDN) may keep it, and the browser must not reuse
+ * it either. Errors and the rate limit's 429 get the same header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
+/**
  * Redeems a comp code for 30 days of Pro, with no card on file.
  *
  * The grant is a real Stripe subscription on the ordinary monthly price,
@@ -159,18 +178,18 @@ export async function POST(request: Request) {
     limit: 5,
     windowMs: 10 * 60_000,
   });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   let code: unknown;
   try {
     const body = (await request.json()) as { code?: unknown };
     code = body?.code;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   if (typeof code !== "string" || code.trim().length === 0 || code.length > 64) {
-    return NextResponse.json(
+    return json(
       { ...INACTIVE, error: "Enter your code." },
       { status: 400 },
     );
@@ -184,7 +203,7 @@ export async function POST(request: Request) {
   // One message for "no such code" and "codes aren't configured", so the
   // response never says which.
   if (!codes.has(normalise(code))) {
-    return NextResponse.json(
+    return json(
       { ...INACTIVE, error: "That code isn't valid." },
       { status: 400 },
     );
@@ -206,7 +225,7 @@ export async function POST(request: Request) {
       refusal = "unavailable";
     }
     if (refusal === "exhausted") {
-      return NextResponse.json(
+      return json(
         {
           ...INACTIVE,
           error: "That code has been fully claimed. Ask for a fresh one.",
@@ -215,7 +234,7 @@ export async function POST(request: Request) {
       );
     }
     if (refusal === "unavailable") {
-      return NextResponse.json(
+      return json(
         { ...INACTIVE, error: "Could not check that code just now. Try again in a moment." },
         { status: 503 },
       );
@@ -245,11 +264,11 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(entitlementFrom(sub, customer.email));
+    return json(entitlementFrom(sub, customer.email));
   } catch (error) {
     if (cap !== null) await releaseRedemption(redeemed);
     console.error("[api/redeem]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not start your pass. Try again in a moment." },
       { status: 502 },
     );

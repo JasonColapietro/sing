@@ -46,6 +46,13 @@ export default function AnalyzeClient() {
   const ringRef = useRef<HTMLSpanElement | null>(null);
 
   const listenRef = useRef(emptyListenLog());
+  /**
+   * This run, start to stop: its listening seconds and whether any frame
+   * carried a voice. A run of MIN_FLUSH_SEC or more that heard none ends on a
+   * line saying why nothing was logged, as the studio's does.
+   */
+  const runRef = useRef({ sec: 0, heard: false });
+  const [silentStop, setSilentStop] = useState(false);
   const sinceSaveRef = useRef(0);
   const noteTimer = useRef<number | undefined>(undefined);
 
@@ -62,6 +69,8 @@ export default function AnalyzeClient() {
    */
   const onFrame = useCallback((frame: AnalyserFrame, dtSec: number) => {
     listen(listenRef.current, dtSec, frame.f0);
+    runRef.current.sec += dtSec;
+    if (frame.f0) runRef.current.heard = true;
 
     const next = accumulate(doseRef.current, {
       day: frame.day,
@@ -145,6 +154,7 @@ export default function AnalyzeClient() {
   const onStop = useCallback(() => {
     stop();
     flush();
+    setSilentStop(runRef.current.sec >= MIN_FLUSH_SEC && !runRef.current.heard);
   }, [stop, flush]);
 
   const onStart = useCallback(async () => {
@@ -152,6 +162,8 @@ export default function AnalyzeClient() {
     // yesterday; the frame carries its own day, so this only refreshes what the
     // idle readout shows.
     doseRef.current = loadDose();
+    runRef.current = { sec: 0, heard: false };
+    setSilentStop(false);
     await start();
   }, [start]);
 
@@ -181,7 +193,16 @@ export default function AnalyzeClient() {
         <MicGate
           className="mb-6"
           title="See your tone"
-          description="Sing any note to draw its harmonics, read your tone and track today's vocal load."
+          description={
+            silentStop ? (
+              <span role="status">
+                No voice was heard, so nothing was logged. Sing a little louder or closer to the mic, or
+                check the input under Audio below.
+              </span>
+            ) : (
+              "Sing any note to draw its harmonics, read your tone and track today's vocal load."
+            )
+          }
           enableLabel={everListened ? "Start again" : "Enable microphone"}
           onEnable={() => void onStart()}
           error={error}

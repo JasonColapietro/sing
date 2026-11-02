@@ -36,14 +36,14 @@ Before recording, roll a die six times and write the order (odd = fuller, even =
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Contrast a fuller speech-like sound with a lighter sound at the same pitch. Match pitch and volume as closely as practical so the production change is what you hear. Record both contrast examples in one take with a quiet breath between them so both remain available for playback.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Put the order you rolled where you can see it; if it never changes from fuller to lighter or back, roll again. On one comfortable note from Humming thirds, sing six short notes, one per roll, fuller or lighter as each roll says, with a quiet breath between them, matching pitch and volume as closely as practical. Record all six in one take in the [recorder](/recorder) so every change is there on playback.
 
 - Look: Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.
 - Listen: Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.
 
 ### Review your own attempt
 
-I compared two easy productions of the same pitch and could describe the audible difference. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang six short notes on one pitch, fuller or lighter in the order I rolled, and heard on playback whether each one landed on the sound it called for. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,14 +62,14 @@ I compared two easy productions of the same pitch and could describe the audible
 
 ## Self-check
 
-- I compared two easy productions of the same pitch and could describe the audible difference.
+- I sang six short notes on one pitch, fuller or lighter in the order I rolled, and heard on playback whether each one landed on the sound it called for.
 - Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: On playback of one take, each of the six switches in your rolled order lands on the sound it called for, fuller or lighter, at the same pitch and in both directions, without getting louder to make the change.
+Ready when: On playback of one take, each of the six notes in your rolled order lands on the sound it called for, fuller or lighter, at the same pitch, including at least one change each way, without getting louder to make the change.
 
 If not ready: If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared two easy productions of the same pitch and could describe the audible difference. This is a self-report, not an automatic assessment.
+What this shows: I sang six short notes on one pitch, fuller or lighter in the order I rolled, and heard on playback whether each one landed on the sound it called for. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Chest, head, falsetto, M1, or M2 classification; no Suede surface identifies the mechanism from audio.

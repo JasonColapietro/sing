@@ -83,7 +83,7 @@ describe("composition descriptions preserve the scope of measured notes", () => 
       expect(description.startsWith(`${song.origin}. `)).toBe(true);
       const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
       const [, tonic] = / tonic on (\S+) at /.exec(description)!;
-      const [, notes, low, high, semis] = / Its (\d+) notes run (\S+) to (\S+): (\d+) semitones /.exec(description)!;
+      const [, notes, low, high, semis] = / (?:Its|Their) (\d+) notes run (\S+) to (\S+): (\d+) semitones /.exec(description)!;
       const [, rating] = / rate it (\w+) to sing/.exec(description)!;
       for (const value of [tonic, notes, low, high, String(song.bpm), String(song.beatsPerBar)]) {
         expect(visibleHtml, `${slug}: ${value}`).toContain(`>${value}<`);

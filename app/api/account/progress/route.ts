@@ -8,6 +8,23 @@ import { checkProgress, isCleanString } from "@/lib/progress-shape";
 import { CLOUD_STATE_MAX_CHARS } from "@/lib/progress-cloud-fit";
 
 /**
+ * Every answer from this route is for one browser only, so no shared cache
+ * (Vercel's edge, a proxy, a CDN) may keep it and the browser must not reuse
+ * it. Errors and the rate limit's 429 get the same header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
+/**
  * A free account's backup of its practice record.
  *
  * Deliberately separate from /api/sync, which is the Pro feature: that route
@@ -58,7 +75,7 @@ function storeKeyFor(userId: string): string | null {
 }
 
 function unauthorized() {
-  return NextResponse.json(
+  return json(
     { error: "Sign in to use your practice backup." },
     { status: 401 },
   );
@@ -71,7 +88,7 @@ async function authorizedStoreKey(): Promise<string | null> {
 }
 
 function notConfigured() {
-  return NextResponse.json(
+  return json(
     { error: "Backups aren't set up on the server yet." },
     { status: 503 },
   );
@@ -82,7 +99,7 @@ export async function GET(request: Request) {
     limit: 30,
     windowMs: 60_000,
   });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   const storeKey = await authorizedStoreKey();
   if (!storeKey) return unauthorized();
@@ -94,12 +111,12 @@ export async function GET(request: Request) {
     const stored = await redis.get<StoredBackup>(storeKey);
     // An account with nothing backed up yet is a normal, quiet state, not an
     // error — the caller shows "no backup yet" rather than a failure.
-    return NextResponse.json(
+    return json(
       stored ?? { state: null, updatedAt: null, savedAt: null },
     );
   } catch (error) {
     console.error("[api/account/progress GET]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not reach your backup. Try again in a moment." },
       { status: 502 },
     );
@@ -111,7 +128,7 @@ export async function PUT(request: Request) {
     limit: 30,
     windowMs: 60_000,
   });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   const storeKey = await authorizedStoreKey();
   if (!storeKey) return unauthorized();
@@ -126,7 +143,7 @@ export async function PUT(request: Request) {
     state = body?.state;
     updatedAt = body?.updatedAt;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   // Shape comes from lib/progress-shape.ts, the same module the browser store
@@ -134,7 +151,7 @@ export async function PUT(request: Request) {
   // this route and the client can never drift into disagreeing about it.
   const rejection = checkProgress(state);
   if (rejection) {
-    return NextResponse.json(
+    return json(
       { error: rejection.reason },
       { status: rejection.overCap ? 413 : 400 },
     );
@@ -146,7 +163,7 @@ export async function PUT(request: Request) {
   // `detail` strings only reach 260KB, so they never trip this. Redis should
   // never see either.
   if (JSON.stringify(state).length > MAX_STATE_BYTES) {
-    return NextResponse.json(
+    return json(
       { error: "That practice record is too large to back up." },
       { status: 413 },
     );
@@ -162,10 +179,10 @@ export async function PUT(request: Request) {
       savedAt: new Date().toISOString(),
     };
     await redis.set(storeKey, record);
-    return NextResponse.json({ ok: true, savedAt: record.savedAt });
+    return json({ ok: true, savedAt: record.savedAt });
   } catch (error) {
     console.error("[api/account/progress PUT]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not save your backup. Try again in a moment." },
       { status: 502 },
     );

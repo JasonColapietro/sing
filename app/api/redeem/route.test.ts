@@ -8,7 +8,8 @@ const dependencies = vi.hoisted(() => ({
 }));
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
+const rate = vi.hoisted(() => ({ limited: null as Response | null }));
+vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => rate.limited }));
 vi.mock("@/lib/redis", () => ({
   getRedis: () => ({
     incr: async (key: string) => {
@@ -41,6 +42,7 @@ function redeem(code: string) {
 }
 
 beforeEach(() => {
+  rate.limited = null;
   process.env.PRO_COMP_CODES = "FRIENDS30";
   process.env.PRO_COMP_MAX_REDEMPTIONS = "1";
   dependencies.counts.clear();
@@ -93,5 +95,24 @@ describe("POST /api/redeem", () => {
 
     expect((await redeem("friends30")).status).toBe(409);
     expect(dependencies.decr).toHaveBeenCalledTimes(2);
+  });
+
+  it("marks every answer private, no-store: the pass, refusals, a used-up code and the rate limit", async () => {
+    const granted = await redeem("friends30");
+    expect(granted.status).toBe(200);
+    expect(granted.headers.get("cache-control")).toBe("private, no-store");
+
+    const used = await redeem("friends30");
+    expect(used.status).toBe(409);
+    expect(used.headers.get("cache-control")).toBe("private, no-store");
+
+    const wrong = await redeem("not-a-code");
+    expect(wrong.status).toBe(400);
+    expect(wrong.headers.get("cache-control")).toBe("private, no-store");
+
+    rate.limited = Response.json({ error: "Too many requests." }, { status: 429 });
+    const limited = await redeem("friends30");
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("cache-control")).toBe("private, no-store");
   });
 });

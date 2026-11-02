@@ -35,7 +35,8 @@ import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
 import { FigureFrame, WaveformFigure } from "@/components/figures";
-import { createRecorderMic, createTakeMutations, soundHeard, startRecorder } from "./runtime";
+import { createRecorderMic, createTakeMutations, RECORDING_MIN_LOG_SEC, soundHeard, startRecorder, takeLogSeconds } from "./runtime";
+import { NO_SOUND_TITLE } from "@/components/practice/silent-session";
 
 // 5 minute take limit. The page subtitle says so ("takes of up to five
 // minutes"), and it and the meta description call the free recorder "no
@@ -223,6 +224,12 @@ export default function RecorderPageClient() {
    * under the singer's thumb.
    */
   const [toastFloating, setToastFloating] = useState(false);
+  /**
+   * The last take ran long enough to log but the mic heard nothing in it: it
+   * is kept to play back, and this says why it earned nothing, as the studio
+   * and the warmups do after a silent run.
+   */
+  const [silentTake, setSilentTake] = useState(false);
 
   useEffect(() => {
     takesRef.current = takes;
@@ -451,7 +458,7 @@ export default function RecorderPageClient() {
       takesRef.current = [take, ...takesRef.current];
       void persistTake(take);
       // A silent take is kept to play back, but it is not practice.
-      const result = durationSec >= 10 && heardRef.current ? logSession({
+      const result = takeLogSeconds(durationSec, heardRef.current) !== null ? logSession({
         type: "recording",
         durationSec,
         detail: take.name,
@@ -468,6 +475,7 @@ export default function RecorderPageClient() {
         setToast({ xp: result.xpGained, achievements: result.newAchievements });
         setToastFloating(true);
       }
+      setSilentTake(!result && durationSec >= RECORDING_MIN_LOG_SEC);
     },
     [persistTake, refreshEstimate],
   );
@@ -501,6 +509,7 @@ export default function RecorderPageClient() {
     setRecPhase("recording");
     // The last take's note gives way to the new take.
     setToast(null);
+    setSilentTake(false);
     tickRef.current = window.setInterval(() => {
       const sec = (performance.now() - startedAtRef.current) / 1000;
       setElapsed(sec);
@@ -863,6 +872,14 @@ export default function RecorderPageClient() {
                       </div>
                     ) : recPhase === "saving" ? (
                       <span className="text-sm text-mut">Saving take…</span>
+                    ) : silentTake ? (
+                      // Beside REC, on a phone's first screen: the take below
+                      // it is kept, and this says why it earned nothing.
+                      <p className="text-sm text-mut" role="status">
+                        <span className="text-ink">{NO_SOUND_TITLE}.</span> The mic heard nothing in that
+                        take, so it was kept to play back but not logged. Sing a little louder or closer
+                        to the mic, or check the input, then record again.
+                      </p>
                     ) : (
                       <p className="text-sm text-mut">
                         Ready. Hit the button or press{" "}

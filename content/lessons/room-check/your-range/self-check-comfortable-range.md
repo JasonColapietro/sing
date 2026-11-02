@@ -43,7 +43,7 @@ Take the range test once for this check, after the warm-up; if you already saved
 
 ### Review your own attempt
 
-I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I took the range test once, gliding down only while the sound stayed easy and then up separately, and wrote down an easy low and high note I could repeat. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I tried a comfortable low and high note without forcing either end and noted the
 
 ## Self-check
 
-- I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.
+- I took the range test once, gliding down only while the sound stayed easy and then up separately, and wrote down an easy low and high note I could repeat.
 - Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You have written down one easy low note and one easy high note you c
 
 If not ready: If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. This is a self-report, not an automatic assessment.
+What this shows: I took the range test once, gliding down only while the sound stayed easy and then up separately, and wrote down an easy low and high note I could repeat. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once.
