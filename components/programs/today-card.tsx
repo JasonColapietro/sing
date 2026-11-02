@@ -34,6 +34,11 @@ import {
 } from "@/lib/programs";
 import { programDayNeedsPro } from "@/components/practice/program-day";
 import { programViewHref } from "@/lib/program-ids";
+import { parseDay } from "@/components/progress/format";
+
+/** A day key (YYYY-MM-DD) as the rest of the app shows dates: "Oct 30". */
+const shortDay = (d: string) =>
+  parseDay(d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 import { saveProgramProgress } from "./store";
 import type { ActiveProgram } from "./use-program";
 
@@ -379,7 +384,7 @@ function Readings({ readings }: { readings: ProgramReading[] }) {
           {readings.map((r) => (
             <tr key={r.index} className="border-t border-line">
               <td className="py-1 pr-3 text-mut">
-                Day {r.index + 1} <span className="text-xs text-dim">{r.day}</span>
+                Day {r.index + 1} <span className="text-xs text-dim">{shortDay(r.day)}</span>
               </td>
               <td className="tabular py-1 pr-3 font-mono">
                 {r.range === undefined
@@ -538,7 +543,7 @@ export function ProgramTodayCard({
                 ) : (
                   <p className="mt-2 max-w-xl text-sm text-mut">
                     Each row opens its room. A row ticks itself once your log shows it
-                    {countsFrom < today ? ` (anything since ${countsFrom} counts)` : ""}; if you did
+                    {countsFrom < today ? ` (anything since ${shortDay(countsFrom)} counts)` : ""}; if you did
                     something the log cannot see, mark the day done yourself.
                   </p>
                 )}
@@ -661,6 +666,9 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
   // count: those open on cap walls until midnight, so this card must not be
   // the one surface still saying "open today's plan".
   const waits = proReady && !locked && view.status === "todo" && waitsForTomorrow(cap.capped, day, itemsDone);
+  // A row the allowance does not count (the range test) is open now, as the
+  // full card on /programs says.
+  const stillOpen = waits ? openUncappedRows(day, itemsDone) : null;
   // Tomorrow is past a Pro program's free week (a rest day ends it).
   const nextLocked = proReady && view.status === "done-today" && nextNeedsPro(program, view.index, isPro);
   // A document load, not a client navigation (lib/program-ids.ts).
@@ -684,7 +692,7 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
         : isRestDay(day)
           ? `Day ${view.index + 1}: rest day.`
           : waits
-            ? `Day ${view.index + 1}: ${day.title} · ${itemsDone.filter(Boolean).length} of ${day.items.length} done. Today’s ${FREE_DAILY_MINUTES} free guided minutes are used; carry on after midnight.`
+            ? `Day ${view.index + 1}: ${day.title} · ${itemsDone.filter(Boolean).length} of ${day.items.length} done. Today’s ${FREE_DAILY_MINUTES} free guided minutes are used; carry on after midnight.${stillOpen ? ` ${stillOpen}` : ""}`
             : `Day ${view.index + 1}: ${day.title} · ${dayMinutes(day)} min`;
   return (
     <Card>
