@@ -2686,7 +2686,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 32598,
+      "totalWords": 32619,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -2775,7 +2775,7 @@
           "part": "Reading your own voice",
           "summary": "How to read an accuracy score honestly: what a cent is, why dead center isn't the goal, and how drift, scoops and vibrato differ.",
           "free": false,
-          "words": 1498,
+          "words": 1519,
           "path": "/book/pitch-accuracy"
         },
         {

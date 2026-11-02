@@ -835,7 +835,7 @@ export const STUDIO_GUIDE: GuideContent = {
     "Live pitch feedback shows the note you are actually singing against the note you are aiming at, while you sing it. Seeing that gap in real time closes a loop that is normally invisible to a singer: you find out you are under the note while you can still do something about it, rather than afterwards.",
   body: [
     "Pitch detection works by finding the repeating period in the sound your voice makes and converting it to a frequency, then to a note name and a deviation in cents. A hundred cents is one semitone, so a reading of minus twenty cents means you are a fifth of a semitone flat.",
-    "The value of the display is that it separates two problems singers usually confuse. If you can see the target and still cannot land on it, the issue is production: support, register, or effort. If you land on it fine once you can see it, the issue was hearing the target, which is ear training rather than technique.",
+    "The value of the display is that it separates two problems singers usually confuse. If you can see the target and still cannot land on it, the issue is production: support, register, or effort. If you land on it fine once you can see it, your voice can make the note and the gap is matching it by ear, which pitch matching in ear training works on directly.",
     // Not "everything runs on your device" — lib/sync.ts uploads Pro progress
     // state to /api/sync. The audio claim is still exact; the scope of it isn't.
     "Pitch analysis runs in the browser on your device and the audio is never sent anywhere, on any tier. Pro's cloud sync backs up your progress numbers (scores, streaks, range) and never audio.",
