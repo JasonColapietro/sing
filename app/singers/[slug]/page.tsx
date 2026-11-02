@@ -14,7 +14,6 @@ import {
   voiceTypeSlug,
   wikipediaUrl,
 } from "@/lib/singers";
-import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
 import { catalogPositionFor, catalogSpanHistogram } from "@/lib/singer-catalog-position";
 import {
   evidenceContestsCatalogLabel,
@@ -32,6 +31,7 @@ import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import {
+  endpointMates,
   keyboardNeighbors,
   keyboardParagraphs,
   sharedSemitones,
@@ -283,11 +283,8 @@ export default async function SingerPage({
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
-  const allLow = sharesLow(s);
-  const allHigh = sharesHigh(s);
-  // Up to eight chips across the two sub-rows.
-  const lowMates = allLow.slice(0, allHigh.length ? 4 : 8);
-  const highMates = allHigh.slice(0, allLow.length ? 4 : 8);
+  // Shared-floor and shared-ceiling chips, closest first (lib/singer-range-profile).
+  const { allLow, allHigh, lowMates, highMates } = endpointMates(s);
   // The range explainer, computed from the catalog's numbers (lib/singer-range-profile).
   // A reviewed correction, or a pending profile whose cited source names another type, unsettles the label.
   const labelSettled = !hasReviewedVoiceTypeCorrection(s) && !evidenceContestsCatalogLabel(s.slug);
@@ -716,9 +713,9 @@ export default async function SingerPage({
               </li>
             ))}
           </ul>
-          {(lowMates.length > 0 || highMates.length > 0) && (
+          {(allLow.length > 0 || allHigh.length > 0) && (
             <div className="mt-6 grid gap-6 sm:grid-cols-2">
-              {lowMates.length > 0 && (
+              {allLow.length > 0 && (
                 <div>
                   <h3 className="text-base">
                     Also listed from {midiToLabel(s.lowMidi)}
@@ -728,26 +725,32 @@ export default async function SingerPage({
                     {allLow.length === 1 ? "voice" : "voices"} here{" "}
                     {allLow.length === 1 ? "has" : "have"} the same
                     reported floor in this catalog.
+                    {lowMates.length === 0 &&
+                      (allLow.length === 1
+                        ? " That voice is already linked on this page."
+                        : " All of them are already linked on this page.")}
                   </p>
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {lowMates.map((m) => (
-                      <li key={m.slug}>
-                        <Link
-                          href={`/singers/${m.slug}`}
-                          prefetch={false}
-                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
-                        >
-                          {m.name}
-                          <span className="tabular font-mono text-[10px] text-dim">
-                            {rangeLabel(m)}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  {lowMates.length > 0 && (
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {lowMates.map((m) => (
+                        <li key={m.slug}>
+                          <Link
+                            href={`/singers/${m.slug}`}
+                            prefetch={false}
+                            className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
+                          >
+                            {m.name}
+                            <span className="tabular font-mono text-[10px] text-dim">
+                              {rangeLabel(m)}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
-              {highMates.length > 0 && (
+              {allHigh.length > 0 && (
                 <div>
                   <h3 className="text-base">
                     Also listed up to {midiToLabel(s.highMidi)}
@@ -757,23 +760,29 @@ export default async function SingerPage({
                     {allHigh.length === 1 ? "voice" : "voices"} here{" "}
                     {allHigh.length === 1 ? "has" : "have"} the same
                     reported ceiling in this catalog.
+                    {highMates.length === 0 &&
+                      (allHigh.length === 1
+                        ? " That voice is already linked on this page."
+                        : " All of them are already linked on this page.")}
                   </p>
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {highMates.map((m) => (
-                      <li key={m.slug}>
-                        <Link
-                          href={`/singers/${m.slug}`}
-                          prefetch={false}
-                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
-                        >
-                          {m.name}
-                          <span className="tabular font-mono text-[10px] text-dim">
-                            {rangeLabel(m)}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  {highMates.length > 0 && (
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {highMates.map((m) => (
+                        <li key={m.slug}>
+                          <Link
+                            href={`/singers/${m.slug}`}
+                            prefetch={false}
+                            className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
+                          >
+                            {m.name}
+                            <span className="tabular font-mono text-[10px] text-dim">
+                              {rangeLabel(m)}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
             </div>

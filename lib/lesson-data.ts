@@ -6766,13 +6766,13 @@ export const LESSONS: Lesson[] = [
       {
         "title": "Name the target: Eight-bar improvisation",
         "body": "Blue thirds and sevenths, and how they resolve toward the tonic.",
-        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "look": "The eight bars have a clear form with room to breathe; the one planned bend on the second 1, flat 3, 1 is small and never forced, and the call and answer need no bends.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
         "title": "Hear the distinction",
         "body": "From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, land on the flat 3, then bend it up on purpose a little toward the major third, stopping short of it, and let it settle back before returning to 1. Change only what you do on the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
-        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "look": "The eight bars have a clear form with room to breathe; the one planned bend on the second 1, flat 3, 1 is small and never forced, and the call and answer need no bends.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
@@ -6832,7 +6832,7 @@ export const LESSONS: Lesson[] = [
     "title": "Blue Thirds and Sevenths",
     "type": "exercise",
     "minutes": 7,
-    "objective": "Land them deliberately, and bend up from them on purpose, rather than arriving flat.",
+    "objective": "Land them deliberately, and bend up from the flat 3 on purpose, rather than arriving flat.",
     "explanation": "",
     "prerequisites": [
       "v-l6-m5-01"
@@ -6850,19 +6850,19 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "Land them deliberately, and bend up from them on purpose, rather than arriving flat.",
-        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "body": "Land them deliberately, and bend up from the flat 3 on purpose, rather than arriving flat.",
+        "look": "The eight bars have a clear form with room to breathe; the one planned bend on the second call is small and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
-        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again; on this second call, land the first flat 3 squarely, then bend it up on purpose a little toward the major third, stopping short of it, and let it settle back before the 5. Then answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
+        "look": "The eight bars have a clear form with room to breathe; the one planned bend on the second call is small and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
+        "body": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again, bending its first flat 3 up toward the major third, answered it with two bars of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6897,13 +6897,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
+        "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again, bending its first flat 3 up toward the major third, answered it with two bars of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
         "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
-      "shows": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again with an answer of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
+      "shows": "I sang the supplied call and answer against my tapped pulse, placing each flat 3 and flat 7 on purpose, then sang the call again, bending its first flat 3 up toward the major third, answered it with two bars of my own from 1, flat 3, 5 and flat 7, and checked that it ended on the tonic.",
       "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },

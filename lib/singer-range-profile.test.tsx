@@ -19,6 +19,7 @@ import { INDEXABLE_ROBOTS } from "@/lib/robots-meta";
 import { getSingerPageLastModified } from "@/lib/singer-evidence";
 import {
   bandCoverage,
+  endpointMates,
   keyboardFacts,
   keyboardNeighbors,
   keyboardParagraphs,
@@ -214,6 +215,84 @@ describe("every singer is linked from at least three other singer pages", () => 
         expect(rendered.has(linked), `${slug} -> ${linked}`).toBe(true);
       }
     }
+  });
+});
+
+describe("shared-floor and shared-ceiling chips show the closest voices, not the first names", () => {
+  it("orders chips by the other endpoint's distance, then name, and repeats no card or neighbor", () => {
+    for (const s of SINGERS) {
+      const { allLow, allHigh, lowMates, highMates } = endpointMates(s);
+      const shown = new Set([...relatedSingers(s), ...keyboardNeighbors(s)].map((o) => o.slug));
+      const check = (
+        mates: typeof lowMates,
+        all: typeof allLow,
+        gap: (o: (typeof all)[number]) => number,
+        also: ReadonlySet<string> = new Set(),
+      ) => {
+        const candidates = all.filter((o) => !shown.has(o.slug) && !also.has(o.slug));
+        // Every chip comes from the full list; none is a card or neighbor already on the page.
+        for (const m of mates) expect(all).toContain(m);
+        expect(mates.filter((m) => shown.has(m.slug))).toEqual([]);
+        // Sorted closest first, ties by name, and no closer candidate left off.
+        for (let i = 1; i < mates.length; i++) {
+          const d = gap(mates[i - 1]) - gap(mates[i]);
+          expect(d < 0 || (d === 0 && mates[i - 1].name.localeCompare(mates[i].name) <= 0), s.slug).toBe(true);
+        }
+        if (mates.length) {
+          const worst = gap(mates.at(-1)!);
+          const skipped = candidates.filter((o) => !mates.includes(o) && gap(o) < worst);
+          expect(skipped.map((o) => o.slug), s.slug).toEqual([]);
+        }
+        return candidates.length;
+      };
+      const lowCandidates = check(lowMates, allLow, (o) => Math.abs(o.highMidi - s.highMidi));
+      // A voice sharing both endpoints shows once, in the floor row.
+      const inLow = new Set(lowMates.map((o) => o.slug));
+      expect(highMates.filter((m) => inLow.has(m.slug)), s.slug).toEqual([]);
+      const highCandidates = check(highMates, allHigh, (o) => Math.abs(o.lowMidi - s.lowMidi), inLow);
+      // Eight chips across the two rows: four each, or eight in one row when
+      // the other has nothing left to show, so no slot is lost to the exclusions.
+      expect(lowMates).toHaveLength(Math.min(lowCandidates, highCandidates ? 4 : 8));
+      expect(highMates).toHaveLength(Math.min(highCandidates, lowMates.length ? 4 : 8));
+    }
+  });
+
+  it("gives Adele's C3 chips the floor-mates nearest her A#5 ceiling, not Akon or Andrea Bocelli", () => {
+    const adele = singerBySlug("adele")!;
+    const { lowMates } = endpointMates(adele);
+    const slugs = lowMates.map((o) => o.slug);
+    expect(slugs).not.toContain("akon");
+    expect(slugs).not.toContain("andrea-bocelli");
+    for (const m of lowMates) expect(Math.abs(m.highMidi - adele.highMidi)).toBeLessThanOrEqual(2);
+    // Fiona Apple (C3–A5) is one semitone off; she is linked as a keyboard neighbor rather than repeated as a chip.
+    expect(linkedSingerSlugs(adele)).toContain("fiona-apple");
+  });
+
+  it("spreads chip links across the catalog instead of the names that sort first", () => {
+    const inbound = new Map<string, number>();
+    for (const s of SINGERS) {
+      const { lowMates, highMates } = endpointMates(s);
+      for (const m of [...lowMates, ...highMates]) inbound.set(m.slug, (inbound.get(m.slug) ?? 0) + 1);
+    }
+    // Alphabetical slicing sent 4,989 chip links to 208 profiles, Adam Lambert taking 146.
+    // Closest-first measured 601 profiles reached and a maximum of 31 (Ailee) on 2026-11-02;
+    // 40 leaves room for catalog growth while catching any return to name order.
+    const max = Math.max(...inbound.values());
+    expect(max).toBeLessThanOrEqual(40);
+    expect(inbound.size).toBeGreaterThan(SINGERS.length * 0.8);
+  });
+
+  it("keeps the full count and says the matches are linked when every one is already a card or neighbor", async () => {
+    const s = SINGERS.find((o) => {
+      const m = endpointMates(o);
+      return m.allLow.length > 0 && m.lowMates.length === 0;
+    })!;
+    expect(s).toBeDefined();
+    const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug: s.slug }) }));
+    const text = html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ");
+    const n = endpointMates(s).allLow.length;
+    expect(text).toContain(`${n} other ${n === 1 ? "voice" : "voices"} here ${n === 1 ? "has" : "have"} the same reported floor in this catalog.`);
+    expect(text).toMatch(/reported floor in this catalog\. (That voice is|All of them are) already linked on this page\./);
   });
 });
 
