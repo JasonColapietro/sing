@@ -74,8 +74,10 @@ describe("recording an imported backup file", () => {
   type Mod = typeof import("./download-backup");
   let mod: Mod;
 
-  const session = (date: string) => ({ id: date, type: "warmup", date, day: date.slice(0, 10), durationSec: 60, xp: 5 });
+  const session = (date: string) => ({ id: date, type: "warmup" as const, date, day: date.slice(0, 10), durationSec: 60, xp: 5 });
   const file = (...dates: string[]) => JSON.stringify({ sessions: dates.map(session) });
+  /** This browser before the import: nothing of its own. */
+  const empty = { sessions: [], range: {} };
 
   beforeEach(async () => {
     for (const k of Object.keys(stored)) delete stored[k];
@@ -105,7 +107,7 @@ describe("recording an imported backup file", () => {
     const json = file("2026-10-01T09:00:00.000Z", "2026-10-15T09:00:00.000Z");
     const sessions = JSON.parse(json).sessions;
 
-    mod.recordImportedBackupFile(json);
+    mod.recordImportedBackupFile(json, empty);
 
     expect(mod.readBackupFileAt()).toBe("2026-10-15T09:00:00.000Z");
     // Into an empty browser: the file holds everything, so the card stays quiet.
@@ -120,9 +122,40 @@ describe("recording an imported backup file", () => {
     expect(backupFileStatus(merged, mod.readBackupFileAt())).toMatchObject({ hasFile: true, sessionsSince: 1 });
   });
 
+  it("records nothing when this browser held practice or a range the file lacks", async () => {
+    const { backupFileStatus } = await import("./save-state");
+    // A session on Oct 5 only in this browser, older than the file's newest.
+    const localOnly = session("2026-10-05T09:00:00.000Z");
+    const json = file("2026-10-01T09:00:00.000Z", "2026-10-15T09:00:00.000Z");
+    mod.recordImportedBackupFile(json, { sessions: [localOnly], range: {} });
+    expect(mod.readBackupFileAt()).toBeNull();
+    const merged = [...JSON.parse(json).sessions, localOnly];
+    expect(backupFileStatus(merged, mod.readBackupFileAt())).toMatchObject({ hasFile: false });
+
+    // A measured range only in this browser.
+    mod.recordImportedBackupFile(json, { sessions: [], range: { lowMidi: 48, highMidi: 67 } });
+    expect(mod.readBackupFileAt()).toBeNull();
+
+    // Every local session and the same range in the file: recorded.
+    const withRange = JSON.stringify({ ...JSON.parse(json), range: { lowMidi: 48, highMidi: 67 } });
+    mod.recordImportedBackupFile(withRange, {
+      sessions: [session("2026-10-01T09:00:00.000Z")],
+      range: { lowMidi: 48, highMidi: 67 },
+    });
+    expect(mod.readBackupFileAt()).toBe("2026-10-15T09:00:00.000Z");
+  });
+
+  it("dates the file from the sessions the import keeps, not entries it drops", () => {
+    const json = JSON.stringify({
+      sessions: [session("2026-10-01T09:00:00.000Z"), { date: "2026-10-19T09:00:00.000Z" }],
+    });
+    mod.recordImportedBackupFile(json, empty);
+    expect(mod.readBackupFileAt()).toBe("2026-10-01T09:00:00.000Z");
+  });
+
   it("never moves a newer recorded backup date backwards", () => {
     mod.recordBackupFile("2026-10-16T00:00:00.000Z");
-    mod.recordImportedBackupFile(file("2026-10-01T09:00:00.000Z"));
+    mod.recordImportedBackupFile(file("2026-10-01T09:00:00.000Z"), empty);
     mod.recordBackupFile("2026-10-02T00:00:00.000Z");
     expect(mod.readBackupFileAt()).toBe("2026-10-16T00:00:00.000Z");
     expect(stored[mod.BACKUP_FILE_AT_KEY]).toBe("2026-10-16T00:00:00.000Z");
@@ -132,11 +165,11 @@ describe("recording an imported backup file", () => {
   });
 
   it("caps a future-dated file at now and ignores a file with no dated sessions", () => {
-    mod.recordImportedBackupFile(file());
-    mod.recordImportedBackupFile("not json");
+    mod.recordImportedBackupFile(file(), empty);
+    mod.recordImportedBackupFile("not json", empty);
     expect(mod.readBackupFileAt()).toBeNull();
 
-    mod.recordImportedBackupFile(file("2030-01-01T00:00:00.000Z"));
+    mod.recordImportedBackupFile(file("2030-01-01T00:00:00.000Z"), empty);
     expect(mod.readBackupFileAt()).toBe("2026-10-20T12:00:00.000Z");
   });
 });

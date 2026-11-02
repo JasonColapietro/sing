@@ -1,4 +1,5 @@
 import { exportProgress, localDay } from "@/lib/progress";
+import { sanitizeProgress, type ProgressState } from "@/lib/progress-shape";
 
 /**
  * When this browser last saved a backup file, from either button that saves
@@ -100,24 +101,37 @@ export function downloadProgressBackup(): void {
  * still counts against it (backupFileStatus). A date past now (a hand-edited
  * file, or one from a device with a fast clock) is capped at now, so it cannot
  * hide later practice from the prompt.
+ *
+ * backupFileStatus judges by date alone, which only holds when the file has
+ * everything this browser had. So `before` is this browser's progress just
+ * before the import: if it held a session or a measured range the file lacks,
+ * nothing is recorded and the prompt keeps saying what is only here. The date
+ * comes from the sessions the import actually keeps (sanitizeProgress), not
+ * from raw entries it drops.
  */
-export function recordImportedBackupFile(json: string): void {
-  let newest = -Infinity;
+export function recordImportedBackupFile(
+  json: string,
+  before: Pick<ProgressState, "sessions" | "range">,
+): void {
+  let imported: ProgressState;
   try {
-    const parsed: unknown = JSON.parse(json);
-    const sessions =
-      typeof parsed === "object" && parsed !== null
-        ? (parsed as { sessions?: unknown }).sessions
-        : undefined;
-    if (!Array.isArray(sessions)) return;
-    for (const s of sessions) {
-      const date =
-        typeof s === "object" && s !== null ? (s as { date?: unknown }).date : undefined;
-      const when = typeof date === "string" ? Date.parse(date) : NaN;
-      if (Number.isFinite(when) && when > newest) newest = when;
-    }
+    imported = sanitizeProgress(JSON.parse(json));
   } catch {
     return;
+  }
+  const inFile = new Set(imported.sessions.map((s) => s.id));
+  if (before.sessions.some((s) => !inFile.has(s.id))) return;
+  const local = before.range;
+  if (
+    (local.lowMidi !== undefined || local.highMidi !== undefined) &&
+    (imported.range.lowMidi !== local.lowMidi || imported.range.highMidi !== local.highMidi)
+  ) {
+    return;
+  }
+  let newest = -Infinity;
+  for (const s of imported.sessions) {
+    const when = Date.parse(s.date);
+    if (Number.isFinite(when) && when > newest) newest = when;
   }
   if (!Number.isFinite(newest)) return;
   recordBackupFile(new Date(Math.min(newest, Date.now())).toISOString());

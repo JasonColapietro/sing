@@ -545,16 +545,18 @@ export function DataControls({
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      const before = getState().sessions.map((s) => s.id);
+      const prior = getState();
+      const before = prior.sessions.map((s) => s.id);
       const json = String(reader.result ?? "");
       const ok = importProgress(json);
       if (!ok) {
         setImportNotice({ kind: "err", text: "That file didn't parse as valid progress data." });
         return;
       }
-      // The file just restored holds everything up to its newest session, so
-      // the save prompt must not call this browser the only copy of it.
-      recordImportedBackupFile(json);
+      // When the file held everything this browser had, it is a backup up to
+      // its newest session, so the save prompt must not call this browser the
+      // only copy of it.
+      recordImportedBackupFile(json, prior);
       // The import merges, but the store still keeps only the newest
       // MAX_SESSIONS, so a big file can push this browser's oldest sessions
       // out. Say so rather than claim they were all kept.
