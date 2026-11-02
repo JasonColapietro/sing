@@ -29,7 +29,7 @@ Hear Minor five-note scale in a comfortable key and remember its first note (1),
 
 ### Name the target: Eight-bar improvisation
 
-An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
+Eight bars in one take: the supplied call and answer, then the call again with a two-bar answer of your own from 1, flat 3, 5 and flat 7, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.

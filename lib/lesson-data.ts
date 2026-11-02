@@ -6935,7 +6935,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Eight-bar improvisation",
-        "body": "An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic.",
+        "body": "Eight bars in one take: the supplied call and answer, then the call again with a two-bar answer of your own from 1, flat 3, 5 and flat 7, keeping the tapped pulse and ending on the tonic.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -8485,14 +8485,14 @@ export const LESSONS: Lesson[] = [
       {
         "title": "Name the target: Range extension",
         "body": "Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection.",
-        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
-        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+        "look": "Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.",
+        "listen": "Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days."
       },
       {
         "title": "Make one evidence take",
         "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.",
-        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
-        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+        "look": "Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.",
+        "listen": "Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days."
       },
       {
         "title": "Review your own attempt",
@@ -8532,7 +8532,7 @@ export const LESSONS: Lesson[] = [
     "selfCheck": {
       "criteria": [
         "I sang Small three-note climb with its top on today's easy high note and its bottom on today's easy low note, and compared both with my earlier baseline without forcing an extension.",
-        "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.",
+        "Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.",

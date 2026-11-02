@@ -31,15 +31,15 @@ Warm up in the comfortable middle, then confirm today's repeatable low and high 
 
 Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
-- Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
+- Look: Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.
+- Listen: Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days.
 
 ### Make one evidence take
 
 State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.
 
-- Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
-- Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
+- Look: Today's notes are taken with the same posture, warm-up, room and microphone distance as the baseline, without a lifted chin or collapsed posture.
+- Listen: Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days.
 
 ### Review your own attempt
 
@@ -63,7 +63,7 @@ I sang Small three-note climb with its top on today's easy high note and its bot
 ## Self-check
 
 - I sang Small three-note climb with its top on today's easy high note and its bottom on today's easy low note, and compared both with my earlier baseline without forcing an extension.
-- The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
+- Today's easy low and high notes sound like usable sung notes you could repeat, not a breathy touch or forced shout reached once; any semitone you tried further counts as new only once it has been easy on three separate days.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
 Ready when: You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.
