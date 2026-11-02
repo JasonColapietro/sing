@@ -184,6 +184,10 @@ describe("songs mic gate", () => {
       <SongsMicGate heading="Enable your microphone to sing “She'll Be Coming Round the Mountain”" />,
     );
     expect(linked).toContain('<h2 class="text-lg sm:text-xl">Enable your microphone to sing');
+    // The example figure sits under the gate, as on /studio and the /range
+    // meter: above it, it pushed both buttons off a 320×568 first screen.
+    expect(html.indexOf("Enable microphone")).toBeLessThan(html.indexOf("What a run looks like"));
+    expect(html.indexOf("Pick a song first")).toBeLessThan(html.indexOf("What a run looks like"));
   });
 
   it("labels the button as a retry once the mic has failed", () => {
