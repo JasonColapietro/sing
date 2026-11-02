@@ -36,7 +36,7 @@ Before recording, draw the order from slips marked neutral, restrained and drive
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Draw the slips, then sing the phrase once per slip in the order drawn, returning to easy neutral between attempts. Change vocal weight without moving the pitch or using loudness as the only cue.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Draw the slips, then sing the phrase once per slip in the order drawn, returning to easy neutral between attempts. Change vocal weight without moving the pitch or using loudness as the only cue. Afterward, speak a sentence and notice whether your speaking voice feels unchanged.
 
 - Look: The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.
 - Listen: Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.

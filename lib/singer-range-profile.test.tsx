@@ -23,10 +23,18 @@ import {
   keyboardNeighbors,
   keyboardParagraphs,
   linkedSingerSlugs,
+  otherArtistSongs,
+  similarRangeAnswer,
   songsInRange,
+  songsInRangeCount,
+  songsInRangeLead,
   voiceTypeParagraphs,
 } from "@/lib/singer-range-profile";
-import { SINGERS, singerBySlug } from "@/lib/singers";
+import rawEvidence from "@/data/singer-evidence.json";
+import { ATLAS } from "@/lib/atlas-data";
+import { evidenceContestsCatalogLabel } from "@/lib/singer-evidence";
+import { popFit } from "@/lib/pop-songs";
+import { SINGERS, relatedSingers, singerBySlug } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
 const decode = (html: string) =>
@@ -86,6 +94,95 @@ describe("range explainer arithmetic", () => {
         expect(song.highMidi).toBeLessThanOrEqual(s.highMidi);
       }
     }
+  });
+});
+
+/** Sum of the two endpoint distances: the rule relatedSingers ranks by. */
+const endpointDistance = (a: { lowMidi: number; highMidi: number }, b: { lowMidi: number; highMidi: number }) =>
+  Math.abs(a.lowMidi - b.lowMidi) + Math.abs(a.highMidi - b.highMidi);
+
+describe("the similar-range FAQ answer states the rule the ranking uses", () => {
+  it("names the top three similar voices, nearest endpoints first, and claims no shared voice type", () => {
+    let otherLabel = 0;
+    for (const s of SINGERS) {
+      const answer = similarRangeAnswer(s);
+      const top = relatedSingers(s).slice(0, 3);
+      // The answer names exactly the cards' first three, in order.
+      const at = top.map((o) => answer.indexOf(`${o.name} (`));
+      expect(at.every((i) => i >= 0), s.slug).toBe(true);
+      expect([...at].sort((a, b) => a - b), s.slug).toEqual(at);
+      // The rule it states holds: distance never falls down the list.
+      const d = top.map((o) => endpointDistance(o, s));
+      expect([...d].sort((a, b) => a - b), s.slug).toEqual(d);
+      expect(answer, s.slug).toContain("ranked by how close their reported lowest and highest notes are");
+      // The label only breaks ties, so the answer never says the matches share it.
+      expect(answer, s.slug).not.toMatch(/voice type|catalog label|matched by|same type/i);
+      if (top.some((o) => o.voiceType !== s.voiceType)) otherLabel += 1;
+    }
+    // The case the old wording got wrong is common, so this guard is live.
+    expect(otherLabel).toBeGreaterThan(100);
+    expect(relatedSingers(singerBySlug("samuel-ramey")!).slice(0, 3).some((o) => o.voiceType !== "Bass")).toBe(true);
+  });
+});
+
+describe("the songs-in-range card counts what it lists", () => {
+  it("counts and lists the same songs, by other artists, on every profile", () => {
+    for (const s of SINGERS) {
+      const fitting = otherArtistSongs(s).filter((song) => popFit(song, s).verdict === "fits");
+      expect(songsInRangeCount(s), s.slug).toBe(fitting.length);
+      expect(songsInRange(s, Infinity).map((x) => x.slug), s.slug).toEqual(
+        expect.arrayContaining(fitting.map((x) => x.slug)),
+      );
+      if (!fitting.length) continue;
+      const lead = songsInRangeLead(s);
+      expect(lead, s.slug).toContain("by other artists on Suede Sing’s song-range pages");
+      expect(lead, s.slug).not.toMatch(/song catalog|^1 of the \d+ [^.]* sit inside|The widest of them/);
+      if (fitting.length === 1) expect(lead, s.slug).toMatch(/^1 of the \d+ .* sits inside/);
+    }
+  });
+
+  it("lists Whitney Houston's widest fitting song by another artist first, and leaves her own out of count and list", () => {
+    const whitney = singerBySlug("whitney-houston")!;
+    const span = (x: { lowMidi: number; highMidi: number }) => x.highMidi - x.lowMidi;
+    const widest = otherArtistSongs(whitney)
+      .filter((song) => popFit(song, whitney).verdict === "fits")
+      .sort((a, b) => span(b) - span(a) || a.title.localeCompare(b.title))[0];
+    expect(songsInRange(whitney)[0].slug).toBe(widest.slug);
+    expect(songsInRange(whitney).map((x) => x.slug)).not.toContain("i-will-always-love-you");
+    expect(songsInRangeLead(whitney)).toMatch(/^All 23 popular songs by other artists/);
+  });
+});
+
+/** "describes X as (a) [lyric] tenor": the voice type a cited source gives, if any. */
+const SOURCE_TYPE = /\bas (?:an? )?(?:[a-z]+ )?(bass-baritone|mezzo-soprano|countertenor|contralto|soprano|baritone|tenor|bass)\b/i;
+
+describe("a cited source that names another voice type unsettles the label", () => {
+  it("drops the same-label comparison on every profile whose own source names a different type", async () => {
+    const evidence = rawEvidence as Record<string, { voiceTypeCopy?: string }>;
+    const contested: string[] = [];
+    for (const [slug, entry] of Object.entries(evidence)) {
+      const named = SOURCE_TYPE.exec(entry.voiceTypeCopy ?? "")?.[1]?.toLowerCase();
+      const s = singerBySlug(slug)!;
+      if (!named || named === s.voiceType.toLowerCase()) continue;
+      contested.push(slug);
+      const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug }) }));
+      const text = visibleText(html);
+      expect(text, slug).toContain(`How ${s.name}’s range lines up with the textbook voice types`);
+      expect(text, slug).not.toMatch(new RegExp(`compares with other ${s.voiceType.toLowerCase()}`, "i"));
+      expect(text, slug).not.toMatch(/Across the \d+ /);
+      // The catalog-position list drops the facts that read the label as settled, too.
+      expect(text, slug).not.toMatch(/Span, [a-z-]+ group|Against the textbook band/);
+    }
+    expect(contested).toContain("peter-steele");
+    expect(evidenceContestsCatalogLabel("peter-steele")).toBe(true);
+  });
+});
+
+describe("note ranges use the house en dash in singer and atlas copy", () => {
+  it("prints no hyphenated note range anywhere in the singer data, evidence or atlas", () => {
+    const HYPHEN_RANGE = /\b[A-G][#b]?-?\d-[A-G][#b]?-?\d\b/g;
+    const corpus = JSON.stringify([SINGERS, rawEvidence, ATLAS]);
+    expect(corpus.match(HYPHEN_RANGE) ?? []).toEqual([]);
   });
 });
 
@@ -154,6 +251,14 @@ describe("every singer page is a thick, indexable answer page", () => {
         expect(html, s.slug).toContain('id="voice-type-comparison"');
         expect(html, s.slug).toContain('id="practice"');
         for (const line of [...keyboardParagraphs(s)]) expect(text, s.slug).toContain(line);
+
+        // The closing card: the reference songs are named as range pages, never a catalog to sing in the app.
+        const card = visibleText(html.slice(html.indexOf('id="practice"')));
+        expect(card, s.slug).not.toMatch(/Suede Sing song catalog|same keyboard|which to train next|Sing in .* range with Suede Sing|sit at each end/);
+        if (songsInRange(s).length) {
+          expect(card, s.slug).toContain(songsInRangeLead(s));
+          expect(html.slice(html.indexOf('id="practice"')), s.slug).toContain('href="/songs"');
+        }
 
         expect(text.split(" ").length, `${s.slug} word count`).toBeGreaterThanOrEqual(MIN_WORDS);
         const masked = text.replaceAll(s.name, "NAME");

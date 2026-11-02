@@ -313,8 +313,9 @@ export function BreathRunResults({
       notice={capped ? <CappedAgainNote notReached={notReached} /> : undefined}
     >
       {shortHold !== null && <ShortSustainNote held={shortHold} />}
-      {/* At the cap the notice carries the priced ask; one is enough. */}
-      {!capped && <BreathProNudge />}
+      {/* At the cap the notice carries the priced ask; one is enough. A run
+          with no step done is no result, so it gets no Pro ask either. */}
+      {!capped && finished && <BreathProNudge />}
     </ResultsScreen>
   );
 }
@@ -493,7 +494,8 @@ export function BreathDrillSession({
       >
         {/* Why "Play again" is gone, and when it comes back. */}
         {capped && <CappedAgainNote />}
-        {!capped && <BreathProNudge />}
+        {/* A drill too short or too quiet to count is no result: no Pro ask. */}
+        {!capped && breathStepDone(step, result) && <BreathProNudge />}
       </ResultsScreen>
     );
   }

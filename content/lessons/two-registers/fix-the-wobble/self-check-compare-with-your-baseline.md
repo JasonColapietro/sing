@@ -36,7 +36,7 @@ Use the same short phrase for the relaxed baseline and the changed example, then
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Compare an easy baseline with a deliberately airier, brighter-nasal, or firmer version only as a listening demonstration. Return to the easy baseline after each contrast.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Compare an easy baseline with a deliberately airier, brighter-nasal, or firmer version only as a listening demonstration. Return to the easy baseline after each contrast. On playback, name the change you hear as breathy, nasal or tight, and notice whether any hoarseness or effort lingers afterward.
 
 - Look: The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.
 - Listen: Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap.

@@ -664,7 +664,8 @@ export function ResultView({
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-mut">
             Your result is saved in this browser. Return to the singer profile
-            to see the overlap, shared notes, and the gap at each end.
+            to see how much of their range yours covers, the semitones you share,
+            and both ranges on one chart.
           </p>
           <div className="mt-4">
             <LinkButton href={singerCompareHref(comparisonSinger.slug)} size="md">

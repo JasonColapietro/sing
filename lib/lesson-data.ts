@@ -275,7 +275,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Make one comfortable sustained sound, then leave a full quiet gap before the next. Change only one room or device setting at a time so you can hear what fixed the input.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Make one comfortable sustained sound, then leave a full quiet gap before the next. Change only one room or device setting at a time so you can hear what fixed the input. Record on the device and in the room you will practice in, and on playback listen for any reference tone, echo or clipping.",
         "look": "The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.",
         "listen": "Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment."
       },
@@ -530,7 +530,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, sing the test as one uninterrupted attempt, and keep its saved result. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. If an end needs extra volume, a lifted chin or neck effort, press Start over before the test finishes: a finished test becomes the range your warm-ups and songs are fitted to.",
+        "body": "Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, sing the test as one uninterrupted attempt, and keep its saved result. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. If an end needs extra volume, a lifted chin or neck effort, press Start over before the test finishes: a finished test becomes the range your warm-ups and songs are fitted to. Then write down one easy low note and one easy high note you could sing again tomorrow.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -803,7 +803,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down. Make three hisses in a row in that take, with a comfortable breath and shoulders down between them. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -1058,7 +1058,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Hold or slide through a narrow range with steady airflow and no push. Reset between attempts instead of extending a fading trill by force.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Hold or slide through a narrow range with steady airflow and no push. Then, in the same take after a quiet breath, sing the same notes once on an open “ah” at the same volume, so you can compare how the two feel. Reset between attempts instead of extending a fading trill by force. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -1313,7 +1313,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Begin close to the pitch rather than sliding up from below. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Begin close to the pitch rather than sliding up from below. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes. In that take, sing the five-note pattern from silence three times in a row, and on playback check that every note starts on its pitch. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1568,7 +1568,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Aim for one centered pitch and an even release. Hear Sustained hold once, stop the reference, then sing your short comfortable holds in that one recorder take. Compare the start and end of each on playback; judge it by ear, not by the display.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Aim for one centered pitch and an even release. Hear Sustained hold once, stop the reference, then sing three short comfortable holds in a row in that one recorder take. Compare the start and end of each on playback; judge it by ear, not by the display. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1823,7 +1823,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep one consistent, comfortable production through the song. Work phrase by phrase, then join the form without changing key to imitate a recording.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep one consistent, comfortable production through the song. Work phrase by phrase, then join the form without changing key to imitate a recording, and sing it through with no stops. Write down the key you sang it in.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },
@@ -2078,7 +2078,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Put the order you rolled where you can see it; if it never changes from fuller to lighter or back, roll again. On one comfortable note from Humming thirds, sing six short notes, one per roll, fuller or lighter as each roll says, with a quiet breath between them, matching pitch and volume as closely as practical. Record all six in one take in the [recorder](/recorder) so every change is there on playback.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Put the order you rolled where you can see it; if it does not change at least once from fuller to lighter and at least once from lighter to fuller, roll again. On one comfortable note from Humming thirds, sing six short notes, one per roll, fuller or lighter as each roll says, with a quiet breath between them, matching pitch and volume as closely as practical. Record all six in one take in the [recorder](/recorder) so every change is there on playback.",
         "look": "Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.",
         "listen": "Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference."
       },
@@ -2351,7 +2351,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Learn the pace there with the reference, then stop it and sing the three sirens in that one recorder take, so you can judge them on playback. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later. If your range test spanned less than 21 semitones, slide a fourth rather than an octave, starting a few notes above your lowest note, and widen it a step at a time only while both ends stay easy.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Learn the pace there with the reference, then stop it and sing the three sirens, up and down, at conversational volume in that one recorder take, so you can judge them on playback. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later. If your range test spanned less than 21 semitones, slide a fourth rather than an octave, starting a few notes above your lowest note, and widen it a step at a time only while both ends stay easy. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2606,7 +2606,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Repeat the same pitch pattern on each assigned vowel without spreading, swallowing, or changing volume to manufacture sameness.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Sing the phrase on five vowels, “ee”, “eh”, “ah”, “oh” and “oo”, in that order, with a quiet breath between. Repeat the same pitch pattern on each vowel without spreading, swallowing, or changing volume to manufacture sameness.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -3116,7 +3116,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Compare an easy baseline with a deliberately airier, brighter-nasal, or firmer version only as a listening demonstration. Return to the easy baseline after each contrast.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Compare an easy baseline with a deliberately airier, brighter-nasal, or firmer version only as a listening demonstration. Return to the easy baseline after each contrast. On playback, name the change you hear as breathy, nasal or tight, and notice whether any hoarseness or effort lingers afterward.",
         "look": "The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.",
         "listen": "Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap."
       },
@@ -3881,7 +3881,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep consonants quick and vowels connected. Increase tempo only while every word remains understandable on playback.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep consonants quick and vowels connected. Increase tempo only while every word remains understandable on playback. Then have someone who has not seen the lyric, or yourself a day later without looking at it, write down every word of the recorded phrase from playback.",
         "look": "The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.",
         "listen": "A listener can write down the words from the recording without seeing the lyric."
       },
@@ -4136,7 +4136,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Shuffle the slips, then sing the phrase once per slip in the order drawn, with a breath between versions: a connected grace, a short release, or a clear accent. Make the gesture small enough to remain repeatable.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Shuffle the slips, then sing the phrase once per slip in the order drawn, with a breath between versions: a connected grace, a short release, or a clear accent. Make the gesture small enough to remain repeatable. On playback, name each articulation before checking the slips.",
         "look": "The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.",
         "listen": "The three versions are distinguishable in playback without one simply being much louder than the others."
       },
@@ -4391,7 +4391,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short. On playback alone, put the four levels in order and check that the pitch stays centered at each.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
         "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
@@ -4646,7 +4646,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Then slide through it once more in the [pitch studio](/studio), which names the note as you sing it, and write down the first note where effort rises on the way up and where the sound settles on the way down. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Then slide through it once more in the [pitch studio](/studio), which names the note as you sing it, and write down the first note where effort rises on the way up and where the sound settles on the way down. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names. Finish the recorder take with three quiet slides in a row through your zone in both directions. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4901,7 +4901,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word. Compare modified and unmodified attempts at the same pitch and volume.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word. Compare modified and unmodified attempts at the same pitch and volume, on one word for each of three vowels, crossing the zone in both directions.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -5156,7 +5156,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. While you find it, have the [voice analyzer](/analyze) open: the Ring band percentage on its tone view usually rises as the sound brightens, but getting louder or pressing can raise it too, so keep the volume steady and the throat easy. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take in the [recorder](/recorder), with a quiet breath between them, so saving does not replace the sound you need to compare.",
+        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. While you find it, have the [voice analyzer](/analyze) open: the Ring band percentage on its tone view usually rises as the sound brightens, but getting louder or pressing can raise it too, so keep the volume steady and the throat easy. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take in the [recorder](/recorder), with a quiet breath between them, so saving does not replace the sound you need to compare. Then sing the brighter “eh” once more at about half the volume, in the same take, and check that the brightness stays without a grip in the throat.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5411,7 +5411,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "Say “hey!” as if calling a friend across a quiet room: a call, not a shout. Sing that “hey” on a comfortable note below your transition and move it up one semitone at a time only while it stays as easy as speaking, to find the last easy step; if it starts to need a push, let it lighten instead. Then hear the pattern you chose, Legato triad or Wee from the fifth, in the key that puts its top note just above your transition but never above that last easy step, and stop the reference. State the checkpoint target and record one uninterrupted attempt in the [recorder](/recorder): the pattern three times in a row at moderate volume, holding its top note for six comfortable seconds each time, with a quiet breath between. Keep the result even when it does not pass. Never chase a belt label by adding throat pressure.",
+        "body": "Say “hey!” as if calling a friend across a quiet room: a call, not a shout. Sing that “hey” on a comfortable note below your transition and move it up one semitone at a time only while it stays as easy as speaking, to find the last easy step; if it starts to need a push, let it lighten instead. Then hear the pattern you chose, Legato triad or Wee from the fifth, in the key that puts its top note just above your transition but never above that last easy step, and stop the reference. State the checkpoint target and record one uninterrupted attempt in the [recorder](/recorder): the pattern three times in a row at moderate volume, holding its top note for six comfortable seconds each time, with a quiet breath between. Keep the result even when it does not pass. Never chase a belt label by adding throat pressure. Afterward, speak a sentence and notice whether your speaking voice feels unchanged.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5666,7 +5666,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Answer a short call, leave space, then vary one element (rhythm, direction or ending) while keeping the same key center. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Once that is familiar, invent a different answer from the same note set. Record call and answer together in one take.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Answer a short call, leave space, then vary one element (rhythm, direction or ending) while keeping the same key center. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Once that is familiar, invent a different answer from the same note set. Record call and answer together in one take. Then make the same take on a different day, with a different answer of your own: it is ready once both days pass.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },
@@ -5921,7 +5921,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed. Sing three reps in a row at your current tempo in that take. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6176,7 +6176,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes. Sing three reps in a row of Hoo descent on one unbroken “oo” in that take. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6431,7 +6431,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Before singing, choose the count where the vibrato will come in and the count where you will return to straight tone, for example in on three and out on six of a slow count. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Before singing, choose the count where the vibrato will come in and the count where you will return to straight tone, for example in on three and out on six of a slow count. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release. Sing three holds in a row this way in that take. Then make the same take again on a different day: it is ready once both days pass.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6941,13 +6941,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Then sing the call again and answer it with two bars of your own, using only 1, flat 3, 5 and flat 7 below the tonic and ending on 1, to make eight bars. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record all eight bars of call and answer in one take.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
       {
         "title": "Review your own attempt",
-        "body": "I sang the supplied call and answer as eight bars against my tapped pulse, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.",
+        "body": "I sang the supplied call and answer, then the call again with an answer of my own from 1, flat 3, 5 and flat 7, as eight bars against my tapped pulse, ending on the tonic.",
         "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
         "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
       }
@@ -6982,13 +6982,13 @@ export const LESSONS: Lesson[] = [
     ],
     "selfCheck": {
       "criteria": [
-        "I sang the supplied call and answer as eight bars against my tapped pulse, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.",
+        "I sang the supplied call and answer, then the call again with an answer of my own from 1, flat 3, 5 and flat 7, as eight bars against my tapped pulse, ending on the tonic.",
         "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "One recorded take holds eight bars against your tapped pulse, builds its answer from the two-bar call rather than wandering, and ends on the tonic you heard before recording.",
       "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form.",
-      "shows": "I sang the supplied call and answer as eight bars against my tapped pulse, with one rhythmic change of my own in the repeat, and checked that it ended on the tonic.",
+      "shows": "I sang the supplied call and answer, then the call again with an answer of my own from 1, flat 3, 5 and flat 7, as eight bars against my tapped pulse, ending on the tonic.",
       "doesNotShow": "Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
     }
   },
@@ -7451,7 +7451,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound. Write the warm-up down in order, from quiet and mid-range to wider and then fuller, with rests, and write the stop list beside it: pain means stop that session; any blood, or a sudden loss of range or voice, means a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness that does not clear means the same doctor. After running it, check whether your voice feels at least as easy as before.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7694,7 +7694,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Set a safe baseline",
-        "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.",
+        "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing, and write down at least two choices that will differ between them.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -7961,7 +7961,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Draw the slips, then sing the phrase once per slip in the order drawn, returning to easy neutral between attempts. Change vocal weight without moving the pitch or using loudness as the only cue.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Draw the slips, then sing the phrase once per slip in the order drawn, returning to easy neutral between attempts. Change vocal weight without moving the pitch or using loudness as the only cue. Afterward, speak a sentence and notice whether your speaking voice feels unchanged.",
         "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
         "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
       },
@@ -8490,7 +8490,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today. Take today's notes the same way as the baseline, with the same warm-up, room and microphone distance, and count a note as new only once it has been easy on three separate days.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },

@@ -36,7 +36,7 @@ Judged by your own ear against your own recording. No vowel or formant tracking 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Repeat the same pitch pattern on each assigned vowel without spreading, swallowing, or changing volume to manufacture sameness.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Sing the phrase on five vowels, “ee”, “eh”, “ah”, “oh” and “oo”, in that order, with a quiet breath between. Repeat the same pitch pattern on each vowel without spreading, swallowing, or changing volume to manufacture sameness.
 
 - Look: The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.
 - Listen: Each vowel remains intelligible while the phrase keeps a related tone and pitch center.

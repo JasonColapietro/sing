@@ -36,7 +36,7 @@ Four audibly distinct levels on one note. Input level is uncalibrated, so your e
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short. On playback alone, put the four levels in order and check that the pitch stays centered at each.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
 - Listen: The four levels in your take form an audible progression while pitch stays centered.

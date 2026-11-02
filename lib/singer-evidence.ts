@@ -292,6 +292,19 @@ export function voiceTypeEvidenceCopy(
   );
 }
 
+/**
+ * Pending profiles whose own cited source names a different voice type from
+ * the catalog label (Peter Steele: a memorial calls him a baritone and does not
+ * establish bass-baritone). Like a reviewed correction, the page then reads
+ * nothing that treats the label as the singer's settled type. Guarded by
+ * lib/singer-range-profile.test.tsx, which reads every evidence entry.
+ */
+const LABEL_CONTESTED_BY_EVIDENCE: ReadonlySet<string> = new Set(["peter-steele"]);
+
+export function evidenceContestsCatalogLabel(slug: string): boolean {
+  return LABEL_CONTESTED_BY_EVIDENCE.has(slug);
+}
+
 /** Groups source cards by the song/performance they document. */
 export function groupEvidenceSources(
   sources: readonly SingerEvidenceSource[],

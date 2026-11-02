@@ -390,7 +390,7 @@ const CATALOGUE: WarmupExercise[] = [
       title: "First hum",
       desc: "Three tiny hummed steps: root, up one tone, back home.",
       tier: "beginner",
-      tip: "Barely more than breathing. Let the buzz find your face on its own.",
+      tip: "Soft but voiced, a hum you could hear across a quiet room. Let the buzz find your face on its own.",
       noteDur: 0.8,
       buildSteps: (r) => [rel(r, [0, 2, 0])],
     },
@@ -476,9 +476,9 @@ const CATALOGUE: WarmupExercise[] = [
   {
     id: "quiet-hum-descent",
     title: "Quiet hum descent",
-    desc: "A quiet hum down 3-2-1, each rep a half-step lower. The smallest sound that still has a pitch.",
+    desc: "A quiet hum down 3-2-1, each rep a half-step lower: soft, but loud enough for the mic to hear the pitch.",
     tier: "beginner",
-    tip: "Half your usual volume. Lips closed, jaw loose, and let each note settle rather than place it.",
+    tip: "Softer than usual, but still a voiced hum. Lips closed, jaw loose, and let each note settle rather than place it.",
     noteDur: 0.8,
     ladder: "down",
     rangeCap: LOWER_HALF_OF_RANGE,
@@ -772,11 +772,11 @@ export const PRO_PACKS: WarmupPack[] = [
       {
         id: "head-fifth-siren",
         title: "Gentle fifth siren",
-        desc: "A soft siren to the fifth and back, using the smallest sound that still slides.",
+        desc: "A soft siren to the fifth and back, quiet but voiced the whole way, so the pitch still slides.",
         tier: "intermediate",
         glide: true,
         noteDur: 0.8,
-        tip: "Half the volume you think you need. Smooth beats loud here.",
+        tip: "Softer than you think you need, but always voiced. Smooth beats loud here.",
         buildSteps: (r) => [
           [r, r + 7],
           [r + 7, r],
@@ -825,7 +825,7 @@ export const PRO_PACKS: WarmupPack[] = [
       {
         id: "head-float-hold",
         title: "Top-note float",
-        desc: "Hold one note at the fifth and let it hover, as light as it will go.",
+        desc: "Hold one note at the fifth and let it hover, light but clearly voiced.",
         tier: "intermediate",
         tip: "Imagine the note resting on the breath, like a ball on a fountain.",
         noteDur: 3,

@@ -363,9 +363,11 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Narrow and repeated-note, with two 4th-sized dips ("dle WENT", "TO
-    // town"). The phrase closes on the leading tone below the tonic, because
-    // the tune is still on its way to "stuck a feather in his cap".
+    // Narrow and repeated-note. This transcription leaves out the low pickup
+    // "A-" (G3, the dominant below, before "riding"), which keeps the phrase
+    // inside a fourth (B3 to E4) and in the easy band. The phrase
+    // closes on the leading tone below the tonic, because the tune is still on
+    // its way to "stuck a feather in his cap".
     id: "yankee-doodle",
     slug: "yankee-doodle",
     title: "Yankee Doodle",
@@ -380,7 +382,8 @@ export const SONGS: Song[] = [
     genre: "Patriotic",
     era: "1700s",
     language: "English",
-    // Not "stepwise": the page counts three leaps of a major third or more.
+    // Not "stepwise": the page counts three leaps of a major third (E4 down
+    // to C4 on "dle went" and "a po", C4 up to E4 on "went to").
     tags: ["march", "narrow range"],
     notes: [
       { midi: 60, startBeat: 0, durBeats: 1, lyric: "Yan", wordEnd: false },

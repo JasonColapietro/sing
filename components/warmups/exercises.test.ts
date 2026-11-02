@@ -503,6 +503,20 @@ describe("coaching copy", () => {
     }
   });
 
+  it("never asks for a sound below what the pitch detector can hear", () => {
+    // lib/audio/pitch.ts drops frames under SILENCE_RMS, the mic runs with
+    // automatic gain off, and two unheard reps close a step as "No sound
+    // picked up". "Barely more than breathing" opened the Start-here Morning
+    // reset; quiet cues must still ask for a voiced, audible note.
+    const belowFloor =
+      /\b(?:barely (?:more than|audible)|smallest sound|as (?:light|quiet|soft) as (?:it will go|you can|possible)|half (?:your|the) (?:usual )?volume|quietest|almost silent|whisper(?:ed)?|under your breath)/i;
+    for (const ex of ALL_EXERCISES) {
+      expect(`${ex.desc} ${ex.tip}`, ex.id).not.toMatch(belowFloor);
+    }
+    const hum = ALL_EXERCISES.find((e) => e.id === "morning-hum")!;
+    expect(hum.tip).toMatch(/soft but voiced/i);
+  });
+
   it("spells out the twelfth runs' descent degree by degree, since it is not a scale", () => {
     // Major-scale degree of each semitone offset the runs use.
     const DEGREE: Record<number, number> = {

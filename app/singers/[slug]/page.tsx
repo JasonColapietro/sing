@@ -17,6 +17,7 @@ import {
 import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
 import { catalogPositionFor, catalogSpanHistogram } from "@/lib/singer-catalog-position";
 import {
+  evidenceContestsCatalogLabel,
   getSingerEvidence,
   getSingerPageLastModified,
   groupEvidenceSources,
@@ -36,10 +37,9 @@ import {
   sharedSemitones,
   similarRangeAnswer,
   songsInRange,
-  songsInRangeCount,
+  songsInRangeLead,
   voiceTypeParagraphs,
 } from "@/lib/singer-range-profile";
-import { POP_SONGS } from "@/lib/pop-songs";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import { RangeMini } from "@/components/singers/range-mini";
@@ -99,11 +99,10 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
   ].includes(s.slug);
 }
 
-/** Position facts that read the catalog voice label as settled; reviewed corrections omit them. */
+/** Position facts that read the catalog voice label as settled; pages where evidence unsettles the label omit them. */
 const LABEL_DEPENDENT_FACTS: ReadonlySet<string> = new Set([
   "type-rank",
   "band",
-  "belt",
 ]);
 
 /** Google cuts titles at roughly 60 characters. */
@@ -231,7 +230,7 @@ function singerFaq(s: SingerRecord): SingerFaq {
         { q: `What is ${s.name}’s lowest note?`, a: `${low} is the reported floor. No reviewed source here establishes it as ${s.name}’s lowest note.` },
         { q: `How many octaves can ${s.name} sing?`, a: `About ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of ${s.name}’s working range.` },
         { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
-        { q: SIMILAR_QUESTION(s), a: similarRangeAnswer(s, !hasReviewedVoiceTypeCorrection(s)) },
+        { q: SIMILAR_QUESTION(s), a: similarRangeAnswer(s) },
       ],
     };
   }
@@ -258,7 +257,7 @@ function singerFaq(s: SingerRecord): SingerFaq {
         a: `About ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer’s full working range.`,
       },
       { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
-      { q: SIMILAR_QUESTION(s), a: similarRangeAnswer(s, !hasReviewedVoiceTypeCorrection(s)) },
+      { q: SIMILAR_QUESTION(s), a: similarRangeAnswer(s) },
     ],
   };
 }
@@ -290,12 +289,12 @@ export default async function SingerPage({
   const lowMates = allLow.slice(0, allHigh.length ? 4 : 8);
   const highMates = allHigh.slice(0, allLow.length ? 4 : 8);
   // The range explainer, computed from the catalog's numbers (lib/singer-range-profile).
-  const labelSettled = !hasReviewedVoiceTypeCorrection(s);
+  // A reviewed correction, or a pending profile whose cited source names another type, unsettles the label.
+  const labelSettled = !hasReviewedVoiceTypeCorrection(s) && !evidenceContestsCatalogLabel(s.slug);
   const keyboard = keyboardParagraphs(s);
   const typeComparison = voiceTypeParagraphs(s, labelSettled);
   const neighbors = keyboardNeighbors(s);
   const fittingSongs = songsInRange(s);
-  const fittingCount = songsInRangeCount(s);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = queryAlignedDescription(s);
@@ -525,13 +524,11 @@ export default async function SingerPage({
             Where {s.name}&rsquo;s reported span sits in the catalog
           </h2>
           <dl className="mt-4 max-w-3xl space-y-4">
-            {/* A reviewed correction set the catalog label aside, so label-dependent facts stay out. */}
+            {/* Where evidence sets the catalog label aside, label-dependent facts stay out. */}
             {catalogPositionFor(s)
-              .filter(
-                (fact) =>
-                  !hasReviewedVoiceTypeCorrection(s) ||
-                  !LABEL_DEPENDENT_FACTS.has(fact.id),
-              )
+              .filter((fact) => labelSettled || !LABEL_DEPENDENT_FACTS.has(fact.id))
+              // Reviewed corrections also withhold the catalog belt, as the keyboard above does.
+              .filter((fact) => !hasReviewedVoiceTypeCorrection(s) || fact.id !== "belt")
               .map((fact) => (
                 <div key={fact.id}>
                   <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -686,7 +683,7 @@ export default async function SingerPage({
           )}
         </Card>
 
-        {/* Similar voices by type and nearest endpoints, then the voices sharing an exact endpoint. */}
+        {/* Similar voices by nearest endpoints (the label only breaks ties), then the voices sharing an exact endpoint. */}
         <Card>
           <SectionLabel>Similar voices</SectionLabel>
           <h2 className="mt-3 text-xl">Voices with a similar catalog range</h2>
@@ -834,14 +831,12 @@ export default async function SingerPage({
         {/* One start, at the end of the read: the range test that overlays the visitor on this singer. */}
         <Card className="border-violet/40">
           <h2 id="practice" className="scroll-mt-24 text-xl">
-            Sing in {s.name}&rsquo;s range with Suede Sing
+            Test your range against {s.name}
           </h2>
           {fittingSongs.length > 0 && (
             <>
-              <p className="mt-3 max-w-3xl text-sm text-mut">
-                {fittingCount} of the {POP_SONGS.length} songs in the Suede Sing song catalog sit
-                inside {s.name}&rsquo;s reported {rangeLabel(s)} as written. The widest of them:
-              </p>
+              {/* The /can-you-sing range pages chart a popular song and hold no melody, so they are never called songs to sing here. */}
+              <p className="mt-3 max-w-3xl text-sm text-mut">{songsInRangeLead(s)}</p>
               <ul className="mt-3 space-y-1">
                 {fittingSongs.map((song) => (
                   <li key={song.slug} className="text-sm">
@@ -855,13 +850,25 @@ export default async function SingerPage({
                   </li>
                 ))}
               </ul>
+              <p className="mt-3 max-w-3xl text-sm text-mut">
+                Those pages chart each song&rsquo;s key, range and difficulty without its
+                melody. The songs you can sing along to with live pitch feedback are the
+                public-domain melodies in the{" "}
+                <Link
+                  href="/songs"
+                  prefetch={false}
+                  className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+                >
+                  songbook
+                </Link>
+                .
+              </p>
             </>
           )}
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            Take the free two-minute range test and Suede Sing lays your lowest and highest
-            notes over {s.name}&rsquo;s {rangeLabel(s)} on the same keyboard. You see which of
-            these notes you already own and which to train next, then warm up and practice
-            right in your browser.
+            Take the free two-minute range test, then come back to this page to see how
+            much of {s.name}&rsquo;s {rangeLabel(s)} your range covers, the semitones you
+            share, and your lowest and highest notes beside {s.name}&rsquo;s on one chart.
           </p>
           <div className="mt-5">
             <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">

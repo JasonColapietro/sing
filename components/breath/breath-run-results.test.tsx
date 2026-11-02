@@ -15,6 +15,13 @@ vi.mock("@/components/practice/session-shell", () => ({
   ),
 }));
 
+// Hydrated and free: the Pro nudge renders as it does on a free singer's screen.
+vi.mock("@/lib/pro", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/lib/pro")>(),
+  useIsPro: () => false,
+  useProReady: () => true,
+}));
+
 import type { LogResult } from "@/lib/progress";
 import { withStepResult } from "@/components/practice/step-results";
 import { BreathRunResults, breathStepDone, shortSustainHold } from "./breath-runner";
@@ -141,5 +148,16 @@ describe("a breath set the cap stopped between steps", () => {
     expect(html).toContain(">Skipped<");
     expect(html.match(/Not reached/g)).toHaveLength(1);
     expect(html).toContain("ran out before the last step of this run.");
+  });
+});
+
+describe("the Pro ask after a breath set", () => {
+  it("follows a set with a step done, and not one where nothing counted", () => {
+    const done = renderRun([boxLogged, farinelli, sustain(7, 20)]);
+    expect(done).toContain("Pro removes the");
+    // Box breathing ended too early to log and nothing after it ran: no result, no ask.
+    const nothing = renderRun([box, null, null]);
+    expect(nothing).toContain("0 of 3 steps");
+    expect(nothing).not.toContain("Pro removes the");
   });
 });

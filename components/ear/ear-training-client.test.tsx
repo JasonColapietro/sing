@@ -1,6 +1,9 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import EarTrainingClient from "./ear-training-client";
+import { GAME_NAMES, type GameId } from "./lib";
+import { GAME_MIC } from "./routines";
+import { earGameCredits } from "./session";
 
 describe("the ear room on a deep link's first load", () => {
   // The server HTML, and every render until the room has read its address:
@@ -34,5 +37,26 @@ describe("the ear room's song chase level", () => {
   it("says where the phrase sits until the range test is saved", () => {
     const html = renderToStaticMarkup(<EarTrainingClient />);
     expect(html).toContain("moved into your saved range, or into C3–E4 until you take the range test.");
+  });
+});
+
+describe("the ear room's promise of credit", () => {
+  // A finished game in a room that listens logs nothing when the mic heard no
+  // note (earGameCredits), so the standing line under the path says so, and
+  // names every game it applies to.
+  it("states the silent-game rule for every game that listens", () => {
+    const html = renderToStaticMarkup(<EarTrainingClient />);
+    const games = Object.keys(GAME_MIC) as GameId[];
+    for (const game of games) {
+      expect(earGameCredits(game, false), game).toBe(!GAME_MIC[game]);
+      expect(earGameCredits(game, true), game).toBe(true);
+    }
+    const line = html.match(/Every finished game[^<]*/)?.[0] ?? "";
+    expect(line).toMatch(/once the mic has\s+heard you sing in the games that listen/);
+    expect(html).not.toMatch(/Every finished game earns XP and counts toward your streak\./);
+    const footer = html.slice(html.indexOf("Every finished game"));
+    for (const game of games.filter((g) => GAME_MIC[g])) {
+      expect(footer.toLowerCase(), game).toContain(GAME_NAMES[game].toLowerCase());
+    }
   });
 });

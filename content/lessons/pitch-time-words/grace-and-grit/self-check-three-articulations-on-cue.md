@@ -36,7 +36,7 @@ Before recording, shuffle three slips marked grace, staccato and accent; sing th
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Shuffle the slips, then sing the phrase once per slip in the order drawn, with a breath between versions: a connected grace, a short release, or a clear accent. Make the gesture small enough to remain repeatable.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Shuffle the slips, then sing the phrase once per slip in the order drawn, with a breath between versions: a connected grace, a short release, or a clear accent. Make the gesture small enough to remain repeatable. On playback, name each articulation before checking the slips.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
 - Listen: The three versions are distinguishable in playback without one simply being much louder than the others.

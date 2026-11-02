@@ -7,8 +7,9 @@
  *    labelled disputed and two cite scores.
  *  - The methodology page must not say every reviewed record carries sources
  *    and a confidence level: only the source-reviewed six do.
- *  - The similar-voice cards are picked by voice type and range center, not
- *    by who reaches the page singer's notes, and the heading says so.
+ *  - The similar-voice cards are picked by nearest reported endpoints (the
+ *    catalog label only breaks ties), not by who reaches the page singer's
+ *    notes, and the heading says so.
  *  - A song credited to another artist's recording says whose it is.
  *  - The mini range bars draw one tone: no unexplained full-voice split, and
  *    none of the ceilings reviewed profiles withhold on their own pages.
@@ -123,6 +124,15 @@ describe("house copy on the free reading pages", () => {
     );
     const all = [HUB_FIGURES_NOTE, ...prose].join(" ");
     expect(britishHits(all)).toEqual([]);
+  });
+
+  it("keeps em dashes and British spelling out of every singer's blurb and technique notes", () => {
+    for (const s of SINGERS) {
+      for (const text of [s.blurb, s.technique ?? ""]) {
+        expect(text, s.slug).not.toContain("\u2014");
+        expect(britishHits(text), s.slug).toEqual([]);
+      }
+    }
   });
 
   it("keeps em dashes and British spelling out of the free atlas chapters", () => {

@@ -402,7 +402,7 @@ describe("the lesson data", () => {
       "v-l6-m4-08": [/at the places (you|I) marked/, /each one on playback/],
       "v-l6-m5-01": [/1, flat 3, 1/, /bend(ing)? up into it on purpose/, /call and answer/],
       "v-l6-m5-04": [/call and answer/, /flat 7/, /one rhythmic change/],
-      "v-l6-m5-08": [/call and answer/, /eight/, /one rhythmic change/],
+      "v-l6-m5-08": [/call and answer/, /eight/, /of (your|my) own/],
       "v-l6-m6-01": [/plain/, /one small scoop or fall/, /top note/],
       "v-l6-m6-05": [/range, ornament,? and continuity demands/, /before combining them/],
       "v-l6-m6-08": [/range, ornament,? and continuity demands/, /before combining them/],
@@ -466,6 +466,117 @@ describe("the lesson data", () => {
       }
     }
     expect(mismatched).toEqual([]);
+  });
+
+  /**
+   * A checkpoint's "Ready when" grades only what its steps asked the singer to
+   * do. Round 21 found Straw grading a vowel take no step asked for, Twang a
+   * quiet repeat no step scheduled, and Switch on Cue's re-roll rule letting
+   * through orders that could never show "one change each way". Each
+   * checkpoint names every element its Ready when grades: a RegExp must match
+   * both the Ready when and the task the page sets; a [ready, task] pair ties
+   * a Ready-when phrase to the step wording that asks for it. Every other
+   * lesson keeps the course's general reflection line, so a new checkpoint, or
+   * a lesson given its own Ready when, fails here until it is tied to its steps.
+   * Every Ready when graded "on two different days" must also have a step that
+   * schedules the second day's take, and Tone Across Five Vowels must name them.
+   */
+  it("grade Ready when only on what the steps asked for", () => {
+    const GENERAL =
+      "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.";
+    type Graded = RegExp | readonly [RegExp, RegExp];
+    const ready: Record<string, Graded[]> = {
+      "v-l1-m1-04": [/playback stopped|reference playback/, /reference tone, echo or clipping/, /on the device and in the room you will practice in/],
+      "v-l1-m2-04": [/one easy low note and one easy high note you could sing again tomorrow/, /range test/],
+      "v-l1-m3-04": [/three hisses in a row/, /even/, /end with air/, /shoulders down/],
+      "v-l2-m1-06": [/straw or lip-trill pattern/, /the same notes/, [/on a vowel/, /on an open “ah”/]],
+      "v-l2-m2-06": [/five-note pattern from silence three times in a row/, /every note starts on its pitch/],
+      "v-l2-m3-06": [/three short (comfortable )?holds in a row/, /start and end/],
+      "v-l2-m4-06": [/with no stops/, /[Ww]rit(?:e down|ten) (?:that|the) key/],
+      "v-l3-m1-07": [
+        /six/,
+        /fuller or lighter/,
+        [/at least one change each way/, /at least once from fuller to lighter and at least once from lighter to fuller, roll again/],
+        [/without getting louder/, /matching pitch and volume/],
+      ],
+      "v-l3-m2-07": [/three (slow )?sirens/, /one on each vowel|three narrow vowels/, /up and down/, /at conversational volume/],
+      "v-l3-m3-07": [[/same phrase/, /same pitch pattern/], [/all five vowels/, /five vowels, “ee”, “eh”, “ah”, “oh” and “oo”/], [/pinched, spread or pushed louder/, /spreading, swallowing, or changing volume/]],
+      "v-l3-m4-07": [/Deep River phrase/, /the crossing/, [/low notes stay clearly audible/, /low end/]],
+      "v-l3-m5-07": [/breathy, nasal or tight/, /baseline/, /hoarseness or (lingering )?effort/],
+      "v-l4-m1-07": [/sharp or flat/, /fresh attempt/, /from silence/, [/hearing the reference once/, /Hear the target once/]],
+      "v-l4-m2-07": [/Swing Low, Sweet Chariot phrase/, /“i”/, /comin' for to carry/, /halfway between/, [/clapped version/, /Clap the complete/]],
+      "v-l4-m3-07": [/who has not seen the lyric/, /write down every word of the recorded phrase from playback/],
+      "v-l4-m4-07": [[/in the order you drew/, /in the order drawn/], /name each articulation/, [/same pitch and tempo/, /pitch, words, and tempo unchanged/]],
+      "v-l4-m5-07": [/put the four levels in order/, /pitch stays centered/, [/no tighter in the neck/, /not by squeezing the throat/]],
+      "v-l5-m1-07": [/effort (first )?rises/, [/three times in a row/, /three quiet slides in a row/], /both directions/],
+      "v-l5-m2-07": [/each of three vowels/, /both directions/, [/smallest vowel change that works/, /only enough to keep the crossing easy/]],
+      "v-l5-m3-07": [/baseline/, /brighter/, [/sing it again quietly/, /once more at about half the volume/], /grip in the throat/],
+      "v-l5-m4-07": [/[Tt]hree times in a row/, /moderate volume/, /top note for six comfortable seconds/, /call/, /speaking voice feels unchanged/],
+      "v-l5-m5-07": [/call and answer/, [/different answer each day/, /different day, with a different answer/], /tapped (four-beat )?pulse/, /tonic/],
+      "v-l6-m1-08": [/three reps in a row/, /current tempo/, [/every note on its own pitch/, /every note is distinct/]],
+      "v-l6-m2-08": [/three reps in a row of Hoo descent on one unbroken “oo”/, [/four separate pitches/, /four clear notes/]],
+      "v-l6-m3-08": [/three holds in a row/, /count/, /straight tone/, /jaw/],
+      "v-l6-m4-08": [[/where you marked them beforehand/, /at the places you marked/], /name each one on playback/, [/returns to its written notes/, /underlying pitch and rhythm map/]],
+      "v-l6-m5-08": [/eight bars/, /tapped pulse/, /two-bar call/, /tonic/],
+      "v-l6-m6-08": [[/every ornament you marked/, /mark each ornament/], [/neither end of the range needing a push/, /both ends are repeatable/]],
+      "v-l7-m1-08": [/from quiet and mid-range to wider and then fuller, with rests/, /pain means stop that session/, /at least as easy/],
+      "v-l7-m2-08": [[/same phrase in both styles/, /both treatments in one take/], /at least two/, [/your own voice/, /both yours/]],
+      "v-l7-m3-08": [[/in the order you drew/, /in the order drawn/], /neutral, restrained and driven/, /easy neutral/, /speaking voice/],
+      "v-l7-m4-08": [/stop plan/, /any blood/, /sudden loss of range or voice/, [/no effect today beyond one a teacher had already taught you/, /already taught to you by a qualified teacher/]],
+      "v-l7-m5-08": [/earlier baseline/, /same warm-up, room and microphone distance/, /easy on three separate days/],
+      "v-l7-m6-08": [/whole study/, [/fixed microphone distance you chose by comparing takes/, /at different comfortable microphone distances/], [/understandable/, /clarity/], [/lost quiet ones/, /quietest phrase/]],
+    };
+    expect(Object.keys(ready).sort()).toEqual(LESSONS.filter((l) => l.type === "checkpoint").map((l) => l.id).sort());
+    const mismatched: string[] = [];
+    for (const lesson of LESSONS) {
+      const id = lesson.id;
+      const { readyWhen } = lesson.selfCheck;
+      if (!ready[id]) {
+        if (readyWhen !== GENERAL) mismatched.push(`${id}: a lesson with its own Ready when needs an entry here`);
+        continue;
+      }
+      expect(readyWhen, id).not.toBe(GENERAL);
+      // The page prints the objective above the steps, so it is part of the task.
+      const set = [
+        lesson.objective,
+        ...shownSteps(lesson).filter((s) => s.title !== REVIEW_STEP_TITLE).map((s) => s.body),
+        ...moduleMaterial(lesson.moduleId)
+          .filter((m) => m.kind === "exercise" || m.kind === "song")
+          .map((m) => m.title),
+      ].join(" ");
+      // A Ready when that asks for two days must have a step that schedules the second.
+      const graded = /two different days/.test(readyWhen)
+        ? [...ready[id], [/two different days/, /same take (again )?on a different day/] as const]
+        : ready[id];
+      for (const g of graded) {
+        const [r, t] = g instanceof RegExp ? [g, g] : g;
+        if (!r.test(readyWhen)) mismatched.push(`${id}: Ready when does not say ${r}`);
+        if (!t.test(set)) mismatched.push(`${id}: the task the page sets does not say ${t}`);
+      }
+    }
+    expect(mismatched).toEqual([]);
+  });
+
+  /**
+   * Switch on Cue's re-roll rule keeps only orders its Ready when can pass. An
+   * order needs a fuller-to-lighter and a lighter-to-fuller change; of the 64
+   * fuller/lighter orders, the ones with a single change (or none) are rolled again.
+   */
+  it("re-roll every Switch on Cue order that could never show a change each way", () => {
+    const lesson = LESSONS.find((l) => l.id === "v-l3-m1-07")!;
+    const evidence = lesson.steps.map((s) => s.body).join(" ");
+    expect(evidence).toMatch(/at least once from fuller to lighter and at least once from lighter to fuller, roll again/);
+    expect(lesson.selfCheck.readyWhen).toMatch(/at least one change each way/);
+    // The rule the page used to state ("never changes ... or back") kept every
+    // order with any change; 10 of those change only one way and cannot pass.
+    const orders = Array.from({ length: 64 }, (_, n) =>
+      [...n.toString(2).padStart(6, "0")].map((b) => (b === "1" ? "F" : "L")).join(""),
+    );
+    const anyChange = orders.filter((o) => o.includes("FL") || o.includes("LF"));
+    const eachWay = orders.filter((o) => o.includes("FL") && o.includes("LF"));
+    expect(anyChange.length - eachWay.length).toBe(10);
+    expect(eachWay.length).toBe(52);
+    expect(evidence).not.toMatch(/never changes from fuller to lighter or back/);
   });
 
   it("serves every lesson in the catalog, and publishes where each one lives", async () => {
