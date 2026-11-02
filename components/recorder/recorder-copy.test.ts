@@ -19,4 +19,14 @@ describe("recorder copy and the take limit", () => {
     expect(page).toContain("Free with no daily limit, and every take stays on this device.");
     expect(route).toContain("Free with no daily limit, and every take stays on your device.");
   });
+
+  it("says why a silent take earned nothing, as the other mic rooms do", () => {
+    // A take long enough to log that the mic heard nothing in is kept but not
+    // logged; without a note the singer saw no XP and no reason.
+    expect(page).toMatch(/setSilentTake\(!result && durationSec >= RECORDING_MIN_LOG_SEC\)/);
+    expect(page).toContain("{NO_SOUND_TITLE}");
+    expect(page.replace(/\s+/g, " ")).toContain(
+      "The mic heard nothing in that take, so it was kept to play back but not logged.",
+    );
+  });
 });

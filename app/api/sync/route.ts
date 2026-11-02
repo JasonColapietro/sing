@@ -12,6 +12,23 @@ import {
 } from "@/lib/stripe";
 
 /**
+ * Every answer from this route is for one browser only, so no shared cache
+ * (Vercel's edge, a proxy, a CDN) may keep it and the browser must not reuse
+ * it. Errors and the rate limit's 429 get the same header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
+/**
  * Cloud sync for a Pro customer's practice progress.
  *
  * The Pro key authenticates: its HMAC proves purchase and names the
@@ -122,7 +139,7 @@ async function lifetimePaymentStillPro(
 
 export async function POST(request: Request) {
   const limited = rateLimit(request, "sync", { limit: 30, windowMs: 60_000 });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   let key: unknown;
   let state: unknown;
@@ -137,12 +154,12 @@ export async function POST(request: Request) {
     state = body?.state;
     updatedAt = body?.updatedAt;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   const claims = verifyProKey(key);
   if (!claims) {
-    return NextResponse.json(
+    return json(
       { error: "Cloud sync needs a valid Pro key." },
       { status: 401 },
     );
@@ -150,7 +167,7 @@ export async function POST(request: Request) {
 
   const redis = getRedis();
   if (!redis) {
-    return NextResponse.json(
+    return json(
       { error: "Cloud sync isn't set up on the server yet." },
       { status: 503 },
     );
@@ -169,7 +186,7 @@ export async function POST(request: Request) {
             claims.customerId,
           );
     if (!entitled) {
-      return NextResponse.json(
+      return json(
         {
           error:
             claims.kind === "subscription"
@@ -184,14 +201,14 @@ export async function POST(request: Request) {
 
     if (state !== undefined) {
       if (typeof state !== "object" || state === null || Array.isArray(state)) {
-        return NextResponse.json(
+        return json(
           { error: "Progress payload must be an object." },
           { status: 400 },
         );
       }
       const serialized = JSON.stringify(state);
       if (serialized.length > MAX_STATE_BYTES) {
-        return NextResponse.json(
+        return json(
           { error: "Progress payload is too large to sync." },
           { status: 413 },
         );
@@ -202,16 +219,16 @@ export async function POST(request: Request) {
         savedAt: new Date().toISOString(),
       };
       await redis.set(storeKey, record);
-      return NextResponse.json({ ok: true, savedAt: record.savedAt });
+      return json({ ok: true, savedAt: record.savedAt });
     }
 
     const stored = await redis.get<StoredSync>(storeKey);
-    return NextResponse.json(
+    return json(
       stored ?? { state: null, updatedAt: null, savedAt: null },
     );
   } catch (error) {
     console.error("[api/sync]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not reach the sync store. Try again in a moment." },
       { status: 502 },
     );

@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I compared a quiet recording with my initial room setup and could hear my voice clearly. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I turned playback down and changed one room or device setting at a time, and could hear my voice clearly on the recording. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I compared a quiet recording with my initial room setup and could hear my voice 
 
 ## Self-check
 
-- I compared a quiet recording with my initial room setup and could hear my voice clearly.
+- I turned playback down and changed one room or device setting at a time, and could hear my voice clearly on the recording.
 - Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If the recording includes the speaker or room noise, stop playback, move away from noise, and try one fresh sound. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared a quiet recording with my initial room setup and could hear my voice clearly. This is a self-report, not an automatic assessment.
+What this shows: I turned playback down and changed one room or device setting at a time, and could hear my voice clearly on the recording. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Microphone calibration, room treatment, vocal technique, pitch accuracy, or a diagnosis of any voice problem.

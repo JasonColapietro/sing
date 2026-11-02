@@ -81,6 +81,26 @@ describe("the pitch meter after Stop mic", () => {
     expect(html).not.toContain("Next, the 2-minute range test");
   });
 
+  it("after a heard run, says a later silent run was not logged, not that it is banked", () => {
+    // "Not saved yet ... singing again adds to that time" was false here: the
+    // earlier run was saved, and the silent one was thrown away, not banked.
+    const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
+    expect(src).toContain("silent={silentStop}");
+    for (const retestDue of [true, false]) {
+      const html = renderToStaticMarkup(
+        <LastRun low={47} high={61} lastLog={null} retestDue={retestDue} onTryRange={() => {}} silent />,
+      );
+      expect(html).toContain("You have held B2 to C#4 so far.");
+      expect(html).toContain("No note was heard that time, so it was not logged.");
+      expect(html).toContain('role="status"');
+      expect(html).not.toContain("Not saved yet");
+      // The range test and the warmups listen through the mic that just heard
+      // nothing: the gate's Sing again and Audio are the next step.
+      expect(html).not.toContain("range test");
+      expect(html).not.toContain("href=");
+    }
+  });
+
   it("points a singer with a recent saved range at practice, not a retest", () => {
     // The book spaces range tests weeks apart, and their warmups and songs
     // already fit the saved range.

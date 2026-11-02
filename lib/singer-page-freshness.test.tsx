@@ -43,13 +43,14 @@ const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
   // 2026-10-30: vocal range on the piano, comparison with the voice type and the textbook bands,
   // shared semitones on the similar-voice cards, keyboard neighbors, songs that fit, similar-range FAQ.
   // 2026-10-29: similar-voice heading says what picks the cards, other artists' recordings credited;
-  // round 18: similar voices picked by nearest endpoints, the span histogram captioned.
-  "olivia-rodrigo": { fingerprint: "c6c79d677e4c7238", lastModified: "2026-10-30" },
-  "reba-mcentire": { fingerprint: "610cc80eb86d8ba1", lastModified: "2026-10-30" },
-  "alex-warren": { fingerprint: "eb2488a7ac257234", lastModified: "2026-10-30" },
-  "sam-smith": { fingerprint: "f6232dfde659c15b", lastModified: "2026-10-30" },
-  "arijit-singh": { fingerprint: "c2904566ca3b7eae", lastModified: "2026-10-30" },
-  adele: { fingerprint: "5cdda09c81ba68f6", lastModified: "2026-10-30" },
+  // round 18: similar voices picked by nearest endpoints, the span histogram captioned;
+  // round 20: similar voices ranked by range distance first, the label only breaking ties.
+  "olivia-rodrigo": { fingerprint: "c6c79d677e4c7238", lastModified: "2026-11-02" },
+  "reba-mcentire": { fingerprint: "a6cfec80a558238e", lastModified: "2026-11-02" },
+  "alex-warren": { fingerprint: "36aef306957b859f", lastModified: "2026-11-02" },
+  "sam-smith": { fingerprint: "01e0266f527cf869", lastModified: "2026-11-02" },
+  "arijit-singh": { fingerprint: "c2904566ca3b7eae", lastModified: "2026-11-02" },
+  adele: { fingerprint: "18db3e9b3b82b76e", lastModified: "2026-11-02" },
 };
 
 describe("reviewed singer page freshness", () => {

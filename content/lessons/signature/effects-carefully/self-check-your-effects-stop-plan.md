@@ -15,7 +15,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Start with the stop rules
 
-Read the stop signals under When it goes wrong and the safety line at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist; any blood means stop and see that doctor. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
+Read the stop signals under When it goes wrong and the safety line at the foot of this page, and copy them into your stop plan: pain, rawness or sudden hoarseness while singing means stop now; hoarseness after practice that clears overnight means do less next time; any blood, or a sudden loss of range or voice, means stop and see a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; hoarseness, extra effort in speech or a changed speaking voice that is still there after rest means the same doctor. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: For the planning task, work from the stop rules on this page; you do not need to make a pitched sound.
@@ -29,7 +29,7 @@ Do not learn a growl, scream, distortion, or other new effect from written direc
 
 ### Name the target: Effects safety and a stop plan
 
-Stop on pain, rawness, sudden hoarseness, loss of range, a changed speaking voice or any blood. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
+Stop on pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practicing, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.
 - Listen: Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.
@@ -66,7 +66,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 - Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice, any blood), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.
+Ready when: Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, a sudden loss of range or voice, extra effort in speech, a changed speaking voice, any blood), what you will do for each, and who you would see, and how soon, for blood, a sudden loss of range or voice, or hoarseness that does not clear, and you produced no effect today beyond one a teacher had already taught you.
 
 If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, a changed speaking voice or any blood. Do not troubleshoot by repeating. Any blood, or a sudden loss of range or voice, means seeing a doctor who can examine the vocal folds, such as an ENT or laryngologist, now; other signs that are still there after rest mean the same. Do not try the effect again to check; leave it until a teacher has heard it.
 

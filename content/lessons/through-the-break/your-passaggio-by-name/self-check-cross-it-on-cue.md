@@ -43,7 +43,7 @@ State the checkpoint target, record one uninterrupted attempt in the [recorder](
 
 ### Review your own attempt
 
-I listened for my own transition during a small comfortable slide and noted where it became less easy. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I approached my transition from below and above on a hum or narrow vowel, wrote down where effort rose and where it settled, and marked a zone. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I listened for my own transition during a small comfortable slide and noted wher
 
 ## Self-check
 
-- I listened for my own transition during a small comfortable slide and noted where it became less easy.
+- I approached my transition from below and above on a hum or narrow vowel, wrote down where effort rose and where it settled, and marked a zone.
 - You can anticipate the change and cross the same general area in both directions without forcing the endpoints.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can name the note where your effort first rises, and on two diff
 
 If not ready: If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I listened for my own transition during a small comfortable slide and noted where it became less easy. This is a self-report, not an automatic assessment.
+What this shows: I approached my transition from below and above on a hum or narrow vowel, wrote down where effort rose and where it settled, and marked a zone. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Primo or secondo passaggio pitches computed from a range scan; Suede measures range extremes, not passaggi.

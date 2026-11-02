@@ -12,6 +12,23 @@ import {
 } from "@/lib/stripe";
 
 /**
+ * Every answer from this route is for one browser only, so no shared cache
+ * (Vercel's edge, a proxy, a CDN) may keep it and the browser must not reuse
+ * it. Errors and the rate limit's 429 get the same header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
+/**
  * Serves a book PDF to a verified Pro customer.
  *
  * The PDFs used to live in public/, which made them world-readable at a
@@ -34,7 +51,7 @@ const PDFS: Record<string, { file: string; filename: string }> = {
 
 export async function POST(request: Request) {
   const limited = rateLimit(request, "book-pdf", { limit: 10, windowMs: 60_000 });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   let subscriptionId: unknown;
   let paymentIntentId: unknown;
@@ -49,12 +66,12 @@ export async function POST(request: Request) {
     paymentIntentId = body?.paymentIntentId;
     book = body?.book;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   const pdf = typeof book === "string" ? PDFS[book] : undefined;
   if (!pdf) {
-    return NextResponse.json({ error: "Unknown book." }, { status: 400 });
+    return json({ error: "Unknown book." }, { status: 400 });
   }
   let billing:
     | { kind: "subscription"; id: string }
@@ -67,7 +84,7 @@ export async function POST(request: Request) {
   ) {
     billing = { kind: "lifetime", id: paymentIntentId };
   } else {
-    return NextResponse.json(
+    return json(
       { error: "Suede Pro is required to download this." },
       { status: 403 },
     );
@@ -90,7 +107,7 @@ export async function POST(request: Request) {
       entitlement = entitlementFromLifetime(payment, null);
     }
     if (!entitlement.active) {
-      return NextResponse.json(
+      return json(
         {
           error:
             billing.kind === "subscription"
@@ -118,13 +135,13 @@ export async function POST(request: Request) {
       (error as { type?: string }).type === "StripeInvalidRequestError" &&
       (error as { code?: string }).code === "resource_missing"
     ) {
-      return NextResponse.json(
+      return json(
         { error: "Suede Pro is required to download this." },
         { status: 403 },
       );
     }
     console.error("[api/book/pdf]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not verify your Pro access. Try again in a moment." },
       { status: 502 },
     );

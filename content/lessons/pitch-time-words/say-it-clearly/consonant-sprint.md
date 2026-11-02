@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I spoke and then sang the displayed lyric, and raised the tempo only while every word stayed understandable on playback. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I spoke and sang the displayed lyric slowly enough for each word to remain under
 
 ## Self-check
 
-- I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback.
+- I spoke and then sang the displayed lyric, and raised the tempo only while every word stayed understandable on playback.
 - A listener can write down the words from the recording without seeing the lyric.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. This is a self-report, not an automatic assessment.
+What this shows: I spoke and then sang the displayed lyric, and raised the tempo only while every word stayed understandable on playback. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. A diction score, consonant recognition, language proficiency, pitch accuracy, or vocal health.

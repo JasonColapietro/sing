@@ -43,7 +43,7 @@ State the checkpoint target, record one uninterrupted attempt, and keep the resu
 
 ### Review your own attempt
 
-I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 
 ## Self-check
 
-- I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.
+- I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume.
 - The four levels in your take form an audible progression while pitch stays centered.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: In one take on one comfortable note, you can put the four levels in 
 
 If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.
+What this shows: I sang four levels on one comfortable note, from quiet to full, by changing breath-energy and resonance rather than pushing the volume. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain.

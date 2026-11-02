@@ -47,3 +47,11 @@ describe("the voice analyzer's listening log", () => {
     expect(src).not.toContain("listenSecRef");
   });
 });
+
+describe("the analyzer after a silent run", () => {
+  const src = readFileSync(new URL("./analyze-client.tsx", import.meta.url), "utf8");
+  it("says why nothing was logged once a run of the tail's length heard no voice", () => {
+    expect(src).toMatch(/setSilentStop\(runRef\.current\.sec >= MIN_FLUSH_SEC && !runRef\.current\.heard\)/);
+    expect(src.replace(/\s+/g, " ")).toContain("No voice was heard, so nothing was logged.");
+  });
+});

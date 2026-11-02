@@ -47,7 +47,7 @@ Record two slides down from the same comfortable note in one take in the recorde
 
 ### Review your own attempt
 
-I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I slid down twice, stopping at the first note that needed effort and then one note earlier, did the same going up, and wrote down the easy low and high notes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -66,7 +66,7 @@ I tried a comfortable low and high note without forcing either end and noted the
 
 ## Self-check
 
-- I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat.
+- I slid down twice, stopping at the first note that needed effort and then one note earlier, did the same going up, and wrote down the easy low and high notes.
 - Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -74,6 +74,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. This is a self-report, not an automatic assessment.
+What this shows: I slid down twice, stopping at the first note that needed effort and then one note earlier, did the same going up, and wrote down the easy low and high notes. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Passaggio pitches, permanent voice type, vocal health, strain, or the widest note you could force once.

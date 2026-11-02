@@ -12,6 +12,23 @@ import {
 } from "@/lib/stripe";
 
 /**
+ * Every answer from this route is for one browser only, so no shared cache
+ * (Vercel's edge, a proxy, a CDN) may keep it and the browser must not reuse
+ * it. Errors and the rate limit's 429 get the same header.
+ */
+const NO_STORE = "private, no-store";
+
+function noStore<T extends Response>(response: T): T {
+  response.headers.set("Cache-Control", NO_STORE);
+  return response;
+}
+
+/** NextResponse.json, marked private and no-store. */
+function json(body: unknown, init?: ResponseInit) {
+  return noStore(NextResponse.json(body, init));
+}
+
+/**
  * Serves a chapter body to a verified Pro customer — for either book.
  *
  * The books are the Pro benefits that are pure content, so gating them in the
@@ -28,7 +45,7 @@ import {
  */
 export async function POST(request: Request) {
   const limited = rateLimit(request, "book", { limit: 60, windowMs: 60_000 });
-  if (limited) return limited;
+  if (limited) return noStore(limited);
 
   let subscriptionId: unknown;
   let paymentIntentId: unknown;
@@ -46,11 +63,11 @@ export async function POST(request: Request) {
     slug = body?.slug;
     book = body?.book;
   } catch {
-    return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
+    return json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
   if (typeof slug !== "string" || !/^[a-z0-9-]{1,64}$/.test(slug)) {
-    return NextResponse.json({ error: "Unknown chapter." }, { status: 400 });
+    return json({ error: "Unknown chapter." }, { status: 400 });
   }
   let billing:
     | { kind: "subscription"; id: string }
@@ -63,7 +80,7 @@ export async function POST(request: Request) {
   ) {
     billing = { kind: "lifetime", id: paymentIntentId };
   } else {
-    return NextResponse.json(
+    return json(
       { error: "Suede Pro is required to read this." },
       { status: 403 },
     );
@@ -74,7 +91,7 @@ export async function POST(request: Request) {
       ? ATLAS.find((c) => c.slug === slug)
       : BOOK.find((c) => c.slug === slug);
   if (!chapter) {
-    return NextResponse.json({ error: "Unknown chapter." }, { status: 404 });
+    return json({ error: "Unknown chapter." }, { status: 404 });
   }
 
   try {
@@ -94,7 +111,7 @@ export async function POST(request: Request) {
       entitlement = entitlementFromLifetime(payment, null);
     }
     if (!entitlement.active) {
-      return NextResponse.json(
+      return json(
         {
           error:
             billing.kind === "subscription"
@@ -104,7 +121,7 @@ export async function POST(request: Request) {
         { status: 403 },
       );
     }
-    return NextResponse.json({
+    return json({
       slug: chapter.slug,
       title: chapter.title,
       part: chapter.part,
@@ -119,13 +136,13 @@ export async function POST(request: Request) {
       (error as { type?: string }).type === "StripeInvalidRequestError" &&
       (error as { code?: string }).code === "resource_missing"
     ) {
-      return NextResponse.json(
+      return json(
         { error: "Suede Pro is required to read this." },
         { status: 403 },
       );
     }
     console.error("[api/book]", error);
-    return NextResponse.json(
+    return json(
       { error: "Could not verify your Pro access. Try again in a moment." },
       { status: 502 },
     );

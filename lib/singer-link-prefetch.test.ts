@@ -196,14 +196,14 @@ describe("singer and hub pages do not prefetch other hubs and profiles", () => {
     expect(rows[0], "add prefetch={false}").toMatch(/prefetch=\{false\}/);
   });
 
-  it("components/guide.tsx related cards (the /range guide links /singers)", () => {
+  it("components/guide.tsx related cards", () => {
     const src = readFileSync(path.join(process.cwd(), "components/guide.tsx"), "utf8");
     const cards = openingTags(src).filter((tag) => /href=\{link\.href\}/.test(tag));
     expect(cards).toHaveLength(1);
     expect(cards[0]).toMatch(/prefetch=\{relatedLinkPrefetch\(link\.href\)\}/);
 
     const related = TOOL_GUIDES.flatMap((g) => g.related.map((l) => l.href));
-    expect(related).toContain("/singers");
+    expect(related).toContain("/atlas/vocal-range-by-voice-type");
     for (const href of ["/singers", "/atlas", "/singers/voice-type/tenor", "/singers/adele#you-vs", "/singers?q=a"]) {
       expect(relatedLinkPrefetch(href), href).toBe(false);
     }

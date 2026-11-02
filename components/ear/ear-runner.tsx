@@ -24,6 +24,7 @@ import {
   type EarRoutineStep,
 } from "./routines";
 import type { EarStepResult } from "./session";
+import { NO_SOUND_TITLE } from "@/components/practice/silent-session";
 import { IntervalGame } from "./interval-game";
 import { PitchMatchGame } from "./pitch-match-game";
 import { MelodyEchoGame } from "./melody-echo-game";
@@ -97,6 +98,35 @@ function GameStep({
 
 /* ---------------- results ---------------- */
 
+/**
+ * Why a game that listens shows no score: the mic heard no note all game, so
+ * nothing was logged. `games` names them in a routine; a lone game passes
+ * none. The warmups' "No sound picked up" note, in the ear room's words.
+ */
+export function earSilentLine(games: readonly string[] = [], again = true): string {
+  const what =
+    games.length === 0
+      ? "this game, so nothing was logged"
+      : `in ${games.length === 1 ? games[0] : `${games.slice(0, -1).join(", ")} and ${games[games.length - 1]}`}, so ${
+          games.length === 1 ? "that game was" : "those games were"
+        } not logged`;
+  // Without "Play again" (the free minutes are spent) the line does not ask for it.
+  const fix = "If you were singing, sing a little louder or closer to the mic, or check the input";
+  return `The mic heard no note ${what}. ${fix}${again ? ", then play again." : "."}`;
+}
+
+function EarSilentNote({ games, again }: { games?: readonly string[]; again: boolean }) {
+  return (
+    <div
+      role="status"
+      className="mb-3 rounded-2xl border border-[var(--s-rec)] bg-[var(--s-elev)] p-4 text-left"
+    >
+      <p className="text-[var(--s-ink)]">{NO_SOUND_TITLE}</p>
+      <p className="mt-1 text-sm text-[var(--s-mut)]">{earSilentLine(games, again)}</p>
+    </div>
+  );
+}
+
 /** The end of a routine or a single game: scores average over the steps played. */
 function EarResults({
   title,
@@ -110,7 +140,8 @@ function EarResults({
   title: string;
   subtitle?: string;
   /** `note` replaces the row's "skipped" when the step was not skipped but never reached. */
-  steps: { label: string; result: EarStepResult | null; note?: string }[];
+  /** `name` is the game alone, for the sentence that says which went unheard. */
+  steps: { label: string; name?: string; result: EarStepResult | null; note?: string }[];
   onContinue: () => void;
   /** Omitted once the free minutes are spent: "Play again" would start past the cap. */
   onAgain?: () => void;
@@ -122,7 +153,8 @@ function EarResults({
   const { goalSec } = useDailyGoal();
   const goalDoneSec = useGoalDoneSec(progress);
 
-  const played = steps.filter((s) => s.result !== null);
+  // A game the mic heard nothing of was not logged, and its 0 is not a score.
+  const played = steps.filter((s) => s.result !== null && !s.result.silent);
   const score =
     played.length === 0
       ? null
@@ -130,6 +162,7 @@ function EarResults({
           played.reduce((a, s) => a + s.result!.score, 0) / played.length,
         );
   const xp = played.reduce((a, s) => a + s.result!.xpGained, 0);
+  const silentGames = [...new Set(steps.filter((s) => s.result?.silent).map((s) => s.name ?? s.label))];
 
   const achievements = useMemo(() => {
     const seen = new Map<string, Achievement>();
@@ -152,14 +185,23 @@ function EarResults({
       goal={{ doneSec: goalDoneSec, goalSec }}
       rows={steps.map((s) => ({
         label: s.label,
-        score: s.result?.score ?? null,
-        note: s.result === null ? (s.note ?? "skipped") : undefined,
+        score: s.result && !s.result.silent ? s.result.score : null,
+        note: s.result === null ? (s.note ?? "skipped") : s.result.silent ? "no sound" : undefined,
       }))}
       achievements={achievements}
       onContinue={onContinue}
       onAgain={onAgain}
       share={{ title, subtitle, url: `${SITE_URL}/ear-training` }}
-      notice={notice}
+      notice={
+        silentGames.length > 0 || notice ? (
+          <>
+            {silentGames.length > 0 && (
+              <EarSilentNote games={steps.length > 1 ? silentGames : undefined} again={onAgain !== undefined} />
+            )}
+            {notice}
+          </>
+        ) : undefined
+      }
     >
       {children}
     </ResultsScreen>
@@ -193,6 +235,7 @@ export function EarRunResults({
       subtitle={routine.tagline}
       steps={routine.steps.map((s, i) => ({
         label: earStepLabel(s),
+        name: GAME_NAMES[s.game],
         result: results[i] ?? null,
         note: capStoppedAt !== null && i >= capStoppedAt ? "not reached" : undefined,
       }))}
@@ -255,7 +298,8 @@ export function EarRunner({
   if (phase.kind === "intro") {
     if (runner.atCapSlide) return <CapSlide cap={cap} onExit={() => quit(phase.step)} />;
     const prevStep = phase.step > 0 ? routine.steps[phase.step - 1] : null;
-    const prevScore = results[phase.step - 1]?.score ?? null;
+    const prev = results[phase.step - 1];
+    const prevScore = prev && !prev.silent ? prev.score : null;
     return (
       <StepIntroSlide
         key={runner.stepKey}

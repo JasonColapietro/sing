@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the supplied call and answer, then invented a different answer from the same note set with a clear beginning and an ending on 1. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I used notes from the supplied pattern to invent a short answer with a clear beg
 
 ## Self-check
 
-- I used notes from the supplied pattern to invent a short answer with a clear beginning and ending.
+- I sang the supplied call and answer, then invented a different answer from the same note set with a clear beginning and an ending on 1.
 - The take sounds like an answer to the call and returns convincingly to the tonal center.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a self-report, not an automatic assessment.
+What this shows: I sang the supplied call and answer, then invented a different answer from the same note set with a clear beginning and an ending on 1. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised.

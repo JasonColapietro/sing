@@ -241,15 +241,53 @@ describe("the lesson data", () => {
       const lists = [
         ...lesson.mistakes.map((m) => m.recovery),
         lesson.selfCheck.ifNotReady,
+        lesson.selfCheck.readyWhen,
         ...lesson.steps.map((s) => s.body),
-      ].filter((text) => /\bStop (for|on) pain\b|see a doctor|seeing a doctor/i.test(text));
+      ].filter((text) => /\bStop (for|on) pain\b|see a doctor|seeing a doctor|stop plan:|stop list|stop signal/i.test(text));
       expect(lists.length, lesson.id).toBeGreaterThan(0);
       for (const text of lists) {
         expect(text, lesson.id).toMatch(/\bany blood\b/i);
-        if (/doctor/i.test(text)) expect(text, lesson.id).toContain(DOCTOR_REFERRAL);
+        if (/doctor/i.test(text)) {
+          expect(text, lesson.id).toContain(DOCTOR_REFERRAL);
+          // A sudden loss of range or voice goes to that doctor now, like blood.
+          expect(text, lesson.id).toMatch(/sudden loss of range or voice[^.;]*\bnow\b/i);
+        }
         expect(text, lesson.id).not.toMatch(/when symptoms persist/i);
       }
     }
+  });
+
+  /**
+   * Effects, Carefully tells the singer to copy the stop signals into a stop
+   * plan, and its checkpoint grades that plan. The list they copy and the list
+   * the checkpoint grades must each name every signal the module stops for,
+   * so a singer who copies step 1 word for word can pass the Ready when.
+   */
+  it("let the effects stop plan a singer copies pass the checkpoint that grades it", () => {
+    const effects = LESSONS.filter((l) => l.moduleId === "v-l7-m4");
+    expect(effects.length).toBe(3);
+    const rule = effects[0].mistakes.map((m) => m.recovery).find((r) => /^Stop for pain/.test(r))!;
+    const signals = rule
+      .match(/^Stop for (.*?)\./)![1]
+      .split(/, | or /)
+      .map((s) => s.replace(/^a /, ""));
+    expect(signals).toEqual([
+      "pain",
+      "rawness",
+      "sudden hoarseness",
+      "loss of range",
+      "extra effort in speech",
+      "changed speaking voice",
+      "any blood",
+    ]);
+    const checkpoint = effects.find((l) => l.type === "checkpoint")!;
+    for (const lesson of effects) {
+      const copied = lesson.steps.find((s) => /copy them into your stop plan:/.test(s.body))!;
+      expect(copied, lesson.id).toBeDefined();
+      for (const signal of signals) expect(copied.body, `${lesson.id} ${signal}`).toContain(signal);
+      expect(lesson.mistakes.map((m) => m.recovery), lesson.id).toContain(rule);
+    }
+    for (const signal of signals) expect(checkpoint.selfCheck.readyWhen, signal).toContain(signal);
   });
 
   /**
@@ -274,28 +312,160 @@ describe("the lesson data", () => {
   });
 
   /**
-   * A concept lesson's "Did it work?" asks about the task its "Hear the
-   * distinction" step set, not material from elsewhere in the module, and its
-   * review step still restates that check so the page drops the repeat.
+   * Every lesson's "Did it work?" asks about the task that lesson set, not the
+   * module's generic outcome or material from elsewhere in the module. Each
+   * lesson names one or more phrases its first self-check criterion shares
+   * with the steps the page shows (the task it set), the table covers every
+   * lesson, so a new lesson fails here until its check is written against its
+   * own task, and the review step still restates that check so the page drops
+   * the repeat.
    */
-  it("ask Did it work? about the task the concept lesson set", () => {
-    const set: Record<string, RegExp> = {
-      "v-l2-m2-01": /breathy, a clicked and a balanced onset/,
-      "v-l4-m1-01": /same reference note from silence twice/,
-      "v-l4-m3-01": /lazy and then clear consonants/,
-      "v-l5-m2-01": /plain and then shaded toward “aw”/,
-      "v-l5-m4-01": /“hey” call up one semitone at a time/,
+  it("ask Did it work? about the task each lesson set", () => {
+    const task: Record<string, RegExp[]> = {
+      "v-l1-m1-01": [/something playing aloud/, /hum/],
+      "v-l1-m1-02": [/one room or device setting at a time/],
+      "v-l1-m1-04": [/one room or device setting at a time/, /playback/],
+      "v-l1-m2-01": [/one note earlier/, /(write|wrote) down/],
+      "v-l1-m2-02": [/glided? (up|down)/, /only while the sound stay/],
+      "v-l1-m2-04": [/range test/, /only while the sound stay/],
+      "v-l1-m3-01": [/shoulders still/, /ribs widen/],
+      "v-l1-m3-02": [/even hiss/, /comfortable breath/],
+      "v-l1-m3-04": [/even hiss/, /comfortable breath/],
+      "v-l2-m1-01": [/straw/, /needed less effort in the throat/],
+      "v-l2-m1-03": [/narrow range/, /reset between attempts/i],
+      "v-l2-m1-06": [/narrow range/, /reset between attempts/i],
+      "v-l2-m2-01": [/breathy, a clicked and a balanced onset|breathy\)?; then .*click/, /“ah”/],
+      "v-l2-m2-03": [/five-note scale/i, /from silence|before starting/],
+      "v-l2-m2-06": [/five-note scale/i],
+      "v-l2-m3-01": [/on the same comfortable note/, /eight/],
+      "v-l2-m3-04": [/Sustained hold/, /the start and end of each/],
+      "v-l2-m3-06": [/Sustained hold/, /the start and end of each/],
+      "v-l2-m4-01": [/Amazing Grace/, /semitone up or down/, /without a push/],
+      "v-l2-m4-04": [/Amazing Grace/, /key/],
+      "v-l2-m4-06": [/Amazing Grace/, /key/],
+      "v-l3-m1-01": [/fuller/, /lighter/, /color and weight/],
+      "v-l3-m1-03": [/fuller speech-like sound with a lighter sound at the same pitch/],
+      "v-l3-m1-07": [/six short notes/, /fuller or lighter/],
+      "v-l3-m2-01": [/“oo”/, /first quickly/, /then slowly/],
+      "v-l3-m2-02": [/“oo”, then “oh”, then “ee”/],
+      "v-l3-m2-07": [/“oo”, then “oh”, then “ee”/],
+      "v-l3-m3-01": [/“ee”, “eh”, “ah”, “oh” and “oo” in one take/, /same pitch pattern on each/],
+      "v-l3-m3-04": [/same pitch pattern on each/, /without spreading, swallowing,? or changing volume/],
+      "v-l3-m3-07": [/same pitch pattern on each/, /without spreading, swallowing,? or changing volume/],
+      "v-l3-m4-01": [/Deep River phrase/, /semitone lower/],
+      "v-l3-m4-04": [/Deep River phrase/],
+      "v-l3-m4-07": [/Deep River phrase/],
+      "v-l3-m5-01": [/baseline/, /without diagnosing its cause/],
+      "v-l3-m5-03": [/baseline phrase/, /“yah-yah-yah”/, /“mah”/],
+      "v-l3-m5-07": [/airier, brighter-nasal,? or firmer version/],
+      "v-l4-m1-01": [/same (reference )?note/, /from silence/],
+      "v-l4-m1-03": [/sharp or flat/, /fresh attempt|sing again/],
+      "v-l4-m1-07": [/Amazing Grace/],
+      "v-l4-m2-01": [/two even sounds per tap/, /three/, /long-short pair/, /swung/, /the second note of each pair moved/],
+      "v-l4-m2-03": [/rhythm on one pitch/, /restored? the melody/],
+      "v-l4-m2-07": [/Swing Low, Sweet Chariot phrase/, /rhythm on one pitch/, /restored? the melody/],
+      "v-l4-m3-01": [/lazy/, /write down the words|wrote down the words/],
+      "v-l4-m3-04": [/tempo only while every word/],
+      "v-l4-m3-07": [/understandable on playback/],
+      "v-l4-m4-01": [/Ode to Joy/, /four times/, /plain, with a grace note/],
+      "v-l4-m4-03": [/a connected grace, a short release,? or a clear accent/],
+      "v-l4-m4-07": [/once per slip in the order drawn/, /a connected grace, a short release,? or a clear accent/],
+      "v-l4-m5-01": [/one comfortable note/, /did not creep sharp/, /four (audible )?levels/],
+      "v-l4-m5-04": [/Simple Gifts/, /quiet level/, /fuller level/],
+      "v-l4-m5-07": [/four (audible )?levels/, /breath-energy and resonance/],
+      "v-l5-m1-01": [/“ng”/, /half/, /on the way up and where the sound settle/],
+      "v-l5-m1-03": [/from below and above on a hum or narrow vowel/, /zone/],
+      "v-l5-m1-07": [/from below and above on a hum or narrow vowel/, /zone/],
+      "v-l5-m2-01": [/“aw”/, /which crossing/],
+      "v-l5-m2-03": [/modified and unmodified attempts/, /same pitch and volume/],
+      "v-l5-m2-07": [/modified and unmodified attempts/, /same pitch and volume/],
+      "v-l5-m3-01": [/baseline/, /bright(er)? (version|example|“eh”)/, /one take/],
+      "v-l5-m3-04": [/baseline/, /bright(er)? (version|example|“eh”)/, /one take/],
+      "v-l5-m3-07": [/baseline/, /bright(er)? (version|example|“eh”)/, /one take/],
+      "v-l5-m4-01": [/“hey”/, /up one semitone at a time/],
+      "v-l5-m4-04": [/“hey”/, /the supplied pattern/],
+      "v-l5-m4-07": [/three times in a row/, /top note for six comfortable seconds each time/],
+      "v-l5-m5-01": [/a different answer from the same note set/],
+      "v-l5-m5-03": [/a different answer from the same note set/],
+      "v-l5-m5-07": [/a different answer from the same note set/],
+      "v-l6-m1-01": [/Small three-note climb/, /about twice as fast/],
+      "v-l6-m1-03": [/Small three-note climb/, /every note (is|was) distinct/],
+      "v-l6-m1-08": [/Small three-note climb/, /every note (is|was) distinct/],
+      "v-l6-m2-01": [/Hoo descent/, /restarting the “h” on every note/, /unbroken “oo”/],
+      "v-l6-m2-04": [/Hoo descent/, /four clear notes/],
+      "v-l6-m2-08": [/Hoo descent/, /four clear notes/],
+      "v-l6-m3-01": [/one second/, /three/, /shaking the jaw/],
+      "v-l6-m3-03": [/straight tone/, /shaking the jaw or pulsing the abdomen/],
+      "v-l6-m3-08": [/count/, /straight tone before/],
+      "v-l6-m4-01": [/plain/, /ornament at the place (you|I) marked/],
+      "v-l6-m4-04": [/one ornament at the place (you|I) marked/, /plain/],
+      "v-l6-m4-08": [/at the places (you|I) marked/, /each one on playback/],
+      "v-l6-m5-01": [/1, flat 3, 1/, /bend(ing)? up into it on purpose/, /call and answer/],
+      "v-l6-m5-04": [/call and answer/, /flat 7/, /one rhythmic change/],
+      "v-l6-m5-08": [/call and answer/, /eight/, /one rhythmic change/],
+      "v-l6-m6-01": [/plain/, /one small scoop or fall/, /top note/],
+      "v-l6-m6-05": [/range, ornament,? and continuity demands/, /before combining them/],
+      "v-l6-m6-08": [/range, ornament,? and continuity demands/, /before combining them/],
+      "v-l7-m1-01": [/tomorrow's voice use/, /whispering/, /warm-up/],
+      "v-l7-m1-03": [/gentle semi-occluded sound, comfortable range movement/],
+      "v-l7-m1-08": [/gentle semi-occluded sound, comfortable range movement/],
+      "v-l7-m2-01": [/first phrase of Amazing Grace/, /changing only one choice/],
+      "v-l7-m2-05": [/both treatments/],
+      "v-l7-m2-08": [/both treatments/],
+      "v-l7-m3-01": [/neutral, then restrained|neutral and then restrained/, /driven/],
+      "v-l7-m3-04": [/without moving the pitch/, /to neutral between every attempt/],
+      "v-l7-m3-08": [/once per slip in the order drawn/, /easy neutral between attempts/],
+      "v-l7-m4-01": [/stop plan/, /new vocal effect/],
+      "v-l7-m4-04": [/stop plan/, /new vocal effect/],
+      "v-l7-m4-08": [/stop plan/, /new vocal effect/],
+      "v-l7-m5-01": [/Small three-note climb with its top/, /semitone higher/],
+      "v-l7-m5-04": [/prior comfortable endpoint at low-to-moderate volume/, /three attempts at most/],
+      "v-l7-m5-08": [/Small three-note climb with its top/, /earlier baseline/],
+      "v-l7-m6-01": [/hand's width/, /arm's length/, /distance on purpose/],
+      "v-l7-m6-05": [/whole arrangement/, /microphone distance/],
+      "v-l7-m6-08": [/whole study/, /distance on the quietest phrase,? or where/],
     };
-    for (const [id, task] of Object.entries(set)) {
-      const lesson = LESSONS.find((l) => l.id === id)!;
+    expect(Object.keys(task).sort()).toEqual(LESSONS.map((l) => l.id).sort());
+    const mismatched: string[] = [];
+    for (const lesson of LESSONS) {
+      const id = lesson.id;
       const [first] = lesson.selfCheck.criteria;
-      expect(first, id).toMatch(task);
-      expect(first, id).not.toMatch(/five-note scale|Amazing Grace|three vowels|supplied short pattern|spoke and sang/);
+      const shown = shownSteps(lesson);
+      // The steps the page shows, and the exercises and songs its practice panel names.
+      const set = [
+        ...shown.filter((s) => s.title !== REVIEW_STEP_TITLE).map((s) => s.body),
+        ...moduleMaterial(lesson.moduleId)
+          .filter((m) => m.kind === "exercise" || m.kind === "song")
+          .map((m) => m.title),
+      ].join(" ");
+      if (!task[id].some((p) => p.source.length >= 12)) mismatched.push(`${id}: name at least one phrase of 12 characters or more`);
+      for (const phrase of task[id]) {
+        if (!phrase.test(first)) mismatched.push(`${id}: the self-check does not say ${phrase}`);
+        if (!phrase.test(set)) mismatched.push(`${id}: the task the page sets does not say ${phrase}`);
+      }
+      // The module outcomes round 19 and 20 found standing in for a lesson's own task.
+      expect(first, id).not.toMatch(
+        /make my own short answering phrases|existing agility pattern|recorded my observation without forcing|supplied study arrangement and compared|connected, detached, and gently accented|quieter and fuller versions of one short phrase|compared comfortable production choices/,
+      );
       expect(lesson.selfCheck.shows, id).toContain(first);
-      const said = [...lesson.selfCheck.criteria, ...lesson.steps.flatMap((s) => [s.look, s.listen])];
-      for (const line of said) expect(line, id).not.toMatch(/three vowels|planned short hold/);
-      expect(shownSteps(lesson).some((s) => s.title === REVIEW_STEP_TITLE), id).toBe(false);
+      expect(shown.some((s) => s.title === REVIEW_STEP_TITLE), id).toBe(false);
+      if (lesson.type === "concept") {
+        const said = [...lesson.selfCheck.criteria, ...lesson.steps.flatMap((s) => [s.look, s.listen])];
+        for (const line of said) {
+          expect(line, id).not.toMatch(/planned short hold|Three repeatable weights|study arrangement|harmony line|three vowels/);
+        }
+        // A concept page's "Name the target" step repeats the objective the
+        // page prints, so a rewritten objective cannot leave a stale target
+        // on show. Swing, Triplet, Straight states its three feels there instead.
+        const target = lesson.steps.find((s) => s.title.startsWith(TARGET_STEP_PREFIX))!;
+        if (id !== "v-l4-m2-01") expect(echoesObjective(target, lesson), id).toBe(true);
+      }
+      // The material round 19 found standing in for the five concept lessons it rewrote.
+      if (["v-l2-m2-01", "v-l4-m1-01", "v-l4-m3-01", "v-l5-m2-01", "v-l5-m4-01"].includes(id)) {
+        expect(first, id).not.toMatch(/five-note scale|Amazing Grace|three vowels|supplied short pattern|spoke and sang/);
+      }
     }
+    expect(mismatched).toEqual([]);
   });
 
   it("serves every lesson in the catalog, and publishes where each one lives", async () => {

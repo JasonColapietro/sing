@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang Small three-note climb slowly and raised the tempo only after every note was distinct, keeping the first and last pitch centered. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I isolated the existing agility pattern slowly and connected its notes without r
 
 ## Self-check
 
-- I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.
+- I sang Small three-note climb slowly and raised the tempo only after every note was distinct, keeping the first and last pitch centered.
 - Three separate pitches remain audible; the middle note does not smear into a slide.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a self-report, not an automatic assessment.
+What this shows: I sang Small three-note climb slowly and raised the tempo only after every note was distinct, keeping the first and last pitch centered. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence.

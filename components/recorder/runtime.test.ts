@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createRecorderMic, startRecorder, createTakeMutations, soundHeard } from "./runtime";
+import { createRecorderMic, startRecorder, createTakeMutations, soundHeard, takeLogSeconds } from "./runtime";
 import type { TakeRecord, TakesStore } from "./db";
 import { openMic } from "@/lib/audio/mic";
 const prefs = vi.hoisted(() => ({ inputId: "B", outputId: "", monitoring: "headphones" }));
@@ -330,7 +330,10 @@ describe("a take's sound check", () => {
   it("gates the take's practice log on it", async () => {
     const { readFileSync } = await import("node:fs");
     const src = readFileSync(new URL("./recorder-page.tsx", import.meta.url), "utf8");
-    expect(src).toContain("const result = durationSec >= 10 && heardRef.current ? logSession({");
+    expect(src).toContain("const result = takeLogSeconds(durationSec, heardRef.current) !== null ? logSession({");
+    expect(takeLogSeconds(60, false)).toBeNull();
+    expect(takeLogSeconds(9, true)).toBeNull();
+    expect(takeLogSeconds(12, true)).toBe(12);
     expect(src).toContain("if (!heardRef.current && live && soundHeard(live)) heardRef.current = true;");
     const begin = src.slice(src.indexOf("const beginCapture = useCallback"));
     expect(begin).toMatch(/startedAtRef\.current = performance\.now\(\);\s*heardRef\.current = false;/);

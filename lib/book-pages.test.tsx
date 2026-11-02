@@ -4,7 +4,7 @@
  * from it. These checks hold the renderer, the chapter text and the page
  * together, plus a few facts the prose once got wrong against the app.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -580,5 +580,33 @@ describe("the chapters agree with the app", () => {
   it("names the earlier shift out of chest that a woman's quiet slide finds", () => {
     expect(body("the-passaggio")).toMatch(/earlier, lighter shift, somewhere around E4 to G4/);
     expect(body("finding-your-break")).toMatch(/earlier, lighter shift out of chest voice[^.]*E4 to G4/);
+  });
+});
+
+describe("pull quotes on the book and atlas landing pages", () => {
+  // A pull quote cites a chapter, so its words must be that chapter's words.
+  const sources = [
+    { page: "app/book/page.tsx", dir: "content/book" },
+    { page: "app/atlas/page.tsx", dir: "content/atlas" },
+  ];
+  const norm = (s: string) => s.replace(/[‘’]/g, "'").replace(/\s+/g, " ");
+
+  it("quotes each cited chapter word for word", () => {
+    let count = 0;
+    for (const { page: file, dir } of sources) {
+      const src = readFileSync(join(__dirname, "..", file), "utf8");
+      const quotes = [...src.matchAll(/<PullQuote\b[^>]*?\squote="([^"]+)"[^>]*?\sbyline="Chapter (\d+) /g)];
+      expect(quotes.length, `${file} pull quotes`).toBeGreaterThan(0);
+      for (const [, quote, n] of quotes) {
+        const prefix = `${n.padStart(2, "0")}-`;
+        const chapterDir = join(__dirname, "..", dir);
+        const name = readdirSync(chapterDir).find((f) => f.startsWith(prefix) && f.endsWith(".md"));
+        expect(name, `${file}: chapter ${n} file`).toBeDefined();
+        const body = norm(readFileSync(join(chapterDir, name!), "utf8"));
+        expect(body, `${file}: "${quote}"`).toContain(norm(quote));
+        count += 1;
+      }
+    }
+    expect(count).toBeGreaterThanOrEqual(2);
   });
 });

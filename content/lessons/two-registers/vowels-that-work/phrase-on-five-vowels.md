@@ -43,7 +43,7 @@ Work in short repetitions with a normal breath and complete release between them
 
 ### Review your own attempt
 
-I sang the same short pattern on five vowels and compared the resulting tone by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
+I sang the same pitch pattern on each of the five vowels without spreading, swallowing or changing volume, and compared the tone by ear. Compare your attempt with the supplied material and choose one smaller adjustment for next time.
 
 - Look: Note the pitch, key, or setup you used so that your next comparison is useful.
 - Listen: Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score.
@@ -62,7 +62,7 @@ I sang the same short pattern on five vowels and compared the resulting tone by 
 
 ## Self-check
 
-- I sang the same short pattern on five vowels and compared the resulting tone by ear.
+- I sang the same pitch pattern on each of the five vowels without spreading, swallowing or changing volume, and compared the tone by ear.
 - Each vowel remains intelligible while the phrase keeps a related tone and pitch center.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
@@ -70,6 +70,6 @@ Ready when: You can describe the result of the stated task and choose one useful
 
 If not ready: If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
-What this shows: I sang the same short pattern on five vowels and compared the resulting tone by ear. This is a self-report, not an automatic assessment.
+What this shows: I sang the same pitch pattern on each of the five vowels without spreading, swallowing or changing volume, and compared the tone by ear. This is a self-report, not an automatic assessment.
 
 What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Formant values, vowel identity, resonance placement, or tone consistency measured by the app.

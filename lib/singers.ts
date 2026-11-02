@@ -39,21 +39,22 @@ export function computeRecords(list: Singer[] = SINGERS): SingerRecords {
 }
 
 /**
- * Singers most comparable to `s`: same voice type first, then nearest low and
- * high endpoints, so the "similar catalog range" heading holds. Ranking by
- * range center alone put C3–A#4 beside A#1–C6 (same center, an octave and
- * more wider).
+ * Singers most comparable to `s`: nearest low and high endpoints first, the
+ * catalog label only as a tie-breaker, so the "similar catalog range" heading
+ * holds. Ranking by range center alone put C3–A#4 beside A#1–C6 (same center,
+ * an octave and more wider); a two-octave penalty for a different label then
+ * left Wendy's C#3–D#7 off Normani's identical C#3–D#7 and put Tim Storms'
+ * B0–B4 on Samuel Ramey's D#2–F4. The label is an unverified catalog field, so
+ * it never outranks a closer range.
  */
 export function relatedSingers(s: Singer, count = 6): Singer[] {
   return SINGERS.filter((o) => o.slug !== s.slug)
     .map((o) => ({
       o,
-      score:
-        (o.voiceType === s.voiceType ? 0 : 24) +
-        Math.abs(o.lowMidi - s.lowMidi) +
-        Math.abs(o.highMidi - s.highMidi),
+      distance: Math.abs(o.lowMidi - s.lowMidi) + Math.abs(o.highMidi - s.highMidi),
+      otherLabel: o.voiceType === s.voiceType ? 0 : 1,
     }))
-    .sort((a, b) => a.score - b.score)
+    .sort((a, b) => a.distance - b.distance || a.otherLabel - b.otherLabel)
     .slice(0, count)
     .map((x) => x.o);
 }
