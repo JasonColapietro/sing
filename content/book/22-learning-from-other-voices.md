@@ -11,7 +11,7 @@ The famous ranges page puts the great voices on one keyboard. Almost none of its
 
 ## What a cited range is, and how it got that way
 
-A cited range is an aggregate. It is the lowest note anyone has found on any recording, paired with the highest note anyone has found on some other recording, and those two recordings may be twenty years apart. Nobody sat the singer down and ran a range test. Someone listened, transcribed, and posted a figure; someone else copied it; a third person found a lower note on a B-side and revised it down. That is the process. Where a source exists, the singer's page names it for the low note and the high note, and it is worth reading — "sustained through the second chorus of a studio ballad" and "one shriek at the end of a live take" are not the same kind of evidence.
+A cited range is an aggregate. It is the lowest note anyone has found on any recording, paired with the highest note anyone has found on some other recording, and those two recordings may be twenty years apart. Nobody sat the singer down and ran a range test. Someone listened, transcribed, and posted a figure; someone else copied it; a third person found a lower note on a B-side and revised it down. That is the process. Where a source exists, the singer's page names it for the low note and the high note, and it is worth reading: "sustained through the second chorus of a studio ballad" and "one shriek at the end of a live take" are not the same kind of evidence.
 
 Three things get flattened by a single low–high figure.
 
@@ -31,7 +31,7 @@ What you want to know about a singer you admire is where the voice lives. Which 
 
 You can get at it yourself in about ten minutes. Pick three of their songs. Ignore the highest note in each one. Sing along quietly, or play the melody, and find the band of five or six notes the chorus keeps returning to. Write the three bands down. What you end up with describes what your voice would be asked to do for four minutes at a stretch, which a low-to-high span never does.
 
-Now set that band against your own comfortable middle, which you find the same way rather than reading it off the range test — the test reports a low note, a high note and a voice-type label, and its middle band is only those edges trimmed. Heavy overlap means their repertoire is worth your time whatever the extremes say. If your middle sits a fourth below theirs, every chorus will fight you even when the top note is reachable — and moving the key, which is normal and covered in the previous chapter, is the fix rather than the failure.
+Now set that band against your own comfortable middle, which you find the same way rather than reading it off the range test; the test reports a low note, a high note and a voice-type label, and its middle band is only those edges trimmed. Heavy overlap means their repertoire is worth your time whatever the extremes say. If your middle sits a fourth below theirs, every chorus will fight you even when the top note is reachable, and moving the key (which is normal and covered in the previous chapter) is the fix rather than the failure.
 
 ## Using the library well
 
@@ -43,7 +43,7 @@ Now set that band against your own comfortable middle, which you find the same w
 
 **Visit the record-holders page once.** It exists, it is fun, and it is the least instructive corner of the library. The page says so itself: the widest figures are the ones with the thinnest evidence behind them. Look, enjoy it, and set nothing on it as a target.
 
-**Look sideways, not up.** The most useful singer in the library is rarely the one you already love. More often it is someone a genre over whose comfortable band matches yours almost note for note, whose songs never came up because they were not on your radar. That is what a searchable library of famous voices is for — finding material that fits an instrument like yours, not confirming that a famous person could sing higher than you.
+**Look sideways, not up.** The most useful singer in the library is rarely the one you already love. More often it is someone a genre over whose comfortable band matches yours almost note for note, whose songs never came up because they were not on your radar. That is what a searchable library of famous voices is for: finding material that fits an instrument like yours, not confirming that a famous person could sing higher than you.
 
 ## What imitation is good for
 

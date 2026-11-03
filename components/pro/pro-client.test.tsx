@@ -26,6 +26,7 @@ import {
 import { NETWORK_ERROR_MESSAGE, ProApiError } from "@/lib/pro";
 import { SUPPORT_EMAIL } from "@/lib/organization";
 import { PRO_PACKS_HREF } from "@/lib/pro-inventory";
+import { ROUTE_KEYWORDS } from "@/lib/keywords";
 
 function state(overrides: Partial<ProState> = {}): ProState {
   return {
@@ -449,6 +450,17 @@ describe("Pro sales copy on the page", () => {
     expect(html.slice(wrapper, button)).toContain("sm:order-2");
     expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Free scores every session/);
     expect(html).not.toContain("once with no renewal");
+  });
+
+  it("leads the headline with the page's head term, as the title does, with one priced ask beside it", () => {
+    const html = renderToStaticMarkup(<ProClient />);
+    const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1].replace(/<br\/?>/g, "").replace(/\s+/g, " ").trim();
+    expect(h1).toBe("Online vocal coach: the full plan, on top of the free studio.");
+    expect(ROUTE_KEYWORDS["/pro"][0]).toBe("online vocal coach");
+    expect(h1?.toLowerCase().startsWith(ROUTE_KEYWORDS["/pro"][0])).toBe(true);
+    // The first screen: from the headline to the end of the hero buttons.
+    const hero = html.slice(html.indexOf("<h1"), html.indexOf("or keep practicing free"));
+    expect(hero.match(/\$79/g)).toHaveLength(1);
   });
 });
 

@@ -5,13 +5,13 @@ order: 2
 summary: "What physically changes between chest, head, mix, falsetto and whistle, and why teachers give the same sounds different names."
 ---
 
-Ask ten singers which register they were in on a given note and you will get several answers, each delivered with confidence. That is not carelessness. The words arrived from different rooms — opera studios, church choirs, tracking booths, voice clinics — and nobody ever sat down to reconcile them.
+Ask ten singers which register they were in on a given note and you will get several answers, each delivered with confidence. That is not carelessness. The words arrived from different rooms (opera studios, church choirs, tracking booths, voice clinics), and nobody ever sat down to reconcile them.
 
 The sounds themselves are not vague. Something specific changes in your larynx as you climb, and it changes in ways you can feel and hear. Start there, and the vocabulary stops mattering so much.
 
 ## What actually changes
 
-Your vocal folds are not a fixed object. They are layered — a muscular body under a softer cover — and the muscles around them can adjust length, thickness and stiffness somewhat independently of each other. That is registers in one sentence. A register is a way of setting up the folds, and each setup has a band of pitches it handles well and a point where it gives out.
+Your vocal folds are not a fixed object. They are layered, a muscular body under a softer cover, and the muscles around them can adjust length, thickness and stiffness somewhat independently of each other. That is registers in one sentence. A register is a way of setting up the folds, and each setup has a band of pitches it handles well and a point where it gives out.
 
 ::figure registers | Two settings that overlap: the heavier one below, the lighter one above, and a stretch where either will do.
 
@@ -25,9 +25,9 @@ Neither is better. They are different tools, and they exist for a plain mechanic
 
 **Chest voice** is the thick-fold setup, the one you speak in. The name comes from sensation: sing a low note with a hand on your sternum and you feel it buzz. The buzz is real, but it is your body resonating sympathetically, not sound being made there. All of it happens at the larynx. Chest voice feels solid, carries consonants well, and turns effortful and shouty when pushed past its comfortable ceiling.
 
-**Falsetto** sits at the far end — folds stretched thin, often without complete closure, so air leaks through even as they vibrate. That leak is why falsetto tends to be breathy, hollow and hard to sing loudly. Most listeners recognize it in a second: the airy top notes running through soul and indie singing.
+**Falsetto** sits at the far end: folds stretched thin, often without complete closure, so air leaks through even as they vibrate. That leak is why falsetto tends to be breathy, hollow and hard to sing loudly. Most listeners recognize it in a second: the airy top notes running through soul and indie singing.
 
-**Head voice** is where the disagreement starts. Some teachers use it as another word for falsetto. Others mean something different — a high, stretched setup in which the folds still close firmly, so the tone rings rather than fogs and can be sung at real volume. Under that second definition, head voice and falsetto are the same neighborhood at different closure. If you have ever held a high note that snapped from foggy to focused without the pitch moving, you have felt the difference from inside. Chapter 10 covers telling them apart on purpose.
+**Head voice** is where the disagreement starts. Some teachers use it as another word for falsetto. Others mean something different: a high, stretched setup in which the folds still close firmly, so the tone rings rather than fogs and can be sung at real volume. Under that second definition, head voice and falsetto are the same neighborhood at different closure. If you have ever held a high note that snapped from foggy to focused without the pitch moving, you have felt the difference from inside. Chapter 10 covers telling them apart on purpose.
 
 **Mix** is the most contested term of all, partly because it names two things that usually travel together. There is a laryngeal middle ground, where the folds are neither fully thick nor fully thin and the transition can be crossed without a visible seam. And there is a resonance contribution: shaping the vowel and the tract so a lighter fold setup sounds fuller than it is. Most working singers do both at once, which is why nobody agrees on where the word belongs. Treat mix as a description of a result, not a switch you flip.
 
@@ -45,13 +45,13 @@ The words come from different repertoires. A classical tenor's head voice is a s
 
 And the boundaries really are blurry. Fold setup is a continuum, not a gearbox. You can sing one pitch with more thickness or less, more closure or less, and any label has to cut that continuum somewhere.
 
-None of this makes the terms useless. It makes them local. When a teacher asks for more head voice, they are asking for a change you can feel — usually less weight, more stretch. Take the instruction, leave the taxonomy.
+None of this makes the terms useless. It makes them local. When a teacher asks for more head voice, they are asking for a change you can feel: usually less weight, more stretch. Take the instruction, leave the taxonomy.
 
 ## The part that matters for practice
 
 The most damaging thing register vocabulary has done is turn a mechanical fact into a moral one. Chest gets called the real voice. Falsetto gets treated as an apology. Mix gets sold as the thing serious singers have and you do not. Beginners then spend months hauling chest voice up past its ceiling, because switching feels like losing.
 
-That is backwards, and it is the short road to strain. A register is a band of pitch and volume that one fold setup handles well. Working inside those bands is not a compromise; it is how the instrument is built. Nearly every singer you could name crosses several setups inside a single song, and the skill on display is not avoiding the switch. It is making the switch inaudible — or making it loud on purpose, the way country and yodeling traditions have done for generations.
+That is backwards, and it is the short road to strain. A register is a band of pitch and volume that one fold setup handles well. Working inside those bands is not a compromise; it is how the instrument is built. Nearly every singer you could name crosses several setups inside a single song, and the skill on display is not avoiding the switch. It is making the switch inaudible, or making it loud on purpose, the way country and yodeling traditions have done for generations.
 
 One boundary is worth stating plainly, because the rest of this chapter is about pushing into unfamiliar territory. Effort is fine. Pain is not.
 

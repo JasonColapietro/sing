@@ -9,7 +9,7 @@ Ten weeks of exercises have been building coordinations in isolation: a steady m
 
 These two weeks are where that transfer happens. They are also where you find out what the previous ten did, because at the start of week 12 you retake the range test and record the same song you recorded in week one.
 
-The work is still twenty minutes, three or four times a week. What changes is the ratio. Warmups shrink to the smallest set that gets you working — five minutes, the pack you have been using, nothing new. The rest is song.
+The work is still twenty minutes, three or four times a week. What changes is the ratio. Warmups shrink to the smallest set that gets you working: five minutes, the pack you have been using, nothing new. The rest is song.
 
 ## Picking the song
 
@@ -23,13 +23,13 @@ Pick something that mostly sits in your comfortable middle, with a few notes rea
 
 If the song is in the wrong key, move it. Once you have taken the range test, Songs opens each melody fitted to your measured range, and the transpose control shifts it a semitone at a time from there; without a saved range it opens in the written key and is scored in either octave. The fit works from your two extremes, so it is a starting guess rather than a judgment of where you are comfortable; trust the chorus over the arithmetic. Changing key is standard practice, and chapter 21 makes the case at length. What matters this week is that a song fighting you by two semitones can hide whatever changed in the last ten.
 
-Record it once, early in week 11, before you have worked on it. That is your working copy — separate from the week-one baseline take, which you leave alone.
+Record it once, early in week 11, before you have worked on it. That is your working copy, separate from the week-one baseline take, which you leave alone.
 
 ## Week 11: taking it apart
 
 Sing the whole thing once at the start of each session. Then stop singing it whole and work on pieces.
 
-Find the hardest phrase. Not the highest note — the hardest phrase, which is usually the longest one, or the one that climbs into your transition on an awkward vowel, or the one that arrives right after a spot with no time to breathe. Most songs have two or three. The rest is comparatively easy.
+Find the hardest phrase. Not the highest note: the hardest phrase, which is usually the longest one, or the one that climbs into your transition on an awkward vowel, or the one that arrives right after a spot with no time to breathe. Most songs have two or three. The rest is comparatively easy.
 
 Take that phrase into the pitch studio and treat it as an exercise. Sing it quietly. Sing it on a single vowel with no consonants, so you can hear what the line does without the words in the way. Then put one word back at a time. Watch the trace where it climbs. A phrase that reads clean in warmups and scruffy in context is telling you that the words, not the notes, are where the coordination falls apart.
 
@@ -47,11 +47,11 @@ Then record the song. Same song, same key, same arrangement as your week-one tak
 
 Now A/B the two takes in the recorder, or, if the browser has cleared the week-one take, play the copy you downloaded and the new take one after the other. Listen straight through once, without stopping and without judging. Then listen again with a list.
 
-Onsets first — the moment each phrase starts. Cleaner? Less scooping up to the note, fewer breathy leaks before the tone arrives? Onsets are worth checking early, because they are audible even to people who cannot describe what they are hearing.
+Onsets first: the moment each phrase starts. Cleaner? Less scooping up to the note, fewer breathy leaks before the tone arrives? Onsets are worth checking early, because they are audible even to people who cannot describe what they are hearing.
 
 Then the middle of the range, not the top. The notes you sing most often are where to look for steadier tone, less wobble on sustained notes, less of a gear change between one phrase and the next.
 
-Then the transition. Not whether it is gone — expect it to still be there, since it is a feature of how the instrument works — but whether the approach is quieter, whether you brace less, whether the sound thins gradually instead of flipping.
+Then the transition. Not whether it is gone (expect it to still be there, since it is a feature of how the instrument works), but whether the approach is quieter, whether you brace less, whether the sound thins gradually instead of flipping.
 
 Then the ends of phrases. Do they still have air behind them, or do they trail off and go flat on the last beat?
 
@@ -59,7 +59,7 @@ Then the ends of phrases. Do they still have air behind them, or do they trail o
 
 Two things go wrong here, in opposite directions.
 
-The first is hearing nothing. Your own voice on playback is uncomfortable, and the discomfort flattens everything into "that sounds bad." If you cannot hear a difference, go to the numbers: the range history in Progress, the accuracy figures, and, with Pro, the per-note accuracy chart — it adds up every scored session you have kept rather than setting week one beside week twelve, so read it for which notes have cost you most across the program, not as a before-and-after. Ten weeks is a short stretch on the timescale voices move, and chapter 11 explains why a trend needs more than two data points. Two readings are not a trend.
+The first is hearing nothing. Your own voice on playback is uncomfortable, and the discomfort flattens everything into "that sounds bad." If you cannot hear a difference, go to the numbers: the range history in Progress, the accuracy figures, and, with Pro, the per-note accuracy chart. It adds up every scored session you have kept rather than setting week one beside week twelve, so read it for which notes have cost you most across the program, not as a before-and-after. Ten weeks is a short stretch on the timescale voices move, and chapter 11 explains why a trend needs more than two data points. Two readings are not a trend.
 
 The second is hearing everything. A retest showing three extra semitones at the top after twelve weeks is more easily explained by a warmer voice, a bolder attempt, or a closer mic than by a longer range. Be suspicious of big changes at the outer edges. Be less suspicious of changes in the comfortable middle, in accuracy, or in how a phrase holds together, because those are harder to fake.
 
@@ -71,7 +71,7 @@ Then find the sentence you wrote before week one (chapter 13) about why you want
 
 Three sensible options, and the comparison tells you which.
 
-If the transition work never quite took — if the retest and the recording both show the same disintegration around the same notes — go back to block two, weeks 5 and 6, and run it again. Repeating a block is not a setback. The transition is the slowest thing in the program to change, and it is a normal place to spend a second pass.
+If the transition work never quite took (if the retest and the recording both show the same disintegration around the same notes), go back to block two, weeks 5 and 6, and run it again. Repeating a block is not a setback. The transition is the slowest thing in the program to change, and it is a normal place to spend a second pass.
 
 If the middle is solid and the top still frays, repeat weeks 7 and 8 with the same volume limits, and pair them with a second song that reaches slightly higher than the first.
 
@@ -79,4 +79,4 @@ If the whole thing held together, do not start another twelve weeks tomorrow. Ke
 
 ## Try this
 
-Open the recorder, put your week-one take next to your week-twelve take (if the browser has cleared the week-one take, play the copy you downloaded beside it), and A/B the first four seconds of each — the very first phrase entry, nothing more. Onsets are the kind of detail you can hear without training, and four seconds beats sitting through both takes twice.
+Open the recorder, put your week-one take next to your week-twelve take (if the browser has cleared the week-one take, play the copy you downloaded beside it), and A/B the first four seconds of each: the very first phrase entry, nothing more. Onsets are the kind of detail you can hear without training, and four seconds beats sitting through both takes twice.

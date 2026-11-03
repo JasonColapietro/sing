@@ -318,6 +318,31 @@ export function finishMeterRun(
   return { log: log({ type: "pitch", durationSec, detail: "Pitch meter" }), silent: false };
 }
 
+/** What the stopped meter says after a run the mic heard nothing of. */
+export const SILENT_ONCE =
+  "No note was heard, so nothing was logged. Sing a little louder or closer to the mic, or check the input under Audio below.";
+
+/**
+ * What it says after the second such run in a row (and every one after). The
+ * same card twice reads as the app ignoring the singer, and a second silent
+ * run is rarely a quiet voice: it is the input. So it names the setup, the
+ * microphone the browser was given and the site permission, and the card
+ * opens the Audio panel. It is still a refusal: nothing is logged
+ * (components/practice/silent-session.ts).
+ */
+export const SILENT_AGAIN =
+  "Still no note heard, so again nothing was logged. Two silent runs in a row usually mean the browser is listening to a different microphone, not that you are too quiet. Open Audio below and choose the mic you are singing into. If that does not help, check that your browser allows this site to use that mic (the mic or lock icon in the address bar) and that no other app or tab is using it.";
+
+/**
+ * Silent runs in a row, after a closed run: one more for a silent run, back
+ * to none once a run heard a note. A run too short to judge (closed before
+ * the hint's wait, with nothing heard) leaves the count where it was.
+ */
+export function nextSilentRuns(prev: number, result: MeterRunResult, heard: boolean): number {
+  if (result.silent) return prev + 1;
+  return heard ? 0 : prev;
+}
+
 /**
  * The stopped meter's summary: the notes held since the meter opened (or was
  * last Reset; "Sing again" keeps them, as the live readout does), whether the
@@ -342,6 +367,8 @@ export function LastRun({
   programNote = null,
   programDayHref = null,
   silent = false,
+  silentAgain = false,
+  onOpenAudio,
 }: {
   low: number;
   high: number;
@@ -366,6 +393,10 @@ export function LastRun({
    * notes above are from before it, and that run was thrown away, not banked.
    */
   silent?: boolean;
+  /** With `silent`: the second silent run in a row or later (SILENT_AGAIN). */
+  silentAgain?: boolean;
+  /** Opens the Audio panel below the gate; offered with SILENT_AGAIN. */
+  onOpenAudio?: () => void;
 }) {
   return (
     <Card className="mb-4">
@@ -376,12 +407,19 @@ export function LastRun({
         {low === high
           ? `You have held ${midiToLabel(low)} so far.`
           : `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far.`}{" "}
-        {silent
+        {silent && silentAgain
+          ? SILENT_AGAIN
+          : silent
           ? "No note was heard that time, so it was not logged. Sing a little louder or closer to the mic, or check the input under Audio below."
           : lastLog
             ? `+${lastLog.xpGained} XP, saved to your progress.`
             : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
       </p>
+      {silent && silentAgain && onOpenAudio && (
+        <div className="mt-3">
+          <Button onClick={onOpenAudio}>Open the audio setup</Button>
+        </div>
+      )}
       {/* The gate asks for one note, so a run of a note or two is the
           expected first result, not a reason to withhold the next step. On a
           stop the view scrolls to this card, which puts the Pitch | Range
@@ -459,6 +497,12 @@ export function PitchMeter({
   const heardMsRef = useRef(0);
   /** The last stop heard no note at all, so nothing was logged. */
   const [silentStop, setSilentStop] = useState(false);
+  /**
+   * Silent runs in a row (nextSilentRuns). Kept across "Sing again", which
+   * clears silentStop, so the second silent run gets SILENT_AGAIN rather than
+   * the same card.
+   */
+  const [silentRuns, setSilentRuns] = useState(0);
 
   /**
    * Log the practice once it has run long enough to count. Idempotent: the
@@ -466,10 +510,12 @@ export function PitchMeter({
    * all call it. A stretch under the floor stays banked for the next flush.
    */
   const flushLog = useCallback(() => {
+    const heard = heardMsRef.current > 0;
     const result = finishMeterRun(practiceClock, heardMsRef);
     if (!result) return;
     if (result.log) setLastLog(result.log);
     setSilentStop(result.silent);
+    setSilentRuns((n) => nextSilentRuns(n, result, heard));
   }, [practiceClock]);
   useFlushOnExit(flushLog);
 
@@ -676,6 +722,17 @@ export function PitchMeter({
     if (listening) focusIfDropped(liveRef.current);
   }, [listening]);
 
+  /** Wraps the Audio panel, so the second silent card can open it. */
+  const audioRef = useRef<HTMLDivElement>(null);
+  const openAudio = () => {
+    const panel = audioRef.current?.querySelector("details");
+    if (!panel) return;
+    panel.open = true;
+    panel.scrollIntoView({ block: "center" });
+    panel.querySelector("summary")?.focus();
+  };
+  const silentAgain = silentRuns >= 2;
+
   const begin = async () => {
     readRetestRule();
     pointsRef.current = [];
@@ -716,6 +773,8 @@ export function PitchMeter({
             programNote={programNote}
             programDayHref={programDayHref}
             silent={silentStop}
+            silentAgain={silentAgain}
+            onOpenAudio={openAudio}
           />
         )}
         {/* A silent run is never saved: say so, rather than drop the singer
@@ -723,8 +782,13 @@ export function PitchMeter({
         {silentStop && low === null && (
           <Card className="mb-4">
             <p role="status" className="text-sm text-mut">
-              No note was heard, so nothing was logged. Sing a little louder or closer to the mic, or check the input under Audio below.
+              {silentAgain ? SILENT_AGAIN : SILENT_ONCE}
             </p>
+            {silentAgain && (
+              <div className="mt-3">
+                <Button onClick={openAudio}>Open the audio setup</Button>
+              </div>
+            )}
           </Card>
         )}
         {/* A run that heard notes (slides, sirens, speech) but never held
@@ -755,7 +819,9 @@ export function PitchMeter({
           onEnable={begin}
           error={error}
         />
-        <AudioSetup className="mx-auto mt-6 max-w-md" />
+        <div ref={audioRef}>
+          <AudioSetup className="mx-auto mt-6 max-w-md" />
+        </div>
         {/* Below the gate so the start button and any mic error stay on a phone's first screen after a #start link. */}
         {low === null && (
           <FigureFrame className="mx-auto mt-8 max-w-2xl" caption="What the range test draws for you">

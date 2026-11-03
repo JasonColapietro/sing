@@ -263,7 +263,8 @@ function SongCard({
   return (
     <Card className="flex h-full flex-col">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="text-lg">{song.title}</h3>
+        {/* Wraps, never truncates, like every title in the songs room. */}
+        <h3 className="min-w-0 text-lg [overflow-wrap:anywhere]">{song.title}</h3>
         <div className="flex shrink-0 items-center gap-1.5">
           <MelodyContour notes={song.notes} className="mr-1" />
           {mastered && <MasteredMark />}
@@ -557,7 +558,10 @@ export function Library({
                 onClick={() => start(song, true)}
                 className="w-44 shrink-0 rounded-xl border border-line bg-panel px-4 py-3 text-left transition-colors hover:border-violet/40"
               >
-                <div className="truncate text-sm">{song.title}</div>
+                {/* Wraps, not truncates: a 176px card holds about 20 characters,
+                    and "(Opening Lines, Verses 1 & 2)" is what tells the
+                    arrangement apart. The row's cards stretch to the tallest. */}
+                <div className="text-sm [overflow-wrap:anywhere]">{song.title}</div>
                 <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                   {relativeTime(at)}
                 </div>
@@ -594,7 +598,7 @@ export function Library({
                 <span className="tabular w-4 font-mono text-[11px] text-dim">
                   {i + 1}
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm">{song.title}</span>
+                <span className="min-w-0 flex-1 text-sm [overflow-wrap:anywhere]">{song.title}</span>
                 {song.id === nowSingingId && <Pill tone="violet">Now</Pill>}
                 <MiniButton
                   label={`Move ${song.title} up`}

@@ -310,6 +310,18 @@ describe("song data a page states as fact", () => {
     }
   });
 
+  it("never tags a melody wide range unless it spans a full octave", () => {
+    // Every "wide range" entry spans at least 12 semitones as transcribed
+    // (Amazing Grace, Simple Gifts and Danny Boy all reach an octave), and the
+    // page prints the span beside the tag. A narrower melody tagged wide range
+    // would contradict that count.
+    const wide = ALL_SONGS.filter((s) => s.tags.includes("wide range"));
+    expect(wide.length).toBeGreaterThan(0);
+    for (const song of wide) {
+      expect(computeDifficulty(song).rangeSemis, song.slug).toBeGreaterThanOrEqual(12);
+    }
+  });
+
   it("never tags a melody stepwise when its leaps raise its own rating", () => {
     // computeDifficulty adds leaps to the span; a melody the page calls
     // stepwise must rate as a stepwise melody of the same span would

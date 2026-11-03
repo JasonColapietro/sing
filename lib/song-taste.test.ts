@@ -127,11 +127,13 @@ describe("pickForTaste", () => {
   });
 
   it("never lets taste override range fit", () => {
-    // A four-semitone voice: Yankee Doodle spans five, so no key fits it, while
-    // Frère Jacques (four) and Silent Night (three) both place inside it.
+    // A four-semitone voice: Yankee Doodle spans nine (G3 pickup to E4), so no
+    // key fits it, while Frère Jacques (four) and Silent Night (three) both
+    // place inside it. Its pickup rates it Hard, so the book is opened through
+    // its band.
     const picks = pickForTaste(
       answers({ level: "some", genres: ["Patriotic"] }),
-      ctx({ masteredIds: openThrough("easy"), range: { lowMidi: 60, highMidi: 64 } }),
+      ctx({ masteredIds: openThrough("hard"), range: { lowMidi: 60, highMidi: 64 } }),
       10,
     );
     const order = ids(picks);

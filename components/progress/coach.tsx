@@ -50,8 +50,9 @@ interface PlanItem {
  * Today's plan from the singer's own numbers. `restDayOf` names the running
  * program when today is one of its rest days: the program the singer chose
  * says rest, so the plan does not tell them in red to sing or lose the streak.
- * It says what resting costs the streak instead, and leaves the plan below
- * as optional.
+ * It says that resting keeps the streak instead (a scheduled rest day is a
+ * bridge, lib/progress.ts bridgeRestDays), and leaves the plan below as
+ * optional.
  *
  * `programRange` is the running program's next scheduled range test
  * (components/practice/program-day.ts programRangeTest). While there is one,
@@ -101,7 +102,7 @@ export function buildPlan(
       ? null
       : `Today is a rest day in ${restDayOf}, and the program counts it as done. Nothing below is required.${
           streakAtRisk
-            ? " Your streak counts only days you practice, so if you rest today it starts again from 1 at your next session."
+            ? ` Resting today keeps your ${state.streak.current}-day streak: a program rest day neither adds a day nor breaks it.`
             : ""
         }`;
 

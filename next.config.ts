@@ -184,6 +184,24 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
 
+      // --- "Musical Theatre" became "Musical Theater" (2026-11-03) ---
+      // The site writes American English, so the genre and its atlas chapter
+      // moved to the American spelling and their slugs moved with them. The
+      // old URLs were published (the hub in the sitemap and llms.txt, the
+      // chapter in the atlas contents), so each lands on its successor in one
+      // permanent hop. The genre rule carries any tail, so the hub's share
+      // card (/opengraph-image and its versioned form) follows the page.
+      {
+        source: "/singers/genre/musical-theatre/:rest*",
+        destination: "/singers/genre/musical-theater/:rest*",
+        permanent: true,
+      },
+      {
+        source: "/atlas/musical-theatre",
+        destination: "/atlas/musical-theater",
+        permanent: true,
+      },
+
       {
         // The warmups room deep-links as /warmups?exercise=<id>, but the id
         // reads like a path segment and visitors type it as one: production

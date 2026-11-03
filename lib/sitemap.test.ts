@@ -63,6 +63,17 @@ describe("sitemap indexability", () => {
     );
   });
 
+  it("publishes the Musical Theater hub at its American slug, never the old one", () => {
+    // 2026-11-03: "Musical Theatre" became "Musical Theater" and the slug
+    // moved; next.config.ts sends the old URLs on in one permanent hop, so a
+    // sitemap listing them would point crawlers at a redirect.
+    const urls = sitemap().map(({ url }) => url);
+    expect(urls).toContain(`${SITE_URL}/singers/genre/musical-theater`);
+    expect(urls.filter((url) => /theatre/i.test(url))).toEqual([]);
+    // The atlas chapter is gated, so it stays out under either spelling.
+    expect(urls).not.toContain(`${SITE_URL}/atlas/musical-theater`);
+  });
+
   it("publishes the programs page with its canonical URL", () => {
     expect(sitemap()).toContainEqual(
       expect.objectContaining({ url: `${SITE_URL}/programs` }),

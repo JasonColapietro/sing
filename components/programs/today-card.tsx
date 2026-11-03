@@ -666,6 +666,9 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
   // count: those open on cap walls until midnight, so this card must not be
   // the one surface still saying "open today's plan".
   const waits = proReady && !locked && view.status === "todo" && waitsForTomorrow(cap.capped, day, itemsDone);
+  // The range test and the recorded take are open now, as the full card says.
+  // Its pre-paint slot is sized for this line (lib/prepaint.ts "waits-open").
+  const stillOpen = waits ? openUncappedRows(day, itemsDone) : null;
   // Tomorrow is past a Pro program's free week (a rest day ends it).
   const nextLocked = proReady && view.status === "done-today" && nextNeedsPro(program, view.index, isPro);
   // A document load, not a client navigation (lib/program-ids.ts).
@@ -689,7 +692,7 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
         : isRestDay(day)
           ? `Day ${view.index + 1}: rest day.`
           : waits
-            ? `Day ${view.index + 1}: ${day.title} · ${itemsDone.filter(Boolean).length} of ${day.items.length} done. Today’s ${FREE_DAILY_MINUTES} free guided minutes are used; carry on after midnight.`
+            ? `Day ${view.index + 1}: ${day.title} · ${itemsDone.filter(Boolean).length} of ${day.items.length} done. Today’s ${FREE_DAILY_MINUTES} free guided minutes are used; carry on after midnight.${stillOpen ? ` ${stillOpen}` : ""}`
             : `Day ${view.index + 1}: ${day.title} · ${dayMinutes(day)} min`;
   return (
     <Card>

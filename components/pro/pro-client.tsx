@@ -1015,10 +1015,14 @@ export function ProClient() {
               </>
             ) : (
               <>
+                {/* Leads with the page's head term, "online vocal coach"
+                    (lib/keywords.ts, first on /pro), as the title and
+                    description do. What Pro adds is the coach's full plan:
+                    free already plans the first two steps of each day. */}
                 <h1 className="text-4xl sm:text-5xl">
-                  Keep the free studio.{" "}
+                  Online vocal coach:{" "}
                   <br />
-                  Add an online vocal coach.
+                  the full plan, on top of the free studio.
                 </h1>
                 {/* On a phone the buttons come straight after the headline;
                     nothing in the paragraph is focusable, so tab order holds. */}

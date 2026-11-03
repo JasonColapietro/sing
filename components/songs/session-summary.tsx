@@ -207,7 +207,7 @@ export function SessionSummary({
     <div className="space-y-6">
       <Card>
         <SectionLabel>{MODE_LABEL[mode]} complete</SectionLabel>
-        <h2 className="mt-3 text-2xl">{song.title}</h2>
+        <h2 className="mt-3 text-2xl [overflow-wrap:anywhere]">{song.title}</h2>
         {/* The rate the song ended on — on Auto the tempo can move mid-session. */}
         <p className="mt-1.5 text-sm text-mut">Finished at {formatTempoPct(data.tempo)} tempo</p>
         {/* Which pass produced this run: a score only means what it means in

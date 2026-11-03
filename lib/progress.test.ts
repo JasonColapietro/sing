@@ -894,3 +894,94 @@ describe("rangeRetestDue", () => {
     expect(rangeRetestDue({ lowMidi: 47, highMidi: 69, testedAt: "not a date" }, now)).toBe(false);
   });
 });
+
+describe("a running program's rest day bridges the streak", () => {
+  const EMPTY = JSON.stringify({
+    xp: 0,
+    sessions: [],
+    streak: { current: 0, best: 0, lastDay: null },
+    range: {},
+    rangeHistory: [],
+    achievements: [],
+  });
+  const at = (day: number) => new Date(2026, 8, day, 12, 0, 0);
+  const practice = (mod: Awaited<ReturnType<typeof withStoredRecord>>, day: number) => {
+    vi.setSystemTime(at(day));
+    return mod.logSession({ type: "warmup", durationSec: 300 });
+  };
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("keeps the streak across a rest day between two practice days, adding nothing for it", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const mod = await withStoredRecord(EMPTY);
+    practice(mod, 21);
+    practice(mod, 22);
+    // The 23rd is the program's rest day. On the 24th the bridge has run.
+    const bridged = mod.applyRestDayBridge(["2026-09-23"], "2026-09-24");
+    expect(bridged.streak).toEqual({ current: 2, best: 2, lastDay: "2026-09-23" });
+    const after = practice(mod, 24);
+    expect(after.state.streak).toEqual({ current: 3, best: 3, lastDay: "2026-09-24" });
+  });
+
+  it("still breaks on an unscheduled skip", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const mod = await withStoredRecord(EMPTY);
+    practice(mod, 21);
+    practice(mod, 22);
+    // The rest day is the 25th; the 23rd and 24th were simply skipped.
+    expect(mod.applyRestDayBridge(["2026-09-25"], "2026-09-25").streak.lastDay).toBe("2026-09-22");
+    expect(practice(mod, 25).state.streak.current).toBe(1);
+  });
+
+  it("with no program, behaves as before: a day off resets the count", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const mod = await withStoredRecord(EMPTY);
+    practice(mod, 21);
+    practice(mod, 22);
+    const before = mod.getStored();
+    expect(mod.applyRestDayBridge([], "2026-09-24").streak.lastDay).toBe("2026-09-22");
+    expect(mod.getStored()).toBe(before);
+    expect(practice(mod, 24).state.streak).toEqual({ current: 1, best: 2, lastDay: "2026-09-24" });
+  });
+
+  it("bridges a run of rest days, but never today and never a dead streak", async () => {
+    const { bridgeRestDays } = await withStoredRecord(EMPTY);
+    const live = { current: 4, best: 6, lastDay: "2026-09-20" };
+    const rest = ["2026-09-21", "2026-09-22"];
+    expect(bridgeRestDays(live, rest, "2026-09-23")).toEqual({ ...live, lastDay: "2026-09-22" });
+    // Today is a rest day: it can still be practiced, and lastDay = today reads as banked.
+    expect(bridgeRestDays(live, rest, "2026-09-22")).toEqual({ ...live, lastDay: "2026-09-21" });
+    // A gap that is not wholly rest days stops the walk.
+    expect(bridgeRestDays(live, ["2026-09-22"], "2026-09-23")).toBe(live);
+    const dead = { current: 0, best: 6, lastDay: "2026-09-20" };
+    expect(bridgeRestDays(dead, rest, "2026-09-23")).toBe(dead);
+  });
+
+  it("survives a reload, an import and a merge with a device that never saw the program", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const mod = await withStoredRecord(EMPTY);
+    practice(mod, 21);
+    practice(mod, 22);
+    mod.applyRestDayBridge(["2026-09-23"], "2026-09-24");
+    const saved = mod.getStored()!;
+    expect(JSON.parse(saved).streak.lastDay).toBe("2026-09-23");
+
+    // Reload: a fresh module reads the bridged record back.
+    const reloaded = await withStoredRecord(saved);
+    expect(reloaded.getState().streak).toEqual({ current: 2, best: 2, lastDay: "2026-09-23" });
+
+    // The other device logged the same two days but has no program.
+    const other = JSON.parse(saved);
+    other.streak = { current: 2, best: 2, lastDay: "2026-09-22" };
+    expect(reloaded.mergeRemoteProgress(other).streak).toEqual({ current: 2, best: 2, lastDay: "2026-09-23" });
+    expect(reloaded.importProgress(JSON.stringify(other))).toBe(true);
+    expect(reloaded.getState().streak.lastDay).toBe("2026-09-23");
+
+    // And the bridged record merged into that device carries the bridge there.
+    const there = await withStoredRecord(JSON.stringify(other));
+    expect(there.mergeRemoteProgress(JSON.parse(saved)).streak).toEqual({ current: 2, best: 2, lastDay: "2026-09-23" });
+  });
+});

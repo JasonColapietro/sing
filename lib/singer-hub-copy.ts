@@ -234,7 +234,7 @@ export const GENRE_HUB_COPY: Record<string, HubCopy> = {
   },
   "musical-theater": {
     intro:
-      "Musical theatre singing serves character and text: performers move between speech, classical legit tone and contemporary belt, often within one song. Eight shows a week reward a sustainable technique over a one-off high note.",
+      "Musical theater singing serves character and text: performers move between speech, classical legit tone and contemporary belt, often within one song. Eight shows a week reward a sustainable technique over a one-off high note.",
     neighbour: "opera",
     contrast:
       "{link} also sings roles on stage, but unamplified and in classical tone throughout, without the belt and speech-singing.",

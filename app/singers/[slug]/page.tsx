@@ -837,10 +837,11 @@ export default async function SingerPage({
           </div>
         </Card>
 
-        {/* One start, at the end of the read: the range test that overlays the visitor on this singer. */}
+        {/* One start, at the end of the read: the range test that overlays the visitor on this singer.
+            The heading asks what the comparison answers, so it does not repeat the button below. */}
         <Card className="border-violet/40">
           <h2 id="practice" className="scroll-mt-24 text-xl">
-            Test your range against {s.name}
+            How much of {s.name}&rsquo;s {rangeLabel(s)} does your range cover?
           </h2>
           {fittingSongs.length > 0 && (
             <>

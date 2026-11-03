@@ -199,7 +199,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Thick gospel-schooled mezzo with a wide chest belt and audible grit at the top of the register.",
-    "technique": "Weight is the whole game. The chest register is thick and gospel-shaped, onsets are firm and closer to glottal than breathy, and the belt keeps chest quality all the way to F5 with a wide vibrato that opens as the note holds. Grit shows up at peaks as an edge riding on a supported tone. Chasing the volume without breath pressure underneath turns that edge into throat scraping."
+    "technique": "Weight is the whole game. The chest register is thick and gospel-shaped, onsets are firm and closer to glottal than breathy, and the belt keeps chest quality all the way to F5 with a wide vibrato that opens as the note holds. Grit shows up at peaks as an edge riding on a supported tone. Chasing the volume without steady support underneath turns that edge into throat scraping."
   },
   {
     "slug": "akon",
@@ -382,7 +382,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Smoky mezzo with a slight nasal edge; belts from the chest and clips notes short for rhythm.",
-    "technique": "Compression, not air. Notes begin with a firm glottal edge and a slightly nasal placement, and that is where the huskiness lives; breathing the tone out to sound smoky works against it. She clips syllables short and lets the rests carry the groove, landing a fraction behind the beat. The Eb5 belt keeps chest weight instead of thinning into a mix, with only a shimmer of narrow vibrato on the release."
+    "technique": "Compression, not air. Notes begin with a firm glottal edge and a slightly nasal placement, and the huskiness rides on that focused core; breathing the tone out to sound smoky works against it. She clips syllables short and lets the rests carry the groove, landing a fraction behind the beat. The Eb5 belt keeps chest weight instead of thinning into a mix, with only a shimmer of narrow vibrato on the release."
   },
   {
     "slug": "alison-krauss",
@@ -4324,8 +4324,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Friends in Low Places",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Sturdy baritone that takes its grit from breath pressure; stage-shout delivery up high.",
-    "technique": "Grit here comes from breath pressure against a fairly open throat, not from scraping. Onsets are aspirate, a little air ahead of the tone, and vibrato is wide and shows up at the ends of long notes. Approaching A4 the delivery turns into a stage shout, chest-weighted and open-vowelled. Copy the volume without the air behind it and you get a squeezed, hoarse sound that will not survive a set."
+    "blurb": "Sturdy baritone with grit riding on a clean, steadily supported tone; stage-shout delivery up high.",
+    "technique": "The grit here is a rough edge riding on steady breath over a clean tone, not a scrape at the folds. Onsets are aspirate, a little air ahead of the tone, and vibrato is wide and shows up at the ends of long notes. Approaching A4 the delivery turns into a stage shout, chest-weighted and open-vowelled. Copy the volume without the steady support under it and you get a squeezed, hoarse sound that will not survive a set."
   },
   {
     "slug": "geddy-lee",
@@ -5547,7 +5547,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Heavy chest weight carried into the fifth octave; belts stay full instead of thinning to falsetto.",
-    "technique": "Chest weight is carried unusually high, so a belt near A5 keeps the thickness it had an octave lower instead of thinning into mix. Vowels open wide at the top, and the note is held straight before a slow vibrato is allowed in at the end. Attacks land firm and on pitch with little scooping. Attempting this without the breath pressure behind it is how singers strain, since the size comes from support and space rather than from squeezing."
+    "technique": "Chest weight is carried unusually high, so a belt near A5 keeps the thickness it had an octave lower instead of thinning into mix. Vowels open wide at the top, and the note is held straight before a slow vibrato is allowed in at the end. Attacks land firm and on pitch with little scooping. Attempting this without steady support behind it is how singers strain, since the size comes from support and space rather than from squeezing."
   },
   {
     "slug": "jeremy-jordan",
@@ -5567,7 +5567,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "High tenor belt with a metallic ring; adds grit up top and flips to falsetto past the break.",
-    "technique": "Ring is the giveaway: a hard metallic edge from close fold contact and a narrow resonance space, which pushes the belt to C5 and keeps it cutting through a band. Above that he adds grit on the attack, then flips openly into falsetto instead of dragging chest higher, so you hear the seam and are meant to. Rhythm is aggressive and consonants land early. The grit rides on breath pressure rather than throat squeeze, which is why the metallic edge survives it."
+    "technique": "Ring is the giveaway: a hard metallic edge from close fold contact and a narrow resonance space, which pushes the belt to C5 and keeps it cutting through a band. Above that he adds grit on the attack, then flips openly into falsetto instead of dragging chest higher, so you hear the seam and are meant to. Rhythm is aggressive and consonants land early. The grit rides on steady breath over a clean tone rather than a throat squeeze, which is why the metallic edge survives it."
   },
   {
     "slug": "jessie-j",
@@ -5853,7 +5853,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "The definitive gravel: a torn, convulsive blues shout that turned polite pop songs into testifying.",
-    "technique": "Rasp at this depth is a full-body event. The tone is shredded across its whole span, not just at peaks, produced with enormous breath drive and a wide-open throat, and the phrasing convulses: words arrive in spasms, early or late, exactly where a gospel shouter would place them. Sustained notes bloom into wide, slow vibrato. Study the phrasing separately from the rasp, speaking the lines in his timing. The distortion itself took him years and cost him plenty; borrow the timing, not the tissue damage."
+    "technique": "Rasp at this depth is a full-body event. The tone is shredded across its whole span, not just at peaks, produced with a wide-open throat and the effort spread across the phrase, and the phrasing convulses: words arrive in spasms, early or late, exactly where a gospel shouter would place them. Sustained notes bloom into wide, slow vibrato. Study the phrasing separately from the rasp, speaking the lines in his timing. The distortion itself took him years and cost him plenty; borrow the timing, not the tissue damage."
   },
   {
     "slug": "joe-elliott",
@@ -5873,7 +5873,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Space Oddity",
     "highSource": "Foolin'",
     "blurb": "Grainy, deep-spoken rock voice that flips into a ringing head-voice top layered for stadium choruses.",
-    "technique": "Two voices coexist here: a deep, grainy speaking register and a bright head-voice extension he layers into wall-of-sound choruses. He flips early and unapologetically, letting the blend between chest and head happen in overdubs rather than in one line. Vowels narrow hard on top notes, with rasp added by compression at the edges. Copyists usually push chest too high trying to make the record's composite sound alone; he builds it from stacked, lighter passes."
+    "technique": "Two voices coexist here: a deep, grainy speaking register and a bright head-voice extension he layers into wall-of-sound choruses. He flips early and unapologetically, letting the blend between chest and head happen in overdubs rather than in one line. Vowels narrow hard on top notes, with a little rasp added at the edges. Copyists usually push chest too high trying to make the record's composite sound alone; he builds it from stacked, lighter passes."
   },
   {
     "slug": "john-denver",
@@ -9415,7 +9415,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Raspy, pushed baritone that stammers and repeats phrases to build pressure.",
-    "technique": "A thick baritone driven hard, with rasp riding on top of the tone rather than replacing it. Onsets are often glottal, words get stammered and repeated to build pressure, and lines push slightly ahead of the beat so the band sounds like it is chasing the singer. The top of the range is shouted, not floated. The grit is not throat scrape; it comes from breath compression and bright forward vowels, and it should never hurt."
+    "technique": "A thick baritone driven hard, with rasp riding on top of the tone rather than replacing it. Onsets are often glottal, words get stammered and repeated to build pressure, and lines push slightly ahead of the beat so the band sounds like it is chasing the singer. The top of the range is shouted, not floated. The grit is not throat scrape; it rides on steady breath over a clean tone, shaped by bright forward vowels, and it should never hurt."
   },
   {
     "slug": "ozuna",
@@ -9718,7 +9718,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "A grainy, soul-schooled baritone: Otis Redding pressure pushed through an English art-rock imagination.",
-    "technique": "Grain plus push defines the mature sound: a throaty, sandpapered baritone driven hard into its upper fourth, where the strain is audible and intentional, borrowed straight from Stax soul shouting. Underneath, phrasing is conversational and behind the beat. The rasp rides on strong breath pressure with the throat staying open; it is effortful but distributed effort. Build the push gradually across a phrase, arriving at full grain only on the peak word. Starting at maximum is how throats get hurt copying this."
+    "technique": "Grain plus push defines the mature sound: a throaty, sandpapered baritone driven hard into its upper fourth, where the strain is audible and intentional, borrowed straight from Stax soul shouting. Underneath, phrasing is conversational and behind the beat. The rasp rides on steady breath over a clean tone, with the throat staying open; it is effortful but distributed effort. Build the push gradually across a phrase, arriving at full grain only on the peak word. Starting at maximum is how throats get hurt copying this."
   },
   {
     "slug": "peter-steele",
@@ -12067,7 +12067,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": "River Deep - Mountain High",
     "blurb": "Gravel-edged contralto that stays in chest voice and gets power from a hard, forward rasp.",
-    "technique": "Power lives in the lower middle here, not up top. The contralto stays in chest with a gravel edge sitting right at the front of the sound, onsets are frequently growled, and phrases push and shove against the beat rather than floating over it. Approaching Eb5 the tone narrows into a hard, rasp-edged cry. That grit rides on breath pressure behind a forward, wide-open vowel, which is how it stays loud without closing the throat down."
+    "technique": "Power lives in the lower middle here, not up top. The contralto stays in chest with a gravel edge sitting right at the front of the sound, onsets are frequently growled, and phrases push and shove against the beat rather than floating over it. Approaching Eb5 the tone narrows into a hard, rasp-edged cry. That grit rides on steady breath over a clean, forward, wide-open vowel, which is how it stays loud without closing the throat down."
   },
   {
     "slug": "tinashe",
@@ -12514,7 +12514,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Raspy tenor that repeats and stretches syllables, sliding between blues shouts and scat phrasing.",
-    "technique": "Rhythm and repetition matter more than sustained tone here. Syllables get stretched, doubled, and worried at until they turn into rhythmic figures, and lines slide between a blues shout and wordless scat phrasing. The rasp comes from breath pressure against a fairly open throat, not from squeezing, and it thickens as volume rises. Phrases enter late and catch up. Because the grit rides on air instead of a tight throat, the flexibility survives the volume."
+    "technique": "Rhythm and repetition matter more than sustained tone here. Syllables get stretched, doubled, and worried at until they turn into rhythmic figures, and lines slide between a blues shout and wordless scat phrasing. The rasp is an edge riding on steady breath over a clean tone, not a squeeze, and it thickens as volume rises. Phrases enter late and catch up. Because the grit rides on a free, steady tone instead of a tight throat, the flexibility survives the volume."
   },
   {
     "slug": "vance-joy",

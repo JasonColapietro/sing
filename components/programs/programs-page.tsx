@@ -44,7 +44,9 @@ export function ProgramsPage({ program = null }: { program?: string | null }) {
             A day ticks itself off once the practice log shows each of its items, one
             program day per calendar day at most; if you did something the log cannot
             see, you mark the day done yourself. Miss a day and the program waits: the
-            next day is there when you come back. Your place is kept in this browser
+            next day is there when you come back. A scheduled rest day keeps your
+            practice streak: it adds no day and does not break it, while a missed
+            practice day still ends the streak. Your place is kept in this browser
             only.
           </p>
         </div>

@@ -637,6 +637,63 @@ function streakFromSessions(sessions: SessionLog[]): number {
   return current;
 }
 
+/* -------------------------------------------------------------- rest days */
+
+/**
+ * The streak carried across a running program's scheduled rest days.
+ *
+ * A rest day in the program the singer is running is a bridge: it neither
+ * adds a day to the streak nor breaks it. The record has no field for that
+ * (it is a published contract, contracts/suede-progress.ts), so a bridge moves
+ * `lastDay`, the day key the count ends on, onto the rest day and leaves
+ * `current` and `best` alone. Every reader of the streak then agrees without
+ * knowing about programs: liveStreak and the header chip (today or yesterday),
+ * lib/prepaint.ts, logSession's "was yesterday" step, and the merge, which
+ * keeps the latest `lastDay` and its count, so the bridge survives reload,
+ * cloud sync and file import.
+ *
+ * `restDays` must be the calendar days the program as it was run made rest
+ * days (lib/programs.ts programRestDays): a program completes a rest day only
+ * on the day after the day before it was completed, so a skipped practice day
+ * is never one of them. Only a day strictly before `today` is bridged: today
+ * can still be practiced, and a `lastDay` of today would read as "banked".
+ * Walks forward from `lastDay` one calendar day at a time, so a gap that is
+ * not wholly rest days stops the walk and the streak lapses as it always has.
+ */
+export function bridgeRestDays(
+  streak: ProgressState["streak"],
+  restDays: Iterable<string>,
+  today: string,
+): ProgressState["streak"] {
+  if (streak.current <= 0 || !streak.lastDay) return streak;
+  const rest = new Set(restDays);
+  let lastDay = streak.lastDay;
+  const cursor = new Date(`${lastDay}T00:00:00`);
+  if (Number.isNaN(cursor.getTime())) return streak;
+  for (;;) {
+    cursor.setDate(cursor.getDate() + 1);
+    const next = localDay(cursor);
+    if (next >= today || !rest.has(next)) break;
+    lastDay = next;
+  }
+  return lastDay === streak.lastDay ? streak : { ...streak, lastDay };
+}
+
+/**
+ * Apply bridgeRestDays to the stored streak and save it when it moved. Called
+ * wherever the running program is read (components/programs/use-program.ts),
+ * including the header's bridge on every page. Writes nothing when there is
+ * nothing to bridge, so calling it on every render is safe.
+ */
+export function applyRestDayBridge(restDays: Iterable<string>, today: string = localDay()): ProgressState {
+  const prev = load();
+  const streak = bridgeRestDays(prev.streak, restDays, today);
+  if (streak === prev.streak) return prev;
+  const next: ProgressState = { ...prev, streak };
+  save(next);
+  return next;
+}
+
 /**
  * Two-way merge of a remote ProgressState into the local one, for cloud
  * sync, the account backup and file import. Every rule is a union, max, or

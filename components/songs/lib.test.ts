@@ -27,6 +27,7 @@ import {
   TEMPO_STEP,
   autoTempoStep,
   bandForSong,
+  computeDifficulty,
   bandOpen,
   breathMarks,
   countOpenSongsFitting,
@@ -720,12 +721,30 @@ describe("a voice sung an octave from the written melody: drawn and filed where 
 });
 
 describe("songbook transcriptions", () => {
-  // Regression guard for two corrected transcriptions: London Bridge's third
-  // "fall-ing down" rises E4–F4–G4, and Danny Boy's opening line.
+  // Regression guard for corrected transcriptions: London Bridge's third
+  // "fall-ing down" rises E4–F4–G4; Danny Boy's opening line is the
+  // Londonderry Air in C (ti-do-re | mi re mi la so mi re la), with "call-" on
+  // D4, the supertonic, as Petrie (1855) and the published song print it; and
+  // Yankee Doodle keeps its G3 pickup "a-" before "riding".
   it("transcribes the corrected folk melodies", () => {
     const midis = (slug: string) => songBySlug(slug)!.notes.map((n) => n.midi);
     expect(midis("london-bridge-is-falling-down").slice(-3)).toEqual([64, 65, 67]);
-    expect(midis("danny-boy")).toEqual([55, 57, 59, 60, 59, 60, 65, 64, 60, 62, 57]);
+    expect(midis("danny-boy")).toEqual([59, 60, 62, 64, 62, 64, 69, 67, 64, 62, 57]);
+    const danny = songBySlug("danny-boy")!;
+    expect(danny.notes.find((n) => n.lyric === "call")!.midi).toBe(62);
+    expect(midis("yankee-doodle")).toEqual([60, 60, 62, 64, 60, 64, 62, 55, 60, 60, 62, 64, 60, 59]);
+  });
+
+  it("rates the restored transcriptions by the book's own difficulty rule", () => {
+    // Yankee Doodle's G3 pickup widens it to 9 semitones and adds two leaps
+    // (D4 down to G3, G3 up to C4): 9 + round(5 / 13 * 12) = 14, Hard.
+    const yankee = computeDifficulty(songBySlug("yankee-doodle")!);
+    expect(yankee).toEqual({ label: "Hard", rangeSemis: 9, leaps: 5, score: 14 });
+    expect(bandForSong(songBySlug("yankee-doodle")!)).toBe("hard");
+    // Danny Boy spans A3 to A4 with two leaps: 12 + round(2 / 10 * 12) = 14.
+    const danny = computeDifficulty(songBySlug("danny-boy")!);
+    expect(danny).toEqual({ label: "Hard", rangeSemis: 12, leaps: 2, score: 14 });
+    expect(bandForSong(songBySlug("danny-boy")!)).toBe("hard");
   });
 });
 

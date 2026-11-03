@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { createLocalStore } from "@/components/songs/favorites";
 import { reviveProgress, startProgram, type ProgramProgress } from "@/lib/programs";
+import { PROGRAM_STORAGE_KEY } from "./storage-key";
 
 /**
  * The singer's place in a program: which one, when it started, and which days
@@ -14,9 +15,10 @@ import { reviveProgress, startProgram, type ProgramProgress } from "@/lib/progra
  * the log is re-derived on every visit, so losing this key costs the singer
  * their place in the calendar and nothing they sang. Every read and write is
  * guarded by `createLocalStore`, so a blocked store reads as "no program".
- * The key is exported for lib/prepaint.ts, whose test holds its copy to it.
+ * The key is exported for lib/prepaint.ts, whose test holds its copy to it;
+ * it lives in ./storage-key so the header can check for it cheaply.
  */
-export const PROGRAM_STORAGE_KEY = "suede-sing:program:v1";
+export { PROGRAM_STORAGE_KEY };
 const KEY = PROGRAM_STORAGE_KEY;
 
 const store = createLocalStore<ProgramProgress | null>(KEY, null, reviveProgress);

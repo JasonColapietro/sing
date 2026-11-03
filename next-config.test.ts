@@ -109,6 +109,49 @@ describe("raw Vercel host redirects", () => {
   });
 });
 
+describe("Musical Theater slug redirects (2026-11-03)", () => {
+  /** Where Next's redirect phase sends `path`, with the rule that matched. */
+  async function resolve(path: string) {
+    const redirects = (await nextConfig.redirects?.()) ?? [];
+    for (const rule of redirects) {
+      if (rule.has || rule.missing) continue;
+      const { regexStr, error } = tryToParsePath(rule.source);
+      if (!regexStr) throw error;
+      const match = new RegExp(regexStr).exec(path);
+      if (!match) continue;
+      // Every parameter in these rules is a `:name*` tail.
+      const tail = match.slice(1).filter(Boolean).join("/");
+      const destination = rule.destination.replace(/\/:\w+\*$/, tail ? `/${tail}` : "");
+      return { destination, permanent: rule.permanent };
+    }
+  }
+
+  it.each([
+    ["/singers/genre/musical-theatre", "/singers/genre/musical-theater"],
+    ["/singers/genre/musical-theatre/opengraph-image", "/singers/genre/musical-theater/opengraph-image"],
+    ["/singers/genre/musical-theatre/opengraph-image/abc123", "/singers/genre/musical-theater/opengraph-image/abc123"],
+    ["/atlas/musical-theatre", "/atlas/musical-theater"],
+  ])("sends %s permanently to %s", async (from, to) => {
+    expect(await resolve(from)).toEqual({ destination: to, permanent: true });
+  });
+
+  it("is a single hop: the new URLs match no redirect of their own", async () => {
+    for (const path of [
+      "/singers/genre/musical-theater",
+      "/singers/genre/musical-theater/opengraph-image",
+      "/atlas/musical-theater",
+    ]) {
+      expect(await resolve(path), path).toBeUndefined();
+    }
+  });
+
+  it("leaves neighboring hubs and chapters alone", async () => {
+    for (const path of ["/singers/genre/opera", "/atlas/opera-and-classical-crossover", "/singers/genre/musical-theatres"]) {
+      expect(await resolve(path), path).toBeUndefined();
+    }
+  });
+});
+
 describe("warmup path redirects", () => {
   it("sends /warmups/<exercise id> to the room's ?exercise= deep link", async () => {
     const redirects = (await nextConfig.redirects?.()) ?? [];
