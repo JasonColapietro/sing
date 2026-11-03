@@ -58,7 +58,7 @@ const PRACTICE: FooterLink[] = [
   { href: "/progress", label: "Your progress" },
   { href: "/extension", label: "Chrome extension vocal coach" },
   // Priced like every ask that leads to the offer; hidden from an owner.
-  { href: "/pro#buy", label: "Suede Pro vocal coach", price: `, ${formatPrice(PRICING.lifetime.amount)} once` },
+  { href: "/pro#buy", label: "Suede Pro online vocal coach", price: `, ${formatPrice(PRICING.lifetime.amount)} once` },
 ];
 
 /** The voice course (hosted here since 2026-09-23), then the sibling Suede properties. */

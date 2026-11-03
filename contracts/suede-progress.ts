@@ -290,7 +290,9 @@ export function buildContract() {
           "current is the number of consecutive local calendar days ending at the " +
           "most recent session day, best is the longest such run, and lastDay is " +
           "the day key the count ends on. Local days, not UTC, and walked by the " +
-          "calendar rather than by subtracting 86,400,000 milliseconds.",
+          "calendar rather than by subtracting 86,400,000 milliseconds. A scheduled " +
+          "rest day of the active program that the singer reached is a bridge: it " +
+          "neither adds a day nor breaks the run, and lastDay can be that rest day.",
         because:
           "This is a decision rather than a missing field. GuitarHub argues in " +
           "published copy that a streak measures attendance — it rises on a " +

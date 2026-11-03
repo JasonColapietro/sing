@@ -287,7 +287,7 @@ function contentsHtml(pages) {
   return `<nav class="contents" id="contents">
     <p class="c-label">Contents</p>
     <h1>The Measured Voice</h1>
-    <p class="c-hint">Every line below is a link — tap a chapter to jump straight to it.
+    <p class="c-hint">Every line below is a link: tap a chapter to jump straight to it.
     Every chapter links back here, to the next chapter, and to any chapter its
     text mentions.</p>
     <ol class="c-list">${rows}</ol>
@@ -452,7 +452,7 @@ const documentHtml = (pages, face) => `<!doctype html><html lang="en"><head><met
   </section>
   <section class="colophon" id="colophon">
     <h2>Colophon</h2>
-    <p>${esc(TITLE)} — ${esc(SUBTITLE)}. Written for Suede Sing, the browser vocal
+    <p>${esc(TITLE)}: ${esc(SUBTITLE)}. Written for Suede Sing, the browser vocal
     studio, and included with a Suede Pro subscription. ${chapters.length} chapters
     in ${parts.length} parts.</p>
     <p>Set in ${esc(face)} with monospace labels, and typeset from the same

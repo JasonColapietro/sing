@@ -326,7 +326,7 @@ function contentsHtml(pages) {
   return `<nav class="contents" id="contents">
     <p class="c-label">Contents</p>
     <h1>${esc(ATLAS_TITLE)}</h1>
-    <p class="c-hint">Every line below is a link — tap a chapter to jump straight to it, and
+    <p class="c-hint">Every line below is a link: tap a chapter to jump straight to it, and
     the names under each chapter are the voices it covers. Every chapter links back here
     and on to the next one.</p>
     <ol class="c-list">${rows}</ol>
@@ -496,23 +496,23 @@ const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta char
   ${bodyHtml(pages)}
   <section class="note">
     <h2>A note on the figures</h2>
-    <p>Every range in this book is a commonly cited figure — compiled from recordings and
-    public discussion, not lab measurements — and the extreme notes are one-off recorded
+    <p>Every range in this book is a commonly cited figure (compiled from recordings and
+    public discussion, not lab measurements), and the extreme notes are one-off recorded
     moments rather than anyone's everyday voice. The technique notes describe how voices
     sound on record.</p>
     <p>And a note on practice: nothing here is medicine. If singing hurts, if you are
     hoarse and it will not clear, or if you ever see blood, that is a question for a
-    doctor or a speech-language pathologist — there is no waiting period, and you do not
+    doctor or a speech-language pathologist; there is no waiting period, and you do not
     need to be sure it is serious before you go.</p>
   </section>
   <section class="colophon" id="colophon">
     <h2>Colophon</h2>
-    <p>${esc(ATLAS_TITLE)} — ${esc(ATLAS_SUBTITLE)}. Written for Suede Sing, the browser
+    <p>${esc(ATLAS_TITLE)}: ${esc(ATLAS_SUBTITLE)}. Written for Suede Sing, the browser
     vocal studio, and included with a Suede Pro subscription. ${chapters.length} chapters
     in ${parts.length} parts.</p>
     <p>Typeset from the same source the app reads, so the book and the in-app chapters
     can never disagree. Every contents row, part list and chapter footer in this file is
-    a live link, and the contents double as the index — every singer covered is named
+    a live link, and the contents double as the index: every singer covered is named
     there.</p>
     <p class="colo-meta">
       Suede Sing \u00b7 <a href="https://sing.suedeai.ai">sing.suedeai.ai</a> \u00b7
