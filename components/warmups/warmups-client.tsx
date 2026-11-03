@@ -332,11 +332,16 @@ export function WarmupsClient() {
   // the singer was actually looking.
   const [errorAt, setErrorAt] = useState<ErrorAt>({ kind: "gate" });
 
+  // Each start checks the live stream, not only the rendered `listening`: the
+  // idle release (useIdleMicRelease) can stop the mic in the task just before
+  // a press, while this render still says it is on. Starting on that stopped
+  // stream ran the exercise deaf and ended it as "No sound picked up". With no
+  // live stream the press reopens the mic first, like a cold start.
   const selectExercise = guard(async (
     ex: WarmupExercise,
     from: "path" | "continue" | "summary" = "path",
   ) => {
-    if (pitch.listening) {
+    if (pitch.listening && pitch.getStream()) {
       startExercise(ex);
       return;
     }
@@ -357,7 +362,7 @@ export function WarmupsClient() {
   /** A row in today's three: the exercise at the tempo the plan set for it. */
   const selectDailyPick = guard(async (p: DailyPick, from: "today" | "summary" = "today") => {
     if (!canStart(p.exercise)) return;
-    if (pitch.listening) {
+    if (pitch.listening && pitch.getStream()) {
       startExercise(p.exercise, p.tempo);
       return;
     }
@@ -369,7 +374,7 @@ export function WarmupsClient() {
 
   const selectRoutine = guard(async (r: Routine, from: "today" | "grid" | "summary") => {
     if (!canStartRoutine(r)) return;
-    if (pitch.listening) {
+    if (pitch.listening && pitch.getStream()) {
       startRoutine(r);
       return;
     }
