@@ -2,7 +2,7 @@
   {
     "name": "Idina Menzel",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "USA",
     "activeFrom": 1996,
     "lowNote": "G2",
@@ -18,7 +18,7 @@
   {
     "name": "Lea Salonga",
     "voiceType": "Soprano",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "Philippines",
     "activeFrom": 1989,
     "lowNote": "F3",
@@ -34,7 +34,7 @@
   {
     "name": "Patti LuPone",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "USA",
     "activeFrom": 1979,
     "lowNote": "E3",
@@ -50,7 +50,7 @@
   {
     "name": "Audra McDonald",
     "voiceType": "Soprano",
-    "genres": ["Musical Theatre", "Jazz", "Classical"],
+    "genres": ["Musical Theater", "Jazz", "Classical"],
     "country": "USA",
     "activeFrom": 1994,
     "lowNote": "F3",
@@ -66,7 +66,7 @@
   {
     "name": "Bernadette Peters",
     "voiceType": "Soprano",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "USA",
     "activeFrom": 1968,
     "lowNote": "G3",
@@ -82,7 +82,7 @@
   {
     "name": "Kristin Chenoweth",
     "voiceType": "Soprano",
-    "genres": ["Musical Theatre", "Classical"],
+    "genres": ["Musical Theater", "Classical"],
     "country": "USA",
     "activeFrom": 1999,
     "lowNote": "G3",
@@ -98,7 +98,7 @@
   {
     "name": "Michael Crawford",
     "voiceType": "Tenor",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "UK",
     "activeFrom": 1973,
     "lowNote": "A2",
@@ -114,7 +114,7 @@
   {
     "name": "Hugh Jackman",
     "voiceType": "Baritone",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "Australia",
     "activeFrom": 1998,
     "lowNote": "A2",
@@ -130,7 +130,7 @@
   {
     "name": "Ben Platt",
     "voiceType": "Tenor",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "USA",
     "activeFrom": 2015,
     "lowNote": "A2",
@@ -146,7 +146,7 @@
   {
     "name": "Jonathan Groff",
     "voiceType": "Tenor",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "USA",
     "activeFrom": 2006,
     "lowNote": "A2",
@@ -162,7 +162,7 @@
   {
     "name": "Cynthia Erivo",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Musical Theatre", "Soul", "Pop"],
+    "genres": ["Musical Theater", "Soul", "Pop"],
     "country": "UK",
     "activeFrom": 2015,
     "lowNote": "E3",
@@ -173,12 +173,12 @@
     "lowSource": null,
     "highSource": null,
     "blurb": "Gospel-rooted belt with fast melisma and controlled rasp, releasing into clean head voice.",
-    "technique": "Gospel-style ornament sits on top of theatre discipline: fast melisma with every note of the run separately articulated, bends into pitches from below, and a rasp added to the front of a word then removed within the same phrase. The belt drives to F5 on real chest weight, and rather than force past it she releases into a clean, unpressed head voice for the notes above. That release is the hard part; most singers either stay in the belt and push or lose the tone entirely in the switch."
+    "technique": "Gospel-style ornament sits on top of theater discipline: fast melisma with every note of the run separately articulated, bends into pitches from below, and a rasp added to the front of a word then removed within the same phrase. The belt drives to F5 on real chest weight, and rather than force past it she releases into a clean, unpressed head voice for the notes above. That release is the hard part; most singers either stay in the belt and push or lose the tone entirely in the switch."
   },
   {
     "name": "Jeremy Jordan",
     "voiceType": "Tenor",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "USA",
     "activeFrom": 2012,
     "lowNote": "A2",
@@ -194,7 +194,7 @@
   {
     "name": "Aaron Tveit",
     "voiceType": "Tenor",
-    "genres": ["Musical Theatre", "Rock"],
+    "genres": ["Musical Theater", "Rock"],
     "country": "USA",
     "activeFrom": 2008,
     "lowNote": "A2",
@@ -210,7 +210,7 @@
   {
     "name": "Ethel Merman",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "USA",
     "activeFrom": 1930,
     "lowNote": "F3",
@@ -226,7 +226,7 @@
   {
     "name": "Julie Andrews",
     "voiceType": "Soprano",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "UK",
     "activeFrom": 1956,
     "lowNote": "G3",
@@ -242,7 +242,7 @@
   {
     "name": "Sutton Foster",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "USA",
     "activeFrom": 2002,
     "lowNote": "F3",
@@ -258,7 +258,7 @@
   {
     "name": "Sierra Boggess",
     "voiceType": "Soprano",
-    "genres": ["Musical Theatre", "Classical"],
+    "genres": ["Musical Theater", "Classical"],
     "country": "USA",
     "activeFrom": 2008,
     "lowNote": "G3",
@@ -274,7 +274,7 @@
   {
     "name": "Ramin Karimloo",
     "voiceType": "Tenor",
-    "genres": ["Musical Theatre", "Rock"],
+    "genres": ["Musical Theater", "Rock"],
     "country": "Canada",
     "activeFrom": 2009,
     "lowNote": "G2",
@@ -284,13 +284,13 @@
     "signatureSong": "Til I Hear You Sing",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Baritone-weighted tenor with rock grit; carries chest color higher than most legit theatre tenors.",
+    "blurb": "Baritone-weighted tenor with rock grit; carries chest color higher than most legit theater tenors.",
     "technique": "The instrument sits low and heavy for a tenor: a thick bottom reaching down to G2, and that same dark chest color carried up through the Bb4 belt rather than lightened into a legit tenor mix. Grit is applied selectively, on the attack of one important word, then dropped again. Vibrato is broad and slow. Phrases build across a long line instead of arriving at full size. Without deep support underneath, carried chest of that weight collapses into plain pushing."
   },
   {
     "name": "Colm Wilkinson",
     "voiceType": "Tenor",
-    "genres": ["Musical Theatre"],
+    "genres": ["Musical Theater"],
     "country": "Ireland",
     "activeFrom": 1985,
     "lowNote": "G2",
@@ -306,7 +306,7 @@
   {
     "name": "Lea Michele",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "USA",
     "activeFrom": 2006,
     "lowNote": "F3",
@@ -316,7 +316,7 @@
     "signatureSong": "Don't Rain on My Parade",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theatre technique.",
-    "technique": "Placement is high and nasal, which broadens the belt and keeps it bright all the way to E5. Vibrato is heavy and fast, arriving early in the note and staying for its full length. Underneath sits a legit theatre foundation, full breath and matched vowels and long sustains, with pop riffs and quick turns laid over the top, sometimes inside one phrase. Attacks are firm and scooped slightly from below. Pinching the throat to get the brightness narrows the tone without adding ring."
+    "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theater technique.",
+    "technique": "Placement is high and nasal, which broadens the belt and keeps it bright all the way to E5. Vibrato is heavy and fast, arriving early in the note and staying for its full length. Underneath sits a legit theater foundation, full breath and matched vowels and long sustains, with pop riffs and quick turns laid over the top, sometimes inside one phrase. Attacks are firm and scooped slightly from below. Pinching the throat to get the brightness narrows the tone without adding ring."
   }
 ]

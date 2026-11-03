@@ -57,7 +57,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Aaron Tveit",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Rock"
     ],
     "activeFrom": 2008,
@@ -575,7 +575,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Audra McDonald",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Jazz",
       "Classical"
     ],
@@ -590,7 +590,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Auli'i Cravalho",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 2016,
@@ -734,7 +734,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1963,
     "lowMidi": 46,
@@ -817,7 +817,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Ben Platt",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 2015,
@@ -846,7 +846,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Bernadette Peters",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1968,
     "lowMidi": 55,
@@ -1335,7 +1335,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "genres": [
       "Opera",
       "Classical",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1989,
     "lowMidi": 41,
@@ -1449,7 +1449,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "genres": [
       "Latin",
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1972,
     "lowMidi": 45,
@@ -1934,7 +1934,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Colm Wilkinson",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1985,
     "lowMidi": 43,
@@ -2017,7 +2017,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Cynthia Erivo",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Soul",
       "Pop"
     ],
@@ -2765,7 +2765,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Ethel Merman",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1930,
     "lowMidi": 53,
@@ -3492,7 +3492,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Hugh Jackman",
     "voiceType": "Baritone",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 1998,
@@ -3535,7 +3535,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Idina Menzel",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 1996,
@@ -3581,7 +3581,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "genres": [
       "Classical",
       "Folk",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1966,
     "lowMidi": 29,
@@ -3913,7 +3913,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Jeremy Jordan",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 2012,
@@ -4285,7 +4285,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Jonathan Groff",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2006,
     "lowMidi": 45,
@@ -4373,7 +4373,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "genres": [
       "Classical",
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2001,
     "lowMidi": 43,
@@ -4457,7 +4457,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Judy Garland",
     "voiceType": "Contralto",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Jazz",
       "Pop"
     ],
@@ -4501,7 +4501,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Julie Andrews",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1956,
     "lowMidi": 55,
@@ -4954,7 +4954,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2011,
     "lowMidi": 53,
@@ -4981,7 +4981,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Kristin Chenoweth",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Classical"
     ],
     "activeFrom": 1999,
@@ -5151,7 +5151,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Lea Michele",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 2006,
@@ -5165,7 +5165,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Lea Salonga",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 1989,
@@ -5428,7 +5428,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2017,
     "lowMidi": 52,
@@ -5974,7 +5974,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Michael Crawford",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1973,
     "lowMidi": 45,
@@ -6462,7 +6462,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "genres": [
       "Pop",
       "R&B",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2005,
     "lowMidi": 50,
@@ -6664,7 +6664,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "voiceType": "Tenor",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1999,
     "lowMidi": 41,
@@ -6750,7 +6750,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Patti LuPone",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1979,
     "lowMidi": 52,
@@ -7006,7 +7006,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Rachel Zegler",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "activeFrom": 2021,
@@ -7050,7 +7050,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Ramin Karimloo",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Rock"
     ],
     "activeFrom": 2009,
@@ -7193,7 +7193,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2021,
     "lowMidi": 52,
@@ -7593,7 +7593,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "genres": [
       "Pop",
       "Singer-Songwriter",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2007,
     "lowMidi": 47,
@@ -7608,7 +7608,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "genres": [
       "Classical",
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 1981,
     "lowMidi": 55,
@@ -7864,7 +7864,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Sierra Boggess",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Classical"
     ],
     "activeFrom": 2008,
@@ -8167,7 +8167,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "name": "Sutton Foster",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "activeFrom": 2002,
     "lowMidi": 53,

@@ -3137,14 +3137,14 @@
           "path": "/atlas/opera-and-classical-crossover"
         },
         {
-          "slug": "musical-theatre",
+          "slug": "musical-theater",
           "order": 22,
-          "title": "Musical theatre",
+          "title": "Musical theater",
           "part": "The trained voice",
           "summary": "Eight shows a week: the belt as a certified skill, legit versus contemporary technique, and why theater singers are the book's masters of sustainable intensity.",
           "free": false,
           "words": 2672,
-          "path": "/atlas/musical-theatre"
+          "path": "/atlas/musical-theater"
         },
         {
           "slug": "latin-voices",

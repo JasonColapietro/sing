@@ -405,7 +405,7 @@ export const ATLAS: AtlasChapter[] = [
     "summary": "The current generation of pop leads (whisper-pop, fry onsets, whistle flexes, conversational belts) and how the microphone rewrote what counts as power.",
     "free": false,
     "words": 4954,
-    "body": "The defining fact of modern pop singing is that the microphone finally won. Once every listener is six inches from the singer's mouth, intimacy scales better than volume, and this chapter documents the consequences: fry onsets as rhythm, whisper-verses as default, breathiness as an instrument rather than a flaw, and belts that arrive as *events* inside otherwise conversational performances. The whisper-pop generation — the entries here built on air and closeness — is not a decline from the founders' power; it is a different instrument optimized for a different playback device.\n\nThat said, the power never left. This chapter also holds the era's technicians — the whistle-register carriers, the gospel-schooled run machines, the theatre-trained belters moonlighting in pop — and their entries read like the founders' chapter with faster ornaments. The range extremes in this chapter are among the widest in the book, precisely because modern production loves a documented flex: the one whistle note, the one fry low, captured and cited forever.\n\nRead these entries with the full-voice ceiling in view. Modern pop's most common imitation injury is copying a conversational singer's *loud moments* without noticing that ninety percent of the performance happens at speech volume — or copying a whistle flex that even its owner visits once per album. The habitat is quiet; the peaks are punctuation. Borrow the verse technique first — onset control, breath-on-tone, diction that carries pitch — and treat every big note in this chapter as the founders treated theirs: rationed, placed, and paid for.",
+    "body": "The defining fact of modern pop singing is that the microphone finally won. Once every listener is six inches from the singer's mouth, intimacy scales better than volume, and this chapter documents the consequences: fry onsets as rhythm, whisper-verses as default, breathiness as an instrument rather than a flaw, and belts that arrive as *events* inside otherwise conversational performances. The whisper-pop generation — the entries here built on air and closeness — is not a decline from the founders' power; it is a different instrument optimized for a different playback device.\n\nThat said, the power never left. This chapter also holds the era's technicians — the whistle-register carriers, the gospel-schooled run machines, the theater-trained belters moonlighting in pop — and their entries read like the founders' chapter with faster ornaments. The range extremes in this chapter are among the widest in the book, precisely because modern production loves a documented flex: the one whistle note, the one fry low, captured and cited forever.\n\nRead these entries with the full-voice ceiling in view. Modern pop's most common imitation injury is copying a conversational singer's *loud moments* without noticing that ninety percent of the performance happens at speech volume — or copying a whistle flex that even its owner visits once per album. The habitat is quiet; the peaks are punctuation. Borrow the verse technique first — onset control, breath-on-tone, diction that carries pitch — and treat every big note in this chapter as the founders treated theirs: rationed, placed, and paid for.",
     "entries": [
       {
         "slug": "beyonce",
@@ -1185,7 +1185,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Good Luck, Babe!",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Theatre-sized soprano belt with hard consonants, then a sudden thin head voice up top.",
+        "blurb": "Theater-sized soprano belt with hard consonants, then a sudden thin head voice up top.",
         "technique": "Stage projection is the baseline. Consonants get hit hard, vowels stay bright and narrow, and the belt runs up to F5 with a steady ring rather than a shout. The characteristic move is a drop into thin, quiet head voice right after a big line, letting the contrast carry the feeling; belt the whole song and half the effect is gone. Long notes finish with a wide vibrato that only surfaces at the very end.",
         "span": "2 octaves + 6"
       },
@@ -1253,8 +1253,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Snow Angel",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Broadway muscle in pop clothing: a thick, ringing belt with theatre-grade support, dressed down into conversational R&B phrasing.",
-        "technique": "Support gives the game away: this is an eight-shows-a-week belt, anchored low in the body, with a ring that cuts through a mix without EQ. What makes it read as pop instead of theatre is the phrasing on top, lazy, behind the beat, with R&B slides into notes a stage director would want struck cleanly. Practice belting E5 at half volume with full support, then loosen the timing. The order matters; loosening first just sounds under-rehearsed.",
+        "blurb": "Broadway muscle in pop clothing: a thick, ringing belt with theater-grade support, dressed down into conversational R&B phrasing.",
+        "technique": "Support gives the game away: this is an eight-shows-a-week belt, anchored low in the body, with a ring that cuts through a mix without EQ. What makes it read as pop instead of theater is the phrasing on top, lazy, behind the beat, with R&B slides into notes a stage director would want struck cleanly. Practice belting E5 at half volume with full support, then loosen the timing. The order matters; loosening first just sounds under-rehearsed.",
         "span": "2 octaves + 4"
       },
       {
@@ -2095,7 +2095,7 @@ export const ATLAS: AtlasChapter[] = [
     "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades: where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
     "free": false,
     "words": 5116,
-    "body": "No genre generated more range mythology than classic rock, and no chapter of this atlas asks for more care in reading its figures. The wailers here — the multi-octave figures fans argue about at pub volume — earned their reputations with real, documented extremes, but the entries are careful about *mechanism*: a great deal of rock's famous altitude is reinforced falsetto, head voice driven hard, or one-off screams captured live, not chest voice defying physics. Where an entry gives a full-voice ceiling, it tells you which was which; many entries give none, and for those the technique paragraph is the better guide.\n\nThe other half of the chapter belongs to the baritones — the art-rockers, the gravel merchants, the frontmen who made menace and character do the work of altitude. Their entries carry most of this chapter's borrowable technique, because their tools transfer: phrasing against the band, vowel theatre, controlled rasp built across a phrase. The wailers' tools mostly do not transfer, which their own entries say plainly.\n\nA pattern worth noticing across both camps: the long careers in this chapter belong overwhelmingly to singers whose entries describe *distributed* effort — grit that rides on support, peaks rationed per set, intensity built on steady breath rather than detonated in the throat. The short careers cluster on the other side of that line. Rock mythology celebrates abandon; rock longevity, on the evidence of these pages, was always a technician's game wearing abandon as a costume.",
+    "body": "No genre generated more range mythology than classic rock, and no chapter of this atlas asks for more care in reading its figures. The wailers here — the multi-octave figures fans argue about at pub volume — earned their reputations with real, documented extremes, but the entries are careful about *mechanism*: a great deal of rock's famous altitude is reinforced falsetto, head voice driven hard, or one-off screams captured live, not chest voice defying physics. Where an entry gives a full-voice ceiling, it tells you which was which; many entries give none, and for those the technique paragraph is the better guide.\n\nThe other half of the chapter belongs to the baritones — the art-rockers, the gravel merchants, the frontmen who made menace and character do the work of altitude. Their entries carry most of this chapter's borrowable technique, because their tools transfer: phrasing against the band, vowel theater, controlled rasp built across a phrase. The wailers' tools mostly do not transfer, which their own entries say plainly.\n\nA pattern worth noticing across both camps: the long careers in this chapter belong overwhelmingly to singers whose entries describe *distributed* effort — grit that rides on support, peaks rationed per set, intensity built on steady breath rather than detonated in the throat. The short careers cluster on the other side of that line. Rock mythology celebrates abandon; rock longevity, on the evidence of these pages, was always a technician's game wearing abandon as a costume.",
     "entries": [
       {
         "slug": "little-richard",
@@ -3767,7 +3767,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Pop-punk's secret soul singer: a slurred, syllable-dense delivery hiding a genuinely agile, Elvis Costello-meets-Motown tenor.",
-        "technique": "Diction is the disguise. Words blur together in a slurred rush, but the pitch underneath is exact, and the voice is a real soul tenor: high mixed belts to C5, quick turns at phrase ends, and a falsetto he can snap into at full speed. The slur removes the theatre-kid crispness that would fight the genre. Learn the melody clean first, then deliberately smear the consonants while keeping every pitch center. Smearing pitch and diction together is just mumbling.",
+        "technique": "Diction is the disguise. Words blur together in a slurred rush, but the pitch underneath is exact, and the voice is a real soul tenor: high mixed belts to C5, quick turns at phrase ends, and a falsetto he can snap into at full speed. The slur removes the theater-kid crispness that would fight the genre. Learn the melody clean first, then deliberately smear the consonants while keeping every pitch center. Smearing pitch and diction together is just mumbling.",
         "span": "2 octaves + 11"
       },
       {
@@ -3848,7 +3848,7 @@ export const ATLAS: AtlasChapter[] = [
     "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
     "free": false,
     "words": 3152,
-    "body": "Metal is where rock's altitude arms race went professional. The air-raid sirens in this chapter sustain pitches, night after night, that classic rock visited on special occasions — and the entries make clear how: this is trained singing, head voice and reinforced mix developed with an athlete's discipline, far closer to operatic production than the leather suggests. The genre even reimported opera directly, in the symphonic wing's classically schooled sopranos, making this the one chapter where conservatory technique and blast beats share a stage.\n\nThe other pole is the low theatre: growls, screams and bass-baritone menace. The sustainable versions documented here are false-cord techniques — noise generated above the folds while the instrument underneath stays healthy — and the entries treat them as the skilled work they are. Between the poles sit the shape-shifters who cover the whole map in one set, clean to brutal and back, which may be the most complete technical package in modern singing.\n\nTwo things to take from this chapter even if you never sing a note of metal. First, vowel discipline: extreme range at extreme volume forces narrow, consistent vowels, and every entry's altitude depends on them. Second, the scheduling: metal singers tour harder than almost anyone, and the durable ones ration their extremes with actuarial precision — the highest scream and the lowest growl appear where the set needs them, not wherever enthusiasm strikes. That is the safety chapter's whole argument, demonstrated at the sport's highest level.",
+    "body": "Metal is where rock's altitude arms race went professional. The air-raid sirens in this chapter sustain pitches, night after night, that classic rock visited on special occasions — and the entries make clear how: this is trained singing, head voice and reinforced mix developed with an athlete's discipline, far closer to operatic production than the leather suggests. The genre even reimported opera directly, in the symphonic wing's classically schooled sopranos, making this the one chapter where conservatory technique and blast beats share a stage.\n\nThe other pole is the low theater: growls, screams and bass-baritone menace. The sustainable versions documented here are false-cord techniques — noise generated above the folds while the instrument underneath stays healthy — and the entries treat them as the skilled work they are. Between the poles sit the shape-shifters who cover the whole map in one set, clean to brutal and back, which may be the most complete technical package in modern singing.\n\nTwo things to take from this chapter even if you never sing a note of metal. First, vowel discipline: extreme range at extreme volume forces narrow, consistent vowels, and every entry's altitude depends on them. Second, the scheduling: metal singers tour harder than almost anyone, and the durable ones ration their extremes with actuarial precision — the highest scream and the lowest growl appear where the set needs them, not wherever enthusiasm strikes. That is the safety chapter's whole argument, demonstrated at the sport's highest level.",
     "entries": [
       {
         "slug": "ozzy-osbourne",
@@ -4119,7 +4119,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Rammstein's granite bass-baritone: rolled Rs, machine-press diction and a low register that functions as percussion.",
-        "technique": "Consonants are the star. The famous rolled R and hyper-plosive German diction turn every line into rhythm-section material, delivered on a deep, dark, deliberately monotone bass-baritone that moves in small steps and almost never ornaments. When intensity rises he adds a controlled growl at the onset, not a scream. Drill the alveolar roll until it starts instantly on any vowel, and keep the pitch line flat and heavy. Melodrama in the melody would puncture the menace; the flatness is the theatre.",
+        "technique": "Consonants are the star. The famous rolled R and hyper-plosive German diction turn every line into rhythm-section material, delivered on a deep, dark, deliberately monotone bass-baritone that moves in small steps and almost never ornaments. When intensity rises he adds a controlled growl at the onset, not a scream. Drill the alveolar roll until it starts instantly on any vowel, and keep the pitch line flat and heavy. Melodrama in the melody would puncture the menace; the flatness is the theater.",
         "span": "2 octaves + 1"
       },
       {
@@ -6563,7 +6563,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Can't Sleep Love",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Theatre-trained mezzo with a firm chest belt, tight vowel shapes and controlled vibrato.",
+        "blurb": "Theater-trained mezzo with a firm chest belt, tight vowel shapes and controlled vibrato.",
         "technique": "The vowels are the giveaway: narrow, forward, and identical take to take, sitting under a chest-mix belt that keeps its brightness through G5. Onsets are precise rather than scooped, vibrato gets switched on deliberately at the ends of sustains, and diction stays crisp at speed. Above the belt the sound thins into a light head voice. Loosen the vowel shape and the belt immediately loses focus.",
         "span": "2 octaves + 7"
       },
@@ -8964,14 +8964,14 @@ export const ATLAS: AtlasChapter[] = [
     ]
   },
   {
-    "slug": "musical-theatre",
+    "slug": "musical-theater",
     "order": 22,
-    "title": "Musical theatre",
+    "title": "Musical theater",
     "part": "The trained voice",
     "summary": "Eight shows a week: the belt as a certified skill, legit versus contemporary technique, and why theater singers are the book's masters of sustainable intensity.",
     "free": false,
     "words": 2672,
-    "body": "Musical theatre is where the belt became a licensed profession. The women and men in this chapter deliver climactic full-voice singing on a schedule no other genre attempts — eight shows a week, months at a stretch — and that schedule is the invisible author of every technique their entries describe. Theatre belting is mix engineering under another name: chest-quality brightness carried on head-voice efficiency, narrow vowels at the top, intensity that reads as maximum while spending far less than maximum. When an entry here describes a famous eleven-o'clock note, it is describing a note designed to be repeatable, which is a different and harder achievement than a note designed to be recorded once.\n\nThe chapter spans the tradition's two dialects. Legit technique — the classically rooted, vibrato-forward sound of the older repertoire — sits beside the contemporary belt that took over as pop scores arrived, and several entries document careers fluent in both, switching styles per show the way session players switch instruments. Diction is the shared constant: every word to the back row, over an orchestra, without amplification's help for most of the form's history.\n\nSteal three things from this chapter regardless of your genre. The marking discipline: theatre singers rehearse at partial voice and perform at full, the exact opposite of amateurs who blow out in rehearsal. The vowel modification at volume, documented entry after entry. And the acting posture — every phrase delivered as a thought occurring now — which is, on the evidence of this book, the cheapest upgrade available to technically solid singers who somehow remain boring.",
+    "body": "Musical theater is where the belt became a licensed profession. The women and men in this chapter deliver climactic full-voice singing on a schedule no other genre attempts — eight shows a week, months at a stretch — and that schedule is the invisible author of every technique their entries describe. Theater belting is mix engineering under another name: chest-quality brightness carried on head-voice efficiency, narrow vowels at the top, intensity that reads as maximum while spending far less than maximum. When an entry here describes a famous eleven-o'clock note, it is describing a note designed to be repeatable, which is a different and harder achievement than a note designed to be recorded once.\n\nThe chapter spans the tradition's two dialects. Legit technique — the classically rooted, vibrato-forward sound of the older repertoire — sits beside the contemporary belt that took over as pop scores arrived, and several entries document careers fluent in both, switching styles per show the way session players switch instruments. Diction is the shared constant: every word to the back row, over an orchestra, without amplification's help for most of the form's history.\n\nSteal three things from this chapter regardless of your genre. The marking discipline: theater singers rehearse at partial voice and perform at full, the exact opposite of amateurs who blow out in rehearsal. The vowel modification at volume, documented entry after entry. And the acting posture — every phrase delivered as a thought occurring now — which is, on the evidence of this book, the cheapest upgrade available to technically solid singers who somehow remain boring.",
     "entries": [
       {
         "slug": "ethel-merman",
@@ -9207,8 +9207,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Buttons",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Athletic pop-theatre soprano: muscular belts, precise melisma, and a head voice that opens into whistle territory.",
-        "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theatre discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble.",
+        "blurb": "Athletic pop-theater soprano: muscular belts, precise melisma, and a head voice that opens into whistle territory.",
+        "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theater discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble.",
         "span": "3 octaves + 6"
       },
       {
@@ -9241,8 +9241,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Don't Rain on My Parade",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theatre technique.",
-        "technique": "Placement is high and nasal, which broadens the belt and keeps it bright all the way to E5. Vibrato is heavy and fast, arriving early in the note and staying for its full length. Underneath sits a legit theatre foundation, full breath and matched vowels and long sustains, with pop riffs and quick turns laid over the top, sometimes inside one phrase. Attacks are firm and scooped slightly from below. Pinching the throat to get the brightness narrows the tone without adding ring.",
+        "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theater technique.",
+        "technique": "Placement is high and nasal, which broadens the belt and keeps it bright all the way to E5. Vibrato is heavy and fast, arriving early in the note and staying for its full length. Underneath sits a legit theater foundation, full breath and matched vowels and long sustains, with pop riffs and quick turns laid over the top, sometimes inside one phrase. Attacks are firm and scooped slightly from below. Pinching the throat to get the brightness narrows the tone without adding ring.",
         "span": "2 octaves + 5"
       },
       {
@@ -9292,7 +9292,7 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Til I Hear You Sing",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Baritone-weighted tenor with rock grit; carries chest color higher than most legit theatre tenors.",
+        "blurb": "Baritone-weighted tenor with rock grit; carries chest color higher than most legit theater tenors.",
         "technique": "The instrument sits low and heavy for a tenor: a thick bottom reaching down to G2, and that same dark chest color carried up through the Bb4 belt rather than lightened into a legit tenor mix. Grit is applied selectively, on the attack of one important word, then dropped again. Vibrato is broad and slow. Phrases build across a long line instead of arriving at full size. Without deep support underneath, carried chest of that weight collapses into plain pushing.",
         "span": "2 octaves + 5"
       },
@@ -9344,7 +9344,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Gospel-rooted belt with fast melisma and controlled rasp, releasing into clean head voice.",
-        "technique": "Gospel-style ornament sits on top of theatre discipline: fast melisma with every note of the run separately articulated, bends into pitches from below, and a rasp added to the front of a word then removed within the same phrase. The belt drives to F5 on real chest weight, and rather than force past it she releases into a clean, unpressed head voice for the notes above. That release is the hard part; most singers either stay in the belt and push or lose the tone entirely in the switch.",
+        "technique": "Gospel-style ornament sits on top of theater discipline: fast melisma with every note of the run separately articulated, bends into pitches from below, and a rasp added to the front of a word then removed within the same phrase. The belt drives to F5 on real chest weight, and rather than force past it she releases into a clean, unpressed head voice for the notes above. That release is the hard part; most singers either stay in the belt and push or lose the tone entirely in the switch.",
         "span": "2 octaves + 8"
       },
       {
@@ -9394,8 +9394,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "Tonight",
         "lowSource": null,
         "highSource": "Grown-Up Christmas List",
-        "blurb": "Classic musical-theatre soprano: warm chest lows, a poised legit mix, and clear, ringing head voice.",
-        "technique": "Legit placement, modern mix: Zegler supports a classic theatre soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes: the sound reads bigger than it is because placement, not pressure, carries it.",
+        "blurb": "Classic musical-theater soprano: warm chest lows, a poised legit mix, and clear, ringing head voice.",
+        "technique": "Legit placement, modern mix: Zegler supports a classic theater soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes: the sound reads bigger than it is because placement, not pressure, carries it.",
         "span": "3 octaves + 3"
       }
     ]
@@ -10422,7 +10422,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Chanson for the dancefloor: a theatrical Belgian baritone that swings between deadpan speech-song and Jacques Brel ache.",
-        "technique": "Theatre runs the voice: verses deliver rapid francophone speech-song with deadpan precision, every syllable machine-placed against the beat, then choruses open into a throbbing, Brel-inherited vibrato and a pushed, pleading upper register. The whiplash between the two modes is the drama. French nasal vowels are essential architecture, not accent. Practice the spoken sections with a metronome at full lyric speed, then the sung hook with generous, wide vibrato. Blending the two modes into one middle temperature loses the whole act.",
+        "technique": "Theater runs the voice: verses deliver rapid francophone speech-song with deadpan precision, every syllable machine-placed against the beat, then choruses open into a throbbing, Brel-inherited vibrato and a pushed, pleading upper register. The whiplash between the two modes is the drama. French nasal vowels are essential architecture, not accent. Practice the spoken sections with a metronome at full lyric speed, then the sung hook with generous, wide vibrato. Blending the two modes into one middle temperature loses the whole act.",
         "span": "2 octaves"
       },
       {
@@ -14990,9 +14990,9 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     ]
   },
   {
-    "slug": "musical-theatre",
+    "slug": "musical-theater",
     "order": 22,
-    "title": "Musical theatre",
+    "title": "Musical theater",
     "part": "The trained voice",
     "summary": "Eight shows a week: the belt as a certified skill, legit versus contemporary technique, and why theater singers are the book's masters of sustainable intensity.",
     "free": false,

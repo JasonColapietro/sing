@@ -232,7 +232,7 @@ export const GENRE_HUB_COPY: Record<string, HubCopy> = {
     summary:
       "Operatic clean highs alongside growls and screams, with range measured on the pitched singing.",
   },
-  "musical-theatre": {
+  "musical-theater": {
     intro:
       "Musical theatre singing serves character and text: performers move between speech, classical legit tone and contemporary belt, often within one song. Eight shows a week reward a sustainable technique over a one-off high note.",
     neighbour: "opera",

@@ -50,7 +50,7 @@
   {
     "name": "Sara Bareilles",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Pop", "Singer-Songwriter", "Musical Theatre"],
+    "genres": ["Pop", "Singer-Songwriter", "Musical Theater"],
     "country": "USA",
     "activeFrom": 2007,
     "lowNote": "B2",
@@ -354,7 +354,7 @@
   {
     "name": "Rachel Zegler",
     "voiceType": "Soprano",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "USA",
     "activeFrom": 2021,
     "lowNote": "Db3",
@@ -364,13 +364,13 @@
     "signatureSong": "Tonight",
     "lowSource": null,
     "highSource": "Grown-Up Christmas List",
-    "blurb": "Classic musical-theatre soprano: warm chest lows, a poised legit mix, and clear, ringing head voice.",
-    "technique": "Legit placement, modern mix: Zegler supports a classic theatre soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes: the sound reads bigger than it is because placement, not pressure, carries it."
+    "blurb": "Classic musical-theater soprano: warm chest lows, a poised legit mix, and clear, ringing head voice.",
+    "technique": "Legit placement, modern mix: Zegler supports a classic theater soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes: the sound reads bigger than it is because placement, not pressure, carries it."
   },
   {
     "name": "Nicole Scherzinger",
     "voiceType": "Soprano",
-    "genres": ["Pop", "R&B", "Musical Theatre"],
+    "genres": ["Pop", "R&B", "Musical Theater"],
     "country": "USA",
     "activeFrom": 2005,
     "lowNote": "D3",
@@ -380,7 +380,7 @@
     "signatureSong": "Buttons",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Athletic pop-theatre soprano: muscular belts, precise melisma, and a head voice that opens into whistle territory.",
-    "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theatre discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble."
+    "blurb": "Athletic pop-theater soprano: muscular belts, precise melisma, and a head voice that opens into whistle territory.",
+    "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theater discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble."
   }
 ]
