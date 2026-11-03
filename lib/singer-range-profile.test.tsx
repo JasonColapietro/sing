@@ -24,6 +24,7 @@ import {
   keyboardNeighbors,
   keyboardParagraphs,
   linkedSingerSlugs,
+  pageNeighbors,
   otherArtistSongs,
   similarRangeAnswer,
   songsInRange,
@@ -205,6 +206,37 @@ describe("every singer is linked from at least three other singer pages", () => 
     }
   });
 
+  it("keyboard neighbors with nothing excluded are the plain shifting window of six", () => {
+    const order = [...SINGERS].sort(
+      (a, b) => a.lowMidi - b.lowMidi || a.highMidi - b.highMidi || a.name.localeCompare(b.name),
+    );
+    order.forEach((s, at) => {
+      const start = Math.max(0, Math.min(at - 3, order.length - 7));
+      const window = order.slice(start, start + 7).filter((o) => o.slug !== s.slug);
+      expect(keyboardNeighbors(s).map((o) => o.slug), s.slug).toEqual(window.map((o) => o.slug));
+    });
+  });
+
+  it("the page's nearest-floor row holds six and repeats no similar-voice card", () => {
+    for (const s of SINGERS) {
+      const n = pageNeighbors(s).map((o) => o.slug);
+      const cards = new Set(relatedSingers(s).map((o) => o.slug));
+      expect(n, s.slug).toHaveLength(6);
+      expect(new Set(n).size, s.slug).toBe(6);
+      expect(n, s.slug).not.toContain(s.slug);
+      expect(n.filter((slug) => cards.has(slug)), s.slug).toEqual([]);
+    }
+  });
+
+  it("walks outward past the cards: Adele's row skips Faith Hill, Fantasia and Keyshia Cole", () => {
+    const adele = singerBySlug("adele")!;
+    const cards = relatedSingers(adele).map((o) => o.slug);
+    for (const slug of ["faith-hill", "fantasia", "keyshia-cole"]) {
+      expect(cards).toContain(slug);
+      expect(pageNeighbors(adele).map((o) => o.slug)).not.toContain(slug);
+    }
+  });
+
   it("mirrors the links the page actually renders", async () => {
     for (const slug of ["aaliyah", SINGERS[0].slug, SINGERS.at(-1)!.slug, "sam-smith"]) {
       const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug }) }));
@@ -222,7 +254,7 @@ describe("shared-floor and shared-ceiling chips show the closest voices, not the
   it("orders chips by the other endpoint's distance, then name, and repeats no card or neighbor", () => {
     for (const s of SINGERS) {
       const { allLow, allHigh, lowMates, highMates } = endpointMates(s);
-      const shown = new Set([...relatedSingers(s), ...keyboardNeighbors(s)].map((o) => o.slug));
+      const shown = new Set([...relatedSingers(s), ...pageNeighbors(s)].map((o) => o.slug));
       const check = (
         mates: typeof lowMates,
         all: typeof allLow,

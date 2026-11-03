@@ -216,20 +216,43 @@ export function voiceTypeParagraphs(s: Singer, labelSettled: boolean, all: Singe
 
 /**
  * Profiles nearest on the keyboard: the catalog ordered by reported floor,
- * then ceiling, then name, and the `count` entries around this one. The
- * window shifts at either end of the order instead of shrinking, so every
- * profile appears on at least `count / 2` other profiles' lists: none is
- * left with no inbound link from another singer page.
+ * then ceiling, then name, and the `count` entries around this one, taken
+ * outward one step at a time (one below, one above, two below, ...). When one
+ * side of the order runs out the walk continues on the other, so the list
+ * never shrinks at either end and every profile stays linked from other
+ * profiles' lists. Slugs in `exclude` are skipped and the walk goes one step
+ * further instead. With nothing excluded this is the plain window of `count`
+ * around the profile.
  */
-export function keyboardNeighbors(s: Singer, count = 6, all: Singer[] = SINGERS): Singer[] {
+export function keyboardNeighbors(
+  s: Singer,
+  count = 6,
+  all: Singer[] = SINGERS,
+  exclude: ReadonlySet<string> = new Set(),
+): Singer[] {
   const order = [...all].sort(
     (a, b) => a.lowMidi - b.lowMidi || a.highMidi - b.highMidi || a.name.localeCompare(b.name),
   );
   const at = order.findIndex((o) => o.slug === s.slug);
   if (at < 0) return [];
-  const half = Math.floor(count / 2);
-  const start = Math.max(0, Math.min(at - half, order.length - (count + 1)));
-  return order.slice(start, start + count + 1).filter((o) => o.slug !== s.slug);
+  const picked = new Set<number>();
+  for (let step = 1; picked.size < count && (at - step >= 0 || at + step < order.length); step++) {
+    for (const i of [at - step, at + step]) {
+      if (picked.size >= count || i < 0 || i >= order.length) continue;
+      if (exclude.has(order[i].slug)) continue;
+      picked.add(i);
+    }
+  }
+  return [...picked].sort((a, b) => a - b).map((i) => order[i]);
+}
+
+/**
+ * The "Nearest reported floors" row as the page renders it: the keyboard
+ * neighbors with the similar-voice cards above it left out, so the row adds
+ * new links rather than repeating the cards.
+ */
+export function pageNeighbors(s: Singer): Singer[] {
+  return keyboardNeighbors(s, 6, SINGERS, new Set(relatedSingers(s).map((o) => o.slug)));
 }
 
 /**
@@ -250,7 +273,7 @@ export function endpointMates(s: Singer): {
 } {
   const allLow = sharesLow(s);
   const allHigh = sharesHigh(s);
-  const shown = new Set([...relatedSingers(s), ...keyboardNeighbors(s)].map((o) => o.slug));
+  const shown = new Set([...relatedSingers(s), ...pageNeighbors(s)].map((o) => o.slug));
   const closest = (mates: Singer[], gap: (o: Singer) => number) =>
     mates
       .filter((o) => !shown.has(o.slug))
@@ -335,6 +358,6 @@ export function linkedSingerSlugs(s: Singer): string[] {
     ...relatedSingers(s),
     ...lowMates,
     ...highMates,
-    ...keyboardNeighbors(s),
+    ...pageNeighbors(s),
   ].map((o) => o.slug);
 }
