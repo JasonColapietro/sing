@@ -675,7 +675,7 @@ No key was added or renamed, so `version` stays 9:
 
 - `editorial`: word counts moved with the text edits of rounds 22 to 26 and
   the final pass, which also removed every em dash from the paid book and
-  atlas prose. Book `totalWords` 32430, atlas `totalWords` 70650; the
+  atlas prose. Book `totalWords` 32430, atlas `totalWords` 70658; the
   per-chapter `words` values moved with them.
 - `editorial` atlas chapter 22: the slug is now `musical-theater` (was
   `musical-theatre`), its `path` is `/atlas/musical-theater` and its `title`
