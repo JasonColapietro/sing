@@ -109,6 +109,18 @@ const PROGRAM = `
   localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "foundations-2w", startedDay: ago(1), startedAt: ago(1) + "T08:00:00.000Z", done: [{ index: 0, day: ago(1), manual: true }] }));
 `;
 /**
+ * A program started today with nothing done, for the capped states below:
+ * day 1 holds a row the free cap does not count (the range test; for The
+ * Measured Voice the range test and a recorded take), so on a capped day the
+ * program cards add the sentence that names those rows as open now, and the
+ * pre-paint script adds "waits-open" to size /warmups' slot for it.
+ */
+const startedToday = (name, programId) => `
+  // cls-state:${name}
+  localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "${programId}", startedDay: ago(0), startedAt: ago(0) + "T00:00:00.000Z", done: [] }));
+`;
+
+/**
  * Mix in 4 weeks with its first six days done on the six days before today
  * and day 7, a rest day, reached today: the day says it is resting and that
  * day 8 onward needs Pro.
@@ -167,6 +179,13 @@ const STATES = {
   program: PROGRAM,
   /** Today's program day waits for midnight because the free minutes are used. */
   "program-capped": PROGRAM + CAPPED,
+  /**
+   * Day 1, started today, waits for midnight with its range test open now
+   * (Foundations in 2 weeks), or its range test and recorded take (The
+   * Measured Voice): the "waits-open" line on /warmups and /progress.
+   */
+  "program-capped-open": startedToday("program-open", "foundations-2w") + CAPPED,
+  "program-capped-open-book": startedToday("program-open-book", "measured-voice-12w") + CAPPED,
   "rest-day": REST_DAY,
   ...Object.fromEntries(
     Object.entries(FINISHED_RUNS).map(([name, run]) => [name, finishedSeed(name, run.programId, run.length, run.checkIns)]),
@@ -188,6 +207,8 @@ const STATE_PROOF = {
   },
   program: { routes: ["programs", "program-foundations", "warmups", "progress", "warmups-deeplink-routine"], selector: "[data-program-day]" },
   "program-capped": { routes: ["programs", "program-foundations", "warmups"], selector: "[data-program-day] [data-program-waits]" },
+  "program-capped-open": { routes: ["programs", "program-foundations", "warmups", "progress"], selector: "[data-program-day] [data-program-waits]" },
+  "program-capped-open-book": { routes: ["programs", "program-detail", "warmups", "progress"], selector: "[data-program-day] [data-program-waits]" },
   "rest-day": { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
   finished: { routes: ["programs", "program-detail", "warmups", "progress"], selector: '[data-program-day][data-status="finished"]' },
   ...Object.fromEntries(

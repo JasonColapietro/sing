@@ -261,7 +261,7 @@ export function PickedForYou({
               className="flex min-w-0 flex-col gap-2 rounded-xl border border-line bg-panel2/60 p-3"
             >
               <div className="min-w-0">
-                <div className="truncate text-sm text-ink">{pick.song.title}</div>
+                <div className="text-sm text-ink [overflow-wrap:anywhere]">{pick.song.title}</div>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   <Pill tone={pick.genreMatch ? "violet" : "mut"}>{pick.song.genre}</Pill>
                   <Pill>{BAND_LABEL[bandForSong(pick.song)]}</Pill>

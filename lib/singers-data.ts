@@ -84,7 +84,7 @@ export const SINGERS: Singer[] = [
     "name": "Aaron Tveit",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Rock"
     ],
     "country": "USA",
@@ -199,7 +199,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Thick gospel-schooled mezzo with a wide chest belt and audible grit at the top of the register.",
-    "technique": "Weight is the whole game. The chest register is thick and gospel-shaped, onsets are firm and closer to glottal than breathy, and the belt keeps chest quality all the way to F5 with a wide vibrato that opens as the note holds. Grit shows up at peaks as an edge riding on a supported tone. Chasing the volume without breath pressure underneath turns that edge into throat scraping."
+    "technique": "Weight is the whole game. The chest register is thick and gospel-shaped, onsets are firm and closer to glottal than breathy, and the belt keeps chest quality all the way to F5 with a wide vibrato that opens as the note holds. Grit shows up at peaks as an edge riding on a supported tone. Chasing the volume without steady support underneath turns that edge into throat scraping."
   },
   {
     "slug": "akon",
@@ -382,7 +382,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Smoky mezzo with a slight nasal edge; belts from the chest and clips notes short for rhythm.",
-    "technique": "Compression, not air. Notes begin with a firm glottal edge and a slightly nasal placement, and that is where the huskiness lives; breathing the tone out to sound smoky works against it. She clips syllables short and lets the rests carry the groove, landing a fraction behind the beat. The Eb5 belt keeps chest weight instead of thinning into a mix, with only a shimmer of narrow vibrato on the release."
+    "technique": "Compression, not air. Notes begin with a firm glottal edge and a slightly nasal placement, and the huskiness rides on that focused core; breathing the tone out to sound smoky works against it. She clips syllables short and lets the rests carry the groove, landing a fraction behind the beat. The Eb5 belt keeps chest weight instead of thinning into a mix, with only a shimmer of narrow vibrato on the release."
   },
   {
     "slug": "alison-krauss",
@@ -818,7 +818,7 @@ export const SINGERS: Singer[] = [
     "name": "Audra McDonald",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Jazz",
       "Classical"
     ],
@@ -839,7 +839,7 @@ export const SINGERS: Singer[] = [
     "name": "Auli'i Cravalho",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "USA",
@@ -1043,7 +1043,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 1963,
@@ -1162,7 +1162,7 @@ export const SINGERS: Singer[] = [
     "name": "Ben Platt",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "USA",
@@ -1203,7 +1203,7 @@ export const SINGERS: Singer[] = [
     "name": "Bernadette Peters",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 1968,
@@ -1896,7 +1896,7 @@ export const SINGERS: Singer[] = [
     "genres": [
       "Opera",
       "Classical",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "UK",
     "activeFrom": 1989,
@@ -2058,7 +2058,7 @@ export const SINGERS: Singer[] = [
     "genres": [
       "Latin",
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "Spain",
     "activeFrom": 1972,
@@ -2332,7 +2332,7 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Good Luck, Babe!",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Theatre-sized soprano belt with hard consonants, then a sudden thin head voice up top.",
+    "blurb": "Theater-sized soprano belt with hard consonants, then a sudden thin head voice up top.",
     "technique": "Stage projection is the baseline. Consonants get hit hard, vowels stay bright and narrow, and the belt runs up to F5 with a steady ring rather than a shout. The characteristic move is a drop into thin, quiet head voice right after a big line, letting the contrast carry the feeling; belt the whole song and half the effect is gone. Long notes finish with a wide vibrato that only surfaces at the very end."
   },
   {
@@ -2747,7 +2747,7 @@ export const SINGERS: Singer[] = [
     "name": "Colm Wilkinson",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "Ireland",
     "activeFrom": 1985,
@@ -2866,7 +2866,7 @@ export const SINGERS: Singer[] = [
     "name": "Cynthia Erivo",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Soul",
       "Pop"
     ],
@@ -2880,7 +2880,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Gospel-rooted belt with fast melisma and controlled rasp, releasing into clean head voice.",
-    "technique": "Gospel-style ornament sits on top of theatre discipline: fast melisma with every note of the run separately articulated, bends into pitches from below, and a rasp added to the front of a word then removed within the same phrase. The belt drives to F5 on real chest weight, and rather than force past it she releases into a clean, unpressed head voice for the notes above. That release is the hard part; most singers either stay in the belt and push or lose the tone entirely in the switch."
+    "technique": "Gospel-style ornament sits on top of theater discipline: fast melisma with every note of the run separately articulated, bends into pitches from below, and a rasp added to the front of a word then removed within the same phrase. The belt drives to F5 on real chest weight, and rather than force past it she releases into a clean, unpressed head voice for the notes above. That release is the hard part; most singers either stay in the belt and push or lose the tone entirely in the switch."
   },
   {
     "slug": "do",
@@ -3926,7 +3926,7 @@ export const SINGERS: Singer[] = [
     "name": "Ethel Merman",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 1930,
@@ -4324,8 +4324,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Friends in Low Places",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Sturdy baritone that takes its grit from breath pressure; stage-shout delivery up high.",
-    "technique": "Grit here comes from breath pressure against a fairly open throat, not from scraping. Onsets are aspirate, a little air ahead of the tone, and vibrato is wide and shows up at the ends of long notes. Approaching A4 the delivery turns into a stage shout, chest-weighted and open-vowelled. Copy the volume without the air behind it and you get a squeezed, hoarse sound that will not survive a set."
+    "blurb": "Sturdy baritone with grit riding on a clean, steadily supported tone; stage-shout delivery up high.",
+    "technique": "The grit here is a rough edge riding on steady breath over a clean tone, not a scrape at the folds. Onsets are aspirate, a little air ahead of the tone, and vibrato is wide and shows up at the ends of long notes. Approaching A4 the delivery turns into a stage shout, chest-weighted and open-vowelled. Copy the volume without the steady support under it and you get a squeezed, hoarse sound that will not survive a set."
   },
   {
     "slug": "geddy-lee",
@@ -4959,7 +4959,7 @@ export const SINGERS: Singer[] = [
     "name": "Hugh Jackman",
     "voiceType": "Baritone",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "Australia",
@@ -5020,7 +5020,7 @@ export const SINGERS: Singer[] = [
     "name": "Idina Menzel",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "USA",
@@ -5084,7 +5084,7 @@ export const SINGERS: Singer[] = [
     "genres": [
       "Classical",
       "Folk",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "Germany",
     "activeFrom": 1966,
@@ -5547,14 +5547,14 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Heavy chest weight carried into the fifth octave; belts stay full instead of thinning to falsetto.",
-    "technique": "Chest weight is carried unusually high, so a belt near A5 keeps the thickness it had an octave lower instead of thinning into mix. Vowels open wide at the top, and the note is held straight before a slow vibrato is allowed in at the end. Attacks land firm and on pitch with little scooping. Attempting this without the breath pressure behind it is how singers strain, since the size comes from support and space rather than from squeezing."
+    "technique": "Chest weight is carried unusually high, so a belt near A5 keeps the thickness it had an octave lower instead of thinning into mix. Vowels open wide at the top, and the note is held straight before a slow vibrato is allowed in at the end. Attacks land firm and on pitch with little scooping. Attempting this without steady support behind it is how singers strain, since the size comes from support and space rather than from squeezing."
   },
   {
     "slug": "jeremy-jordan",
     "name": "Jeremy Jordan",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "USA",
@@ -5567,7 +5567,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "High tenor belt with a metallic ring; adds grit up top and flips to falsetto past the break.",
-    "technique": "Ring is the giveaway: a hard metallic edge from close fold contact and a narrow resonance space, which pushes the belt to C5 and keeps it cutting through a band. Above that he adds grit on the attack, then flips openly into falsetto instead of dragging chest higher, so you hear the seam and are meant to. Rhythm is aggressive and consonants land early. The grit rides on breath pressure rather than throat squeeze, which is why the metallic edge survives it."
+    "technique": "Ring is the giveaway: a hard metallic edge from close fold contact and a narrow resonance space, which pushes the belt to C5 and keeps it cutting through a band. Above that he adds grit on the attack, then flips openly into falsetto instead of dragging chest higher, so you hear the seam and are meant to. Rhythm is aggressive and consonants land early. The grit rides on steady breath over a clean tone rather than a throat squeeze, which is why the metallic edge survives it."
   },
   {
     "slug": "jessie-j",
@@ -5853,7 +5853,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "The definitive gravel: a torn, convulsive blues shout that turned polite pop songs into testifying.",
-    "technique": "Rasp at this depth is a full-body event. The tone is shredded across its whole span, not just at peaks, produced with enormous breath drive and a wide-open throat, and the phrasing convulses: words arrive in spasms, early or late, exactly where a gospel shouter would place them. Sustained notes bloom into wide, slow vibrato. Study the phrasing separately from the rasp, speaking the lines in his timing. The distortion itself took him years and cost him plenty; borrow the timing, not the tissue damage."
+    "technique": "Rasp at this depth is a full-body event. The tone is shredded across its whole span, not just at peaks, produced with a wide-open throat and the effort spread across the phrase, and the phrasing convulses: words arrive in spasms, early or late, exactly where a gospel shouter would place them. Sustained notes bloom into wide, slow vibrato. Study the phrasing separately from the rasp, speaking the lines in his timing. The distortion itself took him years and cost him plenty; borrow the timing, not the tissue damage."
   },
   {
     "slug": "joe-elliott",
@@ -5873,7 +5873,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Space Oddity",
     "highSource": "Foolin'",
     "blurb": "Grainy, deep-spoken rock voice that flips into a ringing head-voice top layered for stadium choruses.",
-    "technique": "Two voices coexist here: a deep, grainy speaking register and a bright head-voice extension he layers into wall-of-sound choruses. He flips early and unapologetically, letting the blend between chest and head happen in overdubs rather than in one line. Vowels narrow hard on top notes, with rasp added by compression at the edges. Copyists usually push chest too high trying to make the record's composite sound alone; he builds it from stacked, lighter passes."
+    "technique": "Two voices coexist here: a deep, grainy speaking register and a bright head-voice extension he layers into wall-of-sound choruses. He flips early and unapologetically, letting the blend between chest and head happen in overdubs rather than in one line. Vowels narrow hard on top notes, with a little rasp added at the edges. Copyists usually push chest too high trying to make the record's composite sound alone; he builds it from stacked, lighter passes."
   },
   {
     "slug": "john-denver",
@@ -6082,7 +6082,7 @@ export const SINGERS: Singer[] = [
     "name": "Jonathan Groff",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2006,
@@ -6206,7 +6206,7 @@ export const SINGERS: Singer[] = [
     "genres": [
       "Classical",
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2001,
@@ -6326,7 +6326,7 @@ export const SINGERS: Singer[] = [
     "name": "Judy Garland",
     "voiceType": "Contralto",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Jazz",
       "Pop"
     ],
@@ -6388,7 +6388,7 @@ export const SINGERS: Singer[] = [
     "name": "Julie Andrews",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "UK",
     "activeFrom": 1956,
@@ -7033,7 +7033,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2011,
@@ -7044,7 +7044,7 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Can't Sleep Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Theatre-trained mezzo with a firm chest belt, tight vowel shapes and controlled vibrato.",
+    "blurb": "Theater-trained mezzo with a firm chest belt, tight vowel shapes and controlled vibrato.",
     "technique": "The vowels are the giveaway: narrow, forward, and identical take to take, sitting under a chest-mix belt that keeps its brightness through G5. Onsets are precise rather than scooped, vibrato gets switched on deliberately at the ends of sustains, and diction stays crisp at speed. Above the belt the sound thins into a light head voice. Loosen the vowel shape and the belt immediately loses focus."
   },
   {
@@ -7072,7 +7072,7 @@ export const SINGERS: Singer[] = [
     "name": "Kristin Chenoweth",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Classical"
     ],
     "country": "USA",
@@ -7314,7 +7314,7 @@ export const SINGERS: Singer[] = [
     "name": "Lea Michele",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "USA",
@@ -7326,15 +7326,15 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Don't Rain on My Parade",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theatre technique.",
-    "technique": "Placement is high and nasal, which broadens the belt and keeps it bright all the way to E5. Vibrato is heavy and fast, arriving early in the note and staying for its full length. Underneath sits a legit theatre foundation, full breath and matched vowels and long sustains, with pop riffs and quick turns laid over the top, sometimes inside one phrase. Attacks are firm and scooped slightly from below. Pinching the throat to get the brightness narrows the tone without adding ring."
+    "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theater technique.",
+    "technique": "Placement is high and nasal, which broadens the belt and keeps it bright all the way to E5. Vibrato is heavy and fast, arriving early in the note and staying for its full length. Underneath sits a legit theater foundation, full breath and matched vowels and long sustains, with pop riffs and quick turns laid over the top, sometimes inside one phrase. Attacks are firm and scooped slightly from below. Pinching the throat to get the brightness narrows the tone without adding ring."
   },
   {
     "slug": "lea-salonga",
     "name": "Lea Salonga",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "Philippines",
@@ -7705,7 +7705,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2017,
@@ -8485,7 +8485,7 @@ export const SINGERS: Singer[] = [
     "name": "Michael Crawford",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "UK",
     "activeFrom": 1973,
@@ -9177,7 +9177,7 @@ export const SINGERS: Singer[] = [
     "genres": [
       "Pop",
       "R&B",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2005,
@@ -9188,8 +9188,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Buttons",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Athletic pop-theatre soprano: muscular belts, precise melisma, and a head voice that opens into whistle territory.",
-    "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theatre discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble."
+    "blurb": "Athletic pop-theater soprano: muscular belts, precise melisma, and a head voice that opens into whistle territory.",
+    "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theater discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble."
   },
   {
     "slug": "nina-simone",
@@ -9415,7 +9415,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Raspy, pushed baritone that stammers and repeats phrases to build pressure.",
-    "technique": "A thick baritone driven hard, with rasp riding on top of the tone rather than replacing it. Onsets are often glottal, words get stammered and repeated to build pressure, and lines push slightly ahead of the beat so the band sounds like it is chasing the singer. The top of the range is shouted, not floated. The grit is not throat scrape; it comes from breath compression and bright forward vowels, and it should never hurt."
+    "technique": "A thick baritone driven hard, with rasp riding on top of the tone rather than replacing it. Onsets are often glottal, words get stammered and repeated to build pressure, and lines push slightly ahead of the beat so the band sounds like it is chasing the singer. The top of the range is shouted, not floated. The grit is not throat scrape; it rides on steady breath over a clean tone, shaped by bright forward vowels, and it should never hurt."
   },
   {
     "slug": "ozuna",
@@ -9463,7 +9463,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Tenor",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "South Korea",
     "activeFrom": 1999,
@@ -9537,7 +9537,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Pop-punk's secret soul singer: a slurred, syllable-dense delivery hiding a genuinely agile, Elvis Costello-meets-Motown tenor.",
-    "technique": "Diction is the disguise. Words blur together in a slurred rush, but the pitch underneath is exact, and the voice is a real soul tenor: high mixed belts to C5, quick turns at phrase ends, and a falsetto he can snap into at full speed. The slur removes the theatre-kid crispness that would fight the genre. Learn the melody clean first, then deliberately smear the consonants while keeping every pitch center. Smearing pitch and diction together is just mumbling."
+    "technique": "Diction is the disguise. Words blur together in a slurred rush, but the pitch underneath is exact, and the voice is a real soul tenor: high mixed belts to C5, quick turns at phrase ends, and a falsetto he can snap into at full speed. The slur removes the theater-kid crispness that would fight the genre. Learn the melody clean first, then deliberately smear the consonants while keeping every pitch center. Smearing pitch and diction together is just mumbling."
   },
   {
     "slug": "patsy-cline",
@@ -9585,7 +9585,7 @@ export const SINGERS: Singer[] = [
     "name": "Patti LuPone",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 1979,
@@ -9718,7 +9718,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "A grainy, soul-schooled baritone: Otis Redding pressure pushed through an English art-rock imagination.",
-    "technique": "Grain plus push defines the mature sound: a throaty, sandpapered baritone driven hard into its upper fourth, where the strain is audible and intentional, borrowed straight from Stax soul shouting. Underneath, phrasing is conversational and behind the beat. The rasp rides on strong breath pressure with the throat staying open; it is effortful but distributed effort. Build the push gradually across a phrase, arriving at full grain only on the peak word. Starting at maximum is how throats get hurt copying this."
+    "technique": "Grain plus push defines the mature sound: a throaty, sandpapered baritone driven hard into its upper fourth, where the strain is audible and intentional, borrowed straight from Stax soul shouting. Underneath, phrasing is conversational and behind the beat. The rasp rides on steady breath over a clean tone, with the throat staying open; it is effortful but distributed effort. Build the push gradually across a phrase, arriving at full grain only on the peak word. Starting at maximum is how throats get hurt copying this."
   },
   {
     "slug": "peter-steele",
@@ -9949,7 +9949,7 @@ export const SINGERS: Singer[] = [
     "name": "Rachel Zegler",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Pop"
     ],
     "country": "USA",
@@ -9961,8 +9961,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Tonight",
     "lowSource": null,
     "highSource": "Grown-Up Christmas List",
-    "blurb": "Classic musical-theatre soprano: warm chest lows, a poised legit mix, and clear, ringing head voice.",
-    "technique": "Legit placement, modern mix: Zegler supports a classic theatre soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes: the sound reads bigger than it is because placement, not pressure, carries it."
+    "blurb": "Classic musical-theater soprano: warm chest lows, a poised legit mix, and clear, ringing head voice.",
+    "technique": "Legit placement, modern mix: Zegler supports a classic theater soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes: the sound reads bigger than it is because placement, not pressure, carries it."
   },
   {
     "slug": "rachelle-ferrell",
@@ -10011,7 +10011,7 @@ export const SINGERS: Singer[] = [
     "name": "Ramin Karimloo",
     "voiceType": "Tenor",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Rock"
     ],
     "country": "Canada",
@@ -10023,7 +10023,7 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Til I Hear You Sing",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Baritone-weighted tenor with rock grit; carries chest color higher than most legit theatre tenors.",
+    "blurb": "Baritone-weighted tenor with rock grit; carries chest color higher than most legit theater tenors.",
     "technique": "The instrument sits low and heavy for a tenor: a thick bottom reaching down to G2, and that same dark chest color carried up through the Bb4 belt rather than lightened into a legit tenor mix. Grit is applied selectively, on the attack of one important word, then dropped again. Vibrato is broad and slow. Phrases build across a long line instead of arriving at full size. Without deep support underneath, carried chest of that weight collapses into plain pushing."
   },
   {
@@ -10214,7 +10214,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Mezzo-soprano",
     "genres": [
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2021,
@@ -10225,8 +10225,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Snow Angel",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Broadway muscle in pop clothing: a thick, ringing belt with theatre-grade support, dressed down into conversational R&B phrasing.",
-    "technique": "Support gives the game away: this is an eight-shows-a-week belt, anchored low in the body, with a ring that cuts through a mix without EQ. What makes it read as pop instead of theatre is the phrasing on top, lazy, behind the beat, with R&B slides into notes a stage director would want struck cleanly. Practice belting E5 at half volume with full support, then loosen the timing. The order matters; loosening first just sounds under-rehearsed."
+    "blurb": "Broadway muscle in pop clothing: a thick, ringing belt with theater-grade support, dressed down into conversational R&B phrasing.",
+    "technique": "Support gives the game away: this is an eight-shows-a-week belt, anchored low in the body, with a ring that cuts through a mix without EQ. What makes it read as pop instead of theater is the phrasing on top, lazy, behind the beat, with R&B slides into notes a stage director would want struck cleanly. Practice belting E5 at half volume with full support, then loosen the timing. The order matters; loosening first just sounds under-rehearsed."
   },
   {
     "slug": "rick-astley",
@@ -10782,7 +10782,7 @@ export const SINGERS: Singer[] = [
     "genres": [
       "Pop",
       "Singer-Songwriter",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2007,
@@ -10803,7 +10803,7 @@ export const SINGERS: Singer[] = [
     "genres": [
       "Classical",
       "Pop",
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "UK",
     "activeFrom": 1981,
@@ -11167,7 +11167,7 @@ export const SINGERS: Singer[] = [
     "name": "Sierra Boggess",
     "voiceType": "Soprano",
     "genres": [
-      "Musical Theatre",
+      "Musical Theater",
       "Classical"
     ],
     "country": "USA",
@@ -11509,7 +11509,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Chanson for the dancefloor: a theatrical Belgian baritone that swings between deadpan speech-song and Jacques Brel ache.",
-    "technique": "Theatre runs the voice: verses deliver rapid francophone speech-song with deadpan precision, every syllable machine-placed against the beat, then choruses open into a throbbing, Brel-inherited vibrato and a pushed, pleading upper register. The whiplash between the two modes is the drama. French nasal vowels are essential architecture, not accent. Practice the spoken sections with a metronome at full lyric speed, then the sung hook with generous, wide vibrato. Blending the two modes into one middle temperature loses the whole act."
+    "technique": "Theater runs the voice: verses deliver rapid francophone speech-song with deadpan precision, every syllable machine-placed against the beat, then choruses open into a throbbing, Brel-inherited vibrato and a pushed, pleading upper register. The whiplash between the two modes is the drama. French nasal vowels are essential architecture, not accent. Practice the spoken sections with a metronome at full lyric speed, then the sung hook with generous, wide vibrato. Blending the two modes into one middle temperature loses the whole act."
   },
   {
     "slug": "sturgill-simpson",
@@ -11596,7 +11596,7 @@ export const SINGERS: Singer[] = [
     "name": "Sutton Foster",
     "voiceType": "Mezzo-soprano",
     "genres": [
-      "Musical Theatre"
+      "Musical Theater"
     ],
     "country": "USA",
     "activeFrom": 2002,
@@ -12007,7 +12007,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Rammstein's granite bass-baritone: rolled Rs, machine-press diction and a low register that functions as percussion.",
-    "technique": "Consonants are the star. The famous rolled R and hyper-plosive German diction turn every line into rhythm-section material, delivered on a deep, dark, deliberately monotone bass-baritone that moves in small steps and almost never ornaments. When intensity rises he adds a controlled growl at the onset, not a scream. Drill the alveolar roll until it starts instantly on any vowel, and keep the pitch line flat and heavy. Melodrama in the melody would puncture the menace; the flatness is the theatre."
+    "technique": "Consonants are the star. The famous rolled R and hyper-plosive German diction turn every line into rhythm-section material, delivered on a deep, dark, deliberately monotone bass-baritone that moves in small steps and almost never ornaments. When intensity rises he adds a controlled growl at the onset, not a scream. Drill the alveolar roll until it starts instantly on any vowel, and keep the pitch line flat and heavy. Melodrama in the melody would puncture the menace; the flatness is the theater."
   },
   {
     "slug": "tim-mcgraw",
@@ -12067,7 +12067,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": "River Deep - Mountain High",
     "blurb": "Gravel-edged contralto that stays in chest voice and gets power from a hard, forward rasp.",
-    "technique": "Power lives in the lower middle here, not up top. The contralto stays in chest with a gravel edge sitting right at the front of the sound, onsets are frequently growled, and phrases push and shove against the beat rather than floating over it. Approaching Eb5 the tone narrows into a hard, rasp-edged cry. That grit rides on breath pressure behind a forward, wide-open vowel, which is how it stays loud without closing the throat down."
+    "technique": "Power lives in the lower middle here, not up top. The contralto stays in chest with a gravel edge sitting right at the front of the sound, onsets are frequently growled, and phrases push and shove against the beat rather than floating over it. Approaching Eb5 the tone narrows into a hard, rasp-edged cry. That grit rides on steady breath over a clean, forward, wide-open vowel, which is how it stays loud without closing the throat down."
   },
   {
     "slug": "tinashe",
@@ -12514,7 +12514,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Raspy tenor that repeats and stretches syllables, sliding between blues shouts and scat phrasing.",
-    "technique": "Rhythm and repetition matter more than sustained tone here. Syllables get stretched, doubled, and worried at until they turn into rhythmic figures, and lines slide between a blues shout and wordless scat phrasing. The rasp comes from breath pressure against a fairly open throat, not from squeezing, and it thickens as volume rises. Phrases enter late and catch up. Because the grit rides on air instead of a tight throat, the flexibility survives the volume."
+    "technique": "Rhythm and repetition matter more than sustained tone here. Syllables get stretched, doubled, and worried at until they turn into rhythmic figures, and lines slide between a blues shout and wordless scat phrasing. The rasp is an edge riding on steady breath over a clean tone, not a squeeze, and it thickens as volume rises. Phrases enter late and catch up. Because the grit rides on a free, steady tone instead of a tight throat, the flexibility survives the volume."
   },
   {
     "slug": "vance-joy",

@@ -1,7 +1,8 @@
 /**
  * Round 16 reading-page guards: the claims the singer pages make about their
  * own evidence, and the house copy rules (no em dashes, American spelling) on
- * the free, indexable reading pages.
+ * the free, indexable reading pages. The em-dash rule also covers the paid
+ * prose: every book and atlas chapter and every singer's blurb and technique.
  *
  *  - The hub caveat must not say every profile is confirmed: four profiles are
  *    labelled disputed and two cite scores.
@@ -33,7 +34,7 @@ import { getSingerEvidence } from "@/lib/singer-evidence";
 import { SINGERS } from "@/lib/singers";
 
 const BRITISH =
-  /\b(colour\w*|favour\w*|labelled|labelling|centre[ds]?|programmes?|practis(e|ed|es|ing)|analys(e|ed|ing)|recognis(e|ed|able|ing)|neighbour\w*|judgement)\b/gi;
+  /\b(colour\w*|theatre\w*|favour\w*|labelled|labelling|centre[ds]?|programmes?|practis(e|ed|es|ing)|analys(e|ed|ing)|recognis(e|ed|able|ing)|neighbour\w*|judgement)\b/gi;
 
 const britishHits = (text: string): string[] => [...text.matchAll(BRITISH)].map((m) => m[0]);
 
@@ -118,7 +119,7 @@ describe("house copy on the free reading pages", () => {
   });
 
   it("keeps British spelling out of the hub copy", () => {
-    // `neighbour` is a field name, not copy; "Musical Theatre" is the genre's name.
+    // `neighbour` is a field name, not copy. The genre is spelled "Musical Theater" since 2026-11-03.
     const prose = [...Object.values(GENRE_HUB_COPY), ...Object.values(VOICE_TYPE_HUB_COPY)].flatMap(
       (copy) => Object.entries(copy).filter(([key]) => key !== "neighbour").map(([, value]) => value),
     );
@@ -135,20 +136,32 @@ describe("house copy on the free reading pages", () => {
     }
   });
 
-  it("keeps em dashes and British spelling out of the free atlas chapters", () => {
+  it("keeps British spelling out of the free atlas chapters", () => {
     const free = ATLAS.filter((c) => c.free);
     expect(free.length).toBeGreaterThan(0);
-    for (const c of free) {
-      expect(c.body, c.slug).not.toContain("—");
-      expect(britishHits(c.body), c.slug).toEqual([]);
-    }
+    for (const c of free) expect(britishHits(c.body), c.slug).toEqual([]);
   });
 
-  it("keeps em dashes out of the free book chapters and British spelling out of the whole book", () => {
-    const free = BOOK.filter((c) => c.free);
-    expect(free.length).toBe(3);
-    for (const c of free) expect(c.body, c.slug).not.toContain("—");
+  it("keeps British spelling out of the whole book", () => {
+    expect(BOOK.filter((c) => c.free).length).toBe(3);
     for (const c of BOOK) expect(britishHits(`${c.title} ${c.summary} ${c.body}`), c.slug).toEqual([]);
+  });
+
+  /**
+   * Paid prose follows the same copy rule as the free pages: every chapter of
+   * both books (title, summary and body, paid ones included) and every
+   * singer's blurb and technique notes are em-dash free. Ranges keep their en
+   * dash ("C3–C5"), which this does not touch.
+   */
+  it("keeps em dashes out of every book and atlas chapter, paid ones included", () => {
+    expect(BOOK.filter((c) => !c.free).length).toBeGreaterThan(0);
+    expect(ATLAS.filter((c) => !c.free).length).toBeGreaterThan(0);
+    const EM_DASH = /\u2014|&mdash;|&#8212;/;
+    for (const c of BOOK) expect(`${c.title} ${c.summary} ${c.body}`, c.slug).not.toMatch(EM_DASH);
+    for (const c of ATLAS) {
+      expect(`${c.title} ${c.summary} ${c.body}`, c.slug).not.toMatch(EM_DASH);
+      for (const e of c.entries) expect(`${e.blurb} ${e.technique ?? ""}`, `${c.slug}/${e.slug}`).not.toMatch(EM_DASH);
+    }
   });
 });
 

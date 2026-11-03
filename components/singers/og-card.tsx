@@ -73,7 +73,7 @@ export function HubOgCard({
       >
         {kicker}
       </div>
-      {/* 76px fits 28 characters on one line ("Musical Theatre vocal ranges");
+      {/* 76px fits 28 characters on one line ("Musical Theater vocal ranges");
           longer titles step down, or the second line is drawn over the stat. */}
       <div
         style={{

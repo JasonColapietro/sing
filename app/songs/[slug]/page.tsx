@@ -410,7 +410,7 @@ export default async function SongPage({
                       href={`/songs/${other.slug}`}
                       className="flex flex-wrap items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
                     >
-                      <span className="text-sm font-medium">{other.title}</span>
+                      <span className="min-w-0 text-sm font-medium [overflow-wrap:anywhere]">{other.title}</span>
                       <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim">
                         {other.form === "full"
                           ? "longer version"

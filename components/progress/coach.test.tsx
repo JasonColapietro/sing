@@ -59,12 +59,13 @@ describe("buildPlan on a program rest day", () => {
     expect(plan.restNote).toBeNull();
   });
 
-  it("drops the red streak banner and says what resting costs instead", () => {
+  it("drops the red streak banner and says resting keeps the streak", () => {
     const plan = buildPlan(state(), NOW, PROGRAM);
     expect(plan.banner).toBeNull();
     expect(plan.restNote).toContain(`Today is a rest day in ${PROGRAM}, and the program counts it as done.`);
     expect(plan.restNote).toContain("Nothing below is required.");
-    expect(plan.restNote).toContain("if you rest today it starts again from 1 at your next session");
+    expect(plan.restNote).toContain("Resting today keeps your 2-day streak: a program rest day neither adds a day nor breaks it.");
+    expect(plan.restNote).not.toContain("starts again from 1");
     // The plan is still there for a singer who wants it.
     expect(plan.items.length).toBeGreaterThan(0);
   });
@@ -244,7 +245,7 @@ describe("the coach during Recovery week", () => {
     const plan = buildPlan(withRange(49), NOW, RECOVERY, null, RECOVERY);
     expect(plan.banner).toBeNull();
     expect(plan.restNote).toBe(
-      `Today is a rest day in ${RECOVERY}, and the program counts it as done. Nothing below is required. Your streak counts only days you practice, so if you rest today it starts again from 1 at your next session.`,
+      `Today is a rest day in ${RECOVERY}, and the program counts it as done. Nothing below is required. Resting today keeps your 2-day streak: a program rest day neither adds a day nor breaks it.`,
     );
     expect(plan.rangeNote).toBe(`Your range was last measured 49 days ago. ${LINE}`);
   });

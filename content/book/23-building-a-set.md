@@ -13,11 +13,11 @@ So the question changes. Not "can I sing this?" but "can I sing this after that,
 
 Think of the whole night as one long phrase: a warm start, a middle where you have the most to give, a peak, a landing. You are not equally capable at all four points.
 
-Early on, the voice tends to be stiff and unreliable at the edges. Some way in — assuming you have not spent it in the first ten minutes — you are usually in the best shape you will be in all night. Warm, responsive, the transition behaving, the top there without a fight. That window does not last. Later the voice gets heavier at the top, quiet singing gets harder before loud singing does, and pitch at the extremes starts to drift a little before you notice it consciously.
+Early on, the voice tends to be stiff and unreliable at the edges. Some way in (assuming you have not spent it in the first ten minutes), you are usually in the best shape you will be in all night. Warm, responsive, the transition behaving, the top there without a fight. That window does not last. Later the voice gets heavier at the top, quiet singing gets harder before loud singing does, and pitch at the extremes starts to drift a little before you notice it consciously.
 
 That shape suggests a placement rule: **put the hardest song in the second third of the set, not at the start and not at the very end.**
 
-The instinct to open big is understandable. It is the song you are proudest of. But an opener is sung on a cold voice in an unfamiliar room, with adrenaline pushing you louder and heavier than you rehearsed. That combination is where singers get into trouble — not because the note is impossible, but because they arrive at it unprepared and compensate with force.
+The instinct to open big is understandable. It is the song you are proudest of. But an opener is sung on a cold voice in an unfamiliar room, with adrenaline pushing you louder and heavier than you rehearsed. That combination is where singers get into trouble, not because the note is impossible, but because they arrive at it unprepared and compensate with force.
 
 The instinct to close big is more defensible, because it makes a good ending. But it means spending the whole set knowing you have to be at your best at the moment you are least likely to be. If you want the demanding song last, the rest of the set has to be built around protecting it, which means most other songs give something up. Sometimes that is the right trade. Make it on purpose.
 
@@ -29,7 +29,7 @@ Two or three of these across a set change how much voice you still have at the e
 
 A useful test: sing the chorus of a candidate song three times through at performance volume. If you would happily do a fourth, it can serve as a recovery song. If the third already feels like work, it is a demanding song in a quiet costume.
 
-Place one after your hardest song, always. Place another before it if the two songs leading in are both heavy. And be honest that songs shift categories — the recovery song at minute forty is not as restful as the same song at minute ten.
+Place one after your hardest song, always. Place another before it if the two songs leading in are both heavy. And be honest that songs shift categories: the recovery song at minute forty is not as restful as the same song at minute ten.
 
 ## Keys across a set, not just within a song
 
@@ -37,7 +37,7 @@ You already know that transposing a song is normal practice. What gets missed is
 
 If four songs in a row put their choruses in the same handful of notes, you have written one very long song in one very narrow band. That band tires, and it is often the band around your transition, because a lot of popular writing sits there. The set feels harder than the sum of its parts and you cannot point at which song did it.
 
-So spread the load. When you lay the set out, write down the tessitura of each chorus — the few notes each chorus actually lives in — and read down the column. You want variety there. If three cluster, move one by a tone or two, reorder so they are not adjacent, or swap one out.
+So spread the load. When you lay the set out, write down the tessitura of each chorus (the few notes each chorus actually lives in) and read down the column. You want variety there. If three cluster, move one by a tone or two, reorder so they are not adjacent, or swap one out.
 
 Two more considerations that only show up in a set. If a song's chorus sits right at your break, it is a bad neighbor: put nothing demanding on either side of it. And avoid two songs in a row that both push your ceiling, even when each is fine alone. The second is sung on a voice that has already been to the top once, and the top is where tiredness shows first.
 
@@ -45,13 +45,13 @@ Two more considerations that only show up in a set. If a song's chorus sits righ
 
 Everything above assumes rehearsal conditions. A room does not give you those.
 
-The loudest variable is monitoring. If you cannot hear yourself, you sing louder — not as a decision, as a reflex — and it costs you volume control for every song that follows. Sort monitoring before anything else. If you get one thing right at soundcheck, make it hearing your own voice.
+The loudest variable is monitoring. If you cannot hear yourself, you sing louder (not as a decision, as a reflex), and it costs you volume control for every song that follows. Sort monitoring before anything else. If you get one thing right at soundcheck, make it hearing your own voice.
 
 A dry room, a loud stage, air conditioning, an hour of talking to people beforehand: none of it is dramatic alone and all of it stacks. Assume the room takes something off the top of what you can do. Build the set with margin, not at the exact limit of what you managed once at home on a good day. Sleep and hydration are part of the plan too, and they are easier to protect the night before than the hour before.
 
 Then there is the part singers forget. Talking between songs is voice use. It is usually talking over a room, at a pitch you never warmed up, without breath support. Four minutes of chat spread through a set is four minutes of unplanned singing sitting between the songs you planned carefully. Keep it short, keep it quieter than feels natural, and put the longer bit of talking after a demanding song rather than before one.
 
-Plan for repetition too. A set is rarely sung once. Two nights running, or two sets in a night, changes the arithmetic — the demanding song that is fine on Friday can be why Saturday goes badly. If a second night is coming, take something out of Friday rather than hoping.
+Plan for repetition too. A set is rarely sung once. Two nights running, or two sets in a night, changes the arithmetic: the demanding song that is fine on Friday can be why Saturday goes badly. If a second night is coming, take something out of Friday rather than hoping.
 
 ## Build it, then test the joins
 
@@ -61,7 +61,7 @@ Then rehearse the joins, not just the songs. Sing three consecutive songs straig
 
 If a join fails you have three moves: reorder, retranspose, replace. Try them in that order. Reordering costs nothing, retransposing costs a rehearsal, replacing costs a song. Most failed joins go away at the first.
 
-And keep a spare — one song you can sing on any voice in any condition and would not be embarrassed to play, for the night the room is dry, the monitors are bad, and the plan has to change halfway through.
+And keep a spare: one song you can sing on any voice in any condition and would not be embarrassed to play, for the night the room is dry, the monitors are bad, and the plan has to change halfway through.
 
 ## Try this
 

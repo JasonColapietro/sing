@@ -1425,6 +1425,24 @@ export function reconcileProgress(
 }
 
 /**
+ * The calendar days this run made rest days: each completed program day that
+ * is a rest day, on the day it was completed. Call after `reconcileProgress`,
+ * which completes a rest day on the day after the day before it, so these are
+ * the program's scheduled rest days as the singer actually ran it, never an
+ * arbitrary skipped day. The streak treats each one as a bridge
+ * (lib/progress.ts bridgeRestDays). A repeated fortnight's `later` days are
+ * included: they were rest days of the earlier pass on the day they were done.
+ */
+export function programRestDays(program: Program, progress: ProgramProgress): string[] {
+  return [...progress.done, ...(progress.later ?? [])]
+    .filter((d) => {
+      const day = program.days[d.index];
+      return day !== undefined && isRestDay(day) && !d.manual;
+    })
+    .map((d) => d.day);
+}
+
+/**
  * Mark the current day done by hand, for items the log cannot see — a song
  * sung elsewhere, a drill stopped before it logged. Refused when today already
  * completed a day, which is the same one-a-day rule the log follows.

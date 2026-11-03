@@ -19,9 +19,9 @@ Do that three or four times, watching three separate things.
 
 The first is what you hear. Somewhere on the way up the sound stops being one continuous color. It may thin, hollow out, brighten suddenly, or flip outright to something lighter and less connected. That change has an address. Slide again, slower, and name the note it happens on.
 
-The second is what you feel. Below the transition the buzz sits low and broad — chest, throat, the front of the face. Above it, it climbs and narrows. Somewhere in between, the effort jumps: the same quiet slide suddenly asks more of you, or you catch yourself bracing. For many singers that jump arrives a semitone or two below the audible change, which makes it the earlier of the two warnings.
+The second is what you feel. Below the transition the buzz sits low and broad: chest, throat, the front of the face. Above it, it climbs and narrows. Somewhere in between, the effort jumps: the same quiet slide suddenly asks more of you, or you catch yourself bracing. For many singers that jump arrives a semitone or two below the audible change, which makes it the earlier of the two warnings.
 
-The third is the trace. Watch the pitch line through that zone. A slide that is clean below and clean above will often go scruffy in the middle — a wobble, a small step, a flat patch where the voice hesitates before committing. The trace will not tell you why. It is good at telling you where, and it does not flatter you the way memory does.
+The third is the trace. Watch the pitch line through that zone. A slide that is clean below and clean above will often go scruffy in the middle: a wobble, a small step, a flat patch where the voice hesitates before committing. The trace will not tell you why. It is good at telling you where, and it does not flatter you the way memory does.
 
 Three or four passes usually give you a zone rather than a note: "it gets strange between D4 and F4." That zone is the honest answer. Write down its lowest note, because that is where preparation has to start, not where the trouble becomes obvious.
 
@@ -39,26 +39,26 @@ With Pro, the per-note accuracy chart in Progress is the sharpest tool here. A b
 
 People talk about a belt ceiling as if it were a lid. It is closer to a point past which one particular way of singing stops being available.
 
-Belting carries chest-dominant weight above where that weight wants to go, held together by how you shape the tract. Every voice has a pitch where that coordination comes apart — the sound gets shouty, the pitch goes sharp or unsteady, and one more semitone costs far more than the last one did. That pitch is your belt ceiling for today, at that volume, on that vowel.
+Belting carries chest-dominant weight above where that weight wants to go, held together by how you shape the tract. Every voice has a pitch where that coordination comes apart: the sound gets shouty, the pitch goes sharp or unsteady, and one more semitone costs far more than the last one did. That pitch is your belt ceiling for today, at that volume, on that vowel.
 
 Two things matter about it. First, it is not the top of your range. Head voice goes higher, often much higher, and the range test measures the higher figure. If your test says A4 and the belt gives out at E4, both numbers are true and they are describing different things.
 
-Second, a belt ceiling is a coordination limit rather than a wall to push through. Hammering the note just above it tends to end a session worse than it started. Chapter 17 covers adding height properly. For now, find where the cost curve turns steep and treat it as information: the edge of your belt today, not a note to build a song on. What you can expect to belt four nights running sits some way below it — chapter 7's betting test finds where, and chapter 23 builds a set with that margin.
+Second, a belt ceiling is a coordination limit rather than a wall to push through. Hammering the note just above it tends to end a session worse than it started. Chapter 17 covers adding height properly. For now, find where the cost curve turns steep and treat it as information: the edge of your belt today, not a note to build a song on. What you can expect to belt four nights running sits some way below it; chapter 7's betting test finds where, and chapter 23 builds a set with that margin.
 
 ## Head voice or falsetto
 
 Above the transition you have more than one option, and telling them apart matters more than the labels suggest.
 
-By ear, falsetto is the airier of the two. Breath sits in the tone, it does not carry far, and its dynamic range is narrow — push for volume and it breaks or flips down. It tends to sound detached from the notes below, as though a different instrument took over. Head voice is cleaner and more compact. It has a core. It can crescendo without falling apart, and it connects downward: you can slide from head voice into your middle without a seam.
+By ear, falsetto is the airier of the two. Breath sits in the tone, it does not carry far, and its dynamic range is narrow: push for volume and it breaks or flips down. It tends to sound detached from the notes below, as though a different instrument took over. Head voice is cleaner and more compact. It has a core. It can crescendo without falling apart, and it connects downward: you can slide from head voice into your middle without a seam.
 
 By feel, falsetto is easy in a hollow way. Very little resistance, very little sensation below the throat, as though the sound is happening without you. Head voice at the same pitch feels gathered. The breath meets something, and the tone is held rather than released.
 
-The recorder settles arguments the mirror cannot. Sing the same three or four notes above your transition twice — once deliberately breathy and light, once keeping the tone compact and connected — then A/B the two takes. A difference that disappears while you are singing is often obvious on playback.
+The recorder settles arguments the mirror cannot. Sing the same three or four notes above your transition twice (once deliberately breathy and light, once keeping the tone compact and connected), then A/B the two takes. A difference that disappears while you are singing is often obvious on playback.
 
 One caution: falsetto is not a failure state. It is a real mechanism with real uses, and plenty of singing you admire lives there. The reason to tell them apart is that they answer to different practice. Working on connection while you are in falsetto is tuning the wrong string.
 
-Write down three notes — where the effort jumps, where the sound changes, and where the belt stops being available. Check them again at the range retest at the end of week six. They will not match exactly, because voices are noisier than that. The direction they drift tells you more than any single reading.
+Write down three notes: where the effort jumps, where the sound changes, and where the belt stops being available. Check them again at the range retest at the end of week six. They will not match exactly, because voices are noisier than that. The direction they drift tells you more than any single reading.
 
 ## Try this
 
-In the [pitch studio](/studio), sing a slow "ng" slide upward at low volume, three times, and note the pitch where the trace first gets scruffy — not where the sound flips, but where it starts to hesitate. That is where your preparation needs to begin.
+In the [pitch studio](/studio), sing a slow "ng" slide upward at low volume, three times, and note the pitch where the trace first gets scruffy, not where the sound flips but where it starts to hesitate. That is where your preparation needs to begin.

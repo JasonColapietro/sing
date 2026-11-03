@@ -502,7 +502,7 @@ describe("the chapters agree with the app", () => {
    */
   it("reads range history on the book's own retest schedule", () => {
     const ch11 = body("tracking-change");
-    expect(ch11).toMatch(/three range tests — week one, the end of week six, and the start of week twelve/);
+    expect(ch11).toMatch(/three range tests: week one, the end of week six, and the start of week twelve/);
     expect(ch11).not.toMatch(/bulk of this run of bars|older cluster|bars older than four weeks/);
     expect(ch11).toMatch(/three months holds only two or three bars/);
     expect(ch11).toMatch(/With only one or two tests on the chart there is no lean to read yet/);

@@ -34,7 +34,7 @@ const GENRES = new Set([
   "Rock", "Hard Rock", "Metal", "Punk", "Grunge", "Alternative", "Indie",
   "Pop", "Synth-Pop", "New Wave", "Disco", "R&B", "Soul", "Funk", "Hip-Hop",
   "Gospel", "Country", "Folk", "Singer-Songwriter", "Blues", "Jazz", "Opera",
-  "Classical", "Musical Theatre", "Latin", "K-Pop", "J-Pop", "Reggae",
+  "Classical", "Musical Theater", "Latin", "K-Pop", "J-Pop", "Reggae",
   "Afrobeats", "Electronic",
 ]);
 

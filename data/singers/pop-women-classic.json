@@ -50,7 +50,7 @@
   {
     "name": "Barbra Streisand",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Pop", "Musical Theatre"],
+    "genres": ["Pop", "Musical Theater"],
     "country": "USA",
     "activeFrom": 1963,
     "lowNote": "Bb2",

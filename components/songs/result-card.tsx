@@ -152,7 +152,7 @@ export function ShareableResult({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <SectionLabel>Suede Sing</SectionLabel>
-          <h3 className="mt-3 text-xl">{title}</h3>
+          <h3 className="mt-3 text-xl [overflow-wrap:anywhere]">{title}</h3>
           {subtitle && <p className="mt-1.5 text-sm text-mut">{subtitle}</p>}
         </div>
         <div className="text-right">

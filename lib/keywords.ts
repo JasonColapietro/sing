@@ -34,6 +34,7 @@ export const HEAD_TERM_OWNERS: Readonly<Record<string, string>> = {
   "singers vocal range": "/singers",
   "famous singers vocal ranges": "/singers",
   "online singing practice": "/",
+  "online vocal coach": "/pro",
   "pitch training": "/studio",
   "vocal warm up exercises": "/warmups",
   "learn to sing": "/learn",

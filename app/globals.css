@@ -355,7 +355,8 @@ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="
  *   data-sing-plan     "pro" | "free" | "capped"
  *   data-sing-program  absent (no program, or another program's own view),
  *                      or a status ("todo", "done", "finished") plus any of
- *                      "rest", "locked", "next-locked", "waits", and on a
+ *                      "rest", "locked", "next-locked", "waits",
+ *                      "waits-open", and on a
  *                      finished run "book" or the program's id
  *   data-sing-range    "saved" when the progress record holds a range test
  *   data-sing-deeplink "breath", "warmups" or "ear" when the address is a
@@ -428,6 +429,16 @@ html:not([data-sing-deeplink="ear"]) [data-prepaint-slot="deeplink-ear"] {
 html[data-sing-program~="waits"] [data-prepaint-slot="program-lead"] {
   min-height: 13.5rem;
 }
+/* "waits-open": the waiting day still has a range test or a recorded take,
+   which the cap does not count, and the card names it as open now. Measured
+   against the production build, 2026-11-03, on /warmups (and the same card
+   on /progress): Foundations day 1 (the range test) 233.95px at 375px and
+   181.95px at 1280px, The Measured Voice day 1 (the range test and the take)
+   253.95px and 201.95px, where the longer sentence wraps once more. Set to
+   the larger, rounded up to the quarter rem. */
+html[data-sing-program~="waits-open"] [data-prepaint-slot="program-lead"] {
+  min-height: 16rem;
+}
 
 /* /programs: today's card above the list. A day still to do is the tallest
    (its rows), so its slot alone already puts the list below a phone's fold. */
@@ -495,6 +506,10 @@ html[data-sing-program~="finished"] [data-prepaint-slot="program-today"][data-pr
   [data-prepaint-slot="program-lead"],
   html[data-sing-program~="waits"] [data-prepaint-slot="program-lead"] {
     min-height: 8rem;
+  }
+  /* The line runs long enough to push the button below it. */
+  html[data-sing-program~="waits-open"] [data-prepaint-slot="program-lead"] {
+    min-height: 12.75rem;
   }
   html[data-sing-program~="todo"] [data-prepaint-slot="program-today"] {
     min-height: 35rem;

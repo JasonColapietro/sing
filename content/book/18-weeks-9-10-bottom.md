@@ -21,13 +21,13 @@ Three practical consequences follow.
 
 **Approach from above, not from below.** Attacking a low note cold, from silence, invites the reach. Start a few notes higher and come down to it on a slide or a scale, and it often arrives with no adjustment at all. That is why nearly all the low work in these two weeks descends.
 
-**Your test floor and your usable floor are different notes.** The range test reports a low note, and it is the lowest one you would let another person hear — fry and scrapings do not count. Even so, it is rarely a note you can start cleanly, hold for four seconds, and sing a word on. A few semitones above it sits a note that behaves. That higher note is your real bottom for repertoire, and it is the one worth knowing.
+**Your test floor and your usable floor are different notes.** The range test reports a low note, and it is the lowest one you would let another person hear; fry and scrapings do not count. Even so, it is rarely a note you can start cleanly, hold for four seconds, and sing a word on. A few semitones above it sits a note that behaves. That higher note is your real bottom for repertoire, and it is the one worth knowing.
 
 ## What to do in the sessions
 
 Keep the shape you have been running: three or four sessions a week, twenty minutes each. Do not stack low work on consecutive days at first. Twice a week is plenty in week 9.
 
-Give roughly six minutes to descending warmups. Pick exercises from the Warmups packs that sit in your lower middle and move downward — five-note descents, slow slides, hums. Start each one above the bottom of your range and let it walk down. When it stops being easy, stop that repetition. There is no version of this where forcing one more semitone helps.
+Give roughly six minutes to descending warmups. Pick exercises from the Warmups packs that sit in your lower middle and move downward: five-note descents, slow slides, hums. Start each one above the bottom of your range and let it walk down. When it stops being easy, stop that repetition. There is no version of this where forcing one more semitone helps.
 
 Use a small, relaxed sound for most of it: a hum, a soft "oh", or a neutral "uh" as in "cup". Small, easy sounds keep the tone gathered without asking you to darken it by hand. If you catch yourself trying to sound low, you have already started pushing.
 
@@ -55,7 +55,7 @@ The last seven or eight minutes of each session is where these two weeks earn th
 
 Pick a song from Songs, transposed so its chorus sits in your middle rather than at either edge. Choose two phrases: the longest one, and one that dips low. Mark where you intend to breathe. Sing them at conversational volume, slowly if the tempo allows, and record every attempt.
 
-Then listen. You are checking three things — whether the low notes stayed released or got manufactured, whether the ends of phrases held their pitch and tone, and whether you breathed where you planned to. A/B the take in the recorder against one from earlier in the week. Do not trust the memory of how it felt; it is unreliable in both directions.
+Then listen. You are checking three things: whether the low notes stayed released or got manufactured, whether the ends of phrases held their pitch and tone, and whether you breathed where you planned to. A/B the take in the recorder against one from earlier in the week. Do not trust the memory of how it felt; it is unreliable in both directions.
 
 With Pro, the per-note accuracy chart in Progress will point at which notes are costing you; Coach also names your weakest notes from the last two weeks. The bottom of a range often reads worse than the middle, which is what descending work is for. It is not a reason to go hunting for a new low note.
 

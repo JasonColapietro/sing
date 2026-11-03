@@ -215,7 +215,7 @@ function Calendar({ program, active }: { program: Program; active: ActiveProgram
           {!isRestDay(day) && <span className="font-mono text-xs text-dim">{dayMinutes(day)} min</span>}
         </div>
         {isRestDay(day) ? (
-          <p className="mt-2 text-sm text-mut">No program practice. A rest day counts as done once you reach it.</p>
+          <p className="mt-2 text-sm text-mut">No program practice. A rest day counts as done once you reach it, and it keeps your practice streak without adding a day.</p>
         ) : (
           <div className="mt-3">
             <DayItems

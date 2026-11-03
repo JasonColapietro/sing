@@ -21,7 +21,7 @@ There is no clean rule for how many that is. A workable habit: draw no conclusio
 
 Separate what you are watching, because different parts of your singing run on different clocks.
 
-Coordination moves fastest. Onsets getting cleaner, a scale holding in tune where it used to sag, the transition through your break costing you less panic — that is motor learning, and repetition is what feeds it. Your pitch studio accuracy and your warmup scores are mostly measuring coordination, which is why they tend to shift first.
+Coordination moves fastest. Onsets getting cleaner, a scale holding in tune where it used to sag, the transition through your break costing you less panic: that is motor learning, and repetition is what feeds it. Your pitch studio accuracy and your warmup scores are mostly measuring coordination, which is why they tend to shift first.
 
 Range boundaries move slowest, and sometimes not at all. The extreme top and bottom of what you can produce are shaped by your anatomy, and practice does not redesign anatomy. What practice can change is your access to notes that were already available but badly coordinated, and the comfort with which you sit in the middle of what you have. Someone who describes gaining a fifth on top over a year has usually gained control, not new notes.
 
@@ -55,11 +55,11 @@ And they cannot tell you when something other than practice is behind a change. 
 
 A few habits make the data worth keeping.
 
-Keep the conditions comparable — same rough time of day, same room, same distance from the phone, same amount of warmup — because you are not chasing the highest number, you are after one that can sit beside the last. Chapter twelve has the full checklist and the ways a reading goes wrong.
+Keep the conditions comparable (same rough time of day, same room, same distance from the phone, same amount of warmup), because you are not chasing the highest number, you are after one that can sit beside the last. Chapter twelve has the full checklist and the ways a reading goes wrong.
 
-Test on the schedule, not on a feeling. Retesting because your voice feels great today guarantees a history of your best days rather than your typical ones. The program asks for three range tests — week one, the end of week six, and the start of week twelve — and three honest readings beat a dozen opportunistic ones.
+Test on the schedule, not on a feeling. Retesting because your voice feels great today guarantees a history of your best days rather than your typical ones. The program asks for three range tests: week one, the end of week six, and the start of week twelve. Three honest readings beat a dozen opportunistic ones.
 
-Write down the context. One line — slept badly, second day of a cold, sang for two hours last night — turns an unexplained dip into an explained one when you look back in March.
+Write down the context. One line (slept badly, second day of a cold, sang for two hours last night) turns an unexplained dip into an explained one when you look back in March.
 
 Read the whole run of tests, not the last one. On the schedule this book keeps, a test every six weeks or so, three months holds only two or three bars, so resist the rightmost bar. Cover it with your thumb if you have to. Ask instead whether the bars before it were already moving the way the newest one suggests. A bar that breaks from the others usually means a condition changed rather than a voice; read it that way until the next scheduled test repeats it.
 

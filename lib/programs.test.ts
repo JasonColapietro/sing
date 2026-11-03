@@ -31,6 +31,7 @@ import {
   programById,
   programMinutesRange,
   programReadings,
+  programRestDays,
   programToday,
   reconcileProgress,
   repeatChoices,
@@ -1669,3 +1670,39 @@ describe("singing one fortnight of a finished run again (chapter 19)", () => {
   });
 });
 
+
+describe("the rest days a run makes, which the streak bridges", () => {
+  // Recovery week: three practice days, a rest day, three practice days.
+  const program = programById("recovery-week")!;
+  const d0 = "2026-09-21";
+  const restIndex = program.days.findIndex(isRestDay);
+
+  it("is the calendar day after the practice day before the rest day", () => {
+    expect(restIndex).toBe(3);
+    const sessions = [0, 1, 2].flatMap((i) => sessionsFor(program.days[i], addDays(d0, i)));
+    const r = reconcileProgress(program, begin(program.id, d0), sessions, addDays(d0, 5));
+    expect(programRestDays(program, r)).toEqual([addDays(d0, 3)]);
+  });
+
+  it("never names a skipped practice day: a late day pushes the rest day later", () => {
+    // Day 3's work sung a day late, after a day with no practice at all.
+    const sessions = [
+      ...sessionsFor(program.days[0], d0),
+      ...sessionsFor(program.days[1], addDays(d0, 1)),
+      ...sessionsFor(program.days[2], addDays(d0, 3)),
+    ];
+    const r = reconcileProgress(program, begin(program.id, d0), sessions, addDays(d0, 6));
+    const rest = programRestDays(program, r);
+    expect(rest).toEqual([addDays(d0, 4)]);
+    expect(rest).not.toContain(addDays(d0, 2));
+  });
+
+  it("is empty before the run reaches a rest day", () => {
+    const r = reconcileProgress(program, begin(program.id, d0), sessionsFor(program.days[0], d0), addDays(d0, 3));
+    expect(programRestDays(program, r)).toEqual([]);
+  });
+
+  it("starts no program on a rest day, so restarting cannot mint one", () => {
+    for (const p of PROGRAMS) expect(isRestDay(p.days[0]), p.id).toBe(false);
+  });
+});

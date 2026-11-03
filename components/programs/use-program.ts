@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { localDay, useProgress } from "@/lib/progress";
+import { applyRestDayBridge, localDay, useProgress } from "@/lib/progress";
 import { subscribePracticeDay } from "@/lib/free-cap";
 import { loadBreath, type SustainAttempt } from "@/components/breath/store";
 import {
@@ -10,6 +10,7 @@ import {
   matchDay,
   programReadings,
   programById,
+  programRestDays,
   programToday,
   reconcileProgress,
   sessionsForRun,
@@ -65,7 +66,7 @@ export interface ActiveProgram {
  */
 export function useActiveProgram(): ActiveProgram | null {
   const stored = useProgramProgress();
-  const { sessions: logged, rangeHistory, range } = useProgress();
+  const { sessions: logged, rangeHistory, range, streak } = useProgress();
   const today = useLocalDay();
   // The sustain room's own attempt record: holds under five seconds are kept
   // there but never logged, and a program still counts them. localStorage, so
@@ -89,6 +90,16 @@ export function useActiveProgram(): ActiveProgram | null {
   useEffect(() => {
     if (progress && stored && progress !== stored) saveProgramProgress(progress);
   }, [progress, stored]);
+
+  // A scheduled rest day of this run neither adds to the streak nor breaks it
+  // (lib/progress.ts bridgeRestDays). Keyed by the days, so it runs once per
+  // new rest day, new local day or newly restored streak, and writes only
+  // when the streak moves.
+  const restDays = program && progress ? programRestDays(program, progress).join(",") : "";
+  const streakEnds = streak.lastDay;
+  useEffect(() => {
+    if (restDays && today && streakEnds) applyRestDayBridge(restDays.split(","), today);
+  }, [restDays, today, streakEnds]);
 
   if (!program || !progress || !today) return null;
   const view = programToday(program, progress, today);

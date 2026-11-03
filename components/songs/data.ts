@@ -363,11 +363,13 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Narrow and repeated-note. This transcription leaves out the low pickup
-    // "A-" (G3, the dominant below, before "riding"), which keeps the phrase
-    // inside a fourth (B3 to E4) and in the easy band. The phrase
-    // closes on the leading tone below the tonic, because the tune is still on
-    // its way to "stuck a feather in his cap".
+    // The standard tune in C: C C D E | C E D G3 | C C D E | C B3, with the
+    // low pickup "a-" (G3, the dominant below) leading into "riding". That
+    // pickup is a fifth down from "town" and a fourth up to "ri-", so the
+    // phrase spans G3 to E4 (9 semitones) with five leaps of a major third or
+    // more in 14 notes, which rates Hard (score 14) and puts it in the "A
+    // stretch" band. The phrase closes on the leading tone below the tonic,
+    // because the tune is still on its way to "stuck a feather in his cap".
     id: "yankee-doodle",
     slug: "yankee-doodle",
     title: "Yankee Doodle",
@@ -382,9 +384,11 @@ export const SONGS: Song[] = [
     genre: "Patriotic",
     era: "1700s",
     language: "English",
-    // Not "stepwise": the page counts three leaps of a major third (E4 down
-    // to C4 on "dle went" and "a po", C4 up to E4 on "went to").
-    tags: ["march", "narrow range"],
+    // Not "stepwise" and not "narrow range" (a Hard rating): the page counts
+    // five leaps of a major third or more (E4 down to C4 on "dle went" and
+    // "a po", C4 up to E4 on "went to", D4 down a fifth to G3 on "town, a-",
+    // and G3 up a fourth to C4 on "a-ri").
+    tags: ["march", "leap"],
     notes: [
       { midi: 60, startBeat: 0, durBeats: 1, lyric: "Yan", wordEnd: false },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "kee" },
@@ -392,7 +396,8 @@ export const SONGS: Song[] = [
       { midi: 64, startBeat: 3, durBeats: 1, lyric: "dle" },
       { midi: 60, startBeat: 4, durBeats: 1, lyric: "went" },
       { midi: 64, startBeat: 5, durBeats: 1, lyric: "to" },
-      { midi: 62, startBeat: 6, durBeats: 2, lyric: "town," },
+      { midi: 62, startBeat: 6, durBeats: 1, lyric: "town," },
+      { midi: 55, startBeat: 7, durBeats: 1, lyric: "a-", line: 1, wordEnd: false },
       { midi: 60, startBeat: 8, durBeats: 1, lyric: "ri", line: 1, wordEnd: false },
       { midi: 60, startBeat: 9, durBeats: 1, lyric: "ding", line: 1 },
       { midi: 62, startBeat: 10, durBeats: 1, lyric: "on", line: 1 },
@@ -712,7 +717,8 @@ export const SONGS: Song[] = [
     genre: "Folk",
     era: "1800s",
     language: "English",
-    tags: ["ballad", "wide range", "legato"],
+    // Spans G3 to F4 (10 semitones), under an octave, so not "wide range".
+    tags: ["ballad", "legato"],
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh" },
       { midi: 57, startBeat: 1, durBeats: 1, lyric: "Dan", wordEnd: false },

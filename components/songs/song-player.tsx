@@ -1515,7 +1515,7 @@ export function SongPlayer({
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <SectionLabel>{song.title}</SectionLabel>
+            <SectionLabel className="max-w-full [overflow-wrap:anywhere]">{song.title}</SectionLabel>
             {sectionPill}
             {loopPill}
             {countInBeat >= 0 && <Pill tone="violet">{COUNT_IN_BEATS - countInBeat}</Pill>}
@@ -1595,7 +1595,7 @@ export function SongPlayer({
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <SectionLabel>{song.title}</SectionLabel>
+            <SectionLabel className="max-w-full [overflow-wrap:anywhere]">{song.title}</SectionLabel>
             <h2 className="mt-3 text-xl">
               {phase === "idle"
                 ? "Ready"

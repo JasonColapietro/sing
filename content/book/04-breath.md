@@ -13,13 +13,13 @@ Steady is the operative word, not strong. A phrase that starts loud and thins ou
 
 ## What the ribs and diaphragm actually do
 
-The diaphragm is a dome of muscle under your lungs. When it contracts it flattens downward, the space in your chest gets bigger, pressure drops, and air comes in. That is the whole of its job. It is an inhaling muscle. It does not push air out, and it cannot — muscles pull, they do not push, and there is nothing for it to pull on that would drive air upward.
+The diaphragm is a dome of muscle under your lungs. When it contracts it flattens downward, the space in your chest gets bigger, pressure drops, and air comes in. That is the whole of its job. It is an inhaling muscle. It does not push air out, and it cannot: muscles pull, they do not push, and there is nothing for it to pull on that would drive air upward.
 
 So when a teacher says "support from the diaphragm," what is really happening is that you are letting the diaphragm release slowly instead of letting it snap back. Your ribs work the same way. The muscles between them can hold the ribcage open, and if you keep it open a little longer than it wants to stay open, the air leaves more slowly and more evenly. The abdominal wall comes back in gradually rather than in a lurch.
 
-That is the mechanism, and it changes as the phrase goes on. Early in a phrase, with the lungs well filled, elastic recoil pushes harder than the folds need, and a gentle inspiratory hold — the ribs staying open — keeps you from dumping the surplus. As the lungs empty, recoil pushes less and less, and well before you run out of air it stops supplying all the pressure the phrase needs, so the abdominal wall comes in steadily to make up the difference. Past the point where a relaxed breath out would stop, recoil starts pulling air back in, and the muscles are doing all of the work. Support is managing that handover so the pressure under the folds stays even, and the tone tells you whether it is going well.
+That is the mechanism, and it changes as the phrase goes on. Early in a phrase, with the lungs well filled, elastic recoil pushes harder than the folds need, and a gentle inspiratory hold (the ribs staying open) keeps you from dumping the surplus. As the lungs empty, recoil pushes less and less, and well before you run out of air it stops supplying all the pressure the phrase needs, so the abdominal wall comes in steadily to make up the difference. Past the point where a relaxed breath out would stop, recoil starts pulling air back in, and the muscles are doing all of the work. Support is managing that handover so the pressure under the folds stays even, and the tone tells you whether it is going well.
 
-You can feel this without singing a note. Sit up, hand on the side of your lower ribs. Breathe in through the nose for four counts and notice the ribs widen sideways — not the shoulders rising, the ribs going out. Then hiss out on a steady "sss" for as long as it stays even, and pay attention to the ribs. If they drop at once, you are dumping. If you can keep them broad for most of the hiss and let them come in only near the end, that is the sensation you want under a sung phrase.
+You can feel this without singing a note. Sit up, hand on the side of your lower ribs. Breathe in through the nose for four counts and notice the ribs widen sideways: not the shoulders rising, the ribs going out. Then hiss out on a steady "sss" for as long as it stays even, and pay attention to the ribs. If they drop at once, you are dumping. If you can keep them broad for most of the hiss and let them come in only near the end, that is the sensation you want under a sung phrase.
 
 ## Why more air is the wrong fix
 
@@ -31,13 +31,13 @@ There is a second failure, and it is the noisier one. If you press the abdominal
 
 The test is simple. Sing a phrase that has been giving you trouble at about half your usual volume, deliberately using less air. Often the pitch settles and the tone rounds out. If it does, the problem was not a shortage of breath.
 
-Actual under-support looks different, and is rarer than people think: the tone starts thin, the pitch sags flat, and the phrase runs out early even though you took a big breath. That is a collapse — you inhaled and then let everything fall in the first second. The fix is not a bigger inhale. It is holding the ribs open past the first beat.
+Actual under-support looks different, and is rarer than people think: the tone starts thin, the pitch sags flat, and the phrase runs out early even though you took a big breath. That is a collapse: you inhaled and then let everything fall in the first second. The fix is not a bigger inhale. It is holding the ribs open past the first beat.
 
 ## The size of the breath
 
 Most singers take too much air, not too little. A full-to-bursting inhale leaves your ribcage stretched near the top of its range, where elastic recoil is strongest. You are now fighting your own tissue just to keep the first note from blasting, and you spend the phrase getting rid of surplus air rather than using it.
 
-Aim for comfortably full — think three-quarters, not the deepest breath you can manage — and take it in silently. A gasping inhale means air is rushing through a narrow throat, and a throat that is narrow on the way in tends to still be narrow on the first note. Silent means open.
+Aim for comfortably full (think three-quarters, not the deepest breath you can manage) and take it in silently. A gasping inhale means air is rushing through a narrow throat, and a throat that is narrow on the way in tends to still be narrow on the first note. Silent means open.
 
 Breathe low and wide rather than high. If your shoulders climb toward your ears on the inhale, you are lifting the upper chest with neck and shoulder muscles: a lot of effort for not much air, and tension that sits right beside the larynx. The visible movement should be around the lower ribs and the belly.
 
@@ -47,7 +47,7 @@ Sensations are personal, and you should be suspicious of anyone who describes th
 
 ::figure support | Steady pressure: the push comes on, holds level for the whole note, then lets go.
 
-The lower ribs stay broad through most of the phrase, rather than dropping the moment you begin. There is a mild sense of resistance around the waist — not a clench, more like leaning gently against something. The throat is uninvolved. That last one is the real marker: if support is working, your neck feels about the same on a loud note as on a quiet one. If it grips as you get louder, the effort has migrated to the wrong place.
+The lower ribs stay broad through most of the phrase, rather than dropping the moment you begin. There is a mild sense of resistance around the waist: not a clench, more like leaning gently against something. The throat is uninvolved. That last one is the real marker: if support is working, your neck feels about the same on a loud note as on a quiet one. If it grips as you get louder, the effort has migrated to the wrong place.
 
 Loud is where this gets tested. Getting louder does mean more airflow and more pressure, but it also means firmer closure at the folds, and the two have to rise together. Add air without the closure and you get breathy and loud. Add closure without the air and you get pressed and tight. The good version feels like the sound is getting bigger without the effort moving upward into the throat.
 
@@ -57,14 +57,14 @@ A correction worth trying on a pressed sound: think of the volume as coming from
 
 Breath work is one of the few things worth practicing with no singing attached, because you can watch the pressure directly instead of guessing at it through tone.
 
-Slow exhales on a hiss, a lip trill, or a straw into a glass of water all do the same thing: they put a small resistance in front of the airstream so you have something to meter against. The straw and the lip trill have a further advantage. The back pressure they create makes hard blowing obvious. You cannot blast through a lip trill — it just stops.
+Slow exhales on a hiss, a lip trill, or a straw into a glass of water all do the same thing: they put a small resistance in front of the airstream so you have something to meter against. The straw and the lip trill have a further advantage. The back pressure they create makes hard blowing obvious. You cannot blast through a lip trill; it just stops.
 
 Box breathing, the Farinelli drill and the sustain test each train that slow release from a different angle, and chapter fourteen describes all three in full. Each is a drill in the app's Breath room, and all three belong early in a practice session rather than at the end, when you are tired and more likely to substitute effort for control. Lip trills live in Warmups.
 
-One caution, and it applies to every held-breath drill here. If you feel light-headed, stop — do not finish the round. Nothing in this chapter should hurt.
+One caution, and it applies to every held-breath drill here. If you feel light-headed, stop. Do not finish the round. Nothing in this chapter should hurt.
 
 Breath is not fuel you spend, and it is not force you apply. It is a pressure you hold steady underneath a vibration, and the skill is in the holding, not in the amount.
 
 ## Try this
 
-Open Breath and run the [sustain test](/breath?drill=sustain) twice — once cold, then again after a minute of lip trills. Compare both numbers it gives you, seconds and steadiness, not just the seconds. A second attempt that lasts longer at equal or better steadiness suggests you were spending air rather than running out of it. Your last ten attempts stay on the chart, so you can see whether that pattern holds up over a few sessions or was a one-off.
+Open Breath and run the [sustain test](/breath?drill=sustain) twice: once cold, then again after a minute of lip trills. Compare both numbers it gives you, seconds and steadiness, not just the seconds. A second attempt that lasts longer at equal or better steadiness suggests you were spending air rather than running out of it. Your last ten attempts stay on the chart, so you can see whether that pattern holds up over a few sessions or was a one-off.

@@ -143,7 +143,7 @@ describe("footer wires every hub into every page", () => {
   it("links /pro with descriptive, priced anchor text, landing on the buy card", () => {
     const anchor = html.match(/<a[^>]*href="\/pro#buy"[^>]*>(.*?)<\/a>/);
     expect(anchor?.[1].replace(/<[^>]+>/g, "")).toBe(
-      `Suede Pro vocal coach, ${formatPrice(PRICING.lifetime.amount)} once`,
+      `Suede Pro online vocal coach, ${formatPrice(PRICING.lifetime.amount)} once`,
     );
     // The price clause carries the not-pro marker, so an owner never sees it.
     expect(anchor?.[1]).toMatch(/<span data-prepaint-plan="not-pro">, \$\d+ once<\/span>/);

@@ -5,7 +5,7 @@ order: 5
 summary: "How the throat and mouth shape one buzzy fold vibration into vowels, brightness and carrying power, and how to change tone without changing effort."
 ---
 
-Your folds make one sound, and it is not a nice one. Heard raw, before it travels anywhere, it is a thin buzzy rasp — closer to a duck call than to singing. Everything you recognize as your voice happens after that buzz leaves the folds. The vowels, the warmth, the edge, the sense that this is you and not someone else: all of it gets added on the way out, in the corridor between your folds and your lips.
+Your folds make one sound, and it is not a nice one. Heard raw, before it travels anywhere, it is a thin buzzy rasp, closer to a duck call than to singing. Everything you recognize as your voice happens after that buzz leaves the folds. The vowels, the warmth, the edge, the sense that this is you and not someone else: all of it gets added on the way out, in the corridor between your folds and your lips.
 
 That corridor is the vocal tract. It is a tube, and you reshape it constantly with your tongue, jaw, lips, soft palate and larynx height. The buzz is the source. The tube is the filter. Once you have that split, most tone problems stop looking like effort problems and start looking like shape problems.
 
@@ -17,7 +17,7 @@ Those peaks are called formants. The buzz already contains a fundamental plus a 
 
 This is why one pitch can produce several completely different sounds. Sing a comfortable note in your middle and slide the vowel from "ee" to "eh" to "ah" to "oh" to "oo" without changing pitch or volume. The note stays exactly where it was. The color changes enormously. You moved two formants with your tongue and lips and never touched the note.
 
-So a vowel is not a mouth position you memorize. It is a pattern of resonances — chiefly the first two — and different mouth shapes can land on the same pattern. Listeners judge that pattern relative to the voice making it, which is why a child's "ah" and a bass's "ah" read as the same vowel even though every resonance sits at a different frequency.
+So a vowel is not a mouth position you memorize. It is a pattern of resonances (chiefly the first two), and different mouth shapes can land on the same pattern. Listeners judge that pattern relative to the voice making it, which is why a child's "ah" and a bass's "ah" read as the same vowel even though every resonance sits at a different frequency.
 
 ## Vowel modification, and why it is not cheating
 
@@ -37,9 +37,9 @@ The word "modification" makes it sound like a compromise, a degraded version of 
 
 You will be told to put the sound in your mask, forward, behind the eyes, in the cheekbones, over the soft palate, in a spot two inches in front of your face. None of that is physically true. Sound is not routed anywhere. It radiates out of your mouth and, to a small degree, vibrates the bone and tissue around it. You cannot aim it.
 
-What you can do is notice sensation. When the tract takes a shape that builds strong resonance in one frequency region, you genuinely feel buzzing in particular places — the front of the face for bright, high sounds, the chest and throat for lower ones. The sensation is real. It is a consequence of the tone, not a cause of it.
+What you can do is notice sensation. When the tract takes a shape that builds strong resonance in one frequency region, you genuinely feel buzzing in particular places: the front of the face for bright, high sounds, the chest and throat for lower ones. The sensation is real. It is a consequence of the tone, not a cause of it.
 
-That makes placement language a shortcut rather than a lie. "Forward" compresses a whole cluster of adjustments — a higher, more forward tongue, a narrower space above the larynx, more high-frequency energy — into one word you can act on in the second before you sing. If a cue produces the sound you want, use it. Just do not build a theory on it, and do not stand there trying to deliver sound to your cheekbones while the tone refuses to change. When a cue stops working, drop it and go back to the levers you can actually move: vowel, tongue, jaw, larynx height, soft palate.
+That makes placement language a shortcut rather than a lie. "Forward" compresses a whole cluster of adjustments (a higher, more forward tongue, a narrower space above the larynx, more high-frequency energy) into one word you can act on in the second before you sing. If a cue produces the sound you want, use it. Just do not build a theory on it, and do not stand there trying to deliver sound to your cheekbones while the tone refuses to change. When a cue stops working, drop it and go back to the levers you can actually move: vowel, tongue, jaw, larynx height, soft palate.
 
 ## Brightness, and why some voices carry
 
@@ -55,4 +55,4 @@ A pairing worth hearing yourself: a straight, unbrightened tone next to the same
 
 ## Try this
 
-In the [Recorder](/recorder), sing one sustained note in your comfortable middle three times — once on a plain "ah", once slid toward "aw", once with a brighter, narrower ring — then A/B compare the takes. Listen for which one carries best on playback rather than which one felt biggest while you were singing it.
+In the [Recorder](/recorder), sing one sustained note in your comfortable middle three times (once on a plain "ah", once slid toward "aw", once with a brighter, narrower ring), then A/B compare the takes. Listen for which one carries best on playback rather than which one felt biggest while you were singing it.

@@ -18,7 +18,7 @@
   {
     "name": "Judy Garland",
     "voiceType": "Contralto",
-    "genres": ["Musical Theatre", "Jazz", "Pop"],
+    "genres": ["Musical Theater", "Jazz", "Pop"],
     "country": "USA",
     "activeFrom": 1939,
     "lowNote": "F3",
@@ -34,7 +34,7 @@
   {
     "name": "Auli'i Cravalho",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Musical Theatre", "Pop"],
+    "genres": ["Musical Theater", "Pop"],
     "country": "USA",
     "activeFrom": 2016,
     "lowNote": "F3",

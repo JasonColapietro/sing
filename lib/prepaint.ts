@@ -21,7 +21,10 @@
  *   data-sing-program  absent with no program, or on another program's own
  *                      view; otherwise a status token ("todo", "done" or
  *                      "finished") and any of "rest", "locked",
- *                      "next-locked", "waits", and on a finished run its
+ *                      "next-locked", "waits", "waits-open" (beside
+ *                      "waits", when today's day still has a range test or
+ *                      a recorded take to do, which the cap does not
+ *                      count), and on a finished run its
  *                      card's size: "book" for the book's program, the
  *                      program's id for the others (the end of
  *                      prepaintState says when each applies)
@@ -130,9 +133,12 @@ export interface PrepaintConfig {
   /**
    * Per program id: [1 when Pro, number of days, indexes of rest days, the
    * token a finished run adds for its card's size ("book" for a program that
-   * follows the book, with chapters; its own id otherwise)].
+   * follows the book, with chapters; its own id otherwise), and per day index
+   * that has rows the free cap does not count (the range test, the
+   * Recorder), each such row's activity type ("range", "recording"), one
+   * entry per row].
    */
-  programs: Record<string, [number, number, number[], string]>;
+  programs: Record<string, [number, number, number[], string, Record<string, string[]>]>;
   /** Per room path ("/breath"), the deep links that room opens. */
   deepLinks: Record<string, PrepaintDeepLink>;
 }
@@ -202,11 +208,14 @@ export function prepaintState(
   const sessions = isObject(progress) && Array.isArray(progress.sessions) ? progress.sessions : [];
   let used = 0;
   let kept = 0;
+  // The kept log, for the program day's rows the cap does not count.
+  const log: Record<string, unknown>[] = [];
   for (let i = 0; i < sessions.length && kept < c.maxSessions; i++) {
     const s = sessions[i];
     // The sessions sanitizeProgress keeps: an id, a known type and a day.
     if (!isObject(s) || typeof s.id !== "string" || typeof s.type !== "string" || !isDay(s.day)) continue;
     kept++;
+    log.push(s);
     if (s.day === today && c.cappedTypes.indexOf(s.type) >= 0 && typeof s.durationSec === "number" && isFinite(s.durationSec)) {
       used += Math.max(0, Math.round(s.durationSec));
     }
@@ -244,6 +253,7 @@ export function prepaintState(
     const length = def[1];
     const rest = def[2];
     const finishedSize = def[3];
+    const openRows = isObject(def[4]) ? def[4] : {};
     const startedDay = record.startedDay as string;
     // reviveProgress: the longest valid prefix of the done list.
     const done: string[] = [];
@@ -296,7 +306,34 @@ export function prepaintState(
     } else {
       tokens.push("todo");
       if (!isPro && proProgram && done.length >= c.freeDays) tokens.push("locked");
-      else if (capped) tokens.push("waits");
+      else if (capped) {
+        tokens.push("waits");
+        // The card then names the rows still open now (components/programs/
+        // today-card.tsx openUncappedRows): the range test and the recorded
+        // take sit outside the allowance, so a day that has one the log does
+        // not show yet carries one more sentence. lib/programs.ts matchDay
+        // with sessionsForRun: a session of the row's type from the day after
+        // the last completion (or the start) through today, logged since the
+        // run started, pays for one row.
+        const types = Object.prototype.hasOwnProperty.call(openRows, String(done.length)) ? openRows[String(done.length)] : [];
+        const from = done.length ? nextDay(done[done.length - 1]) : startedDay;
+        const since = typeof record.startedAt === "string" ? Date.parse(record.startedAt) : NaN;
+        const spent: boolean[] = [];
+        let open = false;
+        for (let t = 0; t < types.length && !open; t++) {
+          let paid = false;
+          for (let q = 0; q < log.length && !paid; q++) {
+            const s = log[q];
+            if (spent[q] || s.type !== types[t] || (s.day as string) < from || (s.day as string) > today) continue;
+            const at = typeof s.date === "string" ? Date.parse(s.date) : NaN;
+            if (isFinite(since) && isFinite(at) && at < since) continue;
+            spent[q] = true;
+            paid = true;
+          }
+          if (!paid) open = true;
+        }
+        if (open) tokens.push("waits-open");
+      }
     }
     program = tokens.join(" ");
     // components/programs/programs-client.tsx programIdAt, on /programs.

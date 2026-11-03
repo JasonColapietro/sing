@@ -40,6 +40,8 @@ async function pageFingerprint(slug: string): Promise<string> {
  * re-pin the fingerprint and date together.
  */
 const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
+  // 2026-11-03: the closing card's heading asks how much of the singer's reported range the reader's
+  // range covers, instead of repeating the button ("Test my range against ...") below it.
   // 2026-11-03: the nearest-reported-floors row skips voices already shown as similar-voice cards
   // and walks outward to the next nearest, and its caption says so.
   // 2026-11-02: shared-floor and shared-ceiling chips list the closest voices (not the first names
@@ -50,12 +52,12 @@ const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
   // round 18: similar voices picked by nearest endpoints, the span histogram captioned;
   // round 20: similar voices ranked by range distance first, the label only breaking ties;
   // round 21: the similar-range FAQ states that rule, the songs card names the range pages and counts what it lists, and the closing line names what the comparison chart draws.
-  "olivia-rodrigo": { fingerprint: "2ae1badaa5476685", lastModified: "2026-11-03" },
-  "reba-mcentire": { fingerprint: "29dba66619b2d0ce", lastModified: "2026-11-03" },
-  "alex-warren": { fingerprint: "fc0d2e0f32290770", lastModified: "2026-11-03" },
-  "sam-smith": { fingerprint: "611f55ce31193bc0", lastModified: "2026-11-03" },
-  "arijit-singh": { fingerprint: "0f564f31d1fc51bb", lastModified: "2026-11-03" },
-  adele: { fingerprint: "cc3c75826386c409", lastModified: "2026-11-03" },
+  "olivia-rodrigo": { fingerprint: "7518f4067ab153c3", lastModified: "2026-11-03" },
+  "reba-mcentire": { fingerprint: "daec40beaa404784", lastModified: "2026-11-03" },
+  "alex-warren": { fingerprint: "43759fe2f45c1a65", lastModified: "2026-11-03" },
+  "sam-smith": { fingerprint: "07e1e71b64071977", lastModified: "2026-11-03" },
+  "arijit-singh": { fingerprint: "672066f91548524a", lastModified: "2026-11-03" },
+  adele: { fingerprint: "5bd0a97cd0167aba", lastModified: "2026-11-03" },
 };
 
 describe("reviewed singer page freshness", () => {

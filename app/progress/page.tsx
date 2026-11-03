@@ -42,7 +42,9 @@ export default function ProgressPage() {
             practice, the range test, the pitch studio, the recorder, the
             tools and the analyzer are logged here. Each logged session earns XP,
             with a bonus when a scored exercise goes well, and practicing on
-            consecutive days builds your streak. The calendar shows the days you
+            consecutive days builds your streak. A scheduled rest day in a
+            program you are running keeps the streak without adding to it. The
+            calendar shows the days you
             practiced, and your latest range test result is kept as your saved
             range.
           </p>

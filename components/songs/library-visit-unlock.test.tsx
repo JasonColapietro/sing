@@ -62,7 +62,7 @@ function render(visitUnlockedSongId?: string, query = "") {
 }
 
 function card(html: string, title: string) {
-  const from = html.indexOf(`<h3 class="text-lg">${title}</h3>`);
+  const from = html.indexOf(`<h3 class="min-w-0 text-lg [overflow-wrap:anywhere]">${title}</h3>`);
   expect(from).toBeGreaterThan(-1);
   return html.slice(from, html.indexOf("</a>", from));
 }

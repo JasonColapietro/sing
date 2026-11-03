@@ -27,7 +27,7 @@ vi.mock("@/lib/progress", () => ({
 vi.mock("@/lib/use-flush-on-exit", () => ({ useFlushOnExit: () => {} }));
 vi.mock("next/dynamic", () => ({ default: () => "program-range-probe" }));
 
-import { PitchMeter, RangeNextStep } from "./pitch-meter";
+import { PitchMeter, RangeNextStep, SILENT_AGAIN, nextSilentRuns } from "./pitch-meter";
 
 const SILENT = "No note was heard, so nothing was logged.";
 let now = 0;
@@ -85,6 +85,61 @@ describe("the pitch meter after a silent Stop", () => {
     hooks.render(() => (tree = PitchMeter({})));
     expect(scrolls).not.toHaveBeenCalled();
     expect(text(tree)).not.toContain(SILENT);
+  });
+});
+
+describe("a second silent run in a row", () => {
+  it("escalates to the audio setup instead of repeating the card, and still logs nothing", async () => {
+    let tree: ReactNode = null;
+    const draw = () => hooks.render(() => (tree = PitchMeter({})));
+    draw();
+    (tree as unknown as ReactElement<{ ref: { current: unknown } }>).props.ref.current = { scrollIntoView: () => {} };
+    const silentRun = () => {
+      fixture.pitch.listening = true;
+      draw();
+      now += 20_000;
+      fixture.pitch.listening = false;
+      draw();
+    };
+
+    silentRun();
+    expect(text(tree)).toContain(SILENT);
+    expect(text(tree)).not.toContain(SILENT_AGAIN);
+    expect(text(tree)).not.toContain("Open the audio setup");
+
+    // "Sing again" from the gate, and silence again.
+    const gate = find(tree, (el) => typeof el.props.onEnable === "function") as ReactElement<{ onEnable: () => Promise<void> }>;
+    await gate.props.onEnable();
+    silentRun();
+
+    expect(fixture.log).not.toHaveBeenCalled();
+    const page = text(tree);
+    expect(page).toContain(SILENT_AGAIN);
+    expect(page).not.toContain(SILENT);
+    expect(page).not.toMatch(/\u2014/);
+    const status = find(tree, (el) => el.props.role === "status");
+    expect(text(status)).toBe(SILENT_AGAIN);
+
+    // The card opens the Audio panel, where the microphone is chosen.
+    const open = find(tree, (el) => typeof el.props.onClick === "function" && text(el.props.children as ReactNode) === "Open the audio setup") as ReactElement<{ onClick: () => void }>;
+    expect(open).not.toBeNull();
+    const summary = { focus: vi.fn() };
+    const details = { open: false, scrollIntoView: vi.fn(), querySelector: () => summary };
+    const wrapper = find(tree, (el) => el.type === "div" && (el.props.children as { type?: { name?: string } } | undefined)?.type?.name === "AudioSetup") as ReactElement<{ ref: { current: unknown } }>;
+    wrapper.props.ref.current = { querySelector: () => details };
+    open.props.onClick();
+    expect(details.open).toBe(true);
+    expect(summary.focus).toHaveBeenCalled();
+  });
+
+  it("counts silent runs in a row, and a heard run starts the count over", () => {
+    const silent = { log: null, silent: true };
+    const quiet = { log: null, silent: false };
+    expect(nextSilentRuns(0, silent, false)).toBe(1);
+    expect(nextSilentRuns(1, silent, false)).toBe(2);
+    // A stop before the hint's wait, with nothing heard: too short to judge.
+    expect(nextSilentRuns(1, quiet, false)).toBe(1);
+    expect(nextSilentRuns(2, quiet, true)).toBe(0);
   });
 });
 

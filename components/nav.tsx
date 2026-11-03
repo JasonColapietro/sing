@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -14,6 +14,7 @@ import { hasSomethingToSave, liveStreak } from "@/components/account/save-state"
 import { useModalFocus } from "@/lib/use-modal-focus";
 import { accountsReady } from "@/lib/accounts";
 import { rangeTestHref } from "@/lib/site";
+import { hasStoredProgram } from "@/components/programs/storage-key";
 
 /**
  * The account controls are the nav's only use of Clerk's React SDK, so they
@@ -22,6 +23,22 @@ import { rangeTestHref } from "@/lib/site";
  * page of a build where no account control can ever render.
  */
 const NavAccount = dynamic(() => import("@/components/account/nav-account"));
+
+/**
+ * A running program's scheduled rest days do not break the streak
+ * (lib/progress.ts bridgeRestDays). The bridge needs the program, and
+ * lib/programs carries every program and the song catalog, so it loads as its
+ * own chunk and only in a browser that holds a program. Mounted here because
+ * the header is on every page, so the streak is bridged before the chip, a
+ * room's end screen or the cap wall names it.
+ */
+const ProgramStreakBridge = dynamic(() => import("@/components/programs/streak-bridge"), { ssr: false });
+
+function subscribeStorage(cb: () => void): () => void {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+}
+const noProgramOnServer = () => false;
 
 /**
  * Ten tabs, not fourteen: Recorder and Analyze fold into Tools, Programs into
@@ -180,6 +197,7 @@ export default function Nav() {
   // page than that one does. Before it is true the affordance is still there,
   // just neutral: a visitor whose browser was wiped has nothing to lose and is
   // exactly the person who needs the way back in.
+  const programStored = useSyncExternalStore(subscribeStorage, hasStoredProgram, noProgramOnServer);
   const worthSaving = hasSomethingToSave(p);
   const streak = streakChipState(p.streak);
   // The fade on the right edge of the tab row is a scroll hint, so it should
@@ -395,6 +413,7 @@ export default function Nav() {
 
   return (
     <>
+      {programStored ? <ProgramStreakBridge /> : null}
       <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-3 px-4 sm:gap-4 sm:px-6">
           <Link

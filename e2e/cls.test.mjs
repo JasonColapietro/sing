@@ -274,6 +274,8 @@ describe("CLS measurement CLI gate", () => {
     capped: { blocks: ["capped"], capped: true, program: null, prepaint: { plan: "capped", program: null } },
     program: { blocks: ["program"], capped: false, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "free", program: "todo" } },
     "program-capped": { blocks: ["program", "capped"], capped: true, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "capped", program: "todo waits" } },
+    "program-capped-open": { blocks: ["program-open", "capped"], capped: true, program: { id: "foundations-2w", status: "todo", index: 0 }, prepaint: { plan: "capped", program: "todo waits waits-open" } },
+    "program-capped-open-book": { blocks: ["program-open-book", "capped"], capped: true, program: { id: "measured-voice-12w", status: "todo", index: 0 }, prepaint: { plan: "capped", program: "todo waits waits-open" } },
     "rest-day": { blocks: ["rest-day"], capped: false, program: { id: "mix-4w", status: "done-today", index: 6 }, prepaint: { plan: "free", program: "done rest next-locked" } },
     finished: { blocks: ["finished"], capped: false, program: { id: "measured-voice-12w", status: "finished", index: 83, readings: [0, 10, 41, 59, 66, 77] }, prepaint: { plan: "free", program: "finished book" } },
     // Each finished program's card is sized by its own token (app/globals.css

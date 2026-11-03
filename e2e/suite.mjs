@@ -45,6 +45,8 @@ const STATE_ROUTES = {
   capped: "warmups,breath,ear-training,songs,breath-deeplink-box,warmups-deeplink-routine,ear-deeplink-routine",
   program: "programs,program-detail,program-foundations,warmups,progress,warmups-deeplink-routine",
   "program-capped": "programs,program-detail,program-foundations,warmups,breath,ear-training",
+  "program-capped-open": "programs,program-foundations,warmups,progress",
+  "program-capped-open-book": "programs,program-detail,warmups,progress",
   "rest-day": "programs,program-detail,warmups,progress",
   finished: "programs,program-detail,warmups,progress",
   "finished-high-notes": "programs,program-high-notes",
@@ -109,7 +111,7 @@ export const SUITES = {
   // carries, about 480 s; layout-shift-returning about 500 s.
   "layout-shift": [
     cls("layout-shift", "--viewport=mobile-375"),
-    ...stateRuns(["capped", "program", "program-capped", "saved-range"]),
+    ...stateRuns(["capped", "program", "program-capped", "program-capped-open", "program-capped-open-book", "saved-range"]),
   ],
   "layout-shift-returning": [
     // A plain returning singer (a saved range and a practice history, no cap

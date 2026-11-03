@@ -1,4 +1,4 @@
-import { FREE_WEEKS, PROGRAMS, isRestDay } from "./programs";
+import { FREE_WEEKS, PROGRAMS, isRestDay, type ProgramItem } from "./programs";
 import { FREE_DAILY_SEC } from "./practice-limits";
 import { MAX_SESSIONS } from "./progress-shape";
 import { PREPAINT_CAPPED_TYPES, PREPAINT_KEYS, prepaintScript, type PrepaintConfig } from "./prepaint";
@@ -17,6 +17,26 @@ export const PREPAINT_EAR_ROUTINE_IDS = ["quick", "daily", "full", "intervals", 
 const ids = <T extends { id: string }>(list: readonly T[]) => list.map((x) => x.id);
 
 /**
+ * The activity each kind of program row logs (lib/programs.ts itemType),
+ * restated because lib/programs.ts itemIsCapped reads lib/free-cap.ts, a
+ * client module, whose values a server import gets as client references.
+ * A row whose activity the free cap does not count (PREPAINT_CAPPED_TYPES) is
+ * open once the cap is reached: the range test and the Recorder.
+ * lib/prepaint.test.ts holds the rows this picks to itemIsCapped.
+ */
+const ROW_TYPE: Record<ProgramItem["kind"], string> = {
+  routine: "warmup",
+  exercise: "warmup",
+  breath: "breath",
+  drill: "breath",
+  range: "range",
+  recorder: "recording",
+  ear: "ear",
+  song: "song",
+};
+const CAPPED: readonly string[] = PREPAINT_CAPPED_TYPES;
+
+/**
  * What the pre-paint script needs to know about the app, derived from the
  * same constants the pages use, so it cannot drift from them. Kept apart from
  * lib/prepaint.ts because the programs module is large and only the server
@@ -31,7 +51,19 @@ export const PREPAINT_CONFIG: PrepaintConfig = {
   programs: Object.fromEntries(
     PROGRAMS.map((p) => [
       p.id,
-      [p.pro ? 1 : 0, p.days.length, p.days.flatMap((d, i) => (isRestDay(d) ? [i] : [])), p.chapters ? "book" : p.id],
+      [
+        p.pro ? 1 : 0,
+        p.days.length,
+        p.days.flatMap((d, i) => (isRestDay(d) ? [i] : [])),
+        p.chapters ? "book" : p.id,
+        // Per day, the rows outside the cap, for the "waits-open" token.
+        Object.fromEntries(
+          p.days.flatMap((d, i) => {
+            const types = d.items.map((item) => ROW_TYPE[item.kind]).filter((type) => !CAPPED.includes(type));
+            return types.length ? [[String(i), types]] : [];
+          }),
+        ),
+      ],
     ]),
   ),
   // What each room opens from its address once hydrated, for the
