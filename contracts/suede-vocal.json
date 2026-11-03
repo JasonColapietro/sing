@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 70729,
+      "totalWords": 70756,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -3003,7 +3003,7 @@
           "part": "Pop",
           "summary": "The current generation of pop leads (whisper-pop, fry onsets, whistle flexes, conversational belts) and how the microphone rewrote what counts as power.",
           "free": false,
-          "words": 4947,
+          "words": 4954,
           "path": "/atlas/pop-women-the-moderns"
         },
         {
@@ -3053,7 +3053,7 @@
           "part": "Rock, metal and alternative",
           "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
           "free": false,
-          "words": 3158,
+          "words": 3151,
           "path": "/atlas/metal"
         },
         {
@@ -3173,7 +3173,7 @@
           "part": "The world's voices",
           "summary": "Groove-first singing, from patois phrasing and Afrobeats' melodic economy to amapiano's smoothness and the continent's great griot and mbalax voices.",
           "free": false,
-          "words": 2068,
+          "words": 2095,
           "path": "/atlas/reggae-afrobeats-and-african-voices"
         },
         {

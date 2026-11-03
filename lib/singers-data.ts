@@ -3226,7 +3226,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Big-lunged belter with heavy vibrato; drives chest voice high, then unspools R&B runs coming down.",
-    "technique": "There is no slow build. The belt lands wide and heavily vibrated, carrying real thickness all the way to A5, which is high for that much weight. Onsets are frequently glottal, and the biggest notes get hit straight on rather than approached from below. Runs mostly happen on the way back down, after the peak. Jamming the larynx upward to reach that top is the usual mistake, when the height should come from breath pressure and a narrowed vowel."
+    "technique": "There is no slow build. The belt lands wide and heavily vibrated, carrying real thickness all the way to A5, which is high for that much weight. Onsets are frequently glottal, and the biggest notes get hit straight on rather than approached from below. Runs mostly happen on the way back down, after the peak. Jamming the larynx upward to reach that top is the usual mistake, when the height should come from letting the folds thin and narrowing the vowel, not from more breath pressure."
   },
   {
     "slug": "dennis-brown",
@@ -4585,7 +4585,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Cat People (Putting Out the Fire)",
     "highSource": "SkinCarver",
     "blurb": "Bluesy, brooding croon-to-howl: an Elvis-shaped baritone soaked in doom and punk menace.",
-    "technique": "Elvis phrasing, punk engine: a chesty baritone crooned through rounded, retro vowels, with a wide lounge-singer vibrato snapped shut by hard glottal accents. He belts through the fourth octave to C#5 on pure chest, adding rasp by overdriving fold closure rather than false-fold layering, which gives the growl its bluesy, vocal-cord bite. Melisma is minimal; lines swing in long crooned arcs punctuated by barked releases. The classic student error is imitating the sneer instead of the support; the swagger is a byproduct of huge, steady airflow."
+    "technique": "Elvis phrasing, punk engine: a chesty baritone crooned through rounded, retro vowels, with a wide lounge-singer vibrato snapped shut by hard glottal accents. He belts through the fourth octave to C#5 on pure chest, with a bluesy rasp flaring at the edges of the growl. Melisma is minimal; lines swing in long crooned arcs punctuated by barked releases. The classic student error is imitating the sneer instead of the support; the swagger is a byproduct of huge, steady airflow."
   },
   {
     "slug": "glenn-hughes",
@@ -12230,7 +12230,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Rasping soul-shouter tenor; grit on every held note, pushes chest voice up until it frays.",
-    "technique": "Grit is the point, and it comes from air pressure meeting a firmly closed larynx, not from scraping the throat. Chest weight gets carried high and pushed until the tone frays, which is what gives held notes their rasp. Phrasing is shouted and rhythmic, landing hard on downbeats, with short interjections dropped between lines. Nothing releases into a light head register. The imitation that fails is the one that growls with no breath support underneath."
+    "technique": "Grit is the point: a rough edge riding on top of the tone rather than a scrape or a squeeze at the throat. Chest weight gets carried high and the held notes fray at their edges, which is the sound to study, not a pressure setup to copy; any rasp that leaves you hoarse is the wrong kind. Phrasing is shouted and rhythmic, landing hard on downbeats, with short interjections dropped between lines. Nothing releases into a light head register. The imitation that fails is the one that growls from a squeezed throat instead of building the edge gradually across a phrase."
   },
   {
     "slug": "tori-amos",
