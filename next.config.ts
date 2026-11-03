@@ -189,11 +189,18 @@ const nextConfig: NextConfig = {
       // moved to the American spelling and their slugs moved with them. The
       // old URLs were published (the hub in the sitemap and llms.txt, the
       // chapter in the atlas contents), so each lands on its successor in one
-      // permanent hop. The genre rule carries any tail, so the hub's share
-      // card (/opengraph-image and its versioned form) follows the page.
+      // permanent hop. The hub has its own exact rule: on Vercel a `:rest*`
+      // tail with nothing in it left a trailing slash ("/musical-theater/"),
+      // which cost a second 308. The tail rule (one or more segments) carries
+      // the hub's share card (/opengraph-image and its versioned form).
       {
-        source: "/singers/genre/musical-theatre/:rest*",
-        destination: "/singers/genre/musical-theater/:rest*",
+        source: "/singers/genre/musical-theatre",
+        destination: "/singers/genre/musical-theater",
+        permanent: true,
+      },
+      {
+        source: "/singers/genre/musical-theatre/:rest+",
+        destination: "/singers/genre/musical-theater/:rest+",
         permanent: true,
       },
       {

@@ -119,10 +119,10 @@ describe("Musical Theater slug redirects (2026-11-03)", () => {
       if (!regexStr) throw error;
       const match = new RegExp(regexStr).exec(path);
       if (!match) continue;
-      // Every parameter in these rules is a `:name*` tail.
+      // Every parameter in these rules is a `:name*` or `:name+` tail.
       const tail = match.slice(1).filter(Boolean).join("/");
-      const destination = rule.destination.replace(/\/:\w+\*$/, tail ? `/${tail}` : "");
-      return { destination, permanent: rule.permanent };
+      const destination = rule.destination.replace(/\/:\w+[*+]$/, tail ? `/${tail}` : "");
+      return { destination, permanent: rule.permanent, source: rule.source };
     }
   }
 
@@ -132,7 +132,16 @@ describe("Musical Theater slug redirects (2026-11-03)", () => {
     ["/singers/genre/musical-theatre/opengraph-image/abc123", "/singers/genre/musical-theater/opengraph-image/abc123"],
     ["/atlas/musical-theatre", "/atlas/musical-theater"],
   ])("sends %s permanently to %s", async (from, to) => {
-    expect(await resolve(from)).toEqual({ destination: to, permanent: true });
+    expect(await resolve(from)).toMatchObject({ destination: to, permanent: true });
+  });
+
+  // An empty `:rest*` tail left a trailing slash on Vercel and a second 308,
+  // so the bare hub URL needs a rule of its own with no parameter at all.
+  it("sends the bare hub URL through an exact rule, never an optional tail", async () => {
+    const hit = await resolve("/singers/genre/musical-theatre");
+    expect(hit?.source).toBe("/singers/genre/musical-theatre");
+    const redirects = (await nextConfig.redirects?.()) ?? [];
+    expect(redirects.some((r) => r.source.includes("musical-theatre") && r.source.endsWith("*"))).toBe(false);
   });
 
   it("is a single hop: the new URLs match no redirect of their own", async () => {
