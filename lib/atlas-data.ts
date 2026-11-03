@@ -1283,7 +1283,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Pop",
     "summary": "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it.",
     "free": false,
-    "words": 4410,
+    "words": 4415,
     "body": "Male pop singing has spent seventy years migrating upward. The crooners in this chapter worked at speech pitch and made softness a technology; the soul-influenced generations pushed the tessitura into high tenor territory; and the streaming era's leads live above the staff half the night, in mixes and falsettos their grandfathers' genre would have considered exotic.\n\nTwo practical observations for the reader who sings these songs. First, the modern male pop tessitura is a tenor's habitat, and most men are baritones. That mismatch, not talent, is why the radio feels high, and the transposition rule from the method chapters is the honest fix. The baritones in this chapter who thrived did it by refusing the arms race: they built styles where depth, restraint or rhythm carried the record. Their entries are the most useful ones here for the average male voice, which is exactly why they are less famous than the freaks of altitude around them.\n\nSecond, notice how many of these entries describe falsetto as a *primary* register rather than an escape hatch. The modern pop man trains his falsetto the way the founders trained their belt: as the money register, with its own dedicated hours. If you borrow one thing from this chapter, borrow that practice allocation. The full voice you already speak with; the top floor is built.",
     "entries": [
       {
@@ -1554,8 +1554,8 @@ export const ATLAS: AtlasChapter[] = [
         "signatureSong": "She Will Be Loved",
         "lowSource": null,
         "highSource": null,
-        "blurb": "Thin tenor built on falsetto and a nasal mix; adds compressed rasp rather than volume.",
-        "technique": "Most of the sound lives above the A4 belt, in a thin nasal mix and a wiry falsetto that stretches to C6. Loudness is not the tool; compression and a thin edge of rasp are. Phrases begin breathy, the vibrato quick and narrow, and phrase ends often lift into falsetto mid-word. Pushing chest to chase the high notes is the wrong instinct here, since the placement needs to get narrower rather than bigger.",
+        "blurb": "Thin tenor built on falsetto and a nasal mix; adds a thin edge of rasp rather than volume.",
+        "technique": "Most of the sound lives above the A4 belt, in a thin nasal mix and a wiry falsetto that stretches to C6. Loudness is not the tool; a focused tone and a thin edge of rasp are. Phrases begin breathy, the vibrato quick and narrow, and phrase ends often lift into falsetto mid-word. Pushing chest to chase the high notes is the wrong instinct here, since the placement needs to get narrower rather than bigger.",
         "span": "3 octaves + 3"
       },
       {
@@ -2604,7 +2604,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Big Dog",
         "highSource": "Night Life",
         "blurb": "Muscular soul-rock tenor; grit-edged belts and smooth low verses in one instrument.",
-        "technique": "Compression gives the voice its muscle: a tight chest-mix with grit at the edges and a forward placement. He belts high on narrow vowels, keeping the sound punchy rather than wide, then releases into smoother low verses with barely any vibrato. Phrases start on the breath and finish clipped. Students copying the belt usually oversqueeze the throat; his intensity comes from breath pressure against a steady fold seal, not from neck tension.",
+        "technique": "Compression gives the voice its muscle: a tight chest-mix with grit at the edges and a forward placement. He belts high on narrow vowels, keeping the sound punchy rather than wide, then releases into smoother low verses with barely any vibrato. Phrases start on the breath and finish clipped. Students copying the belt usually oversqueeze the throat; his intensity comes from a focused, ringing tone on steady breath, not from neck tension.",
         "span": "3 octaves + 10"
       },
       {
@@ -6224,7 +6224,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The source tradition and the ensemble athletes: where the runs, the shout and the squall come from, plus the a cappella specialists who turned blend itself into virtuosity.",
     "free": false,
-    "words": 2519,
+    "words": 2521,
     "body": "Everything the soul chapters borrowed, this chapter owns outright. Gospel is the source code: the run grammar that resolves like harmony, the shout built in waves, the squall (that controlled, ecstatic break at the top of a climb), and the dynamic arc that takes a room from silence to shaking in four minutes. The entries here describe the tradition's specialists at full strength, and the technical headline is stamina-with-abandon: these are the book's most demanding sustained sings, delivered weekly for decades, which is only possible because the abandon rides on ferocious, invisible support.\n\nThe chapter's second population is the a cappella and ensemble athletes, voices whose virtuosity is *blend*: tuning to each other in real time, trading lead and section roles, covering bass-to-whistle territory between a handful of people with no instruments to hide behind. Their entries are the atlas's best documentation of skills solo singing never tests: locking vowels with another voice, balancing to a chord, hearing yourself as a part.\n\nTwo borrowings recommend themselves. From the gospel wing, take the *build*: pick any song you sing and design its dynamics as a staircase the way these entries describe, arriving at full voice only when the song has earned it. From the ensemble wing, take the humility drill: record a simple melody, stack one harmony under it, and re-sing the lead to fit the chord. Every voice in this chapter got its authority from serving a room first; the technique follows the posture.",
     "entries": [
       {
@@ -6632,7 +6632,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Dark, thick contralto that stays in chest; builds by adding weight rather than climbing higher.",
-        "technique": "Weight, not height, is how the build happens. The voice sits dark and thick through the F5 belt, vowels kept round and back, and intensity grows by adding body and repeating a phrase rather than climbing toward the A5. Onsets are firm without being harsh, and vibrato arrives late on the sustains. The trap is shouting; add depth and breath pressure gradually and keep the larynx settled as the volume rises.",
+        "technique": "Weight, not height, is how the build happens. The voice sits dark and thick through the F5 belt, vowels kept round and back, and intensity grows by adding body and repeating a phrase rather than climbing toward the A5. Onsets are firm without being harsh, and vibrato arrives late on the sustains. The trap is shouting; add depth and volume gradually on steady support and keep the larynx settled as the volume rises.",
         "span": "2 octaves + 7"
       },
       {
@@ -10014,7 +10014,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The world's voices",
     "summary": "Precision singing at industrial standards: the idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers.",
     "free": false,
-    "words": 4362,
+    "words": 4363,
     "body": "The center of this chapter is the idol system's product: singers trained from adolescence to dance at full output while delivering studio-grade vocals, auditioned annually against thousands, and drilled in ensemble discipline: hitting your line in a seven-way harmony after sprint choreography is a skill no Western tradition certifies. The main-vocal entries here describe the results: immaculate pitch under cardio load, mixed belts engineered for nightly repetition, and an agility standard set by survival shows where a shaky run ends a career. Alongside them, the ballad specialists of the Korean tradition sustain climactic belts that draw directly on trot and gospel lineages.\n\nJapan's wing runs on different physics: a domestic industry so large it never needed export, producing genre-fluent stylists: city-pop sophistication, vocaloid-influenced precision at inhuman syllable rates, singer-songwriters swinging between woody lows and weightless falsetto. The chapter's remaining seats belong to the wider world: the Mandarin and Cantonese stars, Europe's chanson, ballad and pop voices, playback legends whose ornament systems predate and outclass most Western melisma, and the multi-octave phenomena who tour the world on pure vocal spectacle.\n\nWhat this chapter teaches best is *standards*: these industries quantify vocal skill (pitch under motion, harmony accuracy, consistency across two hundred shows) more explicitly than anywhere else in the book. The borrowable practice is theirs: drill songs while moving, record everything, and treat consistency as the metric, because a voice that performs at its average is worth more than one that performs at its best.",
     "entries": [
       {
@@ -10354,7 +10354,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Compact soprano with huge lung pressure: sirening mixed belts, pop-rock grit and dolphin-high whistle flourishes.",
-        "technique": "G.E.M. compresses hard: a small frame producing big subglottal pressure, with a mixed belt that stays chest-heavy up to G#5 and a fast vibrato that kicks in under load. Verses sit low and husky near D3, sung close to the mic. Above the belt she releases either into clear head tone or a piercing whistle that can spike to F6. Runs are rhythmic and squared-off rather than gospel-loose. Copying her belt without her breath compression shreds consistency within a single chorus.",
+        "technique": "G.E.M. sings big from a small frame: a mixed belt that stays chest-heavy up to G#5 and a fast vibrato that kicks in under load. Verses sit low and husky near D3, sung close to the mic. Above the belt she releases either into clear head tone or a piercing whistle that can spike to F6. Runs are rhythmic and squared-off rather than gospel-loose. Copying her belt by pushing harder instead of matching her steady support shreds consistency within a single chorus.",
         "span": "3 octaves + 3"
       },
       {
@@ -10677,7 +10677,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": null,
         "blurb": "Bright R&B soprano: compressed belts, clean head-voice peaks, and a documented whistle top above the staff.",
-        "technique": "An R&B-schooled soprano who treats registers as one continuous hallway: chest stays bright and compressed, the mix carries belts toward G#5, and head voice takes over cleanly rather than thinning out. Her runs are counted, landing on chord tones, and she shades dynamics inside single syllables. The common copying mistake is shouting the belt; Wendy leans on breath compression and narrow vowels, which is why the top stays ringing instead of spread.",
+        "technique": "An R&B-schooled soprano who treats registers as one continuous hallway: chest stays bright and compressed, the mix carries belts toward G#5, and head voice takes over cleanly rather than thinning out. Her runs are counted, landing on chord tones, and she shades dynamics inside single syllables. The common copying mistake is shouting the belt; Wendy leans on steady support and narrow vowels, which is why the top stays ringing instead of spread.",
         "span": "4 octaves + 2"
       },
       {
@@ -11752,7 +11752,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Pop",
     "summary": "Why the male pop lead keeps climbing, from crooners to falsetto-forward streaming stars, and what the tenor arms race costs the baritones who enter it.",
     "free": false,
-    "words": 4410,
+    "words": 4415,
     "singers": [
       {
         "slug": "brian-wilson",
@@ -13835,7 +13835,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The source tradition and the ensemble athletes: where the runs, the shout and the squall come from, plus the a cappella specialists who turned blend itself into virtuosity.",
     "free": false,
-    "words": 2519,
+    "words": 2521,
     "singers": [
       {
         "slug": "mahalia-jackson",
@@ -15438,7 +15438,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The world's voices",
     "summary": "Precision singing at industrial standards: the idol-system technicians, Japan's genre-fluent stylists, playback legends and global outliers.",
     "free": false,
-    "words": 4362,
+    "words": 4363,
     "singers": [
       {
         "slug": "edith-piaf",
@@ -15949,4 +15949,4 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
     [],
   );
 
-export const ATLAS_WORDS = 70650;
+export const ATLAS_WORDS = 70658;

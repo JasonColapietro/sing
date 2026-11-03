@@ -136,8 +136,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "She Will Be Loved",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin tenor built on falsetto and a nasal mix; adds compressed rasp rather than volume.",
-    "technique": "Most of the sound lives above the A4 belt, in a thin nasal mix and a wiry falsetto that stretches to C6. Loudness is not the tool; compression and a thin edge of rasp are. Phrases begin breathy, the vibrato quick and narrow, and phrase ends often lift into falsetto mid-word. Pushing chest to chase the high notes is the wrong instinct here, since the placement needs to get narrower rather than bigger."
+    "blurb": "Thin tenor built on falsetto and a nasal mix; adds a thin edge of rasp rather than volume.",
+    "technique": "Most of the sound lives above the A4 belt, in a thin nasal mix and a wiry falsetto that stretches to C6. Loudness is not the tool; a focused tone and a thin edge of rasp are. Phrases begin breathy, the vibrato quick and narrow, and phrase ends often lift into falsetto mid-word. Pushing chest to chase the high notes is the wrong instinct here, since the placement needs to get narrower rather than bigger."
   },
   {
     "slug": "adele",
@@ -4306,7 +4306,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Compact soprano with huge lung pressure: sirening mixed belts, pop-rock grit and dolphin-high whistle flourishes.",
-    "technique": "G.E.M. compresses hard: a small frame producing big subglottal pressure, with a mixed belt that stays chest-heavy up to G#5 and a fast vibrato that kicks in under load. Verses sit low and husky near D3, sung close to the mic. Above the belt she releases either into clear head tone or a piercing whistle that can spike to F6. Runs are rhythmic and squared-off rather than gospel-loose. Copying her belt without her breath compression shreds consistency within a single chorus."
+    "technique": "G.E.M. sings big from a small frame: a mixed belt that stays chest-heavy up to G#5 and a fast vibrato that kicks in under load. Verses sit low and husky near D3, sung close to the mic. Above the belt she releases either into clear head tone or a piercing whistle that can spike to F6. Runs are rhythmic and squared-off rather than gospel-loose. Copying her belt by pushing harder instead of matching her steady support shreds consistency within a single chorus."
   },
   {
     "slug": "garth-brooks",
@@ -7756,7 +7756,7 @@ export const SINGERS: Singer[] = [
     "lowSource": "Big Dog",
     "highSource": "Night Life",
     "blurb": "Muscular soul-rock tenor; grit-edged belts and smooth low verses in one instrument.",
-    "technique": "Compression gives the voice its muscle: a tight chest-mix with grit at the edges and a forward placement. He belts high on narrow vowels, keeping the sound punchy rather than wide, then releases into smoother low verses with barely any vibrato. Phrases start on the breath and finish clipped. Students copying the belt usually oversqueeze the throat; his intensity comes from breath pressure against a steady fold seal, not from neck tension."
+    "technique": "Compression gives the voice its muscle: a tight chest-mix with grit at the edges and a forward placement. He belts high on narrow vowels, keeping the sound punchy rather than wide, then releases into smoother low verses with barely any vibrato. Phrases start on the breath and finish clipped. Students copying the belt usually oversqueeze the throat; his intensity comes from a focused, ringing tone on steady breath, not from neck tension."
   },
   {
     "slug": "louis-armstrong",
@@ -11786,7 +11786,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Dark, thick contralto that stays in chest; builds by adding weight rather than climbing higher.",
-    "technique": "Weight, not height, is how the build happens. The voice sits dark and thick through the F5 belt, vowels kept round and back, and intensity grows by adding body and repeating a phrase rather than climbing toward the A5. Onsets are firm without being harsh, and vibrato arrives late on the sustains. The trap is shouting; add depth and breath pressure gradually and keep the larynx settled as the volume rises."
+    "technique": "Weight, not height, is how the build happens. The voice sits dark and thick through the F5 belt, vowels kept round and back, and intensity grows by adding body and repeating a phrase rather than climbing toward the A5. Onsets are firm without being harsh, and vibrato arrives late on the sustains. The trap is shouting; add depth and volume gradually on steady support and keep the larynx settled as the volume rises."
   },
   {
     "slug": "tate-mcrae",
@@ -12676,7 +12676,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Bright R&B soprano: compressed belts, clean head-voice peaks, and a documented whistle top above the staff.",
-    "technique": "An R&B-schooled soprano who treats registers as one continuous hallway: chest stays bright and compressed, the mix carries belts toward G#5, and head voice takes over cleanly rather than thinning out. Her runs are counted, landing on chord tones, and she shades dynamics inside single syllables. The common copying mistake is shouting the belt; Wendy leans on breath compression and narrow vowels, which is why the top stays ringing instead of spread."
+    "technique": "An R&B-schooled soprano who treats registers as one continuous hallway: chest stays bright and compressed, the mix carries belts toward G#5, and head voice takes over cleanly rather than thinning out. Her runs are counted, landing on chord tones, and she shades dynamics inside single syllables. The common copying mistake is shouting the belt; Wendy leans on steady support and narrow vowels, which is why the top stays ringing instead of spread."
   },
   {
     "slug": "whitney-houston",
