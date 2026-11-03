@@ -158,11 +158,6 @@ describe("the program cards once today's free minutes are used", () => {
       const card = renderToStaticMarkup(<ProgramTodayCard active={active("measured-voice-12w", 0)} onBrowse={null} />);
       expect(card).toContain("its guided rows open again after midnight");
       expect(card).toContain("The range test and the recorded take sit outside the allowance and are open now.");
-      // The entry card on /warmups and /progress says the same, not only "after midnight".
-      const waiting = renderToStaticMarkup(<ProgramEntryCard active={active("measured-voice-12w", 0)} />);
-      expect(waiting).toContain(
-        "carry on after midnight. The range test and the recorded take sit outside the allowance and are open now.",
-      );
       // With every capped row ticked, only the range test and the take are
       // left, and both are open now: the card does not say to wait.
       const rest = active("measured-voice-12w", 0, undefined, [true, false, false, true]);

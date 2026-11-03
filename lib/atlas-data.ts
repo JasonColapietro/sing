@@ -2094,7 +2094,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Rock, metal and alternative",
     "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades: where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
     "free": false,
-    "words": 5120,
+    "words": 5116,
     "body": "No genre generated more range mythology than classic rock, and no chapter of this atlas asks for more care in reading its figures. The wailers here — the multi-octave figures fans argue about at pub volume — earned their reputations with real, documented extremes, but the entries are careful about *mechanism*: a great deal of rock's famous altitude is reinforced falsetto, head voice driven hard, or one-off screams captured live, not chest voice defying physics. Where an entry gives a full-voice ceiling, it tells you which was which; many entries give none, and for those the technique paragraph is the better guide.\n\nThe other half of the chapter belongs to the baritones — the art-rockers, the gravel merchants, the frontmen who made menace and character do the work of altitude. Their entries carry most of this chapter's borrowable technique, because their tools transfer: phrasing against the band, vowel theatre, controlled rasp built across a phrase. The wailers' tools mostly do not transfer, which their own entries say plainly.\n\nA pattern worth noticing across both camps: the long careers in this chapter belong overwhelmingly to singers whose entries describe *distributed* effort — grit that rides on support, peaks rationed per set, intensity built on steady breath rather than detonated in the throat. The short careers cluster on the other side of that line. Rock mythology celebrates abandon; rock longevity, on the evidence of these pages, was always a technician's game wearing abandon as a costume.",
     "entries": [
       {
@@ -2434,7 +2434,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Gettin' Tighter",
         "highSource": "Mistreated",
         "blurb": "Funk-schooled rock voice swinging from smoky lows to piercing full-throated screams.",
-        "technique": "Register agility defines the instrument: he moves between smoky low crooning, gospel-inflected runs, and full-throated screams inside a single phrase. The belt is carried extremely high on intense twang and breath pressure, with falsetto reserved for color above it. Runs are rhythmically exact, funk-schooled, never smeared. Vibrato widens with volume. The trap for imitators is chasing the screams cold; he approaches extremes through years of mixed coordination, and copying the top without that scaffolding shreds tone instantly.",
+        "technique": "Register agility defines the instrument: he moves between smoky low crooning, gospel-inflected runs, and full-throated screams inside a single phrase. The belt is carried extremely high on intense twang and a narrowed vowel, with falsetto reserved for color above it. Runs are rhythmically exact, funk-schooled, never smeared. Vibrato widens with volume. The trap for imitators is chasing the screams cold; he approaches extremes through years of mixed coordination, and copying the top without that scaffolding shreds tone instantly.",
         "span": "4 octaves"
       },
       {
@@ -2604,7 +2604,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "Big Dog",
         "highSource": "Night Life",
         "blurb": "Muscular soul-rock tenor; grit-edged belts and smooth low verses in one instrument.",
-        "technique": "Compression gives the voice its muscle: a tight chest-mix with grit at the edges, driven by firm glottal closure and forward placement. He belts high on narrow vowels, keeping the sound punchy rather than wide, then releases into smoother low verses with barely any vibrato. Phrases start on the breath and finish clipped. Students copying the belt usually oversqueeze the throat; his intensity comes from breath pressure against a steady fold seal, not from neck tension.",
+        "technique": "Compression gives the voice its muscle: a tight chest-mix with grit at the edges and a forward placement. He belts high on narrow vowels, keeping the sound punchy rather than wide, then releases into smoother low verses with barely any vibrato. Phrases start on the breath and finish clipped. Students copying the belt usually oversqueeze the throat; his intensity comes from breath pressure against a steady fold seal, not from neck tension.",
         "span": "3 octaves + 10"
       },
       {
@@ -2757,7 +2757,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": "If You Wanna Be Bad, You Gotta Be Good (live)",
         "highSource": "Victim of Love",
         "blurb": "Sandpaper rasp over a bright tenor core; gritty mid-register drive that stays tuneful at full throttle.",
-        "technique": "The rasp rides on top of a clean tenor placement, not inside it; he compresses at the fold level and lets distortion bloom only on stressed syllables. Onset is glottal and percussive, vibrato narrow and late. Phrases are short, consonant-driven, punched from the chest with a lifted soft palate. Students copying him usually manufacture the grit in the throat, which chokes the tone; the growl has to sit over a supported, forward mix or it collapses into strain.",
+        "technique": "The rasp rides on top of a clean tenor placement, not inside it; he keeps the tone clean and lets distortion bloom only on stressed syllables. Onset is glottal and percussive, vibrato narrow and late. Phrases are short, consonant-driven, punched from the chest with a lifted soft palate. Students copying him usually manufacture the grit in the throat, which chokes the tone; the growl has to sit over a supported, forward mix or it collapses into strain.",
         "span": "4 octaves + 1"
       },
       {
@@ -3847,7 +3847,7 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Rock, metal and alternative",
     "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
     "free": false,
-    "words": 3151,
+    "words": 3152,
     "body": "Metal is where rock's altitude arms race went professional. The air-raid sirens in this chapter sustain pitches, night after night, that classic rock visited on special occasions — and the entries make clear how: this is trained singing, head voice and reinforced mix developed with an athlete's discipline, far closer to operatic production than the leather suggests. The genre even reimported opera directly, in the symphonic wing's classically schooled sopranos, making this the one chapter where conservatory technique and blast beats share a stage.\n\nThe other pole is the low theatre: growls, screams and bass-baritone menace. The sustainable versions documented here are false-cord techniques — noise generated above the folds while the instrument underneath stays healthy — and the entries treat them as the skilled work they are. Between the poles sit the shape-shifters who cover the whole map in one set, clean to brutal and back, which may be the most complete technical package in modern singing.\n\nTwo things to take from this chapter even if you never sing a note of metal. First, vowel discipline: extreme range at extreme volume forces narrow, consistent vowels, and every entry's altitude depends on them. Second, the scheduling: metal singers tour harder than almost anyone, and the durable ones ration their extremes with actuarial precision — the highest scream and the lowest growl appear where the set needs them, not wherever enthusiasm strikes. That is the safety chapter's whole argument, demonstrated at the sport's highest level.",
     "entries": [
       {
@@ -4204,7 +4204,7 @@ export const ATLAS: AtlasChapter[] = [
         "lowSource": null,
         "highSource": "Beast and the Harlot",
         "blurb": "Gritty baritone snarl that rides metalcore riffs with a chesty rasp and surprisingly agile high belts.",
-        "technique": "A dense, chesty mix drives this voice: baritone weight carried to C5 with a rasp added at the fold level, not layered on afterward. He compresses hard, keeping the larynx stable while grit rides the tone's edge. Falsetto up to A5 appears only in distant overdubs. Phrasing is riff-locked and consonant-forward, with short, punched onsets. Singers imitating him squeeze the throat to fake the rasp and shred their tone; the distortion works because the underlying mix stays balanced and the air stays compressed, never breathy.",
+        "technique": "A dense, chesty mix drives this voice: baritone weight carried to C5 with a rasp riding the tone's edge. He keeps the larynx stable and the grit at the edges rather than in the core of the sound. Falsetto up to A5 appears only in distant overdubs. Phrasing is riff-locked and consonant-forward, with short, punched onsets. Singers imitating him squeeze the throat to fake the rasp and shred their tone; the distortion works because the underlying mix stays balanced and the air stays compressed, never breathy.",
         "span": "3 octaves + 7"
       },
       {
@@ -12092,7 +12092,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Rock, metal and alternative",
     "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades: where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
     "free": false,
-    "words": 5120,
+    "words": 5116,
     "singers": [
       {
         "slug": "little-richard",
@@ -12832,7 +12832,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Rock, metal and alternative",
     "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
     "free": false,
-    "words": 3151,
+    "words": 3152,
     "singers": [
       {
         "slug": "ozzy-osbourne",
@@ -15949,4 +15949,4 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
     [],
   );
 
-export const ATLAS_WORDS = 70756;
+export const ATLAS_WORDS = 70753;

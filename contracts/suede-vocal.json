@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it: the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 70756,
+      "totalWords": 70753,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -3023,7 +3023,7 @@
           "part": "Rock, metal and alternative",
           "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades: where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
           "free": false,
-          "words": 5120,
+          "words": 5116,
           "path": "/atlas/the-classic-rock-men"
         },
         {
@@ -3053,7 +3053,7 @@
           "part": "Rock, metal and alternative",
           "summary": "Air-raid tenors, operatic sopranos and controlled growls: trained singing at rock volume, and why metal singing is closer to opera than either camp admits.",
           "free": false,
-          "words": 3151,
+          "words": 3152,
           "path": "/atlas/metal"
         },
         {
