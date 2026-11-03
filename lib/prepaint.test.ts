@@ -12,11 +12,16 @@ import { POP_SONGS, popFit } from "./pop-songs";
 import {
   addDays,
   dayNeedsPro,
+  earliestNext,
   isRestDay,
+  itemEvidence,
+  itemIsCapped,
+  matchDay,
   programById,
   programToday,
   reconcileProgress,
   reviveProgress,
+  sessionsForRun,
 } from "./programs";
 import {
   PREPAINT_CAPPED_TYPES,
@@ -159,7 +164,10 @@ describe("pre-paint state: a saved range", () => {
  * rest days complete themselves), programToday, then the cards' paywall and
  * cap rules.
  */
-function expectedTokens(raw: unknown, opts: { isPro?: boolean; capped?: boolean } = {}): string | null {
+function expectedTokens(
+  raw: unknown,
+  opts: { isPro?: boolean; capped?: boolean; sessions?: SessionLog[] } = {},
+): string | null {
   const stored = reviveProgress(raw);
   const program = programById(stored?.programId);
   if (!stored || !program) return null;
@@ -178,7 +186,14 @@ function expectedTokens(raw: unknown, opts: { isPro?: boolean; capped?: boolean 
   } else {
     tokens.push("todo");
     if (programDayNeedsPro({ program, view }, Boolean(opts.isPro))) tokens.push("locked");
-    else if (opts.capped) tokens.push("waits");
+    else if (opts.capped) {
+      tokens.push("waits");
+      // components/programs/today-card.tsx openUncappedRows, from the rows
+      // components/programs/use-program.ts ticks.
+      const day = program.days[view.index];
+      const done = matchDay(day, sessionsForRun(reconciled, opts.sessions ?? []), TODAY, earliestNext(reconciled)).items;
+      if (day.items.some((item, i) => !done[i] && !itemIsCapped(item))) tokens.push("waits-open");
+    }
   }
   return tokens.join(" ");
 }
@@ -241,8 +256,9 @@ describe("pre-paint state: the running program", () => {
       const stored = raw === null ? {} : { [PROGRAM_STORAGE_KEY]: raw };
       expect(state(stored).program).toBe(expectedTokens(raw));
       expect(state({ ...stored, [PRO_STORAGE_KEY]: { active: true } }).program).toBe(expectedTokens(raw, { isPro: true }));
-      const capped = { ...stored, [PROGRESS_STORAGE_KEY]: progress(session("warmup", 330)) };
-      expect(state(capped).program).toBe(expectedTokens(raw, { capped: true }));
+      const cap = session("warmup", 330);
+      const capped = { ...stored, [PROGRESS_STORAGE_KEY]: progress(cap) };
+      expect(state(capped).program).toBe(expectedTokens(raw, { capped: true, sessions: [cap] }));
     });
   }
 
@@ -266,6 +282,43 @@ describe("pre-paint state: the running program", () => {
     expect(at(finished("recovery-week"))).toBe("finished recovery-week");
     // The CI seed's state is unchanged.
     expect(at(finished("measured-voice-12w"))).toBe("finished book");
+  });
+
+  it("adds waits-open while a waiting day still has a range test or a recorded take to do", () => {
+    const cap = session("warmup", 330);
+    const at = (raw: unknown, ...more: SessionLog[]) =>
+      state({ [PROGRAM_STORAGE_KEY]: raw, [PROGRESS_STORAGE_KEY]: progress(cap, ...more) }).program;
+    // Day 1 of Foundations holds the range test; of The Measured Voice, the
+    // range test and a recorded take.
+    const foundations = record("foundations-2w", 0, []);
+    const book = record("measured-voice-12w", 0, []);
+    expect(at(foundations)).toBe("todo waits waits-open");
+    expect(at(book)).toBe("todo waits waits-open");
+    // Not capped, or Pro: the day does not wait, so nothing is open "now".
+    expect(state({ [PROGRAM_STORAGE_KEY]: foundations }).program).toBe("todo");
+    expect(
+      state({ [PROGRAM_STORAGE_KEY]: book, [PROGRESS_STORAGE_KEY]: progress(cap), [PRO_STORAGE_KEY]: { active: true } }).program,
+    ).toBe("todo");
+    // A day with no such row keeps the plain "waits" (Foundations day 2).
+    expect(at(record("foundations-2w", 1, [[0, 1]]))).toBe("todo waits");
+    // The log already shows the row: one session of its type pays for one row.
+    expect(at(foundations, session("range", 60))).toBe("todo waits");
+    expect(at(book, session("range", 60))).toBe("todo waits waits-open");
+    expect(at(book, session("range", 60), session("recording", 30))).toBe("todo waits");
+    expect(at(book, session("range", 60), session("range", 61))).toBe("todo waits waits-open");
+    // Only from the day after the last completion (here, the start) and since
+    // the run started: practice before it does not count.
+    const started = record("foundations-2w", 1, []);
+    expect(at(started, session("range", 60, ago(1)))).toBe("todo waits");
+    expect(at(started, session("range", 60, ago(2)))).toBe("todo waits waits-open");
+    const late = { ...foundations, startedAt: `${TODAY}T23:00:00.000Z` };
+    expect(at(late, session("range", 60))).toBe("todo waits waits-open");
+    // Behind the paywall the day asks for Pro instead.
+    expect(at(record("mix-4w", 7, [0, 1, 2, 3, 4, 5, 6].map((i) => [i, 7 - i] as [number, number])))).toBe("todo locked");
+    // Each agrees with the card's own rows.
+    for (const [raw, more] of [[foundations, []], [book, [session("range", 60)]], [foundations, [session("range", 60)]]] as const) {
+      expect(at(raw, ...more)).toBe(expectedTokens(raw, { capped: true, sessions: [cap, ...more] }));
+    }
   });
 
   it("covers the states the CI layout-shift run seeds", () => {
@@ -293,15 +346,25 @@ describe("pre-paint state: the running program", () => {
   });
 
   it("lists every program, its length, its rest days and its finished card's token", () => {
-    for (const [id, [pro, length, rest, finished]] of Object.entries(PREPAINT_CONFIG.programs)) {
+    for (const [id, [pro, length, rest, finished, open]] of Object.entries(PREPAINT_CONFIG.programs)) {
       const program = programById(id)!;
       expect(pro === 1).toBe(program.pro);
       expect(finished).toBe(program.chapters ? "book" : id);
       // Never one of the status tokens it sits beside.
-      expect(["todo", "done", "finished", "rest", "locked", "next-locked", "waits"]).not.toContain(finished);
+      expect(["todo", "done", "finished", "rest", "locked", "next-locked", "waits", "waits-open"]).not.toContain(finished);
       expect(length).toBe(program.days.length);
       expect(rest.every((i) => isRestDay(program.days[i]))).toBe(true);
       expect(program.days.filter(isRestDay)).toHaveLength(rest.length);
+      // Per day, the activity each row outside the cap logs, as the card's
+      // own matching reads it (one session of that type ticks the row).
+      const want = Object.fromEntries(
+        program.days.flatMap((d, i) => {
+          const rows = d.items.filter((item) => !itemIsCapped(item));
+          return rows.length ? [[String(i), rows.map((item) => itemEvidence(item)[0].type)]] : [];
+        }),
+      );
+      expect(open, id).toEqual(want);
+      for (const rows of Object.values(open)) for (const type of rows) expect(PREPAINT_CAPPED_TYPES).not.toContain(type);
     }
     expect(addDays(TODAY, 0)).toBe(TODAY);
   });
@@ -472,6 +535,14 @@ describe("the inline script", () => {
     });
     expect(attrs).toEqual({ "data-sing-plan": "capped", "data-sing-program": "todo waits" });
     expect(global).toMatchObject({ plan: "capped", freeLeft: "0:00" });
+  });
+
+  it("marks a waiting day whose range test is still open", () => {
+    const { attrs } = run({
+      [PROGRESS_STORAGE_KEY]: progress(session("warmup", 330)),
+      [PROGRAM_STORAGE_KEY]: record("measured-voice-12w", 0, []),
+    });
+    expect(attrs).toEqual({ "data-sing-plan": "capped", "data-sing-program": "todo waits waits-open" });
   });
 
   it("leaves the program attribute off with no program", () => {

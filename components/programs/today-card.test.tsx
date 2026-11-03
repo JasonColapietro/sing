@@ -113,6 +113,34 @@ describe("the program entry card on a day that needs Pro", () => {
     expect(html).toContain("needs Pro");
     expect(html).toMatch(UNLOCK);
   });
+
+  /** The filled (violet) buttons and links in a card's markup, by their text. */
+  const filled = (html: string) =>
+    [...html.matchAll(/<(?:a|button)\b[^>]*class="[^"]*\bbg-violet-ink\b[^"]*"[^>]*>(.*?)<\/(?:a|button)>/g)].map((m) => m[1]);
+
+  it("makes the priced unlock the one filled action, the calendar quiet", () => {
+    plan.pro = false;
+    plan.ready = true;
+    const price = formatPrice(PRICING.lifetime.amount);
+    for (const capped of [false, true]) {
+      capState.capped = capped;
+      try {
+        const entry = renderToStaticMarkup(<ProgramEntryCard active={active("mix-4w", firstPaid)} />);
+        expect(filled(entry)).toEqual([`Unlock day ${firstPaid + 1} with Pro: ${price} once`]);
+        // No second Pro ask in the card, priced or not.
+        expect(entry.match(/href="\/pro[#"]/g)).toHaveLength(1);
+        const card = renderToStaticMarkup(
+          <ProgramTodayCard active={active("measured-voice-12w", firstPaid)} onBrowse={() => {}} />,
+        );
+        expect(filled(card)).toEqual([`Unlock with Pro: ${price} once`]);
+        expect(card.match(/href="\/pro[#"]/g)).toHaveLength(1);
+        expect(card).toContain("See the whole calendar");
+        expect(card).not.toContain("Mark day");
+      } finally {
+        capState.capped = false;
+      }
+    }
+  });
 });
 
 describe("the program cards once today's free minutes are used", () => {
@@ -122,7 +150,9 @@ describe("the program cards once today's free minutes are used", () => {
     capState.capped = true;
     try {
       const entry = renderToStaticMarkup(<ProgramEntryCard active={active("foundations-2w", 3)} />);
-      expect(entry).toContain("carry on after midnight");
+      expect(entry).toContain("carry on after midnight.</p>");
+      // A day with no range test or take names nothing as open now.
+      expect(entry).not.toContain("open now");
       expect(entry).toContain("See today’s plan");
       expect(entry).not.toContain("Open today’s plan");
       expect(entry).toContain("0 of 3 done");
@@ -158,6 +188,18 @@ describe("the program cards once today's free minutes are used", () => {
       const card = renderToStaticMarkup(<ProgramTodayCard active={active("measured-voice-12w", 0)} onBrowse={null} />);
       expect(card).toContain("its guided rows open again after midnight");
       expect(card).toContain("The range test and the recorded take sit outside the allowance and are open now.");
+      // The entry card on /warmups and /progress says the same, after its
+      // own line; its pre-paint slot is sized for it ("waits-open").
+      expect(renderToStaticMarkup(<ProgramEntryCard active={active("measured-voice-12w", 0)} />)).toContain(
+        "carry on after midnight. The range test and the recorded take sit outside the allowance and are open now.",
+      );
+      expect(renderToStaticMarkup(<ProgramEntryCard active={active("foundations-2w", 0)} />)).toContain(
+        "carry on after midnight. The range test sits outside the allowance and is open now.",
+      );
+      // With the range test ticked, only the take is named.
+      expect(
+        renderToStaticMarkup(<ProgramEntryCard active={active("measured-voice-12w", 0, undefined, [false, true, false, false])} />),
+      ).toContain("carry on after midnight. The recorded take sits outside the allowance and is open now.");
       // With every capped row ticked, only the range test and the take are
       // left, and both are open now: the card does not say to wait.
       const rest = active("measured-voice-12w", 0, undefined, [true, false, false, true]);
