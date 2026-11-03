@@ -32,7 +32,7 @@ import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import {
   endpointMates,
-  keyboardNeighbors,
+  pageNeighbors,
   keyboardParagraphs,
   sharedSemitones,
   similarRangeAnswer,
@@ -290,7 +290,7 @@ export default async function SingerPage({
   const labelSettled = !hasReviewedVoiceTypeCorrection(s) && !evidenceContestsCatalogLabel(s.slug);
   const keyboard = keyboardParagraphs(s);
   const typeComparison = voiceTypeParagraphs(s, labelSettled);
-  const neighbors = keyboardNeighbors(s);
+  const neighbors = pageNeighbors(s);
   const fittingSongs = songsInRange(s);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
@@ -787,14 +787,14 @@ export default async function SingerPage({
               )}
             </div>
           )}
-          {/* Nearest floors on the keyboard: a shifting window, so every profile is linked from others. */}
+          {/* Nearest floors on the keyboard, skipping the similar-voice cards: every profile stays linked from others. */}
           {neighbors.length > 0 && (
             <div className="mt-6">
               <h3 className="text-base">
                 Nearest reported floors to {midiToLabel(s.lowMidi)}
               </h3>
               <p className="mt-1 text-sm text-mut">
-                The catalog ordered by lowest note, then highest: the voices on either side of {s.name}.
+                The catalog ordered by lowest note, then highest: the nearest voices on either side of {s.name} not already listed above.
               </p>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {neighbors.map((m) => (

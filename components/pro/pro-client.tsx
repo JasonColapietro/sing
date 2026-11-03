@@ -676,6 +676,12 @@ export function ProClient() {
     );
   }, [endingAsCached]);
   const lapsing = offersLifetimeBeforeLapse(pro, endingCheckedFrom);
+  // A subscriber whose plan is ending is only known after the forced recheck,
+  // which can land after the cancelled return's first scroll: their note and
+  // buy button then move into the card, so bring them into view again.
+  useEffect(() => {
+    if (returnNote === "cancelled" && lapsing) revealBuy();
+  }, [returnNote, lapsing]);
   const showPurchaseOptions = !pro.active || onPass || lapsing;
   // Someone was charged and confirmation failed. Until that is sorted, the
   // page must not offer them a second $79 button under "your payment went
@@ -1144,10 +1150,11 @@ export function ProClient() {
               )}
             </div>
           )}
-          {returnNote === "cancelled" && (
-            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
-              Checkout cancelled. Nothing was charged, and the free studio is
-              exactly where you left it.
+          {returnNote === "cancelled" && !(onPass || lapsing) && (
+            <p role="status" className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
+              {pro.active
+                ? "Checkout cancelled. Nothing was charged, and your Pro access is unchanged."
+                : "Checkout cancelled. Nothing was charged, and the free studio is exactly where you left it."}
             </p>
           )}
           {/* A success address with no usable session id: nothing to confirm,
@@ -1279,6 +1286,16 @@ export function ProClient() {
                     )}
                     {(onPass || lapsing) && (
                       <div id="buy-keep" className="mt-2">
+                        {/* Beside the button their cancelled return lands on,
+                            so the note is on screen and announced. */}
+                        {returnNote === "cancelled" && (
+                          <p
+                            role="status"
+                            className="mb-3 rounded-lg border border-line2 bg-panel px-3 py-2 text-center text-sm text-mut"
+                          >
+                            Checkout cancelled. Nothing was charged, and your Pro access is unchanged.
+                          </p>
+                        )}
                         {buyControls(
                           lifetimePurchase
                             ? `Keep Pro for life: ${price} once`

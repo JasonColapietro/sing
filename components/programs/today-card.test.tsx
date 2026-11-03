@@ -328,6 +328,10 @@ describe("restarting a finished program", () => {
     );
     expect(html).toContain("Restart from day 1");
     expect(html).toContain("data-program-readings");
+    // Dates read as the rest of the app shows them, not as day keys.
+    expect(html).toContain(">Sep 1<");
+    expect(html).toContain(">Sep 14<");
+    expect(html).not.toContain("2026-09-01");
   });
 
   it("keeps the finished run when the singer says no, and starts a new one on yes", () => {
