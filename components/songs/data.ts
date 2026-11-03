@@ -697,14 +697,12 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // The Londonderry Air in C, as Petrie printed it (1855) and as Danny Boy
-    // is published: a stepwise pickup from the leading tone (B3 C4 D4) to the
-    // mediant on "boy," a whole step down and back, a 4th up to A4 on the
-    // second "the", then G4 and E4 on "pipes are", "call-" on D4 (re), and a
-    // 4th down to A3 on "-ing" (ti-do-re | mi re mi la so mi re la). "Call-"
-    // is a slurred D4–C4 pair; the C4 is left out, one note per syllable as
-    // elsewhere in the book. Span 12 st (A3–A4), a full octave, so "wide
-    // range"; two leaps, Hard.
+    // The Londonderry Air in C: a pickup from the dominant below (G3 A3 B3)
+    // to the tonic on "boy," a semitone down and back, a 4th up to F4 on the
+    // second "the", down to C4 on "are", then "call-" on D4 and a 4th down to
+    // A3 on "-ing" (so-la-ti | do ti do fa mi do re la). "Call-" is a slurred
+    // D4–C4 pair; the C4 is left out, one note per syllable as elsewhere in
+    // the book. Span 10 st (G3–F4).
     id: "danny-boy",
     slug: "danny-boy",
     title: "Danny Boy",
@@ -719,17 +717,18 @@ export const SONGS: Song[] = [
     genre: "Folk",
     era: "1800s",
     language: "English",
-    tags: ["ballad", "wide range", "legato"],
+    // Spans G3 to F4 (10 semitones), under an octave, so not "wide range".
+    tags: ["ballad", "legato"],
     notes: [
-      { midi: 59, startBeat: 0, durBeats: 1, lyric: "Oh" },
-      { midi: 60, startBeat: 1, durBeats: 1, lyric: "Dan", wordEnd: false },
-      { midi: 62, startBeat: 2, durBeats: 1, lyric: "ny" },
-      { midi: 64, startBeat: 3, durBeats: 2, lyric: "boy," },
-      { midi: 62, startBeat: 5, durBeats: 1, lyric: "the" },
-      { midi: 64, startBeat: 6, durBeats: 1, lyric: "pipes," },
-      { midi: 69, startBeat: 7, durBeats: 1, lyric: "the" },
-      { midi: 67, startBeat: 8, durBeats: 1, lyric: "pipes" },
-      { midi: 64, startBeat: 9, durBeats: 1, lyric: "are" },
+      { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh" },
+      { midi: 57, startBeat: 1, durBeats: 1, lyric: "Dan", wordEnd: false },
+      { midi: 59, startBeat: 2, durBeats: 1, lyric: "ny" },
+      { midi: 60, startBeat: 3, durBeats: 2, lyric: "boy," },
+      { midi: 59, startBeat: 5, durBeats: 1, lyric: "the" },
+      { midi: 60, startBeat: 6, durBeats: 1, lyric: "pipes," },
+      { midi: 65, startBeat: 7, durBeats: 1, lyric: "the" },
+      { midi: 64, startBeat: 8, durBeats: 1, lyric: "pipes" },
+      { midi: 60, startBeat: 9, durBeats: 1, lyric: "are" },
       { midi: 62, startBeat: 10, durBeats: 2, lyric: "call", wordEnd: false },
       { midi: 57, startBeat: 12, durBeats: 2, lyric: "ing" },
     ],

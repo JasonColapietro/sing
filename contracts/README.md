@@ -669,6 +669,31 @@ unchanged:
 What the other apps must do: re-sync `suede-vocal.json` and
 `suede-voice-curriculum.json` byte for byte. Nothing else changes.
 
+#### Editorial and value changes inside v9 (2026-11-03, rounds 22 to 26 and the final pass)
+
+No key was added or renamed, so `version` stays 9:
+
+- `editorial`: word counts moved with the text edits of rounds 22 to 26 and
+  the final pass, which also removed every em dash from the paid book and
+  atlas prose. Book `totalWords` 32430, atlas `totalWords` 70650; the
+  per-chapter `words` values moved with them.
+- `editorial` atlas chapter 22: the slug is now `musical-theater` (was
+  `musical-theatre`), its `path` is `/atlas/musical-theater` and its `title`
+  is "Musical theater" (American spelling). The old URL answers with a
+  permanent redirect. The singer genre label is now "Musical Theater", and the
+  genre hub moved to `/singers/genre/musical-theater` the same way.
+- `suede-progress.json` `streak.definition`: a scheduled rest day of the
+  active program that the singer reached is a bridge. It neither adds a day
+  nor breaks the run, and `lastDay` can be that rest day.
+- `suede-voice-curriculum.json`: the Blue Thirds and Sevenths objective now
+  reads "Land them deliberately, and bend up from the flat 3 on purpose,
+  rather than arriving flat." (round 24).
+
+What the other apps must do: re-sync the files, and treat the atlas chapter's
+new slug and path as the canonical ones (the old ones redirect). Apps that
+compute a streak from their own session list should treat a reached program
+rest day as a bridge, as the definition now says.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

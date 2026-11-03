@@ -729,7 +729,7 @@ describe("songbook transcriptions", () => {
   it("transcribes the corrected folk melodies", () => {
     const midis = (slug: string) => songBySlug(slug)!.notes.map((n) => n.midi);
     expect(midis("london-bridge-is-falling-down").slice(-3)).toEqual([64, 65, 67]);
-    expect(midis("danny-boy")).toEqual([59, 60, 62, 64, 62, 64, 69, 67, 64, 62, 57]);
+    expect(midis("danny-boy")).toEqual([55, 57, 59, 60, 59, 60, 65, 64, 60, 62, 57]);
     const danny = songBySlug("danny-boy")!;
     expect(danny.notes.find((n) => n.lyric === "call")!.midi).toBe(62);
     expect(midis("yankee-doodle")).toEqual([60, 60, 62, 64, 60, 64, 62, 55, 60, 60, 62, 64, 60, 59]);
@@ -741,9 +741,10 @@ describe("songbook transcriptions", () => {
     const yankee = computeDifficulty(songBySlug("yankee-doodle")!);
     expect(yankee).toEqual({ label: "Hard", rangeSemis: 9, leaps: 5, score: 14 });
     expect(bandForSong(songBySlug("yankee-doodle")!)).toBe("hard");
-    // Danny Boy spans A3 to A4 with two leaps: 12 + round(2 / 10 * 12) = 14.
+    // Danny Boy (the Londonderry Air in C, G3 to F4) has three leaps:
+    // 10 + round(3 / 10 * 12) = 14. "Call-" is D4.
     const danny = computeDifficulty(songBySlug("danny-boy")!);
-    expect(danny).toEqual({ label: "Hard", rangeSemis: 12, leaps: 2, score: 14 });
+    expect(danny).toEqual({ label: "Hard", rangeSemis: 10, leaps: 3, score: 14 });
     expect(bandForSong(songBySlug("danny-boy")!)).toBe("hard");
   });
 });
