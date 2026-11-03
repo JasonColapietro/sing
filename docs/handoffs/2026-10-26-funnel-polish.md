@@ -472,3 +472,23 @@ numbers: the same caveat sentences with values swapped in.
 - Built site: median 1,091 visible words per profile (min 936), median
   page-unique 6-word sequences 132 to 242.
 - Guard: lib/singer-range-profile.test.tsx renders all 636 profiles.
+
+## Comparison pages, 2026-11-03
+
+Branch `seo/vs-and-alternatives-pages` off `main` at `e9f82b2`.
+
+- New hub `/compare` and, per competitor, `/compare/suede-sing-vs-<x>` and
+  `/compare/<x>-alternatives` for Yousician, Singing Carrots, Smule, Simply
+  Sing, Singeo and Sing Sharp (12 pages plus the hub). All copy and facts live
+  in `lib/comparisons.ts`; shared table, FAQ, breadcrumb and JSON-LD pieces in
+  `components/compare/parts.tsx`.
+- Every competitor fact was checked on 2026-11-03 against the source URLs
+  stored beside it (own site, help center or store listing), and every price
+  prints "as of November 2026". Vanido and Erol Singer's Studio were left out:
+  no first-party source for current platform or price.
+- Wired in: sitemap (lastmod 2026-11-03), llms.txt "Comparisons" section and
+  llms-full.txt facts with sources, footer link "Compare singing apps" (the
+  column heading is now "More from Suede AI"), homepage links under the
+  comparison table, keyword maps (`vsKeywords`, `alternativesKeywords`).
+- Guard: `lib/comparisons.test.tsx`. Recheck competitor prices before
+  changing COMPARISONS_CHECKED; prices move often.

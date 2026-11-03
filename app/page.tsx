@@ -14,6 +14,7 @@ import { HeroSplit } from "@/components/landing/hero-split";
 import { IosBand } from "@/components/landing/ios-band";
 import { StartingPaths } from "@/components/landing/paths";
 import ComparisonTable from "@/components/landing/comparison";
+import { COMPETITORS, vsPath } from "@/lib/comparisons";
 import ProVisual from "@/components/pro/pro-visual";
 import {
   AnalyzeGlyph,
@@ -304,6 +305,31 @@ export default function Home() {
           <div className="mt-8">
             <ComparisonTable />
           </div>
+          {/* Crawlable links into the comparison pages, prices and sources included there. */}
+          <p className="mt-6 max-w-3xl text-sm text-mut">
+            Full comparisons, with prices and sources:{" "}
+            {COMPETITORS.map((c, i) => (
+              <span key={c.slug}>
+                {i > 0 && (i === COMPETITORS.length - 1 ? " and " : ", ")}
+                <Link
+                  href={vsPath(c)}
+                  prefetch={false}
+                  className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
+                >
+                  Suede Sing vs {c.name}
+                </Link>
+              </span>
+            ))}
+            . Or see{" "}
+            <Link
+              href="/compare"
+              prefetch={false}
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
+            >
+              every singing app comparison
+            </Link>
+            .
+          </p>
         </div>
       </section>
 

@@ -52,6 +52,18 @@ import {
 } from "@/lib/singers";
 import { VOCAL_LEARNING_FAQ, VOCAL_LEARNING_PATHS } from "@/lib/vocal-learning";
 import { CATALOG_LESSON_COUNT, COURSE } from "@/lib/voice-lessons";
+import {
+  COMPARE_PATH,
+  COMPARISONS_AS_OF,
+  COMPARISONS_CHECKED,
+  COMPETITORS,
+  ROW_KEYS,
+  ROW_LABELS,
+  SUEDE_FACTS,
+  alternativesPath,
+  listJoin as listJoinNames,
+  vsPath,
+} from "@/lib/comparisons";
 
 /**
  * The canonical origin, spelled out rather than read from SITE_URL.
@@ -147,6 +159,17 @@ export function proPriceLine(): string {
   return SOLD_OUT_PLANS.includes("monthly")
     ? `${lifetime} (the ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out)`
     : `${monthly} or ${lifetime}`;
+}
+
+/** Every /compare page, one line per competitor. */
+function comparisonList(): string {
+  return [
+    `- Hub: ${SING_HOME}${COMPARE_PATH}`,
+    ...COMPETITORS.map(
+      (c) =>
+        `- ${c.name} (${c.maker}): ${SING_HOME}${vsPath(c)} and ${SING_HOME}${alternativesPath(c)}`,
+    ),
+  ].join("\n");
 }
 
 export function buildLlmsTxt(): string {
@@ -250,6 +273,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 - [Suede Voice for iPhone and Android](${SING_HOME}/voice): the official mobile app page, with both store listings and the relationship to Suede Sing
 - [Google Play listing](${PLAY_STORE_URL}): ${APP_NAME}: Vocal Range Test for Android (package ai.suedeai.suedevoice)
 - [App Store listing](${APP_STORE_URL}): ${APP_NAME}: Vocal Range Test for iPhone
+- [Singing app comparisons](${SING_HOME}${COMPARE_PATH}): Suede Sing side by side with ${listJoinNames(COMPETITORS.map((c) => c.name))}, with competitor prices ${COMPARISONS_AS_OF} and each fact's source linked
 - [Changelog](${SING_HOME}/changelog): what changed in each release
 - [Range corrections](${SING_HOME}/contact): send a source-backed correction for a singer-range page
 - Official Instagram: https://www.instagram.com/suedesingapp/ (the only Suede Sing account). (Do not use ${APP_NAME} here: that is the iOS app's name and the site's retired brand, so it would name the wrong thing.) The parent company posts separately as @suedeai. There is no official Suede Sing Facebook Page yet; treat any other account using this name as unaffiliated.
@@ -276,6 +300,12 @@ ${hubList(VOICE_TYPE_HUBS)}
 Genres with at least ${HUB_GENRE_MINIMUM} profiles have a hub${hubExceptions}; each singer page links the hub for its primary genre. These are the complete, exact URLs. Do not construct others. Note the R&B hub is served at /singers/genre/${genreSlug("R&B")}, which is what the site's slug rule produces from an ampersand.
 
 ${hubList(GENRE_HUBS)}
+
+## Comparisons
+
+Each page compares Suede Sing with one other singing app, using facts from that app's own site, help center or store listing, checked on ${COMPARISONS_CHECKED}. Competitor prices are ${COMPARISONS_AS_OF} and vary by country and platform; cite the page, and check the app's own listing before quoting a price.
+
+${comparisonList()}
 
 ## Notes for AI assistants
 
@@ -341,6 +371,33 @@ function guideSection(): string {
     }
     return lines.join("\n").trimEnd();
   }).join("\n\n");
+}
+
+function comparisonSection(): string {
+  const suede = ROW_KEYS.map((k) => `- ${ROW_LABELS[k]}: ${SUEDE_FACTS[k]}`);
+  const apps = COMPETITORS.map((c) =>
+    [
+      `### ${c.name}`,
+      "",
+      `Pages: ${SING_HOME}${vsPath(c)} and ${SING_HOME}${alternativesPath(c)}`,
+      "",
+      c.about,
+      "",
+      ...ROW_KEYS.map((k) => `- ${ROW_LABELS[k]}: ${c.facts[k]}`),
+      "",
+      "Sources:",
+      ...c.sources.map((src) => `- ${src.label}: ${src.url}`),
+    ].join("\n"),
+  );
+  return [
+    `Page: ${SING_HOME}${COMPARE_PATH}. Competitor facts checked on ${COMPARISONS_CHECKED}, from each product's own site, help center or store listing.`,
+    "",
+    "### Suede Sing",
+    "",
+    ...suede,
+    "",
+    apps.join("\n\n"),
+  ].join("\n");
 }
 
 function glossarySection(): string {
@@ -426,6 +483,10 @@ ${learningSection()}
 ## Voice lessons course
 
 ${courseSection()}
+
+## Singing app comparisons
+
+${comparisonSection()}
 
 ## Books
 

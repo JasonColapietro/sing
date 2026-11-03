@@ -14,6 +14,7 @@ import {
   type Singer,
 } from "@/lib/singers";
 import { POP_SONGS } from "@/lib/pop-songs";
+import { COMPARE_PATH, COMPARISONS_CHECKED, comparisonPages } from "@/lib/comparisons";
 import { getSingerPageLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 import { VOICE_LEARN_PATH, coursePaths } from "@/lib/voice-lessons";
@@ -39,6 +40,8 @@ const PAGE_LAST_MODIFIED: Readonly<Record<string, string | undefined>> = {
   // /singers lists every profile in its chart and A-Z index.
   "/singers": latestSingerPageDate(SINGERS),
   "/changelog": CHANGELOG_RELEASE_DATE,
+  // The comparison hub's facts were checked on one recorded date.
+  [COMPARE_PATH]: COMPARISONS_CHECKED,
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -71,6 +74,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/atlas/vocal-range-by-voice-type",
     "/glossary",
     "/changelog",
+    COMPARE_PATH,
     // Both books' free sample chapters are real, indexable content; the gated
     // chapters are robots-noindexed and stay out of the sitemap.
     ...ATLAS_CONTENTS.filter((c) => c.free).map((c) => `/atlas/${c.slug}`),
@@ -152,5 +156,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 
-  return [...pages, ...hubs, ...singers, ...songs, ...popSongs, ...course];
+  // Suede Sing vs <app> and <app> alternatives pages: dated by the day their
+  // competitor facts were checked, which is the date their content changed.
+  const comparisons = comparisonPages().map((p) => ({
+    url: `${SITE_URL}${COMPARE_PATH}/${p.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+    lastModified: COMPARISONS_CHECKED,
+  }));
+
+  return [...pages, ...hubs, ...singers, ...songs, ...popSongs, ...course, ...comparisons];
 }

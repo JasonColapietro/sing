@@ -13,7 +13,10 @@ import {
   singerKeywords,
   singerVoiceTypeKeywords,
   songKeywords,
+  vsKeywords,
+  alternativesKeywords,
 } from "@/lib/keywords";
+import { COMPETITORS } from "@/lib/comparisons";
 import { HUB_GENRES, SINGERS, VOICE_KINDS } from "@/lib/singers";
 import { ALL_SONGS } from "@/components/songs/data";
 import { POP_SONGS } from "@/lib/pop-songs";
@@ -67,6 +70,10 @@ function allPageKeywords(): Record<string, readonly string[]> {
   for (const v of VOICE_KINDS) out[`/singers/voice-type/${v}`] = singerVoiceTypeKeywords(v);
   for (const s of ALL_SONGS) out[`/songs/${s.slug}`] = songKeywords(s);
   for (const s of POP_SONGS) out[`/can-you-sing/${s.slug}`] = popSongKeywords(s);
+  for (const c of COMPETITORS) {
+    out[`/compare/suede-sing-vs-${c.slug}`] = vsKeywords(c.name);
+    out[`/compare/${c.slug}-alternatives`] = alternativesKeywords(c.name);
+  }
   for (const c of BOOK_CONTENTS) out[`/book/${c.slug}`] = chapterKeywords(c.searchTitle || c.title, "book");
   for (const c of ATLAS_CONTENTS) out[`/atlas/${c.slug}`] = chapterKeywords(c.title, "atlas");
   const moduleNames = new Map<string, string>();

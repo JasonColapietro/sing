@@ -64,6 +64,8 @@ const PRACTICE: FooterLink[] = [
 /** The voice course (hosted here since 2026-09-23), then the sibling Suede properties. */
 const MORE_FROM_SUEDE: FooterLink[] = [
   { href: "/learn/voice", label: "Voice lessons" },
+  // The comparison hub: Suede Sing next to the singing apps people weigh it against.
+  { href: "/compare", label: "Compare singing apps" },
   { href: "https://strumly.suedeai.ai/capo", label: "Capo calculator on Strumly" },
   { href: "https://suedeai.ai", label: "Suede AI" },
 ];
@@ -159,7 +161,7 @@ export default function SiteFooter() {
         >
           <Column heading="Reference" links={REFERENCE} />
           <Column heading="Practice" links={PRACTICE} />
-          <Column heading="More from Suede" links={MORE_FROM_SUEDE} />
+          <Column heading="More from Suede AI" links={MORE_FROM_SUEDE} />
 
           {/* Every voice-type hub, one click from any page. */}
           <details data-footer-hub className={hubDetailsClass}>

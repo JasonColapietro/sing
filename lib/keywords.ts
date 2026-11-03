@@ -131,6 +131,13 @@ export const ROUTE_KEYWORDS = {
     "singing app updates",
     "vocal practice app release notes",
   ],
+  "/compare": [
+    "singing app comparison",
+    "singing apps compared",
+    "vocal training app comparison",
+    "singing app alternatives",
+    "suede sing",
+  ],
   "/contact": [
     "singer range correction",
     "contact suede sing",
@@ -284,6 +291,40 @@ function pageKeywords(terms: readonly (string | null | undefined)[], route: stri
     (t) => !t.includes("suede") && (HEAD_TERM_OWNERS[t] ?? route) === route,
   );
   return [...own.slice(0, MAX_TERMS - 1), BRAND];
+}
+
+/**
+ * /compare/suede-sing-vs-<x>. The lead term names both products, so it is the
+ * page's one brand term and no separate brand term follows it.
+ */
+export function vsKeywords(competitor: string): string[] {
+  const n = competitor;
+  return normalizeKeywords([
+    `suede sing vs ${n}`,
+    `${n} comparison`,
+    `${n} for singers`,
+    `${n} price`,
+    `${n} features`,
+  ]);
+}
+
+/** /compare/<x>-alternatives: the product's alternatives terms, then the brand. */
+export function alternativesKeywords(competitor: string): string[] {
+  const n = competitor;
+  return pageKeywords(
+    [
+      `${n} alternatives`,
+      `apps like ${n}`,
+      `${n} alternative for singing`,
+      `free ${n} alternative`,
+    ],
+    `/compare/${n}-alternatives`,
+  );
+}
+
+/** The keyword map for either kind of /compare/<slug> page. */
+export function comparisonPageKeywords(kind: "vs" | "alternatives", competitor: string): string[] {
+  return kind === "vs" ? vsKeywords(competitor) : alternativesKeywords(competitor);
 }
 
 export function singerKeywords(s: {
