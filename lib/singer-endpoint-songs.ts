@@ -59,11 +59,6 @@ export function endpointSongs(s: EndpointFields): EndpointSong[] {
   return [pick(s, "high"), pick(s, "low")].filter((x): x is EndpointSong => x !== null);
 }
 
-/** Where a page's "most cited" songs come from, or null when it shows none. */
-export function citedSongsSource(s: EndpointFields): string | null {
-  return endpointSongs(s).some((x) => x.origin === "cited") ? CITED_ENDPOINT_SONGS[s.slug].source : null;
-}
-
 /** Card heading: names only the ends the page has a song for. */
 export function endpointSongsHeading(s: EndpointFields): string {
   const ends = endpointSongs(s).map((x) => x.end);
@@ -74,7 +69,7 @@ export function endpointSongsHeading(s: EndpointFields): string {
 /** Card label for one song. */
 export function endpointSongLabel(item: EndpointSong): string {
   if (item.origin === "cited") return item.end === "high" ? "Most cited high note" : "Most cited low note";
-  return item.end === "high" ? "Highest reported note" : "Lowest reported note";
+  return item.end === "high" ? "Highest note" : "Lowest note";
 }
 
 /** The lead line above the songs: why the reader should press play. */
@@ -86,19 +81,19 @@ export function endpointSongsLead(s: EndpointFields): string | null {
   const cited = songs.some((x) => x.origin === "cited");
 
   if (high && low && high.song === low.song) {
-    return `Both ends of ${s.name}’s ${cited ? "most cited range" : "reported range"} come from one song: “${high.song}.” Play it and listen for the ${low.note} at the bottom and the ${high.note} at the top.`;
+    return `Both ends of ${s.name}’s range come from one song: “${high.song}.” Play it and listen for the ${low.note} at the bottom and the ${high.note} at the top.`;
   }
   if (cited && high && low) {
     return `These are the songs most often cited for ${s.name}’s top and bottom notes: the ${high.note} in “${high.song}” and the ${low.note} in “${low.song}.” Press play and listen for them.`;
   }
   if (high && low) {
-    return `The songs below are where ${s.name}’s reported highest and lowest notes come from. Play them and listen for the ${high.note} at the top and the ${low.note} at the bottom.`;
+    return `The songs below hold ${s.name}’s highest and lowest notes. Play them and listen for the ${high.note} at the top and the ${low.note} at the bottom.`;
   }
   const only = (high ?? low)!;
   const which = only.end === "high" ? "highest" : "lowest";
   return only.origin === "cited"
     ? `The song below is the one most often cited for ${s.name}’s ${which} note, ${only.note}. Play it and listen for it.`
-    : `The song below is where ${s.name}’s reported ${which} note, ${only.note}, comes from. Play it and listen for it.`;
+    : `The song below holds ${s.name}’s ${which} note, ${only.note}. Play it and listen for it.`;
 }
 
 /** FAQ clause naming the song for one end, or "" when there is none. */

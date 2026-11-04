@@ -24,14 +24,14 @@ describe("singer endpoint songs", () => {
   });
 
   it("says so when one song carries both ends", () => {
-    expect(endpointSongsLead(bySlug("mac-miller"))).toContain("Both ends of Mac Miller’s reported range come from one song: “Good News.”");
+    expect(endpointSongsLead(bySlug("mac-miller"))).toContain("Both ends of Mac Miller’s range come from one song: “Good News.”");
   });
 
   it("handles a singer with only a high song", () => {
     const s = bySlug("jeff-buckley");
     expect(endpointSongs(s)).toHaveLength(1);
     expect(endpointSongHook(s)).toBe("Hear the D6 in “Grace”");
-    expect(endpointSongsLead(s)).toBe("The song below is where Jeff Buckley’s reported highest note, D6, comes from. Play it and listen for it.");
+    expect(endpointSongsLead(s)).toBe("The song below holds Jeff Buckley’s highest note, D6. Play it and listen for it.");
   });
 
   it("returns nothing when no song is tied to either end", () => {

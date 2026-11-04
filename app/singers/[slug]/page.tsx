@@ -26,8 +26,8 @@ import {
 } from "@/lib/singer-evidence";
 import { popRangeLabel, popSongsByArtistSlug } from "@/lib/pop-songs";
 import { fitDescription } from "@/lib/meta-fit";
+import { singerTraining } from "@/lib/singer-training";
 import {
-  citedSongsSource,
   endpointSongFaqClause,
   endpointSongHook,
   endpointSongLabel,
@@ -310,7 +310,7 @@ export default async function SingerPage({
   const fittingSongs = songsInRange(s);
   const endpointSongList = endpointSongs(s);
   const endpointLead = endpointSongsLead(s);
-  const endpointCitedSource = citedSongsSource(s);
+  const training = singerTraining(s);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = queryAlignedDescription(s);
@@ -509,14 +509,10 @@ export default async function SingerPage({
                 </li>
               ))}
             </ul>
-            <p className="mt-4 max-w-3xl text-xs text-dim">
-              {endpointCitedSource
-                ? `Song notes from ${endpointCitedSource}. They are per-song transcriptions, separate from the reported span above, and not a verified measurement. `
-                : "These are the recordings the catalog cites for each reported endpoint, not a verified measurement. "}
-              <a href="#evidence" className="underline underline-offset-4">Read the limitations</a>.
-              Then find out whether you can reach them:{" "}
+            <p className="mt-4 max-w-3xl text-sm text-mut">
+              {endpointSongList.length > 1 ? "Can you reach them?" : "Can you reach it?"}{" "}
               <Link href={rangeTestHref({ compare: s.slug })} prefetch={false} className="text-violet-ink underline underline-offset-4">
-                test your range free
+                Test your range free
               </Link>
               .
             </p>
@@ -942,6 +938,21 @@ export default async function SingerPage({
           <div className="mt-5">
             <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
               Test my range against {s.name} →
+            </LinkButton>
+          </div>
+        </Card>
+
+        {/* The close: one practice workflow matched to this singer's style (lib/singer-training.ts). */}
+        <Card className="border-violet/40">
+          <SectionLabel>Train for this sound</SectionLabel>
+          <h2 id="train" className="mt-3 scroll-mt-24 text-xl">
+            Build {s.name}&rsquo;s sound with {training.name}
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm text-mut">{training.why}</p>
+          <p className="mt-2 max-w-3xl text-sm text-mut">{training.tagline}</p>
+          <div className="mt-5">
+            <LinkButton href={training.href} prefetch={false} size="md">
+              Start {training.name} →
             </LinkButton>
           </div>
         </Card>
