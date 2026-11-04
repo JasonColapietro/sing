@@ -138,6 +138,15 @@ function expectedSnippet(singer: (typeof SINGERS)[number]): string {
     return `${span}. Reviewed sources don't settle the voice type. See why, then test your own range free.`;
   }
   const typed = `${span} (${singer.voiceType.toLowerCase()}).`;
+  const hook = singer.highSource
+    ? `Hear the ${midiToLabel(singer.highMidi)} in “${singer.highSource}”`
+    : singer.lowSource
+      ? `Hear the low ${midiToLabel(singer.lowMidi)} in “${singer.lowSource}”`
+      : null;
+  if (hook) {
+    const hooked = [`${typed} ${hook}, then test your range free.`, `${typed} ${hook}.`].find((t) => t.length <= 155);
+    if (hooked) return hooked;
+  }
   const full = `${typed} See the highest and lowest notes, then test your own range free.`;
   return full.length <= 155 ? full : `${typed} Test your own range free.`;
 }
@@ -221,7 +230,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     [
       "freddie-mercury",
       "Freddie Mercury Vocal Range: Reported F2–F6, Baritone",
-      "Freddie Mercury's reported vocal range is F2 to F6, about 4.0 octaves (baritone). See the highest and lowest notes, then test your own range free.",
+      "Freddie Mercury's reported vocal range is F2 to F6, about 4.0 octaves (baritone). Hear the F6 in “Get Down, Make Love”, then test your range free.",
     ],
     [
       "bruno-mars",

@@ -26,6 +26,7 @@ import {
 } from "@/lib/singer-evidence";
 import { popRangeLabel, popSongsByArtistSlug } from "@/lib/pop-songs";
 import { fitDescription } from "@/lib/meta-fit";
+import { endpointSongHook, endpointSongs, endpointSongsLead } from "@/lib/singer-endpoint-songs";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
@@ -163,6 +164,12 @@ function snippetDescription(s: SingerRecord): string {
     return `${span}. Reviewed sources don't settle the voice type. See why, then test your own range free.`;
   }
   const typed = `${span} (${s.voiceType.toLowerCase()}).`;
+  // A named song to press play on is the strongest reason to click: lead with it when the catalog has one.
+  const hook = endpointSongHook(s);
+  if (hook) {
+    const hooked = [`${typed} ${hook}, then test your range free.`, `${typed} ${hook}.`].find((t) => t.length <= 155);
+    if (hooked) return hooked;
+  }
   const full = `${typed} See the highest and lowest notes, then test your own range free.`;
   return full.length <= 155 ? full : fitDescription(`${typed} Test your own range free.`);
 }
@@ -221,13 +228,18 @@ function singerFaq(s: SingerRecord): SingerFaq {
   const semis = s.highMidi - s.lowMidi;
   const low = midiToLabel(s.lowMidi);
   const high = midiToLabel(s.highMidi);
+  const songs = endpointSongs(s);
+  const listenFor = (end: "high" | "low") => {
+    const song = songs.find((x) => x.end === end);
+    return song ? ` Listen for it in “${song.song}.”` : "";
+  };
   if (isPending(s)) {
     return {
       lede: `Our catalog reports ${s.name} from ${low} to ${high}; individual endpoint review is pending.`,
       items: [
         { q: `How high can ${s.name} sing?`, a: `Up to ${high} in this catalog; that upper endpoint is not a verified individual maximum.` },
-        { q: `What is ${s.name}’s highest note?`, a: `${high} is the reported ceiling. No reviewed source here establishes it as ${s.name}’s highest note.` },
-        { q: `What is ${s.name}’s lowest note?`, a: `${low} is the reported floor. No reviewed source here establishes it as ${s.name}’s lowest note.` },
+        { q: `What is ${s.name}’s highest note?`, a: `${high} is the reported ceiling. No reviewed source here establishes it as ${s.name}’s highest note.${listenFor("high")}` },
+        { q: `What is ${s.name}’s lowest note?`, a: `${low} is the reported floor. No reviewed source here establishes it as ${s.name}’s lowest note.${listenFor("low")}` },
         { q: `How many octaves can ${s.name} sing?`, a: `About ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of ${s.name}’s working range.` },
         { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
         { q: SIMILAR_QUESTION(s), a: similarRangeAnswer(s) },
@@ -246,11 +258,11 @@ function singerFaq(s: SingerRecord): SingerFaq {
       },
       {
         q: `What is ${s.name}’s highest note?`,
-        a: `${high} is the reported ceiling. ${sourceScope} the upper endpoint as an individual highest note.`,
+        a: `${high} is the reported ceiling. ${sourceScope} the upper endpoint as an individual highest note.${listenFor("high")}`,
       },
       {
         q: `What is ${s.name}’s lowest note?`,
-        a: `${low} is the reported floor. ${sourceScope} the lower endpoint as an individual physiological limit.`,
+        a: `${low} is the reported floor. ${sourceScope} the lower endpoint as an individual physiological limit.${listenFor("low")}`,
       },
       {
         q: `How many octaves can ${s.name} sing?`,
@@ -292,6 +304,8 @@ export default async function SingerPage({
   const typeComparison = voiceTypeParagraphs(s, labelSettled);
   const neighbors = pageNeighbors(s);
   const fittingSongs = songsInRange(s);
+  const endpointSongList = endpointSongs(s);
+  const endpointLead = endpointSongsLead(s);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = queryAlignedDescription(s);
@@ -463,6 +477,44 @@ export default async function SingerPage({
             </dl>
           </div>
         </Card>
+
+        {/* The songs the catalog ties to each reported endpoint: the "press play" reason to stay. */}
+        {endpointLead && (
+          <Card>
+            <h2 id="hear-the-notes" className="scroll-mt-24 text-xl">
+              Hear {s.name}&rsquo;s highest and lowest notes
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm text-mut">{endpointLead}</p>
+            <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {endpointSongList.map((item) => (
+                <li key={item.end} className="rounded-xl border border-line bg-bg px-4 py-3">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    {item.end === "high" ? "Highest reported note" : "Lowest reported note"}
+                  </p>
+                  <p className="tabular mt-1 font-mono text-3xl font-bold">{item.note}</p>
+                  <p className="mt-1 text-sm">&ldquo;{item.song}&rdquo;</p>
+                  <a
+                    href={item.listenUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex min-h-11 items-center text-sm text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+                  >
+                    Listen on YouTube<span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 max-w-3xl text-xs text-dim">
+              These are the recordings the catalog cites for each reported endpoint, not a
+              verified measurement. <a href="#evidence" className="underline underline-offset-4">Read the limitations</a>.
+              Then find out whether you can reach them:{" "}
+              <Link href={rangeTestHref({ compare: s.slug })} prefetch={false} className="text-violet-ink underline underline-offset-4">
+                test your range free
+              </Link>
+              .
+            </p>
+          </Card>
+        )}
 
         {/* #you-vs: where the header action and the range result's "Compare" land. */}
         <div id="you-vs" className="scroll-mt-20">
