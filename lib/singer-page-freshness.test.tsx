@@ -42,6 +42,7 @@ async function pageFingerprint(slug: string): Promise<string> {
 const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
   // 2026-11-04: pages with catalog endpoint songs get a "Hear the highest and lowest notes" card,
   // the song named in the highest/lowest-note FAQ answers, and the song hook in the search snippet.
+  // 2026-11-04: Olivia Rodrigo's card shows the most cited songs for her top and bottom notes.
   // 2026-11-03: the closing card's heading asks how much of the singer's reported range the reader's
   // range covers, instead of repeating the button ("Test my range against ...") below it.
   // 2026-11-03: the nearest-reported-floors row skips voices already shown as similar-voice cards
@@ -54,7 +55,7 @@ const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
   // round 18: similar voices picked by nearest endpoints, the span histogram captioned;
   // round 20: similar voices ranked by range distance first, the label only breaking ties;
   // round 21: the similar-range FAQ states that rule, the songs card names the range pages and counts what it lists, and the closing line names what the comparison chart draws.
-  "olivia-rodrigo": { fingerprint: "7518f4067ab153c3", lastModified: "2026-11-04" },
+  "olivia-rodrigo": { fingerprint: "a4ec3045049d3809", lastModified: "2026-11-04" },
   "reba-mcentire": { fingerprint: "daec40beaa404784", lastModified: "2026-11-04" },
   "alex-warren": { fingerprint: "285b79a96ac43bad", lastModified: "2026-11-04" },
   "sam-smith": { fingerprint: "07e1e71b64071977", lastModified: "2026-11-04" },

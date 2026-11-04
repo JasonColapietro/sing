@@ -26,7 +26,15 @@ import {
 } from "@/lib/singer-evidence";
 import { popRangeLabel, popSongsByArtistSlug } from "@/lib/pop-songs";
 import { fitDescription } from "@/lib/meta-fit";
-import { endpointSongHook, endpointSongs, endpointSongsLead } from "@/lib/singer-endpoint-songs";
+import {
+  citedSongsSource,
+  endpointSongFaqClause,
+  endpointSongHook,
+  endpointSongLabel,
+  endpointSongs,
+  endpointSongsHeading,
+  endpointSongsLead,
+} from "@/lib/singer-endpoint-songs";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
@@ -228,11 +236,7 @@ function singerFaq(s: SingerRecord): SingerFaq {
   const semis = s.highMidi - s.lowMidi;
   const low = midiToLabel(s.lowMidi);
   const high = midiToLabel(s.highMidi);
-  const songs = endpointSongs(s);
-  const listenFor = (end: "high" | "low") => {
-    const song = songs.find((x) => x.end === end);
-    return song ? ` Listen for it in “${song.song}.”` : "";
-  };
+  const listenFor = (end: "high" | "low") => endpointSongFaqClause(s, end);
   if (isPending(s)) {
     return {
       lede: `Our catalog reports ${s.name} from ${low} to ${high}; individual endpoint review is pending.`,
@@ -306,6 +310,7 @@ export default async function SingerPage({
   const fittingSongs = songsInRange(s);
   const endpointSongList = endpointSongs(s);
   const endpointLead = endpointSongsLead(s);
+  const endpointCitedSource = citedSongsSource(s);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = queryAlignedDescription(s);
@@ -482,14 +487,14 @@ export default async function SingerPage({
         {endpointLead && (
           <Card>
             <h2 id="hear-the-notes" className="scroll-mt-24 text-xl">
-              Hear {s.name}&rsquo;s highest and lowest notes
+              {endpointSongsHeading(s)}
             </h2>
             <p className="mt-3 max-w-3xl text-sm text-mut">{endpointLead}</p>
             <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {endpointSongList.map((item) => (
                 <li key={item.end} className="rounded-xl border border-line bg-bg px-4 py-3">
                   <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                    {item.end === "high" ? "Highest reported note" : "Lowest reported note"}
+                    {endpointSongLabel(item)}
                   </p>
                   <p className="tabular mt-1 font-mono text-3xl font-bold">{item.note}</p>
                   <p className="mt-1 text-sm">&ldquo;{item.song}&rdquo;</p>
@@ -505,8 +510,10 @@ export default async function SingerPage({
               ))}
             </ul>
             <p className="mt-4 max-w-3xl text-xs text-dim">
-              These are the recordings the catalog cites for each reported endpoint, not a
-              verified measurement. <a href="#evidence" className="underline underline-offset-4">Read the limitations</a>.
+              {endpointCitedSource
+                ? `Song notes from ${endpointCitedSource}. They are per-song transcriptions, separate from the reported span above, and not a verified measurement. `
+                : "These are the recordings the catalog cites for each reported endpoint, not a verified measurement. "}
+              <a href="#evidence" className="underline underline-offset-4">Read the limitations</a>.
               Then find out whether you can reach them:{" "}
               <Link href={rangeTestHref({ compare: s.slug })} prefetch={false} className="text-violet-ink underline underline-offset-4">
                 test your range free
