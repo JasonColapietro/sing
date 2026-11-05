@@ -9,6 +9,7 @@ import { SINGERS, rangeLabel, spanOctaves } from "@/lib/singers";
 import { midiToLabel } from "@/lib/audio/notes";
 import { isSingerReviewed, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
+import { CITED_ENDPOINT_SONGS } from "@/lib/singer-cited-songs";
 
 const ARTIST_INTENT_CASES = [
   {
@@ -138,6 +139,22 @@ function expectedSnippet(singer: (typeof SINGERS)[number]): string {
     return `${span}. Reviewed sources don't settle the voice type. See why, then test your own range free.`;
   }
   const typed = `${span} (${singer.voiceType.toLowerCase()}).`;
+  const cited = CITED_ENDPOINT_SONGS[singer.slug];
+  const hook = singer.highSource
+    ? `Hear the ${midiToLabel(singer.highMidi)} in “${singer.highSource}”`
+    : cited?.high
+      ? `Hear the ${cited.high.note} in “${cited.high.song}”`
+      : singer.lowSource
+        ? `Hear the low ${midiToLabel(singer.lowMidi)} in “${singer.lowSource}”`
+        : cited?.low
+          ? `Hear the low ${cited.low.note} in “${cited.low.song}”`
+          : singer.signatureSong
+            ? `Hear “${singer.signatureSong}”`
+            : null;
+  if (hook) {
+    const hooked = [`${typed} ${hook}, then test your range free.`, `${typed} ${hook}.`].find((t) => t.length <= 155);
+    if (hooked) return hooked;
+  }
   const full = `${typed} See the highest and lowest notes, then test your own range free.`;
   return full.length <= 155 ? full : `${typed} Test your own range free.`;
 }
@@ -221,12 +238,12 @@ describe("every singer page answers its vocal range and voice type intent", () =
     [
       "freddie-mercury",
       "Freddie Mercury Vocal Range: Reported F2–F6, Baritone",
-      "Freddie Mercury's reported vocal range is F2 to F6, about 4.0 octaves (baritone). See the highest and lowest notes, then test your own range free.",
+      "Freddie Mercury's reported vocal range is F2 to F6, about 4.0 octaves (baritone). Hear the F6 in “Get Down, Make Love”, then test your range free.",
     ],
     [
       "bruno-mars",
       "Bruno Mars Vocal Range: Reported G2–D6, Tenor | Suede Sing",
-      "Bruno Mars's reported vocal range is G2 to D6, about 3.6 octaves (tenor). See the highest and lowest notes, then test your own range free.",
+      "Bruno Mars's reported vocal range is G2 to D6, about 3.6 octaves (tenor). Hear the A5 in “Gorilla”, then test your range free.",
     ],
     [
       "reba-mcentire",
