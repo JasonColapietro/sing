@@ -45,6 +45,8 @@ import {
   keyboardParagraphs,
   sharedSemitones,
   similarRangeAnswer,
+  closestSongs,
+  closestSongsLead,
   songsInRange,
   songsInRangeLead,
   voiceTypeParagraphs,
@@ -308,6 +310,8 @@ export default async function SingerPage({
   const typeComparison = voiceTypeParagraphs(s, labelSettled);
   const neighbors = pageNeighbors(s);
   const fittingSongs = songsInRange(s);
+  // A narrow span no catalog song fits inside still gets its nearest songs.
+  const nearSongs = fittingSongs.length === 0 ? closestSongs(s) : [];
   const endpointSongList = endpointSongs(s);
   const endpointLead = endpointSongsLead(s);
   const training = singerTraining(s);
@@ -928,6 +932,24 @@ export default async function SingerPage({
                 </Link>
                 .
               </p>
+            </>
+          )}
+          {nearSongs.length > 0 && (
+            <>
+              <p className="mt-3 max-w-3xl text-sm text-mut">{closestSongsLead(s, nearSongs)}</p>
+              <ul className="mt-3 space-y-1">
+                {nearSongs.map(({ song, past, side }) => (
+                  <li key={song.slug} className="text-sm">
+                    <Link
+                      href={`/can-you-sing/${song.slug}`}
+                      prefetch={false}
+                      className="inline-flex min-h-11 items-center text-violet-ink underline-offset-4 hover:underline"
+                    >
+                      {song.title} ({song.artist}): {popRangeLabel(song)} in {song.key}, {past} {past === 1 ? "semitone" : "semitones"} {side === "high" ? "higher" : "lower"}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </>
           )}
           <p className="mt-3 max-w-3xl text-sm text-mut">

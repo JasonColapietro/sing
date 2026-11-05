@@ -93,3 +93,14 @@ describe("singer endpoint songs", () => {
     }
   });
 });
+
+import { closestSongs, songsInRange } from "@/lib/singer-range-profile";
+
+describe("song links on every singer page", () => {
+  it("lists songs in range, or the closest fits when none fits", () => {
+    for (const s of SINGERS) {
+      const n = songsInRange(s).length || closestSongs(s).length;
+      expect(n, s.slug).toBeGreaterThan(0);
+    }
+  });
+});
