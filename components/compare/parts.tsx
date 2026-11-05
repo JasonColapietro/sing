@@ -2,10 +2,10 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { AUTHOR_ID } from "@/lib/author";
 import {
-  COMPARISONS_AS_OF,
   COMPARISONS_CHECKED,
   COMPARISONS_CHECKED_LABEL,
   COMPARE_PATH,
+  PRICING_VARIES,
   ROW_KEYS,
   ROW_LABELS,
   SUEDE_FACTS,
@@ -76,14 +76,26 @@ function TableWrap({ cue, children }: { cue: string; children: ReactNode }) {
   );
 }
 
+/** "Pricing varies" and a link to the competitor's own pricing page or store listing. */
+export function CompetitorPrice({ competitor: c }: { competitor: Competitor }) {
+  return (
+    <>
+      {PRICING_VARIES}.{" "}
+      <a href={c.pricing.url} rel="nofollow noopener" className={`${LINK_CLASS} break-words`}>
+        See {c.pricing.label}
+      </a>
+    </>
+  );
+}
+
 /** Suede Sing and one competitor, row by row. */
 export function SideBySideTable({ competitor: c }: { competitor: Competitor }) {
   return (
     <TableWrap cue={`Swipe the table sideways for ${c.name}`}>
       <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
         <caption className="sr-only">
-          Suede Sing compared with {c.name}: platforms, price {COMPARISONS_AS_OF}, free use,
-          practice, range tools, songs and lessons.
+          Suede Sing compared with {c.name}: platforms, price, free use, practice, range tools,
+          songs and lessons.
         </caption>
         <thead>
           <tr className="border-b border-line">
@@ -105,7 +117,9 @@ export function SideBySideTable({ competitor: c }: { competitor: Competitor }) {
                 {ROW_LABELS[key]}
               </th>
               <td className="py-3 pr-4 text-ink">{SUEDE_FACTS[key]}</td>
-              <td className="py-3 text-mut">{c.facts[key]}</td>
+              <td className="py-3 text-mut">
+                {key === "price" ? <CompetitorPrice competitor={c} /> : c.facts[key]}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -125,7 +139,7 @@ export function AppsTable({
   links?: "both" | "vs";
 }) {
   return (
-    <TableWrap cue="Swipe the table sideways for prices">
+    <TableWrap cue="Swipe the table sideways for more">
       <table className="w-full min-w-[46rem] border-collapse text-left text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead>
@@ -133,7 +147,7 @@ export function AppsTable({
             <th scope="col" className={TH_CLASS}>App</th>
             <th scope="col" className={TH_CLASS}>Built for</th>
             <th scope="col" className={TH_CLASS}>Where it runs</th>
-            <th scope="col" className={TH_CLASS}>Price ({COMPARISONS_AS_OF})</th>
+            <th scope="col" className={TH_CLASS}>Price</th>
             <th scope="col" className={`${TH_CLASS} pr-0`}>Compare</th>
           </tr>
         </thead>
@@ -154,7 +168,9 @@ export function AppsTable({
               <th scope="row" className="py-3 pr-4 font-medium text-ink">{c.name}</th>
               <td className="py-3 pr-4 text-mut">{c.builtFor}</td>
               <td className="py-3 pr-4 text-mut">{c.facts.platforms}</td>
-              <td className="py-3 pr-4 text-mut">{c.priceShort}</td>
+              <td className="py-3 pr-4 text-mut">
+                <CompetitorPrice competitor={c} />
+              </td>
               <td className="py-3 text-mut">
                 <Link href={vsPath(c)} prefetch={false} className={LINK_CLASS}>
                   Suede Sing vs {c.name}
@@ -209,8 +225,9 @@ export function SourceList({ sources }: { sources: readonly Source[] }) {
       <p className="mt-3 max-w-3xl text-sm text-mut">
         Every competitor fact on this page comes from that product&apos;s own website, help
         center or app store listing, checked on{" "}
-        <time dateTime={COMPARISONS_CHECKED}>{COMPARISONS_CHECKED_LABEL}</time>. Prices vary by
-        country, platform and promotion; Suede Sing facts come from the product itself.
+        <time dateTime={COMPARISONS_CHECKED}>{COMPARISONS_CHECKED_LABEL}</time>. Competitor
+        pricing varies by country, platform and promotion, so each price links to that app&apos;s
+        own listing. Suede Sing facts come from the product itself.
       </p>
       <ul className="mt-4 max-w-3xl space-y-2 text-sm text-mut">
         {sources.map((s) => (

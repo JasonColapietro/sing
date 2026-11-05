@@ -1,5 +1,7 @@
 /**
- * Guard for the /compare pages: every competitor fact is sourced and dated,
+ * Guard for the /compare pages: every competitor fact is sourced, competitor
+ * pricing reads "Pricing varies" with no dollar figure (owner direction,
+ * 2026-11-05),
  * every page is indexable, in the sitemap and in llms.txt, and the copy keeps
  * the house writing rules. Assertions run on renderToStaticMarkup output, the
  * HTML a crawler reads.
@@ -18,18 +20,39 @@ import ComparisonPage, {
 import SiteFooter from "@/components/site-footer";
 import {
   COMPARE_PATH,
-  COMPARISONS_AS_OF,
   COMPARISONS_CHECKED,
   COMPETITORS,
+  PRICING_VARIES,
   ROW_KEYS,
   alternativesPath,
   comparisonPages,
+  competitorPriceText,
+  hubFaq,
   vsPath,
 } from "@/lib/comparisons";
 import { buildLlmsFullTxt, buildLlmsTxt, SING_HOME } from "@/lib/llms-txt";
+import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 
 const BANNED = /—|&mdash;|\bmoreover\b|\bdelve|game-changer|\bunlock|\belevate|\bseamless|\blandscape\b|\btapestry\b|it['’]s important to note/i;
+
+/** Suede Sing's own prices are the only dollar figures these pages may print. */
+const SUEDE_PRICES = [PRICING.lifetime.amount, PRICING.monthly.amount].map(formatPrice);
+
+/** Any "$" figure left once Suede Sing's own prices are taken out. */
+function competitorDollars(text: string): string[] {
+  let rest = text;
+  for (const p of SUEDE_PRICES) rest = rest.replace(new RegExp(`${p.replace(/[$.]/g, "\\$&")}(?!\\d|\\.\\d)`, "g"), "");
+  return rest.match(/\$\s?\d[\d.,]*/g) ?? [];
+}
+
+/** Every string inside a value, however deep. */
+function strings(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(strings);
+  if (value && typeof value === "object") return Object.values(value).flatMap(strings);
+  return [];
+}
 
 function graph(html: string): Array<Record<string, unknown>> {
   const block = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
@@ -51,9 +74,24 @@ describe("comparison data", () => {
     }
   });
 
-  it("dates every competitor price", () => {
-    for (const c of COMPETITORS) expect(c.facts.price, c.slug).toContain(COMPARISONS_AS_OF);
-    expect(COMPARISONS_AS_OF).toBe("as of November 2026");
+  it("prices every competitor as \"Pricing varies\" and links its own pricing source", () => {
+    expect(PRICING_VARIES).toBe("Pricing varies");
+    for (const c of COMPETITORS) {
+      expect(c.facts.price, c.slug).toBe(PRICING_VARIES);
+      expect(c.pricing.url, c.slug).toMatch(/^https:\/\//);
+      expect(c.sources.map((s) => s.url), c.slug).toContain(c.pricing.url);
+    }
+  });
+
+  it("holds no competitor dollar figure anywhere in the data", () => {
+    for (const c of COMPETITORS) expect(competitorDollars(strings(c).join("\n")), c.slug).toEqual([]);
+    expect(competitorDollars(strings(hubFaq()).join("\n"))).toEqual([]);
+  });
+
+  it("guard catches a competitor figure and spares Suede Sing's own price", () => {
+    expect(competitorDollars("Premium+ is $29.99 a month")).toEqual(["$29.99"]);
+    expect(competitorDollars(`Suede Pro is ${SUEDE_PRICES[0]} once`)).toEqual([]);
+    expect(competitorDollars(`${SUEDE_PRICES[0]}0 a year`)).not.toEqual([]);
   });
 
   it("generates a vs page and an alternatives page per competitor", () => {
@@ -71,7 +109,10 @@ describe("comparison pages", () => {
     const html = await renderSlug(slug);
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html).toContain("<table");
-    expect(html).toContain(COMPARISONS_AS_OF);
+    expect(html).toContain(PRICING_VARIES);
+    expect(html).not.toMatch(/as of November 2026/i);
+    // No competitor "$" figure in the page, its FAQ answers or its JSON-LD.
+    expect(competitorDollars(html), slug).toEqual([]);
     expect(html).toContain('aria-label="Breadcrumb"');
     const nodes = graph(html);
     const faq = nodes.find((n) => n["@type"] === "FAQPage") as { mainEntity: Array<{ name: string }> };
@@ -86,6 +127,7 @@ describe("comparison pages", () => {
   it.each(comparisonPages().map((p) => [p.slug]))("%s is indexable with its own canonical", async (slug) => {
     const meta = await generateMetadata({ params: Promise.resolve({ slug }) });
     expect(meta.robots).toBeUndefined();
+    expect(competitorDollars(strings(meta).join("\n")), slug).toEqual([]);
     expect(meta.alternates?.canonical).toBe(`${SITE_URL}${COMPARE_PATH}/${slug}`);
     expect(meta.openGraph?.url).toBe(`${SITE_URL}${COMPARE_PATH}/${slug}`);
   });
@@ -94,6 +136,7 @@ describe("comparison pages", () => {
     for (const c of COMPETITORS) {
       const html = await renderSlug(`suede-sing-vs-${c.slug}`);
       for (const s of c.sources) expect(html, c.slug).toContain(`href="${s.url}"`);
+      expect(html, c.slug).toContain(`See ${c.pricing.label}`);
     }
   });
 });
@@ -107,6 +150,12 @@ describe("the /compare hub", () => {
       expect(html).toContain(`href="${alternativesPath(c)}"`);
     }
     expect(html).not.toMatch(BANNED);
+  });
+
+  it("prints no competitor dollar figure", () => {
+    expect(competitorDollars(html)).toEqual([]);
+    expect(competitorDollars(strings(hubMetadata).join("\n"))).toEqual([]);
+    for (const c of COMPETITORS) expect(html).toContain(`href="${c.pricing.url}"`);
   });
 
   it("self-canonicalizes", () => {
@@ -135,8 +184,11 @@ describe("sitemap and llms files", () => {
     for (const c of COMPETITORS) {
       expect(llms).toContain(`${SING_HOME}${vsPath(c)}`);
       expect(llms).toContain(`${SING_HOME}${alternativesPath(c)}`);
-      expect(full).toContain(c.facts.price);
+      expect(full).toContain(competitorPriceText(c));
       for (const s of c.sources) expect(full).toContain(s.url);
     }
+    const comparisons = full.slice(full.indexOf("## Singing app comparisons"));
+    expect(competitorDollars(comparisons)).toEqual([]);
+    expect(competitorDollars(llms)).toEqual([]);
   });
 });

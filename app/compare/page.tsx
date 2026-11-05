@@ -13,7 +13,7 @@ import {
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import {
   COMPARE_PATH,
-  COMPARISONS_AS_OF,
+  COMPARISONS_MONTH,
   COMPETITORS,
   SUEDE_EDGES,
   SUEDE_PRICE_LINE,
@@ -28,7 +28,7 @@ import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 
 const TITLE = `Singing App Comparison: Suede Sing vs ${COMPETITORS.length} Apps`;
-const DESCRIPTION = `Singing app comparison: Suede Sing next to ${listJoin(COMPETITORS.map((c) => c.name))}, with prices checked in November 2026 and every source linked.`;
+const DESCRIPTION = `Singing app comparison: Suede Sing next to ${listJoin(COMPETITORS.map((c) => c.name))}, with every fact checked in ${COMPARISONS_MONTH} and every source linked.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   title: { absolute: TITLE },
@@ -48,7 +48,7 @@ const FAQ = hubFaq();
 export default function ComparePage() {
   return (
     <PageShell
-      kicker="Comparisons · November 2026"
+      kicker={`Comparisons · ${COMPARISONS_MONTH}`}
       title="Singing app comparison: Suede Sing next to six popular apps"
       subtitle={`Suede Sing is the singing app built to measure and train your voice in the browser: a free pitch studio and range test with no daily limit, scored warmups, and Suede Pro at ${SUEDE_PRICE_LINE}. Here is how it lines up against ${listJoin(COMPETITORS.map((c) => c.name))}.`}
       actions={
@@ -81,12 +81,12 @@ export default function ComparePage() {
           <p className="mt-3 max-w-3xl text-mut">
             Each app below is built around something different. Suede Sing is the one built
             around your own voice: it measures your range, scores every note you sing and runs
-            in the browser you already have. Prices are {COMPARISONS_AS_OF} and come from each
-            product&apos;s own site or store listing.
+            in the browser you already have. Each competitor fact comes from that product&apos;s
+            own site or store listing, and each price links there.
           </p>
           <AppsTable
             competitors={COMPETITORS}
-            caption="Suede Sing and six singing apps: what each is built for, where it runs and its price as of November 2026."
+            caption="Suede Sing and six singing apps: what each is built for, where it runs and its price."
           />
         </Card>
 

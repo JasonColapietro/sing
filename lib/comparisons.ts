@@ -1,7 +1,7 @@
 /**
  * Competitor comparison data: the "Suede Sing vs X" and "X alternatives"
  * pages under /compare, the /compare hub, the sitemap and llms.txt all read
- * from this one module, so a price or a source changes in one place.
+ * from this one module, so a fact or a source changes in one place.
  *
  * Rules this file is held to (lib/comparisons.test.ts enforces the
  * mechanical ones):
@@ -10,8 +10,9 @@
  *   on COMPARISONS_CHECKED. Nothing here is a weakness inferred from silence:
  *   where a source does not say something, the row says what the source does
  *   say, or that it is not listed.
- * - Every price carries "as of November 2026" (COMPARISONS_AS_OF) where it is
- *   printed.
+ * - Competitor pricing reads "Pricing varies" (PRICING_VARIES) and links the
+ *   competitor's own pricing page or store listing. No competitor dollar
+ *   figure is printed anywhere (owner direction, 2026-11-05).
  * - Suede Sing claims are read from the same constants the product pages use
  *   (pricing, free cap, inventory counts), so they cannot drift from the
  *   product.
@@ -29,8 +30,10 @@ import { CATALOG_LESSON_COUNT, COURSE } from "@/lib/voice-lessons";
 
 /** The day every competitor fact below was checked against its sources. */
 export const COMPARISONS_CHECKED = "2026-11-03";
-/** Printed next to every competitor price. */
-export const COMPARISONS_AS_OF = "as of November 2026";
+/** The month the comparisons were checked, for page kickers. */
+export const COMPARISONS_MONTH = "November 2026";
+/** What every competitor price cell says. */
+export const PRICING_VARIES = "Pricing varies";
 /** The same date, as a reader sees it. */
 export const COMPARISONS_CHECKED_LABEL = "November 3, 2026";
 
@@ -55,7 +58,7 @@ export interface Edge {
 /** The rows every comparison table prints, in order. */
 export const ROW_LABELS = {
   platforms: "Where it runs",
-  price: `Price (${COMPARISONS_AS_OF})`,
+  price: "Price",
   free: "What you can use free",
   practice: "How practice works",
   range: "Vocal range tools",
@@ -74,8 +77,8 @@ export interface Competitor {
   maker: string;
   /** Short label for hub tables: what the product is built around. */
   builtFor: string;
-  /** Short price for hub tables; the full sentence is facts.price. */
-  priceShort: string;
+  /** The competitor's own pricing page or store listing, linked beside "Pricing varies". */
+  pricing: Source;
   /** A neutral, sourced paragraph: what this product is. */
   about: string;
   facts: Record<RowKey, string>;
@@ -150,12 +153,12 @@ export const COMPETITORS: Competitor[] = [
     name: "Yousician",
     maker: "Yousician Ltd",
     builtFor: "Music lessons for five instruments, singing included",
-    priceShort: "Premium+ $29.99 a month or $139.99 a year",
+    pricing: { label: "Yousician pricing", url: "https://yousician.com/lp/singing-us" },
     about:
       "Yousician is a music-learning app from Yousician Ltd that teaches singing next to guitar, bass, ukulele and piano. The app listens through your microphone and gives feedback on pitch and timing, and its singing lessons cover technique, warm-ups and real songs. It runs on iOS, Android, Mac and PC.",
     facts: {
       platforms: "iOS and Android apps, plus Mac and PC.",
-      price: `Premium+ is $29.99 a month or $139.99 a year on Yousician's US site, with a 7-day free trial (${COMPARISONS_AS_OF}).`,
+      price: PRICING_VARIES,
       free: "A 7-day free trial of Premium+.",
       practice: "The app listens and gives feedback on your pitch and timing as you sing.",
       range: "Calibrates your vocal range so songs can be transposed to fit it.",
@@ -167,10 +170,7 @@ export const COMPETITORS: Competitor[] = [
         title: "Built for the voice and nothing else",
         body: "Every room in Suede Sing exists for singers: the pitch studio, the range test, warmups, ear training, breath drills, song practice and a voice course written for singers.",
       },
-      {
-        title: "One payment instead of a monthly bill",
-        body: `Suede Pro is ${SUEDE_PRICE_LINE}. Yousician Premium+ on the monthly plan is $29.99 a month, so Suede Pro costs less than three months of it (${COMPARISONS_AS_OF}).`,
-      },
+      SUEDE_EDGES.once,
       SUEDE_EDGES.free,
       SUEDE_EDGES.browser,
       SUEDE_EDGES.private,
@@ -180,7 +180,7 @@ export const COMPETITORS: Competitor[] = [
       a: "Open sing.suedeai.ai/range in your browser and take the free range test. It measures your lowest and highest clear notes, songs then open fitted to that range, and a guided warmup is one tap away. There is nothing to install.",
     },
     description: {
-      vs: "Suede Sing vs Yousician for singers: free browser pitch and range tools and $79 once for Pro, against $29.99 a month for Premium+ (November 2026).",
+      vs: "Suede Sing vs Yousician for singers: free browser pitch and range tools, a voice course built for singers and Suede Pro at $79 once.",
       alternatives:
         "Yousician alternatives for singing practice: Suede Sing in the browser with free pitch and range tools and a $79 one-time Pro, plus five more apps.",
     },
@@ -195,13 +195,13 @@ export const COMPETITORS: Competitor[] = [
     name: "Singing Carrots",
     maker: "Singing Carrots",
     builtFor: "Singing training in Chrome and on mobile",
-    priceShort: "Not published; shown after an assessment",
+    pricing: { label: "Singing Carrots pricing", url: "https://singingcarrots.com/pro" },
     about:
       "Singing Carrots is a singing-training site that runs in Google Chrome on a computer, tablet or phone, with a companion app for iOS and Android. It offers a pitch training game, a vocal range test, a pitch accuracy test, a song search that matches titles to your range, beginner courses and leaderboards.",
     facts: {
       platforms: "Google Chrome on a computer, tablet or phone, plus a companion app for iOS and Android.",
-      price: `Plan prices are not published. Its pricing page says plans are recommended after an assessment, and its homepage asks you to log in to see prices (${COMPARISONS_AS_OF}).`,
-      free: "A free account. Paid plans are shown after you log in.",
+      price: PRICING_VARIES,
+      free: "A free account with access to its training tools.",
       practice: "A pitch training game with instant visual feedback, plus sustain and breath training.",
       range: "A vocal range test and a pitch accuracy test.",
       songs: "A song search across 75,000+ titles that filters by your range, difficulty and genre.",
@@ -209,8 +209,8 @@ export const COMPETITORS: Competitor[] = [
     },
     edges: [
       {
-        title: "The price is on the page",
-        body: `Suede Pro is ${SUEDE_PRICE_LINE}, printed on the site for anyone to read. No quiz and no login stand between you and the number.`,
+        title: "One price, printed on the page",
+        body: `Suede Pro is ${SUEDE_PRICE_LINE}, listed on sing.suedeai.ai/pro for anyone to read. Pay once and every Pro feature is yours.`,
       },
       {
         title: "Any modern browser",
@@ -225,9 +225,9 @@ export const COMPETITORS: Competitor[] = [
       a: "Yes. Singing Carrots says it runs in Google Chrome on a computer, tablet or phone. Suede Sing runs in Chrome, Safari, Edge or Firefox, and its pitch analysis happens on your own device, so microphone audio is never uploaded.",
     },
     description: {
-      vs: "Suede Sing vs Singing Carrots: both run in the browser. Suede Sing adds free tools with no daily limit and a $79 one-time Pro price on the page.",
+      vs: "Suede Sing vs Singing Carrots: both run in the browser. Suede Sing adds free tools with no daily limit and Suede Pro at $79 once for lifetime access.",
       alternatives:
-        "Singing Carrots alternatives: Suede Sing gives free pitch and range tools in any modern browser and a published $79 one-time Pro, plus five more apps.",
+        "Singing Carrots alternatives: Suede Sing gives free pitch and range tools in any modern browser and Suede Pro at $79 once, plus five more apps.",
     },
     sources: [
       { label: "Singing Carrots: homepage", url: "https://singingcarrots.com/" },
@@ -239,12 +239,15 @@ export const COMPETITORS: Competitor[] = [
     name: "Smule",
     maker: "Smule, Inc.",
     builtFor: "Social karaoke, duets and live sessions",
-    priceShort: "VIP passes from $5.99 on the App Store",
+    pricing: {
+      label: "Smule on the App Store (US)",
+      url: "https://apps.apple.com/us/app/smule-sing-karaoke-music/id509993510",
+    },
     about:
       "Smule is a social karaoke app from Smule, Inc. for iPhone, iPad and Android. Its App Store listing claims a catalog of 15 million+ songs, with duets, group songs, live sessions, audio effects and key changes to fit your range. A VIP subscription adds the full catalog, solo recording and starting your own duets.",
     facts: {
       platforms: "iPhone and iPad on the App Store, and Android on Google Play.",
-      price: `VIP passes on the US App Store run from $5.99 to $12.99, with Weekly VIP Access at $7.99, billed weekly, monthly or yearly (${COMPARISONS_AS_OF}).`,
+      price: PRICING_VARIES,
       free: "Joining other singers' duets. VIP adds solo recording, the full catalog and starting your own duets.",
       practice: "Sing along to karaoke tracks with real-time pitch help, audio effects, duets and group songs.",
       range: "Change a song's key to fit your range.",
@@ -269,7 +272,7 @@ export const COMPETITORS: Competitor[] = [
       a: `No. Suede Sing is a singing-practice studio: it measures your range, scores your pitch note by note and trains your voice with warmups, ear training, breath drills and a free ${CATALOG_LESSON_COUNT}-lesson course. Its ${SONG_COUNT} public-domain songs open fitted to your range and are scored as you sing.`,
     },
     description: {
-      vs: "Suede Sing vs Smule: a scored singing-practice studio in the browser against a social karaoke app. Free tools, $79 once for Pro (November 2026).",
+      vs: "Suede Sing vs Smule: a scored singing-practice studio in the browser against a social karaoke app. Free tools, and Suede Pro at $79 once.",
       alternatives:
         "Smule alternatives for singers who want to practice: Suede Sing scores your pitch and measures your range free in the browser, plus five more apps.",
     },
@@ -283,12 +286,12 @@ export const COMPETITORS: Competitor[] = [
     name: "Simply Sing",
     maker: "Simply Ltd",
     builtFor: "Singing along to songs fitted to your voice",
-    priceShort: "Premium; US App Store items $4.99 to $89.99",
+    pricing: { label: "Simply Sing on the App Store (US)", url: "https://apps.apple.com/us/app/-/id1592900217" },
     about:
       "Simply Sing is a sing-along app from Simply Ltd, the company behind Simply Piano and Simply Guitar. It finds your voice type with an AI vocal check, adjusts songs to you and gives feedback, with levels that start on easy songs and daily singing tips. It runs on iPhone, iPad and Android.",
     facts: {
       platforms: "iPhone and iPad (iOS 16 or later), and Android.",
-      price: `Monthly and yearly Premium plans whose prices vary by country and platform. The US App Store lists Simply Sing Premium purchases from $4.99 to $89.99 (${COMPARISONS_AS_OF}).`,
+      price: PRICING_VARIES,
       free: "The vocal check, browsing the song library and song recommendations. Daily warm-ups and singing along need Premium.",
       practice: "Sing along to songs adjusted to your voice, with feedback.",
       range: "An AI-powered vocal check that finds your range and voice type.",
@@ -310,7 +313,7 @@ export const COMPETITORS: Competitor[] = [
       a: "Yes. Suede Sing runs in Chrome, Safari, Edge or Firefox on a laptop, a desktop or a phone, with nothing to install, and the Suede Voice app is free for iPhone and Android. Suede Pro's sync carries your scores and streaks across devices.",
     },
     description: {
-      vs: "Suede Sing vs Simply Sing: free warmups and a range test in any browser, and Suede Pro at $79 once instead of a Premium subscription (November 2026).",
+      vs: "Suede Sing vs Simply Sing: free scored warmups and a range test in any browser, and Suede Pro at $79 once for lifetime access.",
       alternatives:
         "Simply Sing alternatives: Suede Sing puts free scored warmups, a range test and a pitch meter in your browser, with Pro at $79 once. Five more apps too.",
     },
@@ -331,12 +334,12 @@ export const COMPETITORS: Competitor[] = [
     name: "Singeo",
     maker: "Musora Media Inc.",
     builtFor: "Video singing lessons and live streams",
-    priceShort: "$30 a month or $279 a year",
+    pricing: { label: "Singeo pricing", url: "https://www.singeo.com/" },
     about:
       "Singeo is an online singing-lesson membership from Musora Media. It teaches through step-by-step video lessons from singing teachers, with on-screen practice assignments, warm-up routines of 5 to 20 minutes, weekly live streams and a community. It runs on the web and in the Musora app for iOS and Android, and the membership also includes piano, guitar, bass and drum lessons.",
     facts: {
       platforms: "The web, plus the Musora app for iOS and Android.",
-      price: `$30 a month or $279 a year, with 7 days of free access and a 90-day money-back guarantee (${COMPARISONS_AS_OF}).`,
+      price: PRICING_VARIES,
       free: "7 days of free access, signing up with an email address and a card.",
       practice: "Video lessons with on-screen practice assignments and warm-up routines of 5 to 20 minutes.",
       range: "No range test is listed on its homepage.",
@@ -348,10 +351,7 @@ export const COMPETITORS: Competitor[] = [
         title: "Feedback from your own microphone",
         body: "Suede Sing listens while you sing. The pitch studio shows how many cents sharp or flat each note is, and every warmup rep is scored note by note.",
       },
-      {
-        title: "One payment instead of a membership",
-        body: `Suede Pro is ${SUEDE_PRICE_LINE}. Singeo is $30 a month, so Suede Pro costs less than three months of it (${COMPARISONS_AS_OF}).`,
-      },
+      SUEDE_EDGES.once,
       {
         title: "Start free, with no card",
         body: `The pitch studio, range test, recorder and the ${CATALOG_LESSON_COUNT}-lesson voice course are free with no daily limit and no payment details. Guided practice gets ${FREE_DAILY_MINUTES} free minutes a day.`,
@@ -363,7 +363,7 @@ export const COMPETITORS: Competitor[] = [
       a: `Yes. Suede Sing's voice course is free: ${COURSE.length} stages and ${CATALOG_LESSON_COUNT} short lessons, from room setup and range to registers, agility and style. Each lesson ends in a self-check and links to the practice room that trains it, where the microphone scores what you sing.`,
     },
     description: {
-      vs: "Suede Sing vs Singeo: live pitch scoring and a free voice course in the browser, against $30 a month for video lessons. Suede Pro is $79 once.",
+      vs: "Suede Sing vs Singeo: live pitch scoring from your microphone and a free voice course in the browser, against video lessons. Suede Pro is $79 once.",
       alternatives:
         "Singeo alternatives for singers: Suede Sing scores your pitch from the microphone and has a free voice course, with Pro at $79 once. Plus five more apps.",
     },
@@ -374,12 +374,12 @@ export const COMPETITORS: Competitor[] = [
     name: "Sing Sharp",
     maker: "Sing Sharp Limited",
     builtFor: "Vocal exercises and training programs on mobile",
-    priceShort: "Memberships from $19.99 a month on the App Store",
+    pricing: { label: "Sing Sharp on the App Store (US)", url: "https://apps.apple.com/app/id772052329" },
     about:
       "Sing Sharp is a singing-lessons app for iPhone, iPad and Android, published on the App Store by Sing Sharp Limited. It gives real-time pitch feedback, a vocal range test, six training programs such as Daily Workout and Sing High Notes, ear training, video lesson demonstrations and audio and video recording. Both store listings note that the app contains ads.",
     facts: {
       platforms: "iPhone, iPad and Apple silicon Macs (as an iPad app), plus Android.",
-      price: `US App Store memberships at $19.99 a month, $39.99 for three months and $99.99 a year, plus a separate $29.99 one-year item and $2.99 ad removal (${COMPARISONS_AS_OF}).`,
+      price: PRICING_VARIES,
       free: "A free download with ads and in-app purchases.",
       practice: "Real-time pitch feedback that shows the notes you hit or miss, plus a resonance view.",
       range: "A short vocal range test.",
@@ -388,10 +388,7 @@ export const COMPETITORS: Competitor[] = [
     },
     edges: [
       SUEDE_EDGES.noAds,
-      {
-        title: "One payment instead of a membership",
-        body: `Suede Pro is ${SUEDE_PRICE_LINE}. The Sing Sharp monthly membership is $19.99, so Suede Pro costs less than four months of it (${COMPARISONS_AS_OF}).`,
-      },
+      SUEDE_EDGES.once,
       SUEDE_EDGES.browser,
       {
         title: "Songs fitted to your range",
@@ -404,7 +401,7 @@ export const COMPETITORS: Competitor[] = [
       a: "No. Suede Sing shows no ads on the free plan or on Suede Pro, and there is no ad-removal purchase because there is nothing to remove.",
     },
     description: {
-      vs: "Suede Sing vs Sing Sharp: no ads, free pitch and range tools in any browser, and Pro at $79 once against memberships from $19.99 a month (Nov 2026).",
+      vs: "Suede Sing vs Sing Sharp: no ads, free pitch and range tools in any browser, and Suede Pro at $79 once for lifetime access.",
       alternatives:
         "Sing Sharp alternatives: Suede Sing has no ads, free pitch and range tools in the browser and Suede Pro at $79 once. Compare it and five more apps.",
     },
@@ -461,7 +458,7 @@ export function listJoin(items: readonly string[]): string {
 
 /** The direct answer a vs page opens on. */
 export function vsAnswer(c: Competitor): string {
-  return `Suede Sing is the stronger pick for singers who want to measure and train their voice. It runs in any modern browser with nothing to install, its pitch studio and range test are free with no daily limit, and Suede Pro is ${SUEDE_PRICE_LINE}. ${c.name} is built around ${lowerFirst(c.builtFor)}; its price ${COMPARISONS_AS_OF}: ${c.priceShort}.`;
+  return `Suede Sing is the stronger pick for singers who want to measure and train their voice. It runs in any modern browser with nothing to install, its pitch studio and range test are free with no daily limit, and Suede Pro is ${SUEDE_PRICE_LINE}. ${c.name} is built around ${lowerFirst(c.builtFor)}, and its pricing varies.`;
 }
 
 /** The direct answer an alternatives page opens on. */
@@ -477,6 +474,16 @@ function lowerFirst(text: string): string {
   return text[0].toLowerCase() + text.slice(1);
 }
 
+/** The vs page answer on cost: Suede Sing's own price, the competitor's listing for theirs. */
+export function competitorPriceAnswer(c: Competitor): string {
+  return `${c.name} ${lowerFirst(PRICING_VARIES)}, and ${c.pricing.label} lists its current plans. Suede Sing has a free plan with no daily limit on its core tools, and Suede Pro is ${SUEDE_PRICE_LINE}, the price on sing.suedeai.ai/pro.`;
+}
+
+/** Plain-text price line for llms-full.txt: "Pricing varies" plus the competitor's own listing. */
+export function competitorPriceText(c: Competitor): string {
+  return `${PRICING_VARIES}. Current pricing: ${c.pricing.label}, ${c.pricing.url}`;
+}
+
 /** Questions every vs page answers, then the product-specific one. */
 export function vsFaq(c: Competitor): Faq[] {
   return [
@@ -486,7 +493,7 @@ export function vsFaq(c: Competitor): Faq[] {
     },
     {
       q: `How much does ${c.name} cost compared with Suede Sing?`,
-      a: `${c.facts.price} Suede Sing has a free plan, and Suede Pro is ${SUEDE_PRICE_LINE}, the price on sing.suedeai.ai/pro.`,
+      a: competitorPriceAnswer(c),
     },
     {
       q: "Is Suede Sing free?",
@@ -527,7 +534,7 @@ export function hubFaq(): Faq[] {
   return [
     {
       q: "Which singing apps does this page compare?",
-      a: `Suede Sing next to ${listJoin(COMPETITORS.map((c) => c.name))}. Each has its own side-by-side page and an alternatives page, with prices checked ${COMPARISONS_AS_OF} and every source linked.`,
+      a: `Suede Sing next to ${listJoin(COMPETITORS.map((c) => c.name))}. Each has its own side-by-side page and an alternatives page, with every source linked.`,
     },
     {
       q: "Which singing app can I use free in a browser?",
@@ -539,7 +546,7 @@ export function hubFaq(): Faq[] {
     },
     {
       q: "How were these comparisons checked?",
-      a: `Every competitor fact on these pages comes from that product's own website, help center or app store listing, checked on ${COMPARISONS_CHECKED_LABEL}. Prices change and vary by country and platform, so each page links the source it used.`,
+      a: `Every competitor fact on these pages comes from that product's own website, help center or app store listing, checked on ${COMPARISONS_CHECKED_LABEL}. Competitor pricing varies by country and platform, so each page links that app's own pricing page or store listing.`,
     },
   ];
 }
