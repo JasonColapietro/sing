@@ -305,9 +305,9 @@ export default function Home() {
           <div className="mt-8">
             <ComparisonTable />
           </div>
-          {/* Crawlable links into the comparison pages, prices and sources included there. */}
+          {/* Crawlable links into the comparison pages, sources included there. */}
           <p className="mt-6 max-w-3xl text-sm text-mut">
-            Full comparisons, with prices and sources:{" "}
+            Full comparisons, feature by feature with sources:{" "}
             {COMPETITORS.map((c, i) => (
               <span key={c.slug}>
                 {i > 0 && (i === COMPETITORS.length - 1 ? " and " : ", ")}

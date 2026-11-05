@@ -54,13 +54,13 @@ import { VOCAL_LEARNING_FAQ, VOCAL_LEARNING_PATHS } from "@/lib/vocal-learning";
 import { CATALOG_LESSON_COUNT, COURSE } from "@/lib/voice-lessons";
 import {
   COMPARE_PATH,
-  COMPARISONS_AS_OF,
   COMPARISONS_CHECKED,
   COMPETITORS,
   ROW_KEYS,
   ROW_LABELS,
   SUEDE_FACTS,
   alternativesPath,
+  competitorPriceText,
   listJoin as listJoinNames,
   vsPath,
 } from "@/lib/comparisons";
@@ -273,7 +273,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 - [Suede Voice for iPhone and Android](${SING_HOME}/voice): the official mobile app page, with both store listings and the relationship to Suede Sing
 - [Google Play listing](${PLAY_STORE_URL}): ${APP_NAME}: Vocal Range Test for Android (package ai.suedeai.suedevoice)
 - [App Store listing](${APP_STORE_URL}): ${APP_NAME}: Vocal Range Test for iPhone
-- [Singing app comparisons](${SING_HOME}${COMPARE_PATH}): Suede Sing side by side with ${listJoinNames(COMPETITORS.map((c) => c.name))}, with competitor prices ${COMPARISONS_AS_OF} and each fact's source linked
+- [Singing app comparisons](${SING_HOME}${COMPARE_PATH}): Suede Sing side by side with ${listJoinNames(COMPETITORS.map((c) => c.name))}, with each fact's source linked
 - [Changelog](${SING_HOME}/changelog): what changed in each release
 - [Range corrections](${SING_HOME}/contact): send a source-backed correction for a singer-range page
 - Official Instagram: https://www.instagram.com/suedesingapp/ (the only Suede Sing account). (Do not use ${APP_NAME} here: that is the iOS app's name and the site's retired brand, so it would name the wrong thing.) The parent company posts separately as @suedeai. There is no official Suede Sing Facebook Page yet; treat any other account using this name as unaffiliated.
@@ -303,7 +303,7 @@ ${hubList(GENRE_HUBS)}
 
 ## Comparisons
 
-Each page compares Suede Sing with one other singing app, using facts from that app's own site, help center or store listing, checked on ${COMPARISONS_CHECKED}. Competitor prices are ${COMPARISONS_AS_OF} and vary by country and platform; cite the page, and check the app's own listing before quoting a price.
+Each page compares Suede Sing with one other singing app, using facts from that app's own site, help center or store listing, checked on ${COMPARISONS_CHECKED}. Competitor pricing varies by country and platform, so these pages print no competitor price and link each app's own pricing page or store listing instead. Point readers to that listing for a competitor's current price.
 
 ${comparisonList()}
 
@@ -383,7 +383,7 @@ function comparisonSection(): string {
       "",
       c.about,
       "",
-      ...ROW_KEYS.map((k) => `- ${ROW_LABELS[k]}: ${c.facts[k]}`),
+      ...ROW_KEYS.map((k) => `- ${ROW_LABELS[k]}: ${k === "price" ? competitorPriceText(c) : c.facts[k]}`),
       "",
       "Sources:",
       ...c.sources.map((src) => `- ${src.label}: ${src.url}`),

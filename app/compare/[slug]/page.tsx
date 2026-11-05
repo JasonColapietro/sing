@@ -16,7 +16,7 @@ import {
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import {
   COMPARE_PATH,
-  COMPARISONS_AS_OF,
+  COMPARISONS_MONTH,
   SUEDE_EDGES,
   SUEDE_PRICE_LINE,
   allSources,
@@ -116,7 +116,7 @@ function VsPage({ competitor: c }: { competitor: Competitor }) {
   const trail = crumbs("vs", c);
   return (
     <PageShell
-      kicker={`Comparison · ${COMPARISONS_AS_OF}`}
+      kicker={`Comparison · ${COMPARISONS_MONTH}`}
       title={`Suede Sing vs ${c.name}`}
       subtitle={vsAnswer(c)}
       actions={<Actions />}
@@ -137,8 +137,8 @@ function VsPage({ competitor: c }: { competitor: Competitor }) {
           <SectionLabel>Side by side</SectionLabel>
           <h2 className="mt-3 text-xl">How do Suede Sing and {c.name} compare?</h2>
           <p className="mt-3 max-w-3xl text-mut">
-            Seven things a singer weighs before practicing, with {c.name}&apos;s price{" "}
-            {COMPARISONS_AS_OF} and its facts taken from its own site and store listings.
+            Seven things a singer weighs before practicing, with {c.name}&apos;s facts taken
+            from its own site and store listings.
           </p>
           <SideBySideTable competitor={c} />
         </Card>
@@ -197,7 +197,7 @@ function AlternativesPage({ competitor: c }: { competitor: Competitor }) {
   const others = otherCompetitors(c);
   return (
     <PageShell
-      kicker={`Alternatives · ${COMPARISONS_AS_OF}`}
+      kicker={`Alternatives · ${COMPARISONS_MONTH}`}
       title={`${c.name} alternatives for singing practice`}
       subtitle={alternativesAnswer(c)}
       actions={<Actions />}
@@ -232,13 +232,12 @@ function AlternativesPage({ competitor: c }: { competitor: Competitor }) {
           <h2 className="mt-3 text-xl">What other {c.name} alternatives are there?</h2>
           <p className="mt-3 max-w-3xl text-mut">
             Suede Sing leads this list, and these are the other apps singers weigh against{" "}
-            {c.name}. Prices are {COMPARISONS_AS_OF}, from each product&apos;s own site or store
-            listing.
+            {c.name}. Each price links to that product&apos;s own site or store listing.
           </p>
           <AppsTable
             competitors={others}
             links="vs"
-            caption={`${c.name} alternatives: Suede Sing and ${others.length} more apps, what each is built for, where it runs and its price ${COMPARISONS_AS_OF}.`}
+            caption={`${c.name} alternatives: Suede Sing and ${others.length} more apps, what each is built for, where it runs and its price.`}
           />
         </Card>
 
