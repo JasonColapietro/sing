@@ -34,6 +34,7 @@ import {
   endpointSongs,
   endpointSongsHeading,
   endpointSongsLead,
+  signatureListen,
 } from "@/lib/singer-endpoint-songs";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
@@ -314,6 +315,7 @@ export default async function SingerPage({
   const nearSongs = fittingSongs.length === 0 ? closestSongs(s) : [];
   const endpointSongList = endpointSongs(s);
   const endpointLead = endpointSongsLead(s);
+  const signature = signatureListen(s);
   const training = singerTraining(s);
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
@@ -520,6 +522,32 @@ export default async function SingerPage({
               </Link>
               .
             </p>
+          </Card>
+        )}
+
+        {/* No song tied to either end: the signature song still gives the page something to play. */}
+        {signature && (
+          <Card>
+            <h2 id="hear-the-notes" className="scroll-mt-24 text-xl">
+              Hear {s.name} sing &ldquo;{signature.song}&rdquo;
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm text-mut">
+              Start with {s.name}&rsquo;s signature song. Play it, follow the line, and hear
+              where the voice sits.
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <a
+                href={signature.listenUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center text-sm text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+              >
+                Listen on YouTube<span className="sr-only"> (opens in a new tab)</span>
+              </a>
+              <Link href={rangeTestHref({ compare: s.slug })} prefetch={false} className="text-sm text-violet-ink underline underline-offset-4">
+                Test your range against {s.name}
+              </Link>
+            </div>
           </Card>
         )}
 

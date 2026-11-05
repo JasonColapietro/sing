@@ -16,7 +16,7 @@ import type { Singer } from "@/lib/singers-data";
  * "reported" framing.
  */
 
-type EndpointFields = Pick<Singer, "slug" | "name" | "lowMidi" | "highMidi" | "lowSource" | "highSource">;
+type EndpointFields = Pick<Singer, "slug" | "name" | "lowMidi" | "highMidi" | "lowSource" | "highSource" | "signatureSong">;
 
 export interface EndpointSong {
   end: "high" | "low";
@@ -68,7 +68,7 @@ export function endpointSongsHeading(s: EndpointFields): string {
 
 /** Card label for one song. */
 export function endpointSongLabel(item: EndpointSong): string {
-  if (item.origin === "cited") return item.end === "high" ? "Most cited high note" : "Most cited low note";
+  if (item.origin === "cited") return item.end === "high" ? "High note" : "Low note";
   return item.end === "high" ? "Highest note" : "Lowest note";
 }
 
@@ -84,7 +84,7 @@ export function endpointSongsLead(s: EndpointFields): string | null {
     return `Both ends of ${s.name}’s range come from one song: “${high.song}.” Play it and listen for the ${low.note} at the bottom and the ${high.note} at the top.`;
   }
   if (cited && high && low) {
-    return `These are the songs most often cited for ${s.name}’s top and bottom notes: the ${high.note} in “${high.song}” and the ${low.note} in “${low.song}.” Press play and listen for them.`;
+    return `These songs show the top and bottom of ${s.name}’s range: the ${high.note} in “${high.song}” and the ${low.note} in “${low.song}.” Press play and listen for them.`;
   }
   if (high && low) {
     return `The songs below hold ${s.name}’s highest and lowest notes. Play them and listen for the ${high.note} at the top and the ${low.note} at the bottom.`;
@@ -92,7 +92,7 @@ export function endpointSongsLead(s: EndpointFields): string | null {
   const only = (high ?? low)!;
   const which = only.end === "high" ? "highest" : "lowest";
   return only.origin === "cited"
-    ? `The song below is the one most often cited for ${s.name}’s ${which} note, ${only.note}. Play it and listen for it.`
+    ? `The song below shows the ${only.end === "high" ? "top" : "bottom"} of ${s.name}’s range: the ${only.note} in “${only.song}.” Play it and listen for it.`
     : `The song below holds ${s.name}’s ${which} note, ${only.note}. Play it and listen for it.`;
 }
 
@@ -101,7 +101,7 @@ export function endpointSongFaqClause(s: EndpointFields, end: "high" | "low"): s
   const item = endpointSongs(s).find((x) => x.end === end);
   if (!item) return "";
   if (item.origin === "catalog") return ` Listen for it in “${item.song}.”`;
-  return ` The song most often cited for the ${end === "high" ? "top" : "bottom"} of ${s.name}’s range is “${item.song},” at ${item.note}.`;
+  return ` For the ${end === "high" ? "top" : "bottom"} of ${s.name}’s range, listen to “${item.song},” at ${item.note}.`;
 }
 
 /**
@@ -110,8 +110,21 @@ export function endpointSongFaqClause(s: EndpointFields, end: "high" | "low"): s
  */
 export function endpointSongHook(s: EndpointFields): string | null {
   const [first] = endpointSongs(s);
-  if (!first) return null;
+  if (!first) {
+    const sig = clean(s.signatureSong);
+    return sig ? `Hear “${sig}”` : null;
+  }
   return first.end === "high"
     ? `Hear the ${first.note} in “${first.song}”`
     : `Hear the low ${first.note} in “${first.song}”`;
+}
+
+/**
+ * For a page with no song tied to either end: the singer's signature song, so
+ * every page still has something to press play on. It names no note.
+ */
+export function signatureListen(s: EndpointFields): { song: string; listenUrl: string } | null {
+  if (endpointSongs(s).length > 0) return null;
+  const song = clean(s.signatureSong);
+  return song ? { song, listenUrl: listenUrl(s.name, song) } : null;
 }

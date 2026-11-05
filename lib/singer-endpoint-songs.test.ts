@@ -10,6 +10,7 @@ import {
   endpointSongsHeading,
   endpointSongsLead,
   listenUrl,
+  signatureListen,
 } from "@/lib/singer-endpoint-songs";
 
 const bySlug = (slug: string) => SINGERS.find((s) => s.slug === slug)!;
@@ -28,17 +29,21 @@ describe("singer endpoint songs", () => {
   });
 
   it("handles a singer with only a high song", () => {
-    const s = bySlug("jeff-buckley");
-    expect(endpointSongs(s)).toHaveLength(1);
-    expect(endpointSongHook(s)).toBe("Hear the D6 in “Grace”");
-    expect(endpointSongsLead(s)).toBe("The song below holds Jeff Buckley’s highest note, D6. Play it and listen for it.");
+    const s = SINGERS.find((x) => endpointSongs(x).map((e) => e.end).join() === "high")!;
+    const [only] = endpointSongs(s);
+    expect(endpointSongHook(s)).toBe(`Hear the ${only.note} in “${only.song}”`);
+    expect(endpointSongsLead(s)).toMatch(/highest note|top of/);
   });
 
-  it("returns nothing when no song is tied to either end", () => {
-    const s = bySlug("celine-dion");
-    expect(endpointSongs(s)).toEqual([]);
+  it("falls back to the signature song when no song is tied to either end", () => {
+    const s = SINGERS.find((x) => endpointSongs(x).length === 0)!;
     expect(endpointSongsLead(s)).toBeNull();
-    expect(endpointSongHook(s)).toBeNull();
+    expect(signatureListen(s)?.song).toBe(s.signatureSong);
+    expect(endpointSongHook(s)).toBe(`Hear “${s.signatureSong}”`);
+  });
+
+  it("gives every singer page something to play", () => {
+    for (const s of SINGERS) expect(endpointSongs(s).length > 0 || signatureListen(s) !== null, s.slug).toBe(true);
   });
 
   it("links a plain YouTube search, URL-encoded", () => {
@@ -52,21 +57,22 @@ describe("singer endpoint songs", () => {
     }
   });
 
-  it("fills the biggest pages from the most cited songs, labeled as such", () => {
+  it("fills the biggest pages from cited songs, labeled by the note each song reaches", () => {
     const s = bySlug("bruno-mars");
     const songs = endpointSongs(s);
     expect(songs.map((x) => [x.end, x.note, x.song, x.origin])).toEqual([
       ["high", "A5", "Gorilla", "cited"],
       ["low", "G#2", "Liquor Store Blues", "cited"],
     ]);
-    expect(songs.map(endpointSongLabel)).toEqual(["Most cited high note", "Most cited low note"]);
+    expect(songs.map(endpointSongLabel)).toEqual(["High note", "Low note"]);
     expect(endpointSongHook(s)).toBe("Hear the A5 in “Gorilla”");
-    expect(endpointSongFaqClause(s, "high")).toBe(" The song most often cited for the top of Bruno Mars’s range is “Gorilla,” at A5.");
+    expect(endpointSongFaqClause(s, "high")).toBe(" For the top of Bruno Mars’s range, listen to “Gorilla,” at A5.");
   });
 
   it("names only the ends it has songs for in the heading", () => {
     expect(endpointSongsHeading(bySlug("taylor-swift"))).toBe("Hear Taylor Swift’s lowest note");
-    expect(endpointSongsHeading(bySlug("jeff-buckley"))).toBe("Hear Jeff Buckley’s highest note");
+    const highOnly = SINGERS.find((x) => endpointSongs(x).map((e) => e.end).join() === "high")!;
+    expect(endpointSongsHeading(highOnly)).toBe(`Hear ${highOnly.name}’s highest note`);
     expect(endpointSongsHeading(bySlug("stevie-wonder"))).toBe("Hear Stevie Wonder’s highest and lowest notes");
   });
 

@@ -148,7 +148,9 @@ function expectedSnippet(singer: (typeof SINGERS)[number]): string {
         ? `Hear the low ${midiToLabel(singer.lowMidi)} in “${singer.lowSource}”`
         : cited?.low
           ? `Hear the low ${cited.low.note} in “${cited.low.song}”`
-          : null;
+          : singer.signatureSong
+            ? `Hear “${singer.signatureSong}”`
+            : null;
   if (hook) {
     const hooked = [`${typed} ${hook}, then test your range free.`, `${typed} ${hook}.`].find((t) => t.length <= 155);
     if (hooked) return hooked;

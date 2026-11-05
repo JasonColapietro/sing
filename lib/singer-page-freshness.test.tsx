@@ -44,6 +44,7 @@ const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
   // the song named in the highest/lowest-note FAQ answers, and the song hook in the search snippet.
   // 2026-11-04: Olivia Rodrigo's card shows the most cited songs for her top and bottom notes.
   // 2026-11-04: every page closes on a "Train for this sound" card naming one program or routine.
+  // 2026-11-04: most cited high/low songs for 303 more singers; the rest get a signature-song card.
   // 2026-11-03: the closing card's heading asks how much of the singer's reported range the reader's
   // range covers, instead of repeating the button ("Test my range against ...") below it.
   // 2026-11-03: the nearest-reported-floors row skips voices already shown as similar-voice cards
@@ -56,12 +57,12 @@ const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
   // round 18: similar voices picked by nearest endpoints, the span histogram captioned;
   // round 20: similar voices ranked by range distance first, the label only breaking ties;
   // round 21: the similar-range FAQ states that rule, the songs card names the range pages and counts what it lists, and the closing line names what the comparison chart draws.
-  "olivia-rodrigo": { fingerprint: "3bb2f395c12e43e4", lastModified: "2026-11-04" },
-  "reba-mcentire": { fingerprint: "d6da8d3e3812ff7a", lastModified: "2026-11-04" },
+  "olivia-rodrigo": { fingerprint: "222172d5b3327148", lastModified: "2026-11-04" },
+  "reba-mcentire": { fingerprint: "a9812c55d5295db9", lastModified: "2026-11-04" },
   "alex-warren": { fingerprint: "78ccf89b3ae85e98", lastModified: "2026-11-04" },
-  "sam-smith": { fingerprint: "3cb42fb6808e7056", lastModified: "2026-11-04" },
-  "arijit-singh": { fingerprint: "4318acf15fa01c78", lastModified: "2026-11-04" },
-  adele: { fingerprint: "7393468a7b014385", lastModified: "2026-11-04" },
+  "sam-smith": { fingerprint: "413bdc2cd03ffc4d", lastModified: "2026-11-04" },
+  "arijit-singh": { fingerprint: "a64c96c0a7db42e7", lastModified: "2026-11-04" },
+  adele: { fingerprint: "e567f4c267396fec", lastModified: "2026-11-04" },
 };
 
 describe("reviewed singer page freshness", () => {
