@@ -45,7 +45,7 @@ Weeks 2 to 4 repeat one week of four day types.
 
 "The everyday set, then cells" uses the longer Daily warmup before the pack.
 
-There is a rest day on day 4 and day 7 of every week, and every Pro day ends on the cool-down. The last day repeats day 1's warm-in and range test, then sings the pack once more.
+There is a rest day on day 4 and day 7 of every week, and every Pro day ends on the cool-down. The last day is the check-in: it repeats day 1's warm-in and range test, then sings the pack once more.
 
 ## Three faults, and what fixes them
 

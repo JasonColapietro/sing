@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 28,
-    words: 39477,
+    words: 39493,
     free: 3,
     pdfMb: 1.4,
     href: "/book",
@@ -94,7 +94,7 @@ export const ATLAS_VOICE_COUNT = 636;
  * the guitar senses live in it too, and the guitar hub publishes those, so
  * counting them here would promise a singer pages this site does not have.
  */
-export const GLOSSARY_COUNT = 42;
+export const GLOSSARY_COUNT = 84;
 
 /** Practice rooms, all free. */
 export const ROOM_COUNT = 10;

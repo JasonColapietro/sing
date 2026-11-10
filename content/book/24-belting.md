@@ -35,7 +35,7 @@ Weeks 2 and 3 are the Belt prep pack. It opens at speaking pitch with a bratty "
 
 Weeks 4 to 6 add two things. The "Longer holds" day follows the pack with six more reps each of the forte "ah" hold and the fifth hold. The "Leaps into a strong note" day swaps the pack for Leaps and intervals, then adds the fifth hold and the octave-drop "hey". A leap is how a belt usually arrives in a song: the melody jumps a fourth or a fifth onto the long note of the chorus. Landing on that note without a scoop, at the pitch and in the bright sound, is the skill.
 
-There is a rest day on day 4 and day 7 of every week. Take them. The last day repeats day 1's warm-in and range test, then sings the pack once more.
+There is a rest day on day 4 and day 7 of every week. Take them. The last day is the check-in: it repeats day 1's warm-in and range test, then sings the pack once more.
 
 ## What the app scores, and what it cannot
 

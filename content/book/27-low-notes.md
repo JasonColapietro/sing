@@ -45,7 +45,7 @@ Weeks 2 and 3 are the Low notes pack. It has eight exercises: a slow five down o
 
 There are three kinds of day. One sings the pack after the Quick warmup. One sings it after the longer Daily warmup. And one, "Quiet sounds, then low holds", opens on the Easy recovery routine instead of a warmup, then sings the pack and four extra reps of the low hold. That day is the quietest of the week on purpose. Low notes like a voice that has not been asked for much.
 
-There is a rest day on day 4 and day 7 of every week, and every Pro day ends on the cool-down. The last day repeats day 1's warm-in and range test, then sings the pack once more.
+There is a rest day on day 4 and day 7 of every week, and every Pro day ends on the cool-down. The last day is the check-in: it repeats day 1's warm-in and range test, then sings the pack once more.
 
 ## Three rules for every low rep
 

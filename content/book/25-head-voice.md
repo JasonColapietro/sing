@@ -37,7 +37,7 @@ Week 3 adds the High notes routine on two days, which goes past the octave to th
 
 Week 4 adds the long notes. The "Notes that hover" day follows the pack with six reps of the top-note float and four of the vibrato hold on the fourth. Those are the first long sustains above your speaking range, and they come last on purpose. A sustained note asks the setup to stay put for seconds at a time. By week 4 it can.
 
-There is a rest day on day 4 and day 7 of every week. The last day repeats day 1's warm-in and range test, then sings the pack once more. Every Pro day ends on the cool-down.
+There is a rest day on day 4 and day 7 of every week. The last day is the check-in: it repeats day 1's warm-in and range test, then sings the pack once more. Every Pro day ends on the cool-down.
 
 ## The crack is information
 
