@@ -236,7 +236,7 @@ async function checkDisabledAffordances(ctx, findings) {
  * below is worded as "no confirmation signal at rest", not "no confirmation
  * exists" — the first is what this probe actually verified.
  */
-async function checkDestructiveActions(ctx, findings) {
+export async function checkDestructiveActions(ctx, findings) {
   const unconfirmed = await ctx.page.evaluate(() => {
     // Anchored to the start of the label, where a destructive action names its
     // verb ("Delete take", "Clear history", "Reset progress"). Unanchored, it
@@ -248,6 +248,12 @@ async function checkDestructiveActions(ctx, findings) {
     document.querySelectorAll("button, [role='button'], a[href]").forEach((el) => {
       const label = (el.getAttribute("aria-label") || el.textContent || "").trim();
       if (!label || !destructiveRe.test(label)) return;
+      // "Clear words" names the diction pack, not an erase operation. Both
+      // locked pack links navigate to Pro; never exempt a button or another
+      // destination merely because its label starts with "Clear".
+      if (el.tagName === "A" && el.getAttribute("href") === "/pro"
+        && el.getAttribute("role") !== "button" && /^clear words(?:pro|\b)/i.test(label)) return;
+
 
       const hasPopup = el.hasAttribute("aria-haspopup") && el.getAttribute("aria-haspopup") !== "false";
       const hasTitle = !!(el.getAttribute("title") || "").trim();

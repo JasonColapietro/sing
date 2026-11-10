@@ -13,7 +13,7 @@ This chapter goes with the program called Low notes in 3 weeks. Chapter 18 alrea
 
 As pitch falls, the folds shorten, thicken and slacken. A slack fold needs very little air pressure to vibrate, and it does not tolerate much. Push more air at a low note and it does not get bigger. It gets rough, or it collapses into a rattle.
 
-That rattle is vocal fry: the folds so slack that they open and close in slow, uneven pulses. It is a real register and speakers use it all the time. It is not a sung pitch, the app cannot score it, and the range test does not count it. Your lowest sung note is the lowest one that still has a clear, steady tone.
+That rattle is vocal fry: the folds so slack that they open and close in slow, uneven pulses. It is a real register and speakers use it all the time. The pitch detector cannot tell you which vocal mechanism produced a note. Do not submit fry as a clear sung note or include it in your measured range. Your lowest sung note is the lowest one that still has a clear, steady tone.
 
 So the bottom of the voice is a place where less is the only thing that works. Chapter 18 put it in three words: low notes are made by release.
 
