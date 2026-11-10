@@ -4015,7 +4015,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 32430,
+      "totalWords": 39477,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -4246,6 +4246,56 @@
           "free": false,
           "words": 1429,
           "path": "/book/building-a-set"
+        },
+        {
+          "slug": "belting",
+          "order": 24,
+          "title": "Belt: a call, not a shout",
+          "part": "Skill programs",
+          "summary": "What a belt physically is, how the six-week belt program builds one from speaking pitch upward, what the app can and cannot score, and the signs that mean stop.",
+          "free": false,
+          "words": 1371,
+          "path": "/book/belting"
+        },
+        {
+          "slug": "head-voice",
+          "order": 25,
+          "title": "Head voice: light is not weak",
+          "part": "Skill programs",
+          "summary": "What head voice is, how it differs from falsetto, how the four-week head voice program builds it from hums and sirens to notes that hover, and what the app can score along the way.",
+          "free": false,
+          "words": 1428,
+          "path": "/book/head-voice"
+        },
+        {
+          "slug": "riffs-and-runs",
+          "order": 26,
+          "title": "Riffs and runs: slow is the method",
+          "part": "Skill programs",
+          "summary": "What a run is made of, why speed comes from accuracy rather than the other way round, how the four-week riffs and runs program builds one cell at a time, and what the score tells you.",
+          "free": false,
+          "words": 1392,
+          "path": "/book/riffs-and-runs"
+        },
+        {
+          "slug": "low-notes",
+          "order": 27,
+          "title": "Low notes: release, not reach",
+          "part": "Skill programs",
+          "summary": "Why low notes get worse with effort, what the three-week low notes program does about it, where vocal fry fits and where it does not, and why your floor may already be your floor.",
+          "free": false,
+          "words": 1460,
+          "path": "/book/low-notes"
+        },
+        {
+          "slug": "longer-phrases",
+          "order": 28,
+          "title": "Longer phrases: spending the breath",
+          "part": "Skill programs",
+          "summary": "Why running out of air is a spending problem rather than a capacity problem, how the four-week longer phrases program trains the spend, where consonants come in, and what the sustain test does and does not show.",
+          "free": false,
+          "words": 1396,
+          "path": "/book/longer-phrases"
         }
       ]
     },

@@ -844,6 +844,7 @@ const BELT: Program = {
     "Every exercise scores how close each note landed. The app cannot hear how loud you are or how the sound is made, so the strength of it is yours to judge. A range test opens and closes the six weeks.",
   weeks: 6,
   pro: true,
+  chapters: [{ fromWeek: 1, toWeek: 6, slug: "belting", title: "Belt: a call, not a shout" }],
   // Chapters 6 and 24: hoarseness after belting is a sign to back off, and a
   // voice that stays rough is a question for a doctor, not for a seventh week.
   finished:
@@ -907,6 +908,7 @@ const HEAD_VOICE: Program = {
     "Every exercise scores how close each note landed. The app cannot hear which register you are in, so whether a note is head voice, falsetto or a mix is yours to judge. A range test opens and closes the four weeks.",
   weeks: 4,
   pro: true,
+  chapters: [{ fromWeek: 1, toWeek: 4, slug: "head-voice", title: "Head voice: light is not weak" }],
   days: [
     ...week([HEAD_FREE_A, HEAD_FREE_B, HEAD_FREE_C, rest(), HEAD_FREE_A, HEAD_FREE_B, rest()], { 0: HEAD_CHECK.first }),
     ...week([HEAD_PACK, HEAD_EVERYDAY, HEAD_PACK, rest(), HEAD_PACK, HEAD_EVERYDAY, rest()]),
@@ -965,6 +967,7 @@ const RUNS: Program = {
     "Every exercise scores how close each note landed at the tempo you set. The app cannot hear style or feel, so whether a run sounds like music is yours to judge. A range test opens and closes the four weeks.",
   weeks: 4,
   pro: true,
+  chapters: [{ fromWeek: 1, toWeek: 4, slug: "riffs-and-runs", title: "Riffs and runs: slow is the method" }],
   days: [
     ...week([RUNS_FREE_A, RUNS_FREE_B, RUNS_FREE_C, rest(), RUNS_FREE_A, RUNS_FREE_B, rest()], { 0: RUNS_CHECK.first }),
     ...week(RUNS_WEEK),
@@ -1015,6 +1018,7 @@ const LOW_NOTES: Program = {
     "Every exercise scores how close each note landed. The app cannot hear how a low note is made, so whether it is clear or gravelly is yours to judge. A range test opens and closes the three weeks; whether the lowest note moves is up to your voice.",
   weeks: 3,
   pro: true,
+  chapters: [{ fromWeek: 1, toWeek: 3, slug: "low-notes", title: "Low notes: release, not reach" }],
   // Chapters 6 and 27: the floor of a voice is mostly anatomy, and pressing
   // for a lower note is how a low practice turns into a rough voice.
   finished:
@@ -1096,6 +1100,7 @@ const LONG_PHRASES: Program = {
     "Every exercise scores how close each note landed, so a note dropped for a breath shows as missed. The app cannot hear the breath itself; how the phrase felt is yours to judge. Day 1 and the last day take a range test and a sustain test, so you can compare the seconds you held.",
   weeks: 4,
   pro: true,
+  chapters: [{ fromWeek: 1, toWeek: 4, slug: "longer-phrases", title: "Longer phrases: spending the breath" }],
   days: [
     ...week([PHRASE_FREE_A, PHRASE_FREE_B, PHRASE_FREE_C, rest(), PHRASE_FREE_A, PHRASE_FREE_B, rest()], {
       0: PHRASE_CHECK.first,

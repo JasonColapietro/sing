@@ -33,10 +33,10 @@ export interface BookInventory {
 export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
-    chapters: 23,
-    words: 32430,
+    chapters: 28,
+    words: 39477,
     free: 3,
-    pdfMb: 1.0,
+    pdfMb: 1.4,
     href: "/book",
   },
   {

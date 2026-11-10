@@ -668,7 +668,7 @@ export const PLAN_ROWS: Array<{
       : "Saved in this browser; export from Progress",
     pro: "Continuous two-way sync across devices",
   },
-  { label: "The Measured Voice (book)", free: "Contents + 3 chapters", pro: "All 23 chapters + PDF" },
+  { label: "The Measured Voice (book)", free: "Contents + 3 chapters", pro: "All 28 chapters + PDF" },
   { label: "The Voice Atlas (book)", free: "Contents + first 3 chapters", pro: "All 27 chapters + PDF" },
   // Singer pages have always been free and the comparison table never said
   // so — the single largest free asset in the product, invisible on the page
