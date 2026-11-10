@@ -80,6 +80,243 @@ export interface GlossarySection {
 
 export const GLOSSARY: GlossarySection[] = [
   {
+  "heading": "Technique and practice",
+  "blurb": "Words used in the guided programs and their reading.",
+  "entries": [
+    {
+      "term": "Call",
+      "domain": "voice",
+      "definition": "A speech-like projected sound used as a reference for belt practice.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Riff",
+      "domain": "music",
+      "definition": "A short recognizable musical figure that can be repeated or varied.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Run",
+      "domain": "music",
+      "definition": "A quick sequence of pitches sung as a connected melodic gesture.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Melisma",
+      "domain": "music",
+      "definition": "Several notes sung on one syllable.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Turn",
+      "domain": "music",
+      "definition": "An ornament that moves around a main note through neighboring pitches.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Pentatonic",
+      "domain": "music",
+      "definition": "A scale or pattern built from five pitch classes within an octave.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Triplet",
+      "domain": "music",
+      "definition": "Three evenly spaced notes occupying the time normally assigned to two of the same value.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Fourth",
+      "domain": "music",
+      "definition": "An interval spanning four letter names, counting both endpoints.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Fifth",
+      "domain": "music",
+      "definition": "An interval spanning five letter names, counting both endpoints.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Tenth",
+      "domain": "music",
+      "definition": "An interval spanning ten letter names, equivalent to an octave plus a third.",
+      "where": "The Measured Voice chapter “Head voice: light is not weak” (Pro reading).",
+      "href": "/book/head-voice"
+    },
+    {
+      "term": "Leap",
+      "domain": "music",
+      "definition": "A melodic move larger than a step between neighboring scale notes.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Scoop",
+      "domain": "music",
+      "definition": "A slide into a target pitch from below.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Phrase",
+      "domain": "music",
+      "definition": "A connected musical idea heard as a unit within a longer passage.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Breath mark",
+      "domain": "music",
+      "definition": "A notation indicating a place to take a breath within music.",
+      "where": "The Measured Voice chapter “Longer phrases: spending the breath” (Pro reading).",
+      "href": "/book/longer-phrases"
+    },
+    {
+      "term": "Sustain",
+      "domain": "voice",
+      "definition": "The continuation of a sung sound over time.",
+      "where": "The Measured Voice chapter “Longer phrases: spending the breath” (Pro reading).",
+      "href": "/book/longer-phrases"
+    },
+    {
+      "term": "Release",
+      "domain": "voice",
+      "definition": "The ending of a sung sound.",
+      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
+      "href": "/book/low-notes"
+    },
+    {
+      "term": "Diction",
+      "domain": "voice",
+      "definition": "The clarity and character of spoken or sung words.",
+      "where": "The Measured Voice chapter “Longer phrases: spending the breath” (Pro reading).",
+      "href": "/book/longer-phrases"
+    },
+    {
+      "term": "Consonant",
+      "domain": "voice",
+      "definition": "A speech sound made by narrowing or closing the vocal tract.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Patter",
+      "domain": "voice",
+      "definition": "Rapid text delivered in a closely spaced rhythmic pattern.",
+      "where": "The Mini-mini patter exercise in the Clear words Pro pack.",
+      "href": "/warmups?exercise=words-mini-patter"
+    },
+    {
+      "term": "Tempo",
+      "domain": "music",
+      "definition": "The speed of the musical beat.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Rep",
+      "domain": "voice",
+      "definition": "One repetition of a practice exercise or pattern.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Cool-down",
+      "domain": "voice",
+      "definition": "A short period of gentle vocal activity at the end of a practice session.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Rest day",
+      "domain": "voice",
+      "definition": "A scheduled day without the program's active vocal training.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Glide",
+      "domain": "voice",
+      "definition": "A continuous pitch movement between two notes rather than discrete steps.",
+      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
+      "href": "/book/low-notes"
+    },
+    {
+      "term": "Descending",
+      "domain": "music",
+      "definition": "Moving from higher pitches to lower pitches.",
+      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
+      "href": "/book/low-notes"
+    },
+    {
+      "term": "Scale",
+      "domain": "music",
+      "definition": "A set of pitches arranged in ascending or descending order.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Arpeggio",
+      "domain": "music",
+      "definition": "The notes of a chord sounded in sequence rather than together.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    },
+    {
+      "term": "Beat",
+      "domain": "music",
+      "definition": "The recurring pulse used to organize musical time.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Breathy",
+      "domain": "voice",
+      "definition": "Describing a voice sound with audible escaping air alongside its tone.",
+      "where": "The Measured Voice chapter “Head voice: light is not weak” (Pro reading).",
+      "href": "/book/head-voice"
+    },
+    {
+      "term": "Jaw",
+      "domain": "voice",
+      "definition": "The movable lower facial bone that helps shape speech and singing sounds.",
+      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
+      "href": "/book/low-notes"
+    },
+    {
+      "term": "Tongue",
+      "domain": "voice",
+      "definition": "The muscular organ in the mouth that helps shape vowels and consonants.",
+      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
+      "href": "/book/low-notes"
+    },
+    {
+      "term": "Syllable",
+      "domain": "voice",
+      "definition": "A unit of speech organized around a vowel sound, with or without surrounding consonants.",
+      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
+      "href": "/book/riffs-and-runs"
+    },
+    {
+      "term": "Pattern",
+      "domain": "music",
+      "definition": "An ordered musical figure used as a repeatable exercise.",
+      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
+      "href": "/book/belting"
+    }
+  ]
+},
+  {
     heading: "Pitch and notation",
     blurb: "The units every number in the app is quoted in.",
     entries: [
@@ -714,6 +951,12 @@ const ROOM_LABELS: Record<string, string> = {
   "/studio": "the pitch studio",
   "/tools": "tools",
   "/warmups": "warmups",
+  "/warmups?exercise=words-mini-patter": "Mini-mini patter (Pro)",
+  "/book/belting": "the chapter \u201cBelt: a call, not a shout\u201d",
+  "/book/riffs-and-runs": "the chapter \u201cRiffs and runs: slow is the method\u201d",
+  "/book/head-voice": "the chapter \u201cHead voice: light is not weak\u201d",
+  "/book/longer-phrases": "the chapter \u201cLonger phrases: spending the breath\u201d",
+  "/book/low-notes": "the chapter \u201cLow notes: release, not reach\u201d",
 };
 
 /** Falls back to the path so a new route is ugly rather than broken. */

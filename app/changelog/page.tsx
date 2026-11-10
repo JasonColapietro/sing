@@ -1,3 +1,4 @@
+import { PRO_PACK_COUNT, PRO_PROGRAM_COUNT, GLOSSARY_COUNT, BOOKS } from "@/lib/pro-inventory";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
@@ -21,11 +22,11 @@ import { IDLE_GRACE_MS } from "@/components/practice/active-clock";
  */
 const ACCOUNTS_OPEN = accountsReady();
 
-const TITLE = "Suede Sing Changelog: What's New in 4.2";
-/** The day 4.2 shipped: the record head's <time> and the page's dateModified. */
-export const RELEASE_DATE = "2026-10-29";
+const TITLE = "Suede Sing Changelog: What's New in 4.3";
+/** The day 4.3 shipped: the record head's <time> and the page's dateModified. */
+export const RELEASE_DATE = "2026-11-10";
 const DESCRIPTION =
-  "Suede Sing changelog for 4.2: calmer room pages, share cards drawn in the site's own type, a clearer Pro page, and 4.1's example figures in every room.";
+  "Suede Sing changelog for 4.3: five new Pro packs, five guided skill programs, five book chapters, and more free glossary definitions.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/changelog"),
@@ -514,10 +515,10 @@ export default function ChangelogPage() {
       kicker="Changelog"
       title={
         <>
-          Suede Sing changelog: everything new in <em>4.2</em>
+          Suede Sing changelog: everything new in <em>4.3</em>
         </>
       }
-      subtitle="Suede Sing 4.2 calms the room pages, draws share cards in the site's own type, and makes the Pro page quicker to read. Below it: 4.1's example figures in every room, and 4.0, which brought back the original design and a recorded grand piano."
+      subtitle="Suede Sing 4.3 adds guided skill programs, practice packs, book chapters and free glossary definitions. Previously, 4.2 calmed the room pages, draws share cards in the site's own type, and makes the Pro page quicker to read. Below it: 4.1's example figures in every room, and 4.0, which brought back the original design and a recorded grand piano."
     >
       <script
         type="application/ld+json"
@@ -531,20 +532,20 @@ export default function ChangelogPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cool to-transparent"
         />
         <V2TraceGlyph className="shrink-0 text-cool" />
-        <span className="text-ink">4.2</span>
+        <span className="text-ink">4.3</span>
         {/* Each item carries the dot before it and never breaks inside, so a
             wrap cannot leave a dot alone at the end of a line. */}
         <span className="flex items-center gap-x-3 whitespace-nowrap">
           <span aria-hidden className="text-line2">
             ·
           </span>
-          <time dateTime={RELEASE_DATE}>Shipped Oct 2026</time>
+          <time dateTime={RELEASE_DATE}>Shipped Nov 2026</time>
         </span>
         <span className="flex items-center gap-x-3 whitespace-nowrap">
           <span aria-hidden className="text-line2">
             ·
           </span>
-          <span className="tabular">{RELEASE_STORIES.length} stories</span>
+          <span className="tabular">{RELEASE_STORIES.length + 1} stories</span>
         </span>
         <span className="flex items-center gap-x-3 whitespace-nowrap">
           <span aria-hidden className="text-line2">
@@ -559,6 +560,13 @@ export default function ChangelogPage() {
           as h3s inside, so a reader or an answer engine asking what is in 4.2
           gets a boundary between it and the releases below. The record head
           above is 4.2's visible title; this h2 says it to the outline. */}
+      <section aria-labelledby="release-4-3" className="mt-12">
+        <h2 id="release-4-3" className="font-display text-2xl">Suede Sing 4.3, November 2026</h2>
+        <p className="mt-4">Five new Pro packs and five skill programs bring the library to {PRO_PACK_COUNT} Pro packs and {PRO_PROGRAM_COUNT} Pro programs. Week 1 of each program stays free.</p>
+        <p className="mt-4">Five new skill chapters bring The Measured Voice to {BOOKS[0].chapters} chapters. The free glossary now defines {GLOSSARY_COUNT} terms. Pitch-accuracy scores measure the practice patterns; tone, comfort and vocal quality remain your judgment.</p>
+        <Link href="/programs" className={linkClass}>Explore the guided programs</Link>
+      </section>
+
       <section aria-labelledby="release-4-2">
         <h2 id="release-4-2" className="sr-only">
           Suede Sing 4.2, October 2026

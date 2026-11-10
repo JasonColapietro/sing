@@ -1,3 +1,4 @@
+import { BOOK } from "./book-data";
 import { describe, expect, it } from "vitest";
 import {
   GLOSSARY,
@@ -9,7 +10,7 @@ import {
   termId,
 } from "./glossary";
 import type { GlossaryDomain } from "./glossary";
-import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { EXERCISES, PRO_PACKS, ALL_EXERCISES } from "@/components/warmups/exercises";
 import { breathDrillTitle, isBreathDrillId } from "@/components/breath/routines";
 import { VOICE_TYPES } from "@/lib/audio/notes";
 import { readdirSync, statSync } from "node:fs";
@@ -160,11 +161,11 @@ describe("GLOSSARY", () => {
     const byDomain = (domain: GlossaryDomain) =>
       GLOSSARY_TERMS.filter((e) => e.domain === domain).length;
 
-    expect(byDomain("music")).toBe(20);
-    expect(byDomain("voice")).toBe(22);
+    expect(byDomain("music")).toBe(39);
+    expect(byDomain("voice")).toBe(36);
     expect(byDomain("guitar")).toBe(16);
-    expect(GLOSSARY_TERMS).toHaveLength(58);
-    expect(SING_GLOSSARY_TERMS).toHaveLength(42);
+    expect(GLOSSARY_TERMS).toHaveLength(91);
+    expect(SING_GLOSSARY_TERMS).toHaveLength(75);
   });
 
   it("names an interval by its letter names, both ends counted, as its own examples are named", () => {
@@ -220,7 +221,11 @@ describe("GLOSSARY", () => {
       // An unlabelled href means a new route was added without deciding what
       // to call it, and the page would render "Open /somewhere →".
       expect(roomLabel(entry.href)).not.toBe(entry.href);
-      expect(APP_ROUTES).toContain(entry.href);
+      if (entry.href.startsWith("/book/")) {
+        expect(BOOK.some((chapter) => `/book/${chapter.slug}` === entry.href)).toBe(true);
+      } else {
+        expect(APP_ROUTES).toContain(entry.href.split("?")[0]);
+      }
     }
   });
 
@@ -436,4 +441,20 @@ describe("entries that name a room", () => {
     expect(where).toMatch(/balanced onset/);
     expect(where).not.toMatch(/glottal/);
   });
+});
+
+export const TERMS_2026_11 = ["Call", "Riff", "Run", "Melisma", "Turn", "Pentatonic", "Triplet", "Fourth", "Fifth", "Tenth", "Leap", "Scoop", "Phrase", "Breath mark", "Sustain", "Release", "Diction", "Consonant", "Patter", "Tempo", "Rep", "Cool-down", "Rest day", "Glide", "Descending", "Scale", "Arpeggio", "Beat", "Breathy", "Jaw", "Tongue", "Syllable", "Pattern"];
+
+it("defines the new practice vocabulary at a verified onward destination", () => {
+  expect(SING_GLOSSARY_TERMS.length).toBeGreaterThanOrEqual(75);
+  for (const term of TERMS_2026_11) {
+    const entry = SING_GLOSSARY_TERMS.find((entry) => entry.term === term)!;
+    expect(entry).toBeDefined();
+    const chapter = BOOK.find((chapter) => `/book/${chapter.slug}` === entry.href);
+    const exerciseId = new URL(entry.href, "https://sing.suedeai.ai").searchParams.get("exercise");
+    const exercise = ALL_EXERCISES.find((exercise) => exercise.id === exerciseId);
+    expect(Boolean(chapter || exercise)).toBe(true);
+    const text = chapter?.body ?? `${exercise!.title} ${exercise!.desc} ${exercise!.tip}`;
+    expect(text).toMatch(new RegExp(`\\b${term}\\b`, "i"));
+  }
 });

@@ -81,7 +81,7 @@ describe("the glossary page", () => {
 
   it("renders no term the guitar hub owns", () => {
     expect(guitarOnly.map((e) => e.term)).toContain("Barre chord");
-    expect(guitarOnly).toHaveLength(14);
+    expect(guitarOnly).toHaveLength(13);
 
     for (const entry of guitarOnly) {
       expect(HTML).not.toContain(`id="${termId(entry.term)}"`);

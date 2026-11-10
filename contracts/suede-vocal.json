@@ -4015,7 +4015,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 39477,
+      "totalWords": 39507,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -4254,7 +4254,7 @@
           "part": "Skill programs",
           "summary": "What a belt physically is, how the six-week belt program builds one from speaking pitch upward, what the app can and cannot score, and the signs that mean stop.",
           "free": false,
-          "words": 1371,
+          "words": 1379,
           "path": "/book/belting"
         },
         {
@@ -4284,7 +4284,7 @@
           "part": "Skill programs",
           "summary": "Why low notes get worse with effort, what the three-week low notes program does about it, where vocal fry fits and where it does not, and why your floor may already be your floor.",
           "free": false,
-          "words": 1460,
+          "words": 1469,
           "path": "/book/low-notes"
         },
         {
@@ -4294,7 +4294,7 @@
           "part": "Skill programs",
           "summary": "Why running out of air is a spending problem rather than a capacity problem, how the four-week longer phrases program trains the spend, where consonants come in, and what the sustain test does and does not show.",
           "free": false,
-          "words": 1396,
+          "words": 1409,
           "path": "/book/longer-phrases"
         }
       ]

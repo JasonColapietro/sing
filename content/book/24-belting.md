@@ -49,9 +49,9 @@ These are not suggestions.
 
 Stop the rep if your neck tightens, your chin lifts, or the sound turns rough. Back off the level and try again lower on the ladder.
 
-Stop the session if anything tickles, scratches or hurts, or if a note that was easy ten minutes ago now needs a run-up. Go straight to the cool-down.
+Stop the session if anything tickles, scratches or hurts, or if a note that was easy ten minutes ago now needs a run-up. Stop singing, including the sung cool-down, and rest your voice.
 
-Take the next day off if you wake up hoarse, or if your speaking voice feels thick. Hoarseness the morning after belting means the session was too big. It does not mean you are building strength. When you come back, repeat a day from weeks 2 and 3 at a lower level before you go on.
+Take the next day off if you wake up hoarse, or if your speaking voice feels thick. Hoarseness the morning after belting can be a warning of vocal irritation or overuse. It does not mean you are building strength. When you come back, repeat a day from weeks 2 and 3 at a lower level before you go on.
 
 And see a doctor who can examine the vocal folds, such as an ENT or laryngologist, if a rough voice hangs around, if there is pain after you stop, or if anything in chapter 6's list turns up. A seventh week of belting is the wrong answer to all of those.
 

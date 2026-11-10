@@ -1181,7 +1181,7 @@ export const PRO_PACKS: WarmupPack[] = [
         title: "Fifths up and back",
         desc: "Leap a fifth and return, twice: 1-5-1-5-1.",
         tier: "intermediate",
-        tip: "Land on top of the fifth. The scoring starts when the note does, so a scoop up into it shows as a miss.",
+        tip: "Land on top of the fifth. Scoring allows a short onset tolerance, then measures pitch accuracy, so a lingering scoop can lower the score.",
         noteDur: 0.6,
         buildSteps: (r) => [rel(r, [0, 7, 0, 7, 0])],
       },

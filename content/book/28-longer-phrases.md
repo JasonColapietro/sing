@@ -9,9 +9,9 @@ Every singer has a line that beats them. It is two bars longer than their breath
 
 This chapter goes with the program called Longer phrases in 4 weeks. It rests on chapter 4, which explained support, and on the second half of chapter 18, which introduced phrase work in the twelve-week plan.
 
-## Capacity is not the problem
+## How the breath is spent
 
-An untrained adult can hold a steady note for something like fifteen to twenty-five seconds. Very few phrases in any song are that long. If you are running out of air on an eight-second line, you are not short of lung. You are spending the breath faster than the line needs.
+Sustain times vary between people and sessions. Running out of air on an eight-second line can reflect how you spend the breath, but the length of a phrase cannot rule out capacity or health factors. This practice explores breath use; it does not assess lung health. Unusual or persistent breathlessness deserves medical advice.
 
 There are three common ways to overspend.
 
@@ -65,7 +65,7 @@ The sustain test gives you seconds. Treat the number carefully. It measures one 
 
 ## When to stop
 
-Breath work can make you light-headed. If you feel dizzy during box breathing or the counted exhale, stop, sit down and breathe normally. Come back to it later with smaller breaths. Dizziness means you were over-breathing, and bigger is the wrong direction.
+Breath work can make you light-headed. If you feel dizzy during box breathing or the counted exhale, stop, sit down and breathe normally. Over-breathing is one possible cause, but dizziness can have other causes. Do not resume the exercise while symptoms remain; seek medical advice if the dizziness is unexplained, persistent or recurrent.
 
 Long phrases are light on the throat when they are sung at a medium level. If your voice is tired afterwards, you were probably pressing to squeeze out the last notes. End the phrase earlier next time. Everything in chapter 6 about pain and hoarseness applies as usual.
 
