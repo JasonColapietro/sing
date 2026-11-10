@@ -80,243 +80,6 @@ export interface GlossarySection {
 
 export const GLOSSARY: GlossarySection[] = [
   {
-  "heading": "Technique and practice",
-  "blurb": "Words used in the guided programs and their reading.",
-  "entries": [
-    {
-      "term": "Call",
-      "domain": "voice",
-      "definition": "A speech-like projected sound used as a reference for belt practice.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Riff",
-      "domain": "music",
-      "definition": "A short recognizable musical figure that can be repeated or varied.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Run",
-      "domain": "music",
-      "definition": "A quick sequence of pitches sung as a connected melodic gesture.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Melisma",
-      "domain": "music",
-      "definition": "Several notes sung on one syllable.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Turn",
-      "domain": "music",
-      "definition": "An ornament that moves around a main note through neighboring pitches.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Pentatonic",
-      "domain": "music",
-      "definition": "A scale or pattern built from five pitch classes within an octave.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Triplet",
-      "domain": "music",
-      "definition": "Three evenly spaced notes occupying the time normally assigned to two of the same value.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Fourth",
-      "domain": "music",
-      "definition": "An interval spanning four letter names, counting both endpoints.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Fifth",
-      "domain": "music",
-      "definition": "An interval spanning five letter names, counting both endpoints.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Tenth",
-      "domain": "music",
-      "definition": "An interval spanning ten letter names, equivalent to an octave plus a third.",
-      "where": "The Measured Voice chapter “Head voice: light is not weak” (Pro reading).",
-      "href": "/book/head-voice"
-    },
-    {
-      "term": "Leap",
-      "domain": "music",
-      "definition": "A melodic move larger than a step between neighboring scale notes.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Scoop",
-      "domain": "music",
-      "definition": "A slide into a target pitch from below.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Phrase",
-      "domain": "music",
-      "definition": "A connected musical idea heard as a unit within a longer passage.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Breath mark",
-      "domain": "music",
-      "definition": "A notation indicating a place to take a breath within music.",
-      "where": "The Measured Voice chapter “Longer phrases: spending the breath” (Pro reading).",
-      "href": "/book/longer-phrases"
-    },
-    {
-      "term": "Sustain",
-      "domain": "voice",
-      "definition": "The continuation of a sung sound over time.",
-      "where": "The Measured Voice chapter “Longer phrases: spending the breath” (Pro reading).",
-      "href": "/book/longer-phrases"
-    },
-    {
-      "term": "Release",
-      "domain": "voice",
-      "definition": "The ending of a sung sound.",
-      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
-      "href": "/book/low-notes"
-    },
-    {
-      "term": "Diction",
-      "domain": "voice",
-      "definition": "The clarity and character of spoken or sung words.",
-      "where": "The Measured Voice chapter “Longer phrases: spending the breath” (Pro reading).",
-      "href": "/book/longer-phrases"
-    },
-    {
-      "term": "Consonant",
-      "domain": "voice",
-      "definition": "A speech sound made by narrowing or closing the vocal tract.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Patter",
-      "domain": "voice",
-      "definition": "Rapid text delivered in a closely spaced rhythmic pattern.",
-      "where": "The Mini-mini patter exercise in the Clear words Pro pack.",
-      "href": "/warmups?exercise=words-mini-patter"
-    },
-    {
-      "term": "Tempo",
-      "domain": "music",
-      "definition": "The speed of the musical beat.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Rep",
-      "domain": "voice",
-      "definition": "One repetition of a practice exercise or pattern.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Cool-down",
-      "domain": "voice",
-      "definition": "A short period of gentle vocal activity at the end of a practice session.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Rest day",
-      "domain": "voice",
-      "definition": "A scheduled day without the program's active vocal training.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Glide",
-      "domain": "voice",
-      "definition": "A continuous pitch movement between two notes rather than discrete steps.",
-      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
-      "href": "/book/low-notes"
-    },
-    {
-      "term": "Descending",
-      "domain": "music",
-      "definition": "Moving from higher pitches to lower pitches.",
-      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
-      "href": "/book/low-notes"
-    },
-    {
-      "term": "Scale",
-      "domain": "music",
-      "definition": "A set of pitches arranged in ascending or descending order.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Arpeggio",
-      "domain": "music",
-      "definition": "The notes of a chord sounded in sequence rather than together.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    },
-    {
-      "term": "Beat",
-      "domain": "music",
-      "definition": "The recurring pulse used to organize musical time.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Breathy",
-      "domain": "voice",
-      "definition": "Describing a voice sound with audible escaping air alongside its tone.",
-      "where": "The Measured Voice chapter “Head voice: light is not weak” (Pro reading).",
-      "href": "/book/head-voice"
-    },
-    {
-      "term": "Jaw",
-      "domain": "voice",
-      "definition": "The movable lower facial bone that helps shape speech and singing sounds.",
-      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
-      "href": "/book/low-notes"
-    },
-    {
-      "term": "Tongue",
-      "domain": "voice",
-      "definition": "The muscular organ in the mouth that helps shape vowels and consonants.",
-      "where": "The Measured Voice chapter “Low notes: release, not reach” (Pro reading).",
-      "href": "/book/low-notes"
-    },
-    {
-      "term": "Syllable",
-      "domain": "voice",
-      "definition": "A unit of speech organized around a vowel sound, with or without surrounding consonants.",
-      "where": "The Measured Voice chapter “Riffs and runs: slow is the method” (Pro reading).",
-      "href": "/book/riffs-and-runs"
-    },
-    {
-      "term": "Pattern",
-      "domain": "music",
-      "definition": "An ordered musical figure used as a repeatable exercise.",
-      "where": "The Measured Voice chapter “Belt: a call, not a shout” (Pro reading).",
-      "href": "/book/belting"
-    }
-  ]
-},
-  {
     heading: "Pitch and notation",
     blurb: "The units every number in the app is quoted in.",
     entries: [
@@ -761,6 +524,420 @@ export const GLOSSARY: GlossarySection[] = [
       },
     ],
   },
+  {
+    heading: "Technique and practice",
+    blurb: "The words the warmup packs, the programs and the book use for how singing is practiced.",
+    entries: [
+      {
+        term: "Major scale",
+        definition:
+          "The seven-note scale of whole and half steps, numbered 1 to 7 from its root, that most warmup patterns are written in.",
+        where:
+          "Every warmup that counts its notes, such as 1-2-3-4-5, is counting steps of this scale up from the rep's root.",
+        href: "/warmups",
+        drill: "five-note-scale",
+        domain: "music",
+      },
+      {
+        term: "Natural minor scale",
+        aka: ["Minor scale"],
+        definition:
+          "The seven-note scale with a lowered third, sixth and seventh, which gives a pattern built on it a darker color than the major scale.",
+        where:
+          "The free Minor five-note scale uses its first five notes, and the Long phrases pack sings its whole octave slowly.",
+        href: "/warmups",
+        drill: "minor-scale",
+        domain: "music",
+      },
+      {
+        term: "Pentatonic scale",
+        aka: ["Major pentatonic"],
+        definition:
+          "A five-note scale that leaves the fourth and seventh out of the major scale, so it has no half steps.",
+        where:
+          "The free Pentatonic run and most of the Riffs and runs pack are built on it.",
+        href: "/warmups",
+        drill: "pentatonic-run",
+        domain: "music",
+      },
+      {
+        term: "Minor pentatonic scale",
+        definition:
+          "The five-note scale of the root, flat third, fourth, fifth and flat seventh, the backbone of most blues, rock and R&B runs.",
+        where:
+          "The Riffs and runs pack's minor pentatonic fall comes down it from the octave.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Blues scale",
+        definition:
+          "The minor pentatonic scale with one passing note, the flat five, added between the fourth and the fifth.",
+        where:
+          "The Riffs and runs pack's blues cell sings five notes of it, two of them half steps apart.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Root",
+        aka: ["Tonic"],
+        definition:
+          "The note a pattern is built on and counted from, called 1.",
+        where:
+          "Warmup patterns are written relative to the root, and the ladder moves the root a semitone between reps.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Triad",
+        definition:
+          "A three-note chord made of a root, the third above it and the fifth above that.",
+        where:
+          "Many warmups sing a triad one note at a time, as 1-3-5-3-1.",
+        href: "/warmups",
+        drill: "legato-triad",
+        domain: "music",
+      },
+      {
+        term: "Arpeggio",
+        definition:
+          "The notes of a chord sung or played one after another instead of together.",
+        where:
+          "The lip-trill arpeggio, the octave arpeggio and the Long phrases pack's arpeggio chain are all arpeggios.",
+        href: "/warmups",
+        drill: "octave-arpeggio",
+        domain: "music",
+      },
+      {
+        term: "Fourth",
+        aka: ["Perfect fourth"],
+        definition:
+          "The interval of five semitones, as from C up to F.",
+        where:
+          "Ear training plays it, and the Leaps and intervals pack opens on it.",
+        href: "/ear-training",
+        domain: "music",
+      },
+      {
+        term: "Fifth",
+        aka: ["Perfect fifth"],
+        definition:
+          "The interval of seven semitones, as from C up to G.",
+        where:
+          "Ear training plays it, and many sirens and leaps in the warmups span it.",
+        href: "/ear-training",
+        drill: "ng-siren-fifth",
+        domain: "music",
+      },
+      {
+        term: "Sixth",
+        aka: ["Major sixth"],
+        definition:
+          "The interval of nine semitones for a major sixth, as from C up to A.",
+        where:
+          "The free Major sixth leaps warmup sings it up and back twice.",
+        href: "/warmups",
+        drill: "sixth-leaps",
+        domain: "music",
+      },
+      {
+        term: "Tenth",
+        aka: ["Major tenth"],
+        definition:
+          "The interval of an octave plus a major third, as from C up to the E above the next C.",
+        where:
+          "The High notes routine and the Leaps and intervals pack reach it, always inside your measured range.",
+        href: "/warmups",
+        drill: "high-arpeggio-tenth",
+        domain: "music",
+      },
+      {
+        term: "Leap",
+        aka: ["Skip"],
+        definition:
+          "A move between two notes that are more than one scale step apart.",
+        where:
+          "The Leaps and intervals pack drills leaps from a fourth to a tenth, up and down.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Scoop",
+        definition:
+          "Arriving at a note from below by sliding up into it instead of starting on its pitch.",
+        where:
+          "A warmup scores a note from the moment it starts, so the time a scoop spends sliding up counts as time off the note.",
+        href: "/studio",
+        domain: "music",
+      },
+      {
+        term: "Melisma",
+        definition:
+          "Several notes sung on a single syllable.",
+        where:
+          "The Riffs and runs pack drills the short melismas pop and gospel runs are made of.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Run",
+        aka: ["Vocal run"],
+        definition:
+          "A quick melisma that travels several notes up or down a scale.",
+        where:
+          "The free Agility run and Pentatonic run and the whole Riffs and runs pack are runs.",
+        href: "/warmups",
+        drill: "agility-run",
+        domain: "music",
+      },
+      {
+        term: "Turn",
+        definition:
+          "A small ornament that circles one note, touching the notes above and below it before coming back.",
+        where:
+          "The Riffs and runs pack's turn and fall circles the third before dropping to the root.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Triplet",
+        definition:
+          "Three equal notes in the time normally given to two of the same kind.",
+        where:
+          "The Riffs and runs pack's triplet cells fall in three groups of three.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Passing note",
+        definition:
+          "A note that connects two others by step without belonging to the chord under them.",
+        where:
+          "The flat five in the blues cell, in the Riffs and runs pack, is one.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Phrase",
+        definition:
+          "A musical sentence of several notes, usually sung on one breath.",
+        where:
+          "The Long phrases pack and the Longer phrases program are built around sung phrases seven to fourteen seconds long.",
+        href: "/programs",
+        domain: "music",
+      },
+      {
+        term: "Breath mark",
+        definition:
+          "A small comma written above the music where a singer plans to breathe.",
+        where:
+          "The Longer phrases program asks you to pencil them on a lyric sheet before you sing the line.",
+        href: "/songs",
+        domain: "music",
+      },
+      {
+        term: "Tempo",
+        aka: ["BPM"],
+        definition:
+          "The speed of the music, counted in beats per minute.",
+        where:
+          "The warmups' Adjust control slows a pattern to 0.75× of its tempo, and every song plays at its own.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Sequence",
+        definition:
+          "A short pattern repeated several times, starting a step higher or lower each time.",
+        where:
+          "The Long phrases pack's thirds in sequence climb in overlapping pairs.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Patter",
+        definition:
+          "Quick syllables sung one to a note, often many on the same pitch.",
+        where:
+          "The Words on pitch pack's patter exercises score only the pitch; the words are yours to judge.",
+        href: "/warmups",
+        domain: "music",
+      },
+      {
+        term: "Vocal folds",
+        aka: ["Vocal cords"],
+        definition:
+          "The two bands of tissue in the larynx whose vibration makes the sound of the voice.",
+        where:
+          "Every pitch the app reads is the rate at which they vibrate, and the book's first chapter describes how they work.",
+        href: "/book",
+        domain: "voice",
+      },
+      {
+        term: "Larynx",
+        aka: ["Voice box"],
+        definition:
+          "The cartilage structure in the throat that holds the vocal folds and moves when you swallow.",
+        where:
+          "The book's low notes chapter warns against pressing it down to make a low note sound deeper.",
+        href: "/book",
+        domain: "voice",
+      },
+      {
+        term: "Release",
+        aka: ["Offset"],
+        definition:
+          "The way a sung note ends.",
+        where:
+          "The book's longer phrases chapter asks for a release that stops the sound rather than fading it into breath.",
+        href: "/book",
+        domain: "voice",
+      },
+      {
+        term: "Sustain",
+        aka: ["Held note"],
+        definition:
+          "One note held at a steady pitch for a stretch of time.",
+        where:
+          "The breath room's sustain test times your longest steady hold.",
+        href: "/breath",
+        domain: "voice",
+      },
+      {
+        term: "Diction",
+        definition:
+          "How clearly the words of a song can be understood when sung.",
+        where:
+          "The Words on pitch pack practices it on moving pitch, scoring the pitch while the words stay yours to judge.",
+        href: "/warmups",
+        domain: "voice",
+      },
+      {
+        term: "Consonant",
+        definition:
+          "A speech sound made by stopping or narrowing the air with the lips, teeth or tongue.",
+        where:
+          "The Words on pitch pack starts each note on one, such as the t in tee-tay-tah-toh-too.",
+        href: "/warmups",
+        domain: "voice",
+      },
+      {
+        term: "Vowel modification",
+        definition:
+          "Nudging a vowel toward a neighboring vowel as the pitch rises, so its resonance still suits the note.",
+        where:
+          "The book's head voice and passaggio chapters ask for it, and the narrow-vowel warmups such as Goo octave scale lean on it.",
+        href: "/book",
+        domain: "voice",
+      },
+      {
+        term: "Swell and fade",
+        aka: ["Messa di voce"],
+        definition:
+          "One held note that grows from soft to medium and fades back while its pitch stays still.",
+        where:
+          "The free warmup of the same name scores the pitch while the volume moves.",
+        href: "/warmups",
+        drill: "swell-and-fade",
+        domain: "voice",
+      },
+      {
+        term: "Call",
+        definition:
+          "A short, bright, speech-like shout of a word on pitch, as you would call to someone across a street.",
+        where:
+          "The Belt prep pack opens with calls at speaking pitch before any held notes.",
+        href: "/programs",
+        domain: "voice",
+      },
+      {
+        term: "Warmup",
+        definition:
+          "A short set of easy exercises that gets the voice ready before harder singing.",
+        where:
+          "The warmups room has free routines from a few minutes to a quarter of an hour.",
+        href: "/warmups",
+        domain: "voice",
+      },
+      {
+        term: "Cool-down",
+        definition:
+          "A few minutes of quiet, descending exercises after singing that bring the voice back toward speaking pitch.",
+        where:
+          "Every Pro day of the skill programs ends on the free Cool-down routine.",
+        href: "/warmups",
+        drill: "straw-slide-down",
+        domain: "voice",
+      },
+      {
+        term: "Hum",
+        definition:
+          "A note sung with the lips closed, so the sound leaves through the nose.",
+        where:
+          "Many warmups open on hums, from the Morning reset's first hum to the cool-down's quiet descent.",
+        href: "/warmups",
+        drill: "humming-thirds",
+        domain: "voice",
+      },
+      {
+        term: "Glide",
+        aka: ["Slide"],
+        definition:
+          "A smooth change of pitch from one note to another that passes through every pitch between them.",
+        where:
+          "Sirens and slides in the warmups are glides, scored along the line between their two notes.",
+        href: "/warmups",
+        drill: "morning-sigh",
+        domain: "voice",
+      },
+      {
+        term: "Rep",
+        aka: ["Repetition"],
+        definition:
+          "One time through an exercise's pattern.",
+        where:
+          "Each warmup sings a set number of reps, starting each one on a new root.",
+        href: "/warmups",
+        domain: "voice",
+      },
+      {
+        term: "Rest day",
+        definition:
+          "A planned day with no practice in a program, which gives the voice time to recover.",
+        where:
+          "Every program of two weeks or more has at least one rest day each week.",
+        href: "/programs",
+        domain: "voice",
+      },
+      {
+        term: "Check-in",
+        definition:
+          "A program day that repeats an earlier day's range test after the same warmup, so the two readings can be compared.",
+        where:
+          "Every Pro skill program ends on one that matches its first day.",
+        href: "/programs",
+        domain: "voice",
+      },
+      {
+        term: "Usable floor",
+        definition:
+          "The lowest note you can start cleanly, hold steadily and sing a word on, usually a few semitones above the lowest note a range test reports.",
+        where:
+          "The Low notes program is built to make the notes near it easier to use.",
+        href: "/range",
+        domain: "voice",
+      },
+      {
+        term: "Hoarseness",
+        definition:
+          "A voice that sounds rough, breathy or weak, in speech or in singing.",
+        where:
+          "The Belt and Low notes programs ask you to rest when it appears and, when it lasts, to see a doctor who can examine the vocal folds, such as an ENT or laryngologist.",
+        href: "/programs",
+        domain: "voice",
+      },
+    ],
+  },
   /**
    * Published by the guitar hub, not by this site, which is why the colliding
    * words appear here a second time: `register` is a region of the neck rather
@@ -944,6 +1121,8 @@ const ROOM_LABELS: Record<string, string> = {
   "/analyze": "the analyzer",
   "/breath": "breath control",
   "/ear-training": "ear training",
+  "/book": "The Measured Voice",
+  "/programs": "practice programs",
   "/range": "the range test",
   "/singers": "the singer library",
   "/singers/records": "the records page",
@@ -951,12 +1130,6 @@ const ROOM_LABELS: Record<string, string> = {
   "/studio": "the pitch studio",
   "/tools": "tools",
   "/warmups": "warmups",
-  "/warmups?exercise=words-mini-patter": "Mini-mini patter (Pro)",
-  "/book/belting": "the chapter \u201cBelt: a call, not a shout\u201d",
-  "/book/riffs-and-runs": "the chapter \u201cRiffs and runs: slow is the method\u201d",
-  "/book/head-voice": "the chapter \u201cHead voice: light is not weak\u201d",
-  "/book/longer-phrases": "the chapter \u201cLonger phrases: spending the breath\u201d",
-  "/book/low-notes": "the chapter \u201cLow notes: release, not reach\u201d",
 };
 
 /** Falls back to the path so a new route is ugly rather than broken. */

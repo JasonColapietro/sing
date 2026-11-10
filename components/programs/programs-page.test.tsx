@@ -81,7 +81,7 @@ describe("free-plan notes a Pro singer never sees", () => {
     expect(paintedFor(pace, { plan: "pro" })).not.toContain("On the free plan.</span>");
   });
 
-  it("are said once on the list, in its lede, rather than on all six cards", () => {
+  it("are said once on the list, in its lede, rather than on every card", () => {
     const list = renderToStaticMarkup(<ProgramsListPage />);
     expect(list).toContain("on the free plan guided practice is five minutes a day");
     expect(list).not.toContain("On the free plan&#x27;s five guided minutes a day");
@@ -122,5 +122,23 @@ describe("The Measured Voice's reading list", () => {
     expect(html.indexOf("/book/how-the-program-works")).toBeLessThan(html.indexOf("/book/weeks-1-2-baseline"));
     // Only the program that follows the book has one.
     expect(await view("foundations-2w")).not.toContain("/book/how-the-program-works");
+  });
+});
+
+describe("a skill program's reading", () => {
+  it("names its one chapter as the whole program's, not a fortnight's", async () => {
+    for (const [id, slug] of [
+      ["belt-6w", "belting"],
+      ["head-voice-4w", "head-voice"],
+      ["runs-4w", "riffs-and-runs"],
+      ["low-notes-3w", "low-notes"],
+      ["long-phrases-4w", "longer-phrases"],
+    ] as const) {
+      const html = await view(id);
+      expect(html, id).toContain("The whole program has a chapter in the book:");
+      expect(html, id).not.toContain("Each fortnight has a chapter");
+      expect(html, id).toContain(`href="/book/${slug}"`);
+    }
+    expect(await view("measured-voice-12w")).toContain("Each fortnight has a chapter in the book:");
   });
 });

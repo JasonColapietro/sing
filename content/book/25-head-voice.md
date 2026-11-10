@@ -35,9 +35,9 @@ Week 2 brings in the Head-voice builder pack after the Quick warmup. It has seve
 
 Week 3 adds the High notes routine on two days, which goes past the octave to the tenth a half-step at a time. That routine fits its ladder to your measured range and never asks for a note above it.
 
-Week 4 adds the long notes. The "Notes that hover" day follows the pack with six reps of the top-note float and four of the vibrato hold on the fourth. Those are the first long sustains above your speaking range, and they come last on purpose. A sustained note asks the setup to stay put for seconds at a time. By week 4 it can.
+Week 4 adds the long notes. The "Notes that hover" day follows the pack with six reps of the top-note float and four of the vibrato hold on the fourth. They are the longest holds in the program, and they come last on purpose. A sustained note asks the setup to stay put for seconds at a time. By week 4 it can.
 
-There is a rest day on day 4 and day 7 of every week. The last day repeats day 1's warm-in and range test, then sings the pack once more. Every Pro day ends on the cool-down.
+There is a rest day on day 4 and day 7 of every week. The last day is the check-in: it repeats day 1's warm-in and range test, then sings the pack once more. Every Pro day ends on the cool-down.
 
 ## The crack is information
 
@@ -51,13 +51,13 @@ Do not practice the crack by hammering it. Three slides through a rough spot is 
 
 Every exercise scores how close each note landed. On the vibrato holds it also reports how fast and how wide the pitch moved. That is all. Nothing in the app hears register, breathiness or effort.
 
-The scores are still worth watching in one specific way. Head voice that is being pushed tends to go sharp, and head voice that is under-supported tends to sag flat at the end of a hold. If the float hold drifts down in its last second, rep after rep, think steadier breath, not more of it. If the octave leaps overshoot, you are throwing weight at the top note.
+The scores are still worth watching in one specific way. Head voice that is being pushed tends to go sharp, and head voice that is under-supported tends to sag flat at the end of a hold. If the float hold drifts down in its last second, rep after rep, think steadier breath, not more of it. If the octave leaps overshoot, you may be throwing weight at the top note.
 
 For everything else, use the recorder. Take one short recording a week of the "loo" arpeggio at your quiet level. You hear your own voice partly through the bones of your skull, which favors the low, heavy part of the sound, so head voice seems thinner from the inside than it does to a listener. The recording is closer to the truth, and many singers like their head voice better on playback than they expected.
 
 ## When to stop
 
-Chapter 6's rules hold. Stop the rep if you are reaching with your chin or if the sound turns rough. Stop the session if anything scratches or hurts, or if the top notes that were easy at the start now need a run-up. Take the day off if you wake up hoarse. A voice that hurts or stays rough is a question for a doctor who can examine the vocal folds, not for a warmup.
+Chapter 6's rules hold. Stop the rep if you are reaching with your chin or if the sound turns rough. Stop the session if anything scratches or hurts, or if the top notes that were easy at the start now need a run-up. Take the day off if you wake up hoarse. A voice that hurts or stays rough is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist, not for a warmup.
 
 Head voice work is among the lightest loads in this book when it is done quietly. If a session leaves you tired, it was too loud.
 

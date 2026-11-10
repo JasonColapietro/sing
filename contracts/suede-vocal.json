@@ -2188,12 +2188,12 @@
         "rangeCap": null,
         "steps": [
           [
+            7,
             9,
             12,
             9,
             7,
             4,
-            2,
             0
           ]
         ],
@@ -2231,7 +2231,7 @@
       },
       {
         "id": "low-slow-five",
-        "title": "Slow five down",
+        "title": "Slow five down and settle",
         "tier": "intermediate",
         "free": false,
         "noteDur": 0.7,
@@ -2249,11 +2249,13 @@
             5,
             4,
             2,
+            0,
+            2,
             0
           ]
         ],
-        "segmentCount": 5,
-        "patternSeconds": 3.82
+        "segmentCount": 7,
+        "patternSeconds": 5.38
       },
       {
         "id": "low-falling-triad",
@@ -2427,7 +2429,7 @@
       },
       {
         "id": "phrase-scale-twice",
-        "title": "Five-note scale, twice",
+        "title": "Scale, then arpeggio",
         "tier": "intermediate",
         "free": false,
         "noteDur": 0.5,
@@ -2447,22 +2449,20 @@
             4,
             2,
             0,
-            2,
             4,
-            5,
             7,
-            5,
+            12,
+            7,
             4,
-            2,
             0
           ]
         ],
-        "segmentCount": 17,
-        "patternSeconds": 9.78
+        "segmentCount": 15,
+        "patternSeconds": 8.62
       },
       {
         "id": "phrase-scale-three",
-        "title": "Five-note scale, three times",
+        "title": "Three passes, each wider",
         "tier": "advanced",
         "free": false,
         "noteDur": 0.45,
@@ -2486,17 +2486,17 @@
             4,
             5,
             7,
-            5,
-            4,
-            2,
-            0,
-            2,
-            4,
-            5,
+            9,
             7,
             5,
             4,
             2,
+            0,
+            4,
+            7,
+            12,
+            7,
+            4,
             0
           ]
         ],
@@ -2540,7 +2540,7 @@
       },
       {
         "id": "phrase-slow-five",
-        "title": "Slow five, every note held",
+        "title": "Slow climb, every note held",
         "tier": "intermediate",
         "free": false,
         "noteDur": 0.9,
@@ -2554,16 +2554,14 @@
             0,
             2,
             4,
-            5,
             7,
-            5,
             4,
             2,
             0
           ]
         ],
-        "segmentCount": 9,
-        "patternSeconds": 8.74
+        "segmentCount": 7,
+        "patternSeconds": 6.78
       },
       {
         "id": "phrase-arpeggio-chain",
@@ -2585,6 +2583,8 @@
             0,
             5,
             9,
+            12,
+            9,
             5,
             0,
             4,
@@ -2593,8 +2593,8 @@
             0
           ]
         ],
-        "segmentCount": 13,
-        "patternSeconds": 8.11
+        "segmentCount": 15,
+        "patternSeconds": 9.37
       },
       {
         "id": "phrase-three-long-notes",
@@ -2742,16 +2742,17 @@
           [
             9,
             0,
-            9,
+            12,
+            4,
             0
           ]
         ],
-        "segmentCount": 4,
-        "patternSeconds": 2.84
+        "segmentCount": 5,
+        "patternSeconds": 3.57
       },
       {
         "id": "leap-falling-fifths",
-        "title": "Falling fifths",
+        "title": "Falling fourth and fifth",
         "tier": "intermediate",
         "free": false,
         "noteDur": 0.6,
@@ -2762,7 +2763,7 @@
         "rangeCap": null,
         "steps": [
           [
-            7,
+            5,
             0,
             7,
             0
@@ -3176,7 +3177,7 @@
       },
       {
         "id": "clear-words",
-        "name": "Clear words",
+        "name": "Words on pitch",
         "exerciseIds": [
           "words-ta-ka",
           "words-la-ga-triad",
@@ -3726,7 +3727,7 @@
             "reps": 8
           }
         ],
-        "seconds": 406.03,
+        "seconds": 420.07,
         "allStepsFree": false
       },
       {
@@ -3767,7 +3768,7 @@
             "reps": 8
           }
         ],
-        "seconds": 791.78,
+        "seconds": 775.04,
         "allStepsFree": false
       },
       {
@@ -3808,12 +3809,12 @@
             "reps": 8
           }
         ],
-        "seconds": 348.27,
+        "seconds": 354.84,
         "allStepsFree": false
       },
       {
         "id": "clear-words",
-        "name": "Clear words",
+        "name": "Words on pitch",
         "pro": true,
         "steps": [
           {
@@ -4015,7 +4016,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 39507,
+      "totalWords": 39582,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -4254,7 +4255,7 @@
           "part": "Skill programs",
           "summary": "What a belt physically is, how the six-week belt program builds one from speaking pitch upward, what the app can and cannot score, and the signs that mean stop.",
           "free": false,
-          "words": 1379,
+          "words": 1474,
           "path": "/book/belting"
         },
         {
@@ -4264,7 +4265,7 @@
           "part": "Skill programs",
           "summary": "What head voice is, how it differs from falsetto, how the four-week head voice program builds it from hums and sirens to notes that hover, and what the app can score along the way.",
           "free": false,
-          "words": 1428,
+          "words": 1437,
           "path": "/book/head-voice"
         },
         {
@@ -4274,7 +4275,7 @@
           "part": "Skill programs",
           "summary": "What a run is made of, why speed comes from accuracy rather than the other way round, how the four-week riffs and runs program builds one cell at a time, and what the score tells you.",
           "free": false,
-          "words": 1392,
+          "words": 1400,
           "path": "/book/riffs-and-runs"
         },
         {
@@ -4284,7 +4285,7 @@
           "part": "Skill programs",
           "summary": "Why low notes get worse with effort, what the three-week low notes program does about it, where vocal fry fits and where it does not, and why your floor may already be your floor.",
           "free": false,
-          "words": 1469,
+          "words": 1416,
           "path": "/book/low-notes"
         },
         {
@@ -4292,9 +4293,9 @@
           "order": 28,
           "title": "Longer phrases: spending the breath",
           "part": "Skill programs",
-          "summary": "Why running out of air is a spending problem rather than a capacity problem, how the four-week longer phrases program trains the spend, where consonants come in, and what the sustain test does and does not show.",
+          "summary": "How breath use can affect phrase length without ruling out capacity or health factors, how the four-week longer phrases program explores breath use, where consonants come in, and what the sustain test does and does not show.",
           "free": false,
-          "words": 1409,
+          "words": 1425,
           "path": "/book/longer-phrases"
         }
       ]

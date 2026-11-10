@@ -586,7 +586,7 @@ export const PRO_PERKS: ProPerk[] = [
     id: "warmups",
     title: "Pro warmup packs",
     // Exactly what PRO_PACKS holds: no genre, voice-type or range-fit claim.
-    desc: `${PRO_PACK_COUNT} extra sets, ${PRO_EXERCISES} exercises: belt prep, a head-voice builder, a mix builder, riffs and runs, low notes, long phrases, leaps and intervals, and clear words.`,
+    desc: `${PRO_PACK_COUNT} extra sets, ${PRO_EXERCISES} exercises: belt prep, a head-voice builder, a mix builder, riffs and runs, low notes, long phrases, leaps and intervals, and words on pitch.`,
   },
   {
     id: "book",
@@ -631,7 +631,7 @@ export const PLAN_ROWS: Array<{
     pro: `${FREE_EXERCISES} + ${PRO_EXERCISES} in ${PRO_PACK_COUNT} pro packs`,
   },
   { label: "Coach plan", free: "First two steps each day", pro: "Full adaptive plan, daily" },
-  // Two programs need Pro after their free first week (lib/programs.ts), and
+  // The Pro programs need Pro after their free first week (lib/programs.ts), and
   // a table headed "no asterisks" has to say so before day 8 does.
   {
     label: "Programs",

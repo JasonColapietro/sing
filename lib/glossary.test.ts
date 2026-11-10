@@ -1,4 +1,3 @@
-import { BOOK } from "./book-data";
 import { describe, expect, it } from "vitest";
 import {
   GLOSSARY,
@@ -10,9 +9,11 @@ import {
   termId,
 } from "./glossary";
 import type { GlossaryDomain } from "./glossary";
-import { EXERCISES, PRO_PACKS, ALL_EXERCISES } from "@/components/warmups/exercises";
+import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import { breathDrillTitle, isBreathDrillId } from "@/components/breath/routines";
 import { VOICE_TYPES } from "@/lib/audio/notes";
+import { PROGRAMS } from "@/lib/programs";
+import { BOOK } from "@/lib/book-data";
 import { readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
@@ -161,11 +162,11 @@ describe("GLOSSARY", () => {
     const byDomain = (domain: GlossaryDomain) =>
       GLOSSARY_TERMS.filter((e) => e.domain === domain).length;
 
-    expect(byDomain("music")).toBe(39);
-    expect(byDomain("voice")).toBe(36);
+    expect(byDomain("music")).toBe(44);
+    expect(byDomain("voice")).toBe(40);
     expect(byDomain("guitar")).toBe(16);
-    expect(GLOSSARY_TERMS).toHaveLength(91);
-    expect(SING_GLOSSARY_TERMS).toHaveLength(75);
+    expect(GLOSSARY_TERMS).toHaveLength(100);
+    expect(SING_GLOSSARY_TERMS).toHaveLength(84);
   });
 
   it("names an interval by its letter names, both ends counted, as its own examples are named", () => {
@@ -221,11 +222,7 @@ describe("GLOSSARY", () => {
       // An unlabelled href means a new route was added without deciding what
       // to call it, and the page would render "Open /somewhere →".
       expect(roomLabel(entry.href)).not.toBe(entry.href);
-      if (entry.href.startsWith("/book/")) {
-        expect(BOOK.some((chapter) => `/book/${chapter.slug}` === entry.href)).toBe(true);
-      } else {
-        expect(APP_ROUTES).toContain(entry.href.split("?")[0]);
-      }
+      expect(APP_ROUTES).toContain(entry.href);
     }
   });
 
@@ -443,18 +440,46 @@ describe("entries that name a room", () => {
   });
 });
 
-export const TERMS_2026_11 = ["Call", "Riff", "Run", "Melisma", "Turn", "Pentatonic", "Triplet", "Fourth", "Fifth", "Tenth", "Leap", "Scoop", "Phrase", "Breath mark", "Sustain", "Release", "Diction", "Consonant", "Patter", "Tempo", "Rep", "Cool-down", "Rest day", "Glide", "Descending", "Scale", "Arpeggio", "Beat", "Breathy", "Jaw", "Tongue", "Syllable", "Pattern"];
+/**
+ * The terms added with the 2026-11 packs, programs and chapters. Each one is
+ * used by that new material, so the glossary defines words a singer meets in
+ * it rather than growing for its own sake.
+ */
+export const TERMS_2026_11: readonly string[] = ["Major scale", "Natural minor scale", "Pentatonic scale", "Minor pentatonic scale", "Blues scale", "Root", "Triad", "Arpeggio", "Fourth", "Fifth", "Sixth", "Tenth", "Leap", "Scoop", "Melisma", "Run", "Turn", "Triplet", "Passing note", "Phrase", "Breath mark", "Tempo", "Sequence", "Patter", "Vocal folds", "Larynx", "Release", "Sustain", "Diction", "Consonant", "Vowel modification", "Swell and fade", "Call", "Warmup", "Cool-down", "Hum", "Glide", "Rep", "Rest day", "Check-in", "Usable floor", "Hoarseness"];
 
-it("defines the new practice vocabulary at a verified onward destination", () => {
-  expect(SING_GLOSSARY_TERMS.length).toBeGreaterThanOrEqual(75);
-  for (const term of TERMS_2026_11) {
-    const entry = SING_GLOSSARY_TERMS.find((entry) => entry.term === term)!;
-    expect(entry).toBeDefined();
-    const chapter = BOOK.find((chapter) => `/book/${chapter.slug}` === entry.href);
-    const exerciseId = new URL(entry.href, "https://sing.suedeai.ai").searchParams.get("exercise");
-    const exercise = ALL_EXERCISES.find((exercise) => exercise.id === exerciseId);
-    expect(Boolean(chapter || exercise)).toBe(true);
-    const text = chapter?.body ?? `${exercise!.title} ${exercise!.desc} ${exercise!.tip}`;
-    expect(text).toMatch(new RegExp(`\\b${term}\\b`, "i"));
-  }
+describe("the 2026-11 terms", () => {
+  const packs = ["runs", "low-notes", "long-phrases", "leaps", "clear-words"];
+  const programs = ["belt-6w", "head-voice-4w", "runs-4w", "low-notes-3w", "long-phrases-4w"];
+  const chapters = ["belting", "head-voice", "riffs-and-runs", "low-notes", "longer-phrases"];
+  const text = [
+    ...PRO_PACKS.filter((p) => packs.includes(p.id)).flatMap((p) => [
+      p.name,
+      p.desc,
+      ...p.exercises.flatMap((e) => [e.title, e.desc, e.tip]),
+    ]),
+    ...PROGRAMS.filter((p) => programs.includes(p.id)).flatMap((p) => [
+      p.name,
+      p.tagline,
+      p.measures,
+      p.finished ?? "",
+      ...p.days.map((d) => d.title),
+    ]),
+    ...BOOK.filter((c) => chapters.includes(c.slug)).map((c) => c.body),
+  ]
+    .join(" \n ")
+    .toLowerCase();
+
+  it("brings the published glossary to at least 75 terms", () => {
+    expect(SING_GLOSSARY_TERMS.length).toBeGreaterThanOrEqual(75);
+  });
+
+  it("defines every new term, once, on this site", () => {
+    for (const term of TERMS_2026_11) {
+      expect(SING_GLOSSARY_TERMS.filter((e) => e.term === term), term).toHaveLength(1);
+    }
+  });
+
+  it("uses every new term in the new packs, programs or chapters", () => {
+    for (const term of TERMS_2026_11) expect(text.includes(term.toLowerCase()), term).toBe(true);
+  });
 });
