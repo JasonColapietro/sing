@@ -66,8 +66,8 @@ export const MELODY_COUNT = 24;
 
 /** Warmup exercises, split by tier. */
 export const FREE_EXERCISES = 39;
-export const PRO_EXERCISES = 19;
-export const PRO_PACK_COUNT = 3;
+export const PRO_EXERCISES = 59;
+export const PRO_PACK_COUNT = 8;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
 
 /**
@@ -138,7 +138,7 @@ export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }>
     {
       figure: String(PRO_EXERCISES),
       label: "pro exercises",
-      sub: `${PRO_PACK_COUNT} packs: belt prep, head voice and mix`,
+      sub: `${PRO_PACK_COUNT} packs, from belt prep and mix to runs, low notes and long phrases`,
     },
     {
       figure: "2",

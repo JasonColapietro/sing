@@ -542,7 +542,7 @@ describe("coaching copy", () => {
 
 describe("the note gap", () => {
   const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
-  const STACCATO = ["gug-staccato", "belt-bah-bursts"];
+  const STACCATO = ["gug-staccato", "belt-bah-bursts", "leap-staccato-fourth-fifth", "leap-staccato-octaves"];
 
   /** Seconds of silence between each pair of consecutive segments. */
   const gaps = (id: string, tempo: number) => {
@@ -607,7 +607,9 @@ describe("the range cap", () => {
   ];
   const COOL_DOWNS = ["quiet-hum-descent", "soft-trill-slide", "straw-slide-down"];
   const VIBRATO = ["vibrato-hold", "vibrato-float-high"];
-  const CAPPED = ["swell-and-fade", "head-float-hold", ...VIBRATO, ...BELT_CAPPED, ...COOL_DOWNS];
+  // The whole low-notes pack stays in the lower part of the ladder.
+  const LOW_NOTES = ALL_EXERCISES.filter((e) => e.id.startsWith("low-")).map((e) => e.id);
+  const CAPPED = ["swell-and-fade", "head-float-hold", ...VIBRATO, ...BELT_CAPPED, ...COOL_DOWNS, ...LOW_NOTES];
 
   it("keeps the ladder as it is without a cap, and at least one rung with one", () => {
     const ladder = [50, 51, 52, 53, 54, 55, 56, 57, 58];

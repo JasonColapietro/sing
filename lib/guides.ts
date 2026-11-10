@@ -225,7 +225,7 @@ export const WARMUPS_GUIDE: GuideContent = {
       "Warm toward the register your material actually sits in rather than sweeping the whole range every time",
       "Use the per-pattern accuracy scores to find the interval or vowel that reliably drifts, then drill that shape",
       "Note the semitone where accuracy dips: a dip that turns up in the same place every session is usually a passaggio, not a limit",
-      "Pro adds three technique packs: belt prep, a head-voice builder and a mix builder",
+      "Pro adds eight technique packs: belt prep, a head-voice builder, a mix builder, riffs and runs, low notes, long phrases, leaps and intervals, and clear words",
     ],
   },
   faq: [

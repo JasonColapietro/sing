@@ -2024,6 +2024,1060 @@
         ],
         "segmentCount": 5,
         "patternSeconds": 3.07
+      },
+      {
+        "id": "runs-three-note-cell",
+        "title": "Three-note cell",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            4,
+            2,
+            0,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 6,
+        "patternSeconds": 3.1
+      },
+      {
+        "id": "runs-pentatonic-climb",
+        "title": "Pentatonic climb",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.4,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            7,
+            9,
+            7,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 9,
+        "patternSeconds": 4.24
+      },
+      {
+        "id": "runs-minor-fall",
+        "title": "Minor pentatonic fall",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            12,
+            10,
+            7,
+            5,
+            3,
+            0
+          ]
+        ],
+        "segmentCount": 6,
+        "patternSeconds": 3.1
+      },
+      {
+        "id": "runs-turn",
+        "title": "Turn and fall",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.4,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            4,
+            7,
+            4,
+            2,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 7,
+        "patternSeconds": 3.28
+      },
+      {
+        "id": "runs-blues-cell",
+        "title": "Blues cell",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            7,
+            6,
+            5,
+            3,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 2.57
+      },
+      {
+        "id": "runs-triplet-cells",
+        "title": "Triplet cells",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.3,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            9,
+            7,
+            4,
+            7,
+            4,
+            2,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 9,
+        "patternSeconds": 3.34
+      },
+      {
+        "id": "runs-seven-note-riff",
+        "title": "Seven-note riff",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.3,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            9,
+            12,
+            9,
+            7,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 7,
+        "patternSeconds": 2.58
+      },
+      {
+        "id": "runs-quick-pentatonic",
+        "title": "Quick pentatonic, up and back",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.22,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            7,
+            9,
+            12,
+            9,
+            7,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 11,
+        "patternSeconds": 3.22
+      },
+      {
+        "id": "low-slow-five",
+        "title": "Slow five down",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.7,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.5
+        },
+        "steps": [
+          [
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.82
+      },
+      {
+        "id": "low-falling-triad",
+        "title": "Falling triad",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.85,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.5
+        },
+        "steps": [
+          [
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 2.71
+      },
+      {
+        "id": "low-hold",
+        "title": "Low hold",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 4,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.5
+        },
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 4
+      },
+      {
+        "id": "low-octave-drop",
+        "title": "Octave drop and settle",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 1.4,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.6
+        },
+        "steps": [
+          [
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 2.88
+      },
+      {
+        "id": "low-glide-fifth",
+        "title": "Slow glide down a fifth",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 1.4,
+        "glide": true,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.5
+        },
+        "steps": [
+          [
+            7,
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 2.8
+      },
+      {
+        "id": "low-minor-three",
+        "title": "Minor three down",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.9,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.5
+        },
+        "steps": [
+          [
+            3,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 2.86
+      },
+      {
+        "id": "low-rocking-tone",
+        "title": "Rocking tone",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.8,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.5
+        },
+        "steps": [
+          [
+            2,
+            0,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 4,
+        "patternSeconds": 3.44
+      },
+      {
+        "id": "low-octave-walk",
+        "title": "Octave walk down",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.6
+        },
+        "steps": [
+          [
+            12,
+            11,
+            9,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 8,
+        "patternSeconds": 4.56
+      },
+      {
+        "id": "phrase-scale-twice",
+        "title": "Five-note scale, twice",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7,
+            5,
+            4,
+            2,
+            0,
+            2,
+            4,
+            5,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 17,
+        "patternSeconds": 9.78
+      },
+      {
+        "id": "phrase-scale-three",
+        "title": "Five-note scale, three times",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7,
+            5,
+            4,
+            2,
+            0,
+            2,
+            4,
+            5,
+            7,
+            5,
+            4,
+            2,
+            0,
+            2,
+            4,
+            5,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 25,
+        "patternSeconds": 13.17
+      },
+      {
+        "id": "phrase-nine-note",
+        "title": "Nine-note scale",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7,
+            9,
+            11,
+            12,
+            14,
+            12,
+            11,
+            9,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 17,
+        "patternSeconds": 8.93
+      },
+      {
+        "id": "phrase-slow-five",
+        "title": "Slow five, every note held",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.9,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 9,
+        "patternSeconds": 8.74
+      },
+      {
+        "id": "phrase-arpeggio-chain",
+        "title": "Arpeggio chain",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.55,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            4,
+            7,
+            4,
+            0,
+            5,
+            9,
+            5,
+            0,
+            4,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 13,
+        "patternSeconds": 8.11
+      },
+      {
+        "id": "phrase-three-long-notes",
+        "title": "Three long notes",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 2.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 7.66
+      },
+      {
+        "id": "phrase-thirds-sequence",
+        "title": "Thirds in sequence",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            4,
+            2,
+            5,
+            4,
+            7,
+            5,
+            9,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 13,
+        "patternSeconds": 7.46
+      },
+      {
+        "id": "phrase-minor-octave",
+        "title": "Minor octave, slow",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.55,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            3,
+            5,
+            7,
+            8,
+            10,
+            12,
+            10,
+            8,
+            7,
+            5,
+            3,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 15,
+        "patternSeconds": 9.37
+      },
+      {
+        "id": "leap-fourths",
+        "title": "Fourths up and back",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            5,
+            0,
+            5,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.32
+      },
+      {
+        "id": "leap-fifths",
+        "title": "Fifths up and back",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            7,
+            0,
+            7,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.32
+      },
+      {
+        "id": "leap-falling-sixths",
+        "title": "Falling sixths",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.65,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            9,
+            0,
+            9,
+            0
+          ]
+        ],
+        "segmentCount": 4,
+        "patternSeconds": 2.84
+      },
+      {
+        "id": "leap-falling-fifths",
+        "title": "Falling fifths",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            7,
+            0,
+            7,
+            0
+          ]
+        ],
+        "segmentCount": 4,
+        "patternSeconds": 2.64
+      },
+      {
+        "id": "leap-staccato-fourth-fifth",
+        "title": "Staccato fourth and fifth",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.35,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.15,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            5,
+            0,
+            7,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 2.35
+      },
+      {
+        "id": "leap-staccato-octaves",
+        "title": "Staccato octaves",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.35,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.15,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            12,
+            0,
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 2.35
+      },
+      {
+        "id": "leap-widening",
+        "title": "Widening leaps",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            4,
+            0,
+            5,
+            0,
+            7,
+            0,
+            9,
+            0,
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 11,
+        "patternSeconds": 5.75
+      },
+      {
+        "id": "leap-tenth",
+        "title": "Tenth and back",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.7,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            16,
+            0
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 2.26
+      },
+      {
+        "id": "words-ta-ka",
+        "title": "Ta-ka on three notes",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.3,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            0,
+            2,
+            2,
+            4,
+            4,
+            2,
+            2,
+            0,
+            0
+          ]
+        ],
+        "segmentCount": 10,
+        "patternSeconds": 3.72
+      },
+      {
+        "id": "words-la-ga-triad",
+        "title": "La-ga triad",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.35,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            0,
+            4,
+            4,
+            7,
+            7,
+            4,
+            4,
+            0,
+            0
+          ]
+        ],
+        "segmentCount": 10,
+        "patternSeconds": 4.22
+      },
+      {
+        "id": "words-mini-patter",
+        "title": "Mini-mini patter",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.22,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "segmentCount": 8,
+        "patternSeconds": 2.32
+      },
+      {
+        "id": "words-five-vowels",
+        "title": "Five vowels, down and back",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            4,
+            2,
+            0,
+            2,
+            4
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.32
+      },
+      {
+        "id": "words-tee-tay-climb",
+        "title": "Tee-tay-tah-toh-too",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 2.82
+      },
+      {
+        "id": "words-pa-ta-ka",
+        "title": "Pa-ta-ka climb",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.25,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            4,
+            4,
+            4,
+            2,
+            2,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 13,
+        "patternSeconds": 4.21
+      },
+      {
+        "id": "words-zinga-triad",
+        "title": "Zing-a triad, twice",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.35,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            4,
+            7,
+            4,
+            0,
+            4,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 9,
+        "patternSeconds": 3.79
+      },
+      {
+        "id": "words-patter-scale",
+        "title": "Patter scale",
+        "tier": "advanced",
+        "free": false,
+        "noteDur": 0.28,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7,
+            9,
+            11,
+            12
+          ]
+        ],
+        "segmentCount": 8,
+        "patternSeconds": 2.8
       }
     ],
     "packs": [
@@ -2062,6 +3116,76 @@
           "mix-mum-octave",
           "mix-goo-scale",
           "mix-nay-fifth-octave"
+        ]
+      },
+      {
+        "id": "runs",
+        "name": "Riffs and runs",
+        "exerciseIds": [
+          "runs-three-note-cell",
+          "runs-pentatonic-climb",
+          "runs-minor-fall",
+          "runs-turn",
+          "runs-blues-cell",
+          "runs-triplet-cells",
+          "runs-seven-note-riff",
+          "runs-quick-pentatonic"
+        ]
+      },
+      {
+        "id": "low-notes",
+        "name": "Low notes",
+        "exerciseIds": [
+          "low-slow-five",
+          "low-falling-triad",
+          "low-hold",
+          "low-octave-drop",
+          "low-glide-fifth",
+          "low-minor-three",
+          "low-rocking-tone",
+          "low-octave-walk"
+        ]
+      },
+      {
+        "id": "long-phrases",
+        "name": "Long phrases",
+        "exerciseIds": [
+          "phrase-scale-twice",
+          "phrase-scale-three",
+          "phrase-nine-note",
+          "phrase-slow-five",
+          "phrase-arpeggio-chain",
+          "phrase-three-long-notes",
+          "phrase-thirds-sequence",
+          "phrase-minor-octave"
+        ]
+      },
+      {
+        "id": "leaps",
+        "name": "Leaps and intervals",
+        "exerciseIds": [
+          "leap-fourths",
+          "leap-fifths",
+          "leap-falling-sixths",
+          "leap-falling-fifths",
+          "leap-staccato-fourth-fifth",
+          "leap-staccato-octaves",
+          "leap-widening",
+          "leap-tenth"
+        ]
+      },
+      {
+        "id": "clear-words",
+        "name": "Clear words",
+        "exerciseIds": [
+          "words-ta-ka",
+          "words-la-ga-triad",
+          "words-mini-patter",
+          "words-five-vowels",
+          "words-tee-tay-climb",
+          "words-pa-ta-ka",
+          "words-zinga-triad",
+          "words-patter-scale"
         ]
       }
     ],
@@ -2521,6 +3645,211 @@
           }
         ],
         "seconds": 223.1,
+        "allStepsFree": false
+      },
+      {
+        "id": "runs",
+        "name": "Riffs and runs",
+        "pro": true,
+        "steps": [
+          {
+            "exerciseId": "runs-three-note-cell",
+            "reps": 8
+          },
+          {
+            "exerciseId": "runs-pentatonic-climb",
+            "reps": 8
+          },
+          {
+            "exerciseId": "runs-minor-fall",
+            "reps": 8
+          },
+          {
+            "exerciseId": "runs-turn",
+            "reps": 8
+          },
+          {
+            "exerciseId": "runs-blues-cell",
+            "reps": 8
+          },
+          {
+            "exerciseId": "runs-triplet-cells",
+            "reps": 8
+          },
+          {
+            "exerciseId": "runs-seven-note-riff",
+            "reps": 8
+          },
+          {
+            "exerciseId": "runs-quick-pentatonic",
+            "reps": 8
+          }
+        ],
+        "seconds": 336.87,
+        "allStepsFree": false
+      },
+      {
+        "id": "low-notes",
+        "name": "Low notes",
+        "pro": true,
+        "steps": [
+          {
+            "exerciseId": "low-slow-five",
+            "reps": 8
+          },
+          {
+            "exerciseId": "low-falling-triad",
+            "reps": 8
+          },
+          {
+            "exerciseId": "low-hold",
+            "reps": 8
+          },
+          {
+            "exerciseId": "low-octave-drop",
+            "reps": 8
+          },
+          {
+            "exerciseId": "low-glide-fifth",
+            "reps": 8
+          },
+          {
+            "exerciseId": "low-minor-three",
+            "reps": 8
+          },
+          {
+            "exerciseId": "low-rocking-tone",
+            "reps": 8
+          },
+          {
+            "exerciseId": "low-octave-walk",
+            "reps": 8
+          }
+        ],
+        "seconds": 406.03,
+        "allStepsFree": false
+      },
+      {
+        "id": "long-phrases",
+        "name": "Long phrases",
+        "pro": true,
+        "steps": [
+          {
+            "exerciseId": "phrase-scale-twice",
+            "reps": 8
+          },
+          {
+            "exerciseId": "phrase-scale-three",
+            "reps": 8
+          },
+          {
+            "exerciseId": "phrase-nine-note",
+            "reps": 8
+          },
+          {
+            "exerciseId": "phrase-slow-five",
+            "reps": 8
+          },
+          {
+            "exerciseId": "phrase-arpeggio-chain",
+            "reps": 8
+          },
+          {
+            "exerciseId": "phrase-three-long-notes",
+            "reps": 8
+          },
+          {
+            "exerciseId": "phrase-thirds-sequence",
+            "reps": 8
+          },
+          {
+            "exerciseId": "phrase-minor-octave",
+            "reps": 8
+          }
+        ],
+        "seconds": 791.78,
+        "allStepsFree": false
+      },
+      {
+        "id": "leaps",
+        "name": "Leaps and intervals",
+        "pro": true,
+        "steps": [
+          {
+            "exerciseId": "leap-fourths",
+            "reps": 8
+          },
+          {
+            "exerciseId": "leap-fifths",
+            "reps": 8
+          },
+          {
+            "exerciseId": "leap-falling-sixths",
+            "reps": 8
+          },
+          {
+            "exerciseId": "leap-falling-fifths",
+            "reps": 8
+          },
+          {
+            "exerciseId": "leap-staccato-fourth-fifth",
+            "reps": 8
+          },
+          {
+            "exerciseId": "leap-staccato-octaves",
+            "reps": 8
+          },
+          {
+            "exerciseId": "leap-widening",
+            "reps": 8
+          },
+          {
+            "exerciseId": "leap-tenth",
+            "reps": 8
+          }
+        ],
+        "seconds": 348.27,
+        "allStepsFree": false
+      },
+      {
+        "id": "clear-words",
+        "name": "Clear words",
+        "pro": true,
+        "steps": [
+          {
+            "exerciseId": "words-ta-ka",
+            "reps": 8
+          },
+          {
+            "exerciseId": "words-la-ga-triad",
+            "reps": 8
+          },
+          {
+            "exerciseId": "words-mini-patter",
+            "reps": 8
+          },
+          {
+            "exerciseId": "words-five-vowels",
+            "reps": 8
+          },
+          {
+            "exerciseId": "words-tee-tay-climb",
+            "reps": 8
+          },
+          {
+            "exerciseId": "words-pa-ta-ka",
+            "reps": 8
+          },
+          {
+            "exerciseId": "words-zinga-triad",
+            "reps": 8
+          },
+          {
+            "exerciseId": "words-patter-scale",
+            "reps": 8
+          }
+        ],
+        "seconds": 355.2,
         "allStepsFree": false
       }
     ]

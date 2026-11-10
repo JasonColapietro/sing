@@ -586,7 +586,7 @@ export const PRO_PERKS: ProPerk[] = [
     id: "warmups",
     title: "Pro warmup packs",
     // Exactly what PRO_PACKS holds: no genre, voice-type or range-fit claim.
-    desc: `${PRO_PACK_COUNT} extra sets, ${PRO_EXERCISES} exercises: belt prep, a head-voice builder and a mix builder.`,
+    desc: `${PRO_PACK_COUNT} extra sets, ${PRO_EXERCISES} exercises: belt prep, a head-voice builder, a mix builder, riffs and runs, low notes, long phrases, leaps and intervals, and clear words.`,
   },
   {
     id: "book",
