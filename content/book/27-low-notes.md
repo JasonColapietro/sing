@@ -33,13 +33,11 @@ Speak afterwards. If your speaking voice feels heavy or tired after a low sessio
 
 How low a voice goes depends chiefly on the length and mass of the folds, and those are fixed. Training can make the notes near your floor clearer, steadier and easier to start. It can make them available on a day when you are not perfectly rested. It does not usually add many notes below the floor, and for a lot of singers it adds none.
 
-That is not a reason to skip the work. The difference between a low note you can touch and a low note you can start cleanly, hold for four seconds and put a word on is the difference between a note and a usable note. Chapter 7 called that the gap between your absolute range and your performable one, and at the bottom the gap is often three or four semitones wide. Closing it is what three weeks can do.
+That is not a reason to skip the work. The difference between a low note you can touch and a low note you can start cleanly, hold for four seconds and put a word on is the difference between a note and a usable note. Chapter 7 called that the gap between your absolute range and your performable one, and chapter 18 put the usable bottom a few semitones above the test floor. Closing it is what three weeks can do.
 
 ## How the three weeks are built
 
 Week 1 is free and uses only the free exercises. Day 1 takes a range test after a hum and a descending five. The other days go down by steps on hums and a tongue trill, then slide down on sighs and soft lip trills, then come down from the top on a slow "hoo" and a reverse arpeggio. Nearly everything descends. Approaching a low note from above, on a slide or a scale, lets it arrive with no adjustment, where attacking it cold invites the reach.
-
-One exercise that week starts in a quiet creak and rolls up into a clean note. That is the only place fry appears in the program, and it is there as an onset, for a second, to find a slack and easy start. The scored part is the clear note after it. Nothing here asks you to sing in fry, and no exercise in the Low notes pack uses it.
 
 Weeks 2 and 3 are the Low notes pack. It has eight exercises: a slow five down on "oh", a falling triad, a long low hold, an octave drop that settles on the low note, a slow glide down a fifth, three slow steps in minor, a rocking tone, and a walk down the whole octave. Every one of them is kept to the lower part of your ladder, and all but the octave walk step down a half-step on each rep, so a set of eight reps drifts toward the bottom rather than hammering one pitch.
 
@@ -65,13 +63,13 @@ The app cannot hear how a low note is made. Clear or gravelly, pressed or free, 
 
 Chapter 6's list applies in full. Stop the session if anything scratches or hurts, or if your speaking voice starts to feel heavy. Take a day off if you wake up hoarse. A voice that hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist.
 
-One more caution, specific to this program. Do not practice low notes first thing in the morning and take the result as progress. Many voices sit lower and feel thicker in the morning, as chapter 8 noted, and loosen over the following hours. Those notes are borrowed. Chapter 12 explained why a reading like that tells you about the morning and not about your voice.
+One more caution, specific to this program. Do not take a low note sung first thing in the morning as progress. Many voices sit lower and feel thicker in the morning, as chapter 8 noted, and loosen over the following hours, though chapter 12 points out that some voices run the other way. Those notes are borrowed. Chapter 12 explained why a reading like that tells you about the morning and not about your voice.
 
 ## After the three weeks
 
 If your lowest note on the last day is the same as on day 1, read the rest of the result before you decide nothing happened. Can you start the notes just above it without a creak? Do they hold their pitch? Can you sing a word on them? Those are the changes this program is built for.
 
-If a song you love still sits under your usable floor, chapter 21 has the honest answer. Moving the key up two semitones costs nothing, and nobody in the audience will know.
+If a song you love still sits under your usable floor, chapter 21 has the honest answer. Moving the key up two semitones often costs little, and most of the audience will not know.
 
 ## Try this
 

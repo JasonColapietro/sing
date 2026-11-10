@@ -49,7 +49,7 @@ There is a rest day on day 4 and day 7 of every week, and every Pro day ends on 
 
 ## Three faults, and what fixes them
 
-**Sliding.** The notes blur into one another, so the run sounds like a siren with bumps. The fix is a tiny pulse of breath on each note, not a hard restart. Sing the cell staccato once, with a clear gap after each note, then legato again. The staccato pass reminds the voice where each pitch is.
+**Sliding.** The notes blur into one another, so the run sounds like a siren with bumps. The fix is a clean, small restart on each note, without a puff of air in front of it. Sing the cell staccato once, with a clear gap after each note, then legato again. The staccato pass reminds the voice where each pitch is.
 
 **Rushing the end.** The first three notes are in time and the rest tumble. This is nearly always a breath that was spent too early. Take a normal breath, not a big one, and think of the last note as the destination. A run is a phrase, and it needs a plan for its air like any other phrase.
 
@@ -65,7 +65,7 @@ What the app cannot hear is whether a run sounds like music. Timing against a be
 
 ## When to stop
 
-Runs are light work when they are sung lightly. If your throat is tired after a runs session, you were singing them too loud or too high. Stop if anything scratches or hurts, and follow chapter 6 for everything else. The quick exercises are capped at eight reps each for a reason: past that, accuracy drops and you start practicing the mistakes.
+Runs are light work when they are sung lightly. If your throat is tired after a runs session, you were singing them too loud or too high. Stop if anything scratches or hurts, and follow chapter 6 for everything else. Keep the quick exercises to the reps the day names: past a handful, accuracy drops and you start practicing the mistakes.
 
 ## After the four weeks
 

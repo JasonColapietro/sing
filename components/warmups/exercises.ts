@@ -957,11 +957,11 @@ export const PRO_PACKS: WarmupPack[] = [
       {
         id: "runs-seven-note-riff",
         title: "Seven-note riff",
-        desc: "Up one step to the octave, then all the way down the pentatonic scale: 6-8-6-5-3-2-1.",
+        desc: "Up through the pentatonic scale to the octave, then down past the second: 5-6-8-6-5-3-1.",
         tier: "advanced",
         tip: "The top note is a flick, not a hold. Touch it and let the rest fall.",
         noteDur: 0.3,
-        buildSteps: (r) => [rel(r, [9, 12, 9, 7, 4, 2, 0])],
+        buildSteps: (r) => [rel(r, [7, 9, 12, 9, 7, 4, 0])],
       },
       {
         id: "runs-quick-pentatonic",
@@ -985,14 +985,14 @@ export const PRO_PACKS: WarmupPack[] = [
     exercises: [
       {
         id: "low-slow-five",
-        title: "Slow five down",
-        desc: 'Down 5-4-3-2-1 on "oh", slowly, each rep a half-step lower.',
+        title: "Slow five down and settle",
+        desc: 'Down 5-4-3-2-1 on "oh", then a step up and back to settle on the low note, slowly, each rep a half-step lower.',
         tier: "intermediate",
         tip: "Low notes need less air and less push, not more. Let each one get quieter if it wants to, as long as it is still a clear note.",
         noteDur: 0.7,
         ladder: "down",
         rangeCap: LOWER_HALF_OF_RANGE,
-        buildSteps: (r) => [rel(r, [7, 5, 4, 2, 0])],
+        buildSteps: (r) => [rel(r, [7, 5, 4, 2, 0, 2, 0])],
       },
       {
         id: "low-falling-triad",
@@ -1074,32 +1074,32 @@ export const PRO_PACKS: WarmupPack[] = [
     ],
   },
   {
-    // Long phrases. Patterns of six to thirteen seconds meant to be sung on
+    // Long phrases. Patterns of seven to fourteen seconds meant to be sung on
     // one breath. The app does not hear the breath: it scores each note's
     // pitch, and a note dropped to breathe simply scores as missed. So the
     // breath plan is in the tip and the judging of it is the singer's.
     id: "long-phrases",
     name: "Long phrases",
-    desc: "Six- to thirteen-second patterns to sing as one phrase on one breath, with the breath plan in each tip, 8 exercises.",
+    desc: "Seven- to fourteen-second patterns to sing as one phrase on one breath, with the breath plan in each tip, 8 exercises.",
     exercises: [
       {
         id: "phrase-scale-twice",
-        title: "Five-note scale, twice",
-        desc: "The five-note scale up and down twice without a break, about ten seconds. The app scores the pitch, not the breath.",
+        title: "Scale, then arpeggio",
+        desc: "The five-note scale up and down, then an arpeggio to the octave and back, without a break, about nine seconds. The app scores the pitch, not the breath.",
         tier: "intermediate",
-        tip: "One breath in, low and quiet, then spend it evenly. If you run short, sing the first pass softer rather than rushing the second.",
+        tip: "One breath in, low and quiet, then spend it evenly. If you run short, sing the scale softer rather than rushing the arpeggio.",
         noteDur: 0.5,
-        buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0, 2, 4, 5, 7, 5, 4, 2, 0])],
+        buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0, 4, 7, 12, 7, 4, 0])],
       },
       {
         id: "phrase-scale-three",
-        title: "Five-note scale, three times",
-        desc: "Three passes of the five-note scale on one breath, about thirteen seconds. The app scores the pitch, not the breath.",
+        title: "Three passes, each wider",
+        desc: "A five-note scale, a six-note scale, then an arpeggio to the octave, all on one breath, about fourteen seconds. The app scores the pitch, not the breath.",
         tier: "advanced",
         tip: "Plan the air in thirds. The last pass should sound like the first; if it fades, that is the length to work at.",
         noteDur: 0.45,
         buildSteps: (r) => [
-          rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0, 2, 4, 5, 7, 5, 4, 2, 0, 2, 4, 5, 7, 5, 4, 2, 0]),
+          rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0, 2, 4, 5, 7, 9, 7, 5, 4, 2, 0, 4, 7, 12, 7, 4, 0]),
         ],
       },
       {
@@ -1113,12 +1113,12 @@ export const PRO_PACKS: WarmupPack[] = [
       },
       {
         id: "phrase-slow-five",
-        title: "Slow five, every note held",
-        desc: "The five-note scale up and down with every note close to a second long. The app scores the pitch, not the breath.",
+        title: "Slow climb, every note held",
+        desc: "Up 1-2-3-5 and back down with every note close to a second long. The app scores the pitch, not the breath.",
         tier: "intermediate",
-        tip: "Nine long notes on one breath. Keep the volume medium and the air steady; a big first note leaves nothing for the last.",
+        tip: "Seven long notes on one breath. Keep the volume medium and the air steady; a big first note leaves nothing for the last.",
         noteDur: 0.9,
-        buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0])],
+        buildSteps: (r) => [rel(r, [0, 2, 4, 7, 4, 2, 0])],
       },
       {
         id: "phrase-arpeggio-chain",
@@ -1127,7 +1127,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tier: "intermediate",
         tip: "No breath where the chord changes. Think of the three arpeggios as one sentence with two commas.",
         noteDur: 0.55,
-        buildSteps: (r) => [rel(r, [0, 4, 7, 4, 0, 5, 9, 5, 0, 4, 7, 4, 0])],
+        buildSteps: (r) => [rel(r, [0, 4, 7, 4, 0, 5, 9, 12, 9, 5, 0, 4, 7, 4, 0])],
       },
       {
         id: "phrase-three-long-notes",
@@ -1188,21 +1188,21 @@ export const PRO_PACKS: WarmupPack[] = [
       {
         id: "leap-falling-sixths",
         title: "Falling sixths",
-        desc: "Start on the sixth and drop to the root, twice: 6-1-6-1.",
+        desc: "Two falling sixths: 6 down to 1, then 8 down to 3, and home.",
         tier: "intermediate",
         tip: "Falling leaps overshoot. Aim for the root as a note of its own, not as wherever the drop ends.",
         noteDur: 0.65,
-        buildSteps: (r) => [rel(r, [9, 0, 9, 0])],
+        buildSteps: (r) => [rel(r, [9, 0, 12, 4, 0])],
       },
       {
         id: "leap-falling-fifths",
-        title: "Falling fifths",
-        desc: "Drop a fifth and climb back, twice, each rep a half-step lower: 5-1-5-1.",
+        title: "Falling fourth and fifth",
+        desc: "Drop a fourth to the root, then a fifth, each rep a half-step lower: 4-1, 5-1.",
         tier: "intermediate",
         tip: "Keep the upper note light so the lower one has room to sound. Same volume on both.",
         noteDur: 0.6,
         ladder: "down",
-        buildSteps: (r) => [rel(r, [7, 0, 7, 0])],
+        buildSteps: (r) => [rel(r, [5, 0, 7, 0])],
       },
       {
         id: "leap-staccato-fourth-fifth",

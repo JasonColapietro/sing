@@ -39,9 +39,9 @@ Week 1 is free and uses only the free drills and exercises. One day opens with a
 
 Week 2 alternates two days. "Breath, then the long-phrases pack" opens with box breathing and a lip trill, then sings the whole pack. "A counted breath, then four long lines" opens with the Farinelli drill and the Quick warmup, then sings four of the pack's exercises for five reps each.
 
-The Long phrases pack has eight exercises, and each is a pattern of roughly six to thirteen seconds meant for one breath: the five-note scale twice, then three times; a nine-note scale; a slow five where every note is nearly a second long; a chain of three arpeggios; three long notes joined; thirds in sequence; and a slow minor octave. Each tip states the breath plan.
+The Long phrases pack has eight exercises, and each is a pattern of roughly seven to fourteen seconds meant for one breath: a scale then an arpeggio; three passes, each wider; a nine-note scale; a slow climb where every note is nearly a second long; a chain of three arpeggios; three long notes joined; thirds in sequence; and a slow minor octave. Each tip states the breath plan.
 
-Weeks 3 and 4 add consonants. On two days a week the Clear words pack follows the warmup, and the three-pass scale follows that. There is a reason for the order. A line of pure vowel is the easy case. Real phrases have words in them, and every consonant either stops the air or lets some escape. A singer with sloppy diction leaks breath on every "h", "f" and "s". Crisp, quick consonants are not only clearer. They are cheaper.
+Weeks 3 and 4 add consonants. On two days a week the Clear words pack follows the warmup, and the three wider passes follow that. There is a reason for the order. A line of pure vowel is the easy case. Real phrases have words in them, and every consonant either stops the air or lets some escape. A singer with sloppy diction leaks breath on every "h", "f" and "s". Crisp, quick consonants are not only clearer. They are cheaper.
 
 There is a rest day on day 4 and day 7 of every week, and every Pro day ends on the cool-down.
 
@@ -57,7 +57,7 @@ There is a rest day on day 4 and day 7 of every week, and every Pro day ends on 
 
 ## What the app scores, and what it cannot
 
-Every exercise scores how close each note landed. That turns out to be a fair, if indirect, measure of breath. A note you dropped in order to breathe scores as missed. A final note that sagged because the air ran out scores as flat. If the last three notes of the three-pass scale score worse than the first three, the breath plan failed, and you can see exactly where.
+Every exercise scores how close each note landed. That says something about the phrase, though not why. A note you dropped in order to breathe scores as missed, and a final note that sagged scores as flat. If the last notes of a long pattern keep scoring worse than the first ones, the breath plan is the first thing to check, with the mirror and the recorder, since the app cannot tell a breath that ran out from any other cause.
 
 The app does not hear the breath itself. It cannot tell a low, quiet inhale from a gasp, and it does not know whether your ribs stayed wide. That part is yours to judge. The mirror is useful here: shoulders that rise on the inhale are the plainest sign of a high breath.
 
@@ -75,4 +75,4 @@ Take the line that beats you and mark it up. Find the consonants that leak. Deci
 
 ## Try this
 
-Open [Five-note scale, twice](/warmups?exercise=phrase-scale-twice) in Warmups and sing it on one breath at a medium level. Then do it again and start a little softer. If the second attempt ends with air to spare, you have just found the cheapest way there is to make a phrase longer.
+Open [Scale, then arpeggio](/warmups?exercise=phrase-scale-twice) in Warmups and sing it on one breath at a medium level. Then do it again and start a little softer. If the second attempt ends with air to spare, you have just found the cheapest way there is to make a phrase longer.

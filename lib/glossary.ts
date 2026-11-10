@@ -722,7 +722,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A musical sentence of several notes, usually sung on one breath.",
         where:
-          "The Long phrases pack and the Longer phrases program are built around sung phrases six to thirteen seconds long.",
+          "The Long phrases pack and the Longer phrases program are built around sung phrases seven to fourteen seconds long.",
         href: "/programs",
         domain: "music",
       },
@@ -787,10 +787,10 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Release",
         aka: ["Offset"],
         definition:
-          "The way a sung note ends, cleanest when the sound simply stops instead of fading into breath.",
+          "The way a sung note ends.",
         where:
-          "The Long phrases pack asks for a clean release on the last note of each line.",
-        href: "/warmups",
+          "The book's longer phrases chapter asks for a release that stops the sound rather than fading it into breath.",
+        href: "/book",
         domain: "voice",
       },
       {
@@ -932,7 +932,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A voice that sounds rough, breathy or weak, in speech or in singing.",
         where:
-          "The Belt and Low notes programs ask you to rest when it appears and to see a doctor who can examine the vocal folds when it lasts.",
+          "The Belt and Low notes programs ask you to rest when it appears and, when it lasts, to see a doctor who can examine the vocal folds, such as an ENT or laryngologist.",
         href: "/programs",
         domain: "voice",
       },

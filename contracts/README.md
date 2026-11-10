@@ -707,7 +707,7 @@ No key was added or renamed, so `version` stays 9:
   programs' ids, lengths and rest days are unchanged.
 - `editorial` book: chapters 24 to 28 added in a new part, "Skill
   programs" (`belting`, `head-voice`, `riffs-and-runs`, `low-notes`,
-  `longer-phrases`). Book `totalWords` 39493.
+  `longer-phrases`). Book `totalWords` 39550.
 - `glossary.json`: 42 terms added in a new section, "Technique and
   practice", all `music` or `voice`, so all published by this site.
 

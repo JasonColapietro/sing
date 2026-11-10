@@ -832,8 +832,11 @@ const BELT_LEAPS = day(
   exercise("belt-octave-drop", 6),
   routine("cooldown"),
 );
-const BELT_EARLY_WEEK = [BELT_CALLS, BELT_ACROSS, BELT_EVERYDAY, rest(), BELT_CALLS, BELT_ACROSS, rest()];
-const BELT_LATE_WEEK = [BELT_HOLDS, BELT_LEAPS, BELT_EVERYDAY, rest(), BELT_HOLDS, BELT_LEAPS, rest()];
+// Never two belting days back to back (chapter 17): a light day with no
+// belt work sits between them.
+const BELT_LIGHT = day("A light day: head voice, no calls", routine("daily"), routine("head-voice-builder"), routine("cooldown"));
+const BELT_EARLY_WEEK = [BELT_CALLS, BELT_LIGHT, BELT_ACROSS, rest(), BELT_EVERYDAY, BELT_LIGHT, rest()];
+const BELT_LATE_WEEK = [BELT_HOLDS, BELT_LIGHT, BELT_LEAPS, rest(), BELT_EVERYDAY, BELT_LIGHT, rest()];
 
 const BELT: Program = {
   id: "belt-6w",
@@ -995,7 +998,7 @@ const LOW_FREE_B = day(
   "Slides and a quiet start",
   exercise("morning-sigh", 5),
   exercise("soft-trill-slide", 5),
-  exercise("fry-onset", 4),
+  exercise("humming-thirds", 4),
   exercise("morning-sustain", 4),
 );
 const LOW_FREE_C = day(
@@ -1095,7 +1098,7 @@ const LONG_PHRASES: Program = {
   id: "long-phrases-4w",
   name: "Longer phrases in 4 weeks",
   tagline:
-    "Four weeks of breath drills and lines that last eight to thirteen seconds, sung on one breath, with consonants from week 3.",
+    "Four weeks of breath drills and lines that last seven to fourteen seconds, sung on one breath, with consonants from week 3.",
   measures:
     "Every exercise scores how close each note landed, so a note dropped for a breath shows as missed. The app cannot hear the breath itself; how the phrase felt is yours to judge. Day 1 and the last day take a range test and a sustain test, so you can compare the seconds you held.",
   weeks: 4,

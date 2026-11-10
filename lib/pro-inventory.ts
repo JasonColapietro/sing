@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 28,
-    words: 39493,
+    words: 39550,
     free: 3,
     pdfMb: 1.4,
     href: "/book",
