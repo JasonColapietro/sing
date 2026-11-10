@@ -5118,6 +5118,41 @@
         "weeks": 12,
         "pro": true,
         "freeWeeks": 1
+      },
+      {
+        "id": "belt-6w",
+        "name": "Belt in 6 weeks",
+        "weeks": 6,
+        "pro": true,
+        "freeWeeks": 1
+      },
+      {
+        "id": "head-voice-4w",
+        "name": "Head voice in 4 weeks",
+        "weeks": 4,
+        "pro": true,
+        "freeWeeks": 1
+      },
+      {
+        "id": "runs-4w",
+        "name": "Riffs and runs in 4 weeks",
+        "weeks": 4,
+        "pro": true,
+        "freeWeeks": 1
+      },
+      {
+        "id": "low-notes-3w",
+        "name": "Low notes in 3 weeks",
+        "weeks": 3,
+        "pro": true,
+        "freeWeeks": 1
+      },
+      {
+        "id": "long-phrases-4w",
+        "name": "Longer phrases in 4 weeks",
+        "weeks": 4,
+        "pro": true,
+        "freeWeeks": 1
       }
     ]
   },

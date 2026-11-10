@@ -108,6 +108,11 @@ export const ROOM_COUNT = 10;
 export const PRO_PROGRAM_NAMES: readonly string[] = [
   "Mix in 4 weeks",
   "The Measured Voice: 12 weeks",
+  "Belt in 6 weeks",
+  "Head voice in 4 weeks",
+  "Riffs and runs in 4 weeks",
+  "Low notes in 3 weeks",
+  "Longer phrases in 4 weeks",
 ];
 export const PRO_PROGRAM_COUNT = PRO_PROGRAM_NAMES.length;
 export const FREE_PROGRAM_COUNT = 4;

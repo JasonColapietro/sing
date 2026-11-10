@@ -66,6 +66,9 @@ import { FREE_DAILY_SEC } from "./free-cap";
 
 const allItems = (p: Program) => p.days.flatMap((d) => d.items);
 
+/** The 2026-11 skill programs, in the order they follow the book's program. */
+const NEW_PROGRAMS = ["belt-6w", "head-voice-4w", "runs-4w", "low-notes-3w", "long-phrases-4w"] as const;
+
 let n = 0;
 function session(day: string, type: SessionLog["type"], detail?: string, time = "12:00:00"): SessionLog {
   n += 1;
@@ -85,9 +88,10 @@ function sessionsFor(d: ProgramDay, day: string): SessionLog[] {
 }
 
 describe("program data", () => {
-  it("has unique ids and four to six programs", () => {
+  it("has unique ids and four to eleven programs, the 2026-11 skill programs last", () => {
     expect(PROGRAMS.length).toBeGreaterThanOrEqual(4);
-    expect(PROGRAMS.length).toBeLessThanOrEqual(6);
+    expect(PROGRAMS.length).toBeLessThanOrEqual(11);
+    expect(PROGRAMS.map((p) => p.id).slice(-NEW_PROGRAMS.length)).toEqual([...NEW_PROGRAMS]);
     expect(new Set(PROGRAMS.map((p) => p.id)).size).toBe(PROGRAMS.length);
     for (const p of PROGRAMS) expect(programById(p.id)).toBe(p);
     expect(programById("nope")).toBeNull();
@@ -661,6 +665,125 @@ describe("program data", () => {
         // Weeks 6 and 12 close on a session instead of a rest.
         .filter((i) => i !== 41 && i !== 83),
     );
+    // The 2026-11 programs: a rest on days 4 and 7 of every week, except that
+    // the last week closes on the check-in.
+    const midAndEnd = (weeks: number) =>
+      Array.from({ length: weeks }, (_, w) => [w * 7 + 3, w * 7 + 6])
+        .flat()
+        .slice(0, -1);
+    expect(programById("belt-6w")!.days).toHaveLength(42);
+    expect(rests("belt-6w")).toEqual([3, 6, 10, 13, 17, 20, 24, 27, 31, 34, 38]);
+    expect(programById("head-voice-4w")!.days).toHaveLength(28);
+    expect(rests("head-voice-4w")).toEqual([3, 6, 10, 13, 17, 20, 24]);
+    expect(programById("runs-4w")!.days).toHaveLength(28);
+    expect(rests("runs-4w")).toEqual([3, 6, 10, 13, 17, 20, 24]);
+    expect(programById("low-notes-3w")!.days).toHaveLength(21);
+    expect(rests("low-notes-3w")).toEqual([3, 6, 10, 13, 17]);
+    expect(programById("long-phrases-4w")!.days).toHaveLength(28);
+    expect(rests("long-phrases-4w")).toEqual([3, 6, 10, 13, 17, 20, 24]);
+    for (const id of NEW_PROGRAMS) expect(rests(id), id).toEqual(midAndEnd(programById(id)!.weeks));
+  });
+
+  it("opens and closes each new program on a range test warmed up the same way", () => {
+    for (const id of NEW_PROGRAMS) {
+      const p = programById(id)!;
+      const first = p.days[0];
+      const last = p.days.filter((d) => !isRestDay(d)).at(-1)!;
+      expect(last, id).toBe(p.days.at(-1));
+      const before = (d: ProgramDay) => d.items.slice(0, d.items.findIndex((i) => i.kind === "range"));
+      expect(first.items.some((i) => i.kind === "range"), id).toBe(true);
+      expect(last.items.some((i) => i.kind === "range"), id).toBe(true);
+      expect(before(last), id).toEqual(before(first));
+      expect(before(first).length, id).toBeGreaterThan(0);
+      // No other day takes the test, so the two readings are the comparison.
+      const tests = p.days.filter((d) => d.items.some((i) => i.kind === "range"));
+      expect(tests, id).toEqual([first, last]);
+      // And the same number of sustain attempts, where the program times a hold.
+      const attempts = (d: ProgramDay) =>
+        d.items.reduce((k, i) => k + (i.kind === "drill" && drillPreset(i).drill === "sustain" ? 1 : 0), 0);
+      expect(attempts(last), id).toBe(attempts(first));
+    }
+    // Longer phrases is the one that times a held note at both ends.
+    const phrases = programById("long-phrases-4w")!;
+    expect(phrases.days[0].items.some((i) => i.kind === "drill" && i.id === "sustain")).toBe(true);
+    expect(phrases.measures).toMatch(/sustain test/);
+  });
+
+  it("ends each working day of the new programs on the cool-down", () => {
+    for (const id of NEW_PROGRAMS) {
+      const p = programById(id)!;
+      p.days.forEach((d, i) => {
+        const label = `${id} day ${i + 1} "${d.title}"`;
+        const last = d.items.at(-1);
+        const endsCool = last?.kind === "routine" && last.id === "cooldown";
+        expect(d.items.slice(0, -1).some((x) => x.kind === "routine" && x.id === "cooldown"), label).toBe(false);
+        if (isRestDay(d)) return;
+        // The free week is sized to the free plan's five guided minutes; every
+        // Pro day ends on the real cool-down.
+        expect(endsCool, label).toBe(dayNeedsPro(p, i));
+      });
+    }
+  });
+
+  it("builds each new program on the pack it is named for", () => {
+    const leans: Record<(typeof NEW_PROGRAMS)[number], string[]> = {
+      "belt-6w": ["belt-prep", "leaps"],
+      "head-voice-4w": ["head-voice-builder"],
+      "runs-4w": ["runs", "clear-words"],
+      "low-notes-3w": ["low-notes"],
+      "long-phrases-4w": ["long-phrases", "clear-words"],
+    };
+    for (const id of NEW_PROGRAMS) {
+      const p = programById(id)!;
+      expect(p.pro, id).toBe(true);
+      const routines = new Set(allItems(p).flatMap((i) => (i.kind === "routine" ? [i.id] : [])));
+      for (const pack of leans[id]) expect(routines.has(pack), `${id}: ${pack}`).toBe(true);
+      // The main pack is on at least two days of every Pro week.
+      for (let w = 1; w < p.weeks; w++) {
+        const days = p.days.slice(w * 7, w * 7 + 7);
+        const uses = days.filter((d) =>
+          d.items.some(
+            (i) =>
+              (i.kind === "routine" && i.id === leans[id][0]) ||
+              (i.kind === "exercise" && routineById(leans[id][0])!.steps.some((s) => s.exerciseId === i.id)),
+          ),
+        );
+        expect(uses.length, `${id} week ${w + 1}`).toBeGreaterThanOrEqual(2);
+      }
+    }
+    // Belt holds the leaps and the longer holds back until week 4.
+    const belt = programById("belt-6w")!;
+    const early = belt.days.slice(7, 21).flatMap((d) => d.items);
+    expect(early.some((i) => i.kind === "routine" && i.id === "leaps")).toBe(false);
+    expect(early.some((i) => i.kind === "exercise")).toBe(false);
+    expect(belt.days.slice(21).flatMap((d) => d.items).some((i) => i.kind === "routine" && i.id === "leaps")).toBe(true);
+    // Clear words: once a week in runs, twice a week from week 3 in longer phrases.
+    const wordsDays = (id: string, w: number) =>
+      programById(id)!
+        .days.slice(w * 7, w * 7 + 7)
+        .filter((d) => d.items.some((i) => i.kind === "routine" && i.id === "clear-words")).length;
+    for (const w of [1, 2, 3]) expect(wordsDays("runs-4w", w), `runs week ${w + 1}`).toBe(1);
+    expect(wordsDays("long-phrases-4w", 1)).toBe(0);
+    for (const w of [2, 3]) expect(wordsDays("long-phrases-4w", w), `phrases week ${w + 1}`).toBe(2);
+  });
+
+  it("gives no two programs the same calendar", () => {
+    // Padding is a program that is another program's days under a new name.
+    const sig = (p: Program) => JSON.stringify(p.days.map((d) => d.items));
+    expect(new Set(PROGRAMS.map(sig)).size).toBe(PROGRAMS.length);
+    // And no new program's free week repeats another program's, day for day.
+    const freeWeek = (p: Program) => JSON.stringify(p.days.slice(0, 7).map((d) => d.items));
+    const pro = PROGRAMS.filter((p) => p.pro);
+    expect(new Set(pro.map(freeWeek)).size).toBe(pro.length);
+  });
+
+  it("states what is scored and what is not in each new program", () => {
+    for (const id of NEW_PROGRAMS) {
+      const p = programById(id)!;
+      expect(p.measures, id).toMatch(/scores|scored/i);
+      expect(p.measures, id).toMatch(/yours to judge|cannot hear/i);
+      expect(p.measures, id).toMatch(/range test/);
+    }
   });
 
   it("warms up before every range test, and records after it, as chapters 8 and 14 ask", () => {
@@ -728,8 +851,10 @@ describe("program data", () => {
     }
     // The finished card's own line too: a Recovery week that ends with the
     // voice still rough sends it to a doctor (chapter 6), not round again.
+    // Belt and Low notes are the two skill programs that work an edge of the
+    // voice hard enough to leave it rough, so their finished cards refer too.
     const finishedReferrals = PROGRAMS.filter((p) => p.finished && /\bdoctor\b/i.test(p.finished));
-    expect(finishedReferrals.map((p) => p.id)).toEqual(["recovery-week"]);
+    expect(finishedReferrals.map((p) => p.id)).toEqual(["recovery-week", "belt-6w", "low-notes-3w"]);
     for (const p of finishedReferrals) {
       expect(p.finished, p.id).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
       expect(p.finished, p.id).not.toMatch(/run it again|start (it )?again/i);

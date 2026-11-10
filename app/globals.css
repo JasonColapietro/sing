@@ -489,6 +489,21 @@ html[data-sing-program~="finished"][data-sing-program~="foundations-2w"] [data-p
 html[data-sing-program~="finished"][data-sing-program~="high-notes-6w"] [data-prepaint-slot="program-today"] {
   --finished-slot: 36.5rem;
 }
+/* The 2026-11 skill programs, two check-in rows each. Head voice has Mix's
+   card. Riffs and runs and Longer phrases have headings that wrap on a phone,
+   and Longer phrases' rows carry a sustain reading. Belt and Low notes add a
+   finished line that refers a voice still rough to a doctor. */
+html[data-sing-program~="finished"][data-sing-program~="head-voice-4w"] [data-prepaint-slot="program-today"] {
+  --finished-slot: 31.25rem;
+}
+html[data-sing-program~="finished"][data-sing-program~="runs-4w"] [data-prepaint-slot="program-today"],
+html[data-sing-program~="finished"][data-sing-program~="long-phrases-4w"] [data-prepaint-slot="program-today"] {
+  --finished-slot: 33rem;
+}
+html[data-sing-program~="finished"][data-sing-program~="belt-6w"] [data-prepaint-slot="program-today"],
+html[data-sing-program~="finished"][data-sing-program~="low-notes-3w"] [data-prepaint-slot="program-today"] {
+  --finished-slot: 38rem;
+}
 /* The Measured Voice: chapter 19's next steps, six check-in rows (three of
    them sustain only, their range cell a one-line dash) and the fortnight
    choices (52.6rem, 34.4rem). */
@@ -530,8 +545,15 @@ html[data-sing-program~="finished"] [data-prepaint-slot="program-today"][data-pr
     --finished-slot: 16.5rem;
   }
   html[data-sing-program~="finished"][data-sing-program~="mix-4w"] [data-prepaint-slot="program-today"],
-  html[data-sing-program~="finished"][data-sing-program~="foundations-2w"] [data-prepaint-slot="program-today"] {
+  html[data-sing-program~="finished"][data-sing-program~="foundations-2w"] [data-prepaint-slot="program-today"],
+  html[data-sing-program~="finished"][data-sing-program~="head-voice-4w"] [data-prepaint-slot="program-today"],
+  html[data-sing-program~="finished"][data-sing-program~="runs-4w"] [data-prepaint-slot="program-today"],
+  html[data-sing-program~="finished"][data-sing-program~="long-phrases-4w"] [data-prepaint-slot="program-today"] {
     --finished-slot: 24.75rem;
+  }
+  html[data-sing-program~="finished"][data-sing-program~="belt-6w"] [data-prepaint-slot="program-today"],
+  html[data-sing-program~="finished"][data-sing-program~="low-notes-3w"] [data-prepaint-slot="program-today"] {
+    --finished-slot: 27.25rem;
   }
   html[data-sing-program~="finished"][data-sing-program~="high-notes-6w"] [data-prepaint-slot="program-today"] {
     --finished-slot: 28.25rem;

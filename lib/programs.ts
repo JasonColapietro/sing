@@ -769,8 +769,359 @@ const MEASURED_VOICE: Program = {
   ],
 };
 
-/** Shortest first, the Pro programs last. */
-export const PROGRAMS: Program[] = [RECOVERY, FOUNDATIONS, VIBRATO, HIGH_NOTES, MIX, MEASURED_VOICE];
+// The 2026-11 skill programs. Each is built the way Mix is: a free week of
+// free exercises that preview the skill inside the free plan's five guided
+// minutes, Pro weeks that alternate two or three day types on a pack and end
+// on the cool-down, and a last day that takes the range test warmed up exactly
+// as day 1's was. None of them measures the skill it practices: the score is
+// pitch, and each `measures` line says what is left to the singer.
+
+/** A day-1 and last-day pair: the same warm-in before the range test, the same close after it. */
+function checkInDays(before: ProgramItem[], after: ProgramItem[], closing: ProgramItem[]) {
+  return {
+    first: day("Where you start", ...before, range, ...after),
+    last: day("Check in", ...before, range, ...after, ...closing, routine("cooldown")),
+  };
+}
+
+// Belt in 6 weeks. Weeks 2 and 3 are the belt-prep pack, whose calls and holds
+// all walk the lower middle of the range; the leaps and the longer holds come
+// in week 4, once the speech-level sound is a habit (book chapter 24).
+const BELT_CHECK = checkInDays(
+  [exercise("lip-trill-scale", 6), exercise("five-note-scale", 5)],
+  [exercise("sustained-hold", 4), exercise("descending-five", 4)],
+  [routine("belt-prep")],
+);
+const BELT_FREE_A = day(
+  "An easy, steady middle",
+  exercise("lip-trill-scale", 6),
+  exercise("five-note-scale", 5),
+  exercise("sustained-hold", 4),
+  exercise("descending-five", 4),
+);
+const BELT_FREE_B = day(
+  "Swell without squeeze",
+  exercise("morning-hum", 5),
+  exercise("swell-and-fade", 4),
+  exercise("legato-triad", 5),
+  exercise("quiet-hum-descent", 5),
+);
+const BELT_FREE_C = day(
+  "Short and detached",
+  exercise("lip-trill-scale", 6),
+  exercise("gug-staccato", 4),
+  exercise("octave-arpeggio", 4),
+  exercise("straw-slide-down", 5),
+);
+const BELT_CALLS = day("Calls at speaking pitch", routine("quick"), routine("belt-prep"), routine("cooldown"));
+const BELT_ACROSS = day("Calls, then across the middle", routine("quick"), routine("belt-prep"), routine("mix"), routine("cooldown"));
+const BELT_EVERYDAY = day("The everyday set, then calls", routine("daily"), routine("belt-prep"), routine("cooldown"));
+const BELT_HOLDS = day(
+  "Longer holds",
+  routine("quick"),
+  routine("belt-prep"),
+  exercise("belt-forte-ah", 6),
+  exercise("belt-fifth-hold", 6),
+  routine("cooldown"),
+);
+const BELT_LEAPS = day(
+  "Leaps into a strong note",
+  routine("quick"),
+  routine("leaps"),
+  exercise("belt-fifth-hold", 6),
+  exercise("belt-octave-drop", 6),
+  routine("cooldown"),
+);
+const BELT_EARLY_WEEK = [BELT_CALLS, BELT_ACROSS, BELT_EVERYDAY, rest(), BELT_CALLS, BELT_ACROSS, rest()];
+const BELT_LATE_WEEK = [BELT_HOLDS, BELT_LEAPS, BELT_EVERYDAY, rest(), BELT_HOLDS, BELT_LEAPS, rest()];
+
+const BELT: Program = {
+  id: "belt-6w",
+  name: "Belt in 6 weeks",
+  tagline:
+    "Six weeks from speech-level calls to strong, held notes in the middle of your range, with leaps from week 4 and rest days every week.",
+  measures:
+    "Every exercise scores how close each note landed. The app cannot hear how loud you are or how the sound is made, so the strength of it is yours to judge. A range test opens and closes the six weeks.",
+  weeks: 6,
+  pro: true,
+  // Chapters 6 and 24: hoarseness after belting is a sign to back off, and a
+  // voice that stays rough is a question for a doctor, not for a seventh week.
+  finished:
+    "If a session ever left you hoarse the next day, the calls were too big: sing weeks 2 and 3 quieter before going further. A voice that hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, rather than more belting.",
+  days: [
+    ...week([BELT_FREE_A, BELT_FREE_B, BELT_FREE_C, rest(), BELT_FREE_A, BELT_FREE_B, rest()], { 0: BELT_CHECK.first }),
+    ...week(BELT_EARLY_WEEK),
+    ...week(BELT_EARLY_WEEK),
+    ...week(BELT_LATE_WEEK),
+    ...week(BELT_LATE_WEEK),
+    ...week(BELT_LATE_WEEK, { 6: BELT_CHECK.last }),
+  ],
+};
+
+// Head voice in 4 weeks. The pack every Pro day, with the free high-notes
+// routine above it from week 3 and the long hovering holds in week 4.
+const HEAD_CHECK = checkInDays(
+  [exercise("morning-hum", 5), exercise("morning-siren", 6)],
+  [exercise("ng-siren-fifth", 5), exercise("descending-five", 4)],
+  [routine("head-voice-builder")],
+);
+const HEAD_FREE_A = day(
+  "Hums and small sirens",
+  exercise("morning-hum", 5),
+  exercise("morning-siren", 6),
+  exercise("ng-siren-fifth", 5),
+  exercise("descending-five", 4),
+);
+const HEAD_FREE_B = day(
+  "Light on the octave",
+  exercise("lip-trill-scale", 6),
+  exercise("gee-octave", 5),
+  exercise("hoo-four-note", 4),
+  exercise("quiet-hum-descent", 5),
+);
+const HEAD_FREE_C = day(
+  "Float, then come down",
+  exercise("morning-lip-trill", 5),
+  exercise("reverse-arpeggio", 4),
+  exercise("vibrato-float-high", 4),
+  exercise("soft-trill-slide", 5),
+);
+const HEAD_PACK = day("The head-voice pack", routine("quick"), routine("head-voice-builder"), routine("cooldown"));
+const HEAD_EVERYDAY = day("The everyday set, then light on top", routine("daily"), routine("head-voice-builder"), routine("cooldown"));
+const HEAD_HIGH = day("Past the octave, light", routine("quick"), routine("head-voice-builder"), routine("high-notes"), routine("cooldown"));
+const HEAD_HOVER = day(
+  "Notes that hover",
+  routine("quick"),
+  routine("head-voice-builder"),
+  exercise("head-float-hold", 6),
+  exercise("vibrato-float-high", 4),
+  routine("cooldown"),
+);
+
+const HEAD_VOICE: Program = {
+  id: "head-voice-4w",
+  name: "Head voice in 4 weeks",
+  tagline:
+    "Four weeks of light, connected notes above your speaking range: hums and sirens first, then the head-voice pack, then holds that hover.",
+  measures:
+    "Every exercise scores how close each note landed. The app cannot hear which register you are in, so whether a note is head voice, falsetto or a mix is yours to judge. A range test opens and closes the four weeks.",
+  weeks: 4,
+  pro: true,
+  days: [
+    ...week([HEAD_FREE_A, HEAD_FREE_B, HEAD_FREE_C, rest(), HEAD_FREE_A, HEAD_FREE_B, rest()], { 0: HEAD_CHECK.first }),
+    ...week([HEAD_PACK, HEAD_EVERYDAY, HEAD_PACK, rest(), HEAD_PACK, HEAD_EVERYDAY, rest()]),
+    ...week([HEAD_PACK, HEAD_HIGH, HEAD_EVERYDAY, rest(), HEAD_PACK, HEAD_HIGH, rest()]),
+    ...week([HEAD_HOVER, HEAD_HIGH, HEAD_EVERYDAY, rest(), HEAD_HOVER, HEAD_HIGH, rest()], { 6: HEAD_CHECK.last }),
+  ],
+};
+
+// Riffs and runs in 4 weeks. Slow cells before quick ones on every day, and
+// one day a week on the Clear words pack, since a run is sung on a syllable.
+const RUNS_CHECK = checkInDays(
+  [exercise("morning-three-note", 5), exercise("five-note-scale", 5)],
+  [exercise("pentatonic-run", 5), exercise("descending-five", 4)],
+  [routine("runs")],
+);
+const RUNS_FREE_A = day(
+  "Slow, and every note",
+  exercise("morning-three-note", 5),
+  exercise("five-note-scale", 5),
+  exercise("pentatonic-run", 5),
+  exercise("descending-five", 4),
+);
+const RUNS_FREE_B = day(
+  "Small steps",
+  exercise("morning-hum", 5),
+  exercise("chromatic-neighbor", 6),
+  exercise("minor-scale", 4),
+  exercise("straw-slide-down", 5),
+);
+const RUNS_FREE_C = day(
+  "A first quick run",
+  exercise("lip-trill-scale", 6),
+  exercise("agility-run", 4),
+  exercise("pentatonic-run", 6),
+  exercise("quiet-hum-descent", 5),
+);
+const RUNS_CELLS = day("Cells, slow", routine("quick"), routine("runs"), routine("cooldown"));
+const RUNS_SPEED = day("Accuracy, then speed", routine("agility"), routine("runs"), routine("cooldown"));
+const RUNS_WORDS = day(
+  "Runs on syllables",
+  routine("quick"),
+  routine("clear-words"),
+  exercise("runs-triplet-cells", 6),
+  exercise("runs-quick-pentatonic", 6),
+  routine("cooldown"),
+);
+const RUNS_EVERYDAY = day("The everyday set, then cells", routine("daily"), routine("runs"), routine("cooldown"));
+const RUNS_WEEK = [RUNS_CELLS, RUNS_SPEED, RUNS_WORDS, rest(), RUNS_CELLS, RUNS_EVERYDAY, rest()];
+
+const RUNS: Program = {
+  id: "runs-4w",
+  name: "Riffs and runs in 4 weeks",
+  tagline:
+    "Four weeks of pentatonic and blues-scale cells, placed slowly before they are sung quickly, with one day a week on syllables.",
+  measures:
+    "Every exercise scores how close each note landed at the tempo you set. The app cannot hear style or feel, so whether a run sounds like music is yours to judge. A range test opens and closes the four weeks.",
+  weeks: 4,
+  pro: true,
+  days: [
+    ...week([RUNS_FREE_A, RUNS_FREE_B, RUNS_FREE_C, rest(), RUNS_FREE_A, RUNS_FREE_B, rest()], { 0: RUNS_CHECK.first }),
+    ...week(RUNS_WEEK),
+    ...week(RUNS_WEEK),
+    ...week(RUNS_WEEK, { 6: RUNS_CHECK.last }),
+  ],
+};
+
+// Low notes in 3 weeks. Every Pro day warms up before it goes down and ends on
+// the cool-down; one day a week opens on the recovery set instead of a warmup,
+// so the low holds are sung on the quietest voice of the week.
+const LOW_CHECK = checkInDays(
+  [exercise("morning-hum", 5), exercise("descending-five", 5)],
+  [exercise("tongue-trill-descent", 4), exercise("quiet-hum-descent", 5)],
+  [routine("low-notes")],
+);
+const LOW_FREE_A = day(
+  "Down by steps",
+  exercise("morning-hum", 5),
+  exercise("descending-five", 5),
+  exercise("tongue-trill-descent", 4),
+  exercise("quiet-hum-descent", 5),
+);
+const LOW_FREE_B = day(
+  "Slides and a quiet start",
+  exercise("morning-sigh", 5),
+  exercise("soft-trill-slide", 5),
+  exercise("fry-onset", 4),
+  exercise("morning-sustain", 4),
+);
+const LOW_FREE_C = day(
+  "From the top, down",
+  exercise("lip-trill-scale", 6),
+  exercise("hoo-four-note", 4),
+  exercise("reverse-arpeggio", 4),
+  exercise("straw-slide-down", 5),
+);
+const LOW_PACK = day("The low-notes pack", routine("quick"), routine("low-notes"), routine("cooldown"));
+const LOW_QUIET = day("Quiet sounds, then low holds", routine("recovery"), routine("low-notes"), exercise("low-hold", 4), routine("cooldown"));
+const LOW_EVERYDAY = day("The everyday set, then down", routine("daily"), routine("low-notes"), routine("cooldown"));
+
+const LOW_NOTES: Program = {
+  id: "low-notes-3w",
+  name: "Low notes in 3 weeks",
+  tagline:
+    "Three weeks of slow descents and quiet low holds that settle toward the bottom of your range without pressing on it.",
+  measures:
+    "Every exercise scores how close each note landed. The app cannot hear how a low note is made, so whether it is clear or gravelly is yours to judge. A range test opens and closes the three weeks; whether the lowest note moves is up to your voice.",
+  weeks: 3,
+  pro: true,
+  // Chapters 6 and 27: the floor of a voice is mostly anatomy, and pressing
+  // for a lower note is how a low practice turns into a rough voice.
+  finished:
+    "Some voices are already at their floor, and three weeks will not move it. If the low notes feel easier, return to your usual practice or pick another program. A voice that hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, rather than more low practice.",
+  days: [
+    ...week([LOW_FREE_A, LOW_FREE_B, LOW_FREE_C, rest(), LOW_FREE_A, LOW_FREE_B, rest()], { 0: LOW_CHECK.first }),
+    ...week([LOW_PACK, LOW_QUIET, LOW_EVERYDAY, rest(), LOW_PACK, LOW_QUIET, rest()]),
+    ...week([LOW_PACK, LOW_EVERYDAY, LOW_QUIET, rest(), LOW_PACK, LOW_EVERYDAY, rest()], { 6: LOW_CHECK.last }),
+  ],
+};
+
+// Longer phrases in 4 weeks. The one new program with a second measurement:
+// the sustain test times a held note, so day 1 and the last day take it after
+// the range test and the two readings compare. Breath drills open the Pro
+// days, and the Clear words pack comes in twice a week from week 3, when the
+// lines are long enough for consonants to cost air.
+const PHRASE_CHECK = checkInDays(
+  [exercise("lip-trill-scale", 6), exercise("five-note-scale", 5)],
+  [drill("sustain")],
+  [
+    exercise("phrase-scale-twice", 5),
+    exercise("phrase-scale-three", 5),
+    exercise("phrase-nine-note", 5),
+    exercise("phrase-minor-octave", 5),
+  ],
+);
+const PHRASE_FREE_A = day(
+  "Breath, then one long line",
+  drill("box"),
+  exercise("legato-triad", 5),
+  exercise("five-note-scale", 5),
+  exercise("morning-sustain", 4),
+);
+const PHRASE_FREE_B = day(
+  "Count the breath out",
+  drill("farinelli"),
+  exercise("hoo-four-note", 4),
+  exercise("sustained-hold", 4),
+);
+const PHRASE_FREE_C = day(
+  "Three passes on one breath",
+  exercise("lip-trill-scale", 6),
+  exercise("hung-ee-mm", 4),
+  exercise("swell-and-fade", 4),
+  exercise("straw-slide-down", 5),
+);
+const PHRASE_PACK = day(
+  "Breath, then the long-phrases pack",
+  drill("box"),
+  exercise("lip-trill-scale", 8),
+  routine("long-phrases"),
+  routine("cooldown"),
+);
+const PHRASE_HALF = day(
+  "A counted breath, then four long lines",
+  drill("farinelli"),
+  routine("quick"),
+  exercise("phrase-scale-twice", 5),
+  exercise("phrase-slow-five", 5),
+  exercise("phrase-arpeggio-chain", 5),
+  exercise("phrase-three-long-notes", 5),
+  routine("cooldown"),
+);
+const PHRASE_WORDS = day(
+  "Long lines with words",
+  drill("box"),
+  routine("quick"),
+  routine("clear-words"),
+  exercise("phrase-scale-three", 4),
+  routine("cooldown"),
+);
+
+const LONG_PHRASES: Program = {
+  id: "long-phrases-4w",
+  name: "Longer phrases in 4 weeks",
+  tagline:
+    "Four weeks of breath drills and lines that last eight to thirteen seconds, sung on one breath, with consonants from week 3.",
+  measures:
+    "Every exercise scores how close each note landed, so a note dropped for a breath shows as missed. The app cannot hear the breath itself; how the phrase felt is yours to judge. Day 1 and the last day take a range test and a sustain test, so you can compare the seconds you held.",
+  weeks: 4,
+  pro: true,
+  days: [
+    ...week([PHRASE_FREE_A, PHRASE_FREE_B, PHRASE_FREE_C, rest(), PHRASE_FREE_A, PHRASE_FREE_B, rest()], {
+      0: PHRASE_CHECK.first,
+    }),
+    ...week([PHRASE_PACK, PHRASE_HALF, PHRASE_PACK, rest(), PHRASE_HALF, PHRASE_PACK, rest()]),
+    ...week([PHRASE_PACK, PHRASE_WORDS, PHRASE_HALF, rest(), PHRASE_PACK, PHRASE_WORDS, rest()]),
+    ...week([PHRASE_PACK, PHRASE_WORDS, PHRASE_HALF, rest(), PHRASE_PACK, PHRASE_WORDS, rest()], {
+      6: PHRASE_CHECK.last,
+    }),
+  ],
+};
+
+/** Shortest first, the Pro programs last; the 2026-11 skill programs after the book's. */
+export const PROGRAMS: Program[] = [
+  RECOVERY,
+  FOUNDATIONS,
+  VIBRATO,
+  HIGH_NOTES,
+  MIX,
+  MEASURED_VOICE,
+  BELT,
+  HEAD_VOICE,
+  RUNS,
+  LOW_NOTES,
+  LONG_PHRASES,
+];
 
 export function programById(id: string | null | undefined): Program | null {
   if (!id) return null;
