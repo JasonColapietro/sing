@@ -757,3 +757,13 @@ consumers that vendor either file (`Suede-AI/suede-voice`, the native apps,
 fail until they do. One identifier moved with it: the glossary section
 `colour-tuning-and-timing` is now `color-tuning-and-timing`, and the Tone
 alias "Colour" is now "Color". Nothing in this repo linked the old anchor.
+
+### Guided practice and reading, November 2026
+
+The five new skill-program chapters bring The Measured Voice to 28 chapters.
+The regenerated vocal contract tracks the new chapter and word counts. The
+free Sing glossary now has 75 terms, including 33 new definitions linked to
+verified reading or practice destinations. The shared glossary retains all 16
+guitar entries. These are value additions and changes, so contract versions
+remain unchanged. The book PDF was regenerated after independent content
+review corrected stop-singing advice, breath-health claims and detector limits.
