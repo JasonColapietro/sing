@@ -12,6 +12,15 @@ import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 import { accountsReady } from "@/lib/accounts";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import {
+  BOOKS,
+  FREE_PROGRAM_COUNT,
+  GLOSSARY_COUNT,
+  PRO_EXERCISES,
+  PRO_PACK_COUNT,
+  PRO_PACKS_HREF,
+  PRO_PROGRAM_COUNT,
+} from "@/lib/pro-inventory";
 import { IDLE_GRACE_MS } from "@/components/practice/active-clock";
 
 /**
@@ -21,11 +30,11 @@ import { IDLE_GRACE_MS } from "@/components/practice/active-clock";
  */
 const ACCOUNTS_OPEN = accountsReady();
 
-const TITLE = "Suede Sing Changelog: What's New in 4.2";
-/** The day 4.2 shipped: the record head's <time> and the page's dateModified. */
-export const RELEASE_DATE = "2026-10-29";
+const TITLE = "Suede Sing Changelog: What's New in 4.3";
+/** The day 4.3 shipped: the record head's <time> and the page's dateModified. */
+export const RELEASE_DATE = "2026-11-10";
 const DESCRIPTION =
-  "Suede Sing changelog for 4.2: calmer room pages, share cards drawn in the site's own type, a clearer Pro page, and 4.1's example figures in every room.";
+  "Suede Sing changelog for 4.3: five new Pro warmup packs, five skill programs from belt to longer phrases, five book chapters and a bigger glossary.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/changelog"),
@@ -64,10 +73,38 @@ type Story = {
 };
 
 /**
+ * The 4.3 stories (November 10), in the order a singer meets them. Every
+ * count comes from lib/pro-inventory.ts, which its test re-derives.
+ */
+const RELEASE_STORIES: Story[] = [
+  {
+    label: "Warmups",
+    title: "Five new Pro warmup packs",
+    body: `Riffs and runs, Low notes, Long phrases, Leaps and intervals and Clear words join belt prep, head voice and mix: ${PRO_PACK_COUNT} Pro packs and ${PRO_EXERCISES} Pro exercises in all. Every exercise is scored on pitch, as before, and the Clear words pack says on every row that the words are yours to judge.`,
+    links: [{ href: PRO_PACKS_HREF, text: "See the Pro packs" }],
+  },
+  {
+    label: "Programs",
+    title: "Five skill programs",
+    body: `Belt in 6 weeks, Head voice in 4 weeks, Riffs and runs in 4 weeks, Low notes in 3 weeks and Longer phrases in 4 weeks, each built on the new packs, with week 1 free and a range test at both ends. That makes ${FREE_PROGRAM_COUNT + PRO_PROGRAM_COUNT} programs, ${PRO_PROGRAM_COUNT} of them Pro after their first week.`,
+    links: [{ href: "/programs", text: "Choose a program" }],
+  },
+  {
+    label: "Reading",
+    title: "Five new chapters, and a bigger glossary",
+    body: `The Measured Voice gains a closing part, Skill programs, with one chapter for each new program: ${BOOKS[0].chapters} chapters and a rebuilt PDF. The free glossary now defines ${GLOSSARY_COUNT} terms, from the pentatonic scale to the usable floor.`,
+    links: [
+      { href: "/book", text: "Open The Measured Voice" },
+      { href: "/glossary", text: "Read the glossary" },
+    ],
+  },
+];
+
+/**
  * The 4.2 stories (fleet pass 5, October 29), in the order a singer meets
  * them. Each names something on screen in this release.
  */
-const RELEASE_STORIES: Story[] = [
+const RELEASE_42_STORIES: Story[] = [
   {
     label: "Rooms",
     title: "Calmer room pages",
@@ -298,6 +335,10 @@ const LOG: Array<{
   entries: Array<{ day: string; note: string }>;
 }> = [
   {
+    month: "November 2026",
+    entries: [{ day: "10", note: "Suede Sing 4.3." }],
+  },
+  {
     month: "October 2026",
     entries: [
       // Release lines are terse on purpose: the stories above say what shipped.
@@ -514,10 +555,10 @@ export default function ChangelogPage() {
       kicker="Changelog"
       title={
         <>
-          Suede Sing changelog: everything new in <em>4.2</em>
+          Suede Sing changelog: everything new in <em>4.3</em>
         </>
       }
-      subtitle="Suede Sing 4.2 calms the room pages, draws share cards in the site's own type, and makes the Pro page quicker to read. Below it: 4.1's example figures in every room, and 4.0, which brought back the original design and a recorded grand piano."
+      subtitle="Suede Sing 4.3 adds five Pro warmup packs, five skill programs built on them, five chapters of The Measured Voice and a glossary twice the size. Below it: 4.2's calmer room pages and clearer Pro page, and the releases before it."
     >
       <script
         type="application/ld+json"
@@ -531,14 +572,14 @@ export default function ChangelogPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cool to-transparent"
         />
         <V2TraceGlyph className="shrink-0 text-cool" />
-        <span className="text-ink">4.2</span>
+        <span className="text-ink">4.3</span>
         {/* Each item carries the dot before it and never breaks inside, so a
             wrap cannot leave a dot alone at the end of a line. */}
         <span className="flex items-center gap-x-3 whitespace-nowrap">
           <span aria-hidden className="text-line2">
             ·
           </span>
-          <time dateTime={RELEASE_DATE}>Shipped Oct 2026</time>
+          <time dateTime={RELEASE_DATE}>Shipped Nov 2026</time>
         </span>
         <span className="flex items-center gap-x-3 whitespace-nowrap">
           <span aria-hidden className="text-line2">
@@ -550,21 +591,34 @@ export default function ChangelogPage() {
           <span aria-hidden className="text-line2">
             ·
           </span>
-          {/* The whole log, since July, not 4.2's share of it. */}
+          {/* The whole log, since July, not 4.3's share of it. */}
           <span className="tabular">{entriesLogged} log entries since July</span>
         </span>
       </div>
 
       {/* Each release is one section with an h2 that names it and its stories
-          as h3s inside, so a reader or an answer engine asking what is in 4.2
+          as h3s inside, so a reader or an answer engine asking what is in 4.3
           gets a boundary between it and the releases below. The record head
-          above is 4.2's visible title; this h2 says it to the outline. */}
-      <section aria-labelledby="release-4-2">
-        <h2 id="release-4-2" className="sr-only">
-          Suede Sing 4.2, October 2026
+          above is 4.3's visible title; this h2 says it to the outline. */}
+      <section aria-labelledby="release-4-3">
+        <h2 id="release-4-3" className="sr-only">
+          Suede Sing 4.3, November 2026
         </h2>
         <div className="mt-12 space-y-12">
           {RELEASE_STORIES.map((s) => (
+            <StoryBlock key={s.label} story={s} />
+          ))}
+        </div>
+      </section>
+
+      <section aria-label="Suede Sing 4.2" className="mt-14 border-t border-line2 pt-8">
+        <SectionLabel heading>Earlier: 4.2, October 2026</SectionLabel>
+        <p className="mt-3 max-w-prose text-meta text-mut">
+          Calmer room pages, share cards drawn in the site&apos;s own type,
+          and a Pro page that is quicker to read.
+        </p>
+        <div className="mt-8 space-y-12">
+          {RELEASE_42_STORIES.map((s) => (
             <StoryBlock key={s.label} story={s} />
           ))}
         </div>

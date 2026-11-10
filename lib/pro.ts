@@ -631,7 +631,7 @@ export const PLAN_ROWS: Array<{
     pro: `${FREE_EXERCISES} + ${PRO_EXERCISES} in ${PRO_PACK_COUNT} pro packs`,
   },
   { label: "Coach plan", free: "First two steps each day", pro: "Full adaptive plan, daily" },
-  // Two programs need Pro after their free first week (lib/programs.ts), and
+  // The Pro programs need Pro after their free first week (lib/programs.ts), and
   // a table headed "no asterisks" has to say so before day 8 does.
   {
     label: "Programs",

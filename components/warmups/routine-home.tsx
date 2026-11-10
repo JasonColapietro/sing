@@ -239,8 +239,8 @@ export function PathSection({
     levels.push({
       title: "Pro packs",
       blurb: "Themed sets that pick up where the path ends.",
-      // Each row is a whole pack, not an exercise: "0 of 3 exercises" would
-      // count three packs that hold 19.
+      // Each row is a whole pack, not an exercise: "0 of 8 exercises" would
+      // count the packs as if each were one exercise.
       unit: "packs",
       items: PRO_PACKS.map((pack) => ({
         id: pack.id,

@@ -694,6 +694,26 @@ new slug and path as the canonical ones (the old ones redirect). Apps that
 compute a streak from their own session list should treat a reached program
 rest day as a bridge, as the definition now says.
 
+#### Value changes inside v9 (2026-11-10, guided practice and reading)
+
+No key was added or renamed, so `version` stays 9:
+
+- `suede-vocal.json` warm-up catalogue: five Pro packs added after `mix`
+  (`runs`, `low-notes`, `long-phrases`, `leaps`, `clear-words`), eight
+  exercises each, every one using fields the catalogue already had.
+- `suede-vocal.json` programs: five Pro programs added after
+  `measured-voice-12w` (`belt-6w`, `head-voice-4w`, `runs-4w`,
+  `low-notes-3w`, `long-phrases-4w`), each with `freeWeeks` 1. Existing
+  programs' ids, lengths and rest days are unchanged.
+- `editorial` book: chapters 24 to 28 added in a new part, "Skill
+  programs" (`belting`, `head-voice`, `riffs-and-runs`, `low-notes`,
+  `longer-phrases`). Book `totalWords` 39493.
+- `glossary.json`: 42 terms added in a new section, "Technique and
+  practice", all `music` or `voice`, so all published by this site.
+
+What the other apps must do: re-sync both files byte for byte. The iPhone
+app's routines and book are a separate change (see the 2026-11-10 handoff).
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or
