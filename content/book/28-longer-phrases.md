@@ -41,7 +41,7 @@ Week 2 alternates two days. "Breath, then the long-phrases pack" opens with box 
 
 The Long phrases pack has eight exercises, and each is a pattern of roughly seven to fourteen seconds meant for one breath: a scale then an arpeggio; three passes, each wider; a nine-note scale; a slow climb where every note is nearly a second long; a chain of three arpeggios; three long notes joined; thirds in sequence; and a slow minor octave. Each tip states the breath plan.
 
-Weeks 3 and 4 add consonants. On two days a week the Clear words pack follows the warmup, and the three wider passes follow that. There is a reason for the order. A line of pure vowel is the easy case. Real phrases have words in them, and every consonant either stops the air or lets some escape. A singer with sloppy diction leaks breath on every "h", "f" and "s". Crisp, quick consonants are not only clearer. They are cheaper.
+Weeks 3 and 4 add consonants. On two days a week the Words on pitch pack follows the warmup, and the three wider passes follow that. There is a reason for the order. A line of pure vowel is the easy case. Real phrases have words in them, and every consonant either stops the air or lets some escape. A singer with sloppy diction leaks breath on every "h", "f" and "s". Crisp, quick consonants are not only clearer. They are cheaper.
 
 There is a rest day on day 4 and day 7 of every week, and every Pro day ends on the cool-down.
 

@@ -759,7 +759,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "Quick syllables sung one to a note, often many on the same pitch.",
         where:
-          "The Clear words pack's patter exercises score only the pitch; the words are yours to judge.",
+          "The Words on pitch pack's patter exercises score only the pitch; the words are yours to judge.",
         href: "/warmups",
         domain: "music",
       },
@@ -808,7 +808,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "How clearly the words of a song can be understood when sung.",
         where:
-          "The Clear words pack practices it on moving pitch, scoring the pitch while the words stay yours to judge.",
+          "The Words on pitch pack practices it on moving pitch, scoring the pitch while the words stay yours to judge.",
         href: "/warmups",
         domain: "voice",
       },
@@ -817,7 +817,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A speech sound made by stopping or narrowing the air with the lips, teeth or tongue.",
         where:
-          "The Clear words pack starts each note on one, such as the t in tee-tay-tah-toh-too.",
+          "The Words on pitch pack starts each note on one, such as the t in tee-tay-tah-toh-too.",
         href: "/warmups",
         domain: "voice",
       },

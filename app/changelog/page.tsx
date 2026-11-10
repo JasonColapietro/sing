@@ -80,7 +80,7 @@ const RELEASE_STORIES: Story[] = [
   {
     label: "Warmups",
     title: "Five new Pro warmup packs",
-    body: `Riffs and runs, Low notes, Long phrases, Leaps and intervals and Clear words join belt prep, head voice and mix: ${PRO_PACK_COUNT} Pro packs and ${PRO_EXERCISES} Pro exercises in all. Every exercise is scored on pitch, as before, and the Clear words pack says on every row that the words are yours to judge.`,
+    body: `Riffs and runs, Low notes, Long phrases, Leaps and intervals and Words on pitch join belt prep, head voice and mix: ${PRO_PACK_COUNT} Pro packs and ${PRO_EXERCISES} Pro exercises in all. Every exercise is scored on pitch, as before, and the Words on pitch pack says on every row that the words are yours to judge.`,
     links: [{ href: PRO_PACKS_HREF, text: "See the Pro packs" }],
   },
   {

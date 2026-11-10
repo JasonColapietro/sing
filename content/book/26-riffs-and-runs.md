@@ -41,7 +41,7 @@ Weeks 2 to 4 repeat one week of four day types.
 
 "Accuracy, then speed" swaps the Quick warmup for the free Agility and runs routine, which ends on fast five-note scales, and then sings the pack.
 
-"Runs on syllables" is the day that most singers skip in their own practice and should not. It sings the Clear words pack, then the triplet cells and the quick pentatonic again. A run in a song is sung on a vowel, often after a consonant, and the consonant has to get out of the way without knocking the first note flat.
+"Runs on syllables" is the day that most singers skip in their own practice and should not. It sings the Words on pitch pack, then the triplet cells and the quick pentatonic again. A run in a song is sung on a vowel, often after a consonant, and the consonant has to get out of the way without knocking the first note flat.
 
 "The everyday set, then cells" uses the longer Daily warmup before the pack.
 

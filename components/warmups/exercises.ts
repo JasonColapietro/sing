@@ -1245,12 +1245,12 @@ export const PRO_PACKS: WarmupPack[] = [
     ],
   },
   {
-    // Clear words. Consonants and vowels on moving pitch. The detector reads
+    // Words on pitch. Consonants and vowels on moving pitch. The detector reads
     // pitch only: it cannot tell "ta" from "la", so every desc ends by saying
     // so. What the score does show is whether the pitch stayed true while the
     // mouth was busy, which is the half of diction a tuner can see.
     id: "clear-words",
-    name: "Clear words",
+    name: "Words on pitch",
     desc: "Consonants and vowels on moving pitch. The app scores the pitch; how clear the words are is yours to judge, 8 exercises.",
     exercises: [
       {

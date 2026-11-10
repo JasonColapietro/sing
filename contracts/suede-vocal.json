@@ -3177,7 +3177,7 @@
       },
       {
         "id": "clear-words",
-        "name": "Clear words",
+        "name": "Words on pitch",
         "exerciseIds": [
           "words-ta-ka",
           "words-la-ga-triad",
@@ -3814,7 +3814,7 @@
       },
       {
         "id": "clear-words",
-        "name": "Clear words",
+        "name": "Words on pitch",
         "pro": true,
         "steps": [
           {
@@ -4016,7 +4016,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure, included with Suede Pro.",
       "pathPrefix": "/book",
-      "totalWords": 39550,
+      "totalWords": 39552,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -4275,7 +4275,7 @@
           "part": "Skill programs",
           "summary": "What a run is made of, why speed comes from accuracy rather than the other way round, how the four-week riffs and runs program builds one cell at a time, and what the score tells you.",
           "free": false,
-          "words": 1399,
+          "words": 1400,
           "path": "/book/riffs-and-runs"
         },
         {
@@ -4295,7 +4295,7 @@
           "part": "Skill programs",
           "summary": "Why running out of air is a spending problem rather than a capacity problem, how the four-week longer phrases program trains the spend, where consonants come in, and what the sustain test does and does not show.",
           "free": false,
-          "words": 1411,
+          "words": 1412,
           "path": "/book/longer-phrases"
         }
       ]

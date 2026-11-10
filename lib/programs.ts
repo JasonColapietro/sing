@@ -921,7 +921,7 @@ const HEAD_VOICE: Program = {
 };
 
 // Riffs and runs in 4 weeks. Slow cells before quick ones on every day, and
-// one day a week on the Clear words pack, since a run is sung on a syllable.
+// one day a week on the Words on pitch pack, since a run is sung on a syllable.
 const RUNS_CHECK = checkInDays(
   [exercise("morning-three-note", 5), exercise("five-note-scale", 5)],
   [exercise("pentatonic-run", 5), exercise("descending-five", 4)],
@@ -1036,7 +1036,7 @@ const LOW_NOTES: Program = {
 // Longer phrases in 4 weeks. The one new program with a second measurement:
 // the sustain test times a held note, so day 1 and the last day take it after
 // the range test and the two readings compare. Breath drills open the Pro
-// days, and the Clear words pack comes in twice a week from week 3, when the
+// days, and the Words on pitch pack comes in twice a week from week 3, when the
 // lines are long enough for consonants to cost air.
 const PHRASE_CHECK = checkInDays(
   [exercise("lip-trill-scale", 6), exercise("five-note-scale", 5)],

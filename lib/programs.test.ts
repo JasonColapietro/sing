@@ -757,7 +757,7 @@ describe("program data", () => {
     expect(early.some((i) => i.kind === "routine" && i.id === "leaps")).toBe(false);
     expect(early.some((i) => i.kind === "exercise")).toBe(false);
     expect(belt.days.slice(21).flatMap((d) => d.items).some((i) => i.kind === "routine" && i.id === "leaps")).toBe(true);
-    // Clear words: once a week in runs, twice a week from week 3 in longer phrases.
+    // Words on pitch: once a week in runs, twice a week from week 3 in longer phrases.
     const wordsDays = (id: string, w: number) =>
       programById(id)!
         .days.slice(w * 7, w * 7 + 7)
