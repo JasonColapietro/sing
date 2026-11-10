@@ -160,6 +160,12 @@ const FINISHED_RUNS = {
   "finished-foundations": { programId: "foundations-2w", length: 14, checkIns: [0, 13], view: "program-foundations" },
   "finished-recovery": { programId: "recovery-week", length: 7, checkIns: [], view: "program-recovery" },
   "finished-vibrato": { programId: "vibrato-3w", length: 21, checkIns: [], view: "program-vibrato" },
+  // The 2026-11 skill programs: a check-in on day 1 and the last day each.
+  "finished-belt": { programId: "belt-6w", length: 42, checkIns: [0, 41], view: "program-belt" },
+  "finished-head-voice": { programId: "head-voice-4w", length: 28, checkIns: [0, 27], view: "program-head-voice" },
+  "finished-runs": { programId: "runs-4w", length: 28, checkIns: [0, 27], view: "program-runs" },
+  "finished-low-notes": { programId: "low-notes-3w", length: 21, checkIns: [0, 20], view: "program-low-notes" },
+  "finished-long-phrases": { programId: "long-phrases-4w", length: 28, checkIns: [0, 27], view: "program-long-phrases" },
 };
 
 /**
@@ -244,6 +250,11 @@ const DEEP_LINKS = [
   { path: "/programs?program=mix-4w", name: "program-mix", kind: "app", onlyWhenNamed: true },
   { path: "/programs?program=recovery-week", name: "program-recovery", kind: "app", onlyWhenNamed: true },
   { path: "/programs?program=vibrato-3w", name: "program-vibrato", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=belt-6w", name: "program-belt", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=head-voice-4w", name: "program-head-voice", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=runs-4w", name: "program-runs", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=low-notes-3w", name: "program-low-notes", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=long-phrases-4w", name: "program-long-phrases", kind: "app", onlyWhenNamed: true },
   { path: "/singers/adele", name: "singer-adele", kind: "detail", onlyWhenNamed: true },
   { path: "/singers/celine-dion", name: "singer-celine-dion", kind: "detail", onlyWhenNamed: true },
   { path: "/can-you-sing/someone-like-you", name: "song-someone-like-you", kind: "detail", onlyWhenNamed: true },

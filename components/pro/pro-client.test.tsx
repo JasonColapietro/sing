@@ -382,13 +382,13 @@ describe("Pro sales copy on the page", () => {
   });
 
   it("says where free ends for the programs, and names the Pro ones", () => {
-    // Two programs need Pro after week 1. A table headed "No asterisks" that
+    // Seven programs need Pro after week 1. A table headed "No asterisks" that
     // left them out was contradicted by the day-8 wall.
     const html = renderToStaticMarkup(<ProClient />);
-    expect(html).toContain("4, plus week 1 of 2 more");
-    expect(html).toContain("All 6");
+    expect(html).toContain("4, plus week 1 of 7 more");
+    expect(html).toContain("All 11");
     expect(html).toContain(
-      "Both Pro programs in full (Mix in 4 weeks and The Measured Voice: 12 weeks)",
+      "All Pro programs in full (Mix in 4 weeks, The Measured Voice: 12 weeks, Belt in 6 weeks, Head voice in 4 weeks, Riffs and runs in 4 weeks, Low notes in 3 weeks, and Longer phrases in 4 weeks)",
     );
   });
 

@@ -33,10 +33,10 @@ export interface BookInventory {
 export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
-    chapters: 23,
-    words: 32430,
+    chapters: 28,
+    words: 39552,
     free: 3,
-    pdfMb: 1.0,
+    pdfMb: 1.4,
     href: "/book",
   },
   {
@@ -66,8 +66,8 @@ export const MELODY_COUNT = 24;
 
 /** Warmup exercises, split by tier. */
 export const FREE_EXERCISES = 39;
-export const PRO_EXERCISES = 19;
-export const PRO_PACK_COUNT = 3;
+export const PRO_EXERCISES = 59;
+export const PRO_PACK_COUNT = 8;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
 
 /**
@@ -94,7 +94,7 @@ export const ATLAS_VOICE_COUNT = 636;
  * the guitar senses live in it too, and the guitar hub publishes those, so
  * counting them here would promise a singer pages this site does not have.
  */
-export const GLOSSARY_COUNT = 42;
+export const GLOSSARY_COUNT = 84;
 
 /** Practice rooms, all free. */
 export const ROOM_COUNT = 10;
@@ -108,6 +108,11 @@ export const ROOM_COUNT = 10;
 export const PRO_PROGRAM_NAMES: readonly string[] = [
   "Mix in 4 weeks",
   "The Measured Voice: 12 weeks",
+  "Belt in 6 weeks",
+  "Head voice in 4 weeks",
+  "Riffs and runs in 4 weeks",
+  "Low notes in 3 weeks",
+  "Longer phrases in 4 weeks",
 ];
 export const PRO_PROGRAM_COUNT = PRO_PROGRAM_NAMES.length;
 export const FREE_PROGRAM_COUNT = 4;
@@ -138,7 +143,7 @@ export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }>
     {
       figure: String(PRO_EXERCISES),
       label: "pro exercises",
-      sub: `${PRO_PACK_COUNT} packs: belt prep, head voice and mix`,
+      sub: `${PRO_PACK_COUNT} packs, from belt prep and mix to runs, low notes and long phrases`,
     },
     {
       figure: "2",

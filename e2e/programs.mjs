@@ -32,6 +32,14 @@ const JSON_OUT = flag("json");
 const PROGRESS_KEY = "suede-sing:progress:v1";
 const PROGRAM_KEY = "suede-sing:program:v1";
 const PROGRAM_ID = "foundations-2w";
+/** The 2026-11 skill programs, all Pro after a free week (lib/programs.ts). */
+const NEW_PROGRAMS = [
+  ["belt-6w", "Belt in 6 weeks"],
+  ["head-voice-4w", "Head voice in 4 weeks"],
+  ["runs-4w", "Riffs and runs in 4 weeks"],
+  ["low-notes-3w", "Low notes in 3 weeks"],
+  ["long-phrases-4w", "Longer phrases in 4 weeks"],
+];
 
 const results = [];
 function check(name, ok, detail = "") {
@@ -144,7 +152,7 @@ try {
   await page.goto(`${BASE}/programs`, { waitUntil: "networkidle" });
   check("list renders", (await page.locator("h1").innerText()).includes("Singing practice programs"));
   const cards = await page.locator("a", { hasText: /-day calendar/ }).count();
-  check("six programs listed", cards === 6, `${cards}`);
+  check("eleven programs listed", cards === 11, `${cards}`);
   await page.locator("a", { hasText: "See the 14-day calendar" }).click();
   await page.waitForURL(/program=foundations-2w/);
   check("detail view opens", (await page.locator("h2", { hasText: "Foundations in 2 weeks" }).count()) > 0);
@@ -249,6 +257,56 @@ try {
   check("blocked storage: mark day done", card.status === "done-today" && card.index === 0);
   check("blocked storage: no page errors", blockedErrors.length === 0, blockedErrors.join(" | "));
   await blocked.close();
+
+  // 8. The 2026-11 skill programs. Each opens on its own view and starts; day
+  // 1's rows all answer; and with the free week done, day 8 meets the Pro
+  // wall instead of its rows.
+  for (const [id, name] of NEW_PROGRAMS) {
+    const ctx = await browser.newContext({ viewport: { width: 375, height: 812 } });
+    const p = await ctx.newPage();
+    const pageErrors = [];
+    p.on("pageerror", (e) => pageErrors.push(String(e)));
+    await p.goto(`${BASE}/programs?program=${id}`, { waitUntil: "networkidle" });
+    check(`${id}: its own view renders`, (await p.locator("h2", { hasText: name }).count()) > 0);
+    await p.getByRole("button", { name: "Start this program" }).click();
+    card = await todayCard(p);
+    check(`${id}: day 1 is today`, card.status === "todo" && card.index === 0, card.text.slice(0, 120));
+    const first = await todayRows(p);
+    check(`${id}: day 1 has rows`, first.length >= 3, first.map((r) => r.href).join(" "));
+    check(`${id}: day 1 takes the range test`, first.some((r) => r.href.startsWith("/range")));
+    for (const r of first) {
+      const res = await p.request.get(`${BASE}${r.href}`);
+      check(`${id}: ${r.href} responds`, res.ok(), `${res.status()}`);
+    }
+    // The free week done by hand, one day per calendar day, ending yesterday.
+    await p.evaluate(
+      ({ key, id }) => {
+        const ago = (n) => {
+          const d = new Date();
+          d.setDate(d.getDate() - n);
+          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        };
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            programId: id,
+            startedDay: ago(7),
+            startedAt: `${ago(7)}T08:00:00.000Z`,
+            done: [0, 1, 2, 3, 4, 5, 6].map((index) => ({ index, day: ago(7 - index), manual: true })),
+          }),
+        );
+      },
+      { key: PROGRAM_KEY, id },
+    );
+    await p.goto(`${BASE}/programs?program=${id}`, { waitUntil: "networkidle" });
+    card = await todayCard(p);
+    check(`${id}: day 8 is today after the free week`, card.status === "todo" && card.index === 7, card.text.slice(0, 120));
+    check(`${id}: day 8 shows the Pro wall`, /Unlock with Pro/.test(card.text), card.text.slice(0, 200));
+    const locked = await todayRows(p);
+    check(`${id}: day 8 starts nothing for a free singer`, locked.length === 0, locked.map((r) => r.href).join(" "));
+    check(`${id}: no page errors`, pageErrors.length === 0, pageErrors.join(" | "));
+    await ctx.close();
+  }
 } catch (e) {
   failed = true;
   console.error(String(e));

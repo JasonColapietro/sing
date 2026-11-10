@@ -382,11 +382,11 @@ describe("voice-science claims", () => {
     expect(copy).toMatch(/come back down/);
   });
 
-  /** The packs Pro sells are the three technique packs, named as the room names them. */
+  /** The packs Pro sells are the technique packs, counted and named as the room names them. */
   it("sells only the Pro warmup packs the room has", () => {
     const point = guides.WARMUPS_GUIDE.advanced.points.find((p) => /^Pro /.test(p))!;
     expect(point).not.toMatch(/\bgenre\b|voice-type/i);
-    const count = ["one", "two", "three", "four", "five"][PRO_PACKS.length - 1];
+    const count = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][PRO_PACKS.length - 1];
     expect(point).toContain(`${count} technique packs`);
     for (const pack of PRO_PACKS) expect(point.toLowerCase()).toContain(pack.name.toLowerCase());
   });

@@ -54,6 +54,11 @@ const STATE_ROUTES = {
   "finished-foundations": "programs,program-foundations",
   "finished-recovery": "programs,program-recovery",
   "finished-vibrato": "programs,program-vibrato",
+  "finished-belt": "programs,program-belt",
+  "finished-head-voice": "programs,program-head-voice",
+  "finished-runs": "programs,program-runs",
+  "finished-low-notes": "programs,program-low-notes",
+  "finished-long-phrases": "programs,program-long-phrases",
   "saved-range": "singer-adele,singer-celine-dion,song-someone-like-you",
 };
 
@@ -133,6 +138,11 @@ export const SUITES = {
       "finished-foundations",
       "finished-recovery",
       "finished-vibrato",
+      "finished-belt",
+      "finished-head-voice",
+      "finished-runs",
+      "finished-low-notes",
+      "finished-long-phrases",
     ]),
   ],
 };

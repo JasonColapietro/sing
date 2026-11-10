@@ -338,7 +338,9 @@ function ProgramDetail({
                 : {r.why}.{" "}
               </Fragment>
             ))}
-            Each fortnight has a chapter in the book:
+            {program.chapters.length === 1
+              ? "The whole program has a chapter in the book:"
+              : "Each fortnight has a chapter in the book:"}
             <ul className="mt-2 space-y-1">
               {program.chapters.map((c) => (
                 <li key={c.slug}>

@@ -12,6 +12,11 @@ export const PROGRAM_IDS = [
   "high-notes-6w",
   "mix-4w",
   "measured-voice-12w",
+  "belt-6w",
+  "head-voice-4w",
+  "runs-4w",
+  "low-notes-3w",
+  "long-phrases-4w",
 ] as const;
 
 /**

@@ -18,4 +18,4 @@ metadata and sitemap indexing regressions, including a pending-status fixture.
 Account/auth pages, private data, unpublished routes, and paid-content shells
 retain their explicit indexing exclusions.
 
-Current handoff: docs/handoffs/2026-11-03-audit-loop.md; older records in docs/archive/.
+Current handoff: docs/handoffs/2026-11-10-guided-practice-and-reading.md (previous: docs/handoffs/2026-11-03-audit-loop.md); older records in docs/archive/.
