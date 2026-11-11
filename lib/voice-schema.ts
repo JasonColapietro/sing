@@ -17,7 +17,7 @@ export const IOS_PRO_FEATURES = [
   "A daily plan with guided warmups, drills and routines",
   "26 public-domain songs that transpose to your range",
   "Live pitch studio, ear training, breath drills and recorder",
-  "Practice history and range growth",
+  "Practice history with your vocal range charted over time",
   "The Measured Voice book with a PDF to keep",
 ];
 
