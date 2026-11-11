@@ -9,6 +9,7 @@ export default function ComparisonTable() {
         competitors={COMPETITORS}
         caption={`Suede Sing and ${COMPETITORS.length} singing apps: purpose, platforms and pricing.`}
         links="vs"
+        showSuedePrice={false}
       />
       <p className="mt-3 font-mono text-xs text-dim">
         Competitor facts checked {COMPARISONS_CHECKED_LABEL} against their own

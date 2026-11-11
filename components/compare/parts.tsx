@@ -133,10 +133,13 @@ export function AppsTable({
   competitors,
   caption,
   links = "both",
+  showSuedePrice = true,
 }: {
   competitors: readonly Competitor[];
   caption: string;
   links?: "both" | "vs";
+  /** The homepage states its price once, in the Pro teaser above this table. */
+  showSuedePrice?: boolean;
 }) {
   return (
     <TableWrap cue="Swipe the table sideways for more">
@@ -156,7 +159,7 @@ export function AppsTable({
             <th scope="row" className="py-3 pr-4 font-medium text-violet-ink">Suede Sing</th>
             <td className="py-3 pr-4 text-ink">Measuring and training your voice in the browser</td>
             <td className="py-3 pr-4 text-ink">Any modern browser, plus iPhone and Android apps</td>
-            <td className="py-3 pr-4 text-ink">{SUEDE_FACTS.price}</td>
+            <td className="py-3 pr-4 text-ink">{showSuedePrice ? SUEDE_FACTS.price : "Free plan and optional Suede Pro"}</td>
             <td className="py-3 text-ink">
               <Link href="/pro" prefetch={false} className={LINK_CLASS}>
                 See Suede Pro
