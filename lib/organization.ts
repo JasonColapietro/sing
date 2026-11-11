@@ -80,10 +80,14 @@ export const SUPPORT_EMAIL = "support@suedeai.ai";
 
 /** The full node, for the pages that stand as the site's own entity surface. */
 export const ORG_NODE = {
+  "parentOrganization": {"@type":"Organization","@id":"https://jcinvestmentgroup.ventures/#organization","name":"JC Investment Group LLC","url":"https://jcinvestmentgroup.ventures/"},
+  "address": {"@type":"PostalAddress","streetAddress":"138 Victorian Lane","addressLocality":"Jupiter","addressRegion":"FL","postalCode":"33458","addressCountry":"US"},
+  "hasMerchantReturnPolicy": {"@type":"MerchantReturnPolicy","@id":"https://suedeai.ai/terms#money-back-policy","name":"90-day money-back policy","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":90,"returnFees":"https://schema.org/FreeReturn","refundType":"https://schema.org/FullRefund","merchantReturnLink":"https://suedeai.ai/terms#money-back-policy"},
+
   "@type": "Organization",
   "@id": ORG_ID,
   name: ORG_NAME,
-  alternateName: ["Suede Labs AI", "Suede Labs"],
+  alternateName: ["Suede Labs AI","Suede Labs","Suede"],
   url: ORG_URL,
   logo: ORG_LOGO,
   founder: { "@id": "https://suedeai.ai/founder#person" },
@@ -101,6 +105,11 @@ export const ORG_NODE = {
  * thin copy emitted from ~670 sitemap URLs cannot outweigh the full one.
  */
 export const ORG_PUBLISHER_NODE = {
+  "alternateName": ["Suede Labs AI","Suede Labs","Suede"],
+  "parentOrganization": {"@type":"Organization","@id":"https://jcinvestmentgroup.ventures/#organization","name":"JC Investment Group LLC","url":"https://jcinvestmentgroup.ventures/"},
+  "address": {"@type":"PostalAddress","streetAddress":"138 Victorian Lane","addressLocality":"Jupiter","addressRegion":"FL","postalCode":"33458","addressCountry":"US"},
+  "hasMerchantReturnPolicy": {"@type":"MerchantReturnPolicy","@id":"https://suedeai.ai/terms#money-back-policy","name":"90-day money-back policy","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":90,"returnFees":"https://schema.org/FreeReturn","refundType":"https://schema.org/FullRefund","merchantReturnLink":"https://suedeai.ai/terms#money-back-policy"},
+
   "@type": "Organization",
   "@id": ORG_ID,
   name: ORG_NAME,

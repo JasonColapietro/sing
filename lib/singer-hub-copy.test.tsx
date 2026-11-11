@@ -223,7 +223,22 @@ describe("hub snippets, next steps and structured data", () => {
       for (const [href, page] of await allHubs()) {
         const json = page.html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] ?? "";
         expect(json, href).toContain(`"isPartOf":{"@id":"${SITE_URL}/#website"}`);
-        expect(json, href).toContain('"publisher":{"@type":"Organization"');
+        const nodes: Record<string, unknown>[] = [];
+        const walk = (value: unknown): void => {
+          if (Array.isArray(value)) value.forEach(walk);
+          else if (value && typeof value === 'object') {
+            nodes.push(value as Record<string, unknown>);
+            Object.values(value).forEach(walk);
+          }
+        };
+        walk(JSON.parse(json));
+        const publisher = nodes.find((node) => node['@id'] === 'https://suedeai.ai/#organization' && node['@type'] === 'Organization');
+        expect(publisher, href).toMatchObject({
+          name: 'Suede AI',
+          parentOrganization: { name: 'JC Investment Group LLC' },
+          address: { streetAddress: '138 Victorian Lane' },
+          hasMerchantReturnPolicy: { merchantReturnDays: 90 },
+        });
         expect(json, href).not.toContain('"@type":"WebSite"');
       }
     },
