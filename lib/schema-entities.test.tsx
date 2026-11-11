@@ -9,6 +9,7 @@ import HomePage from "@/app/page";
 import ProPage from "@/app/pro/page";
 import VoicePage from "@/app/voice/page";
 import ExtensionPage from "@/app/extension/page";
+import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/app-store";
 
 type Node = Record<string, unknown>;
 
@@ -71,5 +72,61 @@ describe("popular-song recording artists", () => {
   ])("%s preserves the credited artists and their entity types", async (slug, artists) => {
     const nodes = graph(renderToStaticMarkup(await PopSongPage({ params: Promise.resolve({ slug }) })));
     expect(nodes.find((n) => n["@type"] === "MusicRecording")?.byArtist).toEqual(artists);
+  });
+});
+
+
+describe("Android singing app discovery", () => {
+  it.each([["home", HomePage], ["download page", VoicePage]])(
+    "%s identifies Android independently of the browser and iPhone apps",
+    (_, Page) => {
+      const html = renderToStaticMarkup(<Page />);
+      const nodes = graph(html);
+      const android = nodes.find((n) => n.operatingSystem === "Android")!;
+      expect(android).toMatchObject({
+        "@type": "MobileApplication",
+        "@id": "https://sing.suedeai.ai/voice#android",
+        name: "Suede Voice: Vocal Range Test",
+        identifier: "ai.suedeai.suedevoice",
+        installUrl: PLAY_STORE_URL,
+        downloadUrl: PLAY_STORE_URL,
+        sameAs: [PLAY_STORE_URL],
+        offers: { price: "0", priceCurrency: "USD", url: PLAY_STORE_URL },
+      });
+      expect(android.description).toMatch(/Android singing app/);
+      expect(android.featureList).toContain("96 vocal exercises across 13 techniques with Pro");
+      expect((android.offers as Node).description).toMatch(/monthly or annual.*Pro subscription/);
+      expect(android).not.toHaveProperty("aggregateRating");
+      expect(android).not.toHaveProperty("review");
+      expect(html).toContain(`href="${PLAY_STORE_URL}"`);
+      const ios = nodes.find((n) => String(n.operatingSystem).startsWith("iOS"))!;
+      expect(ios.installUrl).toBe(APP_STORE_URL);
+      expect(ios).not.toHaveProperty("identifier", "ai.suedeai.suedevoice");
+      for (const ref of [android.author, android.publisher] as Node[]) {
+        expect(nodes.some((node) => node["@id"] === ref["@id"])).toBe(true);
+      }
+    },
+  );
+
+  it("connects the homepage to the app without calling the web studio an Android download", () => {
+    const nodes = graph(renderToStaticMarkup(<HomePage />));
+    const page = nodes.find((n) => n["@type"] === "WebPage")!;
+    expect(page.mainEntity).toEqual({ "@id": "https://sing.suedeai.ai/#app" });
+    expect(page.mentions).toContainEqual({ "@id": "https://sing.suedeai.ai/voice#android" });
+    const browser = nodes.find((n) => n["@id"] === "https://sing.suedeai.ai/#app")!;
+    expect(browser["@type"]).toBe("WebApplication");
+    expect(browser.operatingSystem).toBe("Web Browser");
+    expect(browser).not.toHaveProperty("installUrl");
+  });
+
+  it("shows the paid practice boundary in the Android page content", () => {
+    const prose = renderToStaticMarkup(<VoicePage />)
+      .replace(/<script[\s\S]*?<\/script>/g, " ")
+      .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+    expect(prose).toContain("Singing practice on Android");
+    expect(prose).toContain("free vocal range test");
+    expect(prose).toContain("Suede Voice Pro adds 96 vocal exercises");
+    expect(prose).toContain("optional monthly or annual subscription through Google Play");
+    expect(prose).not.toMatch(/no subscription|all vocal exercises are free/i);
   });
 });

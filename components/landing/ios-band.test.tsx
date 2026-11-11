@@ -7,6 +7,7 @@
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { PLAY_STORE_URL } from "@/lib/app-store";
 import { IosBand } from "./ios-band";
 
 const html = renderToStaticMarkup(<IosBand />);
@@ -49,9 +50,8 @@ describe("the iOS strip", () => {
 
 describe("the Android claim", () => {
   /**
-   * Android is built and signed but has no Play Store listing yet. This guard
-   * retires itself: it only forbids the claim while lib/app-store.ts has no
-   * Play Store URL in it.
+   * Android is publicly listed on Google Play. Keep the homepage heading and
+   * direct install link aligned with the platform named in the app schema.
    */
   const appStoreSource = readFileSync(
     new URL("../../lib/app-store.ts", import.meta.url),
@@ -65,6 +65,11 @@ describe("the Android claim", () => {
       return;
     }
     expect(prose).not.toMatch(/Android/i);
+  });
+
+  it("gives Android a heading and a direct install link", () => {
+    expect(html).toMatch(/<h2[^>]*>Singing app for iPhone and Android:/);
+    expect(html).toContain(`href="${PLAY_STORE_URL}"`);
   });
 
   it("still points somewhere real for the companion it does name", () => {

@@ -7,6 +7,7 @@ import { NotPro } from "@/components/pro/gate";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { ROUTINES, routineMinutes } from "@/components/warmups/routines";
 import { ORG_NODE } from "@/lib/organization";
+import { VOICE_APP_NODES } from "@/lib/voice-schema";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
@@ -145,6 +146,16 @@ const HOME_JSON_LD = {
       name: "Suede Sing",
       publisher: { "@id": "https://suedeai.ai/#organization" },
     },
+    {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/#webpage`,
+      url: `${SITE_URL}/`,
+      name: HOME_TITLE,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      mainEntity: { "@id": `${SITE_URL}/#app` },
+      mentions: VOICE_APP_NODES.map((app) => ({ "@id": app["@id"] })),
+    },
+    ...VOICE_APP_NODES,
     ORG_NODE,
     // The organization's founder pointer has to resolve on this page alone.
     AUTHOR_NODE,
@@ -336,7 +347,7 @@ export default function Home() {
       {/* 6 — Famous voices */}
       <FamousVoices />
 
-      {/* 7 — The iPhone companion */}
+      {/* 7 — The iPhone and Android companion */}
       <IosBand />
 
       {/* 8 — Final CTA */}
