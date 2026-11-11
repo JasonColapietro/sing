@@ -18,9 +18,11 @@ import ComparisonPage, {
   generateStaticParams,
 } from "@/app/compare/[slug]/page";
 import SiteFooter from "@/components/site-footer";
+import HomeComparison from "@/components/landing/comparison";
 import {
   COMPARE_PATH,
   COMPARISONS_CHECKED,
+  COMPARISONS_CHECKED_LABEL,
   COMPETITORS,
   PRICING_VARIES,
   ROW_KEYS,
@@ -164,6 +166,23 @@ describe("the /compare hub", () => {
 
   it("is linked from the sitewide footer", () => {
     expect(renderToStaticMarkup(<SiteFooter />)).toContain(`href="${COMPARE_PATH}"`);
+  });
+});
+
+describe("homepage comparison consistency", () => {
+  const html = renderToStaticMarkup(<HomeComparison />);
+
+  it("uses the same competitors, facts, pricing sources and reviewed date as the hub", () => {
+    expect(html).toContain(COMPARISONS_CHECKED_LABEL);
+    expect(html).not.toContain("August 2026");
+    expect(html.match(/<tbody\b[^>]*>[\s\S]*?<\/tbody>/)?.[0].match(/<tr\b/g)).toHaveLength(COMPETITORS.length + 1);
+    for (const c of COMPETITORS) {
+      expect(html).toContain(c.builtFor.replace(/&/g, "&amp;"));
+      expect(html).toContain(`href="${vsPath(c)}"`);
+      expect(html).toContain(`href="${c.pricing.url}"`);
+    }
+    expect(competitorDollars(html)).toEqual([]);
+    expect(html).not.toMatch(BANNED);
   });
 });
 

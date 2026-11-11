@@ -169,6 +169,10 @@ const HOME_JSON_LD = {
       browserRequirements: "Requires a microphone for pitch and range features",
       url: `${SITE_URL}/`,
       publisher: { "@id": "https://suedeai.ai/#organization" },
+      mainEntityOfPage: { "@id": `${SITE_URL}/#webpage` },
+      image: `${SITE_URL}/icon-512.png`,
+      screenshot: [`${SITE_URL}/room-studio.png`, `${SITE_URL}/room-progress.png`],
+      sameAs: ["https://www.instagram.com/suedesingapp/"],
       featureList: [
         "Real-time pitch training",
         "Vocal range test",
@@ -304,14 +308,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5 — Comparison, trimmed to the rows where the columns differ */}
+      {/* 5 — The same sourced app facts as /compare. */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Side by side"
-            lede="Only the rows where the answers differ."
+            lede="See what each app is built for, where it runs and how it is priced."
           >
-            What Suede Sing does free in a browser
+            Compare singing apps for your next practice
           </SectionHeading>
           <div className="mt-8">
             <ComparisonTable />
