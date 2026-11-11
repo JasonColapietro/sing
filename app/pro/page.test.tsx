@@ -41,10 +41,6 @@ describe("/pro Early Access offers", () => {
       name: string;
       price: string;
       description: string;
-      priceSpecification: {
-        "@type": string;
-        referenceQuantity?: { unitCode: string };
-      };
     }>;
 
     expect(offers).toHaveLength(2);
@@ -57,23 +53,44 @@ describe("/pro Early Access offers", () => {
       availability: "https://schema.org/SoldOut",
       description:
         "Sold out. Existing subscribers keep renewing at the price they signed up at.",
-      priceSpecification: {
-        referenceQuantity: { unitCode: "MON" },
-      },
+      priceCurrency: "USD",
     });
     expect(offers[1]).toMatchObject({
       price: "79.00",
       availability: "https://schema.org/InStock",
       description: "One payment for lifetime access. No renewal.",
-      priceSpecification: { "@type": "PriceSpecification" },
+      priceCurrency: "USD",
     });
-    expect(offers[1].priceSpecification.referenceQuantity).toBeUndefined();
+    // Google rejects UnitPriceSpecification for this software-app field.
+    // Offer.price is sufficient; don't duplicate prices in an unsupported node.
+    for (const offer of offers) expect(offer).not.toHaveProperty("priceSpecification");
     expect(JSON.stringify(offers)).not.toMatch(/annual|yearly|ANN/i);
     expect(JSON.stringify(offers)).not.toContain("—");
   });
 });
 
 describe("/pro structured data references", () => {
+  it("includes the homepage's accurate free offer on its free app node", () => {
+    const home = jsonLdFrom(renderToStaticMarkup(<Home />));
+    const pro = jsonLdFrom(renderToStaticMarkup(<ProPage />));
+    const appId = "https://sing.suedeai.ai/#app";
+    const homeApp = home["@graph"].find((node) => node["@id"] === appId);
+    const proApp = pro["@graph"].find((node) => node["@id"] === appId);
+
+    expect(proApp?.offers).toEqual(homeApp?.offers);
+    expect(proApp?.offers).toMatchObject({
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      description: expect.stringContaining("five free minutes a day"),
+    });
+    for (const node of pro["@graph"]) {
+      expect(node).not.toHaveProperty("aggregateRating");
+      expect(node).not.toHaveProperty("review");
+    }
+  });
+
   it("defines every node its isPartOf pointers name, so each resolves on this page alone", () => {
     const data = jsonLdFrom(renderToStaticMarkup(<ProPage />));
     const ids = new Set(data["@graph"].map((node) => node["@id"]));

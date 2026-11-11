@@ -10,6 +10,7 @@ import {
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
+import { FREE_STUDIO_OFFER } from "@/lib/web-app-schema";
 
 const PRO_TITLE = "Online Vocal Coach for Singers: Suede Pro";
 
@@ -30,7 +31,7 @@ function offerFor(plan: CheckoutPlan) {
   // Schema wants a plain decimal string, so "79" is written "79.00" here even
   // though the page shows it without the cents.
   const price = amount.toFixed(2);
-  const offer = {
+  return {
     "@type": "Offer",
     url: `${SITE_URL}/pro`,
     name:
@@ -43,37 +44,16 @@ function offerFor(plan: CheckoutPlan) {
         : // Legacy subscribers renew at their own (older) price, so the
           // renewal clause names no amount; the price field still carries 4.99.
           "Sold out. Existing subscribers keep renewing at the price they signed up at.",
+    // Google reads Offer.price directly. A UnitPriceSpecification for the
+    // monthly plan triggers an unsupported-type warning in Rich Results Test;
+    // the offer's name and description retain its monthly, sold-out status.
     price,
     priceCurrency: "USD",
     availability:
       plan === "monthly"
         ? "https://schema.org/SoldOut"
         : "https://schema.org/InStock",
-    priceSpecification: {
-      "@type":
-        plan === "monthly" ? "UnitPriceSpecification" : "PriceSpecification",
-      price,
-      priceCurrency: "USD",
-    },
   };
-
-  if (plan === "monthly") {
-    // "4.99 USD per one month" — recurring, not a one-off price that
-    // happens to read 4.99. Lifetime deliberately has no reference quantity.
-    return {
-      ...offer,
-      priceSpecification: {
-        ...offer.priceSpecification,
-        referenceQuantity: {
-          "@type": "QuantitativeValue",
-          value: 1,
-          unitCode: "MON",
-        },
-      },
-    };
-  }
-
-  return offer;
 }
 
 /** Lifetime is the only purchasable offer; monthly is listed as SoldOut. */
@@ -117,8 +97,8 @@ const PRO_JSON_LD = {
     {
       // The free studio the paid tier is part of: the identifying properties
       // of the homepage's WebApplication node, so the `isPartOf` below
-      // resolves on this page. The full node (feature list, the free offer)
-      // stays on the homepage, as ORG_PUBLISHER_NODE does for the publisher.
+      // resolves on this page. Include the same free offer so a crawler can
+      // understand the price without fetching the homepage's fuller node.
       "@type": "WebApplication",
       "@id": `${SITE_URL}/#app`,
       name: "Suede Sing",
@@ -126,6 +106,7 @@ const PRO_JSON_LD = {
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web Browser",
       publisher: { "@id": "https://suedeai.ai/#organization" },
+      offers: FREE_STUDIO_OFFER,
     },
     {
       // SoftwareApplication, not Product. A subscription is not a shippable
