@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
+import { ANDROID_EXERCISE_COUNT } from "@/lib/voice-schema";
 import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 
 /**
@@ -22,6 +23,13 @@ export function IosBand() {
             </Link>{" "}
             has its own practice tools, and the iPhone app adds register
             analysis.
+          </p>
+          <p className="mt-3 text-mut">
+            On Android, start with a free vocal range test and real-time pitch
+            feedback. An optional monthly or annual Pro subscription adds
+            {" "}{ANDROID_EXERCISE_COUNT} vocal exercises, guided warmups, breath and
+            ear training, and progress tracking. Audio analysis runs offline on
+            your device, with no ads or account required.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <a
