@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
-import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
-import { ORG_ID, ORG_NODE } from "@/lib/organization";
+import { APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
+import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
+import { AUTHOR_NODE } from "@/lib/author";
+import { ANDROID_EXERCISE_COUNT, VOICE_APP_NODES } from "@/lib/voice-schema";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -13,7 +15,7 @@ import { routeKeywords } from "@/lib/keywords";
 // different intents. This page is the install; /range is the test.
 const TITLE = "Singing App for iPhone & Android: Download Suede Voice";
 const DESCRIPTION =
-  "Download Suede Voice, the singing app from Suede AI for iPhone and Android. Test your vocal range on your phone; prefer a browser? Use Suede Sing.";
+  "Download Suede Voice, a singing app for Android and iPhone. Free vocal range test; Pro adds exercises and warmups. Prefer a browser? Use Suede Sing.";
 const PAGE_URL = `${SITE_URL}${VOICE_PAGE_PATH}`;
 
 export const metadata: Metadata = {
@@ -50,23 +52,8 @@ const JSON_LD = {
       isPartOf: { "@id": `${SITE_URL}/#website` },
       mainEntity: [{ "@id": `${PAGE_URL}#ios` }, { "@id": `${PAGE_URL}#android` }],
     },
-    ...[
-      { id: "ios", operatingSystem: "iOS 17.0 or later", store: APP_STORE_URL },
-      { id: "android", operatingSystem: "Android", store: PLAY_STORE_URL },
-    ].map(({ id, operatingSystem, store }) => ({
-      "@type": "MobileApplication",
-      "@id": `${PAGE_URL}#${id}`,
-      name: `${APP_NAME}: Vocal Range Test`,
-      applicationCategory: "EducationalApplication",
-      operatingSystem,
-      url: `${PAGE_URL}#${id}`,
-      installUrl: store,
-      sameAs: [store],
-      description: "Vocal range testing and singing practice from Suede AI.",
-      publisher: { "@id": ORG_ID },
-      author: { "@id": "https://suedeai.ai/founder#person" },
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD", url: store },
-    })),
+    ...VOICE_APP_NODES,
+    AUTHOR_NODE,
     ORG_NODE,
   ],
 };
@@ -127,14 +114,29 @@ export default function VoicePage() {
             </div>
           </div>
           <div id="android" className="mt-6 scroll-mt-28 border-t border-line pt-6">
-            <h3>Android</h3>
-            <p className="mt-1 text-sm text-mut">Free download on Google Play. Check the listing for device compatibility.</p>
+            <h3>Android singing app</h3>
+            <p className="mt-1 text-sm text-mut">Free download and vocal range test. Optional monthly or annual Suede Voice Pro subscription unlocks guided practice. Check Google Play for device compatibility and current prices.</p>
             <div className="mt-3 hidden lg:block">
               <LinkButton href={PLAY_STORE_URL} variant="outline" className="w-full">Get it on Google Play</LinkButton>
             </div>
           </div>
           <p className="mt-5 text-xs text-dim">Features and purchase options can differ between platforms. Each store lists the current details.</p>
         </div>
+      </section>
+
+      <section className="mt-16 border-t border-line pt-12" aria-labelledby="android-practice-title">
+        <SectionHeading id="android-practice-title">Singing practice on Android</SectionHeading>
+        <p className="mt-4 max-w-3xl leading-relaxed text-mut">
+          Start with the free vocal range test and voice-type estimate. Suede
+          Voice gives you real-time pitch feedback, with audio analysis that
+          runs offline on your phone. No ads or account required.
+        </p>
+        <p className="mt-4 max-w-3xl leading-relaxed text-mut">
+          Suede Voice Pro adds {ANDROID_EXERCISE_COUNT} vocal exercises across
+          13 techniques, guided vocal warmups and daily routines, breath control,
+          ear training, practice history and progress tracking. Pro is an optional
+          monthly or annual subscription through Google Play.
+        </p>
       </section>
 
       <section className="mt-16 border-t border-line pt-12" aria-labelledby="practice-title">

@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
-import { APP_NAME, APP_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
+import { ANDROID_EXERCISE_COUNT } from "@/lib/voice-schema";
+import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 
 /**
- * One strip for the phone companion: the label, one sentence, the badge and
+ * One strip for the phone companion: the label, one sentence, the store links and
  * one product image. The platform disclaimer lives on /voice.
  */
 export function IosBand() {
@@ -12,8 +13,8 @@ export function IosBand() {
     <section id="app" className="border-t border-line bg-panel/40">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-12 sm:grid-cols-[1fr_auto] sm:px-6 sm:py-14">
         <div className="max-w-2xl">
-          <SectionLabel hairline className="mb-4">iPhone companion</SectionLabel>
-          <h2 className="text-2xl sm:text-3xl">Also on iPhone: {APP_NAME}</h2>
+          <SectionLabel hairline className="mb-4">iPhone &amp; Android companion</SectionLabel>
+          <h2 className="text-2xl sm:text-3xl">Singing app for iPhone and Android: {APP_NAME}</h2>
           <p className="mt-3 text-mut">
             The web studio gives you live pitch and range testing with no daily
             clock;{" "}
@@ -23,18 +24,34 @@ export function IosBand() {
             has its own practice tools, and the iPhone app adds register
             analysis.
           </p>
-          <a
-            href={APP_STORE_URL}
-            aria-label={`View ${APP_NAME} on the App Store`}
-            className="mt-6 inline-block rounded-[10px] transition-opacity hover:opacity-85"
-          >
-            <Image
-              src="/app-store-badge.svg"
-              width={168}
-              height={56}
-              alt="Download on the App Store"
-            />
-          </a>
+          <p className="mt-3 text-mut">
+            On Android, start with a free vocal range test and real-time pitch
+            feedback. An optional monthly or annual Pro subscription adds
+            {" "}{ANDROID_EXERCISE_COUNT} vocal exercises, guided warmups, breath and
+            ear training, and progress tracking. Audio analysis runs offline on
+            your device, with no ads or account required.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <a
+              href={APP_STORE_URL}
+              aria-label={`View ${APP_NAME} on the App Store`}
+              className="inline-block rounded-[10px] transition-opacity hover:opacity-85"
+            >
+              <Image
+                src="/app-store-badge.svg"
+                width={168}
+                height={56}
+                alt="Download on the App Store"
+              />
+            </a>
+            <a
+              href={PLAY_STORE_URL}
+              aria-label={`Get ${APP_NAME} for Android on Google Play`}
+              className="text-violet-ink underline underline-offset-4"
+            >
+              Get it on Google Play
+            </a>
+          </div>
         </div>
         {/* The range room, captured from this site at phone width: the
             result the app and the browser both start from. */}
