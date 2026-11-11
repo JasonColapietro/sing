@@ -8,6 +8,7 @@ import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { ROUTINES, routineMinutes } from "@/components/warmups/routines";
 import { ORG_NODE } from "@/lib/organization";
 import { VOICE_APP_NODES } from "@/lib/voice-schema";
+import { FREE_STUDIO_OFFER } from "@/lib/web-app-schema";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
@@ -182,14 +183,7 @@ const HOME_JSON_LD = {
         "Recorder and song practice",
         "Famous singer vocal range library",
       ],
-      offers: {
-        "@type": "Offer",
-        name: "Free pitch meter and vocal range test",
-        description: "Guided practice includes five free minutes a day; additional practice and Pro features require a paid plan.",
-        price: "0",
-        priceCurrency: "USD",
-        availability: "https://schema.org/InStock",
-      },
+      offers: FREE_STUDIO_OFFER,
     },
   ],
 };
