@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { AUTHOR_NODE } from "@/lib/author";
-import { ANDROID_EXERCISE_COUNT, VOICE_APP_NODES } from "@/lib/voice-schema";
+import {
+  ANDROID_EXERCISE_COUNT, IOS_APP_VERSION, IOS_FREE_FEATURES,
+  IOS_PRO_FEATURES, IOS_SCREENSHOTS, VOICE_APP_NODES,
+} from "@/lib/voice-schema";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -43,6 +47,13 @@ export const metadata: Metadata = {
 const JSON_LD = {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: "Suede Sing",
+      publisher: { "@id": ORG_NODE["@id"] },
+    },
     {
       "@type": "WebPage",
       "@id": PAGE_URL,
@@ -105,7 +116,10 @@ export default function VoicePage() {
           <h2 className="text-2xl">Get the official app</h2>
           <p className="mt-2 text-sm text-mut">Both listings are named Suede Voice: Vocal Range Test and list Jason Colapietro as the developer.</p>
           <div id="ios" className="mt-6 scroll-mt-28">
-            <h3>iPhone</h3>
+            <div className="flex items-center gap-3">
+              <Image src="/voice/ios-icon.jpg" alt="Suede Voice iPhone app icon" width={40} height={40} className="rounded-lg" />
+              <h3>iPhone</h3>
+            </div>
             <p className="mt-1 text-sm text-mut">iOS 17 or later. Free download with optional in-app purchases.</p>
             {/* Below lg the hero row above carries both store buttons on the
                 first screen, so the card's pair would be the same two again. */}
@@ -114,7 +128,10 @@ export default function VoicePage() {
             </div>
           </div>
           <div id="android" className="mt-6 scroll-mt-28 border-t border-line pt-6">
-            <h3>Android singing app</h3>
+            <div className="flex items-center gap-3">
+              <Image src="/voice/android-icon.png" alt="Suede Voice Android app icon" width={40} height={40} className="rounded-lg" />
+              <h3>Android singing app</h3>
+            </div>
             <p className="mt-1 text-sm text-mut">Free download and vocal range test. Optional monthly or annual Suede Voice Pro subscription unlocks guided practice. Check Google Play for device compatibility and current prices.</p>
             <div className="mt-3 hidden lg:block">
               <LinkButton href={PLAY_STORE_URL} variant="outline" className="w-full">Get it on Google Play</LinkButton>
@@ -122,6 +139,55 @@ export default function VoicePage() {
           </div>
           <p className="mt-5 text-xs text-dim">Features and purchase options can differ between platforms. Each store lists the current details.</p>
         </div>
+      </section>
+
+      <section className="mt-16 border-t border-line pt-12" aria-labelledby="iphone-practice-title">
+        <SectionLabel>iPhone app · Version {IOS_APP_VERSION}</SectionLabel>
+        <SectionHeading id="iphone-practice-title">From a range test to a daily singing routine</SectionHeading>
+        <p className="mt-4 max-w-3xl leading-relaxed text-mut">
+          Find the notes you can sing today, then choose what to practice next.
+          Range tests are free and unlimited. Suede Voice Pro adds the daily
+          plan and practice studio. Audio analysis runs on your iPhone, and
+          recordings stay on the device.
+        </p>
+        <div className="mt-7 grid gap-6 md:grid-cols-2">
+          {[
+            { title: "Free on iPhone", features: IOS_FREE_FEATURES },
+            { title: "Suede Voice Pro on iPhone", features: IOS_PRO_FEATURES },
+          ].map(({ title, features }) => (
+            <div key={title} className="rounded-2xl border border-line bg-panel p-6">
+              <h3 className="text-xl">{title}</h3>
+              <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-mut">
+                {features.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 text-sm text-mut">
+          Pro is an optional in-app subscription. See the{" "}
+          <a href={APP_STORE_URL} className="text-violet-ink underline underline-offset-4">App Store listing</a>
+          {" "}for current prices and purchase options. The web studio&apos;s
+          Suede Pro plan is a separate purchase.
+        </p>
+        <div className="mt-8 grid grid-cols-1 gap-7 sm:grid-cols-3">
+          {IOS_SCREENSHOTS.map((shot) => (
+            <figure key={shot.src} className="mx-auto w-full max-w-[280px] sm:max-w-none">
+              <Image
+                src={shot.src}
+                alt={shot.alt}
+                width={442}
+                height={960}
+                sizes="(max-width: 639px) 280px, (max-width: 1152px) 30vw, 350px"
+                className="h-auto w-full rounded-2xl border border-line"
+              />
+              <figcaption className="mt-3 text-sm text-mut">{shot.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="mt-5 text-xs text-dim">
+          iPhone screenshots from the App Store listing. Feature details checked
+          November 11, 2026. Android features are listed separately below.
+        </p>
       </section>
 
       <section className="mt-16 border-t border-line pt-12" aria-labelledby="android-practice-title">
@@ -168,6 +234,7 @@ export default function VoicePage() {
           <LinkButton href="https://suedeai.ai/ios" variant="ghost">
             Browse all official Suede music apps
           </LinkButton>
+          <LinkButton href="/compare" variant="ghost">Compare singing apps</LinkButton>
         </div>
       </section>
 

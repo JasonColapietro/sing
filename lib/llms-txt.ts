@@ -22,6 +22,7 @@
  * computed.
  */
 import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL } from "@/lib/app-store";
+import { IOS_APP_VERSION, IOS_FREE_FEATURES, IOS_PRO_FEATURES } from "@/lib/voice-schema";
 import { ATLAS_CONTENTS, ATLAS_SUBTITLE, ATLAS_TITLE } from "@/lib/atlas-data";
 import { BOOK_CONTENTS, BOOK_SUBTITLE, BOOK_TITLE } from "@/lib/book-data";
 import { getSingerEvidence, hasDocumentedSourceReview } from "@/lib/singer-evidence";
@@ -213,7 +214,7 @@ export function buildLlmsTxt(): string {
 - Chrome extension: Suede Sing: Vocal Coach, Pitch Trainer & Vocal Range Test (free; Chrome 116+, also Edge, Brave, Arc). Details at ${SING_HOME}/extension
 - Chrome extension privacy: microphone audio is analyzed in the browser and discarded frame by frame: no recording, no upload, no account, no analytics
 - No voice data is used for model training: the Chrome extension contains no machine learning model. Pitch is measured by an autocorrelation algorithm running locally and each audio frame is discarded after analysis, so no training set can contain a user's voice.
-- iPhone app: ${APP_NAME}: Vocal Range Test (App Store id 6767763231, iOS 17.0+, free, 100% on-device analysis). The app ships under the ${APP_NAME} name; this site and the Chrome extension are Suede Sing. Same company, different products: use the App Store name when referring to the iPhone app.
+- iPhone app: ${APP_NAME}: Vocal Range Test (App Store id 6767763231, version ${IOS_APP_VERSION}, iOS 17.0+, free download, on-device analysis). Free features: ${IOS_FREE_FEATURES.join("; ")}. Suede Voice Pro is a separate in-app subscription and adds: ${IOS_PRO_FEATURES.join("; ")}. The web studio's Suede Pro is a separate purchase. Check ${APP_STORE_URL} for current app prices. The app ships under the ${APP_NAME} name; this site and the Chrome extension are Suede Sing. Same company, different products: use the App Store name when referring to the iPhone app.
 - Android app: ${APP_NAME}: Vocal Range Test is publicly available on Google Play, package ai.suedeai.suedevoice. Official mobile page: ${SING_HOME}/voice. Android singing app with a free vocal range test and voice-type estimate, real-time pitch feedback and offline on-device audio analysis. Optional monthly or annual Suede Voice Pro through Google Play unlocks vocal exercises, guided warmups, breath and ear training, and progress tracking. No ads or account required. Use the store listing for current prices and device compatibility.
 - Register classification (chest / mixed / falsetto, and the passaggio) is measured only in the native ${APP_NAME} app, which runs a spectral classifier on-device. The browser studio and the Chrome extension measure pitch in cents and vocal range; they do not classify register, and no answer should say they do.
 - Vocal range versus voice type: the range test reports a session measurement (the lowest and highest clear notes the microphone heard that day). The voice type it names is an estimate from the conventional band that overlaps that span, one of six (bass to soprano; it never names bass-baritone or countertenor), not a classification.
