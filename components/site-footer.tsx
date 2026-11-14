@@ -68,6 +68,7 @@ const MORE_FROM_SUEDE: FooterLink[] = [
   { href: "/compare", label: "Compare singing apps" },
   { href: "https://strumly.suedeai.ai/capo", label: "Capo calculator on Strumly" },
   { href: "https://suedeai.ai", label: "Suede AI" },
+  { href: "https://suedeai.ai/books", label: "Books on working with AI" },
 ];
 
 const linkClass =
