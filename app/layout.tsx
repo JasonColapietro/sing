@@ -4,6 +4,7 @@ import { accountsReady } from "@/lib/accounts";
 import "./globals.css";
 import Nav from "@/components/nav";
 import SiteFooter from "@/components/site-footer";
+import { GoogleCloudPartnerBadge } from "@/components/GoogleCloudPartnerBadge";
 import { SITE_URL } from "@/lib/site";
 import ProMoments from "@/components/pro/moments";
 import ProSync from "@/components/pro/sync";
@@ -126,6 +127,7 @@ export default function RootLayout({
         {children}
       </div>
       <SiteFooter />
+      <GoogleCloudPartnerBadge />
     </>
   );
 
