@@ -15,6 +15,13 @@
  * `lib/keywords.test.ts` enforces all of this.
  */
 
+import { POSTS as BLOG_POSTS } from "@/lib/blog/posts";
+
+/** Each Singer's Column post owns the one query it was written for. */
+const BLOG_HEAD_TERMS: Readonly<Record<string, string>> = Object.fromEntries(
+  BLOG_POSTS.map((p) => [p.primaryKeyword, `/blog/${p.slug}`]),
+);
+
 /** Hard cap on terms per page, brand included. */
 export const MAX_TERMS = 10;
 
@@ -47,6 +54,10 @@ export const HEAD_TERM_OWNERS: Readonly<Record<string, string>> = {
   "song vocal range": "/can-you-sing",
   "public domain songs to sing": "/songs",
   "singing app": "/voice",
+  "singing tips": "/blog",
+  "singing blog": "/blog",
+  // The Singer's Column: each post owns its primary keyword (lib/blog/posts).
+  ...BLOG_HEAD_TERMS,
 };
 
 export const ROUTE_KEYWORDS = {
@@ -124,6 +135,14 @@ export const ROUTE_KEYWORDS = {
     "songs for my vocal range",
     "popular songs vocal range",
     "song key finder for singers",
+    "suede sing",
+  ],
+  "/blog": [
+    "singing tips",
+    "singing blog",
+    "singing advice",
+    "vocal technique articles",
+    "how to sing",
     "suede sing",
   ],
   "/changelog": [
@@ -462,4 +481,9 @@ export function lessonKeywords(page: { name: string; skill?: string; group?: str
     ],
     "/learn/voice/lesson",
   );
+}
+
+/** A Singer's Column post: its own terms, primary first, then the brand. */
+export function blogPostKeywords(post: { slug: string; keywords: readonly string[] }): string[] {
+  return pageKeywords([...post.keywords], `/blog/${post.slug}`);
 }

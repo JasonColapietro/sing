@@ -17,6 +17,7 @@ import { POP_SONGS } from "@/lib/pop-songs";
 import { COMPARE_PATH, COMPARISONS_CHECKED, comparisonPages } from "@/lib/comparisons";
 import { getSingerPageLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
+import { BLOG_PATH, POSTS as BLOG_POSTS, latestPostDate, postPath } from "@/lib/blog";
 import { VOICE_LEARN_PATH, coursePaths } from "@/lib/voice-lessons";
 
 /**
@@ -42,6 +43,10 @@ const PAGE_LAST_MODIFIED: Readonly<Record<string, string | undefined>> = {
   "/changelog": CHANGELOG_RELEASE_DATE,
   // The comparison hub's facts were checked on one recorded date.
   [COMPARE_PATH]: COMPARISONS_CHECKED,
+  // The column index changes when a post does.
+  [BLOG_PATH]: latestPostDate(),
+  // Every post carries its own hand-set content date.
+  ...Object.fromEntries(BLOG_POSTS.map((p) => [postPath(p), p.updated])),
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -52,6 +57,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/programs",
     "/range",
     "/learn",
+    BLOG_PATH,
+    ...BLOG_POSTS.map(postPath),
     VOICE_LEARN_PATH,
     "/voice",
     "/singers",
@@ -85,7 +92,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority:
       path === ""
         ? 1
-        : path === "/learn" || path === "/singers" || path === "/atlas"
+        : path === "/learn" || path === "/singers" || path === "/atlas" || path === BLOG_PATH
           ? 0.9
           : 0.7,
     ...(PAGE_LAST_MODIFIED[path] ? { lastModified: PAGE_LAST_MODIFIED[path] } : {}),
