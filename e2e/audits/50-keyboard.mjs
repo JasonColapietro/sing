@@ -165,7 +165,9 @@ function setupKeyboardProbe(selector) {
       // (suedeai.ai/agent-view.js) is a shadow-DOM host, and document
       // .activeElement alone reports the host for every inner button.
       let active = document.activeElement;
+      let inAgentView = false;
       while (active && active.shadowRoot && active.shadowRoot.activeElement) {
+        if (active.tagName.toLowerCase() === "suede-agent-view") inAgentView = true;
         active = active.shadowRoot.activeElement;
       }
       const isBody = !active || active === document.body;
@@ -188,6 +190,7 @@ function setupKeyboardProbe(selector) {
         describe: isBody ? "<body>" : window.__describe(active),
         tag: active ? active.tagName.toLowerCase() : null,
         isBody,
+        inAgentView,
         idx,
         // Only ever asked of a real element a real Tab press just landed on
         // — see the header comment on why .focus()-driven checks lie here.
@@ -407,7 +410,9 @@ export async function run(ctx) {
   for (let i = 1; i < visited.length; i++) {
     const snap = visited[i];
     const prev = visited[i - 1];
-    if (snap.isBody && prev && !prev.isBody && prev.idx !== expectedList.length - 1) {
+    // The agent-view switch is the last element in the document, so leaving
+    // it for the browser chrome is the natural end of the Tab order.
+    if (snap.isBody && prev && !prev.isBody && !prev.inAgentView && prev.idx !== expectedList.length - 1) {
       const remaining = prev.idx >= 0 ? expectedList.length - 1 - prev.idx : expectedList.length;
       findings.push({
         severity: "major",
