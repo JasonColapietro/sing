@@ -147,6 +147,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-dvh antialiased">
         <ClerkShell>{shell}</ClerkShell>
+        {/* Shared Light / Dark / AI agent view switch (suedeai.ai). */}
+        <script src="https://suedeai.ai/agent-view.js" defer />
       </body>
     </html>
   );
