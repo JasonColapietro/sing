@@ -21,6 +21,11 @@ describe("the footer's hub columns", () => {
     expect(html.match(/<summary[^>]*sm:pointer-events-none/g)).toHaveLength(2);
   });
 
+  // The founder's AI Operator Series lives on suedeai.ai/books.
+  it("credits the founder's books on suedeai.ai/books once", () => {
+    expect(html.match(/href="https:\/\/suedeai\.ai\/books"[^>]*>\s*Books on working with AI/g)).toHaveLength(1);
+  });
+
   it("keeps the open-source credentials line", () => {
     expect(html).toContain("open-source contributor with 54 pull requests merged across 46");
   });
