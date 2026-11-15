@@ -161,7 +161,13 @@ function setupKeyboardProbe(selector) {
     },
 
     snapshot() {
-      const active = document.activeElement;
+      // Resolve through open shadow roots: the shared agent-view switch
+      // (suedeai.ai/agent-view.js) is a shadow-DOM host, and document
+      // .activeElement alone reports the host for every inner button.
+      let active = document.activeElement;
+      while (active && active.shadowRoot && active.shadowRoot.activeElement) {
+        active = active.shadowRoot.activeElement;
+      }
       const isBody = !active || active === document.body;
       const cands = window.__kbAudit.candidates();
       // -1 when activeElement isn't one of our tabbable candidates — either
