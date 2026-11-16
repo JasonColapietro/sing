@@ -18,11 +18,15 @@ Three things make it worse:
 - **The strum is too busy.** A pattern full of syncopated upstrokes competes directly with the vocal rhythm.
 - **The key is wrong for your voice.** When the melody sits at the top of your range, the effort of reaching for notes takes the attention your hands needed.
 
-The fix for each is in the sections below. The first is the most important: the guitar part has to become boring before you sing over it.
+Start with the first one. The guitar part has to become boring before you sing over it.
 
 ## Step 1: make the guitar part automatic
 
 You know a guitar part is automatic when you can play it while doing something else with your mouth. Test it in this order, and do not move on until each test is easy.
+
+### Pick the right first song
+
+Your first song decides how hard this is. Choose one with three or four open chords you already change between cleanly, a moderate tempo, a melody you can sing from memory without the record, and a chorus that sits comfortably in your voice. Save songs with barre chords, fast changes or wide vocal leaps for your third or fourth attempt.
 
 ### The talk test
 
@@ -34,7 +38,7 @@ Play the part while counting the beats out loud: "one, two, three, four" for qua
 
 ### Chord changes without looking
 
-Practice each change in the song as a one-minute drill: switch back and forth between the two chords, four beats on each, for 60 seconds. Then do it with your eyes on a spot on the wall. Most singer-guitarists who stall do so at one or two awkward changes, and those changes need their own drill.
+Practice each change in the song as a one-minute drill: switch back and forth between the two chords, four beats on each, for 60 seconds. Then do it with your eyes on a spot on the wall. A song often stalls at one or two awkward changes, and those changes need their own drill.
 
 ::infographic layer-method
 
@@ -44,7 +48,7 @@ A simpler strum leaves room for the voice. You can add the fancy pattern back on
 
 ::infographic strum-levels
 
-The [strum](/glossary#strum) on a record is often two guitars plus drums. Solo, you only need enough to keep the pulse and the harmony clear.
+The strum on a record is often two guitars plus drums. Solo, you only need enough to keep the pulse and the harmony clear.
 
 A useful rule: keep your strumming hand moving down and up in time, even on beats where you miss the strings on purpose. A hand that never stops is far easier to keep steady than one that starts and stops with the rhythm of the words.
 
@@ -66,7 +70,7 @@ Now sing. Start at a slow tempo and quietly, so the voice can stay easy. If some
 
 ## Map your syllables onto your strums
 
-The single most useful exercise for stubborn lines is to write out which syllables land on which strums. Take a pencil and the lyric sheet. Above each line, write the beat numbers of the bar. Then mark which syllable falls on each strum, and which syllables fall in between.
+For a stubborn line, write out which syllables land on which strums. Take a pencil and the lyric sheet. Above each line, write the beat numbers of the bar. Then mark which syllable falls on each strum, and which syllables fall in between.
 
 ::infographic syllable-map
 
@@ -103,7 +107,7 @@ The [can you sing it](/can-you-sing) pages list the lowest and highest notes of 
 
 ### Capo or transpose
 
-A [capo](/glossary#capo) raises every open string by one semitone per fret, so you keep the chord shapes you know and move the whole song up. To go down, play the song with different shapes, or tune down. The capo guide on Strumly (linked at the end of this article) helps you work out which fret and shapes give the key you want; the [transposition](/glossary#transposition) entry covers the general idea.
+A capo raises every open string by one semitone per fret, so you keep the chord shapes you know and move the whole song up. To go down, play the song with different shapes, or tune down. The capo guide on Strumly (linked at the end of this article) helps you work out which fret and shapes give the key you want; the [transposition](/glossary#transposition) entry covers the general idea.
 
 ::infographic key-options
 
@@ -111,9 +115,9 @@ Test a key the way a working singer does: sing the whole chorus in the key you t
 
 ## Posture and breath with a guitar in your arms
 
-A guitar changes how you stand and breathe. Small adjustments help a lot.
+A guitar changes how you stand and breathe, and a few adjustments keep it from getting in the way.
 
-- **Keep your head up.** Looking down at the fretboard drops the chin and squeezes the throat. Glance down, then come back to level. Practicing chord changes without looking (Step 1) pays off here.
+- **Keep your head up.** Looking down at the fretboard drops the chin and can tighten the neck and throat. Glance down, then come back to level. Practicing chord changes without looking (Step 1) pays off here.
 - **Let the ribs move.** The body of the guitar rests against your torso. Hold it lightly so your lower ribs and belly can still expand as you breathe in. The lesson [ribs out, shoulders still](/learn/voice/room-check/breathe-low/ribs-out-shoulders-still) shows the movement to look for.
 - **Use a strap, even sitting.** A strap holds the guitar at the same height every time, so your strumming arm does not tense up to hold it in place.
 - **Breathe in the gaps.** Find the rests in the vocal line and mark them on your lyric sheet. Your strumming hand keeps going; only your voice pauses. If you run out of air, the phrase is probably longer than you planned for, and [breathing from the diaphragm](/blog/how-to-sing-from-your-diaphragm) covers how to fill up low and quickly.
@@ -133,7 +137,7 @@ The chord change is stealing your attention. Drill that change for one minute a 
 
 ### "My voice goes sharp or flat once I add guitar"
 
-Strumming hard makes you push your voice to be heard, and pushing pulls the pitch around. Strum softer, sing at normal speaking volume, and check the melody alone in the [pitch studio](/studio). Also check your tuning before every session: a guitar that is slightly out of tune pulls your ear with it.
+Strumming hard tempts you to push your voice to be heard over it, and pushing tends to pull the pitch around. Strum softer, sing at normal speaking volume, and check the melody alone in the [pitch studio](/studio). Also check your tuning before every session: a guitar that is slightly out of tune pulls your ear with it.
 
 ### "I run out of breath"
 
@@ -155,9 +159,9 @@ Twenty to thirty minutes a day is enough. Pick one song you already know well by
 | 4 | Same strum, climb two ladder steps | Hum, then speak the verse in rhythm | 25 |
 | 5 | Same strum, same tempo | Write the syllable map for the chorus; speak it | 25 |
 | 6 | Same strum | Sing verse and chorus quietly | 25 |
-| 7 | Rest from the song | Record one full take; listen back | 15 |
+| 7 | Play through once at your current ladder step | Record one full take; listen back | 15 |
 | 8 | Climb the ladder to 80% | Sing, fixing the weakest line in a loop | 25 |
-| 9 | Try two keys with a capo | Record the chorus in each | 25 |
+| 9 | Try the song in two or three keys (capo up, new shapes down) | Record the chorus in each | 25 |
 | 10 | Settle the key; ladder to 90% | Sing the whole song | 25 |
 | 11 | Add one strum level | Speak, then sing the hardest line | 25 |
 | 12 | Full tempo | Sing the whole song twice | 25 |
@@ -205,7 +209,7 @@ export const howToSingAndPlayGuitar: BlogPost = {
   ],
   published: "2026-11-16",
   updated: "2026-11-16",
-  readMinutes: 11,
+  readMinutes: 12,
   category: "Practice",
   answer:
     "To sing and play guitar at the same time, make the guitar part automatic first, so you can strum it while talking or counting. Then add your voice in layers: hum the melody over the chords, speak the lyrics in rhythm, and finally sing. Practice each layer slowly with a metronome and raise the tempo in small steps.",
@@ -294,7 +298,7 @@ export const howToSingAndPlayGuitar: BlogPost = {
   faq: [
     {
       q: "Why is it so hard to sing and play guitar at the same time?",
-      a: "You are running two rhythms at once: a steady strum and an irregular melody. Your brain tries to lock them together, so one part copies the other. Making the guitar part automatic before you add your voice is what separates them.",
+      a: "You are running two rhythms at once: a steady strum and an irregular melody. Until one part runs on its own, the two tend to lock together, so the strum copies the words or the words copy the strum. Making the guitar part automatic before you add your voice is what separates them.",
     },
     {
       q: "Should I learn the guitar part or the vocal part first?",

@@ -5,13 +5,13 @@ const body = [
   ``,
   `Singing with a cold is often fine in a lighter, shorter form when the illness sits in your nose and head and your speaking voice still sounds like you. It is a bad idea when the cold has reached your larynx (the voice box) or your chest: when you are hoarse, losing your voice, coughing hard, running a fever, or when singing hurts. Two questions decide it: where is the illness, and what is your voice doing today?`,
   ``,
-  `This guide gives you a way to answer that question honestly, a gentler way to sing on the days you decide to, and the signs that mean a doctor rather than a warmup. It is general information for singers, not medical advice. If you are unsure about your own symptoms, ask a doctor, ideally one who can look at your vocal folds.`,
+  `This guide gives you a way to answer those questions honestly, a gentler way to sing on the days you decide to, and the signs that mean a doctor rather than a warmup. It is general information for singers, not medical advice. If you are unsure about your own symptoms, ask a doctor, ideally one who can look at your vocal folds.`,
   ``,
   `### Why location matters`,
   ``,
   `Your voice is made by two small [vocal folds](/glossary#vocal-folds) inside the [larynx](/glossary#larynx), meeting hundreds of times a second while you sing. A stuffy nose changes how your voice resonates, because the nasal passages are part of the space your sound travels through, but it does not touch the folds themselves. That is why a head cold makes you sound blocked and muffled without necessarily making you hoarse.`,
   ``,
-  `Laryngitis is different. The folds themselves are inflamed and swollen. Swollen folds are heavier and stiffer, so they need more air pressure and more effort to vibrate, and they are more easily irritated by that extra effort. The sound comes out rough, breathy or unreliable, and high notes may simply not be there. Pushing a swollen voice through a set is the classic way a few days of laryngitis turns into weeks of trouble.`,
+  `Laryngitis is different. The folds themselves are inflamed and swollen. Swollen folds are heavier and less pliable, so they need more air pressure and more effort to vibrate, and they are more easily irritated by that extra effort. The sound comes out rough, breathy or unreliable, and high notes may simply not be there. Pushing a swollen voice through a set is the classic way a few days of laryngitis turns into weeks of trouble.`,
   ``,
   `A chest cold adds a third problem. Congestion and coughing make breath harder to manage, and every hard cough slams the folds together. You may have a clear voice and still lack the steady airflow that singing needs.`,
   ``,
@@ -99,7 +99,7 @@ const body = [
   ``,
   `## A 7-day plan for a typical head cold`,
   ``,
-  `Every cold is different, and this is a framework, not a schedule to force yourself through. Most uncomplicated colds settle within about a week to ten days. Move to the next day's plan only when your two-minute check is as good as or better than yesterday's.`,
+  `Every cold is different, so treat this as a framework and let your voice set the pace. Most uncomplicated colds settle within about a week to ten days. Move to the next day's plan only when your two-minute check is as good as or better than yesterday's.`,
   ``,
   `| Day | Main symptoms | Singing | Speaking and care |`,
   `|---|---|---|---|`,
@@ -120,7 +120,7 @@ const body = [
   `- **Record one phrase a day.** In the [Recorder](/recorder), sing the same comfortable phrase at the same volume each morning. Listen back a few days later. Clearer onsets and less breathiness are good signs.`,
   `- **Watch the cents readout.** In the [pitch studio](/studio), hold an easy note for a few seconds. A swollen voice often wobbles or drifts more than usual, and the [cents](/glossary#cent) readout shows that drift settling as you recover.`,
   `- **Check your range last.** Leave the [range test](/range?mode=range#start) until you feel fully well. Chapter 8 of the book, [Reading the range test](/book/reading-the-range-test), explains why a single low reading on a bad day is not your range.`,
-  `- **Look at the spectrogram.** The [voice analyzer](/analyze) shows breathiness as extra noise between the harmonics. It is a picture to compare against your own healthy recordings, not a test result.`,
+  `- **Look at the spectrogram.** The [voice analyzer](/analyze) shows breathiness as extra noise between the harmonics. Compare it with your own healthy recordings; it does not diagnose anything.`,
   ``,
   `[When numbers lie](/book/when-numbers-lie) is worth reading before you draw conclusions from any of these. Illness, short sleep and a dry room all show up in the numbers.`,
   ``,
@@ -130,7 +130,7 @@ const body = [
   ``,
   `::infographic doctor`,
   ``,
-  `Hoarseness that lasts more than about two weeks is the most widely repeated threshold in voice-care guidance, including from the US National Institute on Deafness and Other Communication Disorders. You do not need to wait that long if something feels wrong: sudden voice loss, especially one that happened mid-song, can be a sign of bleeding in the fold (a vocal fold hemorrhage), which needs prompt attention. [Adele](/singers/adele) cancelled tour dates in 2011 after a vocal fold hemorrhage and later had surgery, and her story is one reason many professional singers now take a sudden change seriously. If your throat hurts after you sing even once you are well, our guide to a [sore throat after singing](/blog/sore-throat-after-singing) helps you separate fatigue from warning signs.`,
+  `Voice-care guidance usually puts the line for hoarseness at two to three weeks. The US National Institute on Deafness and Other Communication Disorders (NIDCD) says to see a doctor if you have been hoarse for more than three weeks, and a singer who depends on the voice has good reason to go sooner. Some signs should not wait at all: sudden voice loss, especially one that happened mid-song, can be a sign of bleeding in the fold (a vocal fold hemorrhage), which needs prompt attention. [Adele](/singers/adele) cancelled tour dates in 2011 after a vocal fold hemorrhage and had surgery later that year. If your throat hurts after you sing even once you are well, our guide to a [sore throat after singing](/blog/sore-throat-after-singing) helps you separate fatigue from warning signs.`,
   ``,
   `::video pro`,
   ``,
@@ -174,7 +174,7 @@ export const singingWithACold: BlogPost = {
   readMinutes: 11,
   category: "Health",
   answer:
-    "Singing with a cold is usually fine in a lighter, shorter, lower form when the cold is in your nose and head and your speaking voice still sounds clear. Rest instead when you are hoarse, losing your voice, coughing hard, running a fever, or when singing hurts. Hoarseness lasting more than about two weeks, pain, sudden voice loss or blood means seeing a doctor, ideally a laryngologist.",
+    "Singing with a cold is usually fine in a lighter, shorter, lower form when the cold is in your nose and head and your speaking voice still sounds clear. Rest instead when you are hoarse, losing your voice, coughing hard, running a fever, or when singing hurts. Hoarseness lasting more than two to three weeks, pain, sudden voice loss or blood means seeing a doctor, ideally a laryngologist.",
   body,
   infographics: {
     where: {
@@ -220,7 +220,7 @@ export const singingWithACold: BlogPost = {
       kind: "steps",
       title: "When to see a doctor or laryngologist",
       steps: [
-        { label: "Hoarseness over about 2 weeks", detail: "A rough or changed voice that has not cleared in about two weeks, with or without a cold, needs an examination." },
+        { label: "Hoarseness over 2 to 3 weeks", detail: "A rough or changed voice that has not cleared in two to three weeks, with or without a cold, needs an examination." },
         { label: "Pain", detail: "Pain when singing or speaking, pain on one side, or pain running toward the ear." },
         { label: "Sudden voice loss", detail: "A voice that disappears or changes suddenly, especially mid-song, can mean bleeding in a fold. Go promptly." },
         { label: "Blood", detail: "Any blood when coughing or clearing your throat." },
@@ -249,7 +249,7 @@ export const singingWithACold: BlogPost = {
     },
     {
       q: "Can singing with laryngitis damage your voice?",
-      a: "Pushing a voice through laryngitis raises the risk of strain, and in rare cases bleeding in the vocal fold. Swollen folds need more effort to vibrate, so the same song costs more than usual. Rest, hydrate and speak softly until your speaking voice is clear again, and see a doctor if hoarseness lasts more than about two weeks.",
+      a: "Pushing a voice through laryngitis raises the risk of strain, and in rare cases bleeding in the vocal fold. Swollen folds need more effort to vibrate, so the same song costs more than usual. Rest, hydrate and speak softly until your speaking voice is clear again, and see a doctor if hoarseness lasts more than two to three weeks.",
     },
     {
       q: "Does a stuffy nose affect singing?",
@@ -261,11 +261,11 @@ export const singingWithACold: BlogPost = {
     },
     {
       q: "How long after a cold can I sing normally?",
-      a: "Many singers are back to normal within a few days of feeling well, but swelling can lag behind other symptoms and the top of the range usually returns last. Rebuild gradually over about a week, from quiet middle-range work up to full volume and high notes. If your voice is still hoarse about two weeks after the cold started, see a doctor.",
+      a: "Many singers are back to normal within a few days of feeling well, but swelling can lag behind other symptoms and the top of the range usually returns last. Rebuild gradually over about a week, from quiet middle-range work up to full volume and high notes. If your voice is still hoarse two to three weeks after the cold started, see a doctor.",
     },
     {
       q: "What should I do if I lose my voice before a performance?",
-      a: "Stop singing and talking as much as you can, drink water, and get a medical opinion, ideally from an ENT or laryngologist, especially if the loss was sudden. Do not numb your throat to push through. A voice that has disappeared is a reason to reschedule or have a cover ready, not to force it.",
+      a: "Stop singing and talking as much as you can, drink water, and get a medical opinion, ideally from an ENT or laryngologist, especially if the loss was sudden. Do not numb your throat to push through. If your voice has disappeared, reschedule or call in a cover.",
     },
   ],
   related: [

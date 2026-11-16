@@ -12,7 +12,7 @@ Play [Luciano Pavarotti](/singers/luciano-pavarotti) next to a pop ballad and yo
 
 ### A low, stable larynx
 
-The larynx is the box in your throat that holds the vocal folds. In speech and in a lot of pop singing it rises as you go higher. Classical singers train it to stay comfortably low and steady across the range. That lengthens the vocal tract, which darkens and deepens the color. The goal is a larynx that stays put, not one you shove down. Pressing the tongue root down to fake a low larynx gives a swallowed, hooty sound and tires the voice fast. The [larynx entry in the glossary](/glossary#larynx) shows where it sits and what it does.
+The larynx is the box in your throat that holds the vocal folds. In speech and in a lot of pop singing it rises as you go higher. Classical singers train it to stay comfortably low and steady across the range. That lengthens the vocal tract, which darkens and deepens the color. Aim for a larynx that stays put on its own. Shoving it down by pressing the tongue root gives a swallowed, hooty sound and tires the voice fast. The [larynx entry in the glossary](/glossary#larynx) shows where it sits and what it does.
 
 ### Space: the open throat
 
@@ -20,21 +20,21 @@ Teachers talk about "space" or an "open throat". In practice it means a relaxed 
 
 ### Ring: the singer's formant
 
-Trained classical voices often show a strong band of energy around 2.5 to 3.5 kHz, called the [singer's formant](/glossary#singers-formant). An orchestra puts comparatively little energy in that region and human hearing is especially sensitive there, so the voice cuts through without extra force. Singers describe it as "ring", "squillo" or "ping". It comes from shaping the space just above the vocal folds, not from pushing more air. [The Measured Voice](/book/what-your-voice-is) explains the source-and-filter idea behind it, and the course lesson on [ring without pressing](/learn/voice/through-the-break/twang-and-ring/ring-without-pressing) gives you a feel for brightness that costs nothing.
+Trained classical voices, especially tenors, baritones, basses and mezzos, often show a strong band of energy around 2.5 to 3.5 kHz, called the [singer's formant](/glossary#singers-formant). High sopranos rely on it less, because their notes already sit high enough to carry. An orchestra puts comparatively little energy in that region and human hearing is especially sensitive there, so the voice cuts through without extra force. Singers describe it as "ring", "squillo" or "ping". It comes from shaping the space just above the vocal folds, not from pushing more air. [The Measured Voice](/book/what-your-voice-is) explains the source-and-filter idea behind it, and the course lesson on [ring without pressing](/learn/voice/through-the-break/twang-and-ring/ring-without-pressing) teaches you to add brightness without adding effort.
 
 ### Legato
 
-[Legato](/glossary#legato) means bound together. Every note flows into the next with no gaps, bumps or little pushes, and consonants are quick so the vowels can stay long. A steady flow of breath carries the line. Most classical training is, at heart, legato training.
+[Legato](/glossary#legato) means bound together. Every note flows into the next with no gaps, bumps or little pushes, and consonants are quick so the vowels can stay long. A steady flow of breath carries the line. A large share of classical training comes down to legato.
 
 ### Pure vowels and a consistent vibrato
 
-Italian has five basic vowel sounds (ah, eh, ee, oh, oo), each held without sliding into a diphthong. Singing on these clean vowels keeps the resonance even from note to note, which is why classical singers learn them first, even if they will mostly sing in English or German. Classical voices also tend to carry a steady, regular [vibrato](/glossary#vibrato), usually around 5 to 7 cycles per second, that appears on its own once the voice is free. If yours does not show up yet, our guide on [how to sing with vibrato](/blog/how-to-sing-with-vibrato) explains why and what to do.
+Classical singing builds on five basic Italian vowel shapes (ah, eh, ee, oh, oo), each held without sliding into a diphthong. Singing on these clean vowels keeps the resonance even from note to note, which is why classical singers learn them first, even if they will mostly sing in English or German. Classical voices also tend to carry a steady, regular [vibrato](/glossary#vibrato), usually around 5 to 7 cycles per second, that appears on its own once the voice is free. If yours does not show up yet, our guide on [how to sing with vibrato](/blog/how-to-sing-with-vibrato) explains why and what to do.
 
 ::infographic compare
 
 ## Opera singing vs pop singing
 
-Classical technique is one style among many, with its own priorities. Pop is built around the microphone, so it can use a speech-like, close and intimate sound. Opera is built for unamplified rooms, so it chooses resonance and evenness first. Neither is better. They are different jobs, and the table above shows where they part ways. If you sing both, keep them as two deliberate settings. The course lesson [same song, two rooms](/learn/voice/signature/style-rooms/same-song-two-rooms) trains exactly that switch.
+Classical technique is one style among many, with its own priorities. Pop is built around the microphone, so it can use a speech-like, close and intimate sound. Opera is built for unamplified rooms, so it chooses resonance and evenness first. Each suits its job, and the table above shows where they part ways. If you sing both, keep them as two deliberate settings. The course lesson [same song, two rooms](/learn/voice/signature/style-rooms/same-song-two-rooms) trains exactly that switch.
 
 ## Voice types and the Fach system
 
@@ -146,9 +146,9 @@ Long, heavy consonants chop up legato. Fix: speak the text in rhythm, then sing 
 The sound inside your head is a poor guide, so use objective checks.
 
 - **Pitch studio.** Sing your messa di voce and legato slurs in the [pitch studio](/studio) and watch the cents readout. On a held note your center should stay within roughly 10 to 20 cents of the target as you swell and fade. A trace that drifts down at the end of a phrase usually means the breath is collapsing.
-- **Voice analyzer.** Open the [voice analyzer](/analyze) and hold a vowel. The spectrogram shows the band around 3 kHz as a gold column. Compare its share of energy between a plain take and a spacious, ringing take. Treat it as a comparison between your own takes, not a target number.
+- **Voice analyzer.** Open the [voice analyzer](/analyze) and hold a vowel. The spectrogram shows the band around 3 kHz as a gold column. Compare the "Ring band" percentage between a plain take and a spacious, ringing take. Treat it as a comparison between your own takes, not a target number.
 - **Recorder.** Record the same phrase every few days in the [recorder](/recorder) and A/B the takes. Listen for even vowels, joined notes and a voice that sounds the same from bottom to top.
-- **Range test.** Repeat the [range test](/range?mode=range#start) every couple of weeks. Classical work often adds comfortable notes at the top once the larynx stops rising. Track your results on the [progress](/progress) page.
+- **Range test.** Repeat the [range test](/range?mode=range#start) every couple of weeks. Classical work can add comfortable notes at the top once the larynx stops rising. Track your results on the [progress](/progress) page.
 
 ::video beginner
 

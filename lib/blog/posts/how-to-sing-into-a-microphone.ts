@@ -6,7 +6,7 @@ To sing into a microphone well, point it straight at your mouth, start about two
 
 Below: which mic suits which job, how to set levels so nothing distorts, and how to practice it all with a phone. You can check every step yourself in the [recorder](/recorder), the [voice analyzer](/analyze) and the [pitch studio](/studio).
 
-A microphone does not change how you produce sound. It changes what the audience hears, and it is far less forgiving of inconsistency than a room. Good mic technique is mostly about reaching the capsule the same way, every phrase.
+Your vocal technique stays the same on a microphone. What changes is what the audience hears, and a mic punishes inconsistency far more than a room does. Most of mic technique comes down to reaching the capsule the same way on every phrase.
 
 ## Dynamic vs condenser: know what you are holding
 
@@ -53,13 +53,13 @@ Your voice has a wider dynamic range than a sound system likes: a soft verse can
 
 The free course covers this exact skill in the lesson [mic distance is a dynamic control](/learn/voice/signature/the-room/mic-distance-is-a-dynamic-control), and its partner lesson on [dynamics without pushing](/learn/voice/pitch-time-words/louder-softer/dynamics-without-pushing) trains the vocal side: getting louder through resonance and breath energy rather than squeeze. If your loud notes feel pressed, the [belting article](/blog/how-to-belt-without-straining) is the place to fix the voice first.
 
-> Keep your volume the same and move the microphone instead. A distorted loud note is fixed by distance, not by singing smaller.
+> When a loud note distorts, keep singing it at full size and move the microphone back.
 
 ### The handheld basics
 
 - Hold the mic by the body, not the grille. Cupping the grille with your hand blocks the pickup pattern, makes the mic sound boxy and invites feedback.
 - Keep a relaxed grip; a tense mic arm usually means a tense neck and jaw too.
-- On a stand, set the height so your head stays level. Craning up or down to reach the mic changes your larynx and your tone.
+- On a stand, set the height so your head stays level. Craning up or down to reach the mic pulls your neck and jaw out of line, and your tone changes with them.
 
 ## Plosives, pops and sibilance
 
@@ -90,7 +90,7 @@ At home, the same rule applies. If you practice with a backing track blasting fr
 
 ## Gain staging basics
 
-Gain is the input level at the start of the chain: the knob on your interface or mixer channel. Get it wrong and no amount of mixing fixes it.
+Gain is the input level at the start of the chain: the knob on your interface or mixer channel. Get it badly wrong and mixing cannot fully repair the recording.
 
 ::infographic gain-steps
 
@@ -107,7 +107,7 @@ You do not need a studio microphone to practice mic technique. A phone records c
 - Put the phone on a stand or shelf at mouth height so the distance stays identical every take.
 - Keep the microphone openings clear. Cases, fingers and a laptop lid can muffle them.
 - Start about a relaxed hand-span away and keep that distance for every comparison take.
-- Pick a soft-furnished room. Bathrooms sound flattering because the echo hides pitch errors.
+- Pick a soft-furnished room. Bathrooms sound flattering because the echo can mask small pitch errors.
 - Use wired headphones for any backing track and keep it quiet.
 
 Record in the [recorder](/recorder), which lets you A/B two takes side by side. Then open the same phrase in the [voice analyzer](/analyze): the spectrogram shows your harmonics, and it is a useful way to see that a take at different distances does change the balance of low and high energy. For a full home routine, read [how to practice singing at home](/blog/how-to-practice-singing-at-home).
@@ -142,7 +142,7 @@ Fit this into your usual practice, after a warmup such as the [quick routine](/w
 | Day 2 | Angle and plosives | Drill 3, then one verse of a song with the mic slightly off-axis |
 | Day 3 | Working the mic | Drill 2 five times, then the loudest phrase of a song you know |
 | Day 4 | Hearing yourself | Drill 4 in the pitch studio, compare cents readings |
-| Day 5 | Sibilance and consistency | A lyric full of "s" sounds with the mic aimed at your chin, keeping it on-axis as you turn your head |
+| Day 5 | Sibilance and consistency | A lyric full of "s" sounds with the mic aimed at your chin, keeping that same angle as you turn your head |
 | Day 6 | Full song run | Record a whole song using everything, A/B against your Day 1 take |
 | Day 7 | Review | Listen back, choose one habit to keep fixing next week, rest your voice |
 

@@ -2,13 +2,13 @@ import type { BlogPost } from "../types";
 
 const body = `## How to sing jazz: the short answer
 
-To sing jazz, you sing the way you talk to one person in a quiet room, then put that speech on a swinging beat. Learn a handful of standards from lead sheets in your own key, phrase the words the way you would say them, let some phrases land a little after the beat, and keep the tone close to your speaking voice. Scat comes later, and it starts as call-and-response on a few notes of the blues scale, not as a flurry of fast syllables.
+To sing jazz, you sing the way you talk to one person in a quiet room, then put that speech on a swinging beat. Learn a handful of standards from lead sheets in your own key, phrase the words the way you would say them, let some phrases land a little after the beat, and keep the tone close to your speaking voice. Save scat for later, and start it as call-and-response on three or four notes of the blues scale.
 
-Below, each piece comes in the order most singers learn it, with drills, a two-week plan and ways to track progress.
+The sections below follow the order most singers learn these skills, with a drill for each, a two-week plan and a way to check your progress.
 
 ## What makes a voice sound like jazz
 
-Jazz singing is a set of choices more than a special voice. The free course makes this point in its lesson on [style as a set of choices](/learn/voice/signature/style-rooms/style-is-a-set-of-choices-not-a-sound), and jazz is the clearest example. Four choices carry most of the style.
+Jazz style comes from choices you can practice, and any healthy voice can make them. The free course makes this point in its lesson on [style as a set of choices](/learn/voice/signature/style-rooms/style-is-a-set-of-choices-not-a-sound), and jazz is the clearest example. Four choices carry most of the style.
 
 - **Speech-like tone.** Most jazz singing sits close to the speaking voice: clear vowels, moderate volume, little push. A classical singer projects to the back of a hall. A jazz singer lets the microphone do that work and sings to the front row.
 - **Rhythmic freedom over a steady beat.** The band keeps time. You float over it, landing some words early, some late, and some right on the beat.
@@ -29,7 +29,7 @@ Count a steady beat as "1 and 2 and." Straight eighths split each beat into two 
 
 ### Feel the backbeat on 2 and 4
 
-Pop and rock audiences often clap on 1 and 3. Jazz lives on 2 and 4. Set the [metronome on the tools page](/tools) to half your target tempo and treat each click as beats 2 and 4. If the song is at 120 beats per minute, the click goes at 60, and you hear it on the backbeat only. This one change makes your phrasing relax, because the click no longer pulls every word onto the downbeat.
+Jazz lives on beats 2 and 4, the backbeat. Clapping or nodding on 1 and 3 is the most common beginner habit, and it makes swing feel heavy. Set the [metronome on the tools page](/tools) to half your target tempo and treat each click as beats 2 and 4. If the song is at 120 beats per minute, the click goes at 60, and you hear it on the backbeat only. This one change makes your phrasing relax, because the click no longer pulls every word onto the downbeat.
 
 ### Drill: swing on one pitch
 
@@ -101,15 +101,15 @@ Scat is improvising with nonsense syllables, the way a horn player solos. Louis 
 
 ### Start with call-and-response
 
-Have a friend, a recording, or a looped phrase play a short two-bar idea. You answer with a two-bar idea of your own. At first, copy it exactly. Then copy the rhythm but change one note. Then change the rhythm and keep the notes. Call-and-response trains the two things scat needs: listening and answering in time. The course has a whole unit on this in [Four Bars Yours](/learn/voice/through-the-break/four-bars-yours/self-check-your-answering-phrase).
+Have a friend, a recording, or a looped phrase play a short two-bar idea. You answer with a two-bar idea of your own. At first, copy it exactly. Then copy the rhythm but change one note. Then change the rhythm and keep the notes. Call-and-response trains the two things scat needs: listening and answering in time. The course lesson [Sing the Answer](/learn/voice/through-the-break/four-bars-yours/sing-the-answer) walks you through call-and-response before free improvising.
 
 ### Use a few notes from the blues scale
 
-Do not try to outline every chord. Pick the key of the song and use three or four notes of its [blues scale](/glossary#blues-scale). In C, the blues scale is C, Eb, F, F#, G, Bb. Start with just C, Eb, F and G. Those four notes will sound good over a C blues and over many swing tunes in C. The lessons on [blue thirds and sevenths](/learn/voice/agility/blues-and-pentatonic-lines/blue-thirds-and-sevenths) explain why those notes sound the way they do.
+Do not try to outline every chord. Pick the key of the song and use three or four notes of its [blues scale](/glossary#blues-scale). In C, the blues scale is C, Eb, F, F#, G, Bb. Start with just C, Eb, F and G. Those four notes fit a C blues and work as bluesy color over many swing tunes in C. The lessons on [blue thirds and sevenths](/learn/voice/agility/blues-and-pentatonic-lines/blue-thirds-and-sevenths) explain why those notes sound the way they do.
 
 ### Choose syllables that swing
 
-Syllables are not decoration. They shape the rhythm.
+Your syllables shape the rhythm, so choose them for how they move.
 
 - **"Doo"** for long notes and soft starts.
 - **"Bah," "dat," "bop"** for short, accented notes, especially at the end of a phrase.
@@ -161,7 +161,7 @@ Two more worth naming:
 
 ## How to measure your progress
 
-- **Pitch.** Sing the melody straight through in the [pitch studio](/studio) and watch the cents readout. Long notes should settle near center. Notes you bend into on purpose will start off-center and should arrive. If they never arrive, that is a pitch problem, not a style.
+- **Pitch.** Sing the melody straight through in the [pitch studio](/studio) and watch the cents readout. Long notes should settle near center. Notes you bend into on purpose will start off-center and should arrive. If they never arrive, treat it as a pitch problem to fix.
 - **Rhythm.** Record yourself with the metronome audible and listen back. Mark every place where you rushed or dragged without meaning to. Laid-back phrasing that ends in time is style; phrasing that ends late is drift.
 - **Range and key.** Retake the [range test](/range?mode=range#start) every few weeks. As your comfortable range grows, you may want to move a standard up or down a step.
 - **Recordings over time.** Keep one recording of your standard from week one. Compare it with week four. The improvement in ease and phrasing is usually obvious once you hear them side by side.
@@ -208,7 +208,7 @@ export const howToSingJazz: BlogPost = {
         { label: "How the beat splits", cells: ["Two equal halves", "Long then short, roughly two thirds and one third"] },
         { label: "How to count it", cells: ["1 and 2 and", "1 (trip) let 2 (trip) let"] },
         { label: "Where the accent sits", cells: ["Usually on the beat", "Often on the upbeat, the short note"] },
-        { label: "Where you clap", cells: ["Often 1 and 3", "2 and 4, the backbeat"] },
+        { label: "Where the pulse is felt", cells: ["Evenly on every beat", "Strongest on 2 and 4, the backbeat"] },
         { label: "Sounds like", cells: ["Even, marching, most pop and rock", "Rolling, lilting, medium-tempo jazz"] },
         { label: "Changes with tempo", cells: ["Stays even", "Gets straighter as the tempo rises"] },
         { label: "Practice it", cells: ["Metronome on every beat", "Metronome on 2 and 4 at half tempo"] },
@@ -261,13 +261,13 @@ export const howToSingJazz: BlogPost = {
       youtubeId: "s4AUCBfRVFI",
       title: "Scat Singing 101 (Part 1)",
       channel: "Aimee Nolte Music",
-      why: "A jazz pianist and singer starts beginners on scat with swing feel and simple syllables, the same order this guide uses.",
+      why: "A jazz pianist and singer introduces scat for beginners. Watch it before the twelve-bar drill above.",
     },
     phrasing: {
       youtubeId: "yYSGVJ7Gb7M",
       title: "Thana Alexa - Jazz Vocal Phrasing",
       channel: "MyMusicMasterclass",
-      why: "A working jazz vocalist demonstrates how to reshape a melody's rhythm and placement so a standard sounds like your own.",
+      why: "Jazz vocalist Thana Alexa talks through phrasing a melody. Pair it with the three-ways drill.",
     },
   },
   faq: [

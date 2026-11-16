@@ -27,7 +27,7 @@ A good country key puts the verse at or a little above your speaking pitch, so t
 
 ## Twang: the bright edge, and how to use it safely
 
-Twang is the bright, slightly buzzy, cutting quality you hear in a lot of classic and modern country. Voice scientists generally describe it as a narrowing of the space just above the vocal folds (the aryepiglottic region), which reshapes the tube and boosts the upper harmonics that the ear hears most easily. The important part for you: twang adds carrying power by changing resonance, not by pushing more air or squeezing the throat. That is why it suited singers working in loud rooms before amplification was good.
+Twang is the bright, slightly buzzy, cutting quality you hear in a lot of classic and modern country. Voice scientists generally describe it as a narrowing of the space just above the vocal folds (the aryepiglottic region), which reshapes the tube and boosts the upper harmonics that the ear hears most easily. For you, that means twang adds carrying power by changing resonance rather than by pushing more air or squeezing the throat. A well-made twang should still work at a quiet volume.
 
 ### Finding twang in three steps
 
@@ -35,7 +35,7 @@ Twang is the bright, slightly buzzy, cutting quality you hear in a lot of classi
 2. Sing that "nyeh" on a comfortable note for 3 seconds, then change to "eh" and keep the brightness.
 3. Turn it down. Sing the same note with half the twang, then a quarter. Being able to dial it is the actual skill.
 
-Do 5 reps of that sequence on 3 or 4 different comfortable notes. If the sound only gets louder, start again smaller. If your neck tightens or the tone turns scratchy, stop and go back to an easy hum. The Suede lesson [Twang and ring](/learn/voice/through-the-break/twang-and-ring) walks through the same distinction with a recording check, and the [voice analyzer](/analyze) can show the brightness change on its tone view while you keep volume steady.
+Do 5 reps of that sequence on 3 or 4 different comfortable notes. If the sound only gets louder, start again smaller. If your neck tightens or the tone turns scratchy, stop and go back to an easy hum. The Suede lesson [Twang and ring](/learn/voice/through-the-break/twang-and-ring) walks through the same distinction with a recording check, and the live spectrogram in the [voice analyzer](/analyze) shows the extra energy in the upper harmonics while you keep volume steady.
 
 ### Use twang like seasoning
 
@@ -66,11 +66,11 @@ Record all three in the [recorder](/recorder) at the same distance. Most singers
 
 ## The cry, the break and other country ornaments
 
-Country ornaments are small and placed on purpose. They punctuate emotion; they should never happen by accident.
+Country ornaments are small and placed on purpose, on the words where the emotion peaks.
 
 ### The cry (sob)
 
-The cry is a quick, slightly broken catch in the tone, often on the start of a word or as a phrase falls away, that sounds like the edge of tears. [Patsy Cline](/singers/patsy-cline) used it with great control. To find it safely, imitate a gentle whimper on "oh" at speaking pitch, with no force at all, then sing a short falling phrase and let the catch happen on the first syllable. A light sob tilt also tends to soften and darken the tone, which can make a high line feel easier. Keep it quiet at first; a cry that needs pressure is no longer a cry.
+The cry is a quick, slightly broken catch in the tone, often on the start of a word or as a phrase falls away, that sounds like the edge of tears. [Patsy Cline](/singers/patsy-cline) used it with great control. To find it safely, imitate a gentle whimper on "oh" at speaking pitch, with no force at all, then sing a short falling phrase and let the catch happen on the first syllable. Keep it quiet at first; a cry that needs pressure is no longer a cry.
 
 ### The break (yodel flip)
 
