@@ -12,7 +12,7 @@ Your vocal folds are adjusted by two main muscle groups. The thyroarytenoid (TA)
 
 Every note you sing is a balance between those two. At the bottom of your range, TA dominates. At the top, CT dominates. In the middle, around your passaggio (the transition zone), both are working, and the folds are neither fully thick nor fully thin. When that balance shifts smoothly and the folds keep closing cleanly, listeners hear one connected voice. That result is what most teachers mean by mix.
 
-So mix is best understood as a coordination between chest and head dominance rather than a separate third register. Chapter 2 of *The Measured Voice* puts it plainly: treat mix as a description of a result, not a switch you flip. There is also a resonance side to it. Shaping the vowel so a lighter fold setup sounds fuller is half of why a good mix sounds "big" without being heavy. The [glossary entry on mix](/glossary#mix) and the lesson on [chest, head and falsetto](/learn/voice/two-registers/chest-head-falsetto) cover the vocabulary if you want it.
+Mix is best understood as a coordination between chest and head dominance rather than a separate third register. Chapter 2 of *The Measured Voice* puts it plainly: treat mix as a description of a result, not a switch you flip. There is also a resonance side to it. Shaping the vowel so a lighter fold setup sounds fuller is half of why a good mix sounds "big" without being heavy. The [glossary entry on mix](/glossary#mix) and the lesson on [chest, head and falsetto](/learn/voice/two-registers/chest-head-falsetto) cover the vocabulary if you want it.
 
 > If you can only reach a note by pushing harder every time, you are not in mix yet. A real mix gets easier with repetition, not harder.
 
@@ -22,7 +22,7 @@ People confuse mix with "loud head voice" or "chest that didn't crack yet". The 
 
 ::infographic registers
 
-Two practical notes. First, falsetto is useful: it is often the easiest door into the light, CT-led coordination that mix needs, as long as you then teach it to close more firmly. Second, "head voice" means different things to different teachers. Here it means the stretched setup with firm closure, so it rings instead of sounding foggy. Hear the [same pitch two ways](/learn/voice/two-registers/chest-head-falsetto/same-pitch-two-ways) to feel the difference from the inside.
+Falsetto is useful here: it is often the easiest door into the light, CT-led coordination that mix needs, as long as you then teach it to close more firmly. Also, "head voice" means different things to different teachers. Here it means the stretched setup with firm closure, so it rings instead of sounding foggy. Hear the [same pitch two ways](/learn/voice/two-registers/chest-head-falsetto/same-pitch-two-ways) to feel the difference from the inside.
 
 ## Where to look for your mix
 
