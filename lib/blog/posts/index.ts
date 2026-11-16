@@ -15,6 +15,14 @@ import { howToImproveVocalTone } from "./how-to-improve-vocal-tone";
 import { howToSingRiffsAndRuns } from "./how-to-sing-riffs-and-runs";
 import { howToSingHarmony } from "./how-to-sing-harmony";
 import { howToOvercomeStageFright } from "./how-to-overcome-stage-fright-when-singing";
+import { howToSingLouder } from "./how-to-sing-louder-without-shouting";
+import { howToSingWithEmotion } from "./how-to-sing-with-emotion";
+import { howToSingWithRasp } from "./how-to-sing-with-rasp";
+import { howToReadMusicForSinging } from "./how-to-read-music-for-singing";
+import { singingAuditionTips } from "./singing-audition-tips";
+import { howToSingIntoAMicrophone } from "./how-to-sing-into-a-microphone";
+import { vocalCoolDownExercises } from "./vocal-cool-down-exercises";
+import { howToSingAndPlayGuitar } from "./how-to-sing-and-play-guitar-at-the-same-time";
 
 /**
  * Every published post. Add the import and the entry here; the routes,
@@ -37,4 +45,12 @@ export const POSTS: readonly BlogPost[] = [
   howToSingRiffsAndRuns,
   howToSingHarmony,
   howToOvercomeStageFright,
+  howToSingLouder,
+  howToSingWithEmotion,
+  howToSingWithRasp,
+  howToReadMusicForSinging,
+  singingAuditionTips,
+  howToSingIntoAMicrophone,
+  vocalCoolDownExercises,
+  howToSingAndPlayGuitar,
 ];
