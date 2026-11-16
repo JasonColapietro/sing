@@ -7,7 +7,7 @@ const body = [
   ``,
   `That order matters more than any exercise. Singers who get hurt chasing rasp usually skip the clean voice and try to make the whole sound rough by squeezing. Singers who keep a gritty sound for decades tend to have a strong clean voice underneath and treat the grit like seasoning. This guide shows you how to build that foundation, how to explore texture gently, how long to practice, and which signs mean stop.`,
   ``,
-  `A note before you start. The [effects module](/learn/voice/signature/effects-carefully) in Suede's free voice course is strict on purpose: it asks you to learn any growl or distortion with a qualified teacher listening, because two very different things can sound alike from the outside. Treat this article as the groundwork and the safety plan. If you want to go further than light texture, take it to a teacher.`,
+  `The [effects module](/learn/voice/signature/effects-carefully) in Suede's free voice course is strict on purpose: it asks you to learn any growl or distortion with a qualified teacher listening, because two very different things can sound alike from the outside. Treat this article as the groundwork and the safety plan: a clean foundation, a gentle way to find the sensation, and firm limits. If you want more than light texture, or you are unsure what you are doing, take it to a teacher.`,
   ``,
   `## What vocal rasp actually is`,
   ``,
@@ -48,7 +48,7 @@ const body = [
   `- [Rod Stewart](/singers/rod-stewart): a naturally husky tone with light rasp almost all the time. Much of it is his speaking voice quality, which is hard to copy without strain.`,
   `- [Joe Cocker](/singers/joe-cocker) and [Tina Turner](/singers/tina-turner): soul-rooted grit that comes and goes with the emotion of the line.`,
   `- [Chris Cornell](/singers/chris-cornell): a wide range, moving between clean high notes and heavy distortion within one song.`,
-  `- [Brian Johnson](/singers/brian-johnson) and [Bonnie Tyler](/singers/bonnie-tyler): near-constant high grit. These are the hardest sounds to imitate and the easiest to overdo.`,
+  `- [Brian Johnson](/singers/brian-johnson) and [Bonnie Tyler](/singers/bonnie-tyler): near-constant high grit, the hardest sounds to imitate and the easiest to overdo. Tyler's husky tone is widely reported to have arrived after surgery for vocal nodules in the late 1970s, a reminder that some raspy voices you hear on record are not a technique you can copy.`,
   `- [Chris Stapleton](/singers/chris-stapleton): country and soul rasp on a big, clean core. Compare the clean and gritty lines in [Tennessee Whiskey](/can-you-sing/tennessee-whiskey).`,
   ``,
   `Open each profile to see where their recorded range sits. If their gritty peaks sit above your comfortable belt, lower the key before you try anything. The [range test](/range?mode=range#start) shows where your own voice lives, and [Lose Control](/can-you-sing/lose-control) is a good modern song to check against.`,
@@ -71,7 +71,7 @@ const body = [
   ``,
   `### Drill 3: the short burst (3 minutes)`,
   ``,
-  `Sing your clean "ah" on the baseline note. After it has started cleanly, let a little of that laugh rattle in for about one second, then return to clean. Clean, grit, clean. Do 5 bursts, rest for 30 seconds, then do 5 more. Keep it quiet: the grit should be a texture you can barely hear, not a roar.`,
+  `If you can, do drills 3 and 4 with a teacher listening, or send a teacher your recorder takes before you move past day 7 of the plan below. Sing your clean "ah" on the baseline note. After it has started cleanly, let a little of that laugh rattle in for about one second, then return to clean. Clean, grit, clean. Do 5 bursts, rest for 30 seconds, then do 5 more. Keep it quiet: the grit should be a texture you can barely hear, not a roar.`,
   ``,
   `### Drill 4: one word in a phrase (3 minutes)`,
   ``,
@@ -151,7 +151,7 @@ const body = [
   `- Any blood when you cough or clear your throat.`,
   `- A rough sound you can no longer turn off, so your clean voice stays gritty.`,
   ``,
-  `That last one matters for gritty singers. If the rasp is there when you do not want it, the effect is no longer a choice, and something may have changed in the tissue. A laryngologist can look at the folds directly, which settles the question in a way no amount of practice can.`,
+  `For gritty singers, the last sign deserves attention. If the rasp is there when you do not want it, the effect is no longer a choice, and something may have changed in the tissue. A laryngologist can examine the folds directly with a scope; more practice cannot tell you what is there.`,
 ].join("\n");
 
 export const howToSingWithRasp: BlogPost = {
@@ -185,7 +185,7 @@ export const howToSingWithRasp: BlogPost = {
       rows: [
         { label: "What makes the sound", cells: ["True folds vibrating evenly", "Clean fold vibration plus loose rattle above the folds", "Folds pressed and colliding hard"] },
         { label: "How it feels", cells: ["Easy, steady", "A buzz or rattle above the note", "Scraping, burning, tight neck"] },
-        { label: "Volume", cells: ["Any level", "Medium to loud, never forced", "Only appears when shouting"] },
+        { label: "Volume", cells: ["Any level", "Quiet to medium while learning, never forced", "Only appears when shouting"] },
         { label: "Pitch", cells: ["Steady on the studio trace", "Steady under the noise", "Often drifts flat or cracks"] },
         { label: "Afterwards", cells: ["Voice unchanged", "Clean voice unchanged", "Hoarse, lower, missing top notes"] },
         { label: "How often to use", cells: ["Most of your singing", "A few words per phrase", "Never"] },
@@ -240,13 +240,13 @@ export const howToSingWithRasp: BlogPost = {
       youtubeId: "N0hCU0vMvgQ",
       title: "Distortion using CVT",
       channel: "Complete Vocal Technique",
-      why: "The method that studies vocal effects closely demonstrates distortion layered over a clean, supported sound.",
+      why: "Complete Vocal Technique has researched vocal effects in detail; listen for the clean, supported sound underneath the distortion.",
     },
     tamplin: {
       youtubeId: "kgGgDayLrdU",
       title: "How To Sing With Distortion And Rasp - Ken Tamplin Vocal Academy",
       channel: "Ken Tamplin Vocal Academy",
-      why: "A rock voice teacher's short demonstration of building rasp gradually on top of breath support.",
+      why: "A rock voice teacher talks through rasp and distortion; compare his advice with the stop rules above and keep your own doses short.",
     },
   },
   faq: [

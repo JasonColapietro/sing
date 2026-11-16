@@ -1,8 +1,8 @@
 import type { BlogPost } from "../types";
 
-const body = `## Singing audition tips: what actually decides the room
+const body = `## Singing audition tips: the short version
 
-The most useful singing audition tips are boring on purpose. Pick a song whose chorus sits in the comfortable middle of your voice, cut it to the length the notice asks for, put it in your key, and rehearse the whole visit (walking in, slating, giving the pianist a tempo, singing, leaving) until it feels routine. Panels rarely remember the singer with the highest note. They remember the one who sounded settled, told a story and was easy to work with.
+The most useful singing audition tips are boring on purpose. Pick a song whose chorus sits in the comfortable middle of your voice, cut it to the length the notice asks for, put it in your key, and rehearse the whole visit (walking in, slating, giving the pianist a tempo, singing, leaving) until it feels routine. A panel is choosing someone to cast or place, so a singer who sounds settled, tells a story and is easy to work with usually does better than one who reaches for the highest note.
 
 Most bad auditions trace back to one weak spot: a song set too high, a confusing cut, the wrong key, or nerves with nowhere to go. Each has a fix you can practice, and this guide takes them in the order you will meet them.
 
@@ -26,11 +26,11 @@ The song is the one decision you control completely, so make it carefully. The g
 
 ### Start from your measured range
 
-Take the [range test](/range?mode=range#start) before you shortlist anything. It reports your lowest and highest notes, and more usefully, it gives you a picture of where your voice is comfortable. The book chapter on [reading the range test](/book/reading-the-range-test) explains why the two edge notes are limits rather than targets. For an audition, plan as if you have two or three semitones less at the top than your best test result. Adrenaline tightens the throat, and the top of the range is the first place it shows.
+Take the [range test](/range?mode=range#start) before you shortlist anything. It reports your lowest and highest notes, and more usefully, it gives you a picture of where your voice is comfortable. The book chapter on [reading the range test](/book/reading-the-range-test) explains why the two edge notes are limits rather than targets. For an audition, plan as if you have two or three semitones less at the top than your best test result. Nerves tend to add tension and speed up your breathing, and the top of the range is usually the first place that shows.
 
 ### Audit the chorus, not the top note
 
-A song's highest note happens once or twice. Its [tessitura](/glossary#tessitura), the band where the melody spends most of its time, happens for the whole song. Two songs can share a top note and feel nothing alike to sing. Sing the last chorus quietly at a conversational volume. If it only works loud, it is too high for an audition.
+A song's highest note happens once or twice. Its [tessitura](/glossary#tessitura), the band where the melody spends most of its time, happens for the whole song. Two songs can share a top note and feel nothing alike to sing. Sing the last chorus at a moderate volume. If it only works when you push it loud, it is probably too high for you right now.
 
 The [can you sing it](/can-you-sing) pages lay out a popular song's range so you can compare it with yours before you commit. Look at a big ballad like [Someone Like You](/can-you-sing/someone-like-you) and notice how much of it lives in the middle, which is part of why it works for so many voices. Compare it with a song built around a sustained belt climax, where the hard part keeps coming back.
 
@@ -74,6 +74,17 @@ A quick way to find the right key:
 - Check the lowest verse note is still audible. Dropping the chorus also drops the verse.
 
 Once you have the key, buy or prepare sheet music printed in it. Do not ask an audition pianist to transpose at sight. Some can, and it still adds risk you do not need.
+
+## What to bring and wear
+
+Pack the night before so the morning is only about your voice.
+
+- Your binder with the cut marked, plus a spare copy of the music.
+- Any track, cued and labeled, with a backup on your phone.
+- A headshot and résumé if the notice asks for them (common for musical theatre, rare for choirs and bands).
+- Room-temperature water and a light snack for the wait.
+
+Wear clothes you can breathe and move in, that suggest the role or style without being a costume, and shoes you have already stood in for an hour. Arrive 15 to 20 minutes early so you can sign in, find the bathroom and start your top-up warmup without rushing.
 
 ## Accompanist and track etiquette
 

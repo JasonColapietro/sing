@@ -4,13 +4,13 @@ const body = `## How to sing and play guitar at the same time: the method
 
 To sing and play guitar at the same time, you make the guitar part automatic first, then add the voice in layers: hum the melody over the chords, speak the lyrics in rhythm over the strum, and only then sing the words. Each layer is practiced slowly with a metronome and sped up in small steps. The hand that strums has to run on its own before your attention can go to pitch and words.
 
-Almost everyone who tries this for the first time finds that one part falls apart the moment the other starts. Your strumming hand copies the rhythm of the words, or your voice waits for the chord change and comes in late. That is a coordination problem, and coordination is trained the same way every time: separate the parts, make one of them automatic, then join them in very small pieces.
+Most beginners find that one part falls apart the moment the other starts. That is a coordination problem, and it is trained by separating the parts, making one automatic, then joining them in small pieces.
 
 This guide gives you the layer-by-layer method, a speed ladder, a way to map syllables onto strums, how to pick a key your voice likes, how to stand and breathe with a guitar in your arms, and a two-week plan. You can do every step with the metronome in [practice tools](/tools), the cents readout in the [pitch studio](/studio) and the [recorder](/recorder).
 
 ## Why your hands and voice fight each other
 
-Singing and strumming are two rhythms running at once. Usually the strum is steady (often eighth notes) while the melody is irregular: it pushes ahead of the beat, holds through a bar line and rests in odd places. Your brain likes to lock both hands and voice to one rhythm, so whichever part you are thinking about pulls the other one with it.
+Singing and strumming are two rhythms running at once. The strum is steady while the melody pushes ahead of the beat, holds through bar lines and rests in odd places. Whichever part you are thinking about pulls the other one with it.
 
 Three things make it worse:
 
@@ -44,7 +44,7 @@ A simpler strum leaves room for the voice. You can add the fancy pattern back on
 
 ::infographic strum-levels
 
-The [strum](/glossary#strum) you hear on a record may also be two guitars, or one guitar plus a drum kit doing the rhythmic work. Solo, you only need enough to keep the pulse and the harmony clear. Plenty of fine performances use nothing but steady downstrokes.
+The [strum](/glossary#strum) on a record is often two guitars plus drums. Solo, you only need enough to keep the pulse and the harmony clear.
 
 A useful rule: keep your strumming hand moving down and up in time, even on beats where you miss the strings on purpose. A hand that never stops is far easier to keep steady than one that starts and stops with the rhythm of the words.
 
@@ -72,7 +72,7 @@ The single most useful exercise for stubborn lines is to write out which syllabl
 
 Once you can see it, you can practice it. Most lines have two or three anchor points where a stressed syllable lands exactly on a downbeat. Lock those first. The syllables that fall between strums usually sort themselves out once the anchors are solid.
 
-A melody that starts before the downbeat (a pickup) is the most common problem. Count the beat of the bar where you breathe and come in, and say it out loud a few times: "breathe on four, sing on the and of four."
+A line that starts before the downbeat (a pickup) is the most common trouble spot. Say it out loud: "breathe on four, sing on the and of four."
 
 ## Slow it down: the metronome speed ladder
 
@@ -87,7 +87,7 @@ The rules for the ladder:
 - **Step up by about 5 to 10 BPM.** Larger jumps break the coordination you just built.
 - **Finish each session one step below your best.** End on a few clean passes so the last thing your hands practiced was correct.
 
-The [metronome](/glossary#metronome) also catches a quieter problem: drifting faster in the chorus. Most players speed up when they get excited. A click shows you where.
+The [metronome](/glossary#metronome) also catches choruses that drift faster when you get excited.
 
 ## Choose a key that fits your voice
 
@@ -168,7 +168,7 @@ If you get stuck on a day, repeat it. The plan works because each day adds one t
 
 ## How to measure your progress
 
-Feel is unreliable here, because once something gets easier you stop noticing it. Measure it instead.
+Measure progress instead of trusting feel.
 
 - **Tempo.** Write down the highest metronome setting where you got three clean passes. That number should climb over the two weeks.
 - **Pitch.** Sing the chorus alone into the [pitch studio](/studio) and note how close the long notes land in cents. Then sing it while playing and compare. The gap between the two numbers is how much the guitar is still costing you.
@@ -185,7 +185,7 @@ Listen closely to how singer-guitarists keep things simple. [Ed Sheeran](/singer
 
 ## When to get help
 
-A guitar teacher can fix chord changes and strumming faster than you can alone, and a voice teacher can help if your voice tires quickly or the top of your range feels tight. If the problem is pain, hoarseness that lasts more than about two weeks, or sudden loss of your voice, see a laryngologist before you keep practicing.`;
+A guitar teacher can fix chord changes and strumming faster than you can alone, and a voice teacher can help if your voice tires quickly or the top of your range feels tight. For pain, hoarseness lasting more than about two weeks, or sudden voice loss, see a laryngologist before you keep practicing.`;
 
 export const howToSingAndPlayGuitar: BlogPost = {
   slug: "how-to-sing-and-play-guitar-at-the-same-time",
@@ -205,7 +205,7 @@ export const howToSingAndPlayGuitar: BlogPost = {
   ],
   published: "2026-11-16",
   updated: "2026-11-16",
-  readMinutes: 1,
+  readMinutes: 11,
   category: "Practice",
   answer:
     "To sing and play guitar at the same time, make the guitar part automatic first, so you can strum it while talking or counting. Then add your voice in layers: hum the melody over the chords, speak the lyrics in rhythm, and finally sing. Practice each layer slowly with a metronome and raise the tempo in small steps.",

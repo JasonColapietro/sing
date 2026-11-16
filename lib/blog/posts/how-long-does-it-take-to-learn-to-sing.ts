@@ -31,7 +31,7 @@ Each stage below assumes roughly 15 to 30 minutes a day, four or five days a wee
 
 The first month is about hearing and landing notes. You learn what it feels like to match a played pitch, start a note cleanly, and keep the breath going to the end of a short phrase.
 
-What usually changes: your first notes stop sliding up from below, simple melodies feel less shaky, and you can tell when you are off. That last one is a big deal. Many beginners cannot yet hear whether they are sharp or flat, and visual feedback speeds this up enormously. In the [pitch studio](/studio), a cents readout shows how far you are from the target, so you learn the feeling of "in tune" faster than by guessing.
+What usually changes: your first notes stop sliding up from below, simple melodies feel less shaky, and you start to notice when you are off. Many beginners cannot yet hear whether they are sharp or flat, so this change matters, and visual feedback speeds it up. In the [pitch studio](/studio), a cents readout shows how far you are from the target, so you learn the feeling of "in tune" faster than by guessing.
 
 Good work for this stage: the free course units on [straw and lip trill](/learn/voice/steady-tone/straw-and-lip-trill), [landing the note](/learn/voice/steady-tone/land-the-note) and [breathing low](/learn/voice/room-check/breathe-low), plus pitch matching in [ear training](/ear-training).
 
@@ -51,7 +51,7 @@ What usually changes: sirens slide through the break instead of jumping, you can
 
 Once the mechanics are reasonably reliable, the work shifts to musicianship and endurance. Consistent high notes are part of this stage, not the first year, because they depend on everything below them. The [high notes guide](/blog/how-to-sing-high-notes) explains why the top is built from the middle.
 
-What usually changes: you sing a full set without fatigue, you choose vibrato, runs and dynamics instead of having them happen to you, and your sound starts to feel like yours. Singers you admire spent years here too. [Adele](/singers/adele) and [Freddie Mercury](/singers/freddie-mercury) sound effortless because the coordination became automatic long before the records you know.
+What usually changes: you sing a full set without fatigue, you choose vibrato, runs and dynamics instead of having them happen to you, and your sound starts to feel like yours. Singers you admire spent years at this stage too. [Adele](/singers/adele) and [Freddie Mercury](/singers/freddie-mercury) sound effortless because years of singing made the coordination automatic.
 
 ## Milestones that show you are on track
 
@@ -63,7 +63,7 @@ If you can tick the early items and the later ones still feel far away, that is 
 
 ## What speeds up learning to sing
 
-Some habits make a large difference to how fast the timeline moves.
+Four habits move the timeline more than anything else.
 
 ### Short, frequent practice
 
@@ -83,7 +83,9 @@ Deciding what to practice each day is tiring, and beginners tend to drift toward
 
 ### Lessons, even a few
 
-You do not need weekly lessons for years, but a handful early on can save months. A teacher can catch a pressed onset, a jaw that clamps or a breath habit that would otherwise become automatic.
+You do not need weekly lessons for years, but a handful early on can save months. A teacher can catch a pressed onset, a jaw that clamps or a breath habit before it becomes automatic.
+
+::video coach
 
 ## What slows it down
 
@@ -143,7 +145,7 @@ A few rules keep the numbers honest:
 - **Wait for a trend.** Draw no conclusion from fewer than five or six sessions spread over about a month.
 - **Use your ears too.** A recording from three months ago next to one from today often shows progress the numbers miss.
 
-The [Progress](/progress) page keeps your saved range, streaks and session history on your device, so you can check whether you are practicing as often as you think you are. The book chapter on [reading the range test](/book/reading-the-range-test) explains what a range result can and cannot tell you.
+The [Progress](/progress) page keeps your saved range, streaks and XP on your device, so you can check whether you are practicing as often as you think you are. The book chapter on [reading the range test](/book/reading-the-range-test) explains what a range result can and cannot tell you.
 
 ::video timeline
 
@@ -152,8 +154,6 @@ The [Progress](/progress) page keeps your saved range, streaks and session histo
 A voice teacher is worth booking if you have practiced steadily for two or three months and nothing seems to move, if your break cracks every time despite slow sirens, or if you are preparing for auditions or performances. A few lessons can also confirm you are on the right track.
 
 See a doctor, ideally an ENT or a laryngologist (an ENT who specializes in the voice), if you have hoarseness lasting more than about two weeks, pain when you sing or speak, or a sudden loss of voice. Those need an examination, and more practice will not answer them. Healthy practice leaves your voice feeling the same or better afterward. The course lesson on [looking after your voice](/learn/voice/signature/look-after-it) covers day-to-day care.
-
-::video coach
 
 ## Start your timeline today
 
@@ -233,7 +233,7 @@ export const howLongToLearnToSing: BlogPost = {
         { label: "Pitch accuracy", cells: ["Pitch studio cents readout", "How close you land and hold chosen notes", "Same three notes, weekly"] },
         { label: "Range", cells: ["Range test", "Comfortable lowest and highest notes", "Every four to six weeks"] },
         { label: "Tone and phrasing", cells: ["Recorder A/B compare", "Steadiness and ease against an older take", "Every two weeks"] },
-        { label: "Consistency", cells: ["Progress page", "Saved range, streaks and sessions", "Glance weekly"] },
+        { label: "Consistency", cells: ["Progress page", "Saved range, streaks and XP", "Glance weekly"] },
         { label: "Structure", cells: ["Programs", "Which stage of a multi-week plan you are in", "Each session"] },
       ],
     },
@@ -249,7 +249,7 @@ export const howLongToLearnToSing: BlogPost = {
       youtubeId: "iJF2WXyO7ck",
       title: "How long does it ACTUALLY take to learn to sing",
       channel: "Adam Mishan",
-      why: "A voice teacher's view on what changes first and why steady practice beats quick fixes.",
+      why: "A second voice teacher answers the same question, so you can compare two coaches' timelines.",
     },
   },
   faq: [
@@ -282,7 +282,7 @@ export const howLongToLearnToSing: BlogPost = {
     { href: "/programs", label: "Practice programs", blurb: "Multi-week plans that schedule each day's focus, from baseline to songs." },
     { href: "/learn/voice", label: "Free voice course", blurb: "Lessons in order, from setting up your space to singing through the break." },
     { href: "/range?mode=range#start", label: "Free range test", blurb: "Find your comfortable lowest and highest notes and save them as a baseline." },
-    { href: "/progress", label: "Progress", blurb: "Your saved range, streaks and session history in one place." },
+    { href: "/progress", label: "Progress", blurb: "Your saved range, streaks and XP in one place." },
     { href: "/recorder", label: "Recorder", blurb: "Record takes and A/B today against last month." },
     { href: "/book/when-numbers-lie", label: "When numbers lie", blurb: "A book chapter on the readings worth ignoring and why trends beat single days." },
     { href: "https://strumly.suedeai.ai", label: "Strumly", blurb: "An AI guitar coach for singer-songwriters who want to accompany themselves." },

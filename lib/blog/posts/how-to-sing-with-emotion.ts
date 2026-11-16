@@ -4,7 +4,7 @@ const body = `## How to sing with emotion: the short answer
 
 To sing with emotion, you decide what each line means before you sing it, then let that meaning steer four things you can control: how loud you are, where you breathe and lean in the phrase, what color your tone has, and how you shape the starts and ends of notes. Feeling the song helps, but listeners only hear the choices that feeling produces. So the work is to find the story in the lyric, make a few deliberate choices per section, record yourself, and check whether those choices actually come across.
 
-That means expression is trainable. Below: a lyric method borrowed from actors, five expressive tools, drills with timings, a 2-week plan, and the mistakes that make emotional singing sound forced.
+You can train all of that. Below are a lyric method borrowed from actors, five expressive tools, drills with timings, a 2-week plan, and the mistakes that make emotional singing sound forced.
 
 ## Why "just feel it" does not work
 
@@ -12,17 +12,17 @@ Most singers have been told to "sing from the heart." The advice is well meant, 
 
 Expression on a recording is made of measurable things: loudness that changes over a phrase, syllables of different lengths, tone that brightens or darkens, notes that start and end in different ways. Change those deliberately and a listener reads emotion into them. Change none of them and even a heartfelt performance sounds flat.
 
-So think of emotion as the reason and expression as the method. The reason chooses; the method delivers.
+Let the feeling decide what you want to say, then use those controls to say it.
 
 ## Step 1: Speak the lyric as a monologue
 
-Before you sing a note, take the melody away. Print or write out the lyric with no line breaks and read it aloud as if you were saying it to one real person. This is the single most useful thing you can do, and most singers skip it.
+Before you sing a note, take the melody away. Print or write out the lyric with no line breaks and read it aloud as if you were saying it to one real person. It is one of the most useful things you can do, and many singers skip it.
 
 Read it three times:
 
 - **First read, plain.** Just the words, at speaking speed. Notice which words you naturally stress.
 - **Second read, to someone.** Pick who you are talking to and say it to them. Your voice will change on its own: it gets quieter on the private lines and firmer on the ones you mean most.
-- **Third read, with the subtext.** Under each line, write in pencil what you *actually* mean. "I hope you're happy" might mean "I am not over you." The sung line carries the subtext, not the dictionary meaning.
+- **Third read, with the subtext.** Under each line, write in pencil what you *actually* mean. "I hope you're happy" might mean "I am not over you." Sing the subtext.
 
 ### Who, where, why
 
@@ -40,7 +40,7 @@ Go back to your spoken read and underline the one or two words per line you lean
 
 ## Step 2: Give each section an intention
 
-A song is not one emotion. Verses usually tell the story, pre-choruses build pressure, and choruses state the point. Give each section a one-word intention and a matching set of choices. This keeps you from singing the whole song at one level, which is the most common reason a performance feels flat.
+Most songs move through more than one feeling. Verses usually tell the story, pre-choruses build pressure, and choruses state the point. Give each section a one-word intention and a matching set of choices. This keeps you from singing the whole song at one level, which is the most common reason a performance feels flat.
 
 ::infographic intention
 
@@ -56,7 +56,7 @@ Dynamics are changes in loudness, and they are the most powerful tool you have. 
 
 ### Phrasing and timing
 
-Phrasing is how you group the words and where you breathe. Breathing in the middle of a thought breaks it; breathing at the comma keeps it whole. Timing matters too. Singing a word slightly behind the beat can sound relaxed, wistful or weary, a habit jazz singers like [Billie Holiday](/singers/billie-holiday) made famous. Singing slightly ahead can sound urgent. This kind of push and pull is often called rubato. Keep it small and come back to the beat by the end of the phrase, or the band (or backing track) will leave you behind.
+Phrasing is how you group the words and where you breathe. Breathing in the middle of a thought breaks it; breathing at the comma keeps it whole. Timing matters too. Singing a word slightly behind the beat can sound relaxed, wistful or weary, a habit jazz singers like [Billie Holiday](/singers/billie-holiday) made famous, often called back-phrasing or laying back. Singing slightly ahead can sound urgent. Stretching and pulling time like this is a form of rubato. Keep it small and come back to the beat by the end of the phrase, or the band (or backing track) will leave you behind.
 
 ### Tone color
 
@@ -68,7 +68,7 @@ How a note starts and ends carries feeling. A gentle onset sounds tender. A clea
 
 ### Face and body
 
-Your face changes your sound: a slight lift in the cheeks brightens the tone, and an audience reads your face before the words. Let your expression match the subtext, keep the jaw and neck free, and avoid grimacing on high notes, which usually means effort has moved into the throat.
+Your face affects your sound: many singers find a slight lift in the cheeks brightens the tone, and an audience sees your face before it takes in the words. Let your expression match the subtext, keep the jaw and neck free, and avoid grimacing on high notes, which usually means effort has moved into the throat.
 
 ::infographic choices
 
@@ -78,7 +78,7 @@ Pick one singer and one song, and listen for a single tool at a time: dynamics, 
 
 - [Adele](/singers/adele) builds songs from intimate, conversational verses to full choruses. Listen to [Someone Like You](/can-you-sing/someone-like-you) for how small the first verse is.
 - [Aretha Franklin](/singers/aretha-franklin) shows how gospel ornaments and strong word stress can make a line feel like testimony.
-- [Billie Holiday](/singers/billie-holiday) is a masterclass in timing and understatement, with a modest range used for maximum meaning.
+- [Billie Holiday](/singers/billie-holiday) is the model for timing and understatement, with a modest range used for maximum meaning.
 - [Freddie Mercury](/singers/freddie-mercury) moves between tender and theatrical within a single song, using huge dynamic contrast.
 - [Amy Winehouse](/singers/amy-winehouse) and [Etta James](/singers/etta-james) bend pitch and play with the beat in ways that sound like speech.
 
@@ -142,22 +142,22 @@ If your voice feels tired, stop for the day.
 
 ## How to measure progress with Suede Sing
 
-Expression is subjective, but you can still check it with evidence.
+Expression is subjective, but your recordings and the pitch readout still give you evidence.
 
 - **Recorder.** Your main tool. Record the same section every few days and listen back a day later, with fresh ears. Ask: could a stranger tell which line matters most? The [recorder](/recorder) keeps your takes so you can compare them with your baseline.
-- **Pitch studio.** Emotional choices often knock pitch off. In the [studio](/studio), the cents readout tells you how far you are from the target note. A deliberate scoop that lands in the center is fine. A quiet line that ends 30 or 40 cents flat points to a support problem, and the [on-pitch guide](/blog/how-to-sing-on-pitch) will help.
+- **Pitch studio.** Emotional choices often knock pitch off. In the [studio](/studio), the cents readout tells you how far you are from the target note. A deliberate scoop that lands in the center is fine. A quiet line that keeps ending 30 or 40 cents flat often means your breath support dropped with the volume, and the [on-pitch guide](/blog/how-to-sing-on-pitch) will help.
 - **Voice analyzer.** The [analyzer](/analyze) shows a spectrogram, so you can see your vibrato appear, and see a breathy tone (more noise, weaker upper harmonics) next to a brighter one.
-- **Comfort after singing.** Your voice should feel the same or better after an expressive run as before it. That is the measure that keeps everything else sustainable.
+- **Comfort after singing.** Your voice should feel the same or better after an expressive run as before it. If it feels worse, scale the effects back.
 
 ## Common mistakes and how to fix them
 
 ### Over-emoting
 
-Sobbing, heavy scoops on every word, constant breathiness and big vibrato everywhere. Listeners hear effort rather than feeling. **Fix:** pick one main tool per section and leave the rest neutral. Restraint makes the big moment land.
+Sobbing, heavy scoops on every word, constant breathiness and big vibrato everywhere. Listeners hear the effort more than the feeling. **Fix:** pick one main tool per section and leave the rest neutral. Restraint makes the big moment land.
 
 ### Squeezing to sound intense
 
-Raw emotion often shows up as throat tension: a pressed, tight sound, a jaw that clamps, a neck that sticks out. It can make you hoarse within a song. **Fix:** get intensity from word stress, timing and resonance instead. The course lessons on [what a growl actually is](/learn/voice/signature/effects-carefully/what-a-growl-actually-is) and [effects with a stop plan](/learn/voice/signature/effects-carefully/effects-listening-and-a-stop-plan) show how to add grit without damage, and our [belting guide](/blog/how-to-belt-without-straining) covers big sounds safely.
+Raw emotion often shows up as throat tension: a pressed, tight sound, a jaw that clamps, a neck that sticks out. It can make you hoarse within a song. **Fix:** get intensity from word stress, timing and resonance instead. The course lessons on [what a growl actually is](/learn/voice/signature/effects-carefully/what-a-growl-actually-is) and [effects with a stop plan](/learn/voice/signature/effects-carefully/effects-listening-and-a-stop-plan) explain what grit is, when to stop, and why it is best learned with a teacher listening, and our [belting guide](/blog/how-to-belt-without-straining) covers big sounds safely.
 
 ### Same level all the way through
 
@@ -203,7 +203,7 @@ export const howToSingWithEmotion: BlogPost = {
   ],
   published: "2026-11-16",
   updated: "2026-11-16",
-  readMinutes: 11,
+  readMinutes: 12,
   category: "Practice",
   answer:
     "To sing with emotion, decide what each line means before you sing it, then let that meaning shape your dynamics, phrasing, tone color and the way notes start and end. Speak the lyric as a monologue, give each section one intention, and record yourself to check that the choices come across without straining your voice.",

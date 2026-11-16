@@ -2,11 +2,11 @@ import type { BlogPost } from "../types";
 
 const body = `## Can anyone learn to sing? Yes, almost everyone
 
-Can anyone learn to sing? For the vast majority of people, yes. Singing is a skill made of two trainable parts: hearing a pitch clearly in your head, and coordinating breath, vocal folds and throat to produce it. Both improve with practice, the same way handwriting or a tennis serve does. What varies from person to person is the starting point and the speed, not whether improvement is possible.
+Can anyone learn to sing? For the vast majority of people, yes. Singing is a skill made of two trainable parts: hearing a pitch clearly in your head, and coordinating breath, vocal folds and throat to produce it. Both improve with practice, the same way handwriting or a tennis serve does. What varies from person to person is the starting point and the speed. The exceptions are few: a small share of people have a real pitch-perception difference (covered below), and some voice problems need a doctor before practice can help.
 
-If you have been told you "can't sing," that verdict was almost certainly a snapshot of an untrained voice. Children who sing a lot at home tend to arrive at adulthood with years of informal practice behind them. Children who were shushed, or who simply never sang, arrive with none. The gap you hear between those two adults is mostly a practice gap.
+If you have been told you "can't sing," that verdict was most likely a snapshot of an untrained voice. Children who sing a lot at home tend to arrive at adulthood with years of informal practice behind them. Children who were shushed, or who simply never sang, arrive with none. The gap you hear between those two adults is mostly a practice gap.
 
-This article walks through what the research says about tone deafness, what talent really contributes, a five-minute self-test you can run today in the [pitch studio](/studio), what improves quickly and what takes longer, and a two-week plan to get you started.
+To find out where you stand, run the five-minute self-test below in the [pitch studio](/studio), then follow the two-week plan further down.
 
 ## What "tone deaf" usually means (and what it doesn't)
 
@@ -33,7 +33,7 @@ Almost everything listeners actually notice in a good amateur singer is trained:
 
 ::infographic talent-vs-training
 
-Plenty of widely loved singers built careers on voices that are distinctive rather than conventionally polished. Look at the profiles for [Bob Dylan](/singers/bob-dylan) or [Leonard Cohen](/singers/leonard-cohen) and notice that a modest range did not stop either from being heard. Your goal does not have to be an operatic instrument. It can be singing a song you love, in tune, in a key that suits you.
+Plenty of widely loved singers built careers on voices that are distinctive rather than conventionally polished. Look at the profiles for [Bob Dylan](/singers/bob-dylan) or [Leonard Cohen](/singers/leonard-cohen) and notice that neither built a career on a conventionally polished tone. Your goal does not have to be an operatic instrument. It can be singing a song you love, in tune, in a key that suits you.
 
 ## The five-minute self-test: where are you starting?
 
@@ -96,7 +96,7 @@ Adults learn motor skills well. You may not have the hours a child has, but you 
 A few things are specific to adult beginners:
 
 - **Self-consciousness is the biggest obstacle.** Many adults stopped singing because someone laughed. Practice where nobody can hear you at first. The guide to [practicing singing at home](/blog/how-to-practice-singing-at-home) covers quiet setups and short routines.
-- **Your speaking habits come with you.** If you speak low, pressed or breathy, those patterns show up in your singing. That is useful information, not a flaw.
+- **Your speaking habits come with you.** If you speak low, pressed or breathy, those patterns show up in your singing. Knowing that tells you what to adjust first.
 - **Choose songs in your key.** Most recordings are pitched for the original singer. Check whether a song fits on a page such as [Can you sing Hallelujah?](/can-you-sing/hallelujah) and move the key if it does not. The lesson [your key, not the record's key](/learn/voice/steady-tone/first-song-one-register/your-key-not-the-records-key) explains why this matters so much.
 - **Voices change with age but keep working.** Older voices can still gain accuracy, steadiness and confidence. Gentle warmups and regular use help a great deal.
 
@@ -134,7 +134,7 @@ Start each session with a short routine from [warmups](/warmups). When the two w
 
 Nerves can make pitch wobble too, even when your technique is fine in private. If singing for others is your goal, the guide on [overcoming stage fright](/blog/how-to-overcome-stage-fright-when-singing) has practical steps.
 
-## How to measure progress honestly
+## How to measure progress
 
 Feelings are unreliable judges of progress. You will have days when you sound worse because you are tired, and days when everything clicks for no clear reason. Use tools that keep a record.
 
@@ -142,8 +142,6 @@ Feelings are unreliable judges of progress. You will have days when you sound wo
 - **The range test.** Retest every few weeks under similar conditions: same time of day, same room, similar warmup. The chapter [when the numbers lie](/book/when-numbers-lie) explains what can skew a reading.
 - **The recorder.** Record the same phrase every week. Comparing a take from today with one from a month ago tells you about tone, steadiness and confidence in a way a number cannot.
 - **Your [progress](/progress) page.** It keeps your latest range and session scores in one place so you can see trends rather than single days.
-
-Look for direction over a month, not perfection in a session.
 
 ## When to see a voice teacher or a doctor
 
@@ -157,7 +155,7 @@ See a doctor, ideally a laryngologist (an ear, nose and throat specialist who fo
 
 ## The short answer, again
 
-If you can hear the difference between in tune and out of tune, you can learn to sing in tune. Start where you are, practice a little most days, measure with tools instead of moods, and give your voice a few months before you decide what it can do. Most people are surprised by how much changes.`;
+If you can hear the difference between in tune and out of tune, you can learn to sing in tune. Start where you are, practice a little most days, measure with tools instead of moods, and give your voice a few months before you decide what it can do. Then compare your recordings and let them answer the question.`;
 
 const answer =
   "Yes, for the vast majority of people. Singing is a learnable skill that combines hearing a pitch and coordinating your voice to produce it, and both improve with regular practice. True tone deafness (congenital amusia) is uncommon, and most people who think they are tone deaf have an untrained voice, not a hearing problem.";
@@ -165,7 +163,7 @@ const answer =
 export const canAnyoneLearnToSing: BlogPost = {
   slug: "can-anyone-learn-to-sing",
   title: "Can Anyone Learn to Sing? What Talent Really Means and How to Start",
-  seoTitle: "Can Anyone Learn to Sing? The Honest Answer",
+  seoTitle: "Can Anyone Learn to Sing? Test Yourself First",
   description:
     "Can anyone learn to sing? Yes for most people. Test your pitch in five minutes, see what talent really adds, and follow a two-week starter plan.",
   primaryKeyword: "can anyone learn to sing",

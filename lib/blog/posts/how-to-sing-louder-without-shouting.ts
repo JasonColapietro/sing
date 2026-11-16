@@ -4,6 +4,8 @@ const body = `## How to sing louder: the short answer
 
 To sing louder, raise the breath pressure under your vocal folds a little, let the folds close more firmly to meet it, and shape your vowels so the throat and mouth amplify the sound. Brightness from twang and open vowels does much of the work. Pushing more air, tightening your neck or lifting your chin only makes the sound tighter and sharper, and it tires your voice fast.
 
+Try this one-minute test. Call "hey!" across the room as if to a friend, then sing "hey" on the same note with the same energy. If the sung version came out nearly as loud and felt just as easy, you already have the coordination this guide builds on. If it went tight or quiet, the drills below close that gap.
+
 Most people who want to sing louder already have enough volume in them. What they lack is a way to reach it without the throat taking over. This guide explains where vocal loudness comes from, the difference between volume and projection, six drills with reps and timings, a two-week plan, the mistakes that turn singing into shouting, and how to check your progress with the [recorder](/recorder), the [voice analyzer](/analyze) and the [pitch studio](/studio).
 
 ## Where loudness comes from
@@ -12,7 +14,7 @@ Three things set how loud you are, and only one of them is about air.
 
 ### 1. Breath pressure under the folds
 
-Your lungs build air pressure below the closed vocal folds. Voice scientists call it subglottal pressure, and it is the main driver of loudness: more pressure makes each puff of air through the folds stronger. The amount you need for a loud note is still modest. You are managing pressure, not blowing hard. The glossary's [breath support](/glossary#breath-support) entry puts it well: a management job, not a strength one.
+Your lungs build air pressure below the closed vocal folds. Voice scientists call it subglottal pressure, and it is the main driver of loudness: more pressure makes each puff of air through the folds stronger. The amount you need for a loud note is still modest. The glossary's [breath support](/glossary#breath-support) entry describes it well: a management job rather than a strength one.
 
 ### 2. Firm, efficient fold closure
 
@@ -44,13 +46,13 @@ Warm up for five minutes first with lip trills or a straw. The lesson on [straw 
 
 ### Drill 1: The steady hiss (2 minutes)
 
-Breathe in low and easy, with your ribs widening, then hiss on "sss" for 12 seconds at an even level. Do 4 reps with a rest between. Then do 2 reps where the hiss grows slightly louder over the 12 seconds, without your shoulders or neck joining in. This teaches you to raise pressure gradually with the torso doing the work. The lesson [hiss for twelve](/learn/voice/room-check/breathe-low/hiss-for-twelve) has the full version, and the [breath room](/breath) can score how steady the hiss is.
+Breathe in low and easy, with your ribs widening, then hiss on "sss" for 12 seconds at an even level. Do 4 reps with a rest between. Then do 2 reps where the hiss grows slightly louder over the 12 seconds, without your shoulders or neck joining in. This teaches you to raise pressure gradually with the torso doing the work. The lesson [hiss for twelve](/learn/voice/room-check/breathe-low/hiss-for-twelve) has the full version, and the sustain test in the [breath room](/breath) will time it for you.
 
 ### Drill 2: Swell and fade (4 minutes)
 
-This is the classic messa di voce: one held note that grows from soft to medium-loud and fades back while the pitch stays still. Pick a comfortable note in your middle range. Sing "ah" for 8 counts: 4 counts growing, 4 counts fading. Do 6 reps, moving up a semitone each time, then back down. The [Swell and fade warmup](/warmups?exercise=swell-and-fade) scores the pitch while the volume moves, so you can see whether the louder part pulls you sharp. See the glossary entry on [swell and fade](/glossary#swell-and-fade).
+This is the classic messa di voce: one held note that grows from soft to a comfortable medium and fades back while the pitch stays still. Pick a comfortable note in your middle range. Sing "ah" for 8 counts: 4 counts growing, 4 counts fading. Do 6 reps, moving up a semitone each time, then back down. The [Swell and fade warmup](/warmups?exercise=swell-and-fade) scores the pitch while the volume moves, so you can see whether the louder part pulls you sharp. See the glossary entry on [swell and fade](/glossary#swell-and-fade).
 
-Keep the peak at medium-loud for the first week. The drill trains control of the change, and that control is what lets you get loud later without a jolt of pressure.
+Keep the peak at a comfortable medium for the first week, which is where the warmup itself tops out. The drill trains control of the change, and that control is what lets you get loud later without a jolt of pressure.
 
 ### Drill 3: Speech-level calls (3 minutes)
 
@@ -88,7 +90,7 @@ Keep each session to 15 to 20 minutes. Loud singing adds to your [vocal dose](/g
 
 | Day | Session | Focus |
 |---|---|---|
-| 8 | Full drill set | Raise the swell peak from medium-loud to loud |
+| 8 | Full drill set | Raise the swell peak from medium to medium-loud, no further than you can hold in tune |
 | 9 | Light day | Quiet sirens and a cool-down |
 | 10 | Drills 2 to 5, then one chorus | Pick a chorus in your comfortable range |
 | 11 | Rest | |
@@ -117,8 +119,8 @@ Two of these deserve more attention. First, loud playback. When you cannot hear 
 Listen to how powerful singers build volume. They rarely start a song at full level, and their loudest notes are usually bright and open rather than strained.
 
 - [Adele](/singers/adele): a full chest-voice sound in a comfortable middle, with the chorus growing from a quieter verse.
-- [Luciano Pavarotti](/singers/luciano-pavarotti): carried over a full orchestra with no microphone, thanks to ring and clear vowels rather than force.
-- [Freddie Mercury](/singers/freddie-mercury): a bright rock voice that sounds huge, with lots of twang and short peaks.
+- [Luciano Pavarotti](/singers/luciano-pavarotti): filled opera houses over a full orchestra without a microphone, using ring and clear vowels rather than force.
+- [Freddie Mercury](/singers/freddie-mercury): a bright rock voice with plenty of twang, which helps it cut through a loud band.
 
 Each profile shows where the singer's range sits, which helps you pick songs that let you get loud in your own comfortable zone.
 
@@ -184,14 +186,14 @@ export const howToSingLouder: BlogPost = {
       title: "How loud voices get, roughly",
       unit: "dB SPL (approximate)",
       bars: [
-        { label: "Quiet speech", value: 45, note: "at about 1 m" },
-        { label: "Conversational speech", value: 60, note: "at about 1 m" },
-        { label: "Raised voice", value: 70, note: "at about 1 m" },
-        { label: "Shouting", value: 85, note: "at about 1 m" },
-        { label: "Loud trained singing", value: 100, note: "close range; strong classical voices can exceed 110" },
+        { label: "Normal speech", value: 62, note: "at about 1 m" },
+        { label: "Raised voice", value: 68, note: "at about 1 m" },
+        { label: "Loud speech", value: 75, note: "at about 1 m" },
+        { label: "Shouting", value: 82, note: "at about 1 m" },
+        { label: "Loud trained singing", value: 100, note: "measured close to the mouth, so not directly comparable; strong classical voices can go higher" },
       ],
       source:
-        "Typical sound pressure levels from voice science and hearing-conservation references. Figures are approximate and depend heavily on distance: in open space the level drops about 6 dB each time the distance doubles.",
+        "Speech levels follow the standard vocal-effort figures used in speech-intelligibility work (ANSI S3.5); the singing figure is a typical close-microphone measurement. All values are approximate and depend heavily on distance: in open space the level drops about 6 dB each time the distance doubles.",
     },
     compare: {
       kind: "compare",
@@ -252,7 +254,7 @@ export const howToSingLouder: BlogPost = {
   faq: [
     {
       q: "Why can't I sing loud?",
-      a: "Usually the folds are not closing cleanly, so air leaks and the tone stays breathy, or the vowel shape is not boosting the sound. Less often, nerves or loud playback make you hold back. Clean onsets, speech-level calls and twang drills tend to unlock volume quickly.",
+      a: "Usually the folds are not closing cleanly, so air leaks and the tone stays breathy, or the vowel shape is not boosting the sound. Less often, nerves or loud playback make you hold back. Clean onsets, speech-level calls and twang drills usually bring the volume up within a couple of weeks.",
     },
     {
       q: "Does singing from the diaphragm make you louder?",

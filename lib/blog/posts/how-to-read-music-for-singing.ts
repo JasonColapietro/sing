@@ -42,7 +42,7 @@ Once you have taken the [range test](/range?mode=range#start), find your lowest 
 
 ## Rhythm: note values and how to count them
 
-Pitch gets the attention, but most sight-singing mistakes are rhythm mistakes. The good news is that rhythm is arithmetic.
+Pitch gets the attention, but many sight-singing mistakes are rhythm mistakes, and rhythm is arithmetic you can count.
 
 The time signature at the start is two stacked numbers. The top number is how many beats are in each bar. The bottom number says which note gets one beat: 4 means a quarter note, 8 means an eighth note. In 4/4, the most common time in popular music, each bar holds four quarter-note beats. In 3/4 it holds three, which is the waltz feel of "Amazing Grace." In 6/8 there are six eighth notes grouped as two big beats of three.
 
@@ -68,11 +68,12 @@ Every major key shares its signature with a minor key three semitones lower, its
 
 ## Intervals: reading distance instead of names
 
-Here is the shift that turns note-reading into singing. Fluent sight-singers rarely think "that's an F, now an A." They see that the next note is two lines up and hear the leap before they sing it. That distance is an [interval](/glossary#interval), and it shows on the staff as a shape:
+Reading distance turns note-reading into singing. Fluent sight-singers rarely think "that's an F, now an A." They see that the next note is two lines up and hear the leap before they sing it. That distance is an [interval](/glossary#interval), and it shows on the staff as a shape:
 
 - **Line to the next space, or space to the next line:** a step (a second).
 - **Line to the next line, or space to the next space:** a third.
-- **Skipping two lines or two spaces:** a fifth.
+- **Line to a space with one line between, or space to a line with one space between:** a fourth.
+- **Line to the line two above (skipping one line), or space to the space two above:** a fifth.
 
 Steps are where most melodies live. Thirds outline chords. Fourths, fifths and octaves are the leaps that announce a chorus. Learn to hear each one by hooking it to the opening of a song you already know.
 
@@ -80,13 +81,13 @@ Steps are where most melodies live. Thirds outline chords. Fourths, fifths and o
 
 The song cue only works if the song is genuinely automatic for you. Swap in your own if one of these is unfamiliar. Several are in the song library, so you can sing them with feedback: [Twinkle Twinkle Little Star](/songs/twinkle-twinkle-little-star) for the fifth, [Amazing Grace](/songs/amazing-grace) for the fourth, [When the Saints Go Marching In](/songs/when-the-saints-go-marching-in) for the major third and [My Bonnie Lies Over the Ocean](/songs/my-bonnie-lies-over-the-ocean) for the major sixth.
 
-Then drill them. The interval game in [ear training](/ear-training) plays two notes and asks you to name the distance. Name it, then sing it back before moving on, because naming an interval and producing one are separate skills and only the second improves your reading.
+Then drill them. Interval ID in [ear training](/ear-training) plays two notes and asks you to name the distance. Easy starts with the major third, fifth and octave, Medium adds the minor third, fourth and major sixth, and Hard covers every interval up to the octave with both notes sounding together. Name it, then sing it back before moving on, because naming an interval and producing one are separate skills and only the second improves your reading.
 
 ## Solfège: a name for every note in the key
 
 Solfège gives each degree of the scale a syllable: do, re, mi, fa, sol, la, ti, do. Most singers know it from "Do-Re-Mi," which [Julie Andrews](/singers/julie-andrews) sang in *The Sound of Music*. The version that helps sight-singing is **movable do**: do is always the home note of the current key. In C major, do is C. In G major, do is G.
 
-That sounds like a small detail, and it does most of the work. Each syllable carries a feeling tied to its place in the key. Ti leans hard toward do. Fa wants to fall to mi. Sol feels stable and open. After a few weeks you stop calculating and start recognizing, because "mi to sol" sounds the same in every key.
+This choice does most of the work. Each syllable carries a feeling tied to its place in the key. Ti leans hard toward do. Fa wants to fall to mi. Sol feels stable and open. After a few weeks you stop calculating and start recognizing, because "mi to sol" sounds the same in every key.
 
 A few more pieces complete the system:
 
@@ -112,15 +113,15 @@ Choral singers often read off the harmony as much as the melody, so once single 
 
 ## A daily 10-minute plan for two weeks
 
-Short and daily beats long and weekly here. Reading is memory work, and memory builds with repetition and sleep. Warm up first with a few straw or lip-trill slides, then run the plan.
+Ten minutes a day works better than one long weekly session. Reading is memory work, and memory builds with repetition and sleep. Warm up first with a few straw or lip-trill slides, then run the plan.
 
 | Days | Minutes 1 to 3 | Minutes 4 to 7 | Minutes 8 to 10 |
 |---|---|---|---|
 | Days 1 to 3 | Name treble or bass staff notes aloud, then play each on the keyboard | Count and clap four bars in 4/4 with the metronome at 60 | Sing do-re-mi-fa-sol up and down over a drone on do |
-| Days 4 to 5 | Find do from five key signatures | Interval game in ear training: seconds and thirds | Sing do-mi-sol-mi-do and do-re-mi-re-do in two keys |
-| Days 6 to 7 | Clap a line with eighth notes and rests | Interval game: add fourths and fifths | Sight-sing one four-bar line using the six steps |
-| Days 8 to 10 | Speak a new line on solfège in rhythm | Melody playback game: three to five notes | Sight-sing two new lines; record the second |
-| Days 11 to 14 | Read a melody from a songbook in your clef | Interval game: add sixths and the octave | Sight-sing a full eight-bar phrase, then check it in the pitch studio |
+| Days 4 to 5 | Find do from five key signatures | Interval ID on Easy: major third, fifth and octave | Sing do-mi-sol-mi-do and do-re-mi-re-do in two keys |
+| Days 6 to 7 | Clap a line with eighth notes and rests | Interval ID on Medium: adds the minor third, fourth and major sixth | Sight-sing one four-bar line using the six steps |
+| Days 8 to 10 | Speak a new line on solfège in rhythm | Melody echo on Easy, then Medium: three or four notes | Sight-sing two new lines; record the second |
+| Days 11 to 14 | Read a melody from a songbook in your clef | Interval ID on Hard: every interval to the octave | Sight-sing a full eight-bar phrase, then check it in the pitch studio |
 
 On rest days, or if your voice feels tired, keep the first two columns and skip the singing. You can read and clap silently for a week and still improve.
 
@@ -129,7 +130,7 @@ On rest days, or if your voice feels tired, keep the first two columns and skip 
 Reading is easy to fool yourself about. These checks show whether you are actually landing the notes.
 
 - **Pitch studio cents readout.** Sing your sight-read line in the [pitch studio](/studio). It shows the note you sang and how many cents above or below the target you are. A cent is one hundredth of a semitone. Wrong notes show up as a whole lane off; tuning drift shows as a steady lean in cents. [How to sing on pitch](/blog/how-to-sing-on-pitch) covers what to do with each.
-- **Ear-training scores.** Every game is scored on its ten rounds and your best score per level is kept, so you can see the interval game climb from week one to week two.
+- **Ear-training scores.** Every game runs ten rounds, and your best score at each difficulty is saved in your browser, so you can watch Interval ID climb from week one to week two.
 - **The recorder.** Record one new line on day 1 and a different line of similar difficulty on day 14 in the [recorder](/recorder). Listen for hesitation before leaps and for rhythm that rushes on long notes.
 - **Your range on the page.** Write the two numbers from your [range test](/range?mode=range#start) above a staff in your clef. Any melody inside them is one you can read and sing today; anything outside is a candidate for transposing.
 
@@ -155,7 +156,7 @@ Sight-reading itself should not strain your voice. It is mostly quiet singing in
 
 ## Where to go next
 
-Reading opens up the whole repertoire. Look up how professionals with strong reading backgrounds phrase a written line: [Ella Fitzgerald](/singers/ella-fitzgerald) is famous for intonation and scat lines that sit on the chord tones you are learning to see. Use the [glossary](/glossary) when a score throws an unfamiliar term at you, and keep the routine going with [how to practice singing at home](/blog/how-to-practice-singing-at-home) once reading becomes part of your normal session.`;
+Reading opens up the whole repertoire. For a model of accurate pitch, listen to [Ella Fitzgerald](/singers/ella-fitzgerald), famous for her intonation and for scat lines built from the chord tones you are learning to see. Use the [glossary](/glossary) when a score throws an unfamiliar term at you, and keep the routine going with [how to practice singing at home](/blog/how-to-practice-singing-at-home) once reading becomes part of your normal session.`;
 
 export const howToReadMusicForSinging: BlogPost = {
   slug: "how-to-read-music-for-singing",
@@ -222,10 +223,10 @@ export const howToReadMusicForSinging: BlogPost = {
         { label: "Perfect 4th", cells: ["5", "F4", "Amazing Grace; Here Comes the Bride"] },
         { label: "Tritone", cells: ["6", "F#4", "Maria (West Side Story)"] },
         { label: "Perfect 5th", cells: ["7", "G4", "Twinkle Twinkle Little Star"] },
-        { label: "Minor 6th", cells: ["8", "Ab4", "The Entertainer (opening leap)"] },
+        { label: "Minor 6th", cells: ["8", "Ab4", "The Entertainer (3rd to 4th note)"] },
         { label: "Major 6th", cells: ["9", "A4", "My Bonnie Lies Over the Ocean"] },
-        { label: "Minor 7th", cells: ["10", "Bb4", "Somewhere (West Side Story)"] },
-        { label: "Major 7th", cells: ["11", "B4", "Take On Me (chorus)"] },
+        { label: "Minor 7th", cells: ["10", "Bb4", "Somewhere (West Side Story): There's a"] },
+        { label: "Major 7th", cells: ["11", "B4", "No reliable cue: sing an octave up, then step down a semitone"] },
         { label: "Octave", cells: ["12", "C5", "Somewhere Over the Rainbow"] },
       ],
     },
@@ -298,7 +299,7 @@ export const howToReadMusicForSinging: BlogPost = {
     },
   ],
   related: [
-    { href: "/ear-training", label: "Ear training", blurb: "Interval, pitch-matching and melody playback games scored over ten rounds." },
+    { href: "/ear-training", label: "Ear training", blurb: "Interval ID, pitch match, melody echo and two more games, ten rounds each." },
     { href: "/tools", label: "Practice tools", blurb: "Browser keyboard, drone and metronome for finding do and counting rhythm." },
     { href: "/atlas/notes-octaves-and-the-keyboard", label: "Notes, octaves and the keyboard", blurb: "Scientific pitch notation in five minutes: what C4 and F#5 mean." },
     { href: "/learn/voice/pitch-time-words/on-the-beat/clap-it-then-sing-it", label: "Clap it, then sing it", blurb: "A free course lesson on counting and clapping rhythm before singing." },
