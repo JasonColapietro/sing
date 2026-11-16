@@ -3,8 +3,12 @@ import { POSTS as ALL } from "./posts";
 
 export type { BlogPost } from "./types";
 
-export const BLOG_PATH = "/blog";
-export const BLOG_NAME = "The Singer's Column";
+export const BLOG_PATH = "/guides";
+/** Where the column lived until 2026-11-16; next.config.ts redirects it here. */
+export const LEGACY_BLOG_PATH = "/blog";
+export const BLOG_NAME = "Singing Guides";
+/** The column's byline name, kept as the index kicker. */
+export const BLOG_KICKER = "The Singer's Column";
 
 /** Newest first. */
 export const POSTS: readonly BlogPost[] = [...ALL].sort((a, b) =>

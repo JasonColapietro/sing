@@ -70,7 +70,7 @@ export const LINKS: {
   { href: "/breath", label: "Breath" },
   { href: "/songs", label: "Songs" },
   { href: "/tools", label: "Tools", also: ["/recorder", "/analyze"] },
-  { href: "/learn", label: "Learn", also: ["/learn/voice", "/book", "/atlas", "/glossary", "/blog"] },
+  { href: "/learn", label: "Learn", also: ["/learn/voice", "/book", "/atlas", "/glossary", "/guides"] },
   { href: "/progress", label: "Progress" },
 ];
 

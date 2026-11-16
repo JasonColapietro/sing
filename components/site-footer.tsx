@@ -26,7 +26,7 @@ type FooterLink = {
 
 const REFERENCE: FooterLink[] = [
   { href: "/learn", label: "Learn to sing" },
-  { href: "/blog", label: "The Singer's Column: singing tips" },
+  { href: "/guides", label: "Singing guides" },
   { href: "/singers", label: "Famous singers' vocal ranges" },
   { href: "/singers/records", label: "Widest, lowest & highest ranges" },
   { href: "/singers/methodology", label: "Singer range methodology" },

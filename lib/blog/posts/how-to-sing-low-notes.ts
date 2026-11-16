@@ -162,13 +162,13 @@ Your lowest note may not move in two weeks, and that is normal. Measure the thin
 - **Tone.** Record the low hold in the [recorder](/recorder) on day 1 and day 14 and listen to the sound of the note, not only its pitch. Clear or gravelly, pressed or free, is something the app cannot judge for you.
 - **Range test.** Retest at the same time of day, after the same warmup, so a morning-voice reading does not fool you.
 
-For more on reading changes honestly, see [when numbers lie](/book/when-numbers-lie). If you are also working the other end of your voice, [how to sing high notes](/blog/how-to-sing-high-notes) covers the opposite skill, and [how to practice singing at home](/blog/how-to-practice-singing-at-home) helps you fit short low sessions into a week.
+For more on reading changes honestly, see [when numbers lie](/book/when-numbers-lie). If you are also working the other end of your voice, [how to sing high notes](/guides/how-to-sing-high-notes) covers the opposite skill, and [how to practice singing at home](/guides/how-to-practice-singing-at-home) helps you fit short low sessions into a week.
 
 ## When to see a voice teacher or a laryngologist
 
 A voice teacher is worth booking if your low notes always crack into fry at the same point, if you cannot stop your chin dipping, or if you are unsure which voice type you are. A teacher can hear how a note is made, which a pitch reading cannot show.
 
-See a doctor who can examine the vocal folds, such as an ENT or laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you speak or sing, sudden loss of voice, or if your low range drops and stays rough for no clear reason. Stop any session that scratches or hurts, and take a day off if you wake up hoarse. The article on a [sore throat after singing](/blog/sore-throat-after-singing) covers recovery in more detail.`;
+See a doctor who can examine the vocal folds, such as an ENT or laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you speak or sing, sudden loss of voice, or if your low range drops and stays rough for no clear reason. Stop any session that scratches or hurts, and take a day off if you wake up hoarse. The article on a [sore throat after singing](/guides/sore-throat-after-singing) covers recovery in more detail.`;
 
 export const howToSingLowNotes: BlogPost = {
   slug: "how-to-sing-low-notes",

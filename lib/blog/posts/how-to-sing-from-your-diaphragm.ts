@@ -156,13 +156,13 @@ Feelings about breath are unreliable, because a big effort feels like good suppo
 
 Do not expect breath work alone to add notes to your range. It makes the notes you have steadier and longer, which is often what makes a song feel easier. If you want to track range separately, the [range test](/range?mode=range#start) does that.
 
-For what comes next, steady breath is the foundation for [belting without straining](/blog/how-to-belt-without-straining) and for [singing high notes](/blog/how-to-sing-high-notes), and a free, even airflow is also what lets [natural vibrato](/blog/how-to-sing-with-vibrato) appear.
+For what comes next, steady breath is the foundation for [belting without straining](/guides/how-to-belt-without-straining) and for [singing high notes](/guides/how-to-sing-high-notes), and a free, even airflow is also what lets [natural vibrato](/guides/how-to-sing-with-vibrato) appear.
 
 ## When to see a voice teacher or a doctor
 
 A voice teacher is worth booking if you have practised low breathing for a few weeks and your phrases still collapse, if you cannot tell whether you are pushing, or if you sing demanding styles such as belt or classical repertoire. A teacher can see what your ribs and neck are doing in a way no app can.
 
-See a doctor, ideally an ENT or a laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you sing or speak, or a sudden loss of voice. Breathing problems in daily life, such as breathlessness climbing stairs or wheezing, are a medical question rather than a singing one. If your throat is sore after practice, read [what a sore throat after singing means](/blog/sore-throat-after-singing) before you push on.
+See a doctor, ideally an ENT or a laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you sing or speak, or a sudden loss of voice. Breathing problems in daily life, such as breathlessness climbing stairs or wheezing, are a medical question rather than a singing one. If your throat is sore after practice, read [what a sore throat after singing means](/guides/sore-throat-after-singing) before you push on.
 
 ::video appoggio
 `;

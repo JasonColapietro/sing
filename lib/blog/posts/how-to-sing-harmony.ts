@@ -6,7 +6,7 @@ To sing harmony, you sing a different note from the melody that fits the same ch
 
 This article builds them in order: hear thirds and sixths, sing them against a drone, then against a recording of the melody, then with real people. Every step works in the browser with the drone and keyboard in [practice tools](/tools), the games in [ear training](/ear-training), the cents readout in the [pitch studio](/studio) and the [recorder](/recorder).
 
-If a melody on its own still wanders, start with [how to sing on pitch](/blog/how-to-sing-on-pitch). A shaky unison becomes a shaky harmony.
+If a melody on its own still wanders, start with [how to sing on pitch](/guides/how-to-sing-on-pitch). A shaky unison becomes a shaky harmony.
 
 ## What harmony is, in plain terms
 
@@ -123,7 +123,7 @@ One tuning subtlety: on a keyboard a major third is 400 cents, while a pure, bea
 
 - Learn your notes from a keyboard or part recording before rehearsal, so rehearsal is for blend.
 - Match your neighbors' vowels. Different vowels on the same pitch sound out of tune.
-- Use straight tone or light vibrato when asked. A wide [vibrato](/blog/how-to-sing-with-vibrato) makes close harmony harder to tune.
+- Use straight tone or light vibrato when asked. A wide [vibrato](/guides/how-to-sing-with-vibrato) makes close harmony harder to tune.
 - Stagger breaths on long phrases so the section never drops out.
 
 ### In a band or a duet
@@ -158,7 +158,7 @@ About 15 to 20 minutes a day. Warm up with a lip trill or gentle hum, and stop i
 | 13 | Folk song from the library, harmony over the guide | Interval ID, Hard | Loop the bar where you drift |
 | 14 | Sing harmony with a friend or a full backing track | Retest Interval ID | Compare today's recorder take with day 9 |
 
-If a day goes badly, repeat it. For a broader way to fit this into a week, see [how to practice singing at home](/blog/how-to-practice-singing-at-home).
+If a day goes badly, repeat it. For a broader way to fit this into a week, see [how to practice singing at home](/guides/how-to-practice-singing-at-home).
 
 ## How to measure progress
 
@@ -186,7 +186,7 @@ The lesson on [drift correction](/learn/voice/pitch-time-words/in-tune-all-the-w
 
 A voice teacher or choir director helps when you can sing thirds against a drone but still lose your part with other people. They hear blend and vowel problems a meter will not show.
 
-See a doctor, ideally an ENT or laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you sing or speak, or a sudden loss of voice. If harmony tires you more than melody, you are probably pushing; [sore throat after singing](/blog/sore-throat-after-singing) covers what to do.
+See a doctor, ideally an ENT or laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you sing or speak, or a sudden loss of voice. If harmony tires you more than melody, you are probably pushing; [sore throat after singing](/guides/sore-throat-after-singing) covers what to do.
 
 > Learn your part well enough that you could sing it alone, then sing it softly next to someone else. That is most of harmony.
 `;
@@ -315,7 +315,7 @@ export const howToSingHarmony: BlogPost = {
     { href: "/tools", label: "Practice tools", blurb: "A drone, a C3 to C6 keyboard and a metronome for working out and tuning harmony notes." },
     { href: "/recorder", label: "Recorder", blurb: "Record a melody track, sing against it, and compare harmony takes side by side." },
     { href: "/songs", label: "Song library", blurb: "Public domain folk songs, hymns and rounds with a guide melody to harmonize over." },
-    { href: "/blog/how-to-sing-on-pitch", label: "How to sing on pitch", blurb: "The single-note accuracy that clean harmony is built on." },
+    { href: "/guides/how-to-sing-on-pitch", label: "How to sing on pitch", blurb: "The single-note accuracy that clean harmony is built on." },
     { href: "https://strumly.suedeai.ai", label: "Strumly", blurb: "An AI guitar coach for singer-songwriters who want to play the chords under their harmonies." },
     { href: "https://studio.suedeai.ai", label: "Suede Studio", blurb: "An AI music generator with stems, for making a backing track to practice harmony over." },
   ],

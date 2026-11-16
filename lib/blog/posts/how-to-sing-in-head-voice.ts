@@ -27,7 +27,7 @@ Falsetto is a useful color in soul, R&B, folk and indie. Head voice is the one y
 
 ### Head voice vs mix
 
-Mixed voice sits between the two. In mix, the TA and CT muscles share the work, so the tone keeps more of chest voice's weight and speech-like quality while staying light enough to climb. Head voice is lighter and rounder than mix. You need a working head voice before mix makes sense, because mix is built by bringing some of that lightness down into the middle of your voice. [How to find your mixed voice](/blog/how-to-find-your-mixed-voice) picks up where this article ends.
+Mixed voice sits between the two. In mix, the TA and CT muscles share the work, so the tone keeps more of chest voice's weight and speech-like quality while staying light enough to climb. Head voice is lighter and rounder than mix. You need a working head voice before mix makes sense, because mix is built by bringing some of that lightness down into the middle of your voice. [How to find your mixed voice](/guides/how-to-find-your-mixed-voice) picks up where this article ends.
 
 ::infographic registers
 
@@ -108,7 +108,7 @@ A head voice that only lives at the top of your range is half the job. Songs mov
 - **Narrow the vowel through the break.** As you climb, let "ah" become "uh" and "ee" lean toward "ih". The lesson on [vowel modification through the break](/learn/voice/through-the-break/vowel-modification-through-the-break) explains how much to change and when.
 - **Get quieter at the crack, not louder.** If the voice flips in the same place every time, approach that spot more softly on the next rep. Three slides through a rough spot is useful. Fifteen is rehearsing the problem.
 
-If the crack is your main concern, [why does my voice crack when I sing](/blog/why-does-my-voice-crack-when-i-sing) goes into causes in more detail, and [how to sing high notes](/blog/how-to-sing-high-notes) covers the full lighten-as-you-ascend approach.
+If the crack is your main concern, [why does my voice crack when I sing](/guides/why-does-my-voice-crack-when-i-sing) goes into causes in more detail, and [how to sing high notes](/guides/how-to-sing-high-notes) covers the full lighten-as-you-ascend approach.
 
 ## Common head voice mistakes and how to fix them
 

@@ -63,7 +63,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       ORG_PUBLISHER_NODE,
       AUTHOR_NODE,
       {
-        "@type": "BlogPosting",
+        "@type": "Article",
         "@id": `${url}#article`,
         mainEntityOfPage: { "@type": "WebPage", "@id": `${url}#webpage`, url },
         headline: post.title,
@@ -77,7 +77,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
         image: DEFAULT_OG_IMAGE.url,
         author: { "@id": AUTHOR_NODE["@id"] },
         publisher: { "@id": ORG_ID },
-        isPartOf: { "@type": "Blog", "@id": `${SITE_URL}${BLOG_PATH}#blog`, name: BLOG_NAME },
+        isPartOf: { "@type": "CollectionPage", "@id": `${SITE_URL}${BLOG_PATH}#webpage`, name: BLOG_NAME },
       },
       {
         "@type": "BreadcrumbList",
