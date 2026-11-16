@@ -12,7 +12,7 @@ Gospel grew out of the Black church in the United States. Its roots run through 
 
 That history matters for how you practice. Gospel is music made for a gathered community, to carry a message. The technique serves the testimony. When you study it, listen to whole services and live recordings as well as studio tracks, and treat the tradition with the respect you would give any music that people hold sacred.
 
-> A gospel singer is never singing at the congregation. They are singing with it, and the room answers back.
+> In gospel, the congregation is part of the arrangement. Leave it room to answer.
 
 ## The gospel sound, piece by piece
 
@@ -36,7 +36,7 @@ A gospel song usually starts calm and ends at full power. Volume is only one way
 
 ::infographic voices
 
-The singer profiles above show something useful: these voices have very different ranges, from Fred Hammond's low bass-baritone notes to CeCe Winans reaching C6. Gospel does not require a particular voice type. It asks you to use the range you have with conviction. Take the [vocal range test](/range?mode=range#start) so you know your own comfortable span before you pick keys.
+The singer profiles above show something useful: these voices have very different ranges, from Marvin Sapp's low E-flat at Eb2 to CeCe Winans and Yolanda Adams reaching C6. Gospel does not require a particular voice type. It asks you to use the range you have with conviction. Take the [vocal range test](/range?mode=range#start) so you know your own comfortable span before you pick keys.
 
 ## How to learn a gospel run
 
@@ -46,7 +46,7 @@ Runs are where many singers start, and also where many push too hard. The method
 
 ### Drill 1: the falling triplet ladder
 
-Sing 5-3-2-1 of a major pentatonic scale in triplet rhythm on "oh", starting in a key where 5 sits in the middle of your voice (around G4 for many higher voices, around D4 for many lower voices). Do 5 reps at a slow tempo, rest 30 seconds, then 5 reps one step faster. Stop at the speed where you can no longer count every note. The [three-note cell](/warmups?exercise=runs-three-note-cell) in Warmups is a good warm-in for this.
+Sing the falling cell 5-3-2-1 of a major pentatonic scale on "oh": 5, 3 and 2 as a triplet, then land on 1 on the next beat. Pick a key where 5 sits in the middle of your voice (around G4 for many higher voices, around D4 for many lower voices). Do 5 reps at a slow tempo, rest 30 seconds, then 5 reps about 10 percent faster. Stop at the speed where you can no longer count every note. The [three-note cell](/warmups?exercise=runs-three-note-cell) in Warmups is a good warm-in for this.
 
 ### Drill 2: the blue third lean
 
@@ -55,6 +55,8 @@ Sing a phrase that lands on the third of the key, and approach it from the flat 
 ### Drill 3: run into the word
 
 Take one line of a hymn you know, such as [Amazing Grace](/songs/amazing-grace), and put a three or four-note run on one important word only. Sing the line 5 times plain, then 5 times with the run. If the run makes the word harder to understand, simplify it. In gospel, the words come first.
+
+::video run
 
 ## Vamps, tags and modulations
 
@@ -90,8 +92,6 @@ The leader carries the story. You need stamina, a clear plan for the build, and 
 
 Praise and worship teams often sing in small groups with microphones, usually with one lead and two or three harmony singers. Mic technique and blend at lower volumes matter more here than raw power. Watch the worship leader for cues to repeat, drop out or move on.
 
-::video run
-
 ## A two-week plan for gospel singers
 
 Practice about 30 minutes a day, five or six days a week. Keep one full rest day, and keep the day after a long Sunday service light.
@@ -123,7 +123,7 @@ In week two, repeat the same pattern with three changes: raise the tempo of Dril
 
 ## Stamina and vocal health
 
-Gospel is one of the most demanding styles a voice can sing. Long services, several songs, rehearsals midweek and high-energy belting add up to a large [vocal dose](/glossary#vocal-dose). Treat your voice like an athlete treats a body.
+Gospel asks a lot of a voice. Long services, several songs, rehearsals midweek and high-energy belting add up to a large [vocal dose](/glossary#vocal-dose), so plan your week around that load.
 
 ::infographic health
 

@@ -4,7 +4,7 @@ const body = `## How to sing musical theatre: the short answer
 
 To sing musical theatre, you learn three vocal qualities and the acting that decides which one to use. Legit is the rounder, head-dominant sound of the older classic scores. Mix is a speech-like blend that carries a bright tone through the middle of the voice. Belt is the chest-dominant call that lands the big moments. On top of those sit clear diction, a song you can act line by line, and enough stamina to do it again tomorrow.
 
-None of this needs a huge voice to start. It needs a healthy middle, a clear plan for each song, and honest feedback. This guide covers the three qualities side by side, how to act a song, how to make the words land, how to choose material that suits your voice, how to cut 16 and 32 bars for an audition, a two-week practice plan, and how to measure progress with the tools on this site.
+You can start with the voice you have. What you need first is a healthy, easy middle range, a clear plan for each song, and honest feedback from recordings. This guide covers the three qualities side by side, how to act a song, how to make the words land, how to choose material that suits your voice, how to cut 16 and 32 bars for an audition, a two-week practice plan, and how to measure progress with the tools on this site.
 
 ## The three sounds of musical theatre: legit, mix and belt
 
@@ -30,7 +30,7 @@ Many working performers can do all three, and roles increasingly ask for that. [
 
 ## Act the song: objective, obstacle, tactic
 
-A musical theatre song exists because speech was no longer enough for the character. That means every song is a scene. Directors and casting panels watch for one thing above all: a person who wants something and is trying to get it.
+A musical theatre song exists because speech was no longer enough for the character. That means every song is a scene. Directors and casting panels look for a person who wants something and is trying to get it.
 
 ### The three questions
 
@@ -46,7 +46,7 @@ A musical theatre song exists because speech was no longer enough for the charac
 4. Decide the moment before: what was said or done one second before the intro starts?
 5. Only then add the melody back, and let the tactic choose the quality. Pleading may sit in a lighter mix. A defiant line may earn the belt.
 
-This is also why a quality is a choice and not a habit. If you belt every phrase, the big note at the end means nothing. For more on shaping a line, see [how to sing with emotion](/blog/how-to-sing-with-emotion).
+Treat each quality as a choice you make for a reason. If you belt every phrase, the big note at the end has nothing to rise above. For more on shaping a line, see [how to sing with emotion](/blog/how-to-sing-with-emotion).
 
 ::video acting
 
@@ -82,16 +82,16 @@ Shows are often transposed for different performers, so check that the key suits
 
 ## Prepare a song from first read to performance
 
-Here is the order that saves the most time. Learn notes and words separately first, then put them together, and only add the big sound once the line is stable.
+This order saves the most time: learn notes and words separately first, then put them together, and only add the big sound once the line is stable.
 
 ::infographic prepare
 
 ## Audition cuts: 16 and 32 bars
 
-Most musical theatre auditions ask for a short cut of a song, commonly 16 bars or 32 bars, rather than the whole number. Treat the bar count as a guide to length, roughly 30 to 60 seconds, and always follow what the audition notice asks for.
+Most musical theatre auditions ask for a short cut of a song, commonly 16 bars or 32 bars, rather than the whole number. Treat the bar count as a guide to length: at a moderate tempo, 16 bars runs about 30 seconds and 32 bars about a minute. Count to a natural musical ending rather than stopping mid-phrase, and always follow what the audition notice asks for.
 
 - **Pick a cut that tells a small story.** It should start with a clear thought and finish on a strong ending, usually the last phrase of the song.
-- **Show your best quality, not your highest note.** If your legit is lovely and your belt is new, lead with legit.
+- **Lead with your best quality.** If your legit is lovely and your belt is new, lead with legit.
 - **Mark the music clearly for the pianist.** Use a clean copy in your key, with the start and end bracketed and any cuts marked.
 - **Practice the transition in.** You get one or two bars of introduction, so know your first note and your moment before.
 - **Keep a contrasting second song ready.** Panels often ask for something in a different style.
@@ -102,7 +102,7 @@ For the full routine, from slating to what to wear, read our [singing audition t
 
 A standard Broadway or West End contract runs eight performances a week, with two-show days. Even if you are preparing for a school show or a community run, train with that in mind. The goal is a voice that sounds the same on Sunday as on Tuesday.
 
-The idea behind this is [vocal dose](/glossary#vocal-dose): the total amount of voice use across a day, including talking. Every loud phrase and every noisy conversation draws from the same account. The Measured Voice explains the anatomy behind it in [what your voice is](/book/what-your-voice-is), and the course lesson on [looking after your voice](/learn/voice/signature/look-after-it) turns it into daily habits.
+The idea behind this is [vocal dose](/glossary#vocal-dose): the total amount of voice use across a day, including talking. Every loud phrase and every noisy conversation draws from the same account. The Measured Voice explains how breath, folds and filter work together in [what your voice is](/book/what-your-voice-is), and the course lesson on [looking after your voice](/learn/voice/signature/look-after-it) turns it into daily habits.
 
 ::infographic stamina
 
@@ -114,7 +114,7 @@ Warm up for five minutes with a lip trill or straw first. Then pick the drill th
 
 ### Legit: vowel-pure five-note scales (5 minutes)
 
-Sing do-re-mi-fa-sol-fa-mi-re-do on "oo", then "oh", then "ah", moving up by semitone. Run about six keys per vowel at a medium-soft level. Keep the vowel and the vibrato identical from bottom to top. Stop well below your highest note.
+Sing do-re-mi-fa-sol-fa-mi-re-do on "oo", then "oh", then "ah", moving up by semitone. Run about six keys per vowel at a medium-soft volume. Keep the vowel and the vibrato identical from bottom to top. Stop well below your highest note.
 
 ### Mix: bratty "nay" slides (4 minutes)
 
@@ -130,7 +130,7 @@ Choose one phrase from your song. Sing it three times with three tactics: to com
 
 ## A two-week practice plan
 
-This assumes about 25 to 35 minutes a day, five days a week, with two rest days. Every session starts with a warmup and ends with the cool-down.
+This assumes about 25 to 35 minutes on singing days, with three full rest days across the fortnight. Every session starts with a warmup and ends with the cool-down.
 
 | Day | Focus | What to do |
 |---|---|---|
@@ -151,11 +151,11 @@ This assumes about 25 to 35 minutes a day, five days a week, with two rest days.
 
 ## How to measure progress
 
-Feelings are useful but unreliable when you are inside the sound. Use measurements alongside them.
+You hear your own voice partly through your skull, so it sounds different from the inside. Check what you feel against recordings and measurements.
 
-- **Pitch studio.** Sing your long notes into the [studio](/studio). The cents readout shows whether a held note drifts. A belt that creeps sharp, or a legit note that sags flat at the end of a phrase, usually means the setup is working too hard.
+- **Pitch studio.** Sing your long notes into the [studio](/studio). The cents readout shows whether a held note drifts. A belt that creeps sharp often means you are pushing, and a legit note that sags flat at the end of a phrase often means you are running out of steady breath.
 - **Recorder.** Record the whole song once a week in the [recorder](/recorder) and listen the next day. Ask three questions: could I understand every word, did each section change tactic, and did the big moment sound like a call rather than a push?
-- **Voice analyzer.** The [analyzer](/analyze) shows a spectrogram of your sound. Compare a legit phrase with a belted one and you can see the difference in brightness in the upper harmonics.
+- **Voice analyzer.** The [analyzer](/analyze) shows a spectrogram of your sound. Compare a legit phrase with a belted one on the same vowel and pitch: the belt usually shows more energy in the upper harmonics, which is the brightness you hear.
 - **Range test.** Repeat the [range test](/range?mode=range#start) every two weeks. Expect small changes. What should improve is the cost: the same notes for less effort.
 
 ## Common mistakes and how to fix them
@@ -173,7 +173,7 @@ Feelings are useful but unreliable when you are inside the sound. Use measuremen
 
 A voice teacher who specializes in musical theatre can hear what no app can: whether your belt is balanced, whether your mix is breathy or pressed, and whether your acting reads. Book lessons once the basics feel easy or before any important audition.
 
-See a doctor who can examine the vocal folds, such as an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing or speaking hurts, or if you lose your voice suddenly. Those are not signs to push through. Stop singing in the meantime.`;
+See a doctor who can examine the vocal folds, such as an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing or speaking hurts, or if you lose your voice suddenly. Rest your voice until you have been seen rather than singing through it.`;
 
 export const howToSingMusicalTheatre: BlogPost = {
   slug: "how-to-sing-musical-theatre",
@@ -194,7 +194,7 @@ export const howToSingMusicalTheatre: BlogPost = {
   ],
   published: "2026-11-16",
   updated: "2026-11-16",
-  readMinutes: 11,
+  readMinutes: 12,
   category: "Technique",
   answer:
     "To sing musical theatre, learn three vocal qualities, legit (head-dominant and classical-leaning), mix (speech-like and bright through the middle) and belt (a chest-dominant call), and choose between them by acting the song. Add clear diction, songs in your key, and the stamina to sing again tomorrow.",
@@ -236,7 +236,7 @@ export const howToSingMusicalTheatre: BlogPost = {
         { tone: "do", text: "Sleep enough and take at least one full voice-rest day a week" },
         { tone: "avoid", text: "Shouting over noise in bars or at parties during a run" },
         { tone: "avoid", text: "Belting full-out at every rehearsal of every song" },
-        { tone: "avoid", text: "Whispering to save your voice, which can strain it" },
+        { tone: "avoid", text: "Forced whispering to save your voice, which can strain it" },
         { tone: "avoid", text: "Singing through pain or hoarseness that lasts more than a day or two" },
       ],
     },
@@ -252,7 +252,7 @@ export const howToSingMusicalTheatre: BlogPost = {
       youtubeId: "fK0bWGlaSCw",
       title: "How To Act While Singing In Musical Theatre with Rachel Lynes",
       channel: "MusicGurus",
-      why: "A West End vocal coach shows how to turn a song into a scene with a clear intention behind each line.",
+      why: "Musical theatre coach Rachel Lynes shows how to turn a song into a scene with a clear intention behind each line.",
     },
   },
   faq: [
@@ -270,7 +270,7 @@ export const howToSingMusicalTheatre: BlogPost = {
     },
     {
       q: "How long should a musical theatre audition cut be?",
-      a: "Auditions commonly ask for 16 bars or 32 bars, which usually means about 30 to 60 seconds of music. Follow the audition notice exactly, choose a cut with a clear beginning and a strong ending, and mark it clearly for the pianist.",
+      a: "Auditions commonly ask for 16 bars or 32 bars. At a moderate tempo that is roughly 30 seconds and one minute of music. Follow the audition notice exactly, choose a cut with a clear beginning and a strong ending, and mark it clearly for the pianist.",
     },
     {
       q: "Should I sing musical theatre songs in the original key?",
@@ -287,7 +287,7 @@ export const howToSingMusicalTheatre: BlogPost = {
     { href: "/singers/genre/musical-theater", label: "Musical theater singers", blurb: "Documented vocal ranges for Broadway and West End voices on a keyboard." },
     { href: "/recorder", label: "Recorder", blurb: "Record your song each week and hear what the panel will hear." },
     { href: "/learn/voice/signature/modes-of-weight", label: "Modes of weight lesson", blurb: "Train neutral, restrained, driven and edged sounds on cue." },
-    { href: "https://studio.suedeai.ai", label: "Suede Studio", blurb: "Generate backing tracks with stems to rehearse your songs at home." },
+    { href: "https://studio.suedeai.ai", label: "Suede Studio", blurb: "Generate a backing track with stems in your key for daily scales and drills." },
   ],
   cta: {
     href: "/studio",
