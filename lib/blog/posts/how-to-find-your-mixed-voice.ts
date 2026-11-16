@@ -4,7 +4,7 @@ const body = `## How to find your mixed voice: the short answer
 
 To find your mixed voice, start from a light, easy sound and carry it across your break instead of hauling your speaking voice upward. Bratty "nay" and "gee" sounds, lip trill sirens and slides that start up in head voice and come down all teach the same thing: the folds can thin out gradually while the tone keeps some of chest voice's clarity. Practice quietly at first, record yourself, and add volume only once the crossing sounds even.
 
-Mixed voice is the most searched and most argued-about idea in singing, mostly because it gets described as a secret third voice you either have or lack. You already have the parts. What you are building is a coordination, and coordinations can be practiced. This guide explains what is happening in your larynx, how to tell whether you are in mix, six drills that build it, and a two-week plan to make it reliable.
+Mixed voice is one of the most argued-about ideas in singing, mostly because it gets described as a secret third voice you either have or lack. You already have the parts. Mix is a coordination between them, and coordinations can be practiced. This guide explains what is happening in your larynx, how to tell whether you are in mix, six drills that build it, and a two-week plan to make it reliable.
 
 ## What mixed voice actually is
 
@@ -42,13 +42,13 @@ The most reliable single test is volume control. If you can sing a note in your 
 
 ## Six exercises to find your mixed voice
 
-Do these in order. Each one isolates one piece of the coordination, and later drills assume the earlier ones feel easy. Warm up first; the [morning warmup](/warmups?routine=morning) covers straws and trills in under ten minutes.
+Do these in order. Each one isolates one piece of the coordination, and later drills assume the earlier ones feel easy. Warm up first: the [Morning reset](/warmups?routine=morning) takes about four minutes.
 
 ::infographic method
 
 ### 1. Lip trill sirens (3 minutes)
 
-A lip trill partly closes the mouth, so some air pressure backs up above the folds. That back-pressure helps them vibrate with less effort and smooths out the break, which makes it the safest place to rehearse crossing your passaggio.
+A lip trill partly closes off the mouth, so some air pressure backs up above the folds. That back-pressure helps them vibrate with less effort and smooths out the break, which makes it the safest place to rehearse crossing your passaggio.
 
 - Start a lip trill ("brrr") on a comfortable low note.
 - Siren up about an octave and a half through your break, then back down, slowly. Take about 4 seconds each way.
@@ -88,7 +88,7 @@ Messa di voce means a crescendo and decrescendo on one held note. It is the clas
 - On "ah" or "eh", start softly, swell to a moderate volume over 4 seconds, then fade over 4 seconds.
 - Do 4 repetitions on 3 different notes.
 
-If the voice flips to falsetto on the fade, or pulls into shouty chest on the swell, stay on that note and make the swell smaller. The lesson [dynamics without pushing](/learn/voice/pitch-time-words/louder-softer/dynamics-without-pushing) builds this skill from scratch.
+If the voice flips to falsetto on the fade, or pulls into shouty chest on the swell, stay on that note and make the swell smaller. The lesson [dynamics without pushing](/learn/voice/pitch-time-words/louder-softer/dynamics-without-pushing) covers the principle: loud from resonance, quiet from support, neither from the throat.
 
 ### 6. The "hey" call (3 minutes)
 
@@ -112,7 +112,7 @@ These are small shifts. The word should still be understandable. See [change the
 
 ### Pulling chest
 
-The most common mistake by far. You carry your speaking setup up past the break, the sound gets louder and tighter, and eventually it cracks or turns into a yell. Fix it by singing that passage a third quieter, narrowing the vowel, and practicing the descending slides from drill 3. The lesson [the difference you can hear](/learn/voice/through-the-break/mix-not-shout/the-difference-you-can-hear) contrasts mix and shout side by side.
+This is the most common problem singers bring to the break. You carry your speaking setup up past the break, the sound gets louder and tighter, and eventually it cracks or turns into a yell. Fix it by singing that passage a third quieter, narrowing the vowel, and practicing the descending slides from drill 3. The lesson [the difference you can hear](/learn/voice/through-the-break/mix-not-shout/the-difference-you-can-hear) contrasts mix and shout side by side.
 
 ### Flipping to falsetto
 
@@ -124,7 +124,7 @@ Trying to copy a recording of a singer you admire, such as [Ariana Grande](/sing
 
 ### Practicing too loud, too long
 
-Mix work is fine-motor training. Ten focused minutes a day beats an hour of shouting. If your voice feels tired, scratchy or hoarse afterward, you overdid it.
+Mix work is fine-motor training, so twenty focused minutes a day does more than an hour of shouting. If your voice feels tired, scratchy or hoarse afterward, you overdid it.
 
 ## A 14-day plan to find your mixed voice
 
@@ -141,13 +141,13 @@ About 20 minutes a day. Warm up first and stop if anything hurts.
 | 12-13 | Into a song | One phrase that crosses your break | Recorded take sounds connected |
 | 14 | Re-test | Compare day 1 and day 14 recordings | Smoother crossing |
 
-For day 12, pick a song that sits around your break. If you want a challenge, check whether you [can sing "Someone Like You"](/can-you-sing/someone-like-you) or ["Die With a Smile"](/can-you-sing/die-with-a-smile), and transpose down until the top notes sit just inside your passaggio. The [multi-week programs](/programs) take this further with a structured passaggio block.
+For day 12, pick a song that sits around your break. If you want a challenge, check whether you [can sing "Someone Like You"](/can-you-sing/someone-like-you) or ["Die With a Smile"](/can-you-sing/die-with-a-smile), and transpose down until the top notes sit just inside your passaggio. [Mix in 4 weeks](/programs?program=mix-4w) in Programs takes this further, working the crossing from the head-voice side and the chest side in turn. It is part of Suede Pro; the first week uses free exercises.
 
 ## How to measure progress
 
 Your ear lies to you about mix. The light version almost always sounds smaller inside your head than it does from the outside. Use tools instead:
 
-- **Pitch studio.** In the [studio](/studio), sing a slow slide through your break and watch the pitch trace. A clean mix shows an unbroken line. A crack or flip shows as a jump or wobble, and the cents readout tells you whether the notes in your break go flat as you strain.
+- **Pitch studio.** In the [studio](/studio), sing a slow slide through your break and watch the pitch trace. A clean mix shows an unbroken line. A crack or flip shows as a jump or wobble, and the cents readout tells you whether the notes in your break drift sharp or flat as you strain.
 - **Recorder.** Record the same phrase on day 1, 7 and 14 in the [recorder](/recorder). Listen for the moment the tone changes color. That moment should get harder to find.
 - **Voice analyzer.** The [spectrogram](/analyze) shows the harmonic content of your tone. A breathy falsetto shows weaker upper harmonics and more noise; a clean mix keeps the harmonics clear through the break.
 - **Range test.** Re-run it after two weeks. Your top note may not change much, but notes that used to be "possible" become usable.
@@ -290,7 +290,7 @@ export const howToFindYourMixedVoice: BlogPost = {
     { href: "/learn/voice/two-registers", label: "Two registers", blurb: "Chest, head, falsetto and the siren, from the free voice course." },
     { href: "/studio", label: "Pitch studio", blurb: "Live pitch trace and cents readout to see your break as you sing through it." },
     { href: "/range?mode=range#start", label: "Free range test", blurb: "Find your range and voice type so you know where your passaggio sits." },
-    { href: "/programs", label: "Multi-week programs", blurb: "Structured plans with a dedicated passaggio block." },
+    { href: "/programs?program=mix-4w", label: "Mix in 4 weeks", blurb: "A four-week program that carries one sound across the octave where most voices change gear." },
     { href: "https://studio.suedeai.ai", label: "Suede Studio", blurb: "Generate backing tracks with stems in your key to practice mix in songs." },
   ],
   cta: {

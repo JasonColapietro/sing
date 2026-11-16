@@ -4,7 +4,7 @@ const body = `## How to sing high notes: the short version
 
 To sing high notes without straining, you make the voice lighter as it climbs instead of louder. Ease off the heavy chest setup before your break, narrow or round the vowel a little, keep the airflow steady rather than forceful, and let head voice or a mix carry the top. Train that handover with straws, lip trills and sirens before you take it into songs, and add range a semitone at a time.
 
-Most people who "can't sing high" have plenty of notes available. They are reaching for those notes with the setup that works for speaking, and that setup runs out somewhere in the middle of the staff. The rest of this article shows you where it runs out for your voice type, why it fails, and a 14-day plan that rebuilds the climb so it stays easy.
+Most people who "can't sing high" have plenty of notes available. They are reaching for those notes with the setup that works for speaking, and that setup runs out somewhere in the middle of the staff. Where it runs out depends on your voice type, and the chart further down shows the zone for each one.
 
 ## Why high notes fail
 
@@ -32,7 +32,7 @@ The passaggio is the zone where your voice has to change gear. It is tied to the
 
 ::infographic passaggio
 
-Two things to take from that chart. First, the zone is three or four semitones wide, which is why the crossing is a gradual handover and not a single switch. Second, many women also meet an earlier, lighter shift somewhere around E4 to G4, where a quiet "oo" slide flips out of chest. That one is real too, and it is where a lot of "my voice goes weak" complaints start.
+Two things to take from that chart. First, the zone is three to five semitones wide, which is why the crossing is a gradual handover and not a single switch. Second, many women also meet an earlier, lighter shift somewhere around E4 to G4, where a quiet "oo" slide flips out of chest. That one is real too, and it is where a lot of "my voice goes weak" complaints start.
 
 To find your own zone, run the [range test](/range?mode=range#start) and then the course lesson [find your zone](/learn/voice/through-the-break/your-passaggio-by-name/find-your-zone). Chapter 8 of the book, [reading the range test](/book/reading-the-range-test), explains how to read the result without fooling yourself, and the [voice range atlas](/atlas/vocal-range-by-voice-type) lays the voice types out side by side.
 
@@ -57,7 +57,7 @@ Semi-occluded vocal tract exercises, or SOVT, partly close the mouth so some air
 - Repeat on a lip trill ("brrr"). If your lips stop buzzing on the way up, you pushed air or tightened. Back off and go again.
 - Total: about 3 minutes.
 
-The lesson [straw slides](/learn/voice/steady-tone/straw-and-lip-trill/straw-slides) walks through this with audio, and the [morning warmup](/warmups?routine=morning) includes it.
+The lesson [straw slides](/learn/voice/steady-tone/straw-and-lip-trill/straw-slides) walks through this with audio, and the [Morning reset warmup](/warmups?routine=morning) gives you hums, lip trills and sirens to start a session with.
 
 ### 2. Sirens through the break
 
@@ -71,7 +71,7 @@ The course lesson [octave sirens on three vowels](/learn/voice/two-registers/the
 
 ### 3. Vowel modification
 
-Each vowel has resonant peaks at fixed frequencies, and as your pitch climbs past them, the vowel stops helping you. Small adjustments to the vowel let it keep helping. This is [vowel modification](/glossary#vowel-modification), and every trained singer uses it.
+Each vowel shape has resonant peaks (formants) at roughly set frequencies, and as your pitch climbs past them, the vowel stops helping you. Small adjustments to the vowel let it keep helping. This is [vowel modification](/glossary#vowel-modification), and every trained singer uses it.
 
 A starting map for most voices through the passaggio:
 
@@ -105,7 +105,7 @@ Measure it properly:
 
 ## Learn from singers with famous high notes
 
-Listening to great high singing helps, as long as you study it instead of copying the loudness. [Mariah Carey](/singers/mariah-carey) is the reference for light head voice and whistle register. [Freddie Mercury](/singers/freddie-mercury) and [Steve Perry](/singers/steve-perry) show a bright rock tenor top. [Whitney Houston](/singers/whitney-houston) and [Adam Lambert](/singers/adam-lambert) show strong mixed belting built on years of training. The [range records page](/singers/records) compares the widest documented ranges.
+Listening to great high singing helps, as long as you study it instead of copying the loudness. [Mariah Carey](/singers/mariah-carey) is the reference for light head voice and whistle register. [Freddie Mercury](/singers/freddie-mercury) and [Steve Perry](/singers/steve-perry) show a bright, ringing rock top. [Whitney Houston](/singers/whitney-houston) and [Adam Lambert](/singers/adam-lambert) show strong mixed belting built over years of singing. The [range records page](/singers/records) compares the widest documented ranges.
 
 If you want a target song, check [Take Me to Church](/can-you-sing/take-me-to-church) or [I Will Always Love You](/can-you-sing/i-will-always-love-you) against your own range first, and change the key if the top sits above what you can sing easily today. Singing it lower and well beats singing it in the record's key and badly.
 
@@ -280,7 +280,7 @@ export const howToSingHighNotes: BlogPost = {
     },
     {
       q: "How can men sing high notes?",
-      a: "Men usually meet the passaggio between roughly B3 and G4 depending on voice type, so the key is lightening and narrowing the vowel there instead of shouting through. Sirens on \"ng\" and descending head-voice scales on \"oo\" are good starting drills, followed by a bright \"nay\" mix pattern.",
+      a: "Men usually meet the passaggio somewhere between G3 and G4, depending on voice type, so the key is lightening and narrowing the vowel there instead of shouting through. Sirens on \"ng\" and descending head-voice scales on \"oo\" are good starting drills, followed by a bright \"nay\" mix pattern.",
     },
     {
       q: "Is it bad if singing high notes hurts?",
@@ -290,7 +290,7 @@ export const howToSingHighNotes: BlogPost = {
   related: [
     { href: "/range?mode=range#start", label: "Free range test", blurb: "Find your comfortable top note and passaggio before you start, and retest on day 14." },
     { href: "/learn/voice/through-the-break", label: "Course: through the break", blurb: "Lessons on your passaggio, vowel modification, twang and mixing without shouting." },
-    { href: "/warmups?routine=morning", label: "Morning warmup", blurb: "Guided straws, trills and slides to do before any high singing." },
+    { href: "/warmups?routine=morning", label: "Morning warmup", blurb: "Guided hums, lip trills and sirens to do before any high singing." },
     { href: "/programs", label: "Practice programs", blurb: "Multi-week plans that work through the passaggio and the top of your range." },
     { href: "/singers/records", label: "Vocal range records", blurb: "Singers with the widest documented ranges, for listening and study." },
     { href: "https://studio.suedeai.ai", label: "Suede Studio", blurb: "Generate a backing track with stems in a key that suits your top notes." },

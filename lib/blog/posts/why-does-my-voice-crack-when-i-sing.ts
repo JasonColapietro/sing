@@ -4,9 +4,9 @@ const body = `## Why does my voice crack when I sing? The short answer
 
 Your voice cracks when you sing because the vocal folds change their setup too suddenly. Somewhere in your range, usually in the transition zone singers call the passaggio, the folds have to shift from a thicker, chest-dominant setup to a thinner, stretched one. If you carry too much weight or air pressure into that zone, the shift happens all at once instead of gradually, and you hear a flip, a yodel or a crack. Fatigue, dehydration, swelling and the voice change of puberty can make the same thing happen in places it normally would not.
 
-The good news is that most cracks are a coordination problem, and coordinations respond to practice. This guide covers the five common causes, where the break tends to sit for each voice type, six drills that smooth it out, a two-week plan, and the signs that a crack is a health question rather than a technique one.
+Most cracks are a coordination problem, and coordination improves with practice. Below are the five common causes, where the break tends to sit for each voice type, six drills that smooth it out, a two-week plan, and the signs that a crack is a health question rather than a technique one.
 
-> A crack is information. It tells you exactly which note, at which volume, on which vowel, your voice is asking for a different setup.
+> Each crack points to the note, the volume and the vowel where your voice needs a different setup.
 
 ## What is actually happening in a voice crack
 
@@ -24,7 +24,7 @@ Not every crack comes from the same place. Run through this list before you star
 
 ### 1. A register transition you have not trained yet
 
-This is the big one. If your cracks happen on the same few notes every time, regardless of the song, you are meeting your passaggio. The lesson [where your voice changes gear](/learn/voice/through-the-break/your-passaggio-by-name/where-your-voice-changes-gear) walks through it, and [chest, head and falsetto](/learn/voice/two-registers/chest-head-falsetto) covers the registers on either side.
+This is the most common cause. If your cracks happen on the same few notes every time, regardless of the song, you are meeting your passaggio. The lesson [where your voice changes gear](/learn/voice/through-the-break/your-passaggio-by-name/where-your-voice-changes-gear) walks through it, and [chest, head and falsetto](/learn/voice/two-registers/chest-head-falsetto) covers the registers on either side.
 
 ### 2. Too much air pressure and too much weight
 
@@ -63,6 +63,16 @@ Before you fix a crack, give it a name. Open the [pitch studio](/studio) so the 
 
 On the trace, a clean slide looks like a smooth ramp. At the break you will often see a wobble, a small step or a flat patch where the voice hesitates. Write down the lowest note of that zone: preparation has to start there, not where the crack becomes obvious. The lesson [find your zone](/learn/voice/through-the-break/your-passaggio-by-name/find-your-zone) uses the same method.
 
+## What to do when your voice cracks mid-song
+
+Drills fix the crossing over weeks. On the day, these adjustments get you through a phrase:
+
+- Sing the cracking phrase about half as loud. Volume is the most common trigger.
+- Narrow the vowel on the crack note ("ah" toward "uh", "ee" toward "ih").
+- Keep your chin level and let the high note feel lighter than the one before it.
+- Lower the key by one or two semitones. The lesson [your key, not the record's key](/learn/voice/steady-tone/first-song-one-register/your-key-not-the-records-key) shows how to pick one.
+- If your voice feels scratchy or tired, stop for the day instead of pushing through.
+
 ## Six drills to stop your voice cracking
 
 Do these in order. Each one isolates one part of the crossing, and the later drills assume the earlier ones feel easy. Keep everything at speaking volume or softer for the first week.
@@ -93,7 +103,7 @@ Wide vowels like "ah" and bright "eh" crack more easily because of where their r
 
 ### 5. Crescendo and decrescendo on the break (3 minutes)
 
-This drill, often called messa di voce, is the most honest test of a stable crossing. Pick a note in the middle of your break zone. Start very soft, swell to moderate over 4 seconds, then fade back to soft over 4 seconds. Do it on 3 notes in the zone, twice each. If the note flips as you get louder, you are adding weight; if it flips as you get softer, you are adding air. The lesson [dynamics without pushing](/learn/voice/pitch-time-words/louder-softer/dynamics-without-pushing) builds the same skill.
+This drill, called messa di voce, is a demanding test of a stable crossing. Pick a note in the middle of your break zone. Start very soft, swell to moderate over 4 seconds, then fade back to soft over 4 seconds. Do it on 3 notes in the zone, twice each. If the note flips as you get louder, you are adding weight; if it flips as you get softer, you are adding air. The lesson [dynamics without pushing](/learn/voice/pitch-time-words/louder-softer/dynamics-without-pushing) builds the same skill.
 
 ### 6. Put it in a phrase (3 minutes)
 
@@ -146,7 +156,7 @@ Progress on a break is easy to miss because you are listening from inside your h
 - Retake the [range test](/range?mode=range#start) every few weeks. If your top note has been stuck at the same pitch while the climb toward it feels easier, that ceiling may be your break rather than your limit.
 - The [voice analyzer](/analyze) shows a spectrogram, so you can see the harmonics shift as you cross the zone.
 
-Expect the crossing to get quieter, not to vanish. Trained singers still have a passaggio; they have simply made it hard to hear.
+Expect the crossing to get quieter rather than disappear. Trained singers still have a passaggio; they have simply made it hard to hear.
 
 ## When a voice crack is a health issue
 
@@ -154,7 +164,7 @@ Most cracks in a healthy voice are coordination. Some are not. A crack that is n
 
 ::infographic health
 
-See a doctor, ideally an ENT or a laryngologist, if you have hoarseness lasting more than about two weeks, pain when singing or speaking, sudden loss of voice, coughing up blood, or a crack that appeared after one loud event and has not gone away. A laryngologist can look at the folds directly with a scope, which no app or teacher can do. If your folds are healthy but cracks persist after several weeks of steady practice, a qualified voice teacher can hear things you cannot. The course lesson [look after it](/learn/voice/signature/look-after-it) covers day-to-day vocal care.`;
+See a doctor, ideally an ENT or a laryngologist, if you have hoarseness lasting more than two to three weeks, pain when singing or speaking, sudden loss of voice, coughing up blood, or a crack that appeared after one loud event and has not gone away. A laryngologist can look at the folds directly with a scope, which no app or teacher can do. If your folds are healthy but cracks persist after several weeks of steady practice, a qualified voice teacher can hear things you cannot. The course lesson [look after it](/learn/voice/signature/look-after-it) covers day-to-day vocal care.`;
 
 const answer =
   "Your voice cracks when you sing because your vocal folds switch too suddenly from a thicker chest setup to a thinner head setup, usually in your passaggio. Too much air pressure, fatigue, dehydration, puberty and swelling make it worse. Sliding gently through the break, lightening your weight and narrowing vowels teaches the switch to happen gradually.";
@@ -177,7 +187,7 @@ export const whyDoesMyVoiceCrack: BlogPost = {
   ],
   published: "2026-11-15",
   updated: "2026-11-15",
-  readMinutes: 10,
+  readMinutes: 11,
   category: "Technique",
   answer,
   body,
@@ -241,8 +251,8 @@ export const whyDoesMyVoiceCrack: BlogPost = {
       title: "Technique crack or health issue?",
       items: [
         { tone: "do", text: "Same notes, every session, voice otherwise clear: practice the crossing." },
-        { tone: "do", text: "Cracks fade after a warmup and a glass of water: fatigue or dryness." },
-        { tone: "avoid", text: "Hoarseness lasting more than about two weeks: see an ENT or laryngologist." },
+        { tone: "do", text: "Cracks fade after a warmup, rest and steady hydration: fatigue or dryness." },
+        { tone: "avoid", text: "Hoarseness lasting more than two to three weeks: see an ENT or laryngologist." },
         { tone: "avoid", text: "Pain when singing or speaking: stop and get checked." },
         { tone: "avoid", text: "Sudden voice loss, or cracking after one loud event that has not settled." },
         { tone: "avoid", text: "Quiet high notes that start late or come out airy for weeks: possible swelling." },
@@ -282,11 +292,11 @@ export const whyDoesMyVoiceCrack: BlogPost = {
     },
     {
       q: "Does voice cracking during puberty go away?",
-      a: "Yes. The larynx and vocal folds grow during adolescence, and cracks settle as the muscles adjust to the new size. While it is happening, sing gently in whatever range is comfortable that week and avoid forcing your old high notes. If hoarseness lasts more than about two weeks, see a doctor.",
+      a: "Yes. The larynx and vocal folds grow during adolescence, and cracks settle as the muscles adjust to the new size. While it is happening, sing gently in whatever range is comfortable that week and avoid forcing your old high notes. If hoarseness lasts more than two to three weeks, see a doctor.",
     },
     {
       q: "When should I see a doctor about voice cracks?",
-      a: "See an ENT or laryngologist if you have hoarseness lasting more than about two weeks, pain when singing or speaking, sudden voice loss, or cracking that started after a single loud event and has not settled. A laryngologist can examine the vocal folds directly with a scope.",
+      a: "See an ENT or laryngologist if you have hoarseness lasting more than two to three weeks, pain when singing or speaking, sudden voice loss, or cracking that started after a single loud event and has not settled. A laryngologist can examine the vocal folds directly with a scope.",
     },
   ],
   related: [

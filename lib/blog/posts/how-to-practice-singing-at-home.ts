@@ -4,7 +4,7 @@ const body = `## How to practice singing at home: the short version
 
 To practice singing at home, set up a quiet corner with your phone and wired headphones, then run the same 20 to 30 minute session most days: a gentle warmup, one technique focus, a few minutes of ear work, a song in a key that suits you, and a short cooldown. Record one take each session and listen back. Measure your progress over weeks, using a pitch readout and a range test taken under the same conditions each time.
 
-That is the whole method. The rest of this article fills in the details: how to set up the room, what goes in each block, what to do if you live with neighbors or roommates, a two-week plan you can follow from tomorrow, and how to tell whether any of it is working. Every drill here can be practiced in your browser, in the [pitch studio](/studio), the [guided warmups](/warmups) and the [recorder](/recorder).
+Below you will find the room setup, the drills for each block, low-volume options for shared walls, a two-week plan you can follow from tomorrow, and the few measurements that show whether it is working. You can run every drill in your browser, in the [pitch studio](/studio), the [guided warmups](/warmups) and the [recorder](/recorder).
 
 Home practice has one real advantage over a weekly lesson. You can do it often. Voices respond to short, frequent, attentive practice far better than to one long session on a Sunday, and a regular habit at home is what turns a teacher's advice (or a book's) into coordination you can rely on.
 
@@ -16,7 +16,7 @@ You do not need a studio. You need a room where you can hear yourself clearly an
 
 ### The room
 
-Pick the quietest room you can use at the same time each day. Soft furnishings help: a bedroom with a bed, curtains and a rug gives a cleaner recording than a tiled kitchen or bathroom. Bathrooms sound flattering because the reverb hides small pitch errors, which is exactly why they are poor places to practice. Turn off fans, air conditioners and the television. Close the door.
+Pick the quietest room you can use at the same time each day. Soft furnishings help: a bedroom with a bed, curtains and a rug gives a cleaner recording than a tiled kitchen or bathroom. Bathrooms sound flattering because the reverb hides small pitch errors, which is exactly why they are poor places to practice. Turn off fans, air conditioners and the television, and close the door.
 
 ### Phone, laptop and microphone
 
@@ -52,8 +52,9 @@ The [morning routine](/warmups?routine=morning) and the [quick routine](/warmups
 Pick one skill per session and stay with it. Trying to fix breath, vowels, high notes and vibrato in one evening means fixing none of them. Good single focuses for a home session:
 
 - **Steady tone:** hold one comfortable note for 4 to 8 seconds, 5 times, aiming for an even sound with no wobble or fade.
+- **Clean onsets:** start a vowel on a comfortable note 5 times, aiming for a gentle, clear start. If you hear a click or catch at the start, begin with a soft "h" and fade it out over a few repetitions.
 - **Breath:** a slow, even hiss on one exhale, 3 to 4 times, then sustained notes. The [breath room](/breath?routine=daily) has a guided daily routine and a mic-based sustain test.
-- **Registers:** octave sirens on three vowels, listening for where the voice changes gear. The lesson on [the siren](/learn/voice/two-registers/the-siren) and the book chapter on [the passaggio](/book/03-the-passaggio) explain what you are hearing.
+- **Registers:** octave sirens on three vowels, listening for where the voice changes gear. The lesson on [the siren](/learn/voice/two-registers/the-siren) and the lesson on [finding your passaggio](/learn/voice/through-the-break/your-passaggio-by-name) explain what you are hearing.
 
 If you are not sure what to work on, follow the [free voice course](/learn/voice) in order, or start a [multi-week program](/programs), which schedules the focus for you day by day.
 
@@ -79,7 +80,7 @@ Living with roommates, thin walls or a sleeping baby is the most common reason p
 
 ::infographic quiet
 
-Straw phonation is the best friend of apartment singers. Through a narrow straw your sound drops to a soft buzz, yet you can still run scales, sirens and even whole melodies, and the exercise stays useful for coordination. Singing the melody of your song through a straw is a legitimate practice method, not a compromise.
+Straw phonation is the best friend of apartment singers. Through a narrow straw your sound drops to a soft buzz, yet you can still run scales, sirens and even whole melodies, and the exercise stays useful for coordination. Singing your song's melody through a straw is a real practice method: you rehearse the pitches and the phrase shapes with very little effort or noise.
 
 Humming on "mm" or "ng" is the next step up in volume. Save full-voice singing for the times you can, and keep your technique block, ear work and song learning for the quiet hours. One caution: quiet does not mean whispered. Whispering, especially forced whispering, can strain the voice more than soft, easy singing. If you want to be quiet, sing softly with a clear tone or use the straw.
 
@@ -99,8 +100,6 @@ Listen once all the way through without judging. Then listen again for one thing
 - Did the ends of phrases go flat or fade?
 - Does it sound like effort, or like singing?
 
-If listening to yourself is uncomfortable, that is very common. It gets easier within a couple of weeks.
-
 ## A two-week home practice plan
 
 This plan assumes about 20 to 30 minutes a day, five or six days a week, with at least one rest day. Adjust the times to your life. The pattern matters more than the exact minutes.
@@ -117,18 +116,18 @@ This plan assumes about 20 to 30 minutes a day, five or six days a week, with at
 | Day 8 | Steady tone on five vowels | Pitch matching, upper middle range | Cents readout on the same three notes |
 | Day 9 | Breath on longer phrases | Learn the chorus | Listen back to one take |
 | Day 10 | Sirens on three vowels | Interval game | One sentence of notes |
-| Day 11 | Onsets without a click | Song, chorus at tempo | Record the chorus |
+| Day 11 | Clean onsets, no click | Song, chorus at tempo | Record the chorus |
 | Day 12 | Lip trill through the whole range | Whole song, slowly | A/B with your Day 5 take |
 | Day 13 | Easy review | Whole song at tempo | Record your two-week take |
 | Day 14 | Rest | Plan next week's focus | Light humming only |
 
-When the two weeks are up, keep the shape and change the focus. The [programs](/programs) do this for you over many weeks, and the book chapter on [how the program works](/book/13-how-the-program-works) explains the reasoning behind the sequence.
+When the two weeks are up, keep the shape and change the focus. The [programs](/programs) do this for you over many weeks, and the book [The Measured Voice](/book) explains the reasoning behind the sequence.
 
 ## Choose songs that fit your voice
 
 Many people who think they cannot sing are singing songs pitched for someone else's voice. If the song's highest notes sit above your comfortable range, you will strain every time, and you will practice straining.
 
-Start by taking the free [range test](/range?mode=range#start) so you know your comfortable low and high notes. Then use the [can you sing it](/can-you-sing) pages to compare a song's range with yours. For example, [Someone Like You](/can-you-sing/someone-like-you) and [Hallelujah](/can-you-sing/hallelujah) both list their lowest and highest notes, so you can see before you start whether the chorus will sit well. If a song is too high or too low, change the key. The book chapters on [choosing songs](/book/20-choosing-songs) and [transposition](/book/21-transposition) show how.
+Start by taking the free [range test](/range?mode=range#start) so you know your comfortable low and high notes. Then use the [can you sing it](/can-you-sing) pages to compare a song's range with yours. For example, [Someone Like You](/can-you-sing/someone-like-you) and [Hallelujah](/can-you-sing/hallelujah) both list their lowest and highest notes, so you can see before you start whether the chorus will sit well. If a song is too high or too low, change the key. The course lesson [your key, not the record's key](/learn/voice/steady-tone/first-song-one-register/your-key-not-the-records-key) shows how.
 
 For the very first weeks, simple melodies are ideal because they let you focus on tone and pitch rather than on remembering lyrics. The [song library](/songs) has folk songs and hymns such as [Amazing Grace](/songs/amazing-grace) with live pitch feedback. Comparing your voice with a singer you admire can also help you pick material, as long as you remember that their recorded key was chosen for their voice. The profiles of [Adele](/singers/adele) and [Ed Sheeran](/singers/ed-sheeran) show the ranges their songs actually use.
 
@@ -138,9 +137,9 @@ Progress in singing is slow and noisy. Your voice changes day to day with sleep,
 
 ::infographic measures
 
-The [Progress](/progress) page keeps your saved range, XP, streaks and session history on your device, so you can see whether you are actually practicing as often as you think you are. Streaks are a modest number, but an honest one. The book chapter on [tracking change over months](/book/11-tracking-change) explains how to read the trends without fooling yourself, and [when numbers lie](/book/when-numbers-lie) covers the readings worth throwing out.
+The [Progress](/progress) page keeps your saved range, XP and streaks on your device, so you can see whether you are practicing as often as you think you are. Streaks are a modest number, but an honest one. The book chapter on [reading the range test](/book/reading-the-range-test) explains what a single result can and cannot tell you, and [when numbers lie](/book/when-numbers-lie) covers the readings worth throwing out.
 
-A realistic expectation: pitch accuracy and steadiness on familiar notes tend to improve first, often within a few weeks of regular practice. The edges of your range move more slowly, and some of that limit is anatomy, which practice does not change. Comfort and control inside the range you have is the better goal.
+A realistic expectation: pitch accuracy and steadiness on familiar notes tend to improve first, often within a few weeks of regular practice. The edges of your range move more slowly, and some of that limit is anatomy, which practice does not change. Aim for comfort and control inside the range you have.
 
 ## Common mistakes and how to fix them
 
@@ -170,7 +169,7 @@ See a doctor, ideally an ENT or a laryngologist (an ENT who specializes in the v
 
 ## Start tonight
 
-You have what you need: a quiet corner, a phone and twenty minutes. Set up the room, run one session in the order above, record one take, and write one sentence about it. Tomorrow, do it again. The habit is the method.
+You have what you need: a quiet corner, a phone and twenty minutes. Set up the room, run one session in the order above, record one take, and write one sentence about it. Tomorrow, do it again, and in two weeks compare your first take with your latest.
 `;
 
 export const howToPracticeSingingAtHome: BlogPost = {
@@ -191,7 +190,7 @@ export const howToPracticeSingingAtHome: BlogPost = {
   ],
   published: "2026-11-15",
   updated: "2026-11-15",
-  readMinutes: 1,
+  readMinutes: 12,
   category: "Practice",
   answer:
     "To practice singing at home, set up a quiet spot with your phone and wired headphones, then run a 20 to 30 minute session most days: warmup, one technique focus, ear work, a song in your key, and a cooldown. Record one take each time, and track pitch accuracy and range over weeks rather than days.",
@@ -269,7 +268,7 @@ export const howToPracticeSingingAtHome: BlogPost = {
       youtubeId: "0xYDvwvmBIM",
       title: "Vocal Straw Exercise",
       channel: "NCVS456",
-      why: "Voice scientist Ingo Titze demonstrates the straw exercise, the quietest useful warmup for apartment practice.",
+      why: "A short demonstration from the National Center for Voice and Speech of straw phonation, the quietest useful warmup for apartment practice.",
     },
   },
   faq: [

@@ -21,7 +21,7 @@ Notice what is missing from that list: a huge breath and a lot of pressure. The 
 
 ## What strain feels like compared with an efficient belt
 
-Strain is the voice's way of telling you that something other than the folds and the resonating space is doing the work. Usually that something is the neck, the jaw, the tongue root or a flood of breath pressure. Voice teachers call the squeezed version pressed phonation: more compression than the note needs, heard as a tight sound rather than a louder one. See the [glossary entry on pressed phonation](/glossary#pressed-phonation).
+Strain means something other than the folds and the resonating space is doing the work. Usually that something is the neck, the jaw, the tongue root or a flood of breath pressure. Voice teachers call the squeezed version pressed phonation: more compression than the note needs, heard as a tight sound rather than a louder one. See the [glossary entry on pressed phonation](/glossary#pressed-phonation).
 
 Here is how the two compare from the inside.
 
@@ -47,27 +47,27 @@ You should be able to make a bright, slightly nasal, bratty sound and then retur
 
 ## The method: six steps to a healthy belt
 
-Work through these in order. Each step adds one ingredient, and the later ones assume the earlier ones feel easy. Warm up first with five minutes of lip trills or straw phonation; the lesson on [straw and lip trill](/learn/voice/steady-tone/straw-and-lip-trill) covers both.
+Work through these in order. Each step adds one ingredient, and the later ones assume the earlier ones feel easy. All six take about 16 minutes. Warm up first with five minutes of lip trills or straw phonation; the lesson on [straw and lip trill](/learn/voice/steady-tone/straw-and-lip-trill) covers both.
 
 ::infographic method
 
-### 1. Call "hey!" at speaking pitch (3 minutes)
+### 1. Call "hey!" at speaking pitch (2 minutes)
 
 Pick the note you naturally speak on. Call "hey!" on it as if to someone across a room, three times, with a normal breath. Then sing "hey" on the same note at the same effort. Repeat 6 times. The sung version should feel like the spoken call. If it feels like more work, bring the volume down until they match.
 
-### 2. Twang with "nyah" (4 minutes)
+### 2. Twang with "nyah" (3 minutes)
 
 Say "nyah nyah nyah" like a teasing child: bright, a little nasal, not loud. Sing it on a 1-3-5-3-1 pattern starting low in your range, moving up a semitone each repetition. Stop 2 or 3 semitones below the point where your voice usually wants to flip. Do 2 rounds. Keep the jaw loose and the tongue tip resting behind the bottom teeth.
 
-### 3. Open the vowel: "nyah" to "yah" to "hey" (4 minutes)
+### 3. Open the vowel: "nyah" to "yah" to "hey" (3 minutes)
 
 On the same pattern, sing "nyah", then drop the "n" and sing "yah", then switch to "hey". The brightness from step 2 should stay even as the nasal quality fades. If the tone goes dull or the effort jumps, go back to "nyah" for two reps.
 
-### 4. Short bursts on "bah" and "hey" (3 minutes)
+### 4. Short bursts on "bah" and "hey" (2 minutes)
 
 Sing short, detached notes (staccato) on "bah" across a five-note scale, with the same calling energy. Short notes teach a clean onset without the slow pressure build-up of long holds. Do 6 scales, rising by a semitone each time, still capped below your break.
 
-### 5. Modify the vowel near the top (4 minutes)
+### 5. Modify the vowel near the top (3 minutes)
 
 As a belt rises, a wide "ah" or "eh" gets harder to keep open. Let the vowel shift slightly: "ah" leans toward "uh", "eh" toward "ih", "ay" toward "eh". Sing a 1-5-1 interval on "hey" and let the top note's vowel narrow a little. The lesson on [vowel modification through the break](/learn/voice/through-the-break/vowel-modification-through-the-break) gives you the full map.
 
@@ -92,7 +92,7 @@ Listen to how the great belters build up to their biggest notes. They rarely sta
 - [Kelly Clarkson](/singers/kelly-clarkson): a pop-rock belt with lots of twang and fast switches into mix.
 - [Freddie Mercury](/singers/freddie-mercury): a rock belt in a high male range, often with brief, well-placed peaks.
 
-Each profile page marks a belt note separately from the top of the singer's range, because the highest note is often not belted at all. Try singing along with your current range in mind, and use the song pages, such as [Can you sing Rolling in the Deep?](/can-you-sing/rolling-in-the-deep), to see whether a chorus sits in your belt zone or needs a key change.
+Each of these profiles marks the belt note separately from the top of the singer's range, because the highest note is often not belted at all. Try singing along with your current range in mind, and use the song pages, such as [Can you sing Rolling in the Deep?](/can-you-sing/rolling-in-the-deep), to see whether a chorus sits in your belt zone or needs a key change.
 
 ::infographic signs
 
@@ -101,7 +101,7 @@ Each profile page marks a belt note separately from the top of the singer's rang
 | Mistake | What it sounds or feels like | Fix |
 |---|---|---|
 | Taking a huge breath | Pressure builds, the first note blasts out, the throat grips | Breathe as you would to speak a long sentence, then call |
-| Lifting the chin | Neck tension, sharp pitch on high notes | Keep the head level and look straight ahead in a mirror |
+| Lifting the chin | Neck tension and a squeezed, strangled top note | Keep the head level and look straight ahead in a mirror |
 | Dragging chest weight too high | Sound gets louder and tighter with every semitone, then cracks | Stop 2 semitones lower and switch to mix above that note |
 | Spreading the vowel too wide at the top | Shrill, thin top note | Narrow "ah" toward "uh" and "eh" toward "ih" |
 | Belting every note | Fatigue after a few songs | Save the belt for peaks and use lighter singing in the verses |
@@ -129,20 +129,20 @@ This plan uses short, focused sessions. Keep belt days separate and put a lighte
 - **Day 11.** Rest.
 - **Day 12.** Pick one chorus that sits in your belt zone and sing it at medium volume 3 times.
 - **Day 13.** Light day.
-- **Day 14.** Repeat Day 3's recording and compare. Same notes, less effort, steadier pitch: that is progress.
+- **Day 14.** Repeat Day 3's recording and compare. If the same notes take less effort and the pitch holds steadier, you are making progress.
 
-If you want a longer, structured version, [Belt in 6 weeks](/programs?program=belt-6w) in Programs follows the same order, with the [Belt prep pack](/warmups?routine=belt-prep) of calls and holds in weeks 2 and 3. Both are part of Suede Pro; the first week uses free exercises.
+If you want a longer, structured version, [Belt in 6 weeks](/programs?program=belt-6w) in Programs follows the same order. It builds on the [Belt prep pack](/warmups?routine=belt-prep) of speech-level calls and holds from week 2 and adds leaps from week 4. Both are part of Suede Pro; the first week uses free exercises.
 
 ## How to measure your progress
 
 Belting is hard to judge from inside your own head because it feels louder to you than it sounds to a listener. Use these checks.
 
-- **Pitch drift in the studio.** In the [pitch studio](/studio), watch the cents readout on your held notes. A forced belt tends to creep sharp as the pressure rises. If one rep drifts more than the last while you are still low in your range, back off.
+- **Pitch drift in the studio.** In the [pitch studio](/studio), watch the cents readout on your held notes. A forced belt often creeps sharp as breath pressure rises. If one rep drifts more than the last while you are still low in your range, back off.
 - **Weekly recordings.** Record the same phrase each week with the [recorder](/recorder) and listen the next day. Listen for a clear, ringing core with no rasp you did not choose.
 - **Brightness on the spectrogram.** The [voice analyzer](/analyze) shows twang as energy in the upper bands while the note itself stays put. It cannot tell you whether you are pressing, so use it as a picture of brightness only.
 - **Effort rating.** After each session, rate your effort from 1 to 10. Over two weeks, the same notes should cost less.
 
-None of Suede's tools can measure strain directly. Your body's signals come first.
+None of Suede's tools can measure strain directly, so trust your body's signals over any readout.
 
 ## When to see a voice teacher or a doctor
 
@@ -278,7 +278,7 @@ export const howToBeltWithoutStraining: BlogPost = {
   related: [
     { href: "/learn/voice/through-the-break/twang-and-ring", label: "Twang and ring", blurb: "Free lessons on a brighter, louder sound without pressing." },
     { href: "/learn/voice/through-the-break/mix-not-shout", label: "Mix, not shout", blurb: "Carry a lighter sound through your break when belt runs out." },
-    { href: "/programs?program=belt-6w", label: "Belt in 6 weeks", blurb: "A structured belt program from speech-level calls to leaps." },
+    { href: "/programs?program=belt-6w", label: "Belt in 6 weeks", blurb: "A six-week Suede Pro program from speech-level calls to leaps." },
     { href: "/studio", label: "Pitch studio", blurb: "Watch live pitch and cents on your held belt notes." },
     { href: "/recorder", label: "Recorder", blurb: "Record a phrase weekly and hear how your belt is changing." },
     { href: "/singers/whitney-houston", label: "Whitney Houston's range", blurb: "See where a great belter's belt note sits in her range." },
@@ -287,6 +287,6 @@ export const howToBeltWithoutStraining: BlogPost = {
   cta: {
     href: "/warmups?routine=belt-prep",
     label: "Start Belt prep",
-    pitch: "Calls, twang and holds at speaking pitch, scored for pitch so you can hear when a belt starts to push.",
+    pitch: "A Suede Pro pack of speech-level calls that build to chest-voice holds, scored for pitch so you can hear when a belt starts to push.",
   },
 };

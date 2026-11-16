@@ -2,9 +2,9 @@ import type { BlogPost } from "../types";
 
 const body = `## How to sing on pitch: the short version
 
-To sing on pitch, you need two things working together: an ear that can hold the target note in your head, and a voice that can land on that note and stay there. Most people who sing off-key have a gap in one of those two, rarely both, and both can be trained. The method in this article is simple. Hear the note before you sing it, match it against a steady reference, check yourself with a cents readout, and repeat in short, frequent sessions.
+To sing on pitch, you need two things working together: an ear that can hold the target note in your head, and a voice that can land on that note and stay there. Most people who sing off-key have a gap in one of them, and both can be trained. The method in this article is simple. Hear the note before you sing it, match it against a steady reference, check yourself with a cents readout, and repeat in short, frequent sessions.
 
-If you have been told you are "tone deaf," read the next section before you give up. Then work through the drills, the 7-day plan and the troubleshooting table. Everything here can be practiced in your browser with the [pitch studio](/studio), the [ear training games](/ear-training) and the drone in [practice tools](/tools).
+To find out where you stand right now, play a mid-range note on a keyboard, stop it, sing it back on "ah" and check the cents readout in the [pitch studio](/studio). Do it five times. If most attempts land within about 25 cents, your ear and voice already connect and you need steadiness. If you keep landing on a different note, start with the hearing drills. If you have been told you are "tone deaf," read the next section before you give up. Then work through the drills, the 7-day plan and the troubleshooting table. Everything here can be practiced in your browser with the [pitch studio](/studio), the [ear training games](/ear-training) and the drone in [practice tools](/tools).
 
 ## Why you sing flat or sharp
 
@@ -25,11 +25,11 @@ Many singers hear the note perfectly well and still miss it. The usual culprits 
 
 ### Monitoring: you cannot hear yourself
 
-Loud backing tracks, a band, or the bone conduction of your own skull can all hide your actual pitch from you. If you sing well alone and poorly with music, monitoring is the likely issue. The course lesson on [why loud playback ruins pitch](/learn/voice/room-check/set-up-your-space/why-loud-playback-ruins-pitch) covers how to set your volume and headphones.
+A loud backing track or band can cover your voice in your own ears, so you lose the feedback you need to correct. If you sing well alone and poorly with music, monitoring is the likely issue. Loud playback also leaks into the microphone and skews any pitch meter. The lesson on [why loud playback ruins pitch](/learn/voice/room-check/set-up-your-space/why-loud-playback-ruins-pitch) shows how to set speaker volume and headphones so both your ears and the meter hear your voice clearly.
 
 ### What about tone deafness?
 
-True tone deafness (congenital amusia) is a real but uncommon condition. Research estimates put it at roughly 1.5 to 4 percent of people, depending on how it is tested. People with amusia usually struggle to tell whether two notes are the same or different, and often cannot recognize familiar tunes without the words. If you can hear that someone else is singing off-key, or you can tell when you yourself are wrong on a recording, you are very unlikely to be in that group. What you have is an untrained skill.
+True tone deafness (congenital amusia) is a real but uncommon condition. Published estimates range from about 1.5 to 4 percent of people, depending on how it is tested. People with amusia usually struggle to tell whether two notes are the same or different, and often cannot recognize familiar tunes without the words. If you can hear that someone else is singing off-key, or you can tell when you yourself are wrong on a recording, you are very unlikely to be in that group. For a closer check, play Higher or lower on Hard in [ear training](/ear-training), where the second note is a semitone above, a semitone below or the same. If you can tell those apart reliably, your pitch hearing works and what you have is an untrained skill.
 
 ::infographic three-ways-off
 
@@ -50,9 +50,9 @@ Do not chase zero. No voice holds dead still, and a healthy vibrato swings above
 
 ## Pitch matching with a drone
 
-A drone is one sustained note that does not stop. It is the single most useful tool for learning to sing on pitch, because it gives your ear a reference to rub against. When you are slightly off, you hear a slow wavering or "beating" against the drone. When you are on, the two sounds lock and the beating disappears.
+A drone is one sustained note that does not stop. It is one of the most useful tools for learning to sing on pitch because it gives your ear a reference to rub against. When you are slightly off, you hear a slow wavering or "beating" against the drone. When you are on, the two sounds lock and the beating disappears.
 
-Open the drone in [practice tools](/tools), set it to a comfortable note in the middle of your voice (A3 or C4 for many lower voices, A4 or C5 for many higher ones), and keep the volume moderate so you can still hear yourself.
+Open the drone in [practice tools](/tools), set it to a comfortable note in the middle of your voice (around A3 to C4 for many lower voices, F4 to A4 for many higher ones), and keep the volume moderate so you can still hear yourself.
 
 ::infographic drone-method
 
@@ -102,17 +102,17 @@ The [ear training](/ear-training) room has short games for matching pitch, catch
 
 ## Hold the note steady
 
-Many singers hit the note and then wander. This is usually breath and effort, not ear. The fix is steadier airflow at a moderate volume.
+Many singers hit the note and then wander. The usual cause is breath and effort rather than the ear. The fix is steadier airflow at a moderate volume.
 
 - **Straw phonation or lip trills.** Semi-occluded exercises (SOVT) such as singing through a straw or doing lip trills balance pressure above and below the vocal folds, making a steady tone easier. Start with the lesson on [straw and lip trill](/learn/voice/steady-tone/straw-and-lip-trill), then sing the same note on an open vowel.
-- **One note per bar.** Hold a single note for four slow beats, rest four, repeat 8 times. The lesson [hold it](/learn/voice/steady-tone/hold-it) walks through this.
+- **One note per bar.** Hold a single note for four slow beats, rest four, repeat 8 times. The lesson [one note per bar](/learn/voice/steady-tone/hold-it/one-note-per-bar) walks through this.
 - **Watch the tail.** In the studio trace, notes that drift flat at the end tell you that breath energy is dropping. Shorten the phrase, take a fresh breath, and rebuild length gradually.
 
-If a whole phrase drifts, the [drift correction lesson](/learn/voice/pitch-time-words/in-tune-all-the-way/drift-correction) teaches a clean way to diagnose and fix it between attempts.
+If a whole phrase drifts, the [drift correction lesson](/learn/voice/pitch-time-words/in-tune-all-the-way/drift-correction) has you hear a sustained reference, sing from silence and compare fresh attempts by ear.
 
 ## Record yourself and listen back
 
-What you hear while singing is not what others hear. Part of your own sound reaches your ears through the bones of your head, which makes you sound fuller and can mask small pitch errors. A recording removes that filter.
+You sound different to yourself than to a listener, because part of your own sound reaches your ears through the bones of your head. While you sing, your attention is also split between making the sound and judging it. A recording lets you do only the judging.
 
 Use the [recorder](/recorder) to capture one short phrase a day, the same phrase each time. Listen once for pitch only. Ask:
 
@@ -120,7 +120,7 @@ Use the [recorder](/recorder) to capture one short phrase a day, the same phrase
 - Did long notes stay put, or sink at the end?
 - Did the hardest leap land, or overshoot?
 
-A simple song works well here. "Amazing Grace" is a classic for a reason: it has a clear melody, a few wide leaps and long notes. Practice the [Amazing Grace song page](/songs/amazing-grace) in a comfortable key. When that feels solid, test yourself on a pop melody such as [Hallelujah](/can-you-sing/hallelujah), whose page shows whether the song sits inside your range.
+A simple song works well here. "Amazing Grace" is a classic for a reason: it has a clear melody, a few wide leaps and long notes. Practice the [Amazing Grace song page](/songs/amazing-grace) in a comfortable key, and use the lesson [Amazing Grace: a phrase to study](/learn/voice/steady-tone/first-song-one-register/amazing-grace-phrase-to-study) for one phrase at a time. When that feels solid, test yourself on a familiar ballad such as [Hallelujah](/can-you-sing/hallelujah), whose page shows whether the song sits inside your range.
 
 ## A 7-day plan to sing on pitch
 
@@ -142,7 +142,7 @@ Keep every note in the comfortable middle of your voice this week. Accuracy on e
 
 ## Common mistakes and fixes
 
-> Most pitch problems are not about talent. They are about attention, effort and feedback.
+> Most pitch problems come down to attention, effort and feedback.
 
 - **Singing too loud.** Volume adds effort and hides pitch errors from your own ears. Practice at medium-soft volume first.
 - **Practicing only with the backing track.** The track covers your mistakes. Use the drone and a cappella attempts, then add the music back.
@@ -196,8 +196,8 @@ export const howToSingOnPitch: BlogPost = {
     "how to match pitch when singing",
   ],
   published: "2026-11-15",
-  updated: "2026-11-15",
-  readMinutes: 11,
+  updated: "2026-11-16",
+  readMinutes: 12,
   category: "Pitch",
   answer:
     "To learn how to sing on pitch, hear the note clearly before you sing it, then match it against a steady reference such as a drone, and check yourself on a cents readout. Most off-key singing comes from an untrained ear or drifting breath, not tone deafness, and both improve with 15 to 20 minutes of daily practice.",
@@ -313,7 +313,7 @@ export const howToSingOnPitch: BlogPost = {
     },
     {
       q: "How do I know if I am singing off-key?",
-      a: "Record yourself and listen back, or sing into a live pitch tracker that shows cents. Your own ears are unreliable while singing because you hear yourself partly through the bones of your head. A readout that sits more than about 25 cents off on held notes is worth working on.",
+      a: "Record yourself and listen back, or sing into a live pitch tracker that shows cents. Your own ears are less reliable while you sing, because you hear yourself partly through the bones of your head and your attention is on making the sound. A readout that sits more than about 25 cents off on held notes is worth working on.",
     },
     {
       q: "How long does it take to improve pitch accuracy?",
@@ -325,7 +325,7 @@ export const howToSingOnPitch: BlogPost = {
     },
     {
       q: "Should I see a doctor if I cannot sing in tune?",
-      a: "Pitch trouble on its own is a training issue, not a medical one. See a doctor or laryngologist if you also have hoarseness lasting more than about two weeks, pain when singing or speaking, or sudden voice loss.",
+      a: "Pitch trouble on its own is usually a training issue. See a doctor or laryngologist if you also have hoarseness lasting more than about two weeks, pain when singing or speaking, or sudden voice loss.",
     },
   ],
   related: [

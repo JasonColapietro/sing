@@ -4,7 +4,7 @@ const body = `## How to sing with vibrato: the short answer
 
 To sing with vibrato, you stop holding the note still and let it move. Vibrato is a small, regular swing in pitch, usually five to seven cycles a second, that a free, steady voice tends to settle into on a sustained note. You get there by releasing jaw, tongue and throat tension, keeping the airflow even, and training the swing with slow-to-fast pitch alternations until your voice takes it over on its own. Then you learn to place it: straight at the start of a note, vibrato toward the end.
 
-Most singers who say they have no vibrato are holding something: the breath, the jaw, the tongue, or the note itself. This article shows you what healthy vibrato is, how to tell it from a wobble or a bleat, six drills that coax it out, a 7-day plan, and how to watch it happen on a pitch trace so you are not guessing.
+Most singers who say they have no vibrato are holding something: the breath, the jaw, the tongue, or the note itself. Below: what healthy vibrato is, how to tell it from a wobble or a bleat, six drills that coax it out, a 7-day plan, and how to check it on a pitch trace instead of guessing.
 
 ## What vibrato actually is
 
@@ -17,7 +17,7 @@ The course adds a third dial, **onset**: whether the vibrato starts at once or a
 
 ::infographic rates
 
-What matters most is regularity. A vibrato that keeps the same rate and the same width through a note sounds like vibrato. One that speeds up, slows down or swings wider and wider sounds like an unsteady voice. The mainstream account in voice science is that vibrato comes from a gentle oscillation in the muscles that set pitch, active but not locked. You cannot build it by force, so the work is mostly about removing what stops it.
+Regularity matters most. A vibrato that keeps the same rate and the same width through a note sounds like vibrato. One that speeds up, slows down or swings wider and wider sounds like an unsteady voice. Voice science traces it mainly to a gentle, regular pulsing in the muscles that adjust pitch, chiefly the cricothyroid, when they are active but not locked. You cannot build it by force, so the work is mostly about removing what stops it.
 
 ::video feel
 
@@ -49,13 +49,15 @@ These four get confused constantly, and singers asking for "more vibrato" someti
 
 ::infographic compare
 
-A wobble is the usual problem in older or heavily pushed voices: the swing gets slow and wide until the center pitch is hard to hear. The course module [fix the wobble](/learn/voice/two-registers/fix-the-wobble) works on the breathiness, tension and pressure that tend to sit underneath it. A fast, narrow bleat usually comes from too much throat tension or pressure, and the fix is the same release work in this article.
+A wobble is the usual problem in older or heavily pushed voices: the swing gets slow and wide until the center pitch is hard to hear. A fast, narrow bleat usually comes from too much throat tension or pressure. Both respond to the release work in this article. For the tone faults that often sit underneath, the course module [fix the wobble](/learn/voice/two-registers/fix-the-wobble) teaches you to tell breathy, nasal and tight tone apart and to release the jaw and tongue.
+
+"Tremolo" is a muddled word. In singing it usually means a fast, narrow, fluttery vibrato, which this article calls a bleat. On instruments it means a throb in volume rather than in pitch. When a teacher says your vibrato is a tremolo, they almost always mean it is too fast and tight.
 
 Straight tone is a choice, and a valuable one. Pop, folk, early music, choral blend and much contemporary musical theater use it constantly. A singer who can sing straight on purpose and let vibrato in on purpose has more control than one who can only do one or the other.
 
 ## Six drills to develop vibrato naturally
 
-Do these in order. Each one isolates a single piece, and later drills assume earlier ones feel easy. Warm up first: four minutes of the [morning warmup](/warmups?routine=morning) is enough.
+Do these in order. Each one isolates a single piece, and later drills assume earlier ones feel easy. Warm up first: the six short exercises in the [Morning reset](/warmups?routine=morning) routine are enough.
 
 ### 1. The straight-tone baseline (2 minutes)
 
@@ -90,7 +92,7 @@ Sing a long, soft "oo" on your baseline note. Think of a tiny "lift" in pitch on
 
 ### 5. Straight, then vibrato (4 minutes)
 
-Now place it. On a 4-count hold at 60 bpm, sing counts 1 and 2 straight, and on count 3 release the note and let the ripple in. On count 4, bring it back to straight and stop. Do 6 reps, then switch: vibrato in on count 2, then on count 4. The course lesson [straight then vibrato](/learn/voice/agility/vibrato-on-demand/straight-then-vibrato) uses the same idea, and its [self-check](/learn/voice/agility/vibrato-on-demand/self-check-straight-to-vibrato-on-cue) asks you to switch on cue three holds in a row on two different days.
+Now place it. On a 4-count hold at 60 bpm, sing counts 1 and 2 straight, and on count 3 release the note and let the ripple in. On count 4, bring it back to straight and stop. Do 6 reps. Then move the entry point: 6 reps with vibrato in on count 2, then 6 reps of a 6-count hold with vibrato in on count 4 and straight again on count 6. The course lesson [straight then vibrato](/learn/voice/agility/vibrato-on-demand/straight-then-vibrato) uses the same idea, and its [self-check](/learn/voice/agility/vibrato-on-demand/self-check-straight-to-vibrato-on-cue) asks you to switch on cue three holds in a row on two different days.
 
 ### 6. Vibrato on a real phrase end (3 minutes)
 
@@ -110,7 +112,7 @@ Open the [pitch studio](/studio) and hold a note. The 8-second trace shows your 
 
 ### The vibrato routine
 
-The [Vibrato routine](/warmups?routine=vibrato) in Warmups gives you long, easy holds in the middle of your range. After each hold it shows you how fast the pitch moved, in hertz, and how wide, in cents, against a 5 to 7 Hz target band. That is all it reads: two numbers about the pitch contour, never whether the vibrato sounded good. A straight hold is a fine result. If you want structure, the [Vibrato in 3 weeks program](/programs) builds the routine into a daily plan.
+The [Vibrato routine](/warmups?routine=vibrato) in Warmups gives you long, easy holds, mostly in the middle of your range, with one lighter hold higher up. After each hold it shows you how fast the pitch moved, in hertz, and how wide, in cents, against a 5 to 7 Hz target band. That is all it reads: two numbers about the pitch contour, never whether the vibrato sounded good. A straight hold is a fine result. If you want structure, the [Vibrato in 3 weeks program](/programs) builds the routine into a daily plan.
 
 ### The recorder and the spectrogram
 
@@ -150,7 +152,7 @@ The jaw bobs up and down and the pitch moves with it. It sounds mechanical and i
 
 ### Pulsing the belly
 
-Rhythmic abdominal pushes make the volume throb, which is closer to a tremolo effect than to vibrato. Fix: keep the exhale smooth and even, and move only the pitch.
+Rhythmic abdominal pushes make the volume throb while the pitch barely moves, which is a pulse, not vibrato. Fix: keep the exhale smooth and even, and move only the pitch.
 
 ### Vibrato on every note
 
@@ -166,19 +168,19 @@ A wide vibrato can mask a center that is slightly flat or sharp. Sing the same n
 
 ## Using vibrato in different styles
 
-Classical and opera singers keep vibrato on nearly every sustained note, with a fuller width. Listen to [Luciano Pavarotti](/singers/luciano-pavarotti) or [Andrea Bocelli](/singers/andrea-bocelli) for even, generous vibrato carried through long lines.
+Classical and opera singers keep vibrato on nearly every sustained note, usually with a fuller width. [Luciano Pavarotti](/singers/luciano-pavarotti) is the textbook case: a quick, even vibrato present from the first instant of the note. [Andrea Bocelli](/singers/andrea-bocelli), recorded close in a crooned style, uses a quicker, shallower shimmer.
 
-Pop, soul and R&B singers mostly start notes straight and let vibrato in late, often only on the last note of a phrase. [Whitney Houston](/singers/whitney-houston) and [Adele](/singers/adele) are good studies in delayed vibrato that blooms on long phrase ends.
+Pop, soul and R&B singers mostly start notes straight and let vibrato in late, often only on the last note of a phrase. [Whitney Houston](/singers/whitney-houston) is a good study in delayed vibrato that arrives at the tail of a held note. [Adele](/singers/adele) uses a slower, wider vibrato under a chesty tone, which shows how much width changes the color.
 
-Some modern pop singers use very little vibrato at all. [Billie Eilish](/singers/billie-eilish) keeps most notes close to straight, which is exactly why her phrases sound intimate.
+Some modern pop singers use very little vibrato at all. [Billie Eilish](/singers/billie-eilish) sings close to the mic at whisper volume and keeps most notes near straight, and that plain tone is part of the intimacy.
 
-The skill underneath every style is the same: a straight tone you trust, and a vibrato you can invite and dismiss on cue. The [Voice Atlas](/atlas) describes vibrato for each singer in terms of rate, width and delay, which turns listening into a practice plan.
+The skill underneath every style is the same: a straight tone you trust, and a vibrato you can invite and dismiss on cue. Many entries in the [Voice Atlas](/atlas) note how a singer's vibrato behaves (fast or slow, wide or narrow, early or late), which gives your listening something specific to copy.
 
 ## When to see a voice teacher or a doctor
 
 A voice teacher is worth it if vibrato still has not appeared after a couple of months of relaxed practice, if you cannot stop a wobble, or if you suspect you are making the movement with your jaw or belly and cannot feel the difference.
 
-See a doctor who can examine the vocal folds, such as an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing hurts, if you lose your voice suddenly, or if a tremor shows up in your speaking voice too and you cannot control it. A shake you did not choose is a question for a doctor, not for a warmup.
+See a doctor who can examine the vocal folds, such as an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing hurts, if you lose your voice suddenly, or if a tremor shows up in your speaking voice too and you cannot control it. An unchosen shake in the voice needs a medical opinion before more practice.
 `;
 
 export const howToSingWithVibrato: BlogPost = {
@@ -200,7 +202,7 @@ export const howToSingWithVibrato: BlogPost = {
   ],
   published: "2026-11-15",
   updated: "2026-11-15",
-  readMinutes: 11,
+  readMinutes: 12,
   category: "Technique",
   answer:
     "To learn how to sing with vibrato, release jaw, tongue and breath tension on a long, easy note and let the pitch swing gently around its center, about five to seven times a second. Train it with straw slides and slow-to-fast pitch alternations until the voice takes the movement over, then place it: straight at the start of a note, vibrato toward the end.",
