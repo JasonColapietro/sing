@@ -82,7 +82,7 @@ Sing slow sirens through a drinking straw or on a [lip trill](/glossary#lip-tril
 
 Say a small, whiny "nyeh" at speaking volume, like mimicking a cartoon brat. Sing it on a comfortable note, then keep that brightness while changing to "eh", then "ah". Do 5 rounds of 3 notes. Keep it quiet. If it only gets louder, start smaller.
 
-Twang should cost almost nothing. The course lesson [twang and ring](/learn/voice/through-the-break/twang-and-ring) uses the same drill and adds the key check: if you can sing the brighter version quietly with an easy neck, it is resonance. If it takes gripping, it is pressing. Our guide on [belting without straining](/blog/how-to-belt-without-straining) builds on the same skill.
+Twang should cost almost nothing. The course lesson [twang and ring](/learn/voice/through-the-break/twang-and-ring) uses the same drill and adds the key check: if you can sing the brighter version quietly with an easy neck, it is resonance. If it takes gripping, it is pressing. Our guide on [belting without straining](/guides/how-to-belt-without-straining) builds on the same skill.
 
 ::video twang
 
@@ -143,7 +143,7 @@ Fifteen to twenty minutes a day is plenty. Keep a short note of what you hear ea
 | Day 6 | Ring | Drill 5 bratty "nyeh", Drill 2 | Ring share rises at the same volume |
 | Day 7 | Song | Warmup, then one song phrase with the best setup | Compare to Day 1 recording |
 
-After the first week, keep the drills that target your main fault and rotate the rest. A structured [program](/programs) can carry you further if you like a schedule. For more on organizing daily sessions, read [how to practice singing at home](/blog/how-to-practice-singing-at-home).
+After the first week, keep the drills that target your main fault and rotate the rest. A structured [program](/programs) can carry you further if you like a schedule. For more on organizing daily sessions, read [how to practice singing at home](/guides/how-to-practice-singing-at-home).
 
 ## How to measure progress
 
@@ -153,13 +153,13 @@ Tone is harder to measure than pitch, so use three checks together:
 - **The studio.** Hold a note in the [studio](/studio) and watch the cents readout. A trace that wanders more than usual is a cue to check your onset and breath, though pitch steadiness and tone are separate skills.
 - **The analyzer.** Save screenshots of your spectrogram on the same note. Stronger, cleaner upper harmonics with less haze is a real change you can point at.
 
-Your range also tends to feel easier as tone improves. A [range test](/range?mode=range#start) every few weeks shows whether your comfortable notes are spreading, and [finding your mixed voice](/blog/how-to-find-your-mixed-voice) helps the tone stay even through your break.
+Your range also tends to feel easier as tone improves. A [range test](/range?mode=range#start) every few weeks shows whether your comfortable notes are spreading, and [finding your mixed voice](/guides/how-to-find-your-mixed-voice) helps the tone stay even through your break.
 
 ## When to see a voice teacher or a doctor
 
 A good voice teacher hears things you cannot hear in yourself and can tell you which of these drills suits your voice. Book a lesson if you have worked on tone for several weeks with little change, if you are not sure whether a sound is twang or pressing, or if you plan to sing for long sessions.
 
-See a doctor, ideally a laryngologist (an ENT who specializes in the voice), if you have hoarseness lasting more than about two weeks, pain when singing or speaking, a sudden loss of voice, or a voice that has become permanently breathy or rough without a clear cause. Persistent breathiness can come from fold changes that no exercise will fix, and only an exam can tell. If singing leaves your throat sore, our guide on [sore throat after singing](/blog/sore-throat-after-singing) explains what to change first.
+See a doctor, ideally a laryngologist (an ENT who specializes in the voice), if you have hoarseness lasting more than about two weeks, pain when singing or speaking, a sudden loss of voice, or a voice that has become permanently breathy or rough without a clear cause. Persistent breathiness can come from fold changes that no exercise will fix, and only an exam can tell. If singing leaves your throat sore, our guide on [sore throat after singing](/guides/sore-throat-after-singing) explains what to change first.
 
 > Good tone is efficient tone. When the folds close cleanly and the jaw and tongue stay free, the voice usually sounds clearer and tires more slowly.
 `;

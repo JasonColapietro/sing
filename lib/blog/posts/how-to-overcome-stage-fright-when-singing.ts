@@ -66,7 +66,7 @@ The safest place to start exposure is your own room. Treat each take as a run-th
 - **Sing for one person.** A partner, a roommate or a friend on a video call. Tell them you want no feedback, only an audience.
 - **Then sing for two or three.** A small living-room session is the next rung on the ladder.
 
-For the full setup of a home practice space, including mic distance and keeping playback low, see [how to practice singing at home](/blog/how-to-practice-singing-at-home). The course lesson [microphone and phrase rehearsal](/learn/voice/signature/the-room/microphone-and-phrase-rehearsal) is worth doing once you start using a mic, and [self-check: your performance study](/learn/voice/signature/the-room/self-check-your-performance-study) gives you a structured way to review your own takes.
+For the full setup of a home practice space, including mic distance and keeping playback low, see [how to practice singing at home](/guides/how-to-practice-singing-at-home). The course lesson [microphone and phrase rehearsal](/learn/voice/signature/the-room/microphone-and-phrase-rehearsal) is worth doing once you start using a mic, and [self-check: your performance study](/learn/voice/signature/the-room/self-check-your-performance-study) gives you a structured way to review your own takes.
 
 ## Choose songs that can survive a shaky day
 
@@ -140,7 +140,7 @@ Nerves are hard to measure directly, but their effects on your voice are not. Tr
 | Drinking alcohol to relax | Dulls coordination and dries the voice | Use slow exhales and your routine instead |
 | Shouting over loud monitors | Strain and a sore throat afterwards | Ask for more of your voice in the monitor |
 
-If your throat aches after a nervous performance, that is a sign of pushing. Read [sore throat after singing](/blog/sore-throat-after-singing) for recovery steps, and see [why your voice cracks](/blog/why-does-my-voice-crack-when-i-sing) if breaks on high notes are feeding your fear.
+If your throat aches after a nervous performance, that is a sign of pushing. Read [sore throat after singing](/guides/sore-throat-after-singing) for recovery steps, and see [why your voice cracks](/guides/why-does-my-voice-crack-when-i-sing) if breaks on high notes are feeding your fear.
 
 ::video schoolofrock
 

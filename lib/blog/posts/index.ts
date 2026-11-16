@@ -29,7 +29,7 @@ import { singingWithACold } from "./singing-with-a-cold";
 import { howToSingOpera } from "./how-to-sing-opera";
 import { howToSingJazz } from "./how-to-sing-jazz";
 import { howToSingCountryMusic } from "./how-to-sing-country-music";
-import { howToSingMusicalTheatre } from "./how-to-sing-musical-theatre";
+import { howToSingMusicalTheater } from "./how-to-sing-musical-theater";
 import { howToSingGospel } from "./how-to-sing-gospel";
 
 /**
@@ -67,6 +67,6 @@ export const POSTS: readonly BlogPost[] = [
   howToSingOpera,
   howToSingJazz,
   howToSingCountryMusic,
-  howToSingMusicalTheatre,
+  howToSingMusicalTheater,
   howToSingGospel,
 ];

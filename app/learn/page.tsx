@@ -372,8 +372,8 @@ export default function LearnPage() {
             <LinkButton href="/atlas" prefetch={false} variant="ghost">
               Read The Voice Atlas
             </LinkButton>
-            <LinkButton href="/blog" prefetch={false} variant="ghost">
-              Singing tips: The Singer&apos;s Column
+            <LinkButton href="/guides" prefetch={false} variant="ghost">
+              Singing guides
             </LinkButton>
           </div>
         </Card>

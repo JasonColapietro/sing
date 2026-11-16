@@ -112,7 +112,7 @@ For the chorus, choose something that sits in your middle range rather than your
 | Breathy loud singing | Lots of air, little volume, dry throat | Work on clean onsets so the folds meet the air |
 | Practicing loud for an hour | Hoarse the next morning | Keep loud work to 10 to 20 minutes |
 
-Two of these deserve more attention. First, loud playback. When you cannot hear yourself, your body raises its effort automatically, and that is how many people end up shouting at rehearsals. The lesson on [why loud playback ruins pitch](/learn/voice/room-check/set-up-your-space/why-loud-playback-ruins-pitch) explains the setup fix. Second, heaviness on the way up. Loud and high are separate goals. If you need both at once, that is belting, and it has its own method in the post on [how to belt without straining](/blog/how-to-belt-without-straining).
+Two of these deserve more attention. First, loud playback. When you cannot hear yourself, your body raises its effort automatically, and that is how many people end up shouting at rehearsals. The lesson on [why loud playback ruins pitch](/learn/voice/room-check/set-up-your-space/why-loud-playback-ruins-pitch) explains the setup fix. Second, heaviness on the way up. Loud and high are separate goals. If you need both at once, that is belting, and it has its own method in the post on [how to belt without straining](/guides/how-to-belt-without-straining).
 
 ## Learn from singers with big, free voices
 
@@ -142,7 +142,7 @@ The free lessons in [louder and softer](/learn/voice/pitch-time-words/louder-sof
 
 ::infographic signs
 
-Stop for the day if you notice any of these, and go back to quiet straw or humming work for the next session. Some throat dryness after a long loud session is common. Pain is not. If your throat hurts during or after singing, the post on [sore throat after singing](/blog/sore-throat-after-singing) covers what to do next.
+Stop for the day if you notice any of these, and go back to quiet straw or humming work for the next session. Some throat dryness after a long loud session is common. Pain is not. If your throat hurts during or after singing, the post on [sore throat after singing](/guides/sore-throat-after-singing) covers what to do next.
 
 ## When to see a voice teacher or a doctor
 
@@ -154,7 +154,7 @@ See a doctor, ideally an ENT or a laryngologist (a throat specialist who examine
 
 ## Summary
 
-You get louder by managing breath pressure, letting the folds close cleanly and shaping a bright, open sound. Work the swell, the call and the twang drills for two weeks, keep the loud work short, and measure with recordings rather than with how big the note feels. If the breathing side still feels vague, read [how to sing from your diaphragm](/blog/how-to-sing-from-your-diaphragm) next.`;
+You get louder by managing breath pressure, letting the folds close cleanly and shaping a bright, open sound. Work the swell, the call and the twang drills for two weeks, keep the loud work short, and measure with recordings rather than with how big the note feels. If the breathing side still feels vague, read [how to sing from your diaphragm](/guides/how-to-sing-from-your-diaphragm) next.`;
 
 export const howToSingLouder: BlogPost = {
   slug: "how-to-sing-louder-without-shouting",

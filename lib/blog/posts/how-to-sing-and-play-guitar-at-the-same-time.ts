@@ -58,7 +58,7 @@ Once the guitar is automatic and simple, add the voice in three layers. Each lay
 
 ### Hum the melody over the chords
 
-Hum the vocal melody on a closed "mm" while you play. Humming gives you the pitch and rhythm of the tune with none of the work of words, and it is gentle on the voice. If the melody wanders against the chords, check it on its own in the [pitch studio](/studio): the cents readout shows whether you land on each note or slide into it. A melody you cannot hold steady without the guitar will not hold steady with it, so [singing on pitch](/blog/how-to-sing-on-pitch) on its own comes first.
+Hum the vocal melody on a closed "mm" while you play. Humming gives you the pitch and rhythm of the tune with none of the work of words, and it is gentle on the voice. If the melody wanders against the chords, check it on its own in the [pitch studio](/studio): the cents readout shows whether you land on each note or slide into it. A melody you cannot hold steady without the guitar will not hold steady with it, so [singing on pitch](/guides/how-to-sing-on-pitch) on its own comes first.
 
 ### Speak the lyrics in rhythm
 
@@ -120,7 +120,7 @@ A guitar changes how you stand and breathe, and a few adjustments keep it from g
 - **Keep your head up.** Looking down at the fretboard drops the chin and can tighten the neck and throat. Glance down, then come back to level. Practicing chord changes without looking (Step 1) pays off here.
 - **Let the ribs move.** The body of the guitar rests against your torso. Hold it lightly so your lower ribs and belly can still expand as you breathe in. The lesson [ribs out, shoulders still](/learn/voice/room-check/breathe-low/ribs-out-shoulders-still) shows the movement to look for.
 - **Use a strap, even sitting.** A strap holds the guitar at the same height every time, so your strumming arm does not tense up to hold it in place.
-- **Breathe in the gaps.** Find the rests in the vocal line and mark them on your lyric sheet. Your strumming hand keeps going; only your voice pauses. If you run out of air, the phrase is probably longer than you planned for, and [breathing from the diaphragm](/blog/how-to-sing-from-your-diaphragm) covers how to fill up low and quickly.
+- **Breathe in the gaps.** Find the rests in the vocal line and mark them on your lyric sheet. Your strumming hand keeps going; only your voice pauses. If you run out of air, the phrase is probably longer than you planned for, and [breathing from the diaphragm](/guides/how-to-sing-from-your-diaphragm) covers how to fill up low and quickly.
 - **Keep your shoulders out of it.** A tight fretting hand and a raised shoulder often pull the neck and jaw tight with them. Shake out both arms between run-throughs.
 
 ::infographic posture-checklist
@@ -168,7 +168,7 @@ Twenty to thirty minutes a day is enough. Pick one song you already know well by
 | 13 | Full tempo, eyes off the neck | Record a full take | 25 |
 | 14 | Play it for someone | Compare with your day 7 recording | 20 |
 
-If you get stuck on a day, repeat it. The plan works because each day adds one thing. For more on fitting practice into a home routine, see [how to practice singing at home](/blog/how-to-practice-singing-at-home).
+If you get stuck on a day, repeat it. The plan works because each day adds one thing. For more on fitting practice into a home routine, see [how to practice singing at home](/guides/how-to-practice-singing-at-home).
 
 ## How to measure your progress
 
@@ -179,7 +179,7 @@ Measure progress instead of trusting feel.
 - **Recordings.** Record a full take on day 7 and day 14 in the [recorder](/recorder) and listen to them back to back. Listen for late entries, rushed choruses and strained top notes.
 - **Range.** If you changed keys, check that the new key sits well inside your [range test](/range?mode=range#start) results.
 
-Once a song holds together, you can add a harmony line on a second take, or sing with a friend. [How to sing harmony](/blog/how-to-sing-harmony) covers finding those notes.
+Once a song holds together, you can add a harmony line on a second take, or sing with a friend. [How to sing harmony](/guides/how-to-sing-harmony) covers finding those notes.
 
 ::video play-and-sing
 

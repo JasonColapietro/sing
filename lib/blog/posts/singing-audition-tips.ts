@@ -95,7 +95,7 @@ A short, polite handover keeps the accompanist on your side.
 - Say thank you before and after.
 - If something goes wrong in the accompaniment, keep singing. The panel is watching how you recover.
 
-For a band or talent show with backing tracks, bring the track in the format the organizer asked for, plus a backup on your phone. Cue it to the exact start, label it with your name and song, and check there is no vocal on it. If you will sing into a microphone, read [how to sing into a microphone](/blog/how-to-sing-into-a-microphone) first. Distance from the mic changes your volume more than your voice does.
+For a band or talent show with backing tracks, bring the track in the format the organizer asked for, plus a backup on your phone. Cue it to the exact start, label it with your name and song, and check there is no vocal on it. If you will sing into a microphone, read [how to sing into a microphone](/guides/how-to-sing-into-a-microphone) first. Distance from the mic changes your volume more than your voice does.
 
 ## Your audition preparation timeline
 
@@ -124,7 +124,7 @@ If the audition is two weeks away, follow this plan once your song and key are s
 | Day 13 | Light: warmup and one calm run | Sleep early |
 | Day 14 | Audition day | Follow the day-of steps |
 
-For a longer runway, a structured [program](/programs) covers range, breath and agility week by week, and [practicing at home](/blog/how-to-practice-singing-at-home) explains how to keep sessions short and specific.
+For a longer runway, a structured [program](/programs) covers range, breath and agility week by week, and [practicing at home](/guides/how-to-practice-singing-at-home) explains how to keep sessions short and specific.
 
 ## Warming up on the day
 
@@ -154,7 +154,7 @@ Pitch and rhythm are the floor. A small slip is forgiven; a song that drifts fla
 
 The slate is your introduction. Keep it short, warm and the same every time: "Hi, I'm Jordan Lee, and I'll be singing 'Song Title' from Show Name." For a pop song, name the artist instead of a show. Then take a breath, find a focus point just above the panel's heads, and nod to the pianist when you are ready.
 
-Practice the slate aloud on every run-through, because a mumbled slate announces nerves before you sing. If nerves are a big part of the problem, [overcoming stage fright](/blog/how-to-overcome-stage-fright-when-singing) has a graded plan for building up to an audience.
+Practice the slate aloud on every run-through, because a mumbled slate announces nerves before you sing. If nerves are a big part of the problem, [overcoming stage fright](/guides/how-to-overcome-stage-fright-when-singing) has a graded plan for building up to an audience.
 
 ## Handling mistakes in the room
 
@@ -198,7 +198,7 @@ Measure a few things before the day.
 
 A voice teacher is worth booking for one or two sessions before an important audition, especially for musical theatre. They can choose and cut material with you, check your key and coach acting choices in a way no app can.
 
-See a doctor, ideally an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing or speaking hurts, or if you suddenly lose your voice. Do not push through an audition on a voice that hurts. If your throat aches after rehearsing, [sore throat after singing](/blog/sore-throat-after-singing) and [look after it](/learn/voice/signature/look-after-it) cover rest and recovery.
+See a doctor, ideally an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing or speaking hurts, or if you suddenly lose your voice. Do not push through an audition on a voice that hurts. If your throat aches after rehearsing, [sore throat after singing](/guides/sore-throat-after-singing) and [look after it](/learn/voice/signature/look-after-it) cover rest and recovery.
 
 ## After the audition: follow-up
 
@@ -378,7 +378,7 @@ export const singingAuditionTips: BlogPost = {
     { href: "/songs", label: "Song library", blurb: "Sing along with a transpose control to find your key." },
     { href: "/warmups?routine=quick", label: "Quick warmup", blurb: "A short guided top-up for the gap before your slot." },
     { href: "/recorder", label: "Recorder", blurb: "Record mock auditions and compare takes over time." },
-    { href: "/blog/how-to-overcome-stage-fright-when-singing", label: "Overcome stage fright", blurb: "A graded plan for singing in front of people." },
+    { href: "/guides/how-to-overcome-stage-fright-when-singing", label: "Overcome stage fright", blurb: "A graded plan for singing in front of people." },
     { href: "https://studio.suedeai.ai", label: "Suede Studio", blurb: "Generate backing tracks with stems to rehearse your audition song." },
   ],
   cta: {

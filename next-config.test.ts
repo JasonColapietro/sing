@@ -109,6 +109,18 @@ describe("raw Vercel host redirects", () => {
   });
 });
 
+describe("Singer's Column move to /guides (2026-11-16)", () => {
+  it("permanently redirects the index and every post from /blog", async () => {
+    const redirects = await nextConfig.redirects?.();
+    expect(redirects).toContainEqual({ source: "/blog", destination: "/guides", permanent: true });
+    expect(redirects).toContainEqual({
+      source: "/blog/:slug",
+      destination: "/guides/:slug",
+      permanent: true,
+    });
+  });
+});
+
 describe("Musical Theater slug redirects (2026-11-03)", () => {
   /** Where Next's redirect phase sends `path`, with the rule that matched. */
   async function resolve(path: string) {

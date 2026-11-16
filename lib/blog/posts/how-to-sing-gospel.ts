@@ -20,7 +20,7 @@ Gospel vocals share a few traits across styles from traditional quartet singing 
 
 ### A strong chest and mix
 
-Most gospel melody sits in the speaking part of the voice and climbs from there. Lead singers use a full [chest voice](/glossary#chest-voice) low down and a bright, speech-based [mix](/glossary#mix) as the line rises, then a [belt](/glossary#belt) at the peaks. The skill is moving through your [passaggio](/glossary#passaggio) without a sudden gear change, so a phrase can start conversational and end in a shout without cracking. If your break still catches you, work through [how to find your mixed voice](/blog/how-to-find-your-mixed-voice) and the course module [through the break](/learn/voice/through-the-break) first.
+Most gospel melody sits in the speaking part of the voice and climbs from there. Lead singers use a full [chest voice](/glossary#chest-voice) low down and a bright, speech-based [mix](/glossary#mix) as the line rises, then a [belt](/glossary#belt) at the peaks. The skill is moving through your [passaggio](/glossary#passaggio) without a sudden gear change, so a phrase can start conversational and end in a shout without cracking. If your break still catches you, work through [how to find your mixed voice](/guides/how-to-find-your-mixed-voice) and the course module [through the break](/learn/voice/through-the-break) first.
 
 ### Runs, riffs and bends
 
@@ -40,7 +40,7 @@ The singer profiles above show something useful: these voices have very differen
 
 ## How to learn a gospel run
 
-Runs are where many singers start, and also where many push too hard. The method is the same one the book chapter on runs teaches: slow first, in small cells, then faster in small steps. The full walkthrough lives in [how to sing riffs and runs](/blog/how-to-sing-riffs-and-runs). Here is the gospel version.
+Runs are where many singers start, and also where many push too hard. The method is the same one the book chapter on runs teaches: slow first, in small cells, then faster in small steps. The full walkthrough lives in [how to sing riffs and runs](/guides/how-to-sing-riffs-and-runs). Here is the gospel version.
 
 ::infographic run
 
@@ -82,7 +82,7 @@ Gospel singers wear different hats depending on the Sunday. Each role asks for d
 
 ### Singing in a gospel choir
 
-Traditional gospel choirs often sing in three parts: soprano, alto and tenor, with the melody sometimes moving between sections. Your job is to blend, stay on your part when the leader goes somewhere new, and match the section's vowels and cut-offs. Learn your line by ear from the rehearsal tracks, then practice holding it against the melody. The guide on [how to sing harmony](/blog/how-to-sing-harmony) and the [ear training room](/ear-training) build that skill. Choir directors in gospel often teach by rote, singing a part and having the section echo it, so fast ear learning is worth more than sight-reading in many rooms.
+Traditional gospel choirs often sing in three parts: soprano, alto and tenor, with the melody sometimes moving between sections. Your job is to blend, stay on your part when the leader goes somewhere new, and match the section's vowels and cut-offs. Learn your line by ear from the rehearsal tracks, then practice holding it against the melody. The guide on [how to sing harmony](/guides/how-to-sing-harmony) and the [ear training room](/ear-training) build that skill. Choir directors in gospel often teach by rote, singing a part and having the section echo it, so fast ear learning is worth more than sight-reading in many rooms.
 
 ### Leading a song
 
@@ -133,11 +133,11 @@ If Sunday is long, keep Monday quiet. Avoid shouting over music in the fellowshi
 
 ### Warm up and cool down
 
-Five to ten minutes of semi-occluded work, such as singing through a straw or a lip trill, before you sing gets the voice moving with less effort. After a long set, a few minutes of gentle humming and slides helps you come down. The [cool-down routine](/warmups?routine=cooldown) is built for this, and [vocal cool-down exercises](/blog/vocal-cool-down-exercises) explains why it helps. For healthy power at the top, read [how to belt without straining](/blog/how-to-belt-without-straining).
+Five to ten minutes of semi-occluded work, such as singing through a straw or a lip trill, before you sing gets the voice moving with less effort. After a long set, a few minutes of gentle humming and slides helps you come down. The [cool-down routine](/warmups?routine=cooldown) is built for this, and [vocal cool-down exercises](/guides/vocal-cool-down-exercises) explains why it helps. For healthy power at the top, read [how to belt without straining](/guides/how-to-belt-without-straining).
 
 ### When to see a voice teacher or doctor
 
-A voice teacher with experience in gospel or contemporary styles is worth finding when you keep hitting the same wall: a crack you cannot get past, runs that will not clean up, or a build that always tires you. See a doctor, ideally a laryngologist (an ear, nose and throat specialist who focuses on the voice), if hoarseness lasts more than about two weeks, if singing hurts, if you lose your voice suddenly, or if your range shrinks and does not come back after rest. If your throat feels raw after singing, [sore throat after singing](/blog/sore-throat-after-singing) covers what to try first.
+A voice teacher with experience in gospel or contemporary styles is worth finding when you keep hitting the same wall: a crack you cannot get past, runs that will not clean up, or a build that always tires you. See a doctor, ideally a laryngologist (an ear, nose and throat specialist who focuses on the voice), if hoarseness lasts more than about two weeks, if singing hurts, if you lose your voice suddenly, or if your range shrinks and does not come back after rest. If your throat feels raw after singing, [sore throat after singing](/guides/sore-throat-after-singing) covers what to try first.
 
 ## How to measure your progress
 
@@ -274,7 +274,7 @@ export const howToSingGospel: BlogPost = {
     { href: "/learn/voice/agility", label: "Agility module", blurb: "Free lessons on runs, turns, blues lines and ornaments, slow to fast." },
     { href: "/warmups?routine=agility", label: "Agility warm-up routine", blurb: "A guided routine that ends on quick five-note scales." },
     { href: "/ear-training", label: "Ear training", blurb: "Hear intervals and harmony parts before you have to hold one in a choir." },
-    { href: "/blog/how-to-sing-riffs-and-runs", label: "How to sing riffs and runs", blurb: "The full method for learning any run, with drills and a two-week plan." },
+    { href: "/guides/how-to-sing-riffs-and-runs", label: "How to sing riffs and runs", blurb: "The full method for learning any run, with drills and a two-week plan." },
     { href: "https://studio.suedeai.ai", label: "Suede Studio", blurb: "Generate a backing track with stems to loop a vamp and practice your answers." },
   ],
   cta: {

@@ -79,7 +79,7 @@ Turn on the drone in [practice tools](/tools) at a comfortable note and hum with
 
 Semi-occluded exercises such as singing through a straw or doing lip trills make it easier to keep the voice steady without squeezing. Do 5 gentle slides up and down a comfortable fifth. The [straw and lip trill module](/learn/voice/steady-tone/straw-and-lip-trill) explains how they work and what to listen for.
 
-For more drills aimed squarely at accuracy, read [how to sing on pitch](/blog/how-to-sing-on-pitch).
+For more drills aimed squarely at accuracy, read [how to sing on pitch](/guides/how-to-sing-on-pitch).
 
 ## What improves quickly and what takes longer
 
@@ -87,7 +87,7 @@ Different parts of singing run on different clocks. Coordination skills like acc
 
 ::infographic timelines
 
-The numbers in that chart are rough planning figures for someone practicing 15 to 20 minutes on most days. Some people move faster and some slower, and illness, stress or a busy talking week can stall things for a while. For a fuller breakdown by goal, see [how long it takes to learn to sing](/blog/how-long-does-it-take-to-learn-to-sing).
+The numbers in that chart are rough planning figures for someone practicing 15 to 20 minutes on most days. Some people move faster and some slower, and illness, stress or a busy talking week can stall things for a while. For a fuller breakdown by goal, see [how long it takes to learn to sing](/guides/how-long-does-it-take-to-learn-to-sing).
 
 ## Learning to sing as an adult
 
@@ -95,7 +95,7 @@ Adults learn motor skills well. You may not have the hours a child has, but you 
 
 A few things are specific to adult beginners:
 
-- **Self-consciousness is the biggest obstacle.** Many adults stopped singing because someone laughed. Practice where nobody can hear you at first. The guide to [practicing singing at home](/blog/how-to-practice-singing-at-home) covers quiet setups and short routines.
+- **Self-consciousness is the biggest obstacle.** Many adults stopped singing because someone laughed. Practice where nobody can hear you at first. The guide to [practicing singing at home](/guides/how-to-practice-singing-at-home) covers quiet setups and short routines.
 - **Your speaking habits come with you.** If you speak low, pressed or breathy, those patterns show up in your singing. Knowing that tells you what to adjust first.
 - **Choose songs in your key.** Most recordings are pitched for the original singer. Check whether a song fits on a page such as [Can you sing Hallelujah?](/can-you-sing/hallelujah) and move the key if it does not. The lesson [your key, not the record's key](/learn/voice/steady-tone/first-song-one-register/your-key-not-the-records-key) explains why this matters so much.
 - **Voices change with age but keep working.** Older voices can still gain accuracy, steadiness and confidence. Gentle warmups and regular use help a great deal.
@@ -132,7 +132,7 @@ Start each session with a short routine from [warmups](/warmups). When the two w
 - **Chasing range before accuracy.** A few in-tune notes are worth more than a wide range of shaky ones.
 - **Stopping after a bad day.** Voices vary daily with sleep, hydration and how much you have talked. Judge progress over weeks, not sessions.
 
-Nerves can make pitch wobble too, even when your technique is fine in private. If singing for others is your goal, the guide on [overcoming stage fright](/blog/how-to-overcome-stage-fright-when-singing) has practical steps.
+Nerves can make pitch wobble too, even when your technique is fine in private. If singing for others is your goal, the guide on [overcoming stage fright](/guides/how-to-overcome-stage-fright-when-singing) has practical steps.
 
 ## How to measure progress
 
@@ -334,7 +334,7 @@ export const canAnyoneLearnToSing: BlogPost = {
     { href: "/ear-training", label: "Ear training", blurb: "Short games for matching pitch, intervals and melodies, including Higher or lower." },
     { href: "/range?mode=range#start", label: "Free range test", blurb: "Find the lowest and highest notes you can sing comfortably today." },
     { href: "/learn", label: "Free voice course", blurb: "A sequenced path from steady tone to registers, pitch and agility." },
-    { href: "/blog/how-to-sing-on-pitch", label: "How to sing on pitch", blurb: "Drills and a 7-day plan focused on accuracy." },
+    { href: "/guides/how-to-sing-on-pitch", label: "How to sing on pitch", blurb: "Drills and a 7-day plan focused on accuracy." },
     { href: "/recorder", label: "Recorder", blurb: "Capture a baseline take and compare it with later ones." },
     {
       href: "https://strumly.suedeai.ai",

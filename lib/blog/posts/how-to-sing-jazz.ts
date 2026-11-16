@@ -62,13 +62,13 @@ Pick one line from a standard. Sing it three times: once exactly as written, onc
 
 ### Small ornaments, used sparingly
 
-Jazz singers bend into notes with a [scoop](/glossary#scoop), fall off the end of a phrase, and add a short [turn](/glossary#turn) here and there. The key word is sparingly. One fall at the end of a phrase says something. Six in a row sound like a habit. The [scoops, falls, bends and slides](/learn/voice/agility/scoops-falls-bends-slides/four-ornaments-named) lessons teach each ornament cleanly so you can choose it on purpose. For longer embellishments, see the guide to [riffs and runs](/blog/how-to-sing-riffs-and-runs).
+Jazz singers bend into notes with a [scoop](/glossary#scoop), fall off the end of a phrase, and add a short [turn](/glossary#turn) here and there. The key word is sparingly. One fall at the end of a phrase says something. Six in a row sound like a habit. The [scoops, falls, bends and slides](/learn/voice/agility/scoops-falls-bends-slides/four-ornaments-named) lessons teach each ornament cleanly so you can choose it on purpose. For longer embellishments, see the guide to [riffs and runs](/guides/how-to-sing-riffs-and-runs).
 
 ## Learning a standard from a lead sheet
 
 The core jazz repertoire is the standard: songs from Broadway and Hollywood written mostly between the 1920s and the 1950s, often called the Great American Songbook, plus jazz tunes from later decades. Good first standards have a modest range and a clear story: "Autumn Leaves," "Fly Me to the Moon," "Summertime," "All of Me," "Blue Moon," "Bye Bye Blackbird."
 
-Jazz musicians read from a lead sheet: one line of melody, the lyric under it, and chord symbols above. Nobody expects a singer to read everything at sight, but you should be able to follow the form and hand the band a chart in your key. If notation is new to you, [how to read music for singing](/blog/how-to-read-music-for-singing) gets you there.
+Jazz musicians read from a lead sheet: one line of melody, the lyric under it, and chord symbols above. Nobody expects a singer to read everything at sight, but you should be able to follow the form and hand the band a chart in your key. If notation is new to you, [how to read music for singing](/guides/how-to-read-music-for-singing) gets you there.
 
 ::infographic learn-a-standard
 
@@ -87,13 +87,13 @@ Most standards follow a 32-bar form, often AABA: an eight-bar idea, the same ide
 Because jazz is sung so close to speech, the microphone is part of your instrument. A gentle, breathy line that would vanish in an acoustic room carries perfectly a few inches from a mic.
 
 - **Proximity effect.** Most directional microphones add bass as you move closer. Leaning in on a soft phrase makes your voice sound warmer and more intimate. Pulling back a few inches on a loud note keeps it from distorting.
-- **Use distance as a volume control.** The course lesson [Mic Distance Is a Dynamic Control](/learn/voice/signature/the-room/mic-distance-is-a-dynamic-control) walks through it step by step, and the guide on [how to sing into a microphone](/blog/how-to-sing-into-a-microphone) covers gear and setup.
+- **Use distance as a volume control.** The course lesson [Mic Distance Is a Dynamic Control](/learn/voice/signature/the-room/mic-distance-is-a-dynamic-control) walks through it step by step, and the guide on [how to sing into a microphone](/guides/how-to-sing-into-a-microphone) covers gear and setup.
 - **Keep the tone easy.** Intimate does not mean pinched. A light, speech-like voice still needs steady airflow underneath it. If quiet singing feels tight, warm up with a straw or a [lip trill](/glossary#lip-trill) first, then speak the lyric on pitch before you sing it.
 - **Vibrato is a choice.** Many jazz singers hold a note straight, then let vibrato bloom near the end. The lesson [Straight Then Vibrato](/learn/voice/agility/vibrato-on-demand/straight-then-vibrato) trains exactly that control.
 
 ::infographic jazz-tone
 
-Jazz also asks you to mean the words. If you want to work on that side directly, [how to sing with emotion](/blog/how-to-sing-with-emotion) pairs well with this guide.
+Jazz also asks you to mean the words. If you want to work on that side directly, [how to sing with emotion](/guides/how-to-sing-with-emotion) pairs well with this guide.
 
 ## Scat singing basics
 

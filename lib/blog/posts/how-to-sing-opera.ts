@@ -28,7 +28,7 @@ Trained classical voices, especially tenors, baritones, basses and mezzos, often
 
 ### Pure vowels and a consistent vibrato
 
-Classical singing builds on five basic Italian vowel shapes (ah, eh, ee, oh, oo), each held without sliding into a diphthong. Singing on these clean vowels keeps the resonance even from note to note, which is why classical singers learn them first, even if they will mostly sing in English or German. Classical voices also tend to carry a steady, regular [vibrato](/glossary#vibrato), usually around 5 to 7 cycles per second, that appears on its own once the voice is free. If yours does not show up yet, our guide on [how to sing with vibrato](/blog/how-to-sing-with-vibrato) explains why and what to do.
+Classical singing builds on five basic Italian vowel shapes (ah, eh, ee, oh, oo), each held without sliding into a diphthong. Singing on these clean vowels keeps the resonance even from note to note, which is why classical singers learn them first, even if they will mostly sing in English or German. Classical voices also tend to carry a steady, regular [vibrato](/glossary#vibrato), usually around 5 to 7 cycles per second, that appears on its own once the voice is free. If yours does not show up yet, our guide on [how to sing with vibrato](/guides/how-to-sing-with-vibrato) explains why and what to do.
 
 ::infographic compare
 
@@ -55,7 +55,7 @@ Opera phrases are long and the sound is sustained, so breath management carries 
 - As you sing, resist the urge to collapse the ribs at once. Let them come in slowly.
 - Stop each phrase with a little air left. Squeezing out the last drop leads to a pressed, flat ending.
 
-Our guide on [how to sing from your diaphragm](/blog/how-to-sing-from-your-diaphragm) goes deeper, and the [breath room](/breath) trains an even, timed exhale away from pitch.
+Our guide on [how to sing from your diaphragm](/guides/how-to-sing-from-your-diaphragm) goes deeper, and the [breath room](/breath) trains an even, timed exhale away from pitch.
 
 ## Five classical exercises for beginners
 
@@ -135,7 +135,7 @@ Opera singers are loud because their resonance is efficient. Shouting into a hig
 
 ### Lifting the larynx on high notes
 
-When the larynx rides up, the top gets thin and strained. Fix: modify the vowel slightly toward a rounder shape as you approach the passaggio ("ah" leaning toward "aw"), a standard classical technique called [vowel modification](/glossary#vowel-modification). The course lesson on [vowel modification through the break](/learn/voice/through-the-break/vowel-modification-through-the-break) walks you through it, and our guide to [singing in head voice](/blog/how-to-sing-in-head-voice) covers the upper register.
+When the larynx rides up, the top gets thin and strained. Fix: modify the vowel slightly toward a rounder shape as you approach the passaggio ("ah" leaning toward "aw"), a standard classical technique called [vowel modification](/glossary#vowel-modification). The course lesson on [vowel modification through the break](/learn/voice/through-the-break/vowel-modification-through-the-break) walks you through it, and our guide to [singing in head voice](/guides/how-to-sing-in-head-voice) covers the upper register.
 
 ### Breaking the line on consonants
 
@@ -158,7 +158,7 @@ You can learn a great deal on your own, but classical singing is the style where
 
 Look for someone who teaches classical voice specifically and can demonstrate what they ask for. Many belong to professional bodies such as the National Association of Teachers of Singing (NATS) in the US. Use this site between lessons for warmups, pitch checks and recordings.
 
-See a doctor, ideally an ENT or a laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you sing or speak, or a sudden loss of voice. Those are medical questions, and a voice teacher cannot answer them. Our article on a [sore throat after singing](/blog/sore-throat-after-singing) covers the warning signs in more detail.`;
+See a doctor, ideally an ENT or a laryngologist, if you have hoarseness that lasts more than about two weeks, pain when you sing or speak, or a sudden loss of voice. Those are medical questions, and a voice teacher cannot answer them. Our article on a [sore throat after singing](/guides/sore-throat-after-singing) covers the warning signs in more detail.`;
 
 const answer =
   "To sing opera, train a comfortably low, stable larynx, an open throat, ringing resonance that carries without a microphone, smooth legato and pure Italian vowels. Practice them slowly on five-note scales, legato slurs, messa di voce and short Italian art songs, and work with a classical voice teacher once the basics feel easy.";
@@ -289,7 +289,7 @@ export const howToSingOpera: BlogPost = {
     { href: "/analyze", label: "Voice analyzer", blurb: "See your harmonics and the ring band around 3 kHz on a live spectrogram." },
     { href: "/learn/voice/two-registers/vowels-that-work", label: "Vowels that work", blurb: "A free course module on keeping one tone across five vowel shapes." },
     { href: "/warmups", label: "Guided warmups", blurb: "Short guided routines to get your voice ready before scales and songs." },
-    { href: "/blog/how-to-improve-vocal-tone", label: "How to improve vocal tone", blurb: "Resonance, vowels and release for a fuller, freer sound." },
+    { href: "/guides/how-to-improve-vocal-tone", label: "How to improve vocal tone", blurb: "Resonance, vowels and release for a fuller, freer sound." },
     { href: "https://cosmos.suedeai.ai", label: "Cosmos music discovery map", blurb: "Explore classical and opera alongside other genres on an interactive map." },
   ],
   cta: {

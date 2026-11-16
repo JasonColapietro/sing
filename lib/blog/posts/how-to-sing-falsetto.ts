@@ -32,7 +32,7 @@ The words get mixed up, partly because some teachers use "head voice" and "false
 
 ::infographic registers
 
-The quickest test is a swell. Sing a high note quietly and make it gradually louder. If it grows and stays clear, you were most likely in head voice. If it stays the same size, gets breathier and then flips down into chest, that was most likely falsetto. Both are useful sounds that need different practice, and our article on [how to sing high notes](/blog/how-to-sing-high-notes) covers the head voice side.
+The quickest test is a swell. Sing a high note quietly and make it gradually louder. If it grows and stays clear, you were most likely in head voice. If it stays the same size, gets breathier and then flips down into chest, that was most likely falsetto. Both are useful sounds that need different practice, and our article on [how to sing high notes](/guides/how-to-sing-high-notes) covers the head voice side.
 
 ## How to find your falsetto
 
@@ -91,7 +91,7 @@ A useful drill is the air dial. Pick one comfortable falsetto note. Sing it for 
 
 ## Switching between chest and falsetto on purpose
 
-A flip from chest into falsetto is a style choice in a lot of music. Folk and country singers use it as a yodel-like ornament, R&B singers flip on a single word for emphasis, and indie singers jump up an octave into falsetto for a chorus. The goal is to flip at the pitch you choose. Accidental cracks are covered in [why your voice cracks when you sing](/blog/why-does-my-voice-crack-when-i-sing).
+A flip from chest into falsetto is a style choice in a lot of music. Folk and country singers use it as a yodel-like ornament, R&B singers flip on a single word for emphasis, and indie singers jump up an octave into falsetto for a chorus. The goal is to flip at the pitch you choose. Accidental cracks are covered in [why your voice cracks when you sing](/guides/why-does-my-voice-crack-when-i-sing).
 
 ### Drill: same pitch, two ways
 
@@ -103,7 +103,7 @@ Sing a two-note pattern: a low note in chest, then a note a fourth or fifth high
 
 ### Drill: the slow blend
 
-Slide on "oo" from chest up into falsetto as smoothly as you can, trying to hide the gear change. Do 6 slow slides. This one is harder, and it is the start of connecting your registers. The siren lesson [octave sirens on three vowels](/learn/voice/two-registers/the-siren/octave-sirens-three-vowels) builds the same skill, and our guide to [finding your mixed voice](/blog/how-to-find-your-mixed-voice) takes it further.
+Slide on "oo" from chest up into falsetto as smoothly as you can, trying to hide the gear change. Do 6 slow slides. This one is harder, and it is the start of connecting your registers. The siren lesson [octave sirens on three vowels](/learn/voice/two-registers/the-siren/octave-sirens-three-vowels) builds the same skill, and our guide to [finding your mixed voice](/guides/how-to-find-your-mixed-voice) takes it further.
 
 | Style | How falsetto is used | Try this |
 |---|---|---|
@@ -155,7 +155,7 @@ When you compare, listen for three things: you can find falsetto instantly, the 
 
 A voice teacher can quickly tell you whether a sound is falsetto, head voice or a mix, which is hard to judge from inside your own head. Book a lesson if you have practiced for a few weeks and still cannot switch on purpose, or if your falsetto always sounds pinched.
 
-Falsetto itself is not harmful when it feels easy. See a doctor, ideally a laryngologist (an ENT who specializes in the voice), if hoarseness lasts more than about two weeks, if singing hurts, if you lose your voice suddenly, or if a falsetto you used to have disappears without a clear reason. Losing easy, quiet high notes is often one of the first changes when the folds are irritated or injured, so get it checked rather than practicing through it. Our article on [a sore throat after singing](/blog/sore-throat-after-singing) and the course module [look after it](/learn/voice/signature/look-after-it) cover rest, hydration and a stop plan.
+Falsetto itself is not harmful when it feels easy. See a doctor, ideally a laryngologist (an ENT who specializes in the voice), if hoarseness lasts more than about two weeks, if singing hurts, if you lose your voice suddenly, or if a falsetto you used to have disappears without a clear reason. Losing easy, quiet high notes is often one of the first changes when the folds are irritated or injured, so get it checked rather than practicing through it. Our article on [a sore throat after singing](/guides/sore-throat-after-singing) and the course module [look after it](/learn/voice/signature/look-after-it) cover rest, hydration and a stop plan.
 `;
 
 export const howToSingFalsetto: BlogPost = {

@@ -109,7 +109,7 @@ When a new melody lands in front of you, do these in order. Spend longer on the 
 
 Say the line is in G major (one sharp) and starts on B4. G is do, so B is mi. Play G4 on the keyboard, sing do-re-mi up to the B, and you are on your starting note. Tap the rhythm while counting. Speak the syllables in rhythm. Then turn on a G drone and sing, listening for each note to settle against it. If a leap trips you, stop, sing the two notes slowly on solfège against the drone, and put the phrase back together.
 
-Choral singers often read off the harmony as much as the melody, so once single lines feel steady, the same method carries into parts. [How to sing harmony](/blog/how-to-sing-harmony) shows how thirds and sixths work against a melody.
+Choral singers often read off the harmony as much as the melody, so once single lines feel steady, the same method carries into parts. [How to sing harmony](/guides/how-to-sing-harmony) shows how thirds and sixths work against a melody.
 
 ## A daily 10-minute plan for two weeks
 
@@ -129,7 +129,7 @@ On rest days, or if your voice feels tired, keep the first two columns and skip 
 
 Reading is easy to fool yourself about. These checks show whether you are actually landing the notes.
 
-- **Pitch studio cents readout.** Sing your sight-read line in the [pitch studio](/studio). It shows the note you sang and how many cents above or below the target you are. A cent is one hundredth of a semitone. Wrong notes show up as a whole lane off; tuning drift shows as a steady lean in cents. [How to sing on pitch](/blog/how-to-sing-on-pitch) covers what to do with each.
+- **Pitch studio cents readout.** Sing your sight-read line in the [pitch studio](/studio). It shows the note you sang and how many cents above or below the target you are. A cent is one hundredth of a semitone. Wrong notes show up as a whole lane off; tuning drift shows as a steady lean in cents. [How to sing on pitch](/guides/how-to-sing-on-pitch) covers what to do with each.
 - **Ear-training scores.** Every game runs ten rounds, and your best score at each difficulty is saved in your browser, so you can watch Interval ID climb from week one to week two.
 - **The recorder.** Record one new line on day 1 and a different line of similar difficulty on day 14 in the [recorder](/recorder). Listen for hesitation before leaps and for rhythm that rushes on long notes.
 - **Your range on the page.** Write the two numbers from your [range test](/range?mode=range#start) above a staff in your clef. Any melody inside them is one you can read and sing today; anything outside is a candidate for transposing.
@@ -156,7 +156,7 @@ Sight-reading itself should not strain your voice. It is mostly quiet singing in
 
 ## Where to go next
 
-Reading opens up the whole repertoire. For a model of accurate pitch, listen to [Ella Fitzgerald](/singers/ella-fitzgerald), famous for her intonation and for scat lines built from the chord tones you are learning to see. Use the [glossary](/glossary) when a score throws an unfamiliar term at you, and keep the routine going with [how to practice singing at home](/blog/how-to-practice-singing-at-home) once reading becomes part of your normal session.`;
+Reading opens up the whole repertoire. For a model of accurate pitch, listen to [Ella Fitzgerald](/singers/ella-fitzgerald), famous for her intonation and for scat lines built from the chord tones you are learning to see. Use the [glossary](/glossary) when a score throws an unfamiliar term at you, and keep the routine going with [how to practice singing at home](/guides/how-to-practice-singing-at-home) once reading becomes part of your normal session.`;
 
 export const howToReadMusicForSinging: BlogPost = {
   slug: "how-to-read-music-for-singing",

@@ -51,7 +51,7 @@ Your voice has a wider dynamic range than a sound system likes: a soft verse can
 - **Long crescendos:** move smoothly, not in jumps. Practice the movement until it happens without thinking.
 - **Breaths:** turn your head slightly away or drop the mic a little for big inhales, so the breath noise does not become part of the song.
 
-The free course covers this exact skill in the lesson [mic distance is a dynamic control](/learn/voice/signature/the-room/mic-distance-is-a-dynamic-control), and its partner lesson on [dynamics without pushing](/learn/voice/pitch-time-words/louder-softer/dynamics-without-pushing) trains the vocal side: getting louder through resonance and breath energy rather than squeeze. If your loud notes feel pressed, the [belting article](/blog/how-to-belt-without-straining) is the place to fix the voice first.
+The free course covers this exact skill in the lesson [mic distance is a dynamic control](/learn/voice/signature/the-room/mic-distance-is-a-dynamic-control), and its partner lesson on [dynamics without pushing](/learn/voice/pitch-time-words/louder-softer/dynamics-without-pushing) trains the vocal side: getting louder through resonance and breath energy rather than squeeze. If your loud notes feel pressed, the [belting article](/guides/how-to-belt-without-straining) is the place to fix the voice first.
 
 > When a loud note distorts, keep singing it at full size and move the microphone back.
 
@@ -86,7 +86,7 @@ Singing in tune depends on hearing yourself. When you cannot, two things happen 
 - **In-ear monitors** seal out stage noise and put your voice directly in your ears. Ask for a little room sound if you feel cut off from the band.
 - **Headphones in the studio:** a common trick is to slide one side off one ear so you hear your acoustic voice as well. Keep the headphone level moderate so the click track does not bleed into a sensitive condenser.
 
-At home, the same rule applies. If you practice with a backing track blasting from a speaker, you will not hear your pitch accurately, and the mic will pick up the track as well as you. The course lesson on [why loud playback ruins pitch](/learn/voice/room-check/set-up-your-space/why-loud-playback-ruins-pitch) shows how to set this up, and the [pitch studio](/studio) cents readout is a good honest check: sing the same phrase with the track loud on speakers and then quietly in headphones, and compare how far off each take reads. For more on pitch itself, see [how to sing on pitch](/blog/how-to-sing-on-pitch).
+At home, the same rule applies. If you practice with a backing track blasting from a speaker, you will not hear your pitch accurately, and the mic will pick up the track as well as you. The course lesson on [why loud playback ruins pitch](/learn/voice/room-check/set-up-your-space/why-loud-playback-ruins-pitch) shows how to set this up, and the [pitch studio](/studio) cents readout is a good honest check: sing the same phrase with the track loud on speakers and then quietly in headphones, and compare how far off each take reads. For more on pitch itself, see [how to sing on pitch](/guides/how-to-sing-on-pitch).
 
 ## Gain staging basics
 
@@ -110,7 +110,7 @@ You do not need a studio microphone to practice mic technique. A phone records c
 - Pick a soft-furnished room. Bathrooms sound flattering because the echo can mask small pitch errors.
 - Use wired headphones for any backing track and keep it quiet.
 
-Record in the [recorder](/recorder), which lets you A/B two takes side by side. Then open the same phrase in the [voice analyzer](/analyze): the spectrogram shows your harmonics, and it is a useful way to see that a take at different distances does change the balance of low and high energy. For a full home routine, read [how to practice singing at home](/blog/how-to-practice-singing-at-home).
+Record in the [recorder](/recorder), which lets you A/B two takes side by side. Then open the same phrase in the [voice analyzer](/analyze): the spectrogram shows your harmonics, and it is a useful way to see that a take at different distances does change the balance of low and high energy. For a full home routine, read [how to practice singing at home](/guides/how-to-practice-singing-at-home).
 
 ## Drills for mic technique
 
@@ -170,7 +170,7 @@ Mic technique is easy to measure because the results are audible. Keep a weekly 
 
 ## When to see a voice teacher or a doctor
 
-A voice teacher is worth booking if you sound fine acoustically but fall apart on a mic, if you cannot hear yourself on stage and keep pushing, or if you have an audition or first gig coming up. One lesson spent on stage craft can save weeks of guessing; the [stage fright guide](/blog/how-to-overcome-stage-fright-when-singing) helps with the nerves side too.
+A voice teacher is worth booking if you sound fine acoustically but fall apart on a mic, if you cannot hear yourself on stage and keep pushing, or if you have an audition or first gig coming up. One lesson spent on stage craft can save weeks of guessing; the [stage fright guide](/guides/how-to-overcome-stage-fright-when-singing) helps with the nerves side too.
 
 See a doctor, ideally an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing hurts, or if you lose your voice suddenly. Repeated hoarseness after gigs is often a sign of oversinging into poor monitors, and it is worth having checked rather than pushing through. The course lesson on [looking after your voice](/learn/voice/signature/look-after-it) covers day-to-day care.
 

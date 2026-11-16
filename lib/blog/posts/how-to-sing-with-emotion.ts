@@ -60,11 +60,11 @@ Phrasing is how you group the words and where you breathe. Breathing in the midd
 
 ### Tone color
 
-The same note can sound bright, dark, breathy or full. A little air in the tone sounds intimate and close. A brighter, more forward sound reads as open, confident or angry. A darker, rounder vowel sounds warm or grave. Use breathiness sparingly: a whole song of it tires the voice and drifts flat. The post on [how to improve vocal tone](/blog/how-to-improve-vocal-tone) covers the resonance side, and the course lesson [neutral, restrained, driven, edged](/learn/voice/signature/modes-of-weight/neutral-restrained-driven-edged) gives you four named weights to choose between on purpose.
+The same note can sound bright, dark, breathy or full. A little air in the tone sounds intimate and close. A brighter, more forward sound reads as open, confident or angry. A darker, rounder vowel sounds warm or grave. Use breathiness sparingly: a whole song of it tires the voice and drifts flat. The post on [how to improve vocal tone](/guides/how-to-improve-vocal-tone) covers the resonance side, and the course lesson [neutral, restrained, driven, edged](/learn/voice/signature/modes-of-weight/neutral-restrained-driven-edged) gives you four named weights to choose between on purpose.
 
 ### Onsets, releases and small ornaments
 
-How a note starts and ends carries feeling. A gentle onset sounds tender. A clean, decisive one sounds sure. A small scoop into a word can sound like a sigh; a fall-off at the end of a line can sound resigned. The lesson on [scoops, falls, bends and slides](/learn/voice/agility/scoops-falls-bends-slides/four-ornaments-named) names each one so you can choose it. Vibrato belongs here too: a straight tone that blooms into vibrato at the end of a held word is one of the most moving sounds in singing. Our guide on [how to sing with vibrato](/blog/how-to-sing-with-vibrato) shows how to place it.
+How a note starts and ends carries feeling. A gentle onset sounds tender. A clean, decisive one sounds sure. A small scoop into a word can sound like a sigh; a fall-off at the end of a line can sound resigned. The lesson on [scoops, falls, bends and slides](/learn/voice/agility/scoops-falls-bends-slides/four-ornaments-named) names each one so you can choose it. Vibrato belongs here too: a straight tone that blooms into vibrato at the end of a held word is one of the most moving sounds in singing. Our guide on [how to sing with vibrato](/guides/how-to-sing-with-vibrato) shows how to place it.
 
 ### Face and body
 
@@ -145,7 +145,7 @@ If your voice feels tired, stop for the day.
 Expression is subjective, but your recordings and the pitch readout still give you evidence.
 
 - **Recorder.** Your main tool. Record the same section every few days and listen back a day later, with fresh ears. Ask: could a stranger tell which line matters most? The [recorder](/recorder) keeps your takes so you can compare them with your baseline.
-- **Pitch studio.** Emotional choices often knock pitch off. In the [studio](/studio), the cents readout tells you how far you are from the target note. A deliberate scoop that lands in the center is fine. A quiet line that keeps ending 30 or 40 cents flat often means your breath support dropped with the volume, and the [on-pitch guide](/blog/how-to-sing-on-pitch) will help.
+- **Pitch studio.** Emotional choices often knock pitch off. In the [studio](/studio), the cents readout tells you how far you are from the target note. A deliberate scoop that lands in the center is fine. A quiet line that keeps ending 30 or 40 cents flat often means your breath support dropped with the volume, and the [on-pitch guide](/guides/how-to-sing-on-pitch) will help.
 - **Voice analyzer.** The [analyzer](/analyze) shows a spectrogram, so you can see your vibrato appear, and see a breathy tone (more noise, weaker upper harmonics) next to a brighter one.
 - **Comfort after singing.** Your voice should feel the same or better after an expressive run as before it. If it feels worse, scale the effects back.
 
@@ -157,7 +157,7 @@ Sobbing, heavy scoops on every word, constant breathiness and big vibrato everyw
 
 ### Squeezing to sound intense
 
-Raw emotion often shows up as throat tension: a pressed, tight sound, a jaw that clamps, a neck that sticks out. It can make you hoarse within a song. **Fix:** get intensity from word stress, timing and resonance instead. The course lessons on [what a growl actually is](/learn/voice/signature/effects-carefully/what-a-growl-actually-is) and [effects with a stop plan](/learn/voice/signature/effects-carefully/effects-listening-and-a-stop-plan) explain what grit is, when to stop, and why it is best learned with a teacher listening, and our [belting guide](/blog/how-to-belt-without-straining) covers big sounds safely.
+Raw emotion often shows up as throat tension: a pressed, tight sound, a jaw that clamps, a neck that sticks out. It can make you hoarse within a song. **Fix:** get intensity from word stress, timing and resonance instead. The course lessons on [what a growl actually is](/learn/voice/signature/effects-carefully/what-a-growl-actually-is) and [effects with a stop plan](/learn/voice/signature/effects-carefully/effects-listening-and-a-stop-plan) explain what grit is, when to stop, and why it is best learned with a teacher listening, and our [belting guide](/guides/how-to-belt-without-straining) covers big sounds safely.
 
 ### Same level all the way through
 
@@ -165,7 +165,7 @@ The whole song at one volume and one color. **Fix:** go back to your section int
 
 ### Nerves flattening everything
 
-Under pressure, many singers drop every choice and just try to survive. **Fix:** rehearse the choices until they are habits, and read our guide on [stage fright when singing](/blog/how-to-overcome-stage-fright-when-singing). A single clear intention per section is easier to hold onto than a dozen small effects.
+Under pressure, many singers drop every choice and just try to survive. **Fix:** rehearse the choices until they are habits, and read our guide on [stage fright when singing](/guides/how-to-overcome-stage-fright-when-singing). A single clear intention per section is easier to hold onto than a dozen small effects.
 
 ## Keep your voice healthy while you emote
 

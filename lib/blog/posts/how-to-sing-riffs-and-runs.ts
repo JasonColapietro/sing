@@ -27,7 +27,7 @@ Runs sit on top of two skills. If either is shaky, speed will expose it.
 
 ### Pitch accuracy on single notes
 
-A run is only as clean as its worst note. If you tend to land a little flat or sharp on held notes, fix that first, because a fast version of a wrong note is still a wrong note. The guide to [how to sing on pitch](/blog/how-to-sing-on-pitch) and the [ear training room](/ear-training) cover the groundwork. A good benchmark: you can hold a note in the [studio](/studio) with the cents readout staying within about 20 cents of center for a few seconds.
+A run is only as clean as its worst note. If you tend to land a little flat or sharp on held notes, fix that first, because a fast version of a wrong note is still a wrong note. The guide to [how to sing on pitch](/guides/how-to-sing-on-pitch) and the [ear training room](/ear-training) cover the groundwork. A good benchmark: you can hold a note in the [studio](/studio) with the cents readout staying within about 20 cents of center for a few seconds.
 
 ### A light, flexible voice
 
@@ -139,7 +139,7 @@ Your ears are not reliable at fast speeds, especially while you are singing. Thr
 
 ## A two-week practice plan
 
-About 15 to 20 minutes a day, with two rest days a week. If you want a longer structured version, the [Riffs and runs in 4 weeks program](/programs?program=runs-4w) builds the same cells day by day, and its first week is free. For fitting practice into a routine at home, see [how to practice singing at home](/blog/how-to-practice-singing-at-home).
+About 15 to 20 minutes a day, with two rest days a week. If you want a longer structured version, the [Riffs and runs in 4 weeks program](/programs?program=runs-4w) builds the same cells day by day, and its first week is free. For fitting practice into a routine at home, see [how to practice singing at home](/guides/how-to-practice-singing-at-home).
 
 | Day | Focus | What to do |
 |---|---|---|
@@ -176,7 +176,7 @@ Copy first, then make it yours. The course's [phrase and ornament study](/learn/
 
 A voice teacher is worth it when you have worked the ladder for a few weeks and one specific fault will not shift, or when you cannot tell whether your runs are light or pushed. A teacher can hear things a pitch trace cannot, like tension, timing and style.
 
-Runs are light work when they are sung lightly. If your throat feels tired or scratchy after a session, you were singing them too loud, too high or too long. Rest, and see [sore throat after singing](/blog/sore-throat-after-singing) for recovery basics. See a doctor, ideally an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing hurts, or if you lose your voice suddenly.`;
+Runs are light work when they are sung lightly. If your throat feels tired or scratchy after a session, you were singing them too loud, too high or too long. Rest, and see [sore throat after singing](/guides/sore-throat-after-singing) for recovery basics. See a doctor, ideally an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing hurts, or if you lose your voice suddenly.`;
 
 export const howToSingRiffsAndRuns: BlogPost = {
   slug: "how-to-sing-riffs-and-runs",

@@ -164,6 +164,19 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // The Singer's Column launched at /blog and moved to /guides on
+        // 2026-11-16: evergreen how-to articles read as guides, not a dated
+        // blog. Every published /blog URL keeps working.
+        source: "/blog",
+        destination: "/guides",
+        permanent: true,
+      },
+      {
+        source: "/blog/:slug",
+        destination: "/guides/:slug",
+        permanent: true,
+      },
+      {
         // The library files this category as Contralto, but "alto" is the
         // commoner word and what the range test used to answer. Both the
         // stored label on a returning singer's device and anyone searching

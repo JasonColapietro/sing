@@ -74,7 +74,7 @@ The cry is a quick, slightly broken catch in the tone, often on the start of a w
 
 ### The break (yodel flip)
 
-The country break is a deliberate flip from chest-dominant voice into a lighter head voice or falsetto and back, the descendant of the yodel. Where many styles train you to hide the register change, country sometimes shows it off. To learn it, you first need to know where your own break is. Slide gently on "oo" from low to high with a [siren](/learn/voice/two-registers/the-siren/slide-through-do-not-jump-over), note where the voice changes gear, then practice a two-note pattern: a chest note just below that zone, then a lighter note a third or fourth above, flipping cleanly. Ten slow reps, then ten at tempo. If your voice cracks when you do not want it to, the post on [why voices crack](/blog/why-does-my-voice-crack-when-i-sing) explains the mechanics.
+The country break is a deliberate flip from chest-dominant voice into a lighter head voice or falsetto and back, the descendant of the yodel. Where many styles train you to hide the register change, country sometimes shows it off. To learn it, you first need to know where your own break is. Slide gently on "oo" from low to high with a [siren](/learn/voice/two-registers/the-siren/slide-through-do-not-jump-over), note where the voice changes gear, then practice a two-note pattern: a chest note just below that zone, then a lighter note a third or fourth above, flipping cleanly. Ten slow reps, then ten at tempo. If your voice cracks when you do not want it to, the post on [why voices crack](/guides/why-does-my-voice-crack-when-i-sing) explains the mechanics.
 
 ### Scoops, falls and bends
 
@@ -92,17 +92,17 @@ The usual mistake is pulling chest voice higher and louder until something gives
 - Add a touch of twang for brightness rather than more volume.
 - Lighten the weight on the approach note so the top note has somewhere to go.
 
-If you want the full method, read [how to find your mixed voice](/blog/how-to-find-your-mixed-voice) and [how to belt without straining](/blog/how-to-belt-without-straining). For a song that tests all of this, [Tennessee Whiskey](/can-you-sing/tennessee-whiskey) sits around a baritone country range (C#3 to A4 in its original key) and asks for runs and bends around the top. Low, speech-pitched delivery is just as valid: [Johnny Cash](/singers/johnny-cash) built a career on a steady, conversational low voice with very little ornament.
+If you want the full method, read [how to find your mixed voice](/guides/how-to-find-your-mixed-voice) and [how to belt without straining](/guides/how-to-belt-without-straining). For a song that tests all of this, [Tennessee Whiskey](/can-you-sing/tennessee-whiskey) sits around a baritone country range (C#3 to A4 in its original key) and asks for runs and bends around the top. Low, speech-pitched delivery is just as valid: [Johnny Cash](/singers/johnny-cash) built a career on a steady, conversational low voice with very little ornament.
 
 ::infographic checklist
 
 ## Harmony: the country tradition of blend
 
-Close harmony runs through country, from family groups and bluegrass trios to modern duets. The most common setups are a harmony a third above the melody (a "high third") and a lower harmony a third or sixth below. Blend matters more than volume: match the lead's vowel shapes, the amount of twang, and where they cut off each word. If you have never held a harmony part, start with the [harmony post](/blog/how-to-sing-harmony) and train your ear for intervals in [ear training](/ear-training). Simple folk tunes with country roots, like [Down in the Valley](/songs/down-in-the-valley) and [Home on the Range](/songs/home-on-the-range), are good songs to harmonize with a friend because the melodies are steady and predictable.
+Close harmony runs through country, from family groups and bluegrass trios to modern duets. The most common setups are a harmony a third above the melody (a "high third") and a lower harmony a third or sixth below. Blend matters more than volume: match the lead's vowel shapes, the amount of twang, and where they cut off each word. If you have never held a harmony part, start with the [harmony post](/guides/how-to-sing-harmony) and train your ear for intervals in [ear training](/ear-training). Simple folk tunes with country roots, like [Down in the Valley](/songs/down-in-the-valley) and [Home on the Range](/songs/home-on-the-range), are good songs to harmonize with a friend because the melodies are steady and predictable.
 
 ## Singing while you play
 
-A lot of country singers accompany themselves on guitar, which adds a coordination layer. Keep the strumming pattern simple until the vocal phrasing feels automatic, and practice talking the lyric over the chords before singing it. The column's guide to [singing and playing guitar at the same time](/blog/how-to-sing-and-play-guitar-at-the-same-time) breaks that down in stages.
+A lot of country singers accompany themselves on guitar, which adds a coordination layer. Keep the strumming pattern simple until the vocal phrasing feels automatic, and practice talking the lyric over the chords before singing it. The column's guide to [singing and playing guitar at the same time](/guides/how-to-sing-and-play-guitar-at-the-same-time) breaks that down in stages.
 
 ## A two-week country singing plan
 
@@ -133,7 +133,7 @@ Feelings are unreliable judges of singing, so collect evidence:
 - **Recorder.** Take the same verse at the same mic distance every few days. Listen for clearer words, steadier pitch and less effort on the high lines.
 - **Range test.** Re-run it every couple of weeks. Country does not demand a wide range, but a top that feels easier gives the chorus more room.
 
-If you want structure beyond this plan, the multi-week [programs](/programs) build these skills in order. For more on daily structure, see [how to practice singing at home](/blog/how-to-practice-singing-at-home).
+If you want structure beyond this plan, the multi-week [programs](/programs) build these skills in order. For more on daily structure, see [how to practice singing at home](/guides/how-to-practice-singing-at-home).
 
 ## Common mistakes and fixes
 
@@ -150,7 +150,7 @@ If you want structure beyond this plan, the multi-week [programs](/programs) bui
 
 A voice teacher who works with contemporary styles can hear whether your twang is coming from resonance or from squeezing, which is hard to judge on your own. Consider lessons if twang or the break always feels effortful, or if you are preparing for regular gigs.
 
-See a doctor, ideally an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing or speaking hurts, or if you lose your voice suddenly. Those signs are worth checking rather than singing through. The post on [sore throat after singing](/blog/sore-throat-after-singing) covers what is normal after a long session and what is not.
+See a doctor, ideally an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing or speaking hurts, or if you lose your voice suddenly. Those signs are worth checking rather than singing through. The post on [sore throat after singing](/guides/sore-throat-after-singing) covers what is normal after a long session and what is not.
 
 ::video twang
 

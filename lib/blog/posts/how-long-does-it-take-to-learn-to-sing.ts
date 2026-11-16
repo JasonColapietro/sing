@@ -6,7 +6,7 @@ With about 20 minutes of focused practice on four or five days a week, most begi
 
 Those are typical ranges, not promises. They assume regular, attentive practice with some form of feedback, and they describe a voice with no health problems. Your own pace depends on where you start, how often you practice, and how well you practice. Someone who sang in a choir as a child starts a long way ahead of someone who has never tried to match a note. Both can improve, and the order of skills is very similar for each.
 
-If you have been wondering whether you can learn at all, start with [can anyone learn to sing](/blog/can-anyone-learn-to-sing). This article assumes you are going to try, and shows you what to expect each month, what speeds it up, and how to measure it so you can see the change for yourself.
+If you have been wondering whether you can learn at all, start with [can anyone learn to sing](/guides/can-anyone-learn-to-sing). This article assumes you are going to try, and shows you what to expect each month, what speeds it up, and how to measure it so you can see the change for yourself.
 
 ::infographic timeline
 
@@ -43,13 +43,13 @@ What usually changes: sustained notes get steadier, phrase endings stop sagging 
 
 ### Months 6 to 12: register coordination and mix
 
-This is the stage where most singers get stuck, and where patience pays the most. The goal is to move through your passaggio (the zone where the voice changes gear) without a crack, a flip or a shout. The [mixed voice guide](/blog/how-to-find-your-mixed-voice) covers the method in detail.
+This is the stage where most singers get stuck, and where patience pays the most. The goal is to move through your passaggio (the zone where the voice changes gear) without a crack, a flip or a shout. The [mixed voice guide](/guides/how-to-find-your-mixed-voice) covers the method in detail.
 
 What usually changes: sirens slide through the break instead of jumping, you can choose a lighter or heavier sound on the same note, and songs that cross your break stop feeling like a cliff edge. It usually comes in pieces. One vowel works before the others, and good days arrive before reliable ones. The course unit [through the break](/learn/voice/through-the-break) breaks it into steps.
 
 ### Years 1 to 3: style, stamina and consistent high notes
 
-Once the mechanics are reasonably reliable, the work shifts to musicianship and endurance. Consistent high notes are part of this stage, not the first year, because they depend on everything below them. The [high notes guide](/blog/how-to-sing-high-notes) explains why the top is built from the middle.
+Once the mechanics are reasonably reliable, the work shifts to musicianship and endurance. Consistent high notes are part of this stage, not the first year, because they depend on everything below them. The [high notes guide](/guides/how-to-sing-high-notes) explains why the top is built from the middle.
 
 What usually changes: you sing a full set without fatigue, you choose vibrato, runs and dynamics instead of having them happen to you, and your sound starts to feel like yours. Singers you admire spent years at this stage too. [Adele](/singers/adele) and [Freddie Mercury](/singers/freddie-mercury) sound effortless because years of singing made the coordination automatic.
 
@@ -67,7 +67,7 @@ Four habits move the timeline more than anything else.
 
 ### Short, frequent practice
 
-Twenty minutes on five days beats two hours on Sunday. Motor learning consolidates between sessions, and a fresh voice practices better than a tired one. The [home practice guide](/blog/how-to-practice-singing-at-home) lays out a full 20 to 30 minute session.
+Twenty minutes on five days beats two hours on Sunday. Motor learning consolidates between sessions, and a fresh voice practices better than a tired one. The [home practice guide](/guides/how-to-practice-singing-at-home) lays out a full 20 to 30 minute session.
 
 ### Feedback you can trust
 

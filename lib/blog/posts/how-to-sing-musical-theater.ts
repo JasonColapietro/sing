@@ -1,28 +1,28 @@
 import type { BlogPost } from "../types";
 
-const body = `## How to sing musical theatre: the short answer
+const body = `## How to sing musical theater: the short answer
 
-To sing musical theatre, you learn three vocal qualities and the acting that decides which one to use. Legit is the rounder, head-dominant sound of the older classic scores. Mix is a speech-like blend that carries a bright tone through the middle of the voice. Belt is the chest-dominant call that lands the big moments. On top of those sit clear diction, a song you can act line by line, and enough stamina to do it again tomorrow.
+To sing musical theater, you learn three vocal qualities and the acting that decides which one to use. Legit is the rounder, head-dominant sound of the older classic scores. Mix is a speech-like blend that carries a bright tone through the middle of the voice. Belt is the chest-dominant call that lands the big moments. On top of those sit clear diction, a song you can act line by line, and enough stamina to do it again tomorrow.
 
 You can start with the voice you have. What you need first is a healthy, easy middle range, a clear plan for each song, and honest feedback from recordings. This guide covers the three qualities side by side, how to act a song, how to make the words land, how to choose material that suits your voice, how to cut 16 and 32 bars for an audition, a two-week practice plan, and how to measure progress with the tools on this site.
 
-## The three sounds of musical theatre: legit, mix and belt
+## The three sounds of musical theater: legit, mix and belt
 
-Musical theatre borrows from opera, pop, jazz and folk, so a single show can ask for several sounds. Teachers do not all use the same words for them, and the lines between them blur. Still, most voice teachers work with three broad qualities, and knowing which one a song calls for is the first decision you make.
+Musical theater borrows from opera, pop, jazz and folk, so a single show can ask for several sounds. Teachers do not all use the same words for them, and the lines between them blur. Still, most voice teachers work with three broad qualities, and knowing which one a song calls for is the first decision you make.
 
 ::infographic qualities
 
 ### Legit
 
-Legit (short for legitimate) is the classical-leaning sound of the Golden Age scores. It is [head voice](/glossary#head-voice) dominant, with a steady line, tall vowels and an even [vibrato](/glossary#vibrato). Think of the soprano roles written for singers like [Julie Andrews](/singers/julie-andrews), or the way [Audra McDonald](/singers/audra-mcdonald) brings her classical training to the stage. Legit does not mean operatic. The words stay clear and the vowels stay close to speech. If your upper range feels thin, start with [how to sing in head voice](/blog/how-to-sing-in-head-voice).
+Legit (short for legitimate) is the classical-leaning sound of the Golden Age scores. It is [head voice](/glossary#head-voice) dominant, with a steady line, tall vowels and an even [vibrato](/glossary#vibrato). Think of the soprano roles written for singers like [Julie Andrews](/singers/julie-andrews), or the way [Audra McDonald](/singers/audra-mcdonald) brings her classical training to the stage. Legit does not mean operatic. The words stay clear and the vowels stay close to speech. If your upper range feels thin, start with [how to sing in head voice](/guides/how-to-sing-in-head-voice).
 
 ### Mix
 
-Mix sits between speech and song. It keeps the clarity of your talking voice while thinning out enough to climb through the [passaggio](/glossary#passaggio) without a crack. Most contemporary scores live here, for men and women alike. A strong mix lets a singer like [Ben Platt](/singers/ben-platt) carry a high, speech-clear line for a whole phrase. The full method is in [how to find your mixed voice](/blog/how-to-find-your-mixed-voice), and the course lesson [mix, not shout](/learn/voice/through-the-break/mix-not-shout) trains the difference by ear.
+Mix sits between speech and song. It keeps the clarity of your talking voice while thinning out enough to climb through the [passaggio](/glossary#passaggio) without a crack. Most contemporary scores live here, for men and women alike. A strong mix lets a singer like [Ben Platt](/singers/ben-platt) carry a high, speech-clear line for a whole phrase. The full method is in [how to find your mixed voice](/guides/how-to-find-your-mixed-voice), and the course lesson [mix, not shout](/learn/voice/through-the-break/mix-not-shout) trains the difference by ear.
 
 ### Belt
 
-A [belt](/glossary#belt) is chest-dominant sound carried above the point where the voice would rather thin out, held together by a bright, forward shape. It sounds like a call across a street. [Idina Menzel](/singers/idina-menzel), [Patti LuPone](/singers/patti-lupone) and [Sutton Foster](/singers/sutton-foster) are famous for it. A belt is brightness first and volume second. Read [how to belt without straining](/blog/how-to-belt-without-straining) before you push any note toward the top of your belt.
+A [belt](/glossary#belt) is chest-dominant sound carried above the point where the voice would rather thin out, held together by a bright, forward shape. It sounds like a call across a street. [Idina Menzel](/singers/idina-menzel), [Patti LuPone](/singers/patti-lupone) and [Sutton Foster](/singers/sutton-foster) are famous for it. A belt is brightness first and volume second. Read [how to belt without straining](/guides/how-to-belt-without-straining) before you push any note toward the top of your belt.
 
 Many working performers can do all three, and roles increasingly ask for that. [Kristin Chenoweth](/singers/kristin-chenoweth) and [Lea Salonga](/singers/lea-salonga) both move between a pure, lifted line and a speech-driven sound. Browse more [musical theater singers](/singers/genre/musical-theater) to hear how each voice handles the switch. The course lesson [one phrase, three weights](/learn/voice/signature/modes-of-weight/one-phrase-three-weights) gives you the same switch as a drill.
 
@@ -30,7 +30,7 @@ Many working performers can do all three, and roles increasingly ask for that. [
 
 ## Act the song: objective, obstacle, tactic
 
-A musical theatre song exists because speech was no longer enough for the character. That means every song is a scene. Directors and casting panels look for a person who wants something and is trying to get it.
+A musical theater song exists because speech was no longer enough for the character. That means every song is a scene. Directors and casting panels look for a person who wants something and is trying to get it.
 
 ### The three questions
 
@@ -46,13 +46,13 @@ A musical theatre song exists because speech was no longer enough for the charac
 4. Decide the moment before: what was said or done one second before the intro starts?
 5. Only then add the melody back, and let the tactic choose the quality. Pleading may sit in a lighter mix. A defiant line may earn the belt.
 
-Treat each quality as a choice you make for a reason. If you belt every phrase, the big note at the end has nothing to rise above. For more on shaping a line, see [how to sing with emotion](/blog/how-to-sing-with-emotion).
+Treat each quality as a choice you make for a reason. If you belt every phrase, the big note at the end has nothing to rise above. For more on shaping a line, see [how to sing with emotion](/guides/how-to-sing-with-emotion).
 
 ::video acting
 
 ## Diction: make every word land
 
-In musical theatre the lyric carries the plot. If the back row misses a word, they miss the story. Good [diction](/glossary#diction) is clean, quick consonants around long, steady vowels.
+In musical theater the lyric carries the plot. If the back row misses a word, they miss the story. Good [diction](/glossary#diction) is clean, quick consonants around long, steady vowels.
 
 - **Put consonants on time.** Most consonants sit just before the beat so the vowel lands on it. Late consonants make the line sound behind.
 - **Finish final consonants.** The t in "night" and the d in "world" are what make the word readable. Keep them crisp and light, not spat.
@@ -88,7 +88,7 @@ This order saves the most time: learn notes and words separately first, then put
 
 ## Audition cuts: 16 and 32 bars
 
-Most musical theatre auditions ask for a short cut of a song, commonly 16 bars or 32 bars, rather than the whole number. Treat the bar count as a guide to length: at a moderate tempo, 16 bars runs about 30 seconds and 32 bars about a minute. Count to a natural musical ending rather than stopping mid-phrase, and always follow what the audition notice asks for.
+Most musical theater auditions ask for a short cut of a song, commonly 16 bars or 32 bars, rather than the whole number. Treat the bar count as a guide to length: at a moderate tempo, 16 bars runs about 30 seconds and 32 bars about a minute. Count to a natural musical ending rather than stopping mid-phrase, and always follow what the audition notice asks for.
 
 - **Pick a cut that tells a small story.** It should start with a clear thought and finish on a strong ending, usually the last phrase of the song.
 - **Lead with your best quality.** If your legit is lovely and your belt is new, lead with legit.
@@ -96,7 +96,7 @@ Most musical theatre auditions ask for a short cut of a song, commonly 16 bars o
 - **Practice the transition in.** You get one or two bars of introduction, so know your first note and your moment before.
 - **Keep a contrasting second song ready.** Panels often ask for something in a different style.
 
-For the full routine, from slating to what to wear, read our [singing audition tips](/blog/singing-audition-tips).
+For the full routine, from slating to what to wear, read our [singing audition tips](/guides/singing-audition-tips).
 
 ## Stamina: singing eight shows a week
 
@@ -171,33 +171,34 @@ You hear your own voice partly through your skull, so it sounds different from t
 
 ## When to see a voice teacher or a doctor
 
-A voice teacher who specializes in musical theatre can hear what no app can: whether your belt is balanced, whether your mix is breathy or pressed, and whether your acting reads. Book lessons once the basics feel easy or before any important audition.
+A voice teacher who specializes in musical theater can hear what no app can: whether your belt is balanced, whether your mix is breathy or pressed, and whether your acting reads. Book lessons once the basics feel easy or before any important audition.
 
 See a doctor who can examine the vocal folds, such as an ENT or laryngologist, if hoarseness lasts more than about two weeks, if singing or speaking hurts, or if you lose your voice suddenly. Rest your voice until you have been seen rather than singing through it.`;
 
-export const howToSingMusicalTheatre: BlogPost = {
-  slug: "how-to-sing-musical-theatre",
-  title: "How to Sing Musical Theatre: Legit, Mix, Belt and Acting the Song",
-  seoTitle: "How to Sing Musical Theatre: A Full Guide",
+export const howToSingMusicalTheater: BlogPost = {
+  slug: "how-to-sing-musical-theater",
+  title: "How to Sing Musical Theater: Legit, Mix, Belt and Acting the Song",
+  seoTitle: "How to Sing Musical Theater: A Full Guide",
   description:
-    "Learn how to sing musical theatre: legit, mix and belt compared, how to act a song, diction, audition cuts, and a two-week practice plan.",
-  primaryKeyword: "how to sing musical theatre",
+    "Learn how to sing musical theater: legit, mix and belt compared, how to act a song, diction, audition cuts, and a two-week practice plan.",
+  primaryKeyword: "how to sing musical theater",
   keywords: [
+    "how to sing musical theater",
     "how to sing musical theatre",
-    "musical theatre singing technique",
+    "musical theater singing technique",
     "how to sing broadway",
     "legit vs mix vs belt",
     "acting through song",
-    "musical theatre vocal exercises",
+    "musical theater vocal exercises",
     "how to sing like a broadway singer",
-    "musical theatre songs for your voice type",
+    "musical theater songs for your voice type",
   ],
   published: "2026-11-16",
   updated: "2026-11-16",
   readMinutes: 12,
   category: "Technique",
   answer:
-    "To sing musical theatre, learn three vocal qualities, legit (head-dominant and classical-leaning), mix (speech-like and bright through the middle) and belt (a chest-dominant call), and choose between them by acting the song. Add clear diction, songs in your key, and the stamina to sing again tomorrow.",
+    "To sing musical theater, learn three vocal qualities, legit (head-dominant and classical-leaning), mix (speech-like and bright through the middle) and belt (a chest-dominant call), and choose between them by acting the song. Add clear diction, songs in your key, and the stamina to sing again tomorrow.",
   body,
   infographics: {
     qualities: {
@@ -216,7 +217,7 @@ export const howToSingMusicalTheatre: BlogPost = {
     },
     prepare: {
       kind: "steps",
-      title: "Preparing a musical theatre song in six steps",
+      title: "Preparing a musical theater song in six steps",
       steps: [
         { label: "Check the key", detail: "Compare the song's range with your range test result and transpose if the top or bottom sits outside your comfortable band." },
         { label: "Speak the lyric", detail: "Read it aloud as a monologue three times. Mark who you are talking to, your objective, and each change of thought." },
@@ -246,13 +247,13 @@ export const howToSingMusicalTheatre: BlogPost = {
       youtubeId: "fzK8V8K6MoY",
       title: "Musical Theater Mix Strategies",
       channel: "Nicholas Perna: tenor and teacher",
-      why: "A voice teacher walks through practical ways to build a musical theatre mix, the quality most contemporary scores rely on.",
+      why: "A voice teacher walks through practical ways to build a musical theater mix, the quality most contemporary scores rely on.",
     },
     acting: {
       youtubeId: "fK0bWGlaSCw",
-      title: "How To Act While Singing In Musical Theatre with Rachel Lynes",
+      title: "How To Act While Singing In Musical Theater with Rachel Lynes",
       channel: "MusicGurus",
-      why: "Musical theatre coach Rachel Lynes shows how to turn a song into a scene with a clear intention behind each line.",
+      why: "Musical theater coach Rachel Lynes shows how to turn a song into a scene with a clear intention behind each line.",
     },
   },
   faq: [
@@ -261,7 +262,7 @@ export const howToSingMusicalTheatre: BlogPost = {
       a: "Legit is head-dominant and classical-leaning, with tall vowels and steady vibrato. Mix blends chest and head into a bright, speech-like sound that climbs through the middle of the voice. Belt is chest-dominant and sounds like a call, used for the biggest moments of a song.",
     },
     {
-      q: "Can anyone learn to sing musical theatre?",
+      q: "Can anyone learn to sing musical theater?",
       a: "Most people with a healthy voice can learn the basics with regular practice. Start in the comfortable middle of your range, learn mix before you push belt, and choose songs in keys that suit you. A teacher speeds up progress once the fundamentals feel easy.",
     },
     {
@@ -269,11 +270,11 @@ export const howToSingMusicalTheatre: BlogPost = {
       a: "Belting done with brightness rather than force is a normal, trainable skill. Problems come from pushing air, lifting the chin, and singing loud for too long without rest. Stop if your throat tightens or hurts, and see an ENT or laryngologist if hoarseness lasts more than about two weeks.",
     },
     {
-      q: "How long should a musical theatre audition cut be?",
+      q: "How long should a musical theater audition cut be?",
       a: "Auditions commonly ask for 16 bars or 32 bars. At a moderate tempo that is roughly 30 seconds and one minute of music. Follow the audition notice exactly, choose a cut with a clear beginning and a strong ending, and mark it clearly for the pianist.",
     },
     {
-      q: "Should I sing musical theatre songs in the original key?",
+      q: "Should I sing musical theater songs in the original key?",
       a: "Not always. Shows are often transposed for different performers, and singing in a key that suits your tessitura sounds better than straining for the cast album key. Check the song against your range test before you commit.",
     },
     {
