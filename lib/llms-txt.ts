@@ -26,6 +26,7 @@ import { IOS_APP_VERSION, IOS_FREE_FEATURES, IOS_PRO_FEATURES } from "@/lib/voic
 import { ATLAS_CONTENTS, ATLAS_SUBTITLE, ATLAS_TITLE } from "@/lib/atlas-data";
 import { BOOK_CONTENTS, BOOK_SUBTITLE, BOOK_TITLE } from "@/lib/book-data";
 import { getSingerEvidence, hasDocumentedSourceReview } from "@/lib/singer-evidence";
+import { BLOG_PATH, POSTS as BLOG_POSTS, postPath } from "@/lib/blog";
 import { SING_GLOSSARY, SING_GLOSSARY_TERMS, termId } from "@/lib/glossary";
 import { TOOL_GUIDES } from "@/lib/guides";
 import { ORG_NAME, ORG_URL } from "@/lib/organization";
@@ -264,6 +265,8 @@ The plan details below are read from the site's own pricing and practice-limit c
 - [Vocal range by voice type](${SING_HOME}/atlas/vocal-range-by-voice-type): the conventional range and passaggio zone for all eight voice types (bass, bass-baritone, baritone, tenor, countertenor, contralto, mezzo-soprano, soprano), in a table, with example singers
 - [The Measured Voice](${SING_HOME}/book): a ${measured.chapters}-chapter book on how the voice works, reading your measurements, a twelve-week program and choosing songs; contents and ${measured.free} chapters free, the rest with Suede Pro
 - [Glossary](${SING_HOME}/glossary): ${glossaryCount} singing terms, each defined in one sentence
+- [The Singer's Column](${SING_HOME}${BLOG_PATH}): long-form singing tips, each ending in a drill on this site
+${BLOG_POSTS.map((p) => `  - [${p.title}](${SING_HOME}${postPath(p)}): ${p.description}`).join("\n")}
 
 ### Product, apps and company
 

@@ -15,7 +15,9 @@ import {
   songKeywords,
   vsKeywords,
   alternativesKeywords,
+  blogPostKeywords,
 } from "@/lib/keywords";
+import { POSTS as BLOG_POSTS } from "@/lib/blog";
 import { COMPETITORS } from "@/lib/comparisons";
 import { HUB_GENRES, SINGERS, VOICE_KINDS } from "@/lib/singers";
 import { ALL_SONGS } from "@/components/songs/data";
@@ -74,6 +76,7 @@ function allPageKeywords(): Record<string, readonly string[]> {
     out[`/compare/suede-sing-vs-${c.slug}`] = vsKeywords(c.name);
     out[`/compare/${c.slug}-alternatives`] = alternativesKeywords(c.name);
   }
+  for (const p of BLOG_POSTS) out[`/blog/${p.slug}`] = blogPostKeywords(p);
   for (const c of BOOK_CONTENTS) out[`/book/${c.slug}`] = chapterKeywords(c.searchTitle || c.title, "book");
   for (const c of ATLAS_CONTENTS) out[`/atlas/${c.slug}`] = chapterKeywords(c.title, "atlas");
   const moduleNames = new Map<string, string>();
