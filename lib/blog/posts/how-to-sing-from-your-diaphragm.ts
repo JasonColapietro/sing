@@ -4,13 +4,11 @@ const body = `## How to sing from your diaphragm: what the cue really means
 
 To sing from your diaphragm, you breathe in low and wide (lower ribs, back and belly expanding, shoulders still), then let the air out slowly and evenly while the ribs stay open for as long as the phrase needs. The diaphragm itself does the inhaling. What you control while you sing is how gradually it and the ribs let go, with the abdominal muscles taking over smoothly as the lungs empty.
 
-That is the whole idea behind one of the most repeated and least explained instructions in singing. Teachers say "sing from your diaphragm" because they hear a voice that is running on a high, grabbed breath and a squeezed throat, and they want the work moved down into the body. The cue points in a useful direction. Taken literally, it sends many singers to clench their stomach and push, which makes things worse.
-
-This article explains what is physically going on, which popular beliefs to drop, how to breathe low, three drills with exact timings, a 7-day plan, and how to check your progress with numbers instead of feelings.
+Few singing instructions get repeated more and explained less. Teachers say "sing from your diaphragm" because they hear a voice that is running on a high, grabbed breath and a squeezed throat, and they want the work moved down into the body. The cue points in a useful direction. Taken literally, it sends many singers to clench their stomach and push, which makes things worse.
 
 ## What your diaphragm actually does when you sing
 
-The diaphragm is a dome-shaped sheet of muscle under your lungs. When it contracts, it flattens downward, the chest cavity gets bigger, pressure inside the lungs drops, and air flows in. That is its job: it is a muscle of inhalation. It cannot push air out, and you cannot feel it directly, because it has very few of the sensory nerves that tell you where a muscle is and what it is doing.
+The diaphragm is a dome-shaped sheet of muscle under your lungs. When it contracts, it flattens downward, the chest cavity gets bigger, pressure inside the lungs drops, and air flows in. That is its job: it is a muscle of inhalation. It cannot push air out, and you cannot feel it directly, because it has relatively few of the sensory receptors that tell you where a muscle is and what it is doing.
 
 What you can feel are its neighbours. When the diaphragm flattens, it presses down on the organs below it, so the belly moves out. The lower ribs swing outward and slightly upward, and many people feel the lower back widen too. Those are the sensations singers mean when they say "diaphragm."
 
@@ -20,9 +18,9 @@ On the way out, three things share the work:
 - **The inspiratory muscles, releasing slowly.** The diaphragm and the muscles between the ribs can keep working gently as you sing, which slows the recoil down. This is the "hold the ribs open" sensation.
 - **The abdominal and lower rib muscles.** As the lungs empty, recoil fades, and these muscles draw inward gradually to keep the pressure up.
 
-The vocal folds need one thing from all this: steady air pressure underneath them. The [book chapter on breath](/book/what-your-voice-is) and the glossary entry on [breath support](/glossary#breath-support) both put it the same way. Support is pressure management, not strength. A singer who "sings from the diaphragm" is a singer whose breath pressure stays even from the first word of a phrase to the last.
+The vocal folds need one thing from all this: steady air pressure underneath them. The [book chapter on breath](/book/what-your-voice-is) and the glossary entry on [breath support](/glossary#breath-support) both put it the same way: support means managing pressure. A singer who "sings from the diaphragm" is a singer whose breath pressure stays even from the first word of a phrase to the last.
 
-> Steady is the target, not strong. A phrase that starts loud and fades, or a high note that goes hard and sharp, is a pressure problem. Neither is fixed by more air.
+> Aim for steady pressure. A phrase that starts loud and fades, or a high note that goes hard and sharp, is a pressure problem, and more air will fix neither.
 
 The Italian school calls this balance *appoggio*, from the verb for "to lean." The inhaling muscles lean gently against the exhaling ones, so neither wins suddenly. You do not need the word to do it, but it is a better description than "diaphragm," and it is the name you will see in classical pedagogy books.
 
@@ -64,9 +62,9 @@ A gasp means air is rushing through a narrow throat, and a throat that is narrow
 
 ## How to manage the exhale: lean, do not collapse
 
-The inhale gets most of the attention. The exhale is where singing actually happens.
+The inhale gets most of the attention, but you sing on the exhale.
 
-The common fault is collapse. You take a good breath, start the phrase, and in the first second the ribs drop and the belly falls in. Most of your air leaves on the opening words, the rest of the phrase runs thin, and the last note sags flat. The fix is not a bigger breath. It is keeping the ribs wide past the first beat and letting them come in late.
+The common fault is collapse. You take a good breath, start the phrase, and in the first second the ribs drop and the belly falls in. Most of your air leaves on the opening words, the rest of the phrase runs thin, and the last note sags flat. The fix is to keep the ribs wide past the first beat and let them come in late. A bigger breath only gives you more air to lose.
 
 Think of the ribs as a slow door rather than a trapdoor. They close, but on your schedule:
 
@@ -91,7 +89,7 @@ Do these early in a session, when you are fresh. Rest for at least one normal br
 3. Keep the hiss the same loudness from start to end. Stop while you still have comfortable air.
 4. Do 5 repetitions. Note your longest *even* hiss, not your longest hiss.
 
-Evenness comes first. A hiss that bursts at the start and fades to nothing is a collapse, however long it lasts. The lesson [Hiss for Twelve](/learn/voice/room-check/breathe-low/hiss-for-twelve) sets an even twelve-second hiss as a sensible early marker, and the [sustain test](/breath?drill=sustain) in the Breath room times the hiss for you and tracks how steady it was.
+Evenness comes first. A hiss that bursts at the start and fades to nothing is a collapse, however long it lasts. The lesson [Hiss for Twelve](/learn/voice/room-check/breathe-low/hiss-for-twelve) works on the same priority, evenness first and duration second, and the [sustain test](/breath?drill=sustain) in the Breath room times the hiss for you and tracks how steady it was.
 
 ### Drill 2: rib hold on a straw or lip trill (3 minutes)
 
@@ -108,7 +106,7 @@ Straws and lip trills create back pressure, which makes over-blowing obvious: bl
 3. Watch the pitch trace and the cents readout. You want a flat line that stays within a small band of the target, especially in the last two seconds.
 4. Do 5 repetitions, then 3 on a short phrase from a song you know.
 
-A trace that sags flat at the end almost always means the ribs collapsed early. A trace that drifts sharp in the middle usually means you pushed. The lesson [One Note Per Bar](/learn/voice/steady-tone/hold-it/one-note-per-bar) uses this same steadiness check.
+A trace that sags flat at the end almost always means the ribs collapsed early. A trace that drifts sharp in the middle usually means you pushed. The lesson [One Note Per Bar](/learn/voice/steady-tone/hold-it/one-note-per-bar) applies the same test to short holds, judged by ear: no sag at the end and no pulsing.
 
 ## Posture that lets you breathe low
 
@@ -130,7 +128,7 @@ Sitting works fine if you sit forward on the chair with both feet on the floor a
 | Taking the biggest breath possible | First note blasts, then fades | Three-quarters full is enough |
 | Breathing too late | Rushed gasps between lines | Mark breaths in your lyrics and practise them |
 
-Planning breaths is part of the skill. Pick a song with long lines, such as [Hallelujah](/can-you-sing/hallelujah) or [Someone Like You](/can-you-sing/someone-like-you), write a mark where you will breathe, and sing it at a speaking-level volume first. Singers known for long, even lines, like [Luciano Pavarotti](/singers/luciano-pavarotti) or [Adele](/singers/adele) on her ballads, make breaths sound effortless because they place them, not because they have larger lungs.
+Planning breaths is part of the skill. Pick a song with long lines, such as [Hallelujah](/can-you-sing/hallelujah) or [Someone Like You](/can-you-sing/someone-like-you), write a mark where you will breathe, and sing it at a speaking-level volume first. Singers known for long, even lines, like [Luciano Pavarotti](/singers/luciano-pavarotti) or [Adele](/singers/adele) on her ballads, make breaths sound effortless largely by placing them well.
 
 ## A 7-day plan to sing from your diaphragm
 
@@ -190,7 +188,7 @@ export const howToSingFromYourDiaphragm: BlogPost = {
   ],
   published: "2026-11-16",
   updated: "2026-11-16",
-  readMinutes: 10,
+  readMinutes: 12,
   category: "Technique",
   answer,
   body,
@@ -339,7 +337,7 @@ export const howToSingFromYourDiaphragm: BlogPost = {
     {
       href: "https://strumly.suedeai.ai",
       label: "Strumly",
-      blurb: "An AI guitar coach for singer-songwriters learning to breathe and play at once.",
+      blurb: "An AI guitar coach for singer-songwriters who accompany themselves.",
     },
   ],
   cta: {

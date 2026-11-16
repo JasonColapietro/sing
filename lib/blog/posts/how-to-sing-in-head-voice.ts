@@ -6,26 +6,24 @@ const body = `Head voice is the lighter setup your voice uses above the point wh
 
 To sing in head voice, start high and light instead of climbing up from your speaking voice. Use a small "oo" or "ee", slide down from a comfortable high note, and keep the volume at a level you could talk over. Once the note is easy, add clarity with an "ng" hum or a light "nay" until the air noise goes, then practice sliding from head voice down into chest without a gap.
 
-That is the whole method in four lines. The rest of this article explains each step, gives you timed drills, and ends with a 14-day plan and the signs that mean you should ask a teacher or a doctor for help.
-
 If you are new to registers, the lesson [chest, head and falsetto](/learn/voice/two-registers/chest-head-falsetto) in the free voice course is a good companion to this page.
 
 ## What head voice is, and what it is not
 
 Your vocal folds change shape as pitch rises. Low and in speech, the thyroarytenoid (TA) muscles keep the folds short and thick, and a deep layer of each fold vibrates. That is chest voice. As you go higher, the cricothyroid (CT) muscles tilt the larynx's cartilages and stretch the folds longer and thinner, so less of their depth takes part in each vibration. When the CT side leads, teachers call the result head voice.
 
-The name describes where singers feel the sound, not where it is made. Every note you sing is made at the folds. "Head" is a sensation of buzz behind the face and in the skull, which is why the [glossary entry for head voice](/glossary#head-voice) calls it a register defined by fold behavior and feel together.
+The name comes from sensation. Every note you sing is made at the folds, and "head" describes the buzz singers feel behind the face and in the skull, which is why the [glossary entry for head voice](/glossary#head-voice) calls it a register defined by fold behavior and feel together.
 
 ### Head voice vs falsetto
 
-This is the distinction that trips most people up. Both are light, stretched-fold setups, and both live high. The difference is closure.
+Most of the confusion about head voice starts here. Both are light, stretched-fold setups, and both live high. The difference is closure.
 
 - **In head voice, the folds close fully** on each vibration. The tone is clear, it can swell and fade, and it connects down into the middle of your voice.
 - **In falsetto, the folds stay slightly apart.** Air escapes through the gap, so the tone is breathy and soft-edged, it runs out of breath quickly, and it usually flips when you try to make it louder. See the [falsetto entry](/glossary#falsetto) for more.
 
 The quickest home test is a swell. Sing a high note quietly on "oo" and grow it to a medium level over three seconds. If the note gets bigger and stays clear, you are in head voice. If it stays the same size, gets airier, and then flips or cracks, that was falsetto.
 
-Neither is wrong. Falsetto is a deliberate color in soul, R&B, folk and indie. But head voice is the one you can strengthen and blend with chest, and that blend is what lets a melody move through the top of your range without a seam.
+Falsetto is a useful color in soul, R&B, folk and indie. Head voice is the one you can strengthen and blend with chest, and that blend is what lets a melody move through the top of your range without a seam.
 
 ### Head voice vs mix
 
@@ -41,7 +39,7 @@ There is no single note where head voice begins. It takes over gradually above y
 
 ::infographic zones
 
-These spans are a guide, not a rule. Many men can sing light notes well above them, and many women use head voice lower than the chart shows. The way to find your own numbers is to take the [free range test](/range?mode=range#start), note your highest comfortable note, and read the results the way [Reading the range test](/book/reading-the-range-test) describes.
+Treat these spans as a rough guide. Many men can sing light notes well above them. Most women also meet an earlier, lighter shift out of chest somewhere around E4 to G4, so a quiet "oo" slide may flip well below the chart's starting notes. The way to find your own numbers is to take the [free range test](/range?mode=range#start), note your highest comfortable note, and read the results the way [Reading the range test](/book/reading-the-range-test) describes.
 
 Listening helps too. Profiles of singers known for clear, light upper notes, such as [Julie Andrews](/singers/julie-andrews), [Kate Bush](/singers/kate-bush) and [Jeff Buckley](/singers/jeff-buckley), show where their recorded ranges sit by voice type.
 
@@ -77,7 +75,7 @@ Once any of the above gives you a high note, hold it on "oo" and grow it slightl
 
 ## How to strengthen head voice so it is not weak or airy
 
-A new head voice usually sounds thin and breathy. That is normal. The instinct is to fix it by singing louder, and that backfires: more air pressure makes the throat grip, and the grip drags you back into heavy chest or a pinched shout. Strength in head voice comes from closure and steadiness, not volume.
+A new head voice usually sounds thin and breathy. That is normal. The instinct is to fix it by singing louder, and that backfires: more air pressure makes the throat grip, and the grip drags you back into heavy chest or a pinched shout. Head voice gets stronger through cleaner closure and steadier breath. Size comes later.
 
 ### Add closure with "ng"
 
@@ -97,7 +95,7 @@ On one comfortable head voice note, swell from soft to medium and back over 6 to
 
 ::video hvt
 
-The book chapter on head voice in *The Measured Voice* sums up the rule well:
+The head voice chapter of *The Measured Voice* puts the rule this way:
 
 > A head voice that only works when you blow at it is not there yet, and a head voice that speaks at a quiet level will take more later without complaint.
 
@@ -124,13 +122,13 @@ If the crack is your main concern, [why does my voice crack when I sing](/blog/w
 | Practicing too long | Top notes that were easy now need a run-up | Stop for the day; 15 to 20 minutes is enough |
 | Judging from the inside | Head voice sounds thin to you | Record and listen back; listeners hear more than you do |
 
-That last row matters more than it looks. You hear yourself partly through the bones of your skull, which favors low frequencies, so head voice usually sounds thinner from inside than it does to a listener.
+About that last row: you hear yourself partly through the bones of your skull, which favors low frequencies, so head voice usually sounds thinner from inside than it does to a listener.
 
 ## How to measure your head voice progress
 
-Head voice is easy to feel and hard to judge, so give yourself evidence.
+Head voice is easy to feel and hard to judge, so collect evidence.
 
-- **Pitch studio.** In the [studio](/studio), hold a head voice note on "oo" and watch the cents readout. Pushed head voice tends to drift sharp, and under-supported head voice tends to sag flat at the end of a hold. A steady line within a few cents for three seconds is a good target.
+- **Pitch studio.** In the [studio](/studio), hold a head voice note on "oo" and watch the cents readout. Pushed head voice often drifts sharp, and under-supported head voice often sags flat at the end of a hold. A steady line within a few cents for three seconds is a good target.
 - **Recorder.** Use the [recorder](/recorder) to capture the same 5-note "loo" scale on day 1, day 7 and day 14 at the same volume. Listen for less air noise and a smaller color change through the break.
 - **Voice analyzer.** The [spectrogram](/analyze) shows harmonics as stacked lines. A breathy tone shows fuzzy noise between them; clearer closure shows cleaner, stronger upper harmonics.
 - **Range test.** Re-take the range test at the end of the plan. Your top note may not move much in two weeks. What changes is how easily you reach the notes you already had.
@@ -164,11 +162,11 @@ If you want a longer, guided version, [Head voice in 4 weeks](/programs?program=
 
 A voice teacher is worth it if you have practiced for a few weeks and still cannot tell head voice from falsetto, or if every crossing from chest to head cracks in the same place. A teacher can hear in one session whether you are pushing, leaking air or lifting the larynx, and those are hard to diagnose alone.
 
-See a doctor, ideally an ENT or a laryngologist, if you have hoarseness lasting more than about two weeks, pain when you sing or speak, or a sudden loss of voice. Those are not head voice problems, and practice will not fix them. Day-to-day care is covered in the lesson on [hydration, humidity and why whispering hurts](/learn/voice/signature/look-after-it/hydration-humidity-and-why-whispering-hurts).
+See a doctor, ideally an ENT or a laryngologist, if you have hoarseness lasting more than about two weeks, pain when you sing or speak, or a sudden loss of voice. Practice will not fix any of those. Day-to-day care is covered in the lesson on [hydration, humidity and why whispering hurts](/learn/voice/signature/look-after-it/hydration-humidity-and-why-whispering-hurts).
 
 ::infographic signs
 
-Head voice is one of the lightest loads you can put on your voice when you sing it quietly. If a session leaves you tired, it was too loud. Keep it small, keep it clear, and let the size come later.
+Head voice is one of the lightest loads you can put on your voice when you sing it quietly. If a session leaves you tired, it was probably too loud, so sing the next one smaller and let the size arrive on its own.
 `;
 
 const answer =
@@ -193,7 +191,7 @@ export const howToSingInHeadVoice: BlogPost = {
   ],
   published: "2026-11-16",
   updated: "2026-11-16",
-  readMinutes: 1,
+  readMinutes: 12,
   category: "Range",
   answer,
   body,
@@ -214,17 +212,17 @@ export const howToSingInHeadVoice: BlogPost = {
     },
     zones: {
       kind: "range",
-      title: "Where head voice typically takes over, by voice type",
+      title: "Where head voice sits, by voice type",
       spans: [
-        { label: "Bass", low: "B3", high: "E4" },
-        { label: "Baritone", low: "D4", high: "G4" },
-        { label: "Tenor", low: "F4", high: "C5" },
-        { label: "Contralto", low: "A4", high: "F5" },
-        { label: "Mezzo-soprano", low: "B4", high: "A5" },
-        { label: "Soprano", low: "D5", high: "C6" },
+        { label: "Bass", low: "C4", high: "E4" },
+        { label: "Baritone", low: "E4", high: "G4" },
+        { label: "Tenor", low: "G4", high: "C5" },
+        { label: "Contralto", low: "B4", high: "F5" },
+        { label: "Mezzo-soprano", low: "C5", high: "A5" },
+        { label: "Soprano", low: "E5", high: "C6" },
       ],
       source:
-        "Low ends follow the passaggio zones in The Measured Voice, chapter 3 (after Richard Miller's classical figures); high ends are the tops of the standard classical voice-type ranges. Many voices, especially lighter male voices, sing higher in head voice or falsetto, and individual voices vary by a few semitones.",
+        "Low ends are the top of each passaggio zone in The Measured Voice, chapter 3 (after Richard Miller's classical figures for lower voices and commercial-voice figures for higher ones); high ends are the tops of the standard classical voice-type ranges. Many voices, especially lighter male voices, sing higher in head voice or falsetto, and individual voices vary by a few semitones.",
     },
     find: {
       kind: "steps",
@@ -278,7 +276,7 @@ export const howToSingInHeadVoice: BlogPost = {
     },
     {
       q: "Can men sing in head voice?",
-      a: "Yes. Every voice has a lighter, stretched-fold setup above the passaggio, and men's head voice usually takes over somewhere around D4 to G4 depending on voice type. Many male pop, rock and classical singers use it constantly, often blended into mix.",
+      a: "Yes. Every voice has a lighter, stretched-fold setup above the passaggio, and men's head voice usually takes over somewhere between about C4 and G4 depending on voice type. Many male pop, rock and classical singers use it constantly, often blended into mix.",
     },
     {
       q: "How long does it take to develop head voice?",
