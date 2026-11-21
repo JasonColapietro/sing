@@ -117,7 +117,9 @@ describe("homepage Pro teaser", () => {
   it("states the lifetime price, and leaves the sold-out monthly plan to /pro", () => {
     const html = renderToStaticMarkup(<Home />);
 
-    expect(html).toContain("Go Pro: $79 once");
+    // "Get lifetime Pro", as every marketing surface now words the purchase
+    // (was "Go Pro: $79 once", which gates' quiet nudges keep).
+    expect(html).toContain("Get lifetime Pro: $79 once");
     expect(html).toContain('href="/pro#buy"');
     // The first pricing fact a visitor reads is the price, never that
     // something sold out; the monthly plan and the renewal terms are /pro's.

@@ -411,11 +411,11 @@ describe("Pro sales copy on the page", () => {
     // the offer; nothing else restates it, and no surface says "gold channel".
     const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
     const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-    // The price on the four buttons (hero, the end of the showcase, buy card,
-    // final CTA), nowhere else. Three until the showcase replaced the perk
-    // grid: a section that demonstrates Pro ends on a button that buys it.
-    expect(text.match(/\$79 once/g)).toHaveLength(4);
-    expect(text.match(/Get lifetime Pro: \$79 once/g)).toHaveLength(4);
+    // The price on the three buttons (hero, buy card, final CTA), nowhere
+    // else. Three again: the showcase's fourth button duplicated the card's,
+    // one screen above it, and the buy bar already covers that stretch.
+    expect(text.match(/\$79 once/g)).toHaveLength(3);
+    expect(text.match(/Get lifetime Pro: \$79 once/g)).toHaveLength(3);
     expect(text.match(/One payment\. Lifetime Pro\. No renewal\./g)).toHaveLength(1);
     expect(text.match(/One payment · Never renews/g)).toHaveLength(1);
     expect(text).not.toContain("$79 once for lifetime access");
@@ -448,6 +448,16 @@ describe("Pro sales copy on the page", () => {
     for (const q of questions) {
       const answer = PRO_FAQ.find((item) => item.q === q)!.a;
       expect(block, q).toContain(`${q}</summary><p class="pb-4 text-sm text-mut">${answer}</p>`);
+      // Answered once: the section further down does not print it again.
+      expect(html.split(`>${q}<`).length - 1, q).toBe(1);
+    }
+    // The other questions are all still on the page, each once, lower down.
+    const later = PRO_FAQ.filter((item) => !questions.includes(item.q));
+    expect(later.length).toBe(PRO_FAQ.length - questions.length);
+    const lower = html.slice(html.indexOf(">Before you decide</h2>"));
+    for (const item of later) {
+      expect(lower.split(`<h3 class="text-lg">${item.q}</h3>`).length - 1, item.q).toBe(1);
+      expect(lower, item.q).toContain(item.a);
     }
     // No refund or guarantee is promised: the repo states none.
     expect(html).not.toMatch(/refund|guarantee|money.back/i);

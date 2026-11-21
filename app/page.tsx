@@ -4,7 +4,7 @@ import Link from "next/link";
 import { formatPrice, PRICING } from "@/lib/pro-shared";
 import { AUTHOR_NODE } from "@/lib/author";
 import { NotPro } from "@/components/pro/gate";
-import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
+import { PRO_SHOWCASE_HREF, TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { ROUTINES, routineMinutes } from "@/components/warmups/routines";
 import { ORG_NODE } from "@/lib/organization";
 import { VOICE_APP_NODES } from "@/lib/voice-schema";
@@ -222,8 +222,10 @@ export default function Home() {
               what Pro adds, and this shows it. The hero's and the final CTA's
               quiet links land here. */}
       <section id={PRO_TEASER_ID} className="border-t border-line bg-panel/40">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+          {/* Top-aligned: the right column is the taller one, and a centred
+              left column floated its heading down beside the second exhibit. */}
+          <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
             <div>
               <SectionLabel hairline className="mb-4">
                 Suede Pro · Early Access
@@ -261,10 +263,12 @@ export default function Home() {
                 {/* NotPro hides the priced ask from a Pro browser before first paint. */}
                 <NotPro>
                   <LinkButton href="/pro#buy" variant="violet" size="lg">
-                    {`Go Pro: ${PRO_PRICE} once`}
+                    {`Get lifetime Pro: ${PRO_PRICE} once`}
                   </LinkButton>
                 </NotPro>
-                <LinkButton href="/pro" variant="ghost" size="lg">
+                {/* To /pro's demonstration, not its hero: the one look-first
+                    link the teaser has. */}
+                <LinkButton href={PRO_SHOWCASE_HREF} variant="ghost" size="lg">
                   See everything Pro adds
                 </LinkButton>
               </div>

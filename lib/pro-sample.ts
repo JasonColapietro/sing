@@ -1,56 +1,96 @@
 /**
- * Sample data for showing Pro's charts to a visitor who has none of their own.
+ * The one sample voice Pro is shown on, for a visitor with no record of their
+ * own: the example coach report (components/pro/pro-visual.tsx, on / and
+ * /pro) and the /pro showcase's charts both draw it, so the two never
+ * describe different singers.
  *
- * Public surface (used by the /pro showcase):
- *   SAMPLE_RANGE          { lowMidi, highMidi } of the sample voice (C3 to G4)
+ * Public surface:
+ *   SAMPLE_DATA_LABEL     the words a surface prints beside the sample
+ *   SAMPLE_RANGE          the voice's range, as midi and as note names
+ *   SAMPLE_NOTES          one row per scored note: name, tally, accuracy
+ *   SAMPLE_ACCURACY       in-tune share of all scored time, a whole percent
+ *   SAMPLE_WEAK_NOTE      the note the sample is weakest on
  *   SAMPLE_NOTE_TALLIES   NoteTallies, for <NoteAccuracyChart tallies={...} />
  *   SAMPLE_RANGE_HISTORY  RangeEntry[], for <RangeHistoryChart history={...} />
- *   SAMPLE_DATA_LABEL     the visible label a surface must print beside either
  *
  * Rules:
  * - It is a made-up voice, so every surface that draws it prints
- *   SAMPLE_DATA_LABEL (or its own wording that says "sample") where a sighted
- *   reader sees it. It never stands in for the visitor's own record.
+ *   SAMPLE_DATA_LABEL where a sighted reader sees it, and names it a sample
+ *   to a screen reader. It never stands in for the visitor's own record.
  * - Deterministic: fixed dates and fixed numbers, never Date.now() or
  *   Math.random(), so the server HTML and the first client render agree and
  *   nothing shifts on hydration.
- * - It claims no outcome. The range edges wobble by a semitone and end where
- *   they began, as the range result's worked example does
- *   (components/range/result-view.tsx sampleHistory): range edges move slowly
- *   if at all, and a sample that widened would promise growth nobody measured.
- * - Type-only imports, so this module adds nothing to a bundle.
+ * - It claims no outcome. The middle range test is narrower at both ends (a
+ *   tired day measures short) and the last one is back where the first was:
+ *   range edges move slowly if at all, and a sample that widened would
+ *   promise growth nobody measured.
+ * - The coach report's next step is the one the coach's plan gives this
+ *   voice (see pro-visual.tsx), so the range must stay at least
+ *   OCTAVE_SIREN_MIN_SEMIS wide with the weak note within five semitones of
+ *   its top. pro-sample.test.ts holds both.
+ * - Constants and type-only imports: the homepage draws the coach report, and
+ *   this module must add nothing to its bundle. The note names are typed
+ *   here for that reason, and the test checks each against midiToLabel.
  */
 import type { NoteTallies, RangeEntry } from "./analytics";
-
-/** The sample voice's range: C3 to G4, 19 semitones. */
-export const SAMPLE_RANGE = { lowMidi: 48, highMidi: 67 } as const;
 
 /** Printed wherever the sample is drawn. */
 export const SAMPLE_DATA_LABEL = "Sample data";
 
+/** The sample voice's range: A2 to G4, 22 semitones. */
+export const SAMPLE_RANGE = { lowMidi: 45, highMidi: 67, low: "A2", high: "G4" } as const;
+
 /**
  * Seconds scored and seconds in tune for each note of a C major scale across
- * the sample range. The middle is steady and the edges are weaker, which is
- * the shape the chart exists to show: the notes worth practicing stand out.
- * [midi, scored seconds, in-tune seconds, mean cents off]
+ * the range. Steady through the middle, a little looser at the edges, and
+ * one note near the top that plainly needs work: the shape the chart exists
+ * to show.
+ * [midi, name, scored seconds, in-tune seconds, mean cents off]
  */
-const SAMPLE_NOTES: ReadonlyArray<readonly [number, number, number, number]> = [
-  [48, 14, 8.5, 31],
-  [50, 22, 16.5, 24],
-  [52, 31, 26, 17],
-  [53, 36, 32, 14],
-  [55, 44, 40.5, 11],
-  [57, 41, 37, 12],
-  [59, 33, 28, 16],
-  [60, 38, 33.5, 13],
-  [62, 27, 21.5, 19],
-  [64, 21, 15, 23],
-  [65, 16, 10.5, 28],
-  [67, 12, 6.5, 34],
+const ROWS: ReadonlyArray<readonly [number, string, number, number, number]> = [
+  [45, "A2", 16, 12, 22],
+  [47, "B2", 22, 18, 18],
+  [48, "C3", 30, 26, 15],
+  [50, "D3", 34, 30.5, 13],
+  [52, "E3", 38, 35, 11],
+  [53, "F3", 36, 32.5, 12],
+  [55, "G3", 44, 40.5, 10],
+  [57, "A3", 41, 37, 12],
+  [59, "B3", 33, 28.5, 15],
+  [60, "C4", 38, 33.5, 13],
+  [62, "D4", 27, 22.5, 17],
+  [64, "E4", 24, 11, 36],
+  [65, "F4", 18, 14, 21],
+  [67, "G4", 14, 10.5, 24],
 ];
 
+export interface SampleNote {
+  midi: number;
+  label: string;
+  sec: number;
+  hitSec: number;
+  cents: number;
+  /** In-tune share of this note's scored time, a whole percent. */
+  accuracy: number;
+}
+
+export const SAMPLE_NOTES: readonly SampleNote[] = ROWS.map(([midi, label, sec, hitSec, cents]) => ({
+  midi,
+  label,
+  sec,
+  hitSec,
+  cents,
+  accuracy: Math.round((hitSec / sec) * 100),
+}));
+
+export const SAMPLE_ACCURACY = Math.round(
+  (SAMPLE_NOTES.reduce((sum, n) => sum + n.hitSec, 0) / SAMPLE_NOTES.reduce((sum, n) => sum + n.sec, 0)) * 100,
+);
+
+export const SAMPLE_WEAK_NOTE: SampleNote = SAMPLE_NOTES.reduce((a, b) => (b.accuracy < a.accuracy ? b : a));
+
 export const SAMPLE_NOTE_TALLIES: NoteTallies = Object.fromEntries(
-  SAMPLE_NOTES.map(([midi, sec, hitSec, cents]) => [
+  SAMPLE_NOTES.map(({ midi, sec, hitSec, cents }) => [
     String(midi),
     { sec, hitSec, cents, frames: Math.round(sec * 40) },
   ]),
@@ -58,10 +98,12 @@ export const SAMPLE_NOTE_TALLIES: NoteTallies = Object.fromEntries(
 
 /**
  * Three range tests six weeks apart (RANGE_RETEST_DAYS; pro-sample.test.ts
- * holds the two together), on fixed dates.
+ * holds the two together), on fixed dates. The middle one is two semitones
+ * short at each end, so the chart shows three different bars rather than one
+ * bar three times.
  */
 export const SAMPLE_RANGE_HISTORY: RangeEntry[] = [
-  { lowMidi: 48, highMidi: 67, testedAt: "2026-06-01T09:00:00.000Z" },
-  { lowMidi: 49, highMidi: 66, testedAt: "2026-07-13T09:00:00.000Z" },
-  { lowMidi: 48, highMidi: 67, testedAt: "2026-08-24T09:00:00.000Z" },
+  { lowMidi: SAMPLE_RANGE.lowMidi, highMidi: SAMPLE_RANGE.highMidi, testedAt: "2026-06-01T09:00:00.000Z" },
+  { lowMidi: 47, highMidi: 65, testedAt: "2026-07-13T09:00:00.000Z" },
+  { lowMidi: SAMPLE_RANGE.lowMidi, highMidi: SAMPLE_RANGE.highMidi, testedAt: "2026-08-24T09:00:00.000Z" },
 ];

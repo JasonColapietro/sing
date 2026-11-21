@@ -3,6 +3,7 @@
  * no record, on their own record (faded, as /progress gives it to a free
  * singer) once they have one, and nothing sold to an owner.
  */
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProState } from "@/lib/pro";
@@ -29,14 +30,23 @@ vi.mock("@/components/prepaint", async (importOriginal) => {
 
 import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
 import { PRO_PERKS } from "@/lib/pro";
-import { BOOKS, PRO_EXERCISES, PRO_PACK_COUNT, PRO_PROGRAM_NAMES } from "@/lib/pro-inventory";
+import { BOOKS, PRO_PROGRAM_COUNT, PRO_SHOWCASE_ANCHOR } from "@/lib/pro-inventory";
+import { SAMPLE_ACCURACY, SAMPLE_RANGE, SAMPLE_WEAK_NOTE } from "@/lib/pro-sample";
+import { routineMinutes, stepExercise } from "@/components/warmups/routines";
+import ProPage from "@/app/pro/page";
+import { PACK_SAMPLE, PackSample } from "./pack-sample";
 import { TAKE_SAMPLE_LABEL } from "./take-sample";
 import { ProClient } from "./pro-client";
 import {
   OWN_DATA_LABEL,
   ProShowcase,
+  SAMPLE_NOTES_CAPTION,
   SAMPLE_NOTES_LABEL,
+  SAMPLE_NOTES_NAME,
+  SAMPLE_RANGE_CAPTION,
   SAMPLE_RANGE_LABEL,
+  SAMPLE_RANGE_NAME,
+  useOwnVoice,
 } from "./pro-showcase";
 
 const FREE: ProState = {
@@ -80,9 +90,39 @@ const SUNG: ProgressState = {
   ],
 } as ProgressState;
 
-const BUY = <button>buy</button>;
+/** The showcase as /pro mounts it: the page reads the visitor's record once and hands it in. */
+function Shown({ owned }: { owned: boolean }) {
+  const own = useOwnVoice(owned);
+  return <ProShowcase owned={owned} own={own} pack={<PackSample />} />;
+}
 const render = (owned = false) =>
-  renderToStaticMarkup(<ProShowcase owned={owned} cta={BUY} />).replace(/<!-- -->/g, "").replaceAll("&#x27;", "'");
+  renderToStaticMarkup(<Shown owned={owned} />).replace(/<!-- -->/g, "").replaceAll("&#x27;", "'").replaceAll("&amp;", "&").replaceAll("&gt;", ">");
+/** What assistive tech is given: the markup with every aria-hidden subtree's own words removed. */
+function exposed(html: string): string {
+  let out = "";
+  let rest = html;
+  for (;;) {
+    const at = rest.indexOf('aria-hidden="true"');
+    if (at < 0) return out + rest;
+    const open = rest.lastIndexOf("<", at);
+    const tag = /^<(\w+)/.exec(rest.slice(open))![1];
+    out += rest.slice(0, open);
+    // Skip to this element's matching close tag.
+    let depth = 0;
+    const walk = new RegExp(`<${tag}\\b[^>]*?(/?)>|</${tag}>`, "g");
+    walk.lastIndex = open;
+    let end = rest.length;
+    for (let m = walk.exec(rest); m; m = walk.exec(rest)) {
+      if (m[0].startsWith("</")) depth--;
+      else if (m[1] !== "/") depth++;
+      if (depth === 0) {
+        end = walk.lastIndex;
+        break;
+      }
+    }
+    rest = rest.slice(end);
+  }
+}
 /** The chart frame under a mono title: from the title to the next frame or row. */
 function frame(html: string, title: string): string {
   const start = html.indexOf(`>${title}</h4>`);
@@ -99,6 +139,7 @@ beforeEach(() => {
 
 describe("the showcase with no record", () => {
   it("is the landing page's /pro#showcase target", () => {
+    expect(PRO_SHOWCASE_ANCHOR).toBe("showcase");
     expect(render()).toMatch(/<section id="showcase"/);
   });
 
@@ -108,16 +149,47 @@ describe("the showcase with no record", () => {
       const html = render();
       const notes = frame(html, "Accuracy by note");
       expect(notes).toContain(`>${SAMPLE_NOTES_LABEL}</p>`);
-      // The chart component's own output, on the sample voice (C3 to G4).
-      expect(notes).toContain("Accuracy for each note you've been scored on, from C3 to G4");
+      // The chart component's own output, on the sample voice. (Its name is
+      // asserted as drawn, not as announced: see the next test.)
+      expect(notes).toContain(`Accuracy for each note you've been scored on, from ${SAMPLE_RANGE.low} to ${SAMPLE_RANGE.high}`);
       const range = frame(html, "Range over time");
       expect(range).toContain(`>${SAMPLE_RANGE_LABEL}</p>`);
-      expect(range).toContain("Your vocal range across 3 tests");
+      expect(range).toContain("across 3 tests");
       expect(html).not.toContain(OWN_DATA_LABEL);
       // A sample is not locked: nothing is faded or hidden from a reader.
       expect(notes).not.toContain("opacity-60");
       expect(range).not.toContain("opacity-60");
     }
+  });
+
+  it("never announces or captions a sample chart as the visitor's own", () => {
+    // Both charts speak to their owner ("each note you've been scored on",
+    // "Your vocal range", "since your first test"). On the sample those words
+    // reached a screen reader as the page's claim about the visitor.
+    const html = render();
+    for (const [title, name, caption] of [
+      ["Accuracy by note", SAMPLE_NOTES_NAME, SAMPLE_NOTES_CAPTION],
+      ["Range over time", SAMPLE_RANGE_NAME, SAMPLE_RANGE_CAPTION],
+    ]) {
+      const f = frame(html, title);
+      const heard = exposed(f);
+      expect(heard, title).toContain(`<div role="img" aria-label="${name}">`);
+      expect(name, title).toMatch(/^Sample chart/);
+      expect(heard, title).toContain(`<p class="mt-2 text-xs text-mut">${caption}</p>`);
+      expect(caption, title).toMatch(/^Sample voice/);
+      expect(heard, title).not.toMatch(/\byou(r|'ve)?\b(?! own (notes|range) appear)/i);
+      // The chart's own caption is still in the markup, hidden from everyone.
+      expect(f, title).toContain('<div aria-hidden="true" class="[&>p]:hidden"><svg');
+    }
+    // The figures are the sample's, the ones the coach report prints.
+    expect(SAMPLE_NOTES_CAPTION).toContain(`${SAMPLE_ACCURACY}%`);
+    expect(SAMPLE_NOTES_CAPTION).toContain(`Weakest note ${SAMPLE_WEAK_NOTE.label} at ${SAMPLE_WEAK_NOTE.accuracy}%`);
+    expect(SAMPLE_RANGE_CAPTION).toContain(`${SAMPLE_RANGE.low}–${SAMPLE_RANGE.high}`);
+  });
+
+  it("says nothing about the visitor's own voice in its lede while it shows a sample", () => {
+    // "See it on your own voice." used to open the section whatever it drew.
+    expect(render()).not.toContain("See it on your own voice");
   });
 
   it("prints the sample's dates the same for every reader, so the server HTML hydrates", () => {
@@ -147,6 +219,7 @@ describe("the showcase on a free visitor's own record", () => {
     const html = render();
     expect(html.match(new RegExp(OWN_DATA_LABEL, "g"))).toHaveLength(2);
     expect(html).not.toContain("Sample data");
+    expect(html).not.toMatch(/Sample (chart|voice)/);
     expect(frame(html, "Accuracy by note")).toContain("from A3 to B3");
     expect(frame(html, "Range over time")).toContain("Your vocal range across 2 tests");
   });
@@ -171,12 +244,21 @@ describe("the showcase on a free visitor's own record", () => {
     expect(frame(html, "Range over time")).toContain(SAMPLE_RANGE_LABEL);
   });
 
-  it("holds each chart in the same fixed frame as the sample, so the swap moves nothing", () => {
-    const FRAME = /grid grid-rows-\[auto_4rem\] overflow-hidden/g;
-    expect(render().match(FRAME)).toHaveLength(2);
+  it("fills the frame's two rows the same way on the sample and on a record, so the swap moves nothing", () => {
+    // The frame is a two-row grid: the drawing, then a caption row of fixed
+    // height. Each state must put exactly one block in each row, with the
+    // caption styled alike; a caption left inside the drawing's row would
+    // leave the second row empty in one state and full in the other.
+    const OWN =
+      /grid grid-rows-\[auto_4rem\] overflow-hidden [^"]*"><svg[\s\S]*?<\/svg><p class="mt-2 text-xs text-mut">[\s\S]*?<\/p><\/div>/g;
+    const SAMPLE =
+      /grid grid-rows-\[auto_4rem\] overflow-hidden "><div role="img"[^>]*><div aria-hidden="true" class="\[&>p\]:hidden"><svg[\s\S]*?<\/svg><p[^>]*>[\s\S]*?<\/p><\/div><\/div><p class="mt-2 text-xs text-mut">[^<]*<\/p><\/div>/g;
+    expect(render().match(OWN)).toHaveLength(2);
+    expect(render().match(SAMPLE)).toBeNull();
     store.progress = DEFAULT_PROGRESS as ProgressState;
-    expect(render().match(FRAME)).toHaveLength(2);
-    // The label's two lines are reserved whichever label it is.
+    expect(render().match(SAMPLE)).toHaveLength(2);
+    expect(render().match(OWN)).toBeNull();
+    // The label above reserves its two lines whichever label it is.
     expect(render().match(/<p class="min-h-12 /g)).toHaveLength(2);
   });
 });
@@ -190,27 +272,70 @@ describe("the showcase's claims", () => {
     }
   });
 
-  it("counts packs, programs and books from the inventory, and states no price", () => {
+  it("shows a real pro pack as its card, from the pack's own data", () => {
+    // Was three big numerals (exercises, packs, programs) and a sentence
+    // listing the programs: figures the perk above and the buy card below
+    // already state. The pack and exercise counts are still in the perk's
+    // sentence (the test above); the program names are on the buy card.
     const html = render();
-    expect(html).toContain(`>${PRO_EXERCISES}</p>`);
-    expect(html).toContain(`>${PRO_PACK_COUNT}</p>`);
-    expect(html).toContain(`>${PRO_PROGRAM_NAMES.length}</p>`);
-    for (const name of PRO_PROGRAM_NAMES) expect(html).toContain(name);
+    const card = html.slice(html.indexOf(`<h4 class="text-lg">${PACK_SAMPLE.name}</h4>`));
+    expect(PACK_SAMPLE.pro).toBe(true);
+    expect(card).toContain(PACK_SAMPLE.tagline);
+    expect(card).toContain(`${PACK_SAMPLE.steps.length} exercises`);
+    expect(card).toContain(`~${routineMinutes(PACK_SAMPLE)} min`);
+    const chips = card.slice(card.indexOf("<ol"), card.indexOf("</ol>"));
+    const titles = PACK_SAMPLE.steps.map((s) => stepExercise(s).title);
+    for (const title of titles.slice(0, 3)) expect(chips).toContain(`${title}</span>`);
+    expect(chips).toContain(`+${titles.length - 3} more`);
+    expect(chips.match(/<svg/g)).toHaveLength(3);
+    // No numeral panel, and each count once.
+    expect(html).not.toMatch(/class="tabular text-3xl/);
+    expect(html.split(`${PACK_SAMPLE.steps.length} exercises`).length - 1).toBeLessThanOrEqual(2);
+    expect(html).toContain(`Pro also opens ${PRO_PROGRAM_COUNT} programs in full.`);
     expect(html).toMatch(/<a[^>]*href="\/programs"[^>]*>Week 1 of every program is free<\/a>/);
+  });
+
+  it("shows both books as their covers, each with its own figures, and states no price", () => {
+    const html = render();
+    const books = html.slice(html.indexOf(">Two books, with PDFs</h3>"), html.indexOf(">Adaptive coach plan</h3>"));
+    expect(books.match(/class="figure relative flex aspect-\[3\/4\]/g)).toHaveLength(BOOKS.length);
     for (const book of BOOKS) {
-      expect(html).toContain(`${book.chapters} chapters, ${book.words.toLocaleString("en-US")} words`);
-      expect(html).toContain(`${book.free} chapters free to read now`);
+      // The cover is hidden from assistive tech, so the figures carry the title.
+      expect(books).toContain(
+        `<span class="sr-only">${book.title}: </span>${book.chapters} chapters, ${book.words.toLocaleString("en-US")} words`,
+      );
+      expect(books).toContain(`${book.free} chapters free to read now`);
     }
     expect(html).toMatch(/<a href="#unlocks"[^>]*>See every chapter title<\/a>/);
     expect(html).not.toMatch(/\$\d/);
   });
+
+  it("keeps the perks with nothing to draw to one compact row, with no glyph cards", () => {
+    const html = render();
+    const row = html.slice(html.indexOf(">Adaptive coach plan</h3>") - 200);
+    expect(row.match(/<h3 class="font-extrabold text-ink text-base">/g)).toHaveLength(3);
+    expect(row).not.toContain("rounded-2xl");
+    expect(html).not.toMatch(/inline-flex h-10 w-10 shrink-0/);
+  });
+
+  it("hands /pro the pack card from the server page", () => {
+    const page = renderToStaticMarkup(<ProPage />);
+    expect(page).toContain(`<h4 class="text-lg">${PACK_SAMPLE.name}</h4>`);
+    // The showcase is a client component and must not import the catalogue.
+    const src = readFileSync(new URL("./pro-showcase.tsx", import.meta.url), "utf8");
+    expect(src).not.toMatch(/from "@\/components\/warmups\//);
+    expect(readFileSync(new URL("./pack-sample.tsx", import.meta.url), "utf8")).not.toContain('"use client"');
+  });
 });
 
 describe("the showcase on /pro", () => {
-  it("ends on one buy button for a free visitor, and points the hero at what it shows them", () => {
+  it("sells a free visitor nothing itself, and points the hero at what it shows them", () => {
     const html = renderToStaticMarkup(<ProClient />);
     const section = html.slice(html.indexOf('<section id="showcase"'), html.indexOf('<section id="plans"'));
-    expect(section.match(/>Get lifetime Pro: \$79 once<\/button>/g)).toHaveLength(1);
+    // It ended on a fourth "Get lifetime Pro" button for one revision: the
+    // card is the next thing down and the buy bar follows the visitor to it.
+    expect(section).not.toMatch(/<button/);
+    expect(section).not.toMatch(/\$\d/);
     // No record in the server HTML, so the link does not promise "your own voice".
     expect(html).toMatch(/<a href="#showcase"[^>]*>See Pro on a sample voice<\/a>/);
     store.progress = SUNG;

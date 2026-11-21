@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import Home from "@/app/page";
-import { BOOKS } from "@/lib/pro-inventory";
+import { BOOKS, PRO_SHOWCASE_HREF } from "@/lib/pro-inventory";
 import { TAKE_SAMPLE_LABEL } from "@/components/pro/take-sample";
 import { HeroSplit } from "./hero-split";
 import { ProExhibits } from "./pro-exhibits";
@@ -24,15 +24,6 @@ function anchors(html: string) {
   }));
 }
 
-/** The element that directly wraps the first anchor with this label. */
-function wrapperOf(html: string, label: string): string {
-  const at = html.indexOf(`>${label}</a>`);
-  expect(at, `no link labelled "${label}"`).toBeGreaterThan(-1);
-  const anchorStart = html.lastIndexOf("<a", at);
-  const wrapperStart = html.lastIndexOf("<", anchorStart - 1);
-  return html.slice(wrapperStart, anchorStart);
-}
-
 describe("the homepage teaser shows what Pro adds", () => {
   const exhibits = renderToStaticMarkup(<ProExhibits />);
 
@@ -41,13 +32,14 @@ describe("the homepage teaser shows what Pro adds", () => {
     expect(text(exhibits)).toContain("The pitch line of each take, and two takes overlaid.");
   });
 
-  it("prints each book's chapters and words from the inventory, linked to the book", () => {
-    expect(BOOKS).toHaveLength(2);
-    for (const book of BOOKS) {
-      expect(text(exhibits)).toContain(`${book.chapters} chapters ${book.words.toLocaleString("en-US")} words`);
-      const link = anchors(exhibits).find((a) => a.href === book.href);
-      expect(link?.label).toBe(book.title);
-    }
+  it("leaves the books to the teaser's list: no cover cards, and nothing to tab through", () => {
+    // Two cover cards stood here for one revision. The teaser's list already
+    // gives both books' chapters and words, the titles wrapped badly in half
+    // a column, and on a phone the cards pushed the room directory down a
+    // screen. /pro's showcase draws the covers.
+    for (const book of BOOKS) expect(text(exhibits)).not.toContain(book.title);
+    expect(exhibits).not.toMatch(/<a\b|<button\b|<ul\b/);
+    expect(exhibits.match(/<svg/g)).toHaveLength(1);
   });
 
   it("states no price and makes no promise the repo cannot keep", () => {
@@ -55,10 +47,21 @@ describe("the homepage teaser shows what Pro adds", () => {
     expect(exhibits).not.toMatch(/guarantee|refund|limited|% off|rated|reviews?\b|singers trust/i);
   });
 
-  it("sends a free visitor to /pro's showcase, behind the not-pro marker", () => {
-    const link = anchors(exhibits).find((a) => a.label === "See Pro on a sample voice");
-    expect(link?.href).toBe("/pro#showcase");
-    expect(wrapperOf(exhibits, "See Pro on a sample voice")).toContain('data-prepaint-plan="not-pro"');
+  it("sends the teaser's one look-first link to /pro's showcase", () => {
+    // "See Pro on a sample voice" was a third link under the exhibits; the
+    // teaser's existing secondary button now goes where it went.
+    const home = renderToStaticMarkup(<Home />);
+    expect(home).not.toContain("See Pro on a sample voice");
+    const links = anchors(home).filter((a) => a.label === "See everything Pro adds");
+    expect(links).toHaveLength(1);
+    expect(links[0].href).toBe(PRO_SHOWCASE_HREF);
+    expect(PRO_SHOWCASE_HREF).toBe("/pro#showcase");
+  });
+
+  it("top-aligns the teaser's two columns", () => {
+    const home = renderToStaticMarkup(<Home />);
+    const teaser = home.slice(home.indexOf(`id="${PRO_TEASER_ID}"`));
+    expect(teaser.slice(0, teaser.indexOf("<h2"))).toContain("grid items-start gap-8 lg:grid-cols-2");
   });
 
   it("imports no book contents, charts, progress store or singer table", () => {
