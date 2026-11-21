@@ -13,6 +13,8 @@ import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
 import { HeroSplit } from "@/components/landing/hero-split";
+import { ProExhibits } from "@/components/landing/pro-exhibits";
+import { PRO_TEASER_ID, SeeWhatProAdds } from "@/components/landing/pro-teaser-link";
 import { IosBand } from "@/components/landing/ios-band";
 import { StartingPaths } from "@/components/landing/paths";
 import ComparisonTable from "@/components/landing/comparison";
@@ -216,40 +218,10 @@ export default function Home() {
               need opposite entry points. */}
       <StartingPaths />
 
-      {/* 3 — Feature grid */}
-      <section className="border-t border-line">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading
-            label="Singing practice tools"
-            lede="Open a room, allow the mic, and sing. Each one runs in your browser."
-          >
-            Open any room and sing
-          </SectionHeading>
-          {/* Two columns on a phone, descriptions held back until sm: the
-              grid is a directory, not a pitch. */}
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {FEATURES.map(({ href, label, desc, Glyph, prefetch }) => (
-              <Link
-                key={href}
-                href={href}
-                prefetch={prefetch}
-                className="lift group rounded-2xl border border-line bg-panel p-4 hover:border-violet/50 sm:p-6"
-              >
-                <span className="well inline-flex h-12 w-12 items-center justify-center rounded-xl text-violet-ink">
-                  <Glyph width={32} height={32} strokeWidth={1.25} />
-                </span>
-                <span className="mt-3 block text-lg text-ink group-hover:text-violet-ink sm:mt-4 sm:text-xl">
-                  {label}
-                </span>
-                <span className="mt-1 hidden text-sm text-mut sm:block">{desc}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4 — Pro teaser */}
-      <section className="border-t border-line bg-panel/40">
+      {/* 3 — Pro teaser, straight after the paths: the second path ends on
+              what Pro adds, and this shows it. The hero's and the final CTA's
+              quiet links land here. */}
+      <section id={PRO_TEASER_ID} className="border-t border-line bg-panel/40">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
@@ -297,7 +269,42 @@ export default function Home() {
                 </LinkButton>
               </div>
             </div>
-            <ProVisual />
+            <div>
+              <ProVisual />
+              <ProExhibits className="mt-4" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4 — Feature grid */}
+      <section className="border-t border-line">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <SectionHeading
+            label="Singing practice tools"
+            lede="Open a room, allow the mic, and sing. Each one runs in your browser."
+          >
+            Open any room and sing
+          </SectionHeading>
+          {/* Two columns on a phone, descriptions held back until sm: the
+              grid is a directory, not a pitch. */}
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+            {FEATURES.map(({ href, label, desc, Glyph, prefetch }) => (
+              <Link
+                key={href}
+                href={href}
+                prefetch={prefetch}
+                className="lift group rounded-2xl border border-line bg-panel p-4 hover:border-violet/50 sm:p-6"
+              >
+                <span className="well inline-flex h-12 w-12 items-center justify-center rounded-xl text-violet-ink">
+                  <Glyph width={32} height={32} strokeWidth={1.25} />
+                </span>
+                <span className="mt-3 block text-lg text-ink group-hover:text-violet-ink sm:mt-4 sm:text-xl">
+                  {label}
+                </span>
+                <span className="mt-1 hidden text-sm text-mut sm:block">{desc}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -367,6 +374,7 @@ export default function Home() {
               Browse warmups
             </LinkButton>
           </div>
+          <SeeWhatProAdds className="mt-2" />
 
           <figure className="mx-auto mt-14 max-w-2xl">
             <figcaption className="font-mono text-label uppercase tracking-[0.14em] text-dim">

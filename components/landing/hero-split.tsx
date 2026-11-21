@@ -2,6 +2,7 @@ import { rangeTestHref } from "@/lib/site";
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/ui";
+import { SeeWhatProAdds } from "./pro-teaser-link";
 import { AUTHOR_NAME } from "@/lib/author";
 import { COOL } from "@/lib/chart-colors";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
@@ -106,6 +107,8 @@ export function HeroSplit() {
           <span className="mx-2 text-line2">·</span>No ads
           <span className="mx-2 text-line2">·</span>Audio stays on your device
         </p>
+        {/* Tertiary on purpose: the two buttons above stay the hero's actions. */}
+        <SeeWhatProAdds className="mt-1" />
       </div>
 
       {/* The founder in the portrait. After the content in the source so it
