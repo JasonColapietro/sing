@@ -127,6 +127,7 @@ export function LockedPanel({
   children,
   cta = UNLOCK_WITH_PRO,
   className = "",
+  sample = false,
 }: {
   /** Mono tape label naming what's inside, e.g. "Per-note accuracy". */
   label: string;
@@ -136,6 +137,12 @@ export function LockedPanel({
   /** Must carry the price (PRO_PRICE_ONCE) when overridden. */
   cta?: string;
   className?: string;
+  /**
+   * The preview is a labelled sample drawing, not the singer's own data.
+   * There is nothing of theirs to hold back, so it is drawn at full strength:
+   * a faded sample demonstrates nothing.
+   */
+  sample?: boolean;
 }) {
   return (
     <div
@@ -148,13 +155,18 @@ export function LockedPanel({
         <ProChip />
       </div>
       <div className="relative">
-        <div aria-hidden className="pointer-events-none select-none pb-6 opacity-60">
-          {children}
-        </div>
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-panel to-transparent"
-        />
+          className={`pointer-events-none select-none ${sample ? "" : "pb-6 opacity-60"}`}
+        >
+          {children}
+        </div>
+        {!sample && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-panel to-transparent"
+          />
+        )}
       </div>
       {/* In flow, not pinned over the preview: the sentence and a priced
           button wrap to two rows on a 375px phone, and a pinned row that

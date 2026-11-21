@@ -1189,6 +1189,7 @@ export default function RecorderPageClient() {
               <LockedPanel
                 label="Take pitch analysis"
                 gives="The pitch line of each take, and two takes overlaid."
+                sample
               >
                 <TakeSample className="p-4" />
               </LockedPanel>
