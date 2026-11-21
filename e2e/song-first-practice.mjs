@@ -55,7 +55,7 @@ try {
         await practice.waitFor();
         const first = practice.getByRole("link").first();
         assert.equal(await first.getAttribute("href"), test.href);
-        await practice.getByRole("link", { name: /^See Pro: \$[\d.]+ once$/ }).waitFor();
+        await practice.getByRole("link", { name: /^Unlock with Pro: \$[\d.]+ once$/ }).waitFor();
         assert.equal(await page.getByRole("dialog", { name: "Go Pro", exact: true }).count(), 0);
         assert.equal(await page.evaluate(() => localStorage.getItem("suede-sing:coach-intro:v1")), null);
         assert.match(await practice.innerText(), /not this popular song’s audio or melody/);
@@ -120,7 +120,7 @@ try {
     assert.equal(await page.evaluate(() => document.body.style.overflow === "hidden"), false);
     assert.equal(await page.evaluate(() => localStorage.getItem("suede-sing:coach-intro:v1")), null);
     assert.equal(await practice.getByRole("link").first().getAttribute("href"), cases[0].href);
-    await practice.getByRole("link", { name: /^See Pro: \$[\d.]+ once$/ }).click();
+    await practice.getByRole("link", { name: /^Unlock with Pro: \$[\d.]+ once$/ }).click();
     // The gate's ask lands on the buy card (was #plans).
     await page.waitForURL(`${base}/pro#buy`);
     await page.locator("#buy").waitFor();
@@ -133,7 +133,7 @@ try {
     const practice = member.page.getByRole("region", { name: "Your first practice" });
     await practice.waitFor();
     assert.equal(await practice.getByRole("link").first().getAttribute("href"), cases[0].href);
-    assert.equal(await practice.getByRole("link", { name: /^See Pro: \$[\d.]+ once$/ }).count(), 0);
+    assert.equal(await practice.getByRole("link", { name: /^Unlock with Pro: \$[\d.]+ once$/ }).count(), 0);
     assert.deepEqual(member.errors, []);
     console.log("PASS existing Pro member retains free recommendation without upsell");
   } finally { await member.context.close(); }

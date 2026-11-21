@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { Button, Card, LinkButton, ProgressBar, SectionLabel } from "@/components/ui";
-import { ProChip } from "@/components/pro/ui";
+import { PRO_BUY_HREF, PRO_PRICE_ONCE, ProChip, UNLOCK_WITH_PRO } from "@/components/pro/ui";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { FREE_DAILY_SEC, useFreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
-import { PRICING, formatPrice } from "@/lib/pro-shared";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   FREE_WEEKS,
@@ -42,11 +41,8 @@ const shortDay = (d: string) =>
 import { saveProgramProgress } from "./store";
 import type { ActiveProgram } from "./use-program";
 
-/** Where an unlock button goes: the offer itself, as every cap surface links it. */
-const PRO_BUY_HREF = "/pro#buy";
-/** What it says: priced, so the wall names the one payment before the click. */
-const PRO_PRICE_ONCE = `${formatPrice(PRICING.lifetime.amount)} once`;
-const UNLOCK_LABEL = `Unlock with Pro: ${PRO_PRICE_ONCE}`;
+/** An unlock button's label: priced, so the wall names the one payment before the click. */
+const UNLOCK_LABEL = UNLOCK_WITH_PRO;
 
 /** "Week 1 was free" / "weeks 1–2 were free", for the free week's end. */
 function freeWeeksWere(capital: boolean): string {
@@ -523,7 +519,7 @@ export function ProgramTodayCard({
             ) : paywalled ? (
               <div className="mt-2 max-w-xl text-sm text-mut">
                 <p>
-                  {FREE_WEEKS === 1 ? "Week 1 was" : `Weeks 1–${FREE_WEEKS} were`} free. The rest of{" "}
+                  {freeWeeksWere(true)}. The rest of{" "}
                   {program.name} needs Pro. Your place is kept, so you can carry on from day{" "}
                   {view.index + 1} once it is unlocked.
                 </p>
@@ -713,7 +709,7 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
               {/* Priced and violet, like the wall in the program's own view
                   (UNLOCK_LABEL): the same moment, the same offer. */}
               <LinkButton href={PRO_BUY_HREF}>
-                {`Unlock day ${view.index + 1} with Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
+                {`Unlock day ${view.index + 1} with Pro: ${PRO_PRICE_ONCE}`}
               </LinkButton>
               <a
                 href={calendarHref}

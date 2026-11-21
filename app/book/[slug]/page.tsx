@@ -11,7 +11,7 @@ import { exitTestFor, PROGRAMME_PART } from "@/lib/programme-exit-tests";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
-import { PRICING, formatPrice } from "@/lib/pro-shared";
+import { PRO_BUY_HREF, UNLOCK_BOTH_BOOKS } from "@/components/pro/ui";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { AuthorByline } from "@/components/book/byline";
@@ -245,8 +245,8 @@ export default async function ChapterPage({
                 </p>
               )}
               <div className="mt-4">
-                <LinkButton href="/pro#buy" size="md">
-                  {`Unlock both books: ${formatPrice(PRICING.lifetime.amount)} once`}
+                <LinkButton href={PRO_BUY_HREF} size="md">
+                  {UNLOCK_BOTH_BOOKS}
                 </LinkButton>
               </div>
             </Card>

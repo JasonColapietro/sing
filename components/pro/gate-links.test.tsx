@@ -4,9 +4,9 @@
  * scroll away) and says what Pro costs before the tap.
  *
  * Two passes. The rendered pass draws each locked surface as a free singer and
- * reads its anchors. The source pass covers the surfaces that cannot be drawn
- * without a browser or a whole page (the cap slide, the chapter readers, the
- * song pages), by reading the files for a bare /pro link.
+ * reads its anchors: the label a singer is shown, not the line of source that
+ * builds it. The source pass only scans the gate files for what must be
+ * absent from every one of them (a bare /pro link, a typed price).
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -20,14 +20,31 @@ vi.mock("@/lib/pro", async (importOriginal) => ({
   useProReady: () => true,
 }));
 
-import { CoachCard } from "@/components/progress/coach";
+import { AtlasCta } from "@/components/atlas/cta";
+import { AtlasChapterReader } from "@/components/atlas/reader";
+import { BookCta } from "@/components/book/cta";
+import { ChapterReader } from "@/components/book/reader";
+import { CoachCard, lockedStepsLine } from "@/components/progress/coach";
+import { ATLAS_CONTENTS } from "@/lib/atlas-data";
+import { BOOK_CONTENTS } from "@/lib/book-data";
 import { PLAN_ROWS, PRO_PERKS } from "@/lib/pro";
 import { PathSection, RoutineGrid } from "@/components/warmups/routine-home";
 import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
 import { formatPrice, PRICING } from "@/lib/pro-shared";
 import { ProInlineNudge } from "./gate";
+import { ProSlotProvider } from "./slot";
 import { TakeSample } from "./take-sample";
-import { LockedPanel, PRO_BUY_HREF, PRO_PRICE_ONCE, UNLOCK_WITH_PRO, UpgradeCard } from "./ui";
+import {
+  GO_PRO,
+  LockedPanel,
+  PRO_BUY_HREF,
+  PRO_PRICE_ONCE,
+  UNLOCK_BOTH_BOOKS,
+  UNLOCK_PRO_PACKS,
+  UNLOCK_PRO_SONGBOOK,
+  UNLOCK_WITH_PRO,
+  UpgradeCard,
+} from "./ui";
 
 const PRICE = formatPrice(PRICING.lifetime.amount);
 const noop = () => {};
@@ -45,6 +62,9 @@ function proLinks(html: string): Array<{ href: string; text: string }> {
  * `"none"` is a navigation row whose destination is checked but which prints
  * no price (the path's locked pack rows, components/practice/learn-home.tsx).
  */
+const lockedBookChapter = BOOK_CONTENTS.find((c) => !c.free)!;
+const lockedAtlasChapter = ATLAS_CONTENTS.find((c) => !c.free)!;
+
 const SURFACES: Array<[name: string, el: ReactElement, priced: "link" | "none", links: number | null]> = [
   [
     "LockedPanel",
@@ -56,10 +76,12 @@ const SURFACES: Array<[name: string, el: ReactElement, priced: "link" | "none", 
   ],
   ["UpgradeCard", <UpgradeCard key="u" title="Your full report" body="Every note." context="Coach" />, "link", 1],
   ["ProInlineNudge", <ProInlineNudge key="n">Pro charts your range tests over time</ProInlineNudge>, "link", 1],
+  // One priced line above the packs; the locked cards are whole-card links
+  // whose price is in their accessible name (cap-controls.test.tsx).
   [
     "locked pro packs (/warmups routines)",
     <RoutineGrid key="r" progress={DEFAULT_PROGRESS} onStart={noop} error={null} errorRoutineId={null} />,
-    "link",
+    "none",
     null,
   ],
   [
@@ -69,6 +91,12 @@ const SURFACES: Array<[name: string, el: ReactElement, priced: "link" | "none", 
     null,
   ],
   ["coach plan", <CoachCard key="c" state={DEFAULT_PROGRESS} />, "link", 1],
+  // The chapter readers and the books' front pages, drawn as the prerendered
+  // page draws them (was a check that the source held the label's template).
+  ["locked chapter (The Measured Voice)", <ChapterReader key="b" chapter={lockedBookChapter} />, "link", null],
+  ["locked chapter (The Voice Atlas)", <AtlasChapterReader key="a" chapter={lockedAtlasChapter} />, "link", null],
+  ["book front page", <BookCta key="bc" />, "link", 1],
+  ["atlas front page", <AtlasCta key="ac" />, "link", 1],
 ];
 
 describe("purchase asks on locked surfaces", () => {
@@ -76,6 +104,22 @@ describe("purchase asks on locked surfaces", () => {
     expect(PRO_PRICE_ONCE).toBe(`${PRICE} once`);
     expect(UNLOCK_WITH_PRO).toBe(`Unlock with Pro: ${PRICE} once`);
     expect(PRO_BUY_HREF).toBe("/pro#buy");
+  });
+
+  it("keeps one purchase vocabulary: a gate unlocks a named thing, a nudge says Go Pro", () => {
+    expect(UNLOCK_PRO_PACKS).toBe(`Unlock the pro packs: ${PRICE} once`);
+    expect(UNLOCK_PRO_SONGBOOK).toBe(`Unlock the Pro songbook: ${PRICE} once`);
+    expect(UNLOCK_BOTH_BOOKS).toBe(`Unlock both books: ${PRICE} once`);
+    expect(GO_PRO).toBe(`Go Pro: ${PRICE} once`);
+    // The buy links only: a locked chapter also carries the owner's way back in (/pro#restore).
+    const label = (el: ReactElement) =>
+      proLinks(renderToStaticMarkup(el)).filter((l) => l.href === PRO_BUY_HREF).map((l) => l.text);
+    expect(label(<ChapterReader chapter={lockedBookChapter} />)).toEqual([UNLOCK_BOTH_BOOKS]);
+    expect(label(<AtlasChapterReader chapter={lockedAtlasChapter} />)).toEqual([UNLOCK_BOTH_BOOKS]);
+    // Were "See what Pro includes, $79 once": a tour's label with a price on it.
+    expect(label(<BookCta />)).toEqual([UNLOCK_BOTH_BOOKS]);
+    expect(label(<AtlasCta />)).toEqual([UNLOCK_BOTH_BOOKS]);
+    expect(label(<ProInlineNudge>Pro charts your range tests over time</ProInlineNudge>)).toEqual([GO_PRO]);
   });
 
   it.each(SURFACES)("%s: goes to the buy card, with the price", (_name, el, priced, count) => {
@@ -103,14 +147,80 @@ describe("purchase asks on locked surfaces", () => {
     expect(html).toContain(`>${UNLOCK_WITH_PRO}</a>`);
   });
 
-  it("counts the coach's locked steps from the plan itself", () => {
+  it("names the coach's locked steps by their numbers, counted from the plan itself", () => {
     const html = renderToStaticMarkup(<CoachCard state={DEFAULT_PROGRESS} />).replace(/<!-- -->/g, "");
     // Free shows two steps; every further <li> is a locked one.
     const locked = (html.match(/<li/g) ?? []).length - 2;
     expect(locked).toBeGreaterThan(0);
-    expect(html).toContain(locked === 1 ? "1 more step in today&#x27;s plan" : `${locked} more steps in today&#x27;s plan`);
+    // Was "N more steps in today's plan", which read as steps beyond the ones
+    // listed; the line now names the locked rows by the numbers beside them.
+    expect(html).toContain(`${lockedStepsLine(3, locked)}.`);
+    expect(html).not.toContain("more step");
     // Another ask owns the screen: the card leaves its own out.
     expect(proLinks(renderToStaticMarkup(<CoachCard state={DEFAULT_PROGRESS} hideProNudge />))).toEqual([]);
+  });
+
+  it("words the locked steps for one, two and more", () => {
+    expect(lockedStepsLine(3, 1)).toBe("Step 3 opens with Pro");
+    expect(lockedStepsLine(3, 2)).toBe("Steps 3 and 4 open with Pro");
+    expect(lockedStepsLine(3, 3)).toBe("Steps 3 to 5 open with Pro");
+  });
+
+  it("keeps the coach's ask a quiet text line where another ask holds the page's slot", () => {
+    // /progress: the locked chart panel holds the slot with the one
+    // "Unlock with Pro" button. The coach row used to print the same label
+    // beside it, outside the slot. Inside a provider it does not hold the
+    // slot (as on the page, where the panel outranks it), and it is a
+    // sentence and a text link: no chip, no button, not the panel's words.
+    const quiet = renderToStaticMarkup(
+      <ProSlotProvider>
+        <CoachCard state={DEFAULT_PROGRESS} />
+      </ProSlotProvider>,
+    ).replace(/<!-- -->/g, "");
+    const links = proLinks(quiet);
+    // Still one upgrade route at the coach's own section.
+    expect(links).toEqual([{ href: "/pro#buy", text: GO_PRO }]);
+    expect(quiet).not.toContain(UNLOCK_WITH_PRO);
+    const at = quiet.indexOf('href="/pro#buy"');
+    const ask = quiet.slice(quiet.lastIndexOf("<p", at), quiet.indexOf("</p>", at));
+    expect(ask).toContain("open with Pro.");
+    expect(ask).not.toContain(">Pro</span>");
+    expect(ask).not.toMatch(/bg-violet|rounded-full|rounded-xl/);
+    // Holding the slot (no provider: the only ask on its page) it is still a
+    // text link, marked with the Pro chip like any inline nudge.
+    const holding = renderToStaticMarkup(<CoachCard state={DEFAULT_PROGRESS} />).replace(/<!-- -->/g, "");
+    expect(proLinks(holding)).toEqual([{ href: "/pro#buy", text: GO_PRO }]);
+    expect(holding).toContain(">Pro</span>");
+  });
+
+  it("never lists more of a locked step than its title, which the card already showed", () => {
+    const html = renderToStaticMarkup(<CoachCard state={DEFAULT_PROGRESS} />).replace(/<!-- -->/g, "");
+    const lockedRows = [...html.matchAll(/<li[^>]*>(.*?)<\/li>/g)].slice(2).map((m) => m[1]);
+    expect(lockedRows.length).toBeGreaterThan(0);
+    for (const row of lockedRows) {
+      expect(row).not.toContain("<a ");
+      expect(row).not.toMatch(/\d+ min/);
+    }
+  });
+});
+
+describe("the pages a locked song or chapter is read on", () => {
+  const buyLabels = (html: string) =>
+    [...new Set(proLinks(html.replace(/<!-- -->/g, "")).filter((l) => l.href === PRO_BUY_HREF).map((l) => l.text))];
+
+  // The songbook's own ask (UNLOCK_PRO_SONGBOOK, app/songs) has nothing to
+  // render against while PRO_SONGS is empty; its wording is pinned above.
+
+  it("unlocks both books from a locked chapter's page", async () => {
+    const { default: BookChapter } = await import("@/app/book/[slug]/page");
+    const { default: AtlasChapter } = await import("@/app/atlas/[slug]/page");
+    for (const html of [
+      renderToStaticMarkup(await BookChapter({ params: Promise.resolve({ slug: lockedBookChapter.slug }) })),
+      renderToStaticMarkup(await AtlasChapter({ params: Promise.resolve({ slug: lockedAtlasChapter.slug }) })),
+    ]) {
+      expect(buyLabels(html)).toEqual([UNLOCK_BOTH_BOOKS]);
+      expect(html).not.toContain('href="/pro"');
+    }
   });
 });
 
@@ -180,16 +290,5 @@ describe("gate sources", () => {
       const source = readFileSync(join(ROOT, file), "utf8");
       expect(source, file).not.toMatch(/\$\d/);
     }
-  });
-
-  it("prices the locked chapter and cap asks", () => {
-    const read = (f: string) => readFileSync(join(ROOT, f), "utf8");
-    for (const f of ["components/book/reader.tsx", "components/atlas/reader.tsx", "app/book/[slug]/page.tsx", "app/atlas/[slug]/page.tsx"]) {
-      expect(read(f), f).toContain("{`Unlock both books: ${formatPrice(PRICING.lifetime.amount)} once`}");
-    }
-    expect(read("components/practice/free-cap.tsx")).toContain(
-      "const GO_PRO_LABEL = `Keep practicing today with Pro: ${formatPrice(PRICING.lifetime.amount)} once`;",
-    );
-    expect(read("components/can-you-sing/verdict.tsx")).toContain("{`See Pro: ${PRO_PRICE_ONCE}`}");
   });
 });

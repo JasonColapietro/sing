@@ -100,6 +100,20 @@ export const PRO_PRICE_ONCE = `${formatPrice(PRICING.lifetime.amount)} once`;
 export const PRO_BUY_HREF = "/pro#buy";
 /** The default call to action of a locked surface. */
 export const UNLOCK_WITH_PRO = `Unlock with Pro: ${PRO_PRICE_ONCE}`;
+/*
+ * One purchase vocabulary. A gate says "Unlock <thing>: {price} once", naming
+ * what is locked right there; a quiet inline nudge says GO_PRO; the marketing
+ * pages' own buttons say "Get lifetime Pro". Nothing says "See what Pro
+ * includes: {price}": a label that reads as a tour and prices like a purchase.
+ */
+/** The locked pro warmup packs on /warmups. */
+export const UNLOCK_PRO_PACKS = `Unlock the pro packs: ${PRO_PRICE_ONCE}`;
+/** The Pro songbook, on the songbook and on a Pro song's page. */
+export const UNLOCK_PRO_SONGBOOK = `Unlock the Pro songbook: ${PRO_PRICE_ONCE}`;
+/** A locked chapter of either book, and each book's front page. */
+export const UNLOCK_BOTH_BOOKS = `Unlock both books: ${PRO_PRICE_ONCE}`;
+/** The quiet text link of an inline nudge. */
+export const GO_PRO = `Go Pro: ${PRO_PRICE_ONCE}`;
 
 /**
  * A locked Pro preview: real content shown faded under a gradient, then one

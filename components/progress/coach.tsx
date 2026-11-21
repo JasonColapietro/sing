@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { RANGE_RETEST_DAYS, type ProgressState } from "@/lib/progress";
-import { useIsPro } from "@/lib/pro";
+import { useIsPro, useProReady } from "@/lib/pro";
 import { useFreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Card } from "@/components/ui";
-import { LockGlyph, PRO_BUY_HREF, UNLOCK_WITH_PRO } from "@/components/pro/ui";
+import { GO_PRO, LockGlyph, PRO_BUY_HREF, ProChip } from "@/components/pro/ui";
+import { useProSlot } from "@/components/pro/slot";
 import { midiToLabel } from "@/lib/audio/notes";
 import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
 import {
@@ -347,6 +348,44 @@ export function buildPlan(
   return { banner, restNote, rangeNote, items };
 }
 
+/**
+ * "Step 3 opens with Pro" / "Steps 3 and 4 open with Pro" / "Steps 3 to 5 open
+ * with Pro". Names the locked rows by the numbers already printed beside
+ * them: "2 more steps in today's plan" read as steps beyond the ones listed.
+ */
+export function lockedStepsLine(first: number, count: number): string {
+  if (count === 1) return `Step ${first} opens with Pro`;
+  const last = first + count - 1;
+  return count === 2 ? `Steps ${first} and ${last} open with Pro` : `Steps ${first} to ${last} open with Pro`;
+}
+
+/**
+ * The coach's upgrade route. One ask per page (components/pro/slot.tsx): it
+ * registers as an inline nudge, and while it holds the slot it carries the
+ * Pro chip like any other nudge. On /progress the locked chart panel holds
+ * the slot with its button, so here it stays one quiet line of text with a
+ * text link, never a second "Unlock with Pro" beside that button (the same
+ * shape as SyncAsk in progress-client.tsx). The link is there either way:
+ * every boundary keeps its own route to the buy card.
+ */
+function LockedStepsAsk({ first, count }: { first: number; count: number }) {
+  // Entitlement is read from this browser, so until it is known the ask does
+  // not compete for the slot; the line itself is drawn with the locked rows.
+  const holds = useProSlot(1, useProReady());
+  return (
+    <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 pl-9 text-sm text-mut">
+      {holds && <ProChip />}
+      <span>{lockedStepsLine(first, count)}.</span>
+      <Link
+        href={PRO_BUY_HREF}
+        className="inline-flex min-h-11 items-center text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+      >
+        {GO_PRO}
+      </Link>
+    </p>
+  );
+}
+
 export function CoachCard({
   state,
   restDayOf = null,
@@ -465,27 +504,12 @@ export function CoachCard({
           )
         )}
       </ol>
-      {/* The gate's own route, directly under the locked steps: how many of
-          today's steps are behind the lock, and what opening them costs.
-          Rendered on the same condition as the locked rows above, so it
-          arrives and leaves with them; left out where another ask owns the
-          screen (hideProNudge). It replaces the card's slotted one-line nudge
-          ("Pro unlocks the full daily plan"), which lost the page's one slot
-          to the locked chart on /progress and so rarely showed. */}
+      {/* The gate's own route, directly under the locked steps. Rendered on
+          the same condition as the locked rows above, so it arrives and
+          leaves with them; left out where another ask owns the screen
+          (hideProNudge). */}
       {!isPro && lockedSteps > 0 && !hideProNudge && (
-        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 pl-9 text-sm text-mut">
-          <span>
-            {lockedSteps === 1
-              ? "1 more step in today's plan"
-              : `${lockedSteps} more steps in today's plan`}
-          </span>
-          <Link
-            href={PRO_BUY_HREF}
-            className="inline-flex min-h-11 items-center text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
-          >
-            {UNLOCK_WITH_PRO}
-          </Link>
-        </p>
+        <LockedStepsAsk first={shown + 1} count={lockedSteps} />
       )}
       <p className="mt-4 text-xs text-dim">
         Built from your scored notes, range tests, and recent practice. No AI,

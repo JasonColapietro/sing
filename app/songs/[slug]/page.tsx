@@ -28,7 +28,7 @@ import { firstFit, MAX_DESCRIPTION, MAX_TITLE } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
-import { formatPrice, PRICING } from "@/lib/pro-shared";
+import { PRO_BUY_HREF, UNLOCK_PRO_SONGBOOK } from "@/components/pro/ui";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { freeLessonsUsingSong } from "@/lib/lesson-readings";
@@ -373,8 +373,8 @@ export default async function SongPage({
               {FREE_MELODIES} melodies you can sing right now.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <LinkButton href="/pro#buy" size="md">
-                {`See what Pro includes: ${formatPrice(PRICING.lifetime.amount)} once`}
+              <LinkButton href={PRO_BUY_HREF} size="md">
+                {UNLOCK_PRO_SONGBOOK}
               </LinkButton>
               <LinkButton href="/songs" variant="outline" size="md">
                 Sing the free songbook

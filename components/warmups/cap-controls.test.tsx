@@ -4,7 +4,7 @@ import { ContinueCard } from "@/components/practice/learn-home";
 import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
 import { planDailyThree } from "@/lib/daily-three";
 import { DailyThreeCard } from "./daily-three-card";
-import { PathSection, RoutineGrid } from "./routine-home";
+import { PathSection, RoutineGrid, lockedPackLabel } from "./routine-home";
 import { PRO_ROUTINES, ROUTINES } from "./routines";
 import { PRO_PACKS_ANCHOR, PRO_PACKS_HREF } from "@/lib/pro-inventory";
 
@@ -46,10 +46,12 @@ describe("warmup starts after the daily allowance", () => {
     expect(starts.length).toBeGreaterThan(0);
     expect(starts.every((button) => button.includes('disabled=""'))).toBe(true);
     expect(html).toContain(reason);
-    // Each locked pack carries one priced link to the buy card (was a silent
-    // whole-card link to bare /pro).
+    // Was one "Unlock the pro packs: $79 once" link per locked card: eight
+    // identical asks, all of them painted for a Pro owner until hydration.
+    // Now the price is one line above the packs and each card is a link.
     expect(html).not.toContain('href="/pro"');
-    expect(html.match(/<a[^>]*href="\/pro#buy"[^>]*>Unlock the pro packs: \$79 once<\/a>/g)).toHaveLength(PRO_ROUTINES.length);
+    expect(html.match(/<a[^>]*href="\/pro#buy"[^>]*>Unlock the pro packs: \$79 once<\/a>/g)).toHaveLength(1);
+    expect(html.match(/href="\/pro#buy"/g)).toHaveLength(PRO_ROUTINES.length + 1);
   });
 
   it("disables path exercises while preserving the range test and Pro links", () => {
@@ -74,6 +76,48 @@ describe("warmup starts after the daily allowance", () => {
     );
     expect(html.match(/href="\/warmups\?exercise=/g)).toHaveLength(3);
     expect(html).not.toContain('disabled=""');
+  });
+});
+
+describe("the locked pro packs on /warmups", () => {
+  const html = renderToStaticMarkup(
+    <RoutineGrid progress={DEFAULT_PROGRESS} onStart={noop} error={null} errorRoutineId={null} />,
+  ).replace(/<!-- -->/g, "");
+  const anchors = [...html.matchAll(/<a\b([^>]*)>(.*?)<\/a>/g)].map((m) => ({
+    attrs: m[1],
+    text: m[2].replace(/<[^>]+>/g, ""),
+  }));
+
+  it("prices the packs once, in a line the pre-paint hides from a Pro owner", () => {
+    // The server HTML is the same for everyone, so anything priced in it has
+    // to sit inside the not-pro marker app/globals.css hides for
+    // html[data-sing-plan="pro"]. The per-card footers did not.
+    const priced = [...html.matchAll(/\$\d+/g)];
+    const ask = html.match(/<p[^>]*data-prepaint-plan="not-pro"[^>]*>.*?<\/p>/)?.[0] ?? "";
+    expect(ask).toContain(`The ${PRO_ROUTINES.length} packs below open with Pro.`);
+    expect(ask).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Unlock the pro packs: \$79 once<\/a>/);
+    const outside = html.replace(ask, "").replace(/aria-label="[^"]*"/g, "");
+    expect(priced.length).toBeGreaterThan(0);
+    expect(outside).not.toMatch(/\$\d/);
+    expect(outside).not.toContain("Unlock the pro packs");
+    // Above the packs, after the free routines.
+    expect(html.indexOf(ask)).toBeGreaterThan(html.indexOf(`>${ROUTINES[ROUTINES.length - 1].name}<`));
+    expect(html.indexOf(ask)).toBeLessThan(html.indexOf(`>${PRO_ROUTINES[0].name}<`));
+  });
+
+  it("makes each locked card one link to the buy card, named for the pack, Pro and the price", () => {
+    for (const routine of PRO_ROUTINES) {
+      const label = lockedPackLabel(routine);
+      expect(label).toBe(`${routine.name}: unlocks with Pro, $79 once`);
+      const card = anchors.filter((a) => a.attrs.includes(`aria-label="${label}"`));
+      expect(card, routine.id).toHaveLength(1);
+      expect(card[0].attrs).toContain('href="/pro#buy"');
+      // The link wraps the whole card: its heading and its meta line.
+      expect(card[0].text).toContain(routine.name);
+      expect(card[0].text).toContain(`${routine.steps.length} exercises`);
+      // No link inside a link, and no priced words on the card itself.
+      expect(card[0].text).not.toMatch(/\$\d|Unlock/);
+    }
   });
 });
 

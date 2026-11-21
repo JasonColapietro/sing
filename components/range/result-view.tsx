@@ -1013,8 +1013,9 @@ function RangeOverTime({
       gives="See your retests on one chart."
     >
       <div className="p-4 sm:p-5">
-        {/* Above the chart, not below it: the panel pins its lock row over the
-            bottom of whatever it wraps, and a caption there would be buried. */}
+        {/* Above the chart, not below it: the panel fades the bottom of
+            whatever it wraps under a gradient, and a caption there would be
+            washed out. */}
         {!hasHistory && (
           <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             Sample: three tests about six weeks apart
