@@ -158,7 +158,18 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
  * One bar per range test, spanning lowest to highest note, so a widening
  * voice is visible as the bars growing outward over time.
  */
-export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
+export function RangeHistoryChart({
+  history,
+  dateFormat,
+}: {
+  history: RangeEntry[];
+  /**
+   * Pins the date labels' locale and time zone. Only for fixed sample dates
+   * that are in the server HTML (/pro's showcase): left to the browser, a
+   * reader outside the server's locale or zone hydrates different text.
+   */
+  dateFormat?: { locale: string; timeZone: string };
+}) {
   const series = rangeSeries(history);
 
   if (series.length === 0) {
@@ -197,9 +208,10 @@ export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
   }
 
   const dateLabel = (iso: string) =>
-    new Date(iso).toLocaleDateString(undefined, {
+    new Date(iso).toLocaleDateString(dateFormat?.locale, {
       month: "short",
       day: "numeric",
+      timeZone: dateFormat?.timeZone,
     });
 
   return (

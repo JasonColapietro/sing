@@ -24,6 +24,7 @@ import {
   WelcomePanel,
 } from "./pro-client";
 import { NETWORK_ERROR_MESSAGE, ProApiError } from "@/lib/pro";
+import { PRO_FAQ } from "@/lib/pro-shared";
 import { SUPPORT_EMAIL } from "@/lib/organization";
 import { PRO_PACKS_HREF } from "@/lib/pro-inventory";
 import { ROUTE_KEYWORDS } from "@/lib/keywords";
@@ -410,9 +411,11 @@ describe("Pro sales copy on the page", () => {
     // the offer; nothing else restates it, and no surface says "gold channel".
     const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
     const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-    // The price on the three buttons (hero, buy card, final CTA), nowhere else.
-    expect(text.match(/\$79 once/g)).toHaveLength(3);
-    expect(text.match(/Get lifetime Pro: \$79 once/g)).toHaveLength(3);
+    // The price on the four buttons (hero, the end of the showcase, buy card,
+    // final CTA), nowhere else. Three until the showcase replaced the perk
+    // grid: a section that demonstrates Pro ends on a button that buys it.
+    expect(text.match(/\$79 once/g)).toHaveLength(4);
+    expect(text.match(/Get lifetime Pro: \$79 once/g)).toHaveLength(4);
     expect(text.match(/One payment\. Lifetime Pro\. No renewal\./g)).toHaveLength(1);
     expect(text.match(/One payment · Never renews/g)).toHaveLength(1);
     expect(text).not.toContain("$79 once for lifetime access");
@@ -427,6 +430,27 @@ describe("Pro sales copy on the page", () => {
     expect(html).not.toContain(">Back to the studio</a>\n");
     expect(html.match(/>Keep practicing free</g)).toHaveLength(1);
     expect(html).toMatch(/One payment<span[^>]*>·<\/span>Never renews<span[^>]*>·<\/span><a[^>]*href="\/studio"[^>]*>Back to the studio<\/a>/);
+  });
+
+  it("answers three purchase questions under the buy card in the FAQ's own words, closed until asked", () => {
+    const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
+    const from = html.indexOf(">Before you pay</h3>");
+    expect(from).toBeGreaterThan(-1);
+    // Up to the pass form, the next disclosure on the page.
+    const block = html.slice(from, html.lastIndexOf("<details", html.indexOf("Have a code?")));
+    const questions = [
+      "How much does Suede Pro cost?",
+      "Does the free studio stay free?",
+      "Can I use Pro on my phone and my computer?",
+    ];
+    expect(block.match(/<details/g)).toHaveLength(questions.length);
+    expect(block).not.toMatch(/<details[^>]*\sopen/);
+    for (const q of questions) {
+      const answer = PRO_FAQ.find((item) => item.q === q)!.a;
+      expect(block, q).toContain(`${q}</summary><p class="pb-4 text-sm text-mut">${answer}</p>`);
+    }
+    // No refund or guarantee is promised: the repo states none.
+    expect(html).not.toMatch(/refund|guarantee|money.back/i);
   });
 
   it("sells the per-note chart as one chart, not one charted over months", () => {
