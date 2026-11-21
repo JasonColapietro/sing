@@ -30,11 +30,10 @@ vi.mock("@/components/prepaint", async (importOriginal) => {
 
 import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
 import { PRO_PERKS } from "@/lib/pro";
-import { BOOKS, PRO_PROGRAM_COUNT, PRO_SHOWCASE_ANCHOR } from "@/lib/pro-inventory";
+import { PRO_SHOWCASE_ANCHOR } from "@/lib/pro-inventory";
 import { SAMPLE_ACCURACY, SAMPLE_RANGE, SAMPLE_WEAK_NOTE } from "@/lib/pro-sample";
-import { routineMinutes, stepExercise } from "@/components/warmups/routines";
 import ProPage from "@/app/pro/page";
-import { PACK_SAMPLE, PackSample } from "./pack-sample";
+import { PACK_SAMPLE } from "./pack-sample";
 import { TAKE_SAMPLE_LABEL } from "./take-sample";
 import { ProClient } from "./pro-client";
 import {
@@ -93,7 +92,7 @@ const SUNG: ProgressState = {
 /** The showcase as /pro mounts it: the page reads the visitor's record once and hands it in. */
 function Shown({ owned }: { owned: boolean }) {
   const own = useOwnVoice(owned);
-  return <ProShowcase owned={owned} own={own} pack={<PackSample />} />;
+  return <ProShowcase owned={owned} own={own} />;
 }
 const render = (owned = false) =>
   renderToStaticMarkup(<Shown owned={owned} />).replace(/<!-- -->/g, "").replaceAll("&#x27;", "'").replaceAll("&amp;", "&").replaceAll("&gt;", ">");
@@ -264,66 +263,68 @@ describe("the showcase on a free visitor's own record", () => {
 });
 
 describe("the showcase's claims", () => {
-  it("heads every perk with its own title and sentence, once", () => {
-    const html = render();
+  it("heads every perk with its own title and sentence, once on the page", () => {
+    // Was asserted of the showcase alone, which drew all seven. It now keeps
+    // the two with a chart or a drawing above the buy card; the pack, the
+    // books and the rest are headed in the unlock stack under the card
+    // (unlock-stack.test.tsx), so the page is what must head each one once.
+    const showcase = render();
+    for (const id of ["analytics", "takes"]) {
+      const perk = PRO_PERKS.find((p) => p.id === id)!;
+      expect(showcase.match(new RegExp(`<h3[^>]*>${perk.title}</h3>`, "g")), id).toHaveLength(1);
+      expect(showcase, id).toContain(perk.desc);
+    }
+    expect(showcase.match(/<h3/g)).toHaveLength(2);
+    const page = renderToStaticMarkup(<ProPage />).replace(/<!-- -->/g, "").replaceAll("&#x27;", "'");
     for (const perk of PRO_PERKS) {
-      expect(html.match(new RegExp(`<h3[^>]*>${perk.title}</h3>`, "g")), perk.id).toHaveLength(1);
-      expect(html, perk.id).toContain(perk.desc);
+      expect(page.match(new RegExp(`<h3[^>]*>${perk.title}</h3>`, "g")), perk.id).toHaveLength(1);
+      expect(page.split(`<p class="mt-1 max-w-md text-sm text-mut">${perk.desc}</p>`).length - 1, perk.id).toBe(1);
     }
   });
 
-  it("shows a real pro pack as its card, from the pack's own data", () => {
-    // Was three big numerals (exercises, packs, programs) and a sentence
-    // listing the programs: figures the perk above and the buy card below
-    // already state. The pack and exercise counts are still in the perk's
-    // sentence (the test above); the program names are on the buy card.
+  it("stands between the hero and the buy card with the charts and the take drawing only", () => {
+    // The pack card, the covers and three text claims sat here too, and the
+    // buy card was 3733px down a phone. They are drawn once, under the card.
     const html = render();
-    const card = html.slice(html.indexOf(`<h4 class="text-lg">${PACK_SAMPLE.name}</h4>`));
-    expect(PACK_SAMPLE.pro).toBe(true);
-    expect(card).toContain(PACK_SAMPLE.tagline);
-    expect(card).toContain(`${PACK_SAMPLE.steps.length} exercises`);
-    expect(card).toContain(`~${routineMinutes(PACK_SAMPLE)} min`);
-    const chips = card.slice(card.indexOf("<ol"), card.indexOf("</ol>"));
-    const titles = PACK_SAMPLE.steps.map((s) => stepExercise(s).title);
-    for (const title of titles.slice(0, 3)) expect(chips).toContain(`${title}</span>`);
-    expect(chips).toContain(`+${titles.length - 3} more`);
-    expect(chips.match(/<svg/g)).toHaveLength(3);
-    // No numeral panel, and each count once.
-    expect(html).not.toMatch(/class="tabular text-3xl/);
-    expect(html.split(`${PACK_SAMPLE.steps.length} exercises`).length - 1).toBeLessThanOrEqual(2);
-    expect(html).toContain(`Pro also opens ${PRO_PROGRAM_COUNT} programs in full.`);
-    expect(html).toMatch(/<a[^>]*href="\/programs"[^>]*>Week 1 of every program is free<\/a>/);
-  });
-
-  it("shows both books as their covers, each with its own figures, and states no price", () => {
-    const html = render();
-    const books = html.slice(html.indexOf(">Two books, with PDFs</h3>"), html.indexOf(">Adaptive coach plan</h3>"));
-    expect(books.match(/class="figure relative flex aspect-\[3\/4\]/g)).toHaveLength(BOOKS.length);
-    for (const book of BOOKS) {
-      // The cover is hidden from assistive tech, so the figures carry the title.
-      expect(books).toContain(
-        `<span class="sr-only">${book.title}: </span>${book.chapters} chapters, ${book.words.toLocaleString("en-US")} words`,
-      );
-      expect(books).toContain(`${book.free} chapters free to read now`);
-    }
-    expect(html).toMatch(/<a href="#unlocks"[^>]*>See every chapter title<\/a>/);
+    expect(html.match(/<h4/g)).toHaveLength(3);
+    expect(html).toContain(">Two takes, overlaid</h4>");
+    expect(html).not.toContain("aspect-[3/4]");
+    expect(html).not.toContain(PACK_SAMPLE.name);
     expect(html).not.toMatch(/\$\d/);
+    const page = renderToStaticMarkup(<ProPage />);
+    const at = (needle: string) => {
+      const i = page.indexOf(needle);
+      expect(i, needle).toBeGreaterThan(-1);
+      return i;
+    };
+    expect(at('<section id="showcase"')).toBeLessThan(at('id="buy"'));
+    expect(at('id="buy"')).toBeLessThan(at('<section id="unlocks"'));
+    expect(at('<section id="unlocks"')).toBeLessThan(at(`<h4 class="text-lg">${PACK_SAMPLE.name}</h4>`));
   });
 
-  it("keeps the perks with nothing to draw to one compact row, with no glyph cards", () => {
-    const html = render();
-    const row = html.slice(html.indexOf(">Adaptive coach plan</h3>") - 200);
-    expect(row.match(/<h3 class="font-extrabold text-ink text-base">/g)).toHaveLength(3);
-    expect(row).not.toContain("rounded-2xl");
-    expect(html).not.toMatch(/inline-flex h-10 w-10 shrink-0/);
+  it("draws its charts for a phone-wide frame: 11-unit axis text in a 320-unit drawing", () => {
+    // The 640-unit drawing /progress uses came out with 4px axis text here.
+    for (const progress of [DEFAULT_PROGRESS as ProgressState, SUNG]) {
+      store.progress = progress;
+      store.hydrated = true;
+      const html = render();
+      const charts = html.split("<svg").slice(1, 3);
+      for (const svg of charts) {
+        expect(svg).toMatch(/^ viewBox="0 0 320 150"/);
+        const sizes = [...svg.slice(0, svg.indexOf("</svg>")).matchAll(/font-size="([\d.]+)"/g)].map((m) => Number(m[1]));
+        expect(sizes.length).toBeGreaterThan(0);
+        expect(Math.min(...sizes)).toBeGreaterThanOrEqual(11);
+      }
+    }
   });
 
   it("hands /pro the pack card from the server page", () => {
     const page = renderToStaticMarkup(<ProPage />);
     expect(page).toContain(`<h4 class="text-lg">${PACK_SAMPLE.name}</h4>`);
-    // The showcase is a client component and must not import the catalogue.
-    const src = readFileSync(new URL("./pro-showcase.tsx", import.meta.url), "utf8");
-    expect(src).not.toMatch(/from "@\/components\/warmups\//);
+    // The showcase and the unlock stack are client components and must not import the catalogue.
+    for (const file of ["./pro-showcase.tsx", "./unlock-stack.tsx", "./claim.tsx"]) {
+      expect(readFileSync(new URL(file, import.meta.url), "utf8"), file).not.toMatch(/from "@\/components\/warmups\//);
+    }
     expect(readFileSync(new URL("./pack-sample.tsx", import.meta.url), "utf8")).not.toContain('"use client"');
   });
 });

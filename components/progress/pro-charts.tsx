@@ -17,6 +17,17 @@ import { TOLERANCE_CENTS } from "@/components/warmups/scoring";
 const WEAK_BELOW = 70;
 const REC = "#9d3f33";
 
+/**
+ * `compact` draws a chart for a frame about a phone wide (/pro's showcase,
+ * which is that wide at every breakpoint): a 320-unit viewBox, so one unit is
+ * about one CSS pixel there and the axis text is 11px instead of the 4px a
+ * 640-unit drawing shrinks to. Fewer labels rather than smaller ones. The
+ * default drawing, the one /progress shows, is unchanged.
+ */
+const COMPACT_FONT = 11;
+/** Mono glyphs are about 0.6em wide; a label needs its own width and a gap. */
+const labelUnits = (chars: number) => chars * COMPACT_FONT * 0.6 + 5;
+
 const emptyClass =
   "rounded-xl border border-dashed border-line2 px-4 py-8 text-center text-sm text-mut";
 
@@ -25,7 +36,14 @@ const emptyClass =
  * high. Notes below the weak threshold are drawn in red so the thing to
  * practise is the thing that stands out.
  */
-export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
+export function NoteAccuracyChart({
+  tallies,
+  compact = false,
+}: {
+  tallies: NoteTallies;
+  /** A phone-wide drawing with 11px axis text; see COMPACT_FONT. */
+  compact?: boolean;
+}) {
   const reports = noteReports(tallies);
 
   if (reports.length === 0) {
@@ -37,12 +55,13 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
     );
   }
 
-  const W = 640;
-  const H = 190;
-  const padL = 34;
-  const padR = 8;
-  const padT = 16;
+  const W = compact ? 320 : 640;
+  const H = compact ? 150 : 190;
+  const padL = compact ? 26 : 34;
+  const padR = compact ? 4 : 8;
+  const padT = compact ? 10 : 16;
   const padB = 26;
+  const fontSize = compact ? COMPACT_FONT : 9;
   const plotW = W - padL - padR;
   const plotH = H - padT - padB;
   const slot = plotW / reports.length;
@@ -51,7 +70,9 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
   const overall = overallAccuracy(tallies);
   const weakest = reports.reduce((a, b) => (b.accuracy < a.accuracy ? b : a));
   // With many notes, labelling every one turns the axis into mush.
-  const labelEvery = reports.length > 22 ? 3 : reports.length > 14 ? 2 : 1;
+  const labelEvery = compact
+    ? Math.max(1, Math.ceil(labelUnits(Math.max(...reports.map((r) => midiToLabel(r.midi).length))) / slot))
+    : reports.length > 22 ? 3 : reports.length > 14 ? 2 : 1;
 
   return (
     <>
@@ -81,9 +102,9 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
               />
               <text
                 x={padL - 6}
-                y={y + 3}
+                y={y + (compact ? 4 : 3)}
                 textAnchor="end"
-                fontSize={9}
+                fontSize={fontSize}
                 fontFamily={MONO}
                 fill={DIM}
               >
@@ -128,7 +149,7 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
                   x={x + barW / 2}
                   y={H - 8}
                   textAnchor="middle"
-                  fontSize={9}
+                  fontSize={fontSize}
                   fontFamily={MONO}
                   fill={weak ? REC : DIM}
                 >
@@ -161,8 +182,11 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
 export function RangeHistoryChart({
   history,
   dateFormat,
+  compact = false,
 }: {
   history: RangeEntry[];
+  /** A phone-wide drawing with 11px axis text; see COMPACT_FONT. */
+  compact?: boolean;
   /**
    * Pins the date labels' locale and time zone. Only for fixed sample dates
    * that are in the server HTML (/pro's showcase): left to the browser, a
@@ -181,12 +205,13 @@ export function RangeHistoryChart({
     );
   }
 
-  const W = 640;
-  const H = 190;
-  const padL = 38;
-  const padR = 10;
-  const padT = 16;
+  const W = compact ? 320 : 640;
+  const H = compact ? 150 : 190;
+  const padL = compact ? 26 : 38;
+  const padR = compact ? 4 : 10;
+  const padT = compact ? 10 : 16;
   const padB = 26;
+  const fontSize = compact ? COMPACT_FONT : 9;
   const plotW = W - padL - padR;
   const plotH = H - padT - padB;
 
@@ -200,6 +225,10 @@ export function RangeHistoryChart({
   const barW = Math.max(6, Math.min(34, slot * 0.5));
   const growth = rangeGrowth(history);
   const latest = series[series.length - 1];
+  // Compact: every date that fits, counted back from the newest ("Sep 30").
+  const dateEvery = Math.max(1, Math.ceil(labelUnits(6) / slot));
+  const dated = (i: number) =>
+    compact ? (series.length - 1 - i) % dateEvery === 0 : series.length <= 8 || i === series.length - 1;
 
   // Gridlines on octave Cs, which read as landmarks on a keyboard.
   const cLines: number[] = [];
@@ -242,9 +271,9 @@ export function RangeHistoryChart({
             />
             <text
               x={padL - 6}
-              y={yOf(midi) + 3}
+              y={yOf(midi) + (compact ? 4 : 3)}
               textAnchor="end"
-              fontSize={9}
+              fontSize={fontSize}
               fontFamily={MONO}
               fill={DIM}
             >
@@ -286,12 +315,12 @@ export function RangeHistoryChart({
                   <circle cx={x + barW / 2} cy={yBottom} r={3} fill={AMBER} stroke={PANEL} strokeWidth={1.5} />
                 </>
               )}
-              {(series.length <= 8 || newest) && (
+              {dated(i) && (
                 <text
                   x={x + barW / 2}
                   y={H - 8}
                   textAnchor="middle"
-                  fontSize={9}
+                  fontSize={fontSize}
                   fontFamily={MONO}
                   fill={newest ? MUT : DIM}
                 >

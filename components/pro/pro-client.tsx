@@ -963,7 +963,7 @@ export function ProClient({
   return (
     <main>
       {/* 1 — Hero */}
-      <section className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
+      <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 sm:px-6 sm:pb-14 sm:pt-14">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div className="animate-fadeup">
             <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
@@ -1122,11 +1122,11 @@ export function ProClient({
       </section>
 
       {/* 2 — What Pro adds, shown: the charts on the visitor's own record or
-              a labelled sample, the take overlay, a pack card and the books. */}
+              a labelled sample, and the take overlay. The pack card and the
+              books are drawn under the buy card, in the unlock stack. */}
       <ProShowcase
         owned={pro.active}
         own={ownVoice}
-        pack={pack}
         cta={
           // An owner is sold nothing: the way on to the charts. A free
           // visitor gets no button here; the card is the next thing down.
@@ -1140,7 +1140,7 @@ export function ProClient({
 
       {/* 3 — Plans */}
       <section id="plans" className="scroll-mt-20 border-t border-line bg-panel/40">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pt-12">
           {welcome ? (
             <WelcomePanel how={welcome} proKey={pro.proKey} periodEnd={periodEnd} />
           ) : (
@@ -1205,7 +1205,7 @@ export function ProClient({
           {/* One plan on sale, so no purchase toggle: the struck-through
               Monthly option beside it read as a broken control. The plans
               blurb names the sold-out plan once. */}
-          <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
+          <div className="mx-auto mt-8 grid max-w-4xl gap-4 sm:grid-cols-2">
             {/* The louder card, first in the source and on screen at every
                 width with no CSS order, so Tab order and screen order agree;
                 every buy link lands on its #buy. */}
@@ -1414,7 +1414,7 @@ export function ProClient({
       {/* 3b — What the money buys, itemised. Directly under the buy card so a
               monthly subscriber and a lifetime buyer can both answer "what do
               I actually get today?" before leaving for Checkout. */}
-      <UnlockStack />
+      <UnlockStack pack={pack} />
 
       {/* 4 — Free vs Pro table */}
       <section className="border-t border-line">

@@ -1,10 +1,8 @@
 "use client";
 
 import { useMemo, type ReactNode } from "react";
-import Link from "next/link";
-import { jumpInPage, SectionLabel } from "@/components/ui";
+import { SectionLabel } from "@/components/ui";
 import { useHydrated } from "@/components/prepaint";
-import { BookCover } from "@/components/book/cover";
 import { NoteAccuracyChart, RangeHistoryChart } from "@/components/progress/pro-charts";
 import {
   aggregateNotes,
@@ -13,9 +11,7 @@ import {
   type NoteTallies,
   type RangeEntry,
 } from "@/lib/analytics";
-import { AUTHOR_NAME } from "@/lib/author";
-import { PRO_PERKS } from "@/lib/pro";
-import { BOOKS, PRO_PROGRAM_COUNT, PRO_SHOWCASE_ANCHOR } from "@/lib/pro-inventory";
+import { PRO_SHOWCASE_ANCHOR } from "@/lib/pro-inventory";
 import {
   SAMPLE_ACCURACY,
   SAMPLE_DATA_LABEL,
@@ -25,13 +21,17 @@ import {
   SAMPLE_WEAK_NOTE,
 } from "@/lib/pro-sample";
 import { useProgress } from "@/lib/progress";
+import { Claim } from "./claim";
 import { TakeSample } from "./take-sample";
 import { ProChip } from "./ui";
 
 /**
- * "What Pro adds" on /pro, shown rather than listed.
+ * "What Pro adds" on /pro, shown rather than listed: the two real charts and
+ * the take drawing, between the hero and the buy card. The other perks (the
+ * pack card, the books, the plan, songs and sync) are drawn once, under the
+ * card, in components/pro/unlock-stack.tsx.
  *
- * Public surface: `ProShowcase({ owned, own, pack, cta })`, `useOwnVoice()`,
+ * Public surface: `ProShowcase({ owned, own, cta })`, `useOwnVoice()`,
  * and the label strings below (tests read them).
  *
  * Rules:
@@ -51,10 +51,10 @@ import { ProChip } from "./ui";
  * - Each chart sits in a frame whose height depends only on its width, so
  *   the swap from sample to own data moves nothing. Nothing else in the
  *   section depends on the visitor's record, for the same reason.
- * - Pictures, not numerals: the pack is a real pack card (the page passes it
- *   in as `pack`, server-rendered, so the exercise catalogue stays out of
- *   this bundle) and the books are their covers. Each figure is stated once,
- *   from lib/pro-inventory.ts; every claim sentence is a PRO_PERKS row.
+ * - The charts are drawn `compact` (components/progress/pro-charts.tsx): a
+ *   frame here is about a phone wide at every breakpoint, and the compact
+ *   drawing keeps its axis text at 10px or more there.
+ * - Every claim sentence is a PRO_PERKS row (components/pro/claim.tsx).
  * - Nothing here states a price or sells: a free visitor's buy button is the
  *   hero's, the card's below, and the bar that follows them. `cta` is an
  *   owner's way on.
@@ -76,8 +76,6 @@ export const SAMPLE_RANGE_CAPTION = `Sample voice: ${SAMPLE_RANGE_HISTORY.length
 
 /** The sample's dates are in the server HTML, so their format cannot follow the reader. */
 const SAMPLE_DATES = { locale: "en-US", timeZone: "UTC" };
-
-const perk = (id: string) => PRO_PERKS.find((p) => p.id === id)!;
 
 /**
  * The visitor's own chart data, or null where they have none worth drawing.
@@ -104,6 +102,18 @@ export function useOwnVoice(owned = false): OwnVoice {
   };
 }
 
+/** A frame's title bar: what the exhibit is, and that it is Pro's. */
+function FrameHead({ title }: { title: string }) {
+  return (
+    <div className="flex items-center justify-between gap-2 border-b border-line bg-panel2/60 px-4 py-2.5">
+      <h4 className="font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-mut">
+        {title}
+      </h4>
+      <ProChip />
+    </div>
+  );
+}
+
 /**
  * A chart in a frame that cannot change height: the SVG's height follows its
  * width, and the caption under it gets a fixed row (three lines of text-xs)
@@ -123,12 +133,7 @@ function ChartFrame({
 }) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-line bg-panel">
-      <div className="flex items-center justify-between gap-2 border-b border-line bg-panel2/60 px-4 py-2.5">
-        <h4 className="font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-mut">
-          {title}
-        </h4>
-        <ProChip />
-      </div>
+      <FrameHead title={title} />
       {/* Two lines reserved: the labels differ in length, and one that
           wrapped where the other did not would move the chart. */}
       <p className="min-h-12 px-4 pt-3 text-xs leading-4 text-mut sm:px-5">{label}</p>
@@ -172,140 +177,80 @@ function SampleChart({ name, caption, children }: { name: string; caption: strin
   );
 }
 
-/** A claim: the perk's own title and sentence, word for word. */
-function Claim({ id, compact = false }: { id: string; compact?: boolean }) {
-  const { title, desc } = perk(id);
-  return (
-    <div>
-      <h3 className={`font-extrabold text-ink ${compact ? "text-base" : "text-xl"}`}>{title}</h3>
-      <p className="mt-1 max-w-md text-sm text-mut">{desc}</p>
-    </div>
-  );
-}
-
-const ROW = "mt-10 grid items-center gap-5 lg:mt-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10";
-const TEXT_LINK =
-  "inline-flex min-h-11 items-center text-sm text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet";
-
 export function ProShowcase({
   owned,
   own,
-  pack,
   cta,
 }: {
   /** Pro is on in this browser: the visitor's own charts are drawn plainly. */
   owned: boolean;
   /** The visitor's own chart data (`useOwnVoice`), called once by the page, which words its jump link from it too. */
   own: OwnVoice;
-  /** A real pro pack card (components/pro/pack-sample.tsx), rendered on the server. */
-  pack?: ReactNode;
   /** An owner's way on from here. A free visitor is sold nothing in this section. */
   cta?: ReactNode;
 }) {
+  const notesOwn = own.tallies !== null;
+  const rangeOwn = own.history !== null;
   return (
     <section id={PRO_SHOWCASE_ANCHOR} className="scroll-mt-20 border-t border-line">
-      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
         <SectionLabel hairline className="mb-4">What Pro adds</SectionLabel>
         <h2 className="max-w-2xl text-2xl sm:text-3xl">
           The coach&apos;s full plan, and the charts behind it
         </h2>
-        {/* The same words whoever reads them: a line that changed with the
-            visitor's record would move everything under it on hydration. */}
-        <p className="mt-3 max-w-2xl text-mut">
-          The two charts below draw from the practice saved in this browser;
-          until there is some, they show a sample voice and say so.
-        </p>
 
-        {/* a. The charts: the real components, on real or sample data. */}
-        <div className="mt-8">
-          <Claim id="analytics" />
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
+        {/* One grid, three exhibits. A phone reads it top to bottom: the
+            analytics claim, its two charts, the takes claim, its drawing. From
+            xl the claims are the first row and the three frames the second,
+            so no claim sits alone beside a wide exhibit. Between, the charts
+            pair up and the take drawing runs under them. Every frame is about
+            a phone wide at each of those, which is what the compact charts
+            are drawn for. */}
+        <div className="mt-6 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
+          <Claim id="analytics" className="md:col-span-2 xl:row-start-1" />
+          <div className="xl:row-start-2">
             <ChartFrame
               title="Accuracy by note"
-              label={
-                own.tallies ? (owned ? `${OWN_DATA_LABEL}.` : OWN_DATA_PREVIEW) : SAMPLE_NOTES_LABEL
-              }
-              faded={own.tallies !== null && !owned}
+              label={notesOwn ? (owned ? `${OWN_DATA_LABEL}.` : OWN_DATA_PREVIEW) : SAMPLE_NOTES_LABEL}
+              faded={notesOwn && !owned}
             >
               {own.tallies ? (
-                <NoteAccuracyChart tallies={own.tallies} />
+                <NoteAccuracyChart tallies={own.tallies} compact />
               ) : (
                 <SampleChart name={SAMPLE_NOTES_NAME} caption={SAMPLE_NOTES_CAPTION}>
-                  <NoteAccuracyChart tallies={SAMPLE_NOTE_TALLIES} />
+                  <NoteAccuracyChart tallies={SAMPLE_NOTE_TALLIES} compact />
                 </SampleChart>
               )}
             </ChartFrame>
+          </div>
+          <div className="xl:row-start-2">
             <ChartFrame
               title="Range over time"
-              label={
-                own.history ? (owned ? `${OWN_DATA_LABEL}.` : OWN_DATA_PREVIEW) : SAMPLE_RANGE_LABEL
-              }
-              faded={own.history !== null && !owned}
+              label={rangeOwn ? (owned ? `${OWN_DATA_LABEL}.` : OWN_DATA_PREVIEW) : SAMPLE_RANGE_LABEL}
+              faded={rangeOwn && !owned}
             >
               {own.history ? (
-                <RangeHistoryChart history={own.history} />
+                <RangeHistoryChart history={own.history} compact />
               ) : (
                 <SampleChart name={SAMPLE_RANGE_NAME} caption={SAMPLE_RANGE_CAPTION}>
-                  <RangeHistoryChart history={SAMPLE_RANGE_HISTORY} dateFormat={SAMPLE_DATES} />
+                  <RangeHistoryChart history={SAMPLE_RANGE_HISTORY} dateFormat={SAMPLE_DATES} compact />
                 </SampleChart>
               )}
             </ChartFrame>
           </div>
-        </div>
-
-        {/* b. Take analysis: a drawing, labelled as a sample by TakeSample. */}
-        <div className={ROW}>
-          <Claim id="takes" />
-          <TakeSample className="rounded-2xl border border-line bg-panel p-4 sm:p-5" />
-        </div>
-
-        {/* c. A pro pack, as the warmups room draws it, and the programs. */}
-        <div className={ROW}>
-          <Claim id="warmups" />
-          <div>
-            {pack}
-            <p className="mt-3 text-sm text-mut">
-              Pro also opens {PRO_PROGRAM_COUNT} programs in full.{" "}
-              <Link href="/programs" className={TEXT_LINK}>
-                Week 1 of every program is free
-              </Link>
-            </p>
+          <Claim id="takes" className="mt-4 md:col-span-2 xl:col-span-1 xl:col-start-3 xl:row-start-1 xl:mt-0" />
+          {/* Take analysis: a drawing, labelled as a sample by TakeSample. */}
+          <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-panel md:col-span-2 xl:col-span-1 xl:col-start-3 xl:row-start-2">
+            <FrameHead title="Two takes, overlaid" />
+            <div className="flex grow flex-col justify-center p-4 sm:p-5">
+              <TakeSample />
+            </div>
           </div>
         </div>
 
-        {/* d. The books, as their covers, each with its own figures. */}
-        <div className={ROW}>
-          <Claim id="book" />
-          <div>
-            <ul className="grid grid-cols-2 gap-4 sm:gap-6">
-              {BOOKS.map((book) => (
-                <li key={book.href}>
-                  <BookCover title={book.title} author={AUTHOR_NAME} />
-                  {/* The cover is a drawing, hidden from assistive tech. */}
-                  <p className="tabular mt-3 text-sm text-ink">
-                    <span className="sr-only">{book.title}: </span>
-                    {book.chapters} chapters, {book.words.toLocaleString("en-US")} words
-                  </p>
-                  <p className="tabular text-sm text-mut">{book.free} chapters free to read now</p>
-                </li>
-              ))}
-            </ul>
-            {/* A plain anchor: the browser makes the jump (see jumpInPage). */}
-            <a href="#unlocks" onClick={jumpInPage} className={`mt-1 ${TEXT_LINK}`}>
-              See every chapter title
-            </a>
-          </div>
-        </div>
-
-        {/* The perks with nothing more to draw, in one row: the plan is the
-            coach report at the top of the page, and the other two are a
-            limit lifted and a sync. */}
-        <div className="mt-10 grid gap-x-8 gap-y-5 border-t border-line pt-8 sm:grid-cols-3 lg:mt-14">
-          {(["coach", "songs", "history"] as const).map((id) => (
-            <Claim key={id} id={id} compact />
-          ))}
-        </div>
-
+        {/* A free visitor reads on into the buy card; the rest of what Pro
+            opens (packs, books, sync) is drawn once, in the unlock stack
+            under it, and the card's list names it in between. */}
         {cta && <div className="mt-8 flex flex-col items-start gap-3">{cta}</div>}
       </div>
     </section>

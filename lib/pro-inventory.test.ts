@@ -9,6 +9,7 @@ import { PLAN_ROWS, PRO_PERKS } from "./pro";
 import { FREE_WEEKS, PROGRAMS } from "./programs";
 import { PRO_FAQ } from "./pro-shared";
 import {
+  ATLAS_PROFILES_NOTE,
   ATLAS_VOICE_COUNT,
   BOOKS,
   FREE_CHAPTERS,
@@ -25,7 +26,6 @@ import {
   TOTAL_CHAPTERS,
   TOTAL_EXERCISES,
   TOTAL_WORDS,
-  UNLOCK_TILES,
 } from "./pro-inventory";
 
 /**
@@ -111,8 +111,10 @@ describe("singer-range copy", () => {
   it("calls catalog spans reported, not measured", () => {
     // The ranges are cited figures from public sources, not measurements this
     // site took. "The Measured Voice" is a book title and stays.
+    // Was UNLOCK_TILES' labels: /pro's numeral tiles are gone (each figure is
+    // now stated once, in a perk sentence); the Atlas line they left is here.
     const copy = [
-      ...UNLOCK_TILES.map((t) => `${t.label} ${t.sub}`),
+      ATLAS_PROFILES_NOTE,
       ...PRO_PERKS.map((p) => p.desc.replaceAll("The Measured Voice", "")),
     ];
     expect(copy.filter((c) => /\bmeasured\b/i.test(c))).toEqual([]);
@@ -121,10 +123,14 @@ describe("singer-range copy", () => {
   it("never counts the free singer ranges as something Pro unlocks", () => {
     // Under "opens the second you upgrade": what Pro adds is the Atlas
     // profiles. Every singer page and its range is free.
-    for (const t of UNLOCK_TILES) expect(t.label, t.label).not.toMatch(/singer ranges?/i);
-    const atlas = UNLOCK_TILES.find((t) => /Atlas/.test(t.label))!;
-    expect(atlas.figure).toBe(String(ATLAS_VOICE_COUNT));
-    expect(atlas.sub).toMatch(/ranges stay free/);
+    // Was the Atlas numeral tile: the tiles are gone from /pro, so the same
+    // two facts are held on the copy that replaced it, the Atlas's own line
+    // in the unlock stack and the perk sentence that counts the profiles.
+    expect(ATLAS_PROFILES_NOTE).not.toMatch(/singer ranges?/i);
+    expect(ATLAS_PROFILES_NOTE).toMatch(/ranges stay free/);
+    const book = PRO_PERKS.find((p) => p.id === "book")!;
+    expect(book.desc).toContain(`${ATLAS_VOICE_COUNT} singer profiles`);
+    expect(book.desc).not.toMatch(/singer ranges?/i);
   });
 
   it("prints the book totals it can prove", () => {
@@ -145,8 +151,9 @@ describe("singer-range copy", () => {
   it("never sells the one-time purchase with subscription words", () => {
     // Lifetime is the only plan on sale. "The moment you subscribe" beside a
     // one-time price raises the "will this renew?" doubt the page removes.
+    // Was also UNLOCK_TILES' captions; the tiles are gone from /pro.
     const copy = [
-      ...UNLOCK_TILES.map((t) => t.sub),
+      ATLAS_PROFILES_NOTE,
       ...PRO_PERKS.map((p) => p.desc),
       ...PRO_FAQ.map((f) => f.a),
     ];
