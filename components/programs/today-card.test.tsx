@@ -414,7 +414,8 @@ describe("the free plan's note on a day longer than five guided minutes", () => 
     expect(rw.days[0].items.some((i) => i.kind === "range")).toBe(false);
     const recovery = note(rw.id, 0);
     expect(recovery).toContain("The free plan covers five guided minutes a day, and this day runs longer");
-    expect(recovery).toMatch(/>Pro<\/a> removes the cap\.<\/p>/);
+    // The cap line is a purchase ask, so it goes to the buy card and states the price.
+    expect(recovery).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Pro<\/a> \(\$79 once\) removes the cap\.<\/p>/);
     expect(recovery).not.toContain("range test is always free");
     // Foundations' day 1 takes one, and still says it is free.
     const f = programById("foundations-2w")!;

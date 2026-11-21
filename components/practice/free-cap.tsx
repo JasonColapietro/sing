@@ -164,6 +164,13 @@ export function CapSlide({ onExit }: { cap: FreeCap; onExit: () => void }) {
           practice opens again at midnight; the pitch studio and the range test
           are open now.
         </p>
+        {/* What the button below buys, said once at the moment it matters.
+            Each clause is a row of PLAN_ROWS / PRO_PERKS (lib/pro.ts); the
+            cap can only be reached on the free plan, so no owner reads it. */}
+        <p className="mt-3 max-w-md text-sm text-[var(--s-mut)]">
+          Pro has no daily limit, and adds every step of the coach&apos;s plan,
+          the pro warmup packs and both books.
+        </p>
         <Link
           href="/studio"
           className={`mt-4 inline-flex min-h-11 items-center text-sm text-[var(--s-ink)] underline underline-offset-4 ${SESSION_FOCUS}`}

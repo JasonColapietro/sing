@@ -80,6 +80,15 @@ export const PRO_PACKS_ANCHOR = "pro-packs";
 export const PRO_PACKS_HREF = `/warmups#${PRO_PACKS_ANCHOR}`;
 
 /**
+ * Where /pro demonstrates the paid charts (components/pro/pro-showcase.tsx):
+ * the section's id, and the address the homepage teaser sends a reader to.
+ * One constant, so the section, /pro's own jump link and the homepage cannot
+ * name different anchors.
+ */
+export const PRO_SHOWCASE_ANCHOR = "showcase";
+export const PRO_SHOWCASE_HREF = `/pro#${PRO_SHOWCASE_ANCHOR}`;
+
+/**
  * Singers with a reported range and a page of their own. Free to read. The
  * ranges are cited catalog spans, not measurements we took, so copy built on
  * this number says "reported" or "singer ranges", never "measured".

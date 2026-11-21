@@ -11,6 +11,7 @@ import { useProgress } from "@/lib/progress";
 import { songFirstPractice } from "@/lib/song-first-practice";
 import { rangeTestHref } from "@/lib/site";
 import { FreeOnly } from "@/components/pro/gate";
+import { PRO_BUY_HREF, UNLOCK_WITH_PRO } from "@/components/pro/ui";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { Card, LinkButton, SectionLabel, jumpInPage } from "@/components/ui";
 
@@ -251,8 +252,8 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
               <SectionLabel>Optional with Pro</SectionLabel>
               <p className="mt-2 text-xs text-mut">{practice.pro}</p>
               <div className="mt-3">
-                <LinkButton href="/pro#plans" variant="outline" size="sm">
-                  See Pro plans
+                <LinkButton href={PRO_BUY_HREF} variant="outline" size="sm">
+                  {UNLOCK_WITH_PRO}
                 </LinkButton>
               </div>
             </div>

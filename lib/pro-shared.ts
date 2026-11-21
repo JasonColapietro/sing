@@ -154,24 +154,34 @@ export function proHeadlineLong(
  * same strings — Google requires the marked-up answer to match what a reader
  * sees, and sharing one array is the only way that stays true.
  */
-export const PRO_FAQ: Array<{ q: string; a: string }> = [
+export const PRO_FAQ: Array<{
+  /** A stable key for code that picks one entry out; never rendered or marked up. */
+  id: string;
+  q: string;
+  a: string;
+}> = [
   {
+    id: "stays-free",
     q: "Does the free studio stay free?",
     a: "Yes. All ten rooms stay open on the free plan. Live pitch feedback, the range test and the recorder have no daily limit; guided practice (warmups, ear training, breath and songs) shares five free minutes a day. Pro removes that limit.",
   },
   {
+    id: "need-pro",
     q: "Do I need Pro to get better?",
     a: "Not to practice. Pro is for the singer who wants the view across their record: range tests charted over time, every take analyzed, the coach's full daily plan, and the two books that explain what the numbers mean.",
   },
   {
+    id: "voice-uploaded",
     q: "Is my voice uploaded?",
     a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers (scores, streaks, range), never audio.",
   },
   {
+    id: "devices",
     q: "Can I use Pro on my phone and my computer?",
     a: "Yes, in a browser. Pro opens in the browser where you buy it, and the Pro key shown after checkout opens it in any other browser, on a phone or a computer. Cloud sync carries your sessions, streaks, scores and range between them; recordings stay on the device that made them. The Suede Voice app for iPhone and Android is a separate download; features and purchase options can differ there, and each store lists the current details.",
   },
   {
+    id: "included",
     q: "What do I get the moment I upgrade?",
     // Built from the inventory, never typed: this answer is also FAQPage
     // markup, and a hard-coded count here once drifted ~21,000 words behind
@@ -179,12 +189,14 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
     a: `No daily limit on guided practice, the coach's full daily plan, ${PRO_PROGRAM_COUNT === 2 ? "both" : "all"} Pro programs in full, and both books in full (${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas), plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, a per-note accuracy chart, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
   },
   {
+    id: "sync",
     q: "What does cloud sync carry, and what stays in this browser?",
     // The keys outside the synced progress record: suede-sing:mastered:v2,
     // ear-best:v1, breath-bests:v1 and program:v1.
     a: "Sync carries your progress record: sessions, streaks, scores and range tests. Song mastery marks, ear-training and breath path stars, and your place in a program stay in the browser where you earned them, and recordings stay on the device that made them.",
   },
   {
+    id: "price",
     q: "How much does Suede Pro cost?",
     a: `Suede Pro is ${formatPrice(PRICING.lifetime.amount)} for lifetime access. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing subscribers keep renewing at the price they signed up at and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
   },

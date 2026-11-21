@@ -6,7 +6,8 @@ import type { ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
 import { midiToLabel } from "@/lib/audio/notes";
 import { Card, Pill, SectionLabel } from "@/components/ui";
-import { ProChip, ProLockTag } from "@/components/pro/ui";
+import { PRO_BUY_HREF, PRO_PRICE_ONCE, ProChip, ProLockTag, UNLOCK_PRO_PACKS } from "@/components/pro/ui";
+import { NotPro } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import {
   PathList,
@@ -97,9 +98,14 @@ export function RoutineMeta({ routine }: { routine: Routine }) {
 
 /**
  * The routine grid: every routine, the free ones then the Pro packs. Pro cards are
- * rendered from PRO_ROUTINES either way; for a free singer they link to /pro
- * instead of starting, and the exercises inside stay behind the paywall in the
- * player.
+ * rendered from PRO_ROUTINES either way; for a free singer each one is a link
+ * to the buy card instead of a start button, and the exercises inside stay
+ * behind the paywall in the player.
+ *
+ * The price is said once, in a line above the packs (PacksAsk), not on every
+ * card: eight identical priced links were noise, and because the grid is
+ * prerendered as "not Pro" they were also on a Pro owner's screen until
+ * hydration took them away and every card below them moved.
  */
 export function RoutineGrid({
   progress,
@@ -149,7 +155,14 @@ export function RoutineGrid({
         className="flex scroll-mt-20 flex-col"
       >
         {locked ? (
-          <Link href="/pro" className="flex-1">
+          // The whole card is the link, and its name says what the tap is
+          // for: the pack, that Pro unlocks it, and the price. The name
+          // starts with the visible heading (WCAG 2.5.3).
+          <Link
+            href={PRO_BUY_HREF}
+            aria-label={lockedPackLabel(routine)}
+            className="flex-1 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-ink"
+          >
             {body}
           </Link>
         ) : (
@@ -175,9 +188,35 @@ export function RoutineGrid({
       {unavailableReason && <p id={unavailableId} className="mt-3 text-sm text-mut">{unavailableReason}</p>}
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ROUTINES.map(card)}
+        <PacksAsk />
         {PRO_ROUTINES.map(card)}
       </div>
     </section>
+  );
+}
+
+/** A locked pack card's accessible name: the pack, what unlocks it, the price. */
+export function lockedPackLabel(routine: Routine): string {
+  return `${routine.name}: unlocks with Pro, ${PRO_PRICE_ONCE}`;
+}
+
+/**
+ * The one priced line above the pro packs, across the whole grid row. In the
+ * server HTML for everyone and behind the pre-paint "not-pro" marker
+ * (NotPro, components/pro/gate.tsx), so a Pro owner's first paint never has
+ * it and taking it away at hydration moves nothing.
+ */
+function PacksAsk() {
+  return (
+    <NotPro as="p" className="col-span-full flex flex-wrap items-center gap-x-2 text-sm text-mut">
+      <span>The {PRO_ROUTINES.length} packs below open with Pro.</span>
+      <Link
+        href={PRO_BUY_HREF}
+        className="inline-flex min-h-11 items-center font-medium text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+      >
+        {UNLOCK_PRO_PACKS}
+      </Link>
+    </NotPro>
   );
 }
 
@@ -248,7 +287,7 @@ export function PathSection({
         desc: pack.desc,
         stars: 0 as Stars,
         locked: true,
-        href: "/pro",
+        href: PRO_BUY_HREF,
       })),
     });
   }
