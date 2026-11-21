@@ -7,7 +7,7 @@ import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { proMomentSeen } from "@/lib/pro-signal";
 import { useProgress } from "@/lib/progress";
 import { MAX_SESSIONS } from "@/lib/progress-shape";
-import { ProChip, UpgradeCard } from "./ui";
+import { PRO_BUY_HREF, PRO_PRICE_ONCE, ProChip, UpgradeCard } from "./ui";
 
 /**
  * Renders children only for free users. Wrap every conversion surface
@@ -149,10 +149,11 @@ export function ProInlineNudge({ children }: { children: string }) {
       <ProChip />
       <span>{children}</span>
       <Link
-        href="/pro#buy"
+        href={PRO_BUY_HREF}
         className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
       >
-        Go Pro
+        {/* Priced, like every other ask: the singer knows the cost before the tap. */}
+        {`Go Pro: ${PRO_PRICE_ONCE}`}
       </Link>
     </p>
   );

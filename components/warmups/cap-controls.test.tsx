@@ -46,7 +46,10 @@ describe("warmup starts after the daily allowance", () => {
     expect(starts.length).toBeGreaterThan(0);
     expect(starts.every((button) => button.includes('disabled=""'))).toBe(true);
     expect(html).toContain(reason);
-    expect(html).toContain('href="/pro"');
+    // Each locked pack carries one priced link to the buy card (was a silent
+    // whole-card link to bare /pro).
+    expect(html).not.toContain('href="/pro"');
+    expect(html.match(/<a[^>]*href="\/pro#buy"[^>]*>Unlock the pro packs: \$79 once<\/a>/g)).toHaveLength(PRO_ROUTINES.length);
   });
 
   it("disables path exercises while preserving the range test and Pro links", () => {
@@ -59,7 +62,9 @@ describe("warmup starts after the daily allowance", () => {
     expect(starts.every((button) => button.includes('disabled=""'))).toBe(true);
     expect(html).toContain(reason);
     expect(html).toContain('href="/range?mode=range#start"');
-    expect(html).toContain('href="/pro"');
+    // The locked pack rows go to the buy card, not the top of /pro.
+    expect(html).toContain('href="/pro#buy"');
+    expect(html).not.toContain('href="/pro"');
   });
 
   it("keeps daily exercise links available when the allowance is open", () => {

@@ -326,8 +326,10 @@ export default function Nav() {
             {/* Keep Pro above the room list so it remains easy to find after
                 opening the drawer. It also has a pill in the phone header. */}
             <div className="px-4 pt-4">
+              {/* A free singer's card is a purchase ask, so it opens the buy
+                  card; an owner's manages the plan from the top of /pro. */}
               <Link
-                href="/pro"
+                href={proActive ? "/pro" : "/pro#buy"}
                 onClick={() => setMenuOpen(false)}
                 className="relative block overflow-hidden rounded-2xl border border-violet/50 bg-panel px-4 py-4 transition-colors hover:border-violet"
               >

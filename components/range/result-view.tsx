@@ -1010,7 +1010,7 @@ function RangeOverTime({
   return (
     <LockedPanel
       label={hasHistory ? "Range over time" : "Range over time · sample"}
-      cta="See your retests on one chart"
+      gives="See your retests on one chart."
     >
       <div className="p-4 sm:p-5">
         {/* Above the chart, not below it: the panel pins its lock row over the

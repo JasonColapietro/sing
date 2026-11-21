@@ -45,7 +45,8 @@ import type { ActiveProgram } from "./use-program";
 /** Where an unlock button goes: the offer itself, as every cap surface links it. */
 const PRO_BUY_HREF = "/pro#buy";
 /** What it says: priced, so the wall names the one payment before the click. */
-const UNLOCK_LABEL = `Unlock with Pro: ${formatPrice(PRICING.lifetime.amount)} once`;
+const PRO_PRICE_ONCE = `${formatPrice(PRICING.lifetime.amount)} once`;
+const UNLOCK_LABEL = `Unlock with Pro: ${PRO_PRICE_ONCE}`;
 
 /** "Week 1 was free" / "weeks 1–2 were free", for the free week's end. */
 function freeWeeksWere(capital: boolean): string {
@@ -561,7 +562,7 @@ export function ProgramTodayCard({
                         Recovery week asks for none, since a tired voice is
                         not one to measure (components/practice/program-day.ts
                         recoveryWeekOf). */}
-                    <Link href="/pro" className="underline">Pro</Link> removes the cap
+                    <Link href={PRO_BUY_HREF} className="underline">Pro</Link> ({PRO_PRICE_ONCE}) removes the cap
                     {day.items.some((i) => i.kind === "range") ? "; the range test is always free" : ""}.
                   </p>
                 )}

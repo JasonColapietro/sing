@@ -109,7 +109,7 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
   const ctas = (
     <div className="mt-5 flex flex-wrap items-center gap-3">
       <LinkButton href="/pro#buy" size="md">
-        {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
+        {`Unlock both books: ${formatPrice(PRICING.lifetime.amount)} once`}
       </LinkButton>
       {sample && (
         <LinkButton href={`/atlas/${sample.slug}`} variant="outline" size="md">

@@ -61,8 +61,10 @@ describe("song comparison to first practice", () => {
     expect(html).toContain(`href="${href}`);
     expect(html).toContain(exercise);
     expect(html).toContain(benefit);
-    expect(html).toContain('href="/pro#plans"');
-    expect(html.indexOf(`href="${href}`)).toBeLessThan(html.indexOf('href="/pro#plans"'));
+    // The ask goes to the buy card and states the price (was "/pro#plans",
+    // "See Pro plans": one plan is on sale, and the gate names its cost).
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>See Pro: \$79 once<\/a>/);
+    expect(html.indexOf(`href="${href}`)).toBeLessThan(html.indexOf('href="/pro#buy"'));
     expect(html).toContain("free for 5 minutes a day");
     expect(html).toContain("commonly cited lead-vocal range");
     expect(html).not.toContain("studio-version");

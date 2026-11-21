@@ -6,7 +6,7 @@ import type { ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
 import { midiToLabel } from "@/lib/audio/notes";
 import { Card, Pill, SectionLabel } from "@/components/ui";
-import { ProChip, ProLockTag } from "@/components/pro/ui";
+import { PRO_BUY_HREF, PRO_PRICE_ONCE, ProChip, ProLockTag } from "@/components/pro/ui";
 import { MicAlert } from "@/components/mic-alert";
 import {
   PathList,
@@ -97,8 +97,8 @@ export function RoutineMeta({ routine }: { routine: Routine }) {
 
 /**
  * The routine grid: every routine, the free ones then the Pro packs. Pro cards are
- * rendered from PRO_ROUTINES either way; for a free singer they link to /pro
- * instead of starting, and the exercises inside stay behind the paywall in the
+ * rendered from PRO_ROUTINES either way; for a free singer they carry a priced
+ * link to the buy card instead of starting, and the exercises inside stay behind the paywall in the
  * player.
  */
 export function RoutineGrid({
@@ -138,6 +138,21 @@ export function RoutineGrid({
           <RoutineMeta routine={routine} />
         </div>
         <StepStrip routine={routine} />
+        {/* A locked pack says what unlocks it and what that costs, as a link a
+            keyboard and a screen reader can find: the card used to be one
+            silent link to /pro with no words about buying on it. The meta
+            line above (the pack's own exercise count and minutes) is what
+            the singer would get. */}
+        {locked && (
+          <p className="mt-4 border-t border-line pt-3">
+            <Link
+              href={PRO_BUY_HREF}
+              className="inline-flex min-h-11 items-center text-sm font-medium text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+            >
+              {`Unlock the pro packs: ${PRO_PRICE_ONCE}`}
+            </Link>
+          </p>
+        )}
       </Card>
     );
     return (
@@ -149,9 +164,7 @@ export function RoutineGrid({
         className="flex scroll-mt-20 flex-col"
       >
         {locked ? (
-          <Link href="/pro" className="flex-1">
-            {body}
-          </Link>
+          <div className="flex-1">{body}</div>
         ) : (
           <button type="button" onClick={() => onStart(routine)}
             disabled={Boolean(unavailableReason)} aria-describedby={unavailableReason ? unavailableId : undefined}
@@ -248,7 +261,7 @@ export function PathSection({
         desc: pack.desc,
         stars: 0 as Stars,
         locked: true,
-        href: "/pro",
+        href: PRO_BUY_HREF,
       })),
     });
   }

@@ -11,6 +11,7 @@ import { SONGS_GUIDE } from "@/lib/guides";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { RoomRailBand } from "@/components/discover/room-rail";
 import { routeKeywords } from "@/lib/keywords";
+import { formatPrice, PRICING } from "@/lib/pro-shared";
 
 // Derived from the arrays rather than written down, so the counts cannot go
 // stale as the songbook grows. A longer arrangement of a melody already in the
@@ -90,8 +91,8 @@ export default function SongsPage() {
                 <SongbookList songs={PRO_SONGS} />
               </div>
               <div className="mt-6">
-                <LinkButton href="/pro" variant="outline" size="sm">
-                  What Pro includes
+                <LinkButton href="/pro#buy" variant="outline" size="sm">
+                  {`What Pro includes: ${formatPrice(PRICING.lifetime.amount)} once`}
                 </LinkButton>
               </div>
             </>

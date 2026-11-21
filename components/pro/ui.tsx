@@ -94,19 +94,32 @@ export function UpgradeCard({
   );
 }
 
+/** The one priced label every gate's buy link carries. Read from PRICING, never typed. */
+export const PRO_PRICE_ONCE = `${formatPrice(PRICING.lifetime.amount)} once`;
+/** Where every gate sends a purchase: the buy card on /pro, never Stripe directly. */
+export const PRO_BUY_HREF = "/pro#buy";
+/** The default call to action of a locked surface. */
+export const UNLOCK_WITH_PRO = `Unlock with Pro: ${PRO_PRICE_ONCE}`;
+
 /**
- * A locked Pro preview: real content shown faded under a gradient, with a
- * lock row pinned at the bottom. Sells by showing, not by hiding.
+ * A locked Pro preview: real content shown faded under a gradient, then one
+ * sentence saying what the panel is and a priced lock row. Sells by showing,
+ * not by hiding. The gate grammar is the same on every locked surface: what
+ * Pro gives here (`gives`), then one priced link to the buy card.
  */
 export function LockedPanel({
   label,
+  gives,
   children,
-  cta = "Unlock with Pro",
+  cta = UNLOCK_WITH_PRO,
   className = "",
 }: {
   /** Mono tape label naming what's inside, e.g. "Per-note accuracy". */
   label: string;
+  /** One sentence: what this panel is for the singer, at this point. */
+  gives: string;
   children: ReactNode;
+  /** Must carry the price (PRO_PRICE_ONCE) when overridden. */
   cta?: string;
   className?: string;
 }) {
@@ -120,23 +133,29 @@ export function LockedPanel({
         </span>
         <ProChip />
       </div>
-      {/* pb-16 keeps the preview clear of the lock row pinned over its
-          bottom edge: an empty-state box inside ran under the button. */}
-      <div aria-hidden className="pointer-events-none select-none pb-16 opacity-60">
-        {children}
+      <div className="relative">
+        <div aria-hidden className="pointer-events-none select-none pb-6 opacity-60">
+          {children}
+        </div>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-panel to-transparent"
+        />
       </div>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-panel to-transparent"
-      />
-      <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 px-4 pb-4 sm:px-5">
-        <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
-          <LockGlyph />
-          Pro preview
-        </span>
-        <LinkButton href="/pro#buy" variant="violet" size="sm">
-          {cta}
-        </LinkButton>
+      {/* In flow, not pinned over the preview: the sentence and a priced
+          button wrap to two rows on a 375px phone, and a pinned row that
+          grows would cover the chart it is selling. */}
+      <div className="px-4 pb-4 sm:px-5">
+        <p className="max-w-xl text-sm text-mut">{gives}</p>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
+            <LockGlyph />
+            Pro preview
+          </span>
+          <LinkButton href={PRO_BUY_HREF} variant="violet" size="sm">
+            {cta}
+          </LinkButton>
+        </div>
       </div>
     </div>
   );

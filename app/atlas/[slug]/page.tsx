@@ -217,7 +217,7 @@ export default async function AtlasChapterPage({
               )}
               <div className="mt-4">
                 <LinkButton href="/pro#buy" size="md">
-                  {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
+                  {`Unlock both books: ${formatPrice(PRICING.lifetime.amount)} once`}
                 </LinkButton>
               </div>
             </Card>

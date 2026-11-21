@@ -117,7 +117,7 @@ export function ChapterReader({
   const ctas = (
     <div className="mt-5 flex flex-wrap gap-3">
       <LinkButton href="/pro#buy" size="sm">
-        {`See Suede Pro, ${formatPrice(PRICING.lifetime.amount)} once`}
+        {`Unlock both books: ${formatPrice(PRICING.lifetime.amount)} once`}
       </LinkButton>
       {sample && (
         <LinkButton href={`/book/${sample.slug}`} variant="outline" size="sm">

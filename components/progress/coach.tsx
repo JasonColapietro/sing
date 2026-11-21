@@ -1,14 +1,12 @@
 "use client";
 
-import { ProSlot } from "@/components/pro/slot";
 import Link from "next/link";
 import { RANGE_RETEST_DAYS, type ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
 import { useFreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Card } from "@/components/ui";
-import { ProInlineNudge } from "@/components/pro/gate";
-import { LockGlyph } from "@/components/pro/ui";
+import { LockGlyph, PRO_BUY_HREF, UNLOCK_WITH_PRO } from "@/components/pro/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
 import {
@@ -382,6 +380,7 @@ export function CoachCard({
   // a locked door. buildPlan always produces at least three items, so this
   // never empties the card.
   const shown = isPro ? items.length : Math.min(2, items.length);
+  const lockedSteps = items.length - shown;
 
   return (
     <Card>
@@ -466,6 +465,28 @@ export function CoachCard({
           )
         )}
       </ol>
+      {/* The gate's own route, directly under the locked steps: how many of
+          today's steps are behind the lock, and what opening them costs.
+          Rendered on the same condition as the locked rows above, so it
+          arrives and leaves with them; left out where another ask owns the
+          screen (hideProNudge). It replaces the card's slotted one-line nudge
+          ("Pro unlocks the full daily plan"), which lost the page's one slot
+          to the locked chart on /progress and so rarely showed. */}
+      {!isPro && lockedSteps > 0 && !hideProNudge && (
+        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 pl-9 text-sm text-mut">
+          <span>
+            {lockedSteps === 1
+              ? "1 more step in today's plan"
+              : `${lockedSteps} more steps in today's plan`}
+          </span>
+          <Link
+            href={PRO_BUY_HREF}
+            className="inline-flex min-h-11 items-center text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+          >
+            {UNLOCK_WITH_PRO}
+          </Link>
+        </p>
+      )}
       <p className="mt-4 text-xs text-dim">
         Built from your scored notes, range tests, and recent practice. No AI,
         just the numbers.
@@ -482,19 +503,6 @@ export function CoachCard({
             ? "the range test and the pitch studio have no clock."
             : "the pitch studio has no clock."}
         </p>
-      )}
-      {/* Not before the first session: a singer with nothing logged has not
-          yet seen the plan read their numbers, which is what the line sells. */}
-      {state.sessions.length > 0 && !hideProNudge && (
-        <div className="mt-3">
-          {/* At the cap the card has just said today's free minutes are used,
-              so the line names the limit Pro removes, not the plan. */}
-          <ProSlot priority={2}>
-            <ProInlineNudge>
-              {cap.capped ? "Pro has no daily limit" : "Pro unlocks the full daily plan"}
-            </ProInlineNudge>
-          </ProSlot>
-        </div>
       )}
     </Card>
   );

@@ -1051,7 +1051,9 @@ export function ProgressClient() {
             </div>
           ) : !isFresh ? (
             <HoldsProSlot priority={3}>
-            <LockedPanel label="Accuracy by note" className="mt-4">
+            <LockedPanel label="Accuracy by note" className="mt-4"
+              gives="Every note you've sung, with how often you landed it. This is your own chart."
+            >
               {/* Real chart as the preview: faded and inert under the panel,
                   but it is the singer's own data doing the selling. With no
                   sessions there is none to do it, so the panel waits for the
