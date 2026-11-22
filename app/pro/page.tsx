@@ -1,4 +1,5 @@
 import { ProClient } from "@/components/pro/pro-client";
+import { PackSample } from "@/components/pro/pack-sample";
 import { AUTHOR_ID, AUTHOR_NODE } from "@/lib/author";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import {
@@ -150,7 +151,10 @@ export default function ProPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(PRO_JSON_LD) }}
       />
-      <ProClient />
+      {/* The pack card is rendered here, on the server, and handed in as a
+          node: it reads the exercise catalogue, which the page's client
+          bundle does not carry (components/pro/pack-sample.tsx). */}
+      <ProClient pack={<PackSample />} />
     </>
   );
 }

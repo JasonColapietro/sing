@@ -80,6 +80,15 @@ export const PRO_PACKS_ANCHOR = "pro-packs";
 export const PRO_PACKS_HREF = `/warmups#${PRO_PACKS_ANCHOR}`;
 
 /**
+ * Where /pro demonstrates the paid charts (components/pro/pro-showcase.tsx):
+ * the section's id, and the address the homepage teaser sends a reader to.
+ * One constant, so the section, /pro's own jump link and the homepage cannot
+ * name different anchors.
+ */
+export const PRO_SHOWCASE_ANCHOR = "showcase";
+export const PRO_SHOWCASE_HREF = `/pro#${PRO_SHOWCASE_ANCHOR}`;
+
+/**
  * Singers with a reported range and a page of their own. Free to read. The
  * ranges are cited catalog spans, not measurements we took, so copy built on
  * this number says "reported" or "singer ranges", never "measured".
@@ -118,36 +127,10 @@ export const PRO_PROGRAM_COUNT = PRO_PROGRAM_NAMES.length;
 export const FREE_PROGRAM_COUNT = 4;
 
 /**
- * The headline tiles under the buy button.
- *
- * Ordered deliberately: the recurring value first and the PDFs last. The PDFs
- * are the highest perceived value and the most extractable thing here — a
- * subscriber can download both on day one — so leading with "4.6 MB of PDF,
- * yours to keep" reads as an instruction to subscribe, download and cancel.
+ * What the Atlas adds to a singer's free page, said under the Atlas on /pro
+ * (components/pro/unlock-stack.tsx). The profiles, not the ranges: every
+ * singer page and its range is free, so a line under "opens the second you
+ * upgrade" that counted the ranges would sell a free asset.
  */
-export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }> =
-  [
-    {
-      figure: TOTAL_WORDS.toLocaleString("en-US"),
-      label: "words, two books",
-      sub: `${TOTAL_CHAPTERS} chapters, open the moment you upgrade`,
-    },
-    // The Atlas profiles, not the ranges: every singer page and its range is
-    // free, and the same section's "Already yours" box says so. A tile under
-    // "opens the second you upgrade" that counted them sold a free asset.
-    {
-      figure: String(ATLAS_VOICE_COUNT),
-      label: "Atlas singer profiles",
-      sub: "Tone and technique for each voice; the ranges stay free on every singer page",
-    },
-    {
-      figure: String(PRO_EXERCISES),
-      label: "pro exercises",
-      sub: `${PRO_PACK_COUNT} packs, from belt prep and mix to runs, low notes and long phrases`,
-    },
-    {
-      figure: "2",
-      label: "PDFs to keep",
-      sub: "Both books, downloadable, yours",
-    },
-  ];
+export const ATLAS_PROFILES_NOTE =
+  "Tone and technique for each voice; the ranges stay free on every singer page.";

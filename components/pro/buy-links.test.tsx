@@ -62,7 +62,9 @@ describe("in-page jumps to the buy card", () => {
     // the final call to action's buttons did nothing.
     const html = renderToStaticMarkup(<ProClient />);
     // The hero, the card and the final call to action are real buy buttons
-    // for a free visitor, never a jump to an identical button.
+    // for a free visitor, never a jump to an identical button. Three again:
+    // the showcase's own (a fourth, for one revision) sat a screen above the
+    // card and under the bar that already follows the visitor.
     expect(html.match(/>Get lifetime Pro: \$79 once<\/button>/g)).toHaveLength(3);
     expect(html).not.toMatch(/>Get lifetime Pro: \$79 once<\/a>/);
     expect(html).not.toMatch(/>Go Pro<\/a>/);

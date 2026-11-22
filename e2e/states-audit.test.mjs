@@ -17,14 +17,14 @@ async function findingsFor(elements) {
 }
 describe("destructive control audit", () => {
   it("recognizes the Clear words Pro-pack navigation, not an erase command", async () => {
-    expect(await findingsFor([element("Clear wordsProConsonants and vowels", "A", { href: "/pro" })])).toEqual([]);
+    expect(await findingsFor([element("Clear wordsProConsonants and vowels", "A", { href: "/pro#buy" })])).toEqual([]);
   });
   it("still reports unconfirmed erase controls and links", async () => {
     const findings = await findingsFor([
       element("Clear history"), element("Delete take"),
       element("Clear words", "BUTTON"),
       element("Clear words", "A", { href: "/progress" }),
-      element("Clear words", "A", { href: "/pro", role: "button" }),
+      element("Clear words", "A", { href: "/pro#buy", role: "button" }),
     ]);
     expect(findings).toHaveLength(5);
     expect(findings.every((finding) => finding.severity === "major")).toBe(true);

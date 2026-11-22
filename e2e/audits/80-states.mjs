@@ -249,9 +249,9 @@ export async function checkDestructiveActions(ctx, findings) {
       const label = (el.getAttribute("aria-label") || el.textContent || "").trim();
       if (!label || !destructiveRe.test(label)) return;
       // "Clear words" names the diction pack, not an erase operation. Both
-      // locked pack links navigate to Pro; never exempt a button or another
+      // locked pack links navigate to the Pro buy card; never exempt a button or another
       // destination merely because its label starts with "Clear".
-      if (el.tagName === "A" && el.getAttribute("href") === "/pro"
+      if (el.tagName === "A" && el.getAttribute("href") === "/pro#buy"
         && el.getAttribute("role") !== "button" && /^clear words(?:pro|\b)/i.test(label)) return;
 
 

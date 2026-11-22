@@ -8,7 +8,7 @@ import { Markdown } from "@/lib/markdown";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
-import { PRICING, formatPrice } from "@/lib/pro-shared";
+import { PRO_BUY_HREF, UNLOCK_BOTH_BOOKS } from "@/components/pro/ui";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { AtlasChapterNav, AtlasChapterReader } from "@/components/atlas/reader";
@@ -216,8 +216,8 @@ export default async function AtlasChapterPage({
                 </p>
               )}
               <div className="mt-4">
-                <LinkButton href="/pro#buy" size="md">
-                  {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
+                <LinkButton href={PRO_BUY_HREF} size="md">
+                  {UNLOCK_BOTH_BOOKS}
                 </LinkButton>
               </div>
             </Card>

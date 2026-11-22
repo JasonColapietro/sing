@@ -1,20 +1,37 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
 import { BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
-import { BOOKS, UNLOCK_TILES } from "@/lib/pro-inventory";
+import { ATLAS_PROFILES_NOTE, BOOKS, PRO_PROGRAM_COUNT } from "@/lib/pro-inventory";
 import { useProReady, useProState } from "@/lib/pro";
 import { SectionLabel } from "@/components/ui";
-import { BookCover } from "@/components/book/cover";
+import { BookCover, type CoverMotif } from "@/components/book/cover";
 import { AUTHOR_NAME } from "@/lib/author";
+import { Claim } from "./claim";
+import { NotPro } from "./gate";
 
 /**
- * What a buyer gets the moment the payment clears: every chapter title is
- * public metadata (BOOK_CONTENTS, ATLAS_CONTENTS hold no chapter bodies), so
- * the contents ship to everyone while the gated prose stays on the server.
+ * What a buyer gets the moment the payment clears, each thing drawn once: the
+ * two books as their covers beside their free chapters, a real pro pack card,
+ * and the perks with nothing more to draw. The showcase above the buy card
+ * keeps only the charts and the take drawing; the rest of "what Pro adds"
+ * lives here, so the card is not a showcase's length down the page.
+ *
+ * Rules:
+ * - Every chapter title is public metadata (BOOK_CONTENTS, ATLAS_CONTENTS
+ *   hold no chapter bodies), so the contents ship to everyone while the gated
+ *   prose stays on the server. The titles are read from that data, never
+ *   typed here.
+ * - Figures come from lib/pro-inventory.ts and each is stated once here: the
+ *   totals in the "book" and "warmups" perk sentences, each book's own under
+ *   its title. No numeral tiles repeating them.
+ * - `pack` is the server-rendered pack card (components/pro/pack-sample.tsx):
+ *   it reads the exercise catalogue, which this client bundle must not carry.
+ * - Nothing here states a price or holds a buy button.
  */
-export function UnlockStack() {
+export function UnlockStack({ pack }: { pack?: ReactNode }) {
   // A buyer lands back here seconds after paying, and a lifetime owner opens
   // /pro from the PRO pill: for them every chapter is open, so the list links
   // every chapter instead of locking what they own. The server snapshot is
@@ -27,7 +44,7 @@ export function UnlockStack() {
       className="scroll-mt-20 border-t border-line"
       aria-labelledby="unlocks-heading"
     >
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
           Included, instantly
         </SectionLabel>
@@ -41,32 +58,13 @@ export function UnlockStack() {
           and the pro packs appear in your warmup list on your next session.
         </p>
 
-        {/* --- the numbers ------------------------------------------------ */}
-        {/* A plain list rather than a <dl>: the description-list version needed
-            an sr-only <dt> carrying the same words as the visible label, so a
-            screen reader read every tile's label twice ("words, two books —
-            [N] words, two books"). Nothing here is a term/definition pair
-            anyway; it is four figures. */}
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {UNLOCK_TILES.map((tile) => (
-            <li
-              key={tile.label}
-              className="rounded-2xl border border-line bg-panel p-5"
-            >
-              <p className="tabular text-4xl text-violet-ink">
-                {tile.figure}
-              </p>
-              <p className="mt-1 text-sm text-ink">{tile.label}</p>
-              <p className="mt-1.5 text-xs text-mut">{tile.sub}</p>
-            </li>
-          ))}
-        </ul>
-
-        {/* --- the table of contents -------------------------------------- */}
-        <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        {/* --- the books: cover, figures and free chapters side by side --- */}
+        <Claim id="book" className="mt-8" />
+        <div className="mt-5 grid gap-x-10 gap-y-8 lg:grid-cols-2">
           <BookContents
             title={BOOK_TITLE}
             kicker="A singing book"
+            motif="trace"
             href="/book"
             entries={BOOK_CONTENTS}
             owned={owned}
@@ -74,13 +72,19 @@ export function UnlockStack() {
           <BookContents
             title={ATLAS_TITLE}
             kicker="How famous singers sing"
+            motif="keys"
             href="/atlas"
             entries={ATLAS_CONTENTS}
+            note={ATLAS_PROFILES_NOTE}
             owned={owned}
           />
         </div>
 
-        <p className="mt-8 text-sm text-mut">
+        {/* Free-only nudges (this one, "Week 1 … is free" and a row's FREE
+            badge) are NotPro: in the server HTML and a free visitor's first
+            paint as before, hidden by the pre-paint for an owner, for whom
+            nothing here is free or paid any more. */}
+        <NotPro as="p" className="mt-6 text-sm text-mut">
           Start with the free chapter{" "}
           <Link
             href="/book/when-numbers-lie"
@@ -89,7 +93,36 @@ export function UnlockStack() {
             When the numbers lie to you
           </Link>
           : it decides whether any measurement on this site is worth anything.
-        </p>
+        </NotPro>
+
+        {/* --- a pro pack as the warmups room draws it, beside the perks with
+                nothing more to draw: the plan is the coach report at the top
+                of the page, the other two are a limit lifted and a sync. Two
+                columns of like weight on a desktop, so neither is a short
+                claim beside an empty half. ------------------------------- */}
+        <div className="mt-10 grid gap-x-10 gap-y-8 border-t border-line pt-8 lg:grid-cols-2">
+          <div>
+            <Claim id="warmups" />
+            {pack && <div className="mt-4">{pack}</div>}
+            <p className="mt-3 text-sm text-mut">
+              Pro also opens {PRO_PROGRAM_COUNT} programs in full.
+              <NotPro>
+                {" "}
+                <Link
+                  href="/programs"
+                  className="inline-flex min-h-11 items-center text-sm text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+                >
+                  Week 1 of every program is free
+                </Link>
+              </NotPro>
+            </p>
+          </div>
+          <div className="grid content-start gap-5 sm:grid-cols-3 lg:grid-cols-1 lg:gap-0 lg:divide-y lg:divide-line lg:[&>*]:py-5 lg:[&>*:first-child]:pt-0">
+            {(["coach", "songs", "history"] as const).map((id) => (
+              <Claim key={id} id={id} compact />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -107,15 +140,21 @@ interface ContentsEntry {
 function BookContents({
   title,
   kicker,
+  motif,
   href,
   entries,
+  note,
   owned,
 }: {
   title: string;
   /** The cover's mono line, as the book's own page draws it. */
   kicker: string;
+  /** The book's own figure, drawn on its cover. */
+  motif: CoverMotif;
   href: string;
   entries: readonly ContentsEntry[];
+  /** One more line about the book, under its figures. */
+  note?: string;
   /** Pro is active on this device: every chapter opens. */
   owned: boolean;
 }) {
@@ -133,7 +172,7 @@ function BookContents({
               <Link
                 href={`${href}/${entry.slug}`}
                 prefetch={owned ? false : undefined}
-                className="flex items-baseline gap-3 py-2 outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
+                className="flex min-h-11 items-baseline gap-3 py-3 outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
               >
                 <span className="tabular w-6 shrink-0 font-mono text-[11px] text-violet-ink">
                   {entry.order}
@@ -142,9 +181,9 @@ function BookContents({
                   {entry.title}
                 </span>
                 {entry.free && (
-                  <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
+                  <NotPro className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
                     Free
-                  </span>
+                  </NotPro>
                 )}
               </Link>
             ) : (
@@ -165,9 +204,12 @@ function BookContents({
   );
 
   return (
-    <div>
-      <BookCover title={title} author={AUTHOR_NAME} kicker={kicker} className="mb-5" />
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+    /* The cover beside the book's name and figures; the chapters beside the
+       cover too from sm up, and under both on a phone, where a title would
+       wrap to three lines in the column the cover leaves. */
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] content-start items-start gap-x-4 gap-y-4 sm:gap-x-6">
+      <BookCover title={title} author={AUTHOR_NAME} kicker={kicker} motif={motif} className="sm:row-span-2" />
+      <div>
         {/* The book's own hub, by name: this page sells the book and was the
             one place on the site that never linked to it. */}
         <h3 className="text-xl text-ink">
@@ -179,7 +221,7 @@ function BookContents({
             {title}
           </Link>
         </h3>
-        <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+        <p className="tabular mt-1.5 font-mono text-[11px] uppercase leading-5 tracking-[0.14em] text-dim">
           {entries.length} chapters
           <span className="mx-1.5 text-line2">·</span>
           {meta?.words.toLocaleString("en-US")} words
@@ -189,31 +231,34 @@ function BookContents({
               {meta.pdfMb} MB PDF
             </>
           ) : null}
-        </span>
+        </p>
+        <p className="mt-1.5 text-xs text-mut">
+          {owned
+            ? `All ${entries.length} chapters are open to you; the PDF downloads from the book's page.`
+            : `${free} readable now, ${entries.length - free} with Pro.`}
+        </p>
+        {note && <p className="mt-1.5 text-xs text-mut">{note}</p>}
       </div>
-      <p className="mt-1.5 text-xs text-mut">
-        {owned
-          ? `All ${entries.length} chapters are open to you; the PDF downloads from the book's page.`
-          : `${free} readable now, ${entries.length - free} with Pro.`}
-      </p>
 
-      <ol className="mt-4 divide-y divide-line border-y border-line">
-        {visible.map(row)}
-      </ol>
-      {/* A free reader's locked titles fold away: two full tables of
-          contents ran to about two phone screens between the buy card and
-          the comparison table. The count and the fold say what Pro opens;
-          the titles are one tap away. An owner's list is their own, in full. */}
-      {locked.length > 0 && (
-        <details className="mt-2">
-          <summary className="inline-flex min-h-11 cursor-pointer list-none items-center font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet [&::-webkit-details-marker]:hidden">
-            See the {locked.length} chapters Pro opens
-          </summary>
-          <ol className="mt-2 divide-y divide-line border-y border-line">
-            {locked.map(row)}
-          </ol>
-        </details>
-      )}
+      <div className="col-span-2 sm:col-span-1 sm:col-start-2">
+        <ol className="divide-y divide-line border-y border-line">
+          {visible.map(row)}
+        </ol>
+        {/* A free reader's locked titles fold away: two full tables of
+            contents ran to about two phone screens between the buy card and
+            the comparison table. The count and the fold say what Pro opens;
+            the titles are one tap away. An owner's list is their own, in full. */}
+        {locked.length > 0 && (
+          <details className="mt-1">
+            <summary className="inline-flex min-h-11 cursor-pointer list-none items-center font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet [&::-webkit-details-marker]:hidden">
+              See the {locked.length} chapters Pro opens
+            </summary>
+            <ol className="mt-2 divide-y divide-line border-y border-line">
+              {locked.map(row)}
+            </ol>
+          </details>
+        )}
+      </div>
     </div>
   );
 }

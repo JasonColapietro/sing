@@ -24,6 +24,7 @@ import {
   WelcomePanel,
 } from "./pro-client";
 import { NETWORK_ERROR_MESSAGE, ProApiError } from "@/lib/pro";
+import { PRO_FAQ } from "@/lib/pro-shared";
 import { SUPPORT_EMAIL } from "@/lib/organization";
 import { PRO_PACKS_HREF } from "@/lib/pro-inventory";
 import { ROUTE_KEYWORDS } from "@/lib/keywords";
@@ -274,6 +275,22 @@ describe("Pro purchase choices", () => {
     expect(html).not.toContain("Renews");
     expect(html).not.toContain("Ends January");
   });
+
+  it("asks an owner no purchase questions: the FAQ keeps how Pro works for them, with no price", () => {
+    proState.current = state({ active: true, plan: "lifetime", status: "active", paymentIntentId: "pi_1" });
+    const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
+    expect(html).not.toContain(">Before you decide</h2>");
+    const from = html.indexOf(">Your data and your devices</h2>");
+    expect(from).toBeGreaterThan(-1);
+    const faq = html.slice(from, html.indexOf("</section>", from));
+    const kept = ["voice-uploaded", "devices", "sync"];
+    for (const item of PRO_FAQ) {
+      const shown = faq.includes(`<h3 class="text-lg">${item.q}</h3>`);
+      expect(shown, item.id).toBe(kept.includes(item.id));
+      if (shown) expect(faq, item.id).toContain(item.a);
+    }
+    expect(faq).not.toMatch(/\$\d|lifetime access|stay free/i);
+  });
 });
 
 describe("restoring Pro on a new browser", () => {
@@ -410,7 +427,9 @@ describe("Pro sales copy on the page", () => {
     // the offer; nothing else restates it, and no surface says "gold channel".
     const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
     const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-    // The price on the three buttons (hero, buy card, final CTA), nowhere else.
+    // The price on the three buttons (hero, buy card, final CTA), nowhere
+    // else. Three again: the showcase's fourth button duplicated the card's,
+    // one screen above it, and the buy bar already covers that stretch.
     expect(text.match(/\$79 once/g)).toHaveLength(3);
     expect(text.match(/Get lifetime Pro: \$79 once/g)).toHaveLength(3);
     expect(text.match(/One payment\. Lifetime Pro\. No renewal\./g)).toHaveLength(1);
@@ -427,6 +446,37 @@ describe("Pro sales copy on the page", () => {
     expect(html).not.toContain(">Back to the studio</a>\n");
     expect(html.match(/>Keep practicing free</g)).toHaveLength(1);
     expect(html).toMatch(/One payment<span[^>]*>·<\/span>Never renews<span[^>]*>·<\/span><a[^>]*href="\/studio"[^>]*>Back to the studio<\/a>/);
+  });
+
+  it("answers three purchase questions under the buy card in the FAQ's own words, closed until asked", () => {
+    const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
+    const from = html.indexOf(">Before you pay</h3>");
+    expect(from).toBeGreaterThan(-1);
+    // Up to the pass form, the next disclosure on the page.
+    const block = html.slice(from, html.lastIndexOf("<details", html.indexOf("Have a code?")));
+    const questions = [
+      "How much does Suede Pro cost?",
+      "Does the free studio stay free?",
+      "Can I use Pro on my phone and my computer?",
+    ];
+    expect(block.match(/<details/g)).toHaveLength(questions.length);
+    expect(block).not.toMatch(/<details[^>]*\sopen/);
+    for (const q of questions) {
+      const answer = PRO_FAQ.find((item) => item.q === q)!.a;
+      expect(block, q).toContain(`${q}</summary><p class="pb-4 text-sm text-mut">${answer}</p>`);
+      // Answered once: the section further down does not print it again.
+      expect(html.split(`>${q}<`).length - 1, q).toBe(1);
+    }
+    // The other questions are all still on the page, each once, lower down.
+    const later = PRO_FAQ.filter((item) => !questions.includes(item.q));
+    expect(later.length).toBe(PRO_FAQ.length - questions.length);
+    const lower = html.slice(html.indexOf(">Before you decide</h2>"));
+    for (const item of later) {
+      expect(lower.split(`<h3 class="text-lg">${item.q}</h3>`).length - 1, item.q).toBe(1);
+      expect(lower, item.q).toContain(item.a);
+    }
+    // No refund or guarantee is promised: the repo states none.
+    expect(html).not.toMatch(/refund|guarantee|money.back/i);
   });
 
   it("sells the per-note chart as one chart, not one charted over months", () => {

@@ -1,19 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Button, jumpInPage, LinkButton, SectionLabel } from "@/components/ui";
 import ProVisual from "./pro-visual";
 import { ProChip } from "./ui";
-import {
-  AnalyticsGlyph,
-  CoachGlyph,
-  PacksGlyph,
-  BookGlyph,
-  SongbookGlyph,
-  SyncGlyph,
-  TakesGlyph,
-} from "./glyphs";
+import { BAR_YIELD, BUY_ANCHOR, BuyBar, buyBarAllowed } from "./buy-bar";
+import { ProShowcase, useOwnVoice } from "./pro-showcase";
 import {
   clearPendingCheckout,
   clearStartedCheckout,
@@ -24,7 +17,6 @@ import {
   openBillingPortal,
   pendingCheckout,
   PLAN_ROWS,
-  PRO_PERKS,
   redeemCode,
   rememberPendingCheckout,
   resolveStartedCheckout,
@@ -48,21 +40,37 @@ import {
   PRO_EXERCISES,
   PRO_PACK_COUNT,
   PRO_PACKS_HREF,
+  PRO_SHOWCASE_ANCHOR,
   PRO_PROGRAM_NAMES,
   TOTAL_CHAPTERS,
   TOTAL_WORDS,
 } from "@/lib/pro-inventory";
 import { UnlockStack } from "./unlock-stack";
 
-const PERK_GLYPHS: Record<string, React.ComponentType> = {
-  coach: CoachGlyph,
-  analytics: AnalyticsGlyph,
-  takes: TakesGlyph,
-  songs: SongbookGlyph,
-  warmups: PacksGlyph,
-  book: BookGlyph,
-  history: SyncGlyph,
-};
+/**
+ * The purchase objections this repo can answer, under the buy card: the
+ * price and that it is paid once, what stays free, and how Pro reaches a
+ * second browser. Each is a PRO_FAQ entry, question and answer word for word
+ * (picked by id, never by retyping the question), so nothing new is claimed.
+ */
+const BUY_ANSWER_IDS = ["price", "stays-free", "devices"];
+const BUY_ANSWERS = BUY_ANSWER_IDS.flatMap((id) => PRO_FAQ.filter((item) => item.id === id));
+/**
+ * The rest, for the "Fair questions" section further down. A free visitor
+ * reads the three above at the card; printing them again there made the page
+ * longer and answered nothing new. An owner gets OWNER_ANSWERS instead. The
+ * FAQPage markup carries all of PRO_FAQ
+ * either way (app/pro/page.tsx), and every answer is on the page, as Google
+ * asks of marked-up answers: the card's are in disclosures.
+ */
+const LATER_ANSWERS = PRO_FAQ.filter((item) => !BUY_ANSWER_IDS.includes(item.id));
+/**
+ * An owner's questions: how Pro works for them, with none of the purchase
+ * ones (the price, what stays free, whether Pro is needed, what an upgrade
+ * brings). Their answers sold what the owner already has.
+ */
+const OWNER_ANSWER_IDS = ["voice-uploaded", "devices", "sync"];
+const OWNER_ANSWERS = OWNER_ANSWER_IDS.flatMap((id) => PRO_FAQ.filter((item) => item.id === id));
 
 /**
  * Numbers first, feature names second.
@@ -115,8 +123,13 @@ function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
   );
 }
 
-/** The buy buttons on this page: the hero, the plans card, and the final call to action. */
-type BuySpot = "hero" | "card" | "end";
+/**
+ * The buy buttons on this page: the hero, the plans card, the final call to
+ * action, and the bar that follows a free visitor between them
+ * (components/pro/buy-bar.tsx). The showcase has none: it ends a screen above
+ * the card, and the bar is on screen all the way down it.
+ */
+type BuySpot = "hero" | "card" | "end" | "bar";
 
 type Task =
   | { kind: "idle" }
@@ -341,7 +354,7 @@ function RedeemPanel({ onUnlocked }: { onUnlocked: () => void }) {
       <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
         Have a code? Start a 30-day pass
       </summary>
-      <form onSubmit={submit} className="mt-4 flex flex-wrap items-center gap-3">
+      <form onSubmit={submit} {...BAR_YIELD} className="mt-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
           required
@@ -436,7 +449,7 @@ function RestorePanel({ onUnlocked }: { onUnlocked: () => void }) {
       <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
         Already have Pro? Unlock it in this browser
       </summary>
-      <form onSubmit={submit} className="mt-4 flex flex-wrap items-center gap-3">
+      <form onSubmit={submit} {...BAR_YIELD} className="mt-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
           required
@@ -628,7 +641,12 @@ export function checkEndingPlan(
   };
 }
 
-export function ProClient() {
+export function ProClient({
+  pack,
+}: {
+  /** The showcase's pro pack card, rendered on the server (app/pro/page.tsx). */
+  pack?: ReactNode;
+}) {
   const pro = useProState();
   // Lifetime is the only plan on sale, so there is no toggle to set this.
   const [billing] = useState<CheckoutPlan>("lifetime");
@@ -695,6 +713,10 @@ export function ProClient() {
   // The price and the no-renewal line sit on the card; the blurb names the offer.
   const plansBlurb = `Early Access is the lifetime plan. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out.`;
   const periodEnd = longDate(pro.currentPeriodEnd);
+  // Whether the showcase's charts are drawing this visitor's own record: the
+  // hero's jump link promises "your own voice" only when they are.
+  const ownVoice = useOwnVoice(pro.active);
+  const showsOwnVoice = ownVoice.tallies !== null || ownVoice.history !== null;
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
   // session with the API, then strip the query so a refresh stays clean.
@@ -873,6 +895,7 @@ export function ProClient() {
           className="w-full"
           onClick={() => goPro("card")}
           aria-disabled={buyBusy || undefined}
+          {...BUY_ANCHOR}
         >
           {opening
             ? "Opening Stripe…"
@@ -948,7 +971,7 @@ export function ProClient() {
   return (
     <main>
       {/* 1 — Hero */}
-      <section className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
+      <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 sm:px-6 sm:pb-14 sm:pt-14">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div className="animate-fadeup">
             <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
@@ -1049,6 +1072,7 @@ export function ProClient() {
                         size="lg"
                         onClick={() => goPro("hero")}
                         aria-disabled={buyBusy || undefined}
+                        {...BUY_ANCHOR}
                       >
                         {opening && buySpot === "hero"
                           ? "Opening Stripe…"
@@ -1081,6 +1105,20 @@ export function ProClient() {
                       {checkout.message}
                     </p>
                   )}
+                  {/* To the demonstration, in words that are true of what it
+                      shows this visitor: their own record, or a sample. A
+                      plain anchor (see jumpInPage). */}
+                  <p className="order-1 mt-1 sm:order-2">
+                    <a
+                      href={`#${PRO_SHOWCASE_ANCHOR}`}
+                      onClick={jumpInPage}
+                      className="inline-flex min-h-11 items-center text-sm text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+                    >
+                      {showsOwnVoice
+                        ? "See it on your own voice"
+                        : "See Pro on a sample voice"}
+                    </a>
+                  </p>
                 </div>
               </>
             )}
@@ -1091,40 +1129,26 @@ export function ProClient() {
         </div>
       </section>
 
-      {/* 2 — Perks */}
-      <section className="border-t border-line">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel hairline className="mb-4">What Pro adds</SectionLabel>
-          <h2 className="max-w-2xl text-2xl sm:text-3xl">
-            The coach&apos;s full plan, and the charts behind it
-          </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PRO_PERKS.map((perk) => {
-              const Glyph = PERK_GLYPHS[perk.id];
-              return (
-                <div
-                  key={perk.id}
-                  className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
-                >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-violet/40 bg-panel2 text-violet-ink">
-                    <Glyph />
-                  </span>
-                  <span className="mt-4 block text-xl font-extrabold text-ink">
-                    {perk.title}
-                  </span>
-                  <span className="mt-1 block text-sm text-mut">
-                    {perk.desc}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* 2 — What Pro adds, shown: the charts on the visitor's own record or
+              a labelled sample, and the take overlay. The pack card and the
+              books are drawn under the buy card, in the unlock stack. */}
+      <ProShowcase
+        owned={pro.active}
+        own={ownVoice}
+        cta={
+          // An owner is sold nothing: the way on to the charts. A free
+          // visitor gets no button here; the card is the next thing down.
+          pro.active ? (
+            <LinkButton href="/progress" variant="outline" size="lg">
+              Open your coach report
+            </LinkButton>
+          ) : undefined
+        }
+      />
 
       {/* 3 — Plans */}
       <section id="plans" className="scroll-mt-20 border-t border-line bg-panel/40">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pt-12">
           {welcome ? (
             <WelcomePanel how={welcome} proKey={pro.proKey} periodEnd={periodEnd} />
           ) : (
@@ -1189,7 +1213,7 @@ export function ProClient() {
           {/* One plan on sale, so no purchase toggle: the struck-through
               Monthly option beside it read as a broken control. The plans
               blurb names the sold-out plan once. */}
-          <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
+          <div className="mx-auto mt-8 grid max-w-4xl gap-4 sm:grid-cols-2">
             {/* The louder card, first in the source and on screen at every
                 width with no CSS order, so Tab order and screen order agree;
                 every buy link lands on its #buy. */}
@@ -1334,8 +1358,10 @@ export function ProClient() {
               )}
             </div>
 
-            {/* Free */}
-            <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
+            {/* Free. Its own height, at the top of the row: stretched to
+                the Pro card's, its action sat about 380px under its list at
+                1280. */}
+            <div className="flex flex-col self-start rounded-2xl border border-line bg-panel p-6 sm:p-7">
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
                 Free
               </span>
@@ -1351,7 +1377,7 @@ export function ProClient() {
                   <PlanPoint key={point}>{point}</PlanPoint>
                 ))}
               </ul>
-              <div className="mt-auto pt-6">
+              <div className="pt-6">
                 <LinkButton
                   href="/studio"
                   variant="outline"
@@ -1363,6 +1389,27 @@ export function ProClient() {
               </div>
             </div>
           </div>
+
+          {/* The questions still open at the button, closed until asked for:
+              open, they would push the pass and unlock forms a screen down. */}
+          {!pro.active && (
+            <div className="mx-auto mt-8 max-w-4xl">
+              <h3 className="text-lg">Before you pay</h3>
+              <div className="mt-3 grid gap-3">
+                {BUY_ANSWERS.map((item) => (
+                  <details
+                    key={item.id}
+                    className="rounded-2xl border border-line bg-panel px-5 py-1"
+                  >
+                    <summary className="cursor-pointer py-3 text-sm text-ink">
+                      {item.q}
+                    </summary>
+                    <p className="pb-4 text-sm text-mut">{item.a}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          )}
 
           {!pro.active && (
             <div className="mx-auto mt-6 grid max-w-4xl gap-3">
@@ -1376,7 +1423,7 @@ export function ProClient() {
       {/* 3b — What the money buys, itemised. Directly under the buy card so a
               monthly subscriber and a lifetime buyer can both answer "what do
               I actually get today?" before leaving for Checkout. */}
-      <UnlockStack />
+      <UnlockStack pack={pack} />
 
       {/* 4 — Free vs Pro table */}
       <section className="border-t border-line">
@@ -1489,11 +1536,13 @@ export function ProClient() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel hairline className="mb-4">Fair questions</SectionLabel>
-          <h2 className="max-w-2xl text-2xl sm:text-3xl">Before you decide</h2>
+          <h2 className="max-w-2xl text-2xl sm:text-3xl">
+            {pro.active ? "Your data and your devices" : "Before you decide"}
+          </h2>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {PRO_FAQ.map((item) => (
+            {(pro.active ? OWNER_ANSWERS : LATER_ANSWERS).map((item) => (
               <div
-                key={item.q}
+                key={item.id}
                 className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
               >
                 <h3 className="text-lg">{item.q}</h3>
@@ -1523,6 +1572,7 @@ export function ProClient() {
                 size="lg"
                 onClick={() => goPro("end")}
                 aria-disabled={buyBusy || undefined}
+                {...BUY_ANCHOR}
               >
                 {opening
                   ? "Opening Stripe…"
@@ -1573,6 +1623,27 @@ export function ProClient() {
           </p>
         </div>
       </section>
+
+      {/* Only for a visitor Pro is not on for; a pass holder or a subscriber
+          already has Pro and is followed by nothing. It adds no Tab stop
+          (see buy-bar.tsx), so where it sits in the source moves no one. */}
+      <BuyBar
+        enabled={buyBarAllowed({
+          purchasable: showPurchaseOptions,
+          proActive: pro.active,
+          paidButUnconfirmed,
+          justUpgraded,
+          confirming: checkout.kind === "working",
+        })}
+        label={`Get lifetime Pro: ${price} once`}
+        busy={buyBusy}
+        error={
+          checkout.kind === "error" && !checkout.ref && buySpot === "bar"
+            ? checkout.message
+            : null
+        }
+        onBuy={() => goPro("bar")}
+      />
     </main>
   );
 }

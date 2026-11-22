@@ -33,7 +33,7 @@ import {
 import { AccountBackupControls } from "./account-backup-sync";
 import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
 import { streakChipState } from "@/components/nav";
-import { LockedPanel, ProChip } from "@/components/pro/ui";
+import { LockedPanel, ProChip, PRO_BUY_HREF, PRO_PRICE_ONCE } from "@/components/pro/ui";
 import { ProSlot, ProSlotProvider, useProSlot } from "@/components/pro/slot";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { useActiveProgram } from "@/components/programs/use-program";
@@ -622,11 +622,7 @@ export function DataControls({
                 record, though: there is nothing to sync yet, and a page with
                 no sessions should not open on a row of asks. */}
             {!fresh && (
-              <ProSlot priority={1}>
-                <ProInlineNudge>
-                  Pro syncs progress across devices automatically
-                </ProInlineNudge>
-              </ProSlot>
+              <SyncAsk />
             )}
             {/* Pro lives in this browser's storage, so a cleared or second
                 browser reads as free here while the record waits in the
@@ -716,6 +712,30 @@ function Example({ children }: { children: ReactNode }) {
         {children}
       </div>
     </div>
+  );
+}
+
+const SYNC_GIVES = "Pro syncs progress across devices automatically";
+
+/**
+ * The sync ask at the data controls. It holds the page's one slotted ask when
+ * nothing louder does; when a locked chart or the coach row holds it, the
+ * same sentence stays as a quiet text line with a priced link, so the point
+ * where a singer looks for sync always says what Pro gives and how to get it
+ * without becoming a second pitch.
+ */
+function SyncAsk() {
+  const holds = useProSlot(1);
+  if (holds) return <ProInlineNudge>{SYNC_GIVES}</ProInlineNudge>;
+  return (
+    <FreeOnly>
+      <p className="text-xs text-mut">
+        {SYNC_GIVES}.{" "}
+        <Link href={PRO_BUY_HREF} className="text-violet-ink underline underline-offset-4">
+          {`Go Pro: ${PRO_PRICE_ONCE}`}
+        </Link>
+      </p>
+    </FreeOnly>
   );
 }
 
@@ -1051,7 +1071,9 @@ export function ProgressClient() {
             </div>
           ) : !isFresh ? (
             <HoldsProSlot priority={3}>
-            <LockedPanel label="Accuracy by note" className="mt-4">
+            <LockedPanel label="Accuracy by note" className="mt-4"
+              gives="Every note you've sung, with how often you landed it. This is your own chart."
+            >
               {/* Real chart as the preview: faded and inert under the panel,
                   but it is the singer's own data doing the selling. With no
                   sessions there is none to do it, so the panel waits for the

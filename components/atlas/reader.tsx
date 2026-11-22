@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useProReady, useProState } from "@/lib/pro";
-import { PRICING, formatPrice } from "@/lib/pro-shared";
+import { PRO_BUY_HREF, UNLOCK_BOTH_BOOKS } from "@/components/pro/ui";
 import {
   ATLAS_CONTENTS,
   type AtlasContentsEntry,
@@ -108,8 +108,8 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
   // runs — the loading line never resolves and there is no way through to Pro.
   const ctas = (
     <div className="mt-5 flex flex-wrap items-center gap-3">
-      <LinkButton href="/pro#buy" size="md">
-        {`See what Pro includes, ${formatPrice(PRICING.lifetime.amount)} once`}
+      <LinkButton href={PRO_BUY_HREF} size="md">
+        {UNLOCK_BOTH_BOOKS}
       </LinkButton>
       {sample && (
         <LinkButton href={`/atlas/${sample.slug}`} variant="outline" size="md">
