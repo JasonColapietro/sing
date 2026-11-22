@@ -299,6 +299,30 @@ export function songsInRange(s: Singer, limit = 5, songs: readonly PopSong[] = P
     .slice(0, limit);
 }
 
+/**
+ * For a span no catalog song fits inside: the songs that come closest, fewest
+ * semitones past the span first, each with how far it goes past. Songs wider
+ * than the whole span are left out, since no transposition brings them in.
+ */
+export function closestSongs(
+  s: Singer,
+  limit = 5,
+  songs: readonly PopSong[] = POP_SONGS,
+): Array<{ song: PopSong; past: number; side: "high" | "low" }> {
+  return otherArtistSongs(s, songs)
+    .map((song) => ({ song, fit: popFit(song, s) }))
+    .filter((x) => x.fit.verdict === "high" || x.fit.verdict === "low")
+    .map((x) => ({ song: x.song, past: x.fit.offsetSemis, side: x.fit.verdict as "high" | "low" }))
+    .sort((a, b) => a.past - b.past || span(b.song) - span(a.song) || a.song.title.localeCompare(b.song.title))
+    .slice(0, limit);
+}
+
+/** The lead above the closest-fit list. */
+export function closestSongsLead(s: Singer, items: ReadonlyArray<{ past: number }>): string {
+  const max = Math.max(...items.map((x) => x.past));
+  return `The popular songs that come closest to ${s.name}’s ${rangeLabel(s)}, each going ${max === 1 ? "1 semitone" : `${max} semitones or less`} past it:`;
+}
+
 /** Catalog songs by other artists: the set songsInRange picks from and songsInRangeCount counts. */
 export function otherArtistSongs(s: Singer, songs: readonly PopSong[] = POP_SONGS): PopSong[] {
   return songs.filter((song) => !song.artistSlugs.includes(s.slug));
