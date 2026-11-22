@@ -28,13 +28,18 @@ import { Button } from "@/components/ui";
  *   already visited and reported its 36 links as unreachable. A pointer, a
  *   touch and a screen reader's cursor still reach it.
  * - It shows only while every BUY_ANCHOR and BAR_YIELD element is off screen
- *   and focus is in no form field: a fixed bar must not sit on the redeem or
+ *   (the window below the sticky header: `stuckHeaderBottom`) and focus is in
+ *   no form field: a fixed bar must not sit on the redeem or
  *   restore form, or over the on-screen keyboard's field.
  * - While `enabled`, the document gets bottom padding the bar's height, for
  *   the whole time and not only while the bar shows, so the bar never covers
  *   the footer's last line and the page's length does not change as the bar
  *   comes and goes; and the same scroll padding, so a control that focus or
- *   a jump scrolls to is not left behind the bar.
+ *   a jump scrolls to is not left behind the bar. The height is the bar's
+ *   measured one (a ResizeObserver) once it has mounted, so a checkout error
+ *   under the button (about 89px in all) is padded for too; PAGE_PAD, its
+ *   usual height, until then. Both go back to what they were when the bar
+ *   goes away.
  * - It sits under the header (z-50) and every dialog (z-60 and up).
  */
 export const BUY_ANCHOR = { "data-buy-anchor": "" } as const;
@@ -69,6 +74,19 @@ export function buyBarAllowed(state: {
   );
 }
 
+/**
+ * Where the site's sticky header ends, in px from the top of the window: a
+ * buy button scrolled under it is hidden from the reader, so it counts as off
+ * screen. Without that, a phone at about every 900px of /pro had a button
+ * wholly behind the header and no bar.
+ */
+export function stuckHeaderBottom(): number {
+  if (typeof document.querySelector !== "function" || typeof getComputedStyle !== "function") return 0;
+  const header = document.querySelector("header");
+  if (!header || !/^(sticky|fixed)$/.test(getComputedStyle(header).position)) return 0;
+  return Math.max(0, Math.ceil(header.getBoundingClientRect().bottom));
+}
+
 const isField = (node: unknown): boolean =>
   typeof (node as Element | null)?.matches === "function" && (node as Element).matches(FIELD_SELECTOR);
 
@@ -93,14 +111,20 @@ export function BuyBar({
   const [fieldFocused, setFieldFocused] = useState(false);
   // Focus is inside the bar: it stays until that focus leaves.
   const [held, setHeld] = useState(false);
+  // The bar's element, from its ref, and its measured height in px.
+  const [barEl, setBarEl] = useState<HTMLDivElement | null>(null);
+  const [height, setHeight] = useState<number | null>(null);
 
   useEffect(() => {
     if (!enabled || typeof IntersectionObserver === "undefined") return;
     const seen = new Map<Element, boolean>();
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) seen.set(entry.target, entry.isIntersecting);
-      setOnScreen([...seen.values()].filter(Boolean).length);
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) seen.set(entry.target, entry.isIntersecting);
+        setOnScreen([...seen.values()].filter(Boolean).length);
+      },
+      { rootMargin: `-${stuckHeaderBottom()}px 0px 0px 0px` },
+    );
     for (const el of document.querySelectorAll(WATCHED_SELECTOR)) observer.observe(el);
     return () => {
       observer.disconnect();
@@ -123,17 +147,34 @@ export function BuyBar({
   }, [enabled]);
 
   useEffect(() => {
+    if (!enabled || !barEl || typeof ResizeObserver === "undefined") return;
+    // The border box: the safe-area padding and the error line included.
+    const measure = () => {
+      const px = Math.ceil(barEl.getBoundingClientRect().height);
+      setHeight(px > 0 ? px : null);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(barEl);
+    measure();
+    return () => {
+      observer.disconnect();
+      setHeight(null);
+    };
+  }, [enabled, barEl]);
+
+  useEffect(() => {
     if (!enabled) return;
     const body = document.body.style;
     const root = document.documentElement.style;
     const before = { pad: body.paddingBottom, scroll: root.scrollPaddingBottom };
-    body.paddingBottom = PAGE_PAD;
-    root.scrollPaddingBottom = PAGE_PAD;
+    const pad = height === null ? PAGE_PAD : `${height}px`;
+    body.paddingBottom = pad;
+    root.scrollPaddingBottom = pad;
     return () => {
       body.paddingBottom = before.pad;
       root.scrollPaddingBottom = before.scroll;
     };
-  }, [enabled]);
+  }, [enabled, height]);
 
   if (!enabled || onScreen === null) return null;
 
@@ -141,6 +182,7 @@ export function BuyBar({
 
   return (
     <div
+      ref={setBarEl}
       role="region"
       aria-label="Buy Suede Pro"
       inert={!shown}

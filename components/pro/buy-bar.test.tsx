@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const hooks = await vi.hoisted(async () => (await import("@/tests/hooks-harness")).createHooks());
 vi.mock("react", async (original) => hooks.mockReact(await original<typeof import("react")>()));
 
-import { BuyBar } from "./buy-bar";
+import { BuyBar, stuckHeaderBottom } from "./buy-bar";
 
 type El = ReactElement<Record<string, unknown>>;
 type Entry = { target: object; isIntersecting: boolean };
@@ -24,6 +24,7 @@ const page = {
   selector: "",
   observed: [] as object[],
   report: (() => {}) as (entries: Entry[]) => void,
+  rootMargin: "",
   disconnected: 0,
   listeners: new Map<string, (event: unknown) => void>(),
   body: { paddingBottom: "" },
@@ -96,8 +97,9 @@ beforeEach(() => {
   vi.stubGlobal(
     "IntersectionObserver",
     class {
-      constructor(report: (entries: Entry[]) => void) {
+      constructor(report: (entries: Entry[]) => void, options?: { rootMargin?: string }) {
         page.report = report;
+        page.rootMargin = options?.rootMargin ?? "";
       }
       observe(target: object) {
         page.observed.push(target);
@@ -135,6 +137,23 @@ describe("when the buy bar shows", () => {
     see();
     see(restoreForm);
     expect(showing()).toBe(false);
+  });
+
+  it("counts a buy button behind the sticky header as off screen", () => {
+    // A phone had a button wholly under the 57px header and no bar, about every 900px of /pro.
+    render();
+    expect(page.rootMargin).toBe("-0px 0px 0px 0px");
+    hooks.unmount();
+    const header = { getBoundingClientRect: () => ({ bottom: 56.4 }) };
+    let position = "sticky";
+    vi.stubGlobal("document", { ...document, querySelector: (sel: string) => (sel === "header" ? header : null) });
+    vi.stubGlobal("getComputedStyle", () => ({ position }));
+    expect(stuckHeaderBottom()).toBe(57);
+    render();
+    expect(page.rootMargin).toBe("-57px 0px 0px 0px");
+    // A header that scrolls away hides nothing.
+    position = "static";
+    expect(stuckHeaderBottom()).toBe(0);
   });
 
   it("hides by going inert and invisible, never by leaving the document", () => {
@@ -216,6 +235,54 @@ describe("what the buy bar does to the page", () => {
     expect(page.root.scrollPaddingBottom).toBe("");
     expect(page.disconnected).toBe(1);
     expect(page.listeners.size).toBe(0);
+  });
+
+  it("pads by the bar's measured height, so a checkout error under its button covers nothing, and puts it back", () => {
+    // With an error line the bar was about 89px tall over a 65px pad.
+    let resized: () => void = () => {};
+    const observed: object[] = [];
+    let disconnected = 0;
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(report: () => void) {
+          resized = report;
+        }
+        observe(target: object) {
+          observed.push(target);
+        }
+        disconnect() {
+          disconnected++;
+        }
+      },
+    );
+    render();
+    see();
+    let barHeight = 65;
+    const barEl = { getBoundingClientRect: () => ({ height: barHeight }) };
+    (tree!.props.ref as (node: object | null) => void)(barEl);
+    render();
+    expect(observed).toEqual([barEl]);
+    expect(page.body.paddingBottom).toBe("65px");
+    expect(page.root.scrollPaddingBottom).toBe("65px");
+    props = { ...props, error: "Stripe did not open." };
+    barHeight = 88.6;
+    resized();
+    render();
+    expect(page.body.paddingBottom).toBe("89px");
+    expect(page.root.scrollPaddingBottom).toBe("89px");
+    // The error cleared: back to the bar's own height.
+    props = { ...props, error: null };
+    barHeight = 65;
+    resized();
+    render();
+    expect(page.body.paddingBottom).toBe("65px");
+    // The bar goes away: the page's own padding comes back.
+    props = { ...props, enabled: false };
+    expect(render()).toBeNull();
+    expect(page.body.paddingBottom).toBe("12px");
+    expect(page.root.scrollPaddingBottom).toBe("");
+    expect(disconnected).toBe(1);
   });
 
   it("is the priced button alone: no name beside it to sit under the window's corner switch", () => {

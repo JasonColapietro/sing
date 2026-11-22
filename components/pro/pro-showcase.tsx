@@ -22,7 +22,7 @@ import {
 } from "@/lib/pro-sample";
 import { useProgress } from "@/lib/progress";
 import { Claim } from "./claim";
-import { TakeSample } from "./take-sample";
+import { TAKE_SAMPLE_READING, TakeSample } from "./take-sample";
 import { ProChip } from "./ui";
 
 /**
@@ -73,6 +73,9 @@ export const SAMPLE_NOTES_NAME = `Sample chart of accuracy by note, from ${SAMPL
 export const SAMPLE_NOTES_CAPTION = `Sample voice: ${SAMPLE_ACCURACY}% in tune across its scored notes. Weakest note ${SAMPLE_WEAK_NOTE.label} at ${SAMPLE_WEAK_NOTE.accuracy}%.`;
 export const SAMPLE_RANGE_NAME = `Sample chart of a vocal range across ${SAMPLE_RANGE_HISTORY.length} tests six weeks apart. The latest spans ${SAMPLE_RANGE.low} to ${SAMPLE_RANGE.high}, ${SAMPLE_SEMITONES} semitones.`;
 export const SAMPLE_RANGE_CAPTION = `Sample voice: ${SAMPLE_RANGE_HISTORY.length} tests six weeks apart. The latest spans ${SAMPLE_RANGE.low}–${SAMPLE_RANGE.high}, ${SAMPLE_SEMITONES} semitones.`;
+
+/** The take frame's line above its drawing: the recorder's locked panel and the landing say the same of it. */
+export const TAKES_LINE = "The pitch line of each take, and two takes overlaid.";
 
 /** The sample's dates are in the server HTML, so their format cannot follow the reader. */
 const SAMPLE_DATES = { locale: "en-US", timeZone: "UTC" };
@@ -242,8 +245,13 @@ export function ProShowcase({
           {/* Take analysis: a drawing, labelled as a sample by TakeSample. */}
           <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-panel md:col-span-2 xl:col-span-1 xl:col-start-3 xl:row-start-2">
             <FrameHead title="Two takes, overlaid" />
-            <div className="flex grow flex-col justify-center p-4 sm:p-5">
+            {/* The chart frames' shape: a line above the exhibit, a caption
+                under it. Centred alone, the drawing (it stops at 21rem) sat
+                in about 140px of blank beside the two charts at xl. */}
+            <p className="min-h-12 px-4 pt-3 text-xs leading-4 text-mut sm:px-5">{TAKES_LINE}</p>
+            <div className="flex grow flex-col px-4 pb-4 sm:px-5">
               <TakeSample />
+              <p className="mt-2 text-xs text-mut">{TAKE_SAMPLE_READING}</p>
             </div>
           </div>
         </div>

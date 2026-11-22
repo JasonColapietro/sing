@@ -3,7 +3,8 @@
  * pitch lines, the later one on its notes and the earlier one flat on the top
  * note.
  *
- * Public surface: `TakeSample({ className? })`, `TAKE_SAMPLE_LABEL`, and
+ * Public surface: `TakeSample({ className? })`, `TAKE_SAMPLE_LABEL`,
+ * `TAKE_SAMPLE_READING`, and
  * `TAKE_SAMPLE_LINES` (the two drawn lines, for tests).
  *
  * Rules:
@@ -13,6 +14,10 @@
  *   the viewBox is 320 wide so one unit is about one pixel there, the text is
  *   11 units, the lines are 2.5, and the two takes part by a visible gap on
  *   one phrase. Do not widen the viewBox without scaling those up with it.
+ * - It never draws larger than 21rem (336px), a little over that phone
+ *   size: in a wider panel (the landing at 1280, /pro between md and xl) a
+ *   full-width drawing set its 11-unit labels near 18px beside neighbours at
+ *   about 11px.
  * - Colors are theme tokens (the stroke-* and fill-* classes), never hex, and
  *   both lines are the "ink" shades, which clear 3:1 on the panel.
  * - A server component with no hooks and no data imports, so the landing
@@ -20,6 +25,9 @@
  *   follows its width, so it causes no layout shift.
  */
 export const TAKE_SAMPLE_LABEL = "Sample takes";
+
+/** What the drawing shows, in words: its accessible name ends with it, and /pro prints it under the drawing. */
+export const TAKE_SAMPLE_READING = "Take 7 lands each note; take 3 is flat on the G4.";
 
 /** Where the plot starts and ends, left of which the note names sit. */
 const X0 = 34;
@@ -70,9 +78,9 @@ export function TakeSample({ className = "" }: { className?: string }) {
       </figcaption>
       <svg
         viewBox="0 0 320 120"
-        className="block w-full"
+        className="block w-full max-w-[21rem]"
         role="img"
-        aria-label="Two sample takes of one phrase drawn as overlaid pitch lines against its target notes. Take 7 lands each note; take 3 is flat on the G4."
+        aria-label={`Two sample takes of one phrase drawn as overlaid pitch lines against its target notes. ${TAKE_SAMPLE_READING}`}
       >
         {GUIDES.map(({ note, y }) => (
           <g key={note}>

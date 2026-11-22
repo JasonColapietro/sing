@@ -34,7 +34,7 @@ import { PRO_SHOWCASE_ANCHOR } from "@/lib/pro-inventory";
 import { SAMPLE_ACCURACY, SAMPLE_RANGE, SAMPLE_WEAK_NOTE } from "@/lib/pro-sample";
 import ProPage from "@/app/pro/page";
 import { PACK_SAMPLE } from "./pack-sample";
-import { TAKE_SAMPLE_LABEL } from "./take-sample";
+import { TAKE_SAMPLE_LABEL, TAKE_SAMPLE_READING } from "./take-sample";
 import { ProClient } from "./pro-client";
 import {
   OWN_DATA_LABEL,
@@ -45,6 +45,7 @@ import {
   SAMPLE_RANGE_CAPTION,
   SAMPLE_RANGE_LABEL,
   SAMPLE_RANGE_NAME,
+  TAKES_LINE,
   useOwnVoice,
 } from "./pro-showcase";
 
@@ -206,6 +207,19 @@ describe("the showcase with no record", () => {
   it("labels the take drawing as a sample", () => {
     expect(render()).toContain(`>${TAKE_SAMPLE_LABEL}</figcaption>`);
   });
+
+  it("frames the take drawing as the charts are framed: a line above, a caption under, from existing words", () => {
+    // At 1280 the drawing floated in about 140px of blank beside the charts.
+    const html = render().replaceAll("&#x27;", "'");
+    const frame = html.slice(html.indexOf(">Two takes, overlaid</h4>"));
+    expect(frame.indexOf(TAKES_LINE)).toBeLessThan(frame.indexOf("<figure"));
+    expect(frame.indexOf(`>${TAKE_SAMPLE_READING}</p>`)).toBeGreaterThan(frame.indexOf("</figure>"));
+    expect(frame.slice(0, frame.indexOf("<figure"))).not.toContain("justify-center");
+    // Both sentences already said the same elsewhere: the recorder's locked panel, and the drawing's own name.
+    const recorder = readFileSync(new URL("../recorder/recorder-page.tsx", import.meta.url), "utf8");
+    expect(recorder).toContain(`gives="${TAKES_LINE}"`);
+    expect(html).toContain(`target notes. ${TAKE_SAMPLE_READING}"`);
+  });
 });
 
 describe("the showcase on a free visitor's own record", () => {
@@ -258,7 +272,8 @@ describe("the showcase on a free visitor's own record", () => {
     expect(render().match(SAMPLE)).toHaveLength(2);
     expect(render().match(OWN)).toBeNull();
     // The label above reserves its two lines whichever label it is.
-    expect(render().match(/<p class="min-h-12 /g)).toHaveLength(2);
+    // Three: the take frame now has the same reserved line above its drawing (its frame matched to the charts').
+    expect(render().match(/<p class="min-h-12 /g)).toHaveLength(3);
   });
 });
 

@@ -47,6 +47,11 @@ describe("the sample takes drawing", () => {
     expect(gaps.filter((gap) => gap <= 3)).toHaveLength(gaps.length - 2);
   });
 
+  it("never draws wider than a little over a phone, so its labels match its neighbours' at any width", () => {
+    // Full width in the landing's 1280 panel, its 11-unit labels drew near 18px beside the coach report's 10.7px.
+    expect(html).toMatch(/<svg[^>]*class="block w-full max-w-\[21rem\]"/);
+  });
+
   it("draws a guide line and a name for each target note", () => {
     expect(html.match(/stroke-dasharray/g)).toHaveLength(3);
     for (const note of ["G4", "E4", "C4"]) expect(html).toContain(`>${note}</text>`);

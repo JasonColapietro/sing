@@ -7,14 +7,21 @@ import { ATLAS_PROFILES_NOTE, BOOKS, PRO_PROGRAM_COUNT } from "@/lib/pro-invento
 import { routineMinutes, stepExercise } from "@/components/warmups/routines";
 import { PACK_SAMPLE, PackSample } from "./pack-sample";
 
-const state = vi.hoisted(() => ({ active: false, ready: true }));
+const state = vi.hoisted(() => ({ active: false, ready: true, hydrated: false }));
 // The real module with the two hooks replaced: the stack now heads its
 // exhibits with PRO_PERKS rows (components/pro/claim.tsx), which a bare
 // two-hook mock did not carry.
 vi.mock("@/lib/pro", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/pro")>()),
   useProState: () => ({ active: state.active }),
+  useIsPro: () => state.active,
   useProReady: () => state.ready,
+}));
+
+// The free-only nudges are NotPro (components/pro/gate.tsx), which keys off hydration.
+vi.mock("@/components/prepaint", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/components/prepaint")>()),
+  useHydrated: () => state.hydrated,
 }));
 
 import { UnlockStack } from "./unlock-stack";
@@ -30,6 +37,32 @@ describe("the unlock stack on /pro", () => {
   beforeEach(() => {
     state.active = false;
     state.ready = true;
+    state.hydrated = false;
+  });
+
+  it("gives an owner their index with no free-or-paid framing: no FREE badge, free-chapter nudge or free week", () => {
+    state.active = true;
+    state.hydrated = true;
+    const html = render();
+    expect(html).not.toMatch(/>Free</);
+    expect(html).not.toContain("Start with the free chapter");
+    expect(html).not.toContain("Week 1 of every program is free");
+    // The contents themselves stay: every chapter of both books, the pack, the programs.
+    expect(html.match(/href="\/(book|atlas)\/[^"]+"/g)).toHaveLength(BOOK_CONTENTS.length + ATLAS_CONTENTS.length);
+    expect(html).toContain(`<h4 class="text-lg">${PACK_SAMPLE.name}</h4>`);
+    expect(html).toContain(`Pro also opens ${PRO_PROGRAM_COUNT} programs in full.`);
+  });
+
+  it("keeps those nudges in a free visitor's first paint, each behind the pre-paint not-pro marker", () => {
+    const html = render();
+    const freeBadges = BOOK_CONTENTS.filter((e) => e.free).length + ATLAS_CONTENTS.filter((e) => e.free).length;
+    expect(html.match(/<span[^>]*data-prepaint-plan="not-pro"[^>]*>Free<\/span>/g)).toHaveLength(freeBadges);
+    expect(html).toMatch(/<p class="mt-6 text-sm text-mut" data-prepaint-plan="not-pro">Start with the free chapter/);
+    expect(html).toMatch(/<span data-prepaint-plan="not-pro"> <a[^>]*href="\/programs"[^>]*>Week 1 of every program is free<\/a><\/span>/);
+    // After hydration a free visitor's markup is the same words without the markers.
+    state.hydrated = true;
+    const after = render();
+    expect(after.replace(/ data-prepaint-plan="not-pro"/g, "")).toBe(html.replace(/ data-prepaint-plan="not-pro"/g, ""));
   });
 
   it("sells the locked chapters to a free reader", () => {

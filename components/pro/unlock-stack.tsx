@@ -10,6 +10,7 @@ import { SectionLabel } from "@/components/ui";
 import { BookCover, type CoverMotif } from "@/components/book/cover";
 import { AUTHOR_NAME } from "@/lib/author";
 import { Claim } from "./claim";
+import { NotPro } from "./gate";
 
 /**
  * What a buyer gets the moment the payment clears, each thing drawn once: the
@@ -79,7 +80,11 @@ export function UnlockStack({ pack }: { pack?: ReactNode }) {
           />
         </div>
 
-        <p className="mt-6 text-sm text-mut">
+        {/* Free-only nudges (this one, "Week 1 … is free" and a row's FREE
+            badge) are NotPro: in the server HTML and a free visitor's first
+            paint as before, hidden by the pre-paint for an owner, for whom
+            nothing here is free or paid any more. */}
+        <NotPro as="p" className="mt-6 text-sm text-mut">
           Start with the free chapter{" "}
           <Link
             href="/book/when-numbers-lie"
@@ -88,7 +93,7 @@ export function UnlockStack({ pack }: { pack?: ReactNode }) {
             When the numbers lie to you
           </Link>
           : it decides whether any measurement on this site is worth anything.
-        </p>
+        </NotPro>
 
         {/* --- a pro pack as the warmups room draws it, beside the perks with
                 nothing more to draw: the plan is the coach report at the top
@@ -100,13 +105,16 @@ export function UnlockStack({ pack }: { pack?: ReactNode }) {
             <Claim id="warmups" />
             {pack && <div className="mt-4">{pack}</div>}
             <p className="mt-3 text-sm text-mut">
-              Pro also opens {PRO_PROGRAM_COUNT} programs in full.{" "}
-              <Link
-                href="/programs"
-                className="inline-flex min-h-11 items-center text-sm text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
-              >
-                Week 1 of every program is free
-              </Link>
+              Pro also opens {PRO_PROGRAM_COUNT} programs in full.
+              <NotPro>
+                {" "}
+                <Link
+                  href="/programs"
+                  className="inline-flex min-h-11 items-center text-sm text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+                >
+                  Week 1 of every program is free
+                </Link>
+              </NotPro>
             </p>
           </div>
           <div className="grid content-start gap-5 sm:grid-cols-3 lg:grid-cols-1 lg:gap-0 lg:divide-y lg:divide-line lg:[&>*]:py-5 lg:[&>*:first-child]:pt-0">
@@ -173,9 +181,9 @@ function BookContents({
                   {entry.title}
                 </span>
                 {entry.free && (
-                  <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
+                  <NotPro className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
                     Free
-                  </span>
+                  </NotPro>
                 )}
               </Link>
             ) : (

@@ -12,6 +12,7 @@ import ClerkShell from "@/components/account/clerk-shell";
 import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import WeeklyReportCard from "@/components/weekly-report-card";
 import { InPageJumps } from "@/components/in-page-jumps";
+import { AgentViewFit } from "@/components/agent-view-fit";
 import { routeKeywords } from "@/lib/keywords";
 import { INDEXABLE_ROBOTS } from "@/lib/robots-meta";
 import { PREPAINT_SCRIPT } from "@/lib/prepaint-config";
@@ -149,8 +150,10 @@ export default function RootLayout({
       </head>
       <body className="min-h-dvh antialiased">
         <ClerkShell>{shell}</ClerkShell>
-        {/* Shared Light / Dark / AI agent view switch (suedeai.ai). */}
+        {/* Shared Light / Dark / AI agent view switch (suedeai.ai), its
+            phone tab narrowed to the page gutter by AgentViewFit. */}
         <script src="https://suedeai.ai/agent-view.js" defer />
+        <AgentViewFit />
       </body>
     </html>
   );

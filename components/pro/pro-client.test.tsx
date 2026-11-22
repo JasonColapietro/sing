@@ -275,6 +275,22 @@ describe("Pro purchase choices", () => {
     expect(html).not.toContain("Renews");
     expect(html).not.toContain("Ends January");
   });
+
+  it("asks an owner no purchase questions: the FAQ keeps how Pro works for them, with no price", () => {
+    proState.current = state({ active: true, plan: "lifetime", status: "active", paymentIntentId: "pi_1" });
+    const html = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
+    expect(html).not.toContain(">Before you decide</h2>");
+    const from = html.indexOf(">Your data and your devices</h2>");
+    expect(from).toBeGreaterThan(-1);
+    const faq = html.slice(from, html.indexOf("</section>", from));
+    const kept = ["voice-uploaded", "devices", "sync"];
+    for (const item of PRO_FAQ) {
+      const shown = faq.includes(`<h3 class="text-lg">${item.q}</h3>`);
+      expect(shown, item.id).toBe(kept.includes(item.id));
+      if (shown) expect(faq, item.id).toContain(item.a);
+    }
+    expect(faq).not.toMatch(/\$\d|lifetime access|stay free/i);
+  });
 });
 
 describe("restoring Pro on a new browser", () => {

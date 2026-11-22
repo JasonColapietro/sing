@@ -71,14 +71,22 @@ describe("what the buy bar watches on /pro", () => {
 
   it("every buy button on the page: hero, card and final call to action", () => {
     const html = renderToStaticMarkup(<ProClient />);
-    const anchors = html.match(/<(?:button|div)[^>]*data-buy-anchor=""[^>]*>/g) ?? [];
-    // Three: the hero's button, the card and the last section's button. The
-    // showcase's button is gone (was a fourth), so nothing else needs watching.
+    const anchors = html.match(/<[a-z]+[^>]*data-buy-anchor=""[^>]*>/g) ?? [];
+    // Three: the hero's button, the card's button and the last section's
+    // button. The showcase's button is gone (was a fourth), so nothing else
+    // needs watching.
     expect(anchors).toHaveLength(3);
-    expect(anchors.filter((tag) => tag.startsWith("<button"))).toHaveLength(2);
-    expect(anchors.some((tag) => tag.includes('id="buy"'))).toBe(true);
-    // The card's own button sits inside the watched card.
-    expect(html.match(/>Get lifetime Pro: \$79 once<\/button>/g)).toHaveLength(3);
+    // Every one a button: the card itself was the third anchor (changed: a
+    // phone scrolled through its lower half with its button gone above and
+    // the bar held back by the card), so the card's own button is now.
+    expect(anchors.filter((tag) => tag.startsWith("<button"))).toHaveLength(3);
+    expect(anchors.some((tag) => tag.includes('id="buy"'))).toBe(false);
+    const button = /<button[^>]*data-buy-anchor=""[^>]*>Get lifetime Pro: \$79 once<\/button>/g;
+    expect(html.match(button)).toHaveLength(3);
+    // The card's button is inside #buy and the card carries no anchor.
+    const card = html.slice(html.indexOf('id="buy"'), html.indexOf(">Before you pay</h3>"));
+    expect(card.match(button)).toHaveLength(1);
+    expect(html.match(/<div[^>]*id="buy"[^>]*>/)![0]).not.toContain("data-buy-anchor");
   });
 
   it("and the two forms it covered on a phone: the pass code and the Pro key", () => {

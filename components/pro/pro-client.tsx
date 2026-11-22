@@ -58,12 +58,19 @@ const BUY_ANSWERS = BUY_ANSWER_IDS.flatMap((id) => PRO_FAQ.filter((item) => item
 /**
  * The rest, for the "Fair questions" section further down. A free visitor
  * reads the three above at the card; printing them again there made the page
- * longer and answered nothing new. Whoever does not get the card's list (an
- * owner) gets every question below. The FAQPage markup carries all of PRO_FAQ
+ * longer and answered nothing new. An owner gets OWNER_ANSWERS instead. The
+ * FAQPage markup carries all of PRO_FAQ
  * either way (app/pro/page.tsx), and every answer is on the page, as Google
  * asks of marked-up answers: the card's are in disclosures.
  */
 const LATER_ANSWERS = PRO_FAQ.filter((item) => !BUY_ANSWER_IDS.includes(item.id));
+/**
+ * An owner's questions: how Pro works for them, with none of the purchase
+ * ones (the price, what stays free, whether Pro is needed, what an upgrade
+ * brings). Their answers sold what the owner already has.
+ */
+const OWNER_ANSWER_IDS = ["voice-uploaded", "devices", "sync"];
+const OWNER_ANSWERS = OWNER_ANSWER_IDS.flatMap((id) => PRO_FAQ.filter((item) => item.id === id));
 
 /**
  * Numbers first, feature names second.
@@ -888,6 +895,7 @@ export function ProClient({
           className="w-full"
           onClick={() => goPro("card")}
           aria-disabled={buyBusy || undefined}
+          {...BUY_ANCHOR}
         >
           {opening
             ? "Opening Stripe…"
@@ -1211,7 +1219,6 @@ export function ProClient({
                 every buy link lands on its #buy. */}
             <div
               id="buy"
-              {...BUY_ANCHOR}
               tabIndex={-1}
               role="group"
               aria-labelledby={buyHeadingId}
@@ -1351,8 +1358,10 @@ export function ProClient({
               )}
             </div>
 
-            {/* Free */}
-            <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
+            {/* Free. Its own height, at the top of the row: stretched to
+                the Pro card's, its action sat about 380px under its list at
+                1280. */}
+            <div className="flex flex-col self-start rounded-2xl border border-line bg-panel p-6 sm:p-7">
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
                 Free
               </span>
@@ -1368,7 +1377,7 @@ export function ProClient({
                   <PlanPoint key={point}>{point}</PlanPoint>
                 ))}
               </ul>
-              <div className="mt-auto pt-6">
+              <div className="pt-6">
                 <LinkButton
                   href="/studio"
                   variant="outline"
@@ -1527,9 +1536,11 @@ export function ProClient({
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel hairline className="mb-4">Fair questions</SectionLabel>
-          <h2 className="max-w-2xl text-2xl sm:text-3xl">Before you decide</h2>
+          <h2 className="max-w-2xl text-2xl sm:text-3xl">
+            {pro.active ? "Your data and your devices" : "Before you decide"}
+          </h2>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {(pro.active ? PRO_FAQ : LATER_ANSWERS).map((item) => (
+            {(pro.active ? OWNER_ANSWERS : LATER_ANSWERS).map((item) => (
               <div
                 key={item.id}
                 className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
