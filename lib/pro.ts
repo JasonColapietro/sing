@@ -221,6 +221,16 @@ async function post<T>(path: string, body: unknown): Promise<T> {
  */
 function apply(
   entitlement: Entitlement,
+  options: { keepCredentials?: boolean } = {},
+): ProState {
+  const next = stateFrom(entitlement, options);
+  save(next);
+  return next;
+}
+
+/** What `apply` would store, without storing it. */
+function stateFrom(
+  entitlement: Entitlement,
   { keepCredentials = false } = {},
 ): ProState {
   const prev = load();
@@ -240,7 +250,6 @@ function apply(
       : null,
     lastVerified: new Date().toISOString(),
   };
-  save(next);
   return next;
 }
 
@@ -427,7 +436,13 @@ export async function confirmCheckout(
       await new Promise((r) => setTimeout(r, 700 * attempt));
     }
     try {
-      const state = apply(await post<Entitlement>("/api/entitlement", { sessionId }));
+      const reply = await post<Entitlement>("/api/entitlement", { sessionId });
+      // A return that proves no purchase (an unpaid or expired session, someone
+      // else's, or a crafted ?checkout=success link) says nothing about Pro this
+      // browser already holds, so it must not overwrite it or its Pro key.
+      // Refunds and disputes still take effect through revalidatePro.
+      const state =
+        !reply.active && load().active ? stateFrom(reply) : apply(reply);
       // /pro has already stripped the return URL and cleared the started id.
       // Keep the only remaining reference until a processing payment settles.
       if (state.active || state.status !== "processing") clearPendingCheckout();
