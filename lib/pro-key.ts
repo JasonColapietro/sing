@@ -9,7 +9,8 @@ import { createHmac, timingSafeEqual } from "node:crypto";
  * unguessable and needs no database to verify. It is proof of *purchase*, not
  * a grant: `verifyProKey` only tells you which billing record the holder paid
  * for, and the caller still asks Stripe whether it remains entitled. A
- * cancelled subscription or refunded lifetime purchase stops working.
+ * cancelled subscription, or a lifetime purchase that is fully refunded or
+ * has an open or lost dispute, stops working.
  *
  * This replaced restoring by email address, which let anyone who knew a
  * subscriber's email unlock Pro in their own browser.

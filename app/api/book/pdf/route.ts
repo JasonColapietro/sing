@@ -104,7 +104,7 @@ export async function POST(request: Request) {
       const payment = await stripe.paymentIntents.retrieve(billing.id, {
         expand: ["customer", "latest_charge"],
       });
-      entitlement = entitlementFromLifetime(payment, null);
+      entitlement = await entitlementFromLifetime(payment, null);
     }
     if (!entitlement.active) {
       return json(

@@ -6,7 +6,6 @@ const stripe = vi.hoisted(() => ({
   retrieveSubscription: vi.fn(),
   retrievePaymentIntent: vi.fn(),
   isOurSubscription: vi.fn(),
-  isOurLifetimePayment: vi.fn(),
   entitlementFrom: vi.fn(),
   entitlementFromLifetime: vi.fn(),
   emailOf: vi.fn(),
@@ -21,7 +20,6 @@ vi.mock("@/lib/stripe", () => ({
   isStripeId: (value: unknown, prefix: string) =>
     typeof value === "string" && value.startsWith(prefix),
   isOurSubscription: stripe.isOurSubscription,
-  isOurLifetimePayment: stripe.isOurLifetimePayment,
   entitlementFrom: stripe.entitlementFrom,
   entitlementFromLifetime: stripe.entitlementFromLifetime,
   emailOf: stripe.emailOf,
@@ -73,9 +71,8 @@ beforeEach(() => {
     paymentIntents: { retrieve: stripe.retrievePaymentIntent },
   });
   stripe.isOurSubscription.mockReturnValue(true);
-  stripe.isOurLifetimePayment.mockReturnValue(true);
   stripe.emailOf.mockReturnValue("singer@example.com");
-  stripe.entitlementFromLifetime.mockReturnValue(lifetimeEntitlement);
+  stripe.entitlementFromLifetime.mockResolvedValue(lifetimeEntitlement);
 });
 
 afterEach(() => {
@@ -123,7 +120,7 @@ describe("POST /api/entitlement", () => {
         "payment_intent.latest_charge",
       ],
     });
-    expect(stripe.isOurLifetimePayment).toHaveBeenCalledWith(payment);
+    // The lifetime policy check now lives inside entitlementFromLifetime.
     expect(stripe.entitlementFromLifetime).toHaveBeenCalledWith(
       payment,
       "singer@example.com",
@@ -150,7 +147,8 @@ describe("POST /api/entitlement", () => {
     expect(stripe.retrievePaymentIntent).toHaveBeenCalledWith("pi_lifetime", {
       expand: ["customer", "latest_charge"],
     });
-    expect(stripe.isOurLifetimePayment).toHaveBeenCalledWith(payment);
+    // The lifetime policy check now lives inside entitlementFromLifetime.
+    expect(stripe.entitlementFromLifetime).toHaveBeenCalledWith(payment, null);
   });
 
   it("preserves status-only revalidation for legacy annual subscriptions", async () => {
@@ -237,7 +235,7 @@ describe("POST /api/entitlement", () => {
   });
 
   it("reports a payment still processing as inactive with its status, not as a refusal", async () => {
-    stripe.isOurLifetimePayment.mockReturnValue(false);
+    stripe.entitlementFromLifetime.mockResolvedValue({ active: false, status: "processing" });
     stripe.retrieveSession.mockResolvedValue({
       subscription: null,
       payment_intent: {
@@ -253,24 +251,49 @@ describe("POST /api/entitlement", () => {
     const response = await entitlement({ sessionId: "cs_slow" });
 
     expect(response.status).toBe(200);
-    expect(await response.json()).toMatchObject({ active: false, status: "processing" });
-    expect(stripe.entitlementFromLifetime).not.toHaveBeenCalled();
+    expect(await response.json()).toMatchObject({ active: false, status: "processing", proKey: null });
+    // Called once now: it holds the policy check the route used to make first.
+    expect(stripe.entitlementFromLifetime).toHaveBeenCalledTimes(1);
   });
 
-  it("rejects a refunded or disputed lifetime payment during revalidation", async () => {
+  it("rejects a fully refunded or lost-dispute lifetime payment during revalidation", async () => {
     stripe.retrievePaymentIntent.mockResolvedValue({
       id: "pi_lifetime",
       customer: { id: "cus_owner" },
       latest_charge: { id: "ch_lifetime" },
     });
-    stripe.isOurLifetimePayment.mockReturnValue(false);
+    // entitlementFromLifetime now makes the policy call the route used to.
+    stripe.entitlementFromLifetime.mockResolvedValue({ active: false, status: "succeeded", proKey: null, customerId: null, email: null });
 
     const response = await entitlement({ paymentIntentId: "pi_lifetime" });
     const body = (await response.json()) as { active?: boolean };
 
     expect(response.status).toBe(200);
     expect(body.active).toBe(false);
-    expect(stripe.entitlementFromLifetime).not.toHaveBeenCalled();
+    expect(body).toMatchObject({ status: null, proKey: null, paymentIntentId: null });
+  });
+
+  it.each([
+    ["session", { sessionId: "cs_lifetime" }],
+    ["revalidation", { paymentIntentId: "pi_lifetime" }],
+  ])("fails closed with a retryable 502 when a dispute cannot be read (%s)", async (_path, body) => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const payment = { id: "pi_lifetime", customer: { id: "cus_owner" }, latest_charge: { id: "ch_lifetime" } };
+    stripe.retrieveSession.mockResolvedValue({
+      subscription: null,
+      payment_intent: payment,
+      customer: { id: "cus_owner" },
+      customer_details: { email: "singer@example.com" },
+    });
+    stripe.retrievePaymentIntent.mockResolvedValue(payment);
+    stripe.entitlementFromLifetime.mockRejectedValue(new Error("Could not read the dispute on charge ch_lifetime."));
+
+    const response = await entitlement(body);
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toEqual({
+      error: "Could not check your Pro access. Try again in a moment.",
+    });
   });
 
   it("uses inclusive Pro access copy when Stripe cannot be reached", async () => {

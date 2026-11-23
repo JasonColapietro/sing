@@ -7,7 +7,7 @@ import { getRedis } from "@/lib/redis";
 import { CLOUD_STATE_MAX_CHARS } from "@/lib/progress-cloud-fit";
 import {
   getStripe,
-  isOurLifetimePayment,
+  lifetimeAccess,
   isOurSubscription,
 } from "@/lib/stripe";
 
@@ -35,7 +35,8 @@ function json(body: unknown, init?: ResponseInit) {
  * subscription or lifetime payment, which becomes the storage key — no
  * accounts needed. Whether that billing record still grants Pro is re-checked
  * against Stripe at most once a day (cached here in Redis), so a cancellation,
- * refund, or dispute removes sync without every request costing a Stripe call.
+ * full refund, or open or lost dispute removes sync without every request
+ * costing a Stripe call.
  *
  * One POST does either direction: body with `state` stores it, body without
  * `state` fetches what's stored. The client owns merging — this route never
@@ -132,7 +133,9 @@ async function lifetimePaymentStillPro(
     typeof payment.customer === "string"
       ? payment.customer
       : payment.customer?.id;
-  const ok = owner === customerId && isOurLifetimePayment(payment);
+  // A dispute lookup failure throws, so it reaches POST's 502 and caches
+  // nothing rather than granting or caching a "no".
+  const ok = owner === customerId && (await lifetimeAccess(payment));
   await redis.set(cacheKey, ok ? "yes" : "no", { ex: ENT_TTL_SEC });
   return ok;
 }

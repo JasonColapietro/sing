@@ -43,6 +43,17 @@ function mint(customerId, billingId) {
   return `suede-pro_${payload}.${signature}`;
 }
 
+/** The status of the most recent dispute on a charge, or null if none is listed. */
+async function latestDisputeStatus(chargeId) {
+  const { data } = await stripe.disputes.list({ charge: chargeId, limit: 10 });
+  const latest = data.reduce(
+    (newest, dispute) =>
+      !newest || dispute.created > newest.created ? dispute : newest,
+    null,
+  );
+  return latest?.status ?? null;
+}
+
 async function findPurchases() {
   if (query.startsWith("sub_")) {
     return [
@@ -123,9 +134,15 @@ for (const purchase of purchases) {
     charge &&
     typeof charge !== "string" &&
     charge.paid &&
+    // Same refund and dispute policy as lifetimeAccess in lib/stripe.ts: a
+    // full refund, an open dispute or a lost one unlocks nothing; a partial
+    // refund, a won dispute, a closed inquiry or a prevented dispute does.
     !charge.refunded &&
-    !charge.disputed &&
-    charge.amount_refunded === 0;
+    charge.amount_refunded < charge.amount_captured &&
+    (!charge.disputed ||
+      ["won", "warning_closed", "prevented"].includes(
+        await latestDisputeStatus(charge.id),
+      ));
   console.log(`\npayment:      ${value.id}`);
   console.log(`status:       ${value.status}${entitles ? "" : "  (won't unlock Pro)"}`);
   console.log(`pro key:      ${mint(customerId, value.id)}`);

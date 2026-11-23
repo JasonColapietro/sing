@@ -25,7 +25,14 @@ vi.mock("@/lib/stripe", () => ({
     paymentIntents: { retrieve: dependencies.retrievePaymentIntent },
   }),
   isOurSubscription: (subscription: { ours?: boolean }) => subscription.ours,
-  isOurLifetimePayment: (payment: { ours?: boolean }) => payment.ours,
+  // The route now asks the async lifetimeAccess; `disputeLookupFails` stands
+  // in for a disputed charge whose dispute Stripe could not return.
+  lifetimeAccess: async (payment: { ours?: boolean; disputeLookupFails?: boolean }) => {
+    if (payment.disputeLookupFails) {
+      throw new Error("Could not read the dispute on charge ch_lifetime.");
+    }
+    return payment.ours;
+  },
 }));
 
 process.env.PRO_KEY_SECRET = "test-pro-key-secret-at-least-32-characters";
@@ -135,4 +142,21 @@ describe("POST /api/sync", () => {
       expect(dependencies[retrieve]).toHaveBeenCalledTimes(1);
     },
   );
+
+  it("answers 502 and caches nothing when a lifetime dispute cannot be read", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    dependencies.retrievePaymentIntent.mockResolvedValue({
+      id: "pi_lifetime",
+      customer: "cus_lifetime",
+      ours: true,
+      disputeLookupFails: true,
+    });
+    const key = mintProKey("cus_lifetime", "pi_lifetime");
+
+    const response = await request({ key, state: { xp: 1 } });
+
+    expect(response.status).toBe(502);
+    expect(dependencies.store.has("sync:ent:pi_lifetime")).toBe(false);
+    expect(dependencies.store.has("sync:state:pi_lifetime")).toBe(false);
+  });
 });

@@ -20,9 +20,17 @@ vi.mock("@/lib/stripe", () => ({
   entitlementFrom: (subscription: { active?: boolean }) => ({
     active: subscription.active === true,
   }),
-  entitlementFromLifetime: (payment: { active?: boolean }) => ({
-    active: payment.active === true,
-  }),
+  // Async now: it checks the lifetime policy, which can look up a dispute.
+  // `disputeLookupFails` stands in for a dispute Stripe could not return.
+  entitlementFromLifetime: async (payment: {
+    active?: boolean;
+    disputeLookupFails?: boolean;
+  }) => {
+    if (payment.disputeLookupFails) {
+      throw new Error("Could not read the dispute on charge ch_lifetime.");
+    }
+    return { active: payment.active === true };
+  },
 }));
 
 const { POST } = await import("./route");
@@ -84,6 +92,26 @@ describe("POST /api/book", () => {
     await expect(response.json()).resolves.toMatchObject({
       slug: "a-vocabulary-for-tone",
       title: "A vocabulary for tone",
+    });
+  });
+
+  it("fails closed with a retryable 502 when a lifetime dispute cannot be read", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    stripe.retrievePaymentIntent.mockResolvedValue({
+      id: "pi_lifetime",
+      active: true,
+      disputeLookupFails: true,
+    });
+
+    const response = await request({
+      paymentIntentId: "pi_lifetime",
+      slug: "a-vocabulary-for-tone",
+      book: "atlas",
+    });
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toEqual({
+      error: "Could not verify your Pro access. Try again in a moment.",
     });
   });
 

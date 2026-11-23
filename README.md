@@ -108,9 +108,17 @@ legacy annual access and a PaymentIntent id for lifetime access. The key is
 shown on `/pro` while Pro is active and is what `/api/restore` accepts.
 
 A key is proof of *purchase*, not a grant: restore verifies the signature and
-then asks Stripe whether the subscription is still live or the lifetime charge
-remains unreversed. A cancelled subscription or refunded lifetime purchase
-stops unlocking anything. Keys are derived rather than stored, so a lost one is
+then asks Stripe whether the subscription is still live or the lifetime
+purchase still grants access. A cancelled subscription stops unlocking
+anything. For lifetime access (`lifetimeAccess` in `lib/stripe.ts`):
+
+- A full refund ends access; a partial refund keeps it.
+- An open dispute or inquiry suspends access while it is open.
+- A lost dispute ends access. A won dispute, an inquiry closed without a
+  chargeback, or a prevented dispute keeps access, and a browser that lost
+  Pro while the dispute was open gets it back through the purchase's Pro key.
+- Only a disputed charge costs an extra Stripe call (the dispute lookup), and
+  if that lookup fails the check answers 502 rather than granting access. Keys are derived rather than stored, so a lost one is
 regenerated, not looked up:
 
 ```bash
@@ -163,8 +171,8 @@ mean to rewrite the path match. WAF counters are per region, so a distributed
 caller can exceed the limit by roughly the number of regions it hits.
 
 `lib/pro.ts` caches the last answer in `localStorage`; `components/pro/sync.tsx`
-re-checks with Stripe twice a day so a cancellation, failed payment, refund, or
-dispute revokes access. New prices resolve by lookup key
+re-checks with Stripe twice a day so a cancellation, failed payment, full
+refund, or open or lost dispute revokes access. New prices resolve by lookup key
 (`suede_pro_monthly_early_access` and
 `suede_pro_lifetime_early_access`), never by hardcoded id. Legacy monthly and
 annual lookup keys remain recognized for existing subscriptions.

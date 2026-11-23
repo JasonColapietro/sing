@@ -440,7 +440,7 @@ export async function confirmCheckout(
       // A return that proves no purchase (an unpaid or expired session, someone
       // else's, or a crafted ?checkout=success link) says nothing about Pro this
       // browser already holds, so it must not overwrite it or its Pro key.
-      // Refunds and disputes still take effect through revalidatePro.
+      // Full refunds and disputes still take effect through revalidatePro.
       const state =
         !reply.active && load().active ? stateFrom(reply) : apply(reply);
       // /pro has already stripped the return URL and cleared the started id.
@@ -464,9 +464,9 @@ const REVALIDATE_AFTER_MS = 12 * 60 * 60 * 1000;
 
 /**
  * Re-checks the subscription or lifetime payment against Stripe so a
- * cancellation, failed payment, refund, or dispute takes effect here. Network
- * failures leave the current state alone rather than locking out someone who
- * is paying.
+ * cancellation, failed payment, full refund, or dispute outcome takes effect
+ * here. Network failures leave the current state alone rather than locking
+ * out someone who is paying.
  */
 export async function revalidatePro({ force = false } = {}): Promise<void> {
   const state = load();

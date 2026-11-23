@@ -6,7 +6,6 @@ import {
   entitlementFrom,
   entitlementFromLifetime,
   getStripe,
-  isOurLifetimePayment,
   isOurSubscription,
   isStripeId,
 } from "@/lib/stripe";
@@ -62,8 +61,9 @@ function invalidBillingReference() {
  *
  * Called with a `sessionId` right after checkout to unlock Pro on this device,
  * then with either its `subscriptionId` or `paymentIntentId` periodically so a
- * cancellation, failed payment, refund, or dispute is reflected here. There
- * is no database, so every check goes straight to Stripe.
+ * cancellation, failed payment, full refund, or open or lost dispute is
+ * reflected here (lifetimeAccess in lib/stripe.ts holds the lifetime policy).
+ * There is no database, so every check goes straight to Stripe.
  *
  * Every path confirms the billing record is actually one of ours before
  * granting anything. The id arrives from localStorage, which anyone can edit,
@@ -162,15 +162,16 @@ export async function POST(request: Request) {
       if (sessionCustomerId !== paymentCustomerId) {
         return json(INACTIVE);
       }
-      if (!isOurLifetimePayment(payment)) {
-        // Not, or not yet, a completed purchase of ours. The payment's status
+      const email =
+        session.customer_details?.email ?? emailOf(session.customer);
+      const entitlement = await entitlementFromLifetime(payment, email);
+      if (!entitlement.active) {
+        // Not, or not yet, a purchase that grants Pro. The payment's status
         // says whether that is final (refunded, canceled) or a card still
         // processing, which a later check can confirm.
         return json({ ...INACTIVE, status: payment.status ?? null });
       }
-      const email =
-        session.customer_details?.email ?? emailOf(session.customer);
-      return json(entitlementFromLifetime(payment, email));
+      return json(entitlement);
     }
 
     if (validSubscriptionId) {
@@ -211,10 +212,10 @@ export async function POST(request: Request) {
       const payment = await stripe.paymentIntents.retrieve(validPaymentIntentId, {
         expand: ["customer", "latest_charge"],
       });
-      if (!isOurLifetimePayment(payment)) {
+      const status = await entitlementFromLifetime(payment, null);
+      if (!status.active) {
         return json(INACTIVE);
       }
-      const status = entitlementFromLifetime(payment, null);
       return json({
         ...status,
         customerId: null,
