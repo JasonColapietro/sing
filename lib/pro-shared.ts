@@ -111,7 +111,7 @@ export const PRICING: Record<CheckoutPlan, PlanPrice> = {
 
 /**
  * The `offer` tag checkout writes on every lifetime payment, and that
- * isOurLifetimePayment requires each time a buyer is checked again. It names
+ * lifetimeAccess requires each time a buyer is checked again. It names
  * the sale, not the label on /pro: keep it when "Early Access" ends, because
  * changing it refuses every lifetime buyer who paid under the old tag.
  */

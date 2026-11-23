@@ -22,9 +22,17 @@ vi.mock("@/lib/stripe", () => ({
   entitlementFrom: (subscription: { active?: boolean }) => ({
     active: subscription.active === true,
   }),
-  entitlementFromLifetime: (payment: { active?: boolean }) => ({
-    active: payment.active === true,
-  }),
+  // Async now: it checks the lifetime policy, which can look up a dispute.
+  // `disputeLookupFails` stands in for a dispute Stripe could not return.
+  entitlementFromLifetime: async (payment: {
+    active?: boolean;
+    disputeLookupFails?: boolean;
+  }) => {
+    if (payment.disputeLookupFails) {
+      throw new Error("Could not read the dispute on charge ch_lifetime.");
+    }
+    return { active: payment.active === true };
+  },
 }));
 
 const { POST } = await import("./route");
@@ -84,5 +92,22 @@ describe("POST /api/book/pdf", () => {
     expect(response.headers.get("content-disposition")).toContain(
       "the-voice-atlas.pdf",
     );
+  });
+
+  it("fails closed with a retryable 502 when a lifetime dispute cannot be read", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    dependencies.retrievePaymentIntent.mockResolvedValue({
+      id: "pi_lifetime",
+      active: true,
+      disputeLookupFails: true,
+    });
+
+    const response = await request({
+      paymentIntentId: "pi_lifetime",
+      book: "measured-voice",
+    });
+
+    expect(response.status).toBe(502);
+    expect(dependencies.readFile).not.toHaveBeenCalled();
   });
 });

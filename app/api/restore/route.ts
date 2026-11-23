@@ -7,7 +7,6 @@ import {
   entitlementFrom,
   entitlementFromLifetime,
   getStripe,
-  isOurLifetimePayment,
   isOurSubscription,
 } from "@/lib/stripe";
 
@@ -49,7 +48,8 @@ function isMissingStripeResource(error: unknown): boolean {
  * to probe, and a key can't be guessed.
  *
  * The key proves purchase; Stripe still decides entitlement, so a cancelled
- * subscription or reversed lifetime payment stops unlocking anything.
+ * subscription, fully refunded lifetime payment, or lifetime payment with an
+ * open or lost dispute stops unlocking anything (see lifetimeAccess).
  */
 export async function POST(request: Request) {
   const limited = rateLimit(request, "restore", { limit: 10, windowMs: 60_000 });
@@ -104,15 +104,17 @@ export async function POST(request: Request) {
       typeof payment.customer === "string"
         ? payment.customer
         : payment.customer?.id;
-    if (owner !== claims.customerId || !isOurLifetimePayment(payment)) {
+    const entitlement =
+      owner === claims.customerId
+        ? await entitlementFromLifetime(payment, emailOf(payment.customer))
+        : null;
+    if (!entitlement?.active) {
       return json({
         ...INACTIVE,
         error: "That Pro key doesn't match a Suede Pro lifetime purchase.",
       });
     }
-    return json(
-      entitlementFromLifetime(payment, emailOf(payment.customer)),
-    );
+    return json(entitlement);
   } catch (error) {
     if (isMissingStripeResource(error)) {
       return json({

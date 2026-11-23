@@ -116,7 +116,7 @@ function priceMatchesPlan(plan: CheckoutPlan, price: Stripe.Price): boolean {
 }
 
 export async function resolvePriceId(plan: CheckoutPlan): Promise<string> {
-  // A lifetime sale at an amount isOurLifetimePayment does not honour would
+  // A lifetime sale at an amount lifetimeAccess does not honour would
   // be refused at its own confirmation and on every recheck after it: the
   // buyer pays and never gets Pro. Refuse the sale until the amount is added.
   if (
@@ -305,8 +305,89 @@ export function entitlementFrom(
  */
 export const HONOURED_LIFETIME_CENTS: ReadonlySet<number> = new Set([7_900]);
 
-/** True only for an unreversed lifetime purchase at an honoured price. */
-export function isOurLifetimePayment(payment: Stripe.PaymentIntent): boolean {
+/**
+ * What each dispute status means for lifetime access, given the rest of the
+ * purchase checks out. An open dispute suspends access while it is open; a
+ * lost one ends it. A won dispute, an inquiry closed without a chargeback
+ * (`warning_closed`) and a `prevented` dispute leave the purchase standing.
+ * A status Stripe adds later is not in this table and grants nothing.
+ */
+const DISPUTE_STATUS_KEEPS_ACCESS: Readonly<Record<string, boolean>> = {
+  warning_needs_response: false,
+  warning_under_review: false,
+  needs_response: false,
+  under_review: false,
+  lost: false,
+  won: true,
+  warning_closed: true,
+  prevented: true,
+} satisfies Record<Stripe.Dispute.Status, boolean>;
+
+/**
+ * A disputed lifetime charge whose dispute could not be read. Access is never
+ * granted without the outcome, so every caller treats this like any other
+ * Stripe failure: a retryable 502, not an answer.
+ */
+export class DisputeLookupError extends Error {
+  constructor(chargeId: string, cause?: unknown) {
+    super(`Could not read the dispute on charge ${chargeId}.`, { cause });
+    this.name = "DisputeLookupError";
+  }
+}
+
+/**
+ * The status of the most recent dispute on the payment's charge, or null when
+ * the charge was never disputed. Only a disputed charge costs a Stripe call.
+ * Throws DisputeLookupError when the charge says it is disputed but its
+ * dispute cannot be read.
+ */
+export async function lifetimeDisputeStatus(
+  payment: Stripe.PaymentIntent,
+): Promise<Stripe.Dispute.Status | null> {
+  const charge = payment.latest_charge;
+  if (!charge || typeof charge === "string" || !charge.disputed) return null;
+  let disputes: Stripe.Dispute[];
+  try {
+    ({ data: disputes } = await getStripe().disputes.list({
+      charge: charge.id,
+      limit: 10,
+    }));
+  } catch (error) {
+    throw new DisputeLookupError(charge.id, error);
+  }
+  const latest = disputes.reduce<Stripe.Dispute | null>(
+    (newest, dispute) =>
+      !newest || dispute.created > newest.created ? dispute : newest,
+    null,
+  );
+  if (!latest) throw new DisputeLookupError(charge.id);
+  return latest.status;
+}
+
+/**
+ * The lifetime access policy: a purchase of ours at an honoured price that
+ * has not been fully refunded and whose dispute, if any, has not been lost
+ * and is not open. A partial refund keeps access.
+ *
+ * Pure: `disputeStatus` is what lifetimeDisputeStatus returned for this
+ * payment. A disputed charge with no status passed grants nothing. Callers
+ * use lifetimeAccess, which looks the dispute up only when there is one.
+ */
+export function isOurLifetimePayment(
+  payment: Stripe.PaymentIntent,
+  disputeStatus: Stripe.Dispute.Status | null,
+): boolean {
+  if (!isOurLifetimePurchase(payment)) return false;
+  const charge = payment.latest_charge as Stripe.Charge;
+  if (!charge.disputed) return true;
+  return !!disputeStatus && DISPUTE_STATUS_KEEPS_ACCESS[disputeStatus] === true;
+}
+
+/**
+ * Everything in the lifetime policy except the dispute outcome: ours, paid at
+ * an honoured price, by a Stripe customer, and not fully refunded.
+ */
+function isOurLifetimePurchase(payment: Stripe.PaymentIntent): boolean {
   const customerId =
     typeof payment.customer === "string"
       ? payment.customer
@@ -323,18 +404,35 @@ export function isOurLifetimePayment(payment: Stripe.PaymentIntent): boolean {
     payment.metadata.plan === "lifetime" &&
     charge.paid &&
     charge.status === "succeeded" &&
+    // Fully refunded ends access; a partial refund does not.
     !charge.refunded &&
-    !charge.disputed &&
-    charge.amount_refunded === 0
+    charge.amount_refunded < charge.amount_captured
   );
 }
 
-/** Maps a verified one-time purchase onto the same client entitlement shape. */
-export function entitlementFromLifetime(
+/**
+ * Whether a lifetime payment grants Pro right now: the one check every route
+ * uses (directly, or through entitlementFromLifetime). An undisputed payment
+ * is decided without another Stripe call; a disputed one by its most recent
+ * dispute. Throws DisputeLookupError rather than guess when that dispute
+ * cannot be read. The customer-ownership check stays with each caller.
+ */
+export async function lifetimeAccess(
+  payment: Stripe.PaymentIntent,
+): Promise<boolean> {
+  if (!isOurLifetimePurchase(payment)) return false;
+  return isOurLifetimePayment(payment, await lifetimeDisputeStatus(payment));
+}
+
+/**
+ * Maps a one-time purchase onto the same client entitlement shape, after
+ * checking it with lifetimeAccess. Throws DisputeLookupError like it.
+ */
+export async function entitlementFromLifetime(
   payment: Stripe.PaymentIntent,
   email?: string | null,
-): Entitlement {
-  if (!isOurLifetimePayment(payment)) {
+): Promise<Entitlement> {
+  if (!(await lifetimeAccess(payment))) {
     return { ...INACTIVE, status: payment.status };
   }
   const customerId =
