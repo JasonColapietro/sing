@@ -94,3 +94,37 @@ describe("checkout confirmation across page visits", () => {
     expect(pro.pendingCheckout()).toBeNull();
   });
 });
+
+describe("a return that proves no purchase", () => {
+  it("leaves Pro already held here, and its Pro key, untouched", async () => {
+    const stored = storage();
+    const pro = await import("./pro");
+    // A lifetime buyer, confirmed normally.
+    vi.stubGlobal("fetch", () => Promise.resolve(reply(paid)));
+    await pro.confirmCheckout("cs_live_real_purchase");
+    const held = stored.get(PRO);
+    expect(JSON.parse(held!)).toMatchObject({ active: true, proKey: paid.proKey });
+
+    // Later they open /pro?checkout=success&session_id=cs_live_junk: Stripe
+    // knows no such session, so the server answers "not active".
+    vi.stubGlobal("fetch", () => Promise.resolve(reply(INACTIVE)));
+    pro.rememberPendingCheckout("cs_live_junk");
+    const state = await pro.confirmCheckout("cs_live_junk");
+
+    // The page is told this return bought nothing...
+    expect(state).toMatchObject({ active: false });
+    // ...but the stored entitlement, key and all, is exactly as it was,
+    expect(stored.get(PRO)).toBe(held);
+    expect(pro.getProState()).toMatchObject({ active: true, plan: "lifetime", proKey: paid.proKey });
+    // and the bogus id is not kept for another attempt.
+    expect(pro.pendingCheckout()).toBeNull();
+  });
+
+  it("is still recorded in a browser that holds no Pro", async () => {
+    const stored = storage();
+    const pro = await import("./pro");
+    vi.stubGlobal("fetch", () => Promise.resolve(reply(INACTIVE)));
+    expect(await pro.confirmCheckout("cs_live_unpaid")).toMatchObject({ active: false });
+    expect(JSON.parse(stored.get(PRO)!)).toMatchObject({ active: false, proKey: null });
+  });
+});
