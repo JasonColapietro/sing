@@ -68,7 +68,7 @@ const MORE_FROM_SUEDE: FooterLink[] = [
   // The comparison hub: Suede Sing next to the singing apps people weigh it against.
   { href: "/compare", label: "Compare singing apps" },
   { href: "https://strumly.suedeai.ai/capo", label: "Capo calculator on Strumly" },
-  { href: "https://suedeai.ai", label: "Suede AI" },
+  { href: "https://suedeai.ai", label: "Suede" },
   { href: "https://suedeai.ai/books", label: "Books on working with AI" },
 ];
 
@@ -163,7 +163,7 @@ export default function SiteFooter() {
         >
           <Column heading="Reference" links={REFERENCE} />
           <Column heading="Practice" links={PRACTICE} />
-          <Column heading="More from Suede AI" links={MORE_FROM_SUEDE} />
+          <Column heading="More from Suede" links={MORE_FROM_SUEDE} />
 
           {/* Every voice-type hub, one click from any page. */}
           <details data-footer-hub className={hubDetailsClass}>
@@ -247,12 +247,13 @@ export default function SiteFooter() {
 
         {/* Estate attribution, worded as on the sibling Suede properties. */}
         <p className="mt-4 max-w-3xl text-meta leading-relaxed text-dim">
-          A <a href="https://suedeai.ai" className={proseLinkClass}>Suede AI</a>{" "}
-          product, built by{" "}
+          Suede Sing is made by{" "}
+          <a href="https://suedeai.ai" className={proseLinkClass}>Suede</a>{" "}
+          (suedeai.ai), founded in 2024 by{" "}
           <a href="https://suedeai.ai/founder" rel="author" className={proseLinkClass}>
             Jason Colapietro
-          </a>
-          , an{" "}
+          </a>{" "}
+          in West Palm Beach, Florida. Jason is an{" "}
           <a
             href="https://seo.suedeai.ai/evidence#open-source"
             className={proseLinkClass}
