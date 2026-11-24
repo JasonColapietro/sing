@@ -462,14 +462,14 @@ describe("cross-product search paths", () => {
 });
 
 /**
- * Entity naming. Suede AI is the company and parent brand; Suede Sing is the
+ * Entity naming. Suede is the company and parent brand; Suede Sing is the
  * product. The file used to open "Suede Sing is the vocal training brand from
  * Suede AI", which hands an answer engine two brands for one company.
  */
 describe("/llms.txt entity naming", () => {
   it("names the company and the product once each, in their roles", () => {
     expect(llms).toContain(`made by ${ORG_NAME}`);
-    expect(llms).toMatch(/Suede AI \(https:\/\/suedeai\.ai\) is the company/);
+    expect(llms).toMatch(/Suede \(https:\/\/suedeai\.ai\) is the company/);
     expect(llms).toMatch(/Suede Sing is the product/);
     expect(llms).not.toMatch(/Suede Sing is (?:the|a) [^\n.]*brand/i);
     expect(llms).not.toContain("Same brand, different surfaces");

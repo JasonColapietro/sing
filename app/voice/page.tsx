@@ -81,7 +81,7 @@ export default function VoicePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <section aria-labelledby="voice-title" className="grid items-start gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
         <div>
-          <SectionLabel>Official app · Suede AI</SectionLabel>
+          <SectionLabel>Official app · Suede</SectionLabel>
           <h1 id="voice-title" className="mt-5">
             <span className="block text-5xl sm:text-7xl">Suede Voice</span>
             <span className="sr-only">, </span>
@@ -100,7 +100,7 @@ export default function VoicePage() {
           </div>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-mut">
             Suede Voice: Vocal Range Test is the vocal range and singing practice
-            app from Suede AI, built by Jason Colapietro. It is a free download
+            app from Suede, built by Jason Colapietro. It is a free download
             for iPhone and Android: start with the notes you can sing, then make
             your next session count.
           </p>
@@ -221,7 +221,7 @@ export default function VoicePage() {
         <SectionHeading id="sing-and-voice">How Suede Voice and Suede Sing fit together</SectionHeading>
         <p className="mt-4 max-w-3xl leading-relaxed text-mut">
           Suede Voice is the mobile app. Suede Sing is the browser studio and
-          Chrome extension. Both are from Suede AI. Without installing the
+          Chrome extension. Both are from Suede. Without installing the
           mobile app, you can use the free browser range test, pitch studio,
           recorder and tools with no daily clock, and warmups, ear
           training, breath and songs for {FREE_DAILY_MINUTES} free minutes of

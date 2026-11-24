@@ -60,12 +60,12 @@ export const ORG_SAME_AS = [
  * "Suede Labs" while a third said "Suede Labs AI", under the identical `@id`.
  * A parser that resolves the entity from one page in isolation, which is the
  * ordinary case, then holds a different name for the same node depending on
- * which page it landed on. "Suede AI" is what suedeai.ai's own canonical node
- * carries (checked 2026-09-25), so that is the value here and the older forms
- * are kept as alternateNames, in the same order, rather than as competing
- * names.
+ * which page it landed on. "Suede" is what suedeai.ai's own canonical node
+ * carries (the company was renamed Suede in November 2026), so that is the
+ * value here and the older forms are kept as alternateNames, in the same
+ * order as suedeai.ai, rather than as competing names.
  */
-export const ORG_NAME = "Suede AI";
+export const ORG_NAME = "Suede";
 export const ORG_URL = "https://suedeai.ai";
 export const ORG_LOGO = "https://suedeai.ai/suede-ai-logo-transparent.png";
 
@@ -87,7 +87,7 @@ export const ORG_NODE = {
   "@type": "Organization",
   "@id": ORG_ID,
   name: ORG_NAME,
-  alternateName: ["Suede Labs AI","Suede Labs","Suede"],
+  alternateName: ["Suede AI","Suede Labs AI","Suede Labs"],
   url: ORG_URL,
   logo: ORG_LOGO,
   founder: { "@id": "https://suedeai.ai/founder#person" },
@@ -105,7 +105,7 @@ export const ORG_NODE = {
  * thin copy emitted from ~670 sitemap URLs cannot outweigh the full one.
  */
 export const ORG_PUBLISHER_NODE = {
-  "alternateName": ["Suede Labs AI","Suede Labs","Suede"],
+  "alternateName": ["Suede AI","Suede Labs AI","Suede Labs"],
   "parentOrganization": {"@type":"Organization","@id":"https://jcinvestmentgroup.ventures/#organization","name":"JC Investment Group LLC","url":"https://jcinvestmentgroup.ventures/"},
   "address": {"@type":"PostalAddress","streetAddress":"138 Victorian Lane","addressLocality":"Jupiter","addressRegion":"FL","postalCode":"33458","addressCountry":"US"},
   "hasMerchantReturnPolicy": {"@type":"MerchantReturnPolicy","@id":"https://suedeai.ai/terms#money-back-policy","name":"90-day money-back policy","returnPolicyCategory":"https://schema.org/MerchantReturnFiniteReturnWindow","merchantReturnDays":90,"returnFees":"https://schema.org/FreeReturn","refundType":"https://schema.org/FullRefund","merchantReturnLink":"https://suedeai.ai/terms#money-back-policy"},

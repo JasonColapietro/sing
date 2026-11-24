@@ -108,7 +108,7 @@ const FAQ = [
   },
   {
     q: "What is the difference between Suede Sing and Suede Voice?",
-    a: "Suede Sing is the web app and the Chrome extension. Suede Voice: Vocal Range Test is the mobile app, available for iPhone and Android. Both are vocal training tools from Suede AI, founded by Jason Colapietro.",
+    a: "Suede Sing is the web app and the Chrome extension. Suede Voice: Vocal Range Test is the mobile app, available for iPhone and Android. Both are vocal training tools from Suede, founded by Jason Colapietro.",
   },
 ];
 
@@ -264,7 +264,7 @@ export default function ExtensionPage() {
       </section>
 
       <section className="mt-12">
-        <SectionLabel heading>Also from Suede AI</SectionLabel>
+        <SectionLabel heading>Also from Suede</SectionLabel>
         {/* Styled as links, like the page's other in-body links: in the
             paragraph's own colour and weight they could not be told apart
             from the text (WCAG 1.4.1), and they are the page's no-install
@@ -272,7 +272,7 @@ export default function ExtensionPage() {
         <p className="mt-4 text-sm text-mut">
           Suede Sing is built by{" "}
           <a href="https://suedeai.ai/founder" className={LINK}>Jason Colapietro</a> at{" "}
-          <a href="https://suedeai.ai" className={LINK}>Suede AI</a>, an independent studio
+          <a href="https://suedeai.ai" className={LINK}>Suede</a>, an independent studio
           making measurement-first tools for musicians. The vocal work also
           ships as the{" "}
           <Link href={VOICE_PAGE_PATH} className={LINK}>{APP_NAME} app for iPhone and Android</Link>,

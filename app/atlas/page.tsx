@@ -202,7 +202,7 @@ export default function AtlasPage() {
             />
             <Stat label="Parts" value={ATLAS_PARTS.length} tone="cool" />
           </div>
-          <AuthorByline className="mt-5">. Published by Suede AI.</AuthorByline>
+          <AuthorByline className="mt-5">. Published by Suede.</AuthorByline>
           <p className="mt-5 max-w-3xl text-mut">
             This is the written study rather than the chart. The numbers on one
             keyboard, searchable and with your own range overlaid, are the{" "}

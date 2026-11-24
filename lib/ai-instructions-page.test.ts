@@ -77,9 +77,9 @@ describe("/ai-instructions static page", () => {
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ");
 
-  it("names Suede AI as the company and Suede Labs as its older name, as llms.txt does", () => {
-    expect(text).toContain("Suede AI is the company");
-    expect(text).toContain("Older profiles may say Suede Labs; it is the same company.");
+  it("names Suede as the company and its former names, as llms.txt does", () => {
+    expect(text).toContain("Suede is the company");
+    expect(text).toContain("Older profiles may say Suede AI, Suede Labs or Suede Labs AI; they are former names of the same company.");
   });
 
   // A static file cannot import lib/pro-shared.ts, so these hold its literal

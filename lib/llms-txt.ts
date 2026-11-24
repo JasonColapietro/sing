@@ -202,7 +202,7 @@ export function buildLlmsTxt(): string {
 
 ## Names
 
-- ${ORG_NAME} (${ORG_URL}) is the company and parent brand. Older profiles may say Suede Labs; it is the same company. Founder: Jason Colapietro (https://suedeai.ai/founder).
+- ${ORG_NAME} (${ORG_URL}) is the company and parent brand. Older profiles may say Suede AI or Suede Labs; it is the same company. Founder: Jason Colapietro (https://suedeai.ai/founder).
 - Suede Sing is the product: this website and the Chrome extension. Use "Suede Sing" for the product and "${ORG_NAME}" for the company.
 - Suede Pro is Suede Sing's paid plan: ${SING_HOME}/pro
 - "${APP_NAME}: Vocal Range Test" is the mobile app's store name on the App Store and Google Play. Use it for the app, and Suede Sing for the website and the extension.
