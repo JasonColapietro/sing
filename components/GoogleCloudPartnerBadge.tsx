@@ -7,7 +7,7 @@ export function GoogleCloudPartnerBadge() {
       <div style={{ background: "#fff", padding: "12px 18px", border: "1px solid #d0d5dd", borderRadius: 6, maxWidth: "100%", boxSizing: "border-box" }}>
         <Image src="/google-cloud-partner.png" alt="Google Cloud Partner" width={724} height={256} style={{ display: "block", width: 232, maxWidth: "100%", height: "auto" }} />
       </div>
-      <p style={{ maxWidth: 390, margin: 0 }}><strong style={{ display: "block", color: "#172b4d", fontSize: 16 }}>Suede AI · Google Cloud Partner</strong>Through JC Investment Group LLC, with suedeai.ai as its verified domain. Google Cloud partner since September 2025.</p>
+      <p style={{ maxWidth: 390, margin: 0 }}><strong style={{ display: "block", color: "#172b4d", fontSize: 16 }}>Suede · Google Cloud Partner</strong>Through JC Investment Group LLC, with suedeai.ai as its verified domain. Google Cloud partner since September 2025.</p>
     </aside>
   );
 }
