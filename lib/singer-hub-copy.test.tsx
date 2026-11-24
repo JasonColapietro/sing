@@ -234,7 +234,7 @@ describe("hub snippets, next steps and structured data", () => {
         walk(JSON.parse(json));
         const publisher = nodes.find((node) => node['@id'] === 'https://suedeai.ai/#organization' && node['@type'] === 'Organization');
         expect(publisher, href).toMatchObject({
-          name: 'Suede AI',
+          name: 'Suede',
           parentOrganization: { name: 'JC Investment Group LLC' },
           address: { streetAddress: '138 Victorian Lane' },
           hasMerchantReturnPolicy: { merchantReturnDays: 90 },

@@ -59,7 +59,7 @@ export const VOICE_APP_NODES = [
     installUrl: APP_STORE_URL,
     downloadUrl: APP_STORE_URL,
     sameAs: [APP_STORE_URL],
-    description: "Singing practice for iPhone from Suede AI. Unlimited vocal range tests are free; Suede Voice Pro adds a daily plan, scored exercises, songs and progress tracking.",
+    description: "Singing practice for iPhone from Suede. Unlimited vocal range tests are free; Suede Voice Pro adds a daily plan, scored exercises, songs and progress tracking.",
     featureList: [
       ...IOS_FREE_FEATURES,
       ...IOS_PRO_FEATURES.map((feature) => `${feature} with Pro`),

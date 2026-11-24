@@ -98,7 +98,7 @@ export default function BookPage() {
             />
             <Stat label="Parts" value={BOOK_PARTS.length} tone="cool" />
           </div>
-          <AuthorByline className="mt-5">. Published by Suede AI.</AuthorByline>
+          <AuthorByline className="mt-5">. Published by Suede.</AuthorByline>
           <p className="mt-5 max-w-2xl text-mut">
             Twenty-three chapters on how the voice works, how to read the
             numbers your own sessions produce, a twelve-week program built from

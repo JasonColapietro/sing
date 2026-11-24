@@ -44,9 +44,9 @@ import { ORG_ID, ORG_NAME, ORG_PUBLISHER_NODE } from "./organization";
 /**
  * The literal, written out rather than imported, so that renaming the constant
  * is a test failure rather than a silent rename of the estate's publisher.
- * "Suede AI" is what suedeai.ai's own canonical node carries.
+ * "Suede" is what suedeai.ai's own canonical node carries.
  */
-const CANONICAL_NAME = "Suede AI";
+const CANONICAL_NAME = "Suede";
 
 const ROUTES: Array<[string, string]> = [
   ["/", renderToStaticMarkup(<Home />)],

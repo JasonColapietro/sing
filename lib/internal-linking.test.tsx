@@ -178,7 +178,7 @@ describe("footer wires every hub into every page", () => {
   it("links the voice course on sing, not its old home", () => {
     expect(html, "footer missing the voice course").toContain('href="/learn/voice"');
     expect(html).not.toContain("guitarhub.org/learn/voice");
-    expect(html, "footer missing Suede AI").toContain('href="https://suedeai.ai"');
+    expect(html, "footer missing Suede").toContain('href="https://suedeai.ai"');
   });
 
   it("links sibling properties as plain anchors, not prefetched routes", () => {
@@ -227,12 +227,12 @@ describe("footer wires every hub into every page", () => {
 });
 
 describe("/extension's onward links", () => {
-  it("styles every 'Also from Suede AI' link as a link, not as body text", async () => {
+  it("styles every 'Also from Suede' link as a link, not as body text", async () => {
     const { default: ExtensionPage } = await import("@/app/extension/page");
     const html = renderToStaticMarkup(<ExtensionPage />);
-    const section = html.slice(html.indexOf("Also from Suede AI"));
+    const section = html.slice(html.indexOf("Also from Suede<"));
     const anchors = section.match(/<a\b[^>]*>/g) ?? [];
-    // The founder, Suede AI, /voice, /, the range test and /studio.
+    // The founder, Suede, /voice, /, the range test and /studio.
     expect(anchors.length).toBeGreaterThanOrEqual(6);
     for (const a of anchors) expect(a, a).toMatch(/class="[^"]*\bunderline\b/);
     expect(section).toContain('href="/voice"');

@@ -9,7 +9,7 @@ export function AuthorByline({
   className,
 }: {
   lead?: string;
-  /** What follows the linked name, e.g. ". Published by Suede AI." */
+  /** What follows the linked name, e.g. ". Published by Suede." */
   children?: ReactNode;
   className?: string;
 }) {
