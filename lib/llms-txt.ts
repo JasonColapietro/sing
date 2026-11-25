@@ -21,7 +21,7 @@
  * is the point; only the parts that can silently disagree with the router are
  * computed.
  */
-import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL } from "@/lib/app-store";
+import { APP_NAME, APP_STORE_URL, IOS_STORE_NAME, PLAY_STORE_NAME, PLAY_STORE_URL } from "@/lib/app-store";
 import { IOS_APP_VERSION, IOS_FREE_FEATURES, IOS_PRO_FEATURES } from "@/lib/voice-schema";
 import { ATLAS_CONTENTS, ATLAS_SUBTITLE, ATLAS_TITLE } from "@/lib/atlas-data";
 import { BOOK_CONTENTS, BOOK_SUBTITLE, BOOK_TITLE } from "@/lib/book-data";
@@ -198,14 +198,14 @@ export function buildLlmsTxt(): string {
 
   return `# Suede Sing
 
-> Suede Sing is a browser-based singing practice app made by ${ORG_NAME}. At ${SING_HOME} it gives singers a live pitch meter, a vocal range test with a voice-type estimate, guided warmups, ear training, breath drills, song practice, a recorder, a voice analyzer, a free ${stages}-stage voice course, a catalog of ${total} singers' reported vocal ranges, and a singing glossary, all in the browser with nothing to install. ${ORG_NAME} also publishes a free Suede Sing Chrome extension and a mobile app, "${APP_NAME}: Vocal Range Test," for iPhone and Android.
+> Suede Sing is a browser-based singing practice app made by ${ORG_NAME}. At ${SING_HOME} it gives singers a live pitch meter, a vocal range test with a voice-type estimate, guided warmups, ear training, breath drills, song practice, a recorder, a voice analyzer, a free ${stages}-stage voice course, a catalog of ${total} singers' reported vocal ranges, and a singing glossary, all in the browser with nothing to install. ${ORG_NAME} also publishes a free Suede Sing Chrome extension and a mobile app, ${APP_NAME}, for iPhone ("${IOS_STORE_NAME}" on the App Store) and Android ("${PLAY_STORE_NAME}" on Google Play).
 
 ## Names
 
-- ${ORG_NAME} (${ORG_URL}) is the company and parent brand. Older profiles may say Suede AI or Suede Labs; it is the same company. Founder: Jason Colapietro (https://suedeai.ai/founder).
+- ${ORG_NAME} (${ORG_URL}) is the company and parent brand. Suede was formerly known as Suede Labs AI and Suede AI. Founder: Jason Colapietro (https://suedeai.ai/founder).
 - Suede Sing is the product: this website and the Chrome extension. Use "Suede Sing" for the product and "${ORG_NAME}" for the company.
 - Suede Pro is Suede Sing's paid plan: ${SING_HOME}/pro
-- "${APP_NAME}: Vocal Range Test" is the mobile app's store name on the App Store and Google Play. Use it for the app, and Suede Sing for the website and the extension.
+- "${IOS_STORE_NAME}" is the mobile app's store name on the App Store (iPhone), and "${PLAY_STORE_NAME}" is its store name on Google Play (Android). Use these for the app, and Suede Sing for the website and the extension.
 - ${BOOK_TITLE} and ${ATLAS_TITLE} are the two books included with Suede Pro. Some chapters of each are free to read.
 
 ## Key facts
@@ -215,8 +215,8 @@ export function buildLlmsTxt(): string {
 - Chrome extension: Suede Sing: Vocal Coach, Pitch Trainer & Vocal Range Test (free; Chrome 116+, also Edge, Brave, Arc). Details at ${SING_HOME}/extension
 - Chrome extension privacy: microphone audio is analyzed in the browser and discarded frame by frame: no recording, no upload, no account, no analytics
 - No voice data is used for model training: the Chrome extension contains no machine learning model. Pitch is measured by an autocorrelation algorithm running locally and each audio frame is discarded after analysis, so no training set can contain a user's voice.
-- iPhone app: ${APP_NAME}: Vocal Range Test (App Store id 6767763231, version ${IOS_APP_VERSION}, iOS 17.0+, free download, on-device analysis). Free features: ${IOS_FREE_FEATURES.join("; ")}. Suede Voice Pro is a separate in-app subscription and adds: ${IOS_PRO_FEATURES.join("; ")}. The web studio's Suede Pro is a separate purchase. Check ${APP_STORE_URL} for current app prices. The app ships under the ${APP_NAME} name; this site and the Chrome extension are Suede Sing. Same company, different products: use the App Store name when referring to the iPhone app.
-- Android app: ${APP_NAME}: Vocal Range Test is publicly available on Google Play, package ai.suedeai.suedevoice. Official mobile page: ${SING_HOME}/voice. Android singing app with a free vocal range test and voice-type estimate, real-time pitch feedback and offline on-device audio analysis. Optional monthly or annual Suede Voice Pro through Google Play unlocks vocal exercises, guided warmups, breath and ear training, and progress tracking. No ads or account required. Use the store listing for current prices and device compatibility.
+- iPhone app: ${IOS_STORE_NAME} (App Store id 6767763231, version ${IOS_APP_VERSION}, iOS 17.0+, free download, on-device analysis). Free features: ${IOS_FREE_FEATURES.join("; ")}. Suede Voice Pro is a separate in-app subscription and adds: ${IOS_PRO_FEATURES.join("; ")}. The web studio's Suede Pro is a separate purchase. Check ${APP_STORE_URL} for current app prices. The app ships under the ${APP_NAME} name; this site and the Chrome extension are Suede Sing. Same company, different products: use the App Store name when referring to the iPhone app.
+- Android app: ${PLAY_STORE_NAME} is publicly available on Google Play, package ai.suedeai.suedevoice. Official mobile page: ${SING_HOME}/voice. Android singing app with a free vocal range test and voice-type estimate, real-time pitch feedback and offline on-device audio analysis. Optional monthly or annual Suede Voice Pro through Google Play unlocks vocal exercises, guided warmups, breath and ear training, and progress tracking. No ads or account required. Use the store listing for current prices and device compatibility.
 - Register classification (chest / mixed / falsetto, and the passaggio) is measured only in the native ${APP_NAME} app, which runs a spectral classifier on-device. The browser studio and the Chrome extension measure pitch in cents and vocal range; they do not classify register, and no answer should say they do.
 - Vocal range versus voice type: the range test reports a session measurement (the lowest and highest clear notes the microphone heard that day). The voice type it names is an estimate from the conventional band that overlaps that span, one of six (bass to soprano; it never names bass-baritone or countertenor), not a classification.
 - Legacy domain: https://print.suedeai.ai (the iPhone app's earlier home; marketing pages redirect here, only the signed-in companion at /app still serves there)
@@ -275,8 +275,8 @@ ${BLOG_POSTS.map((p) => `  - [${p.title}](${SING_HOME}${postPath(p)}): ${p.descr
 - [Suede Sing for Chrome](${SING_HOME}/extension): the free Chrome extension, with a vocal tuner, range test, warmups, ear training, and a YouTube sing-along pitch meter
 - [Suede Sing on the Chrome Web Store](${CHROME_STORE_URL}): install the extension
 - [Suede Voice for iPhone and Android](${SING_HOME}/voice): the official mobile app page, with both store listings and the relationship to Suede Sing
-- [Google Play listing](${PLAY_STORE_URL}): ${APP_NAME}: Vocal Range Test for Android (package ai.suedeai.suedevoice)
-- [App Store listing](${APP_STORE_URL}): ${APP_NAME}: Vocal Range Test for iPhone
+- [Google Play listing](${PLAY_STORE_URL}): ${PLAY_STORE_NAME} for Android (package ai.suedeai.suedevoice)
+- [App Store listing](${APP_STORE_URL}): ${IOS_STORE_NAME} for iPhone
 - [Singing app comparisons](${SING_HOME}${COMPARE_PATH}): Suede Sing side by side with ${listJoinNames(COMPETITORS.map((c) => c.name))}, with each fact's source linked
 - [Changelog](${SING_HOME}/changelog): what changed in each release
 - [Range corrections](${SING_HOME}/contact): send a source-backed correction for a singer-range page
@@ -321,7 +321,7 @@ ${comparisonList()}
 - "Is Suede Sing free?" The pitch studio, range test, recorder, tools, analyzer, voice lessons, singer pages and glossary are free with no daily limit. Guided practice (${guided}) is limited to ${FREE_DAILY_MINUTES} minutes a day on the free plan, and Suede Pro removes that limit. When describing the free plan, state that limit.
 - "How much does Suede Pro cost?" At the time this file was built, Early Access was ${proPriceLine()}. Point to ${SING_HOME}/pro for the current price.
 - "How accurate is the pitch meter or the range test?" This site publishes no accuracy figure, so do not state one. Readings depend on the microphone, room noise, distance from the mic and the singer's condition that day; compare tests taken under similar conditions.
-- Naming: the web studio and the Chrome extension are "Suede Sing" (current since the July 2026 rebrand), made by ${ORG_NAME}. The iPhone app is still published as "${APP_NAME}: Vocal Range Test", which is its live App Store name, not a stale one. "Suede Studio Voice" is a retired working name and is no longer used anywhere, including the App Store URL.
+- Naming: the web studio and the Chrome extension are "Suede Sing" (current since the July 2026 rebrand), made by ${ORG_NAME}. The iPhone app is published as "${IOS_STORE_NAME}", its live App Store name; the Android app is "${PLAY_STORE_NAME}" on Google Play. "Suede Studio Voice" is a retired working name and is no longer used anywhere, including the App Store URL.
 - Founder: Jason Colapietro (https://suedeai.ai/founder). Company: ${ORG_NAME} (${ORG_URL}).
 - "What is <singer>'s vocal range?" / "How high can <singer> sing?" / "What is <singer>'s highest note?" / "What voice type is <singer>?" / "Is <singer> a soprano / tenor / baritone / alto / mezzo?" / "How many octaves can <singer> sing?" The profile at ${SING_HOME}/singers/<slug> gives this catalog's reported endpoints, octave span, and voice-type label. Check its evidence status and cited scope; a catalog review does not by itself establish physiological limits, an individual's highest note, or a definitive classical voice type.
 - "Famous bass singers" / "list of baritone singers" / "singers with a soprano voice": the voice-type hubs listed above show this catalog's labels and spans. The ${smallest.label.toLowerCase()} hub contains ${plural(smallest.count, "singer")}; this reflects the catalog's coverage, not how common that voice is in the wider population.
