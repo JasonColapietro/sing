@@ -17,10 +17,11 @@ import {
   relatedPopSongs,
   type PopSong,
 } from "@/lib/pop-songs";
-import { rangeLabel } from "@/lib/singers-core";
+import { VOICE_KINDS, describeSpan, rangeLabel, voiceTypeSlug, type VoiceKind } from "@/lib/singers-core";
+import { REFERENCE_BANDS } from "@/lib/singers-analysis";
 import { getSingerReviewStatus, singerReviewLabel } from "@/lib/singer-evidence";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 
 interface Params {
   slug: string;
@@ -78,6 +79,80 @@ function ratingLine(song: PopSong): string {
   return `By ${song.artist}, ${song.year}. ${why}`;
 }
 
+
+/**
+ * The conventional voice-type bands (REFERENCE_BANDS, the same spans
+ * /atlas/vocal-range-by-voice-type prints) that hold the song's whole cited
+ * range when it is moved by `shift` semitones. Pure arithmetic on two stored
+ * figures, so it says nothing about who may sing the song.
+ */
+function bandsHolding(song: PopSong, shift: number): VoiceKind[] {
+  return VOICE_KINDS.filter((v) => {
+    const band = REFERENCE_BANDS[v];
+    return band.low <= song.lowMidi + shift && band.high >= song.highMidi + shift;
+  });
+}
+
+const BANDS_NOTE =
+  "The bands are the conventional spans on vocal range by voice type, not a rule about who may sing a song. Your own range test is the better guide.";
+
+function shiftedRange(song: PopSong, shift: number): string {
+  return `${popNoteLabel(song, song.lowMidi + shift)}–${popNoteLabel(song, song.highMidi + shift)}`;
+}
+
+/** "tenor and baritone", "bass, baritone and tenor". */
+function joinTypes(types: VoiceKind[]): string {
+  const names = types.map((t) => t.toLowerCase());
+  return names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
+}
+
+/** Plain sentences for the voice-type card and its FAQ answer. */
+function voiceTypeSentences(song: PopSong): { written: string; octaves: string[] } {
+  const span = song.highMidi - song.lowMidi;
+  const asWritten = bandsHolding(song, 0);
+  const written =
+    asWritten.length > 0
+      ? `As written, ${popRangeLabel(song)} sits inside the conventional band for ${asWritten.length === 1 ? "one voice type" : `${asWritten.length} voice types`}: ${joinTypes(asWritten)}.`
+      : span > 24
+        ? `As written, ${popRangeLabel(song)} fits inside none of the eight conventional voice-type bands: its span of ${describeSpan(span)} is wider than the two octaves each band covers.`
+        : `As written, ${popRangeLabel(song)} fits inside none of the eight conventional voice-type bands: it straddles the edge between two of them.`;
+  const octaves = ([-12, 12] as const).flatMap((shift) => {
+    const types = bandsHolding(song, shift);
+    return types.length > 0
+      ? [`Sung an octave ${shift < 0 ? "lower" : "higher"} (${shiftedRange(song, shift)}), it sits inside the band for ${joinTypes(types)}.`]
+      : [];
+  });
+  return { written, octaves };
+}
+
+/**
+ * The questions a searcher brings to a song page, answered from the entry's
+ * own fields. Each renders as a visible h3 and as the FAQPage node, from the
+ * same strings, so the markup cannot drift from the page.
+ */
+function songFaq(song: PopSong): { q: string; a: string }[] {
+  const span = song.highMidi - song.lowMidi;
+  const name = `“${song.title}”`;
+  return [
+    {
+      q: `What key is ${name} in?`,
+      a: `${name} by ${song.artist} (${song.year}) is in ${song.key}, the original key as published. The low and high notes on this page are spelled for that key.`,
+    },
+    {
+      q: `What is the vocal range of ${name}?`,
+      a: `The commonly cited lead-vocal range is ${popNoteLabel(song, song.lowMidi)} to ${popNoteLabel(song, song.highMidi)}, a span of ${span} semitones (${describeSpan(span)}). These are cited figures for the lead line, not a measurement taken from the recording.`,
+    },
+    {
+      q: `Can I sing ${name} in a lower or higher key?`,
+      a: `Yes. Changing the key moves every note by the same distance. Two semitones down, the cited range becomes ${shiftedRange(song, -2)}; two semitones up, it becomes ${shiftedRange(song, 2)}. Once you have taken the range test, this page works out how far to move it for your voice.`,
+    },
+    {
+      q: `How do I find out if ${name} fits my voice?`,
+      a: `Take the free vocal range test. It listens while you slide down and then up, keeps your lowest and highest clear notes on this device, and this page then compares them with ${popRangeLabel(song)}. A range test finds your limits rather than your comfortable band, so a song whose top or bottom lands at the edge of your result will still be work.`,
+    },
+  ];
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -119,6 +194,8 @@ export default async function CanYouSingSongPage({
   const singers = popSongSingers(song);
   const related = relatedPopSongs(song);
   const span = song.highMidi - song.lowMidi;
+  const faq = songFaq(song);
+  const types = voiceTypeSentences(song);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -167,6 +244,25 @@ export default async function CanYouSingSongPage({
         })),
         datePublished: String(song.year),
         genre: song.genre,
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faq`,
+        url: pageUrl,
+        isPartOf: { "@id": `${pageUrl}#webpage` },
+        mainEntity: [
+          // These two render under their own card headings above the list.
+          { q: `Is “${song.title}” hard to sing?`, a: song.blurb },
+          {
+            q: `Which voice types does “${song.title}” sit in?`,
+            a: [...[types.written, ...types.octaves], BANDS_NOTE].join(" "),
+          },
+          ...faq,
+        ].map(({ q, a }) => ({
+          "@type": "Question",
+          name: q,
+          acceptedAnswer: { "@type": "Answer", text: a },
+        })),
       },
     ],
   };
@@ -263,6 +359,72 @@ export default async function CanYouSingSongPage({
               </p>
             </Card>
           )}
+
+          <Card>
+            <SectionLabel heading>{`Which voice types does “${song.title}” sit in?`}</SectionLabel>
+            <p className="mt-3 max-w-prose text-sm text-mut">{types.written}</p>
+            {types.octaves.map((line) => (
+              <p key={line} className="mt-2 max-w-prose text-sm text-mut">{line}</p>
+            ))}
+            <p className="mt-3 max-w-prose text-sm text-mut">
+              The bands are the conventional spans on{" "}
+              <Link
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
+                href="/atlas/vocal-range-by-voice-type"
+                prefetch={false}
+              >
+                vocal range by voice type
+              </Link>
+              , not a rule about who may sing a song. Your own{" "}
+              <Link
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2 hover:decoration-violet"
+                href={rangeTestHref({ check: song.slug })}
+              >
+                range test
+              </Link>{" "}
+              is the better guide.
+            </p>
+            {bandsHolding(song, 0).length > 0 && (
+              <p className="mt-3 text-xs text-dim">
+                Singers by voice type:{" "}
+                {bandsHolding(song, 0).map((v, i) => (
+                  <span key={v}>
+                    {i > 0 && ", "}
+                    <Link
+                      className="underline underline-offset-2 hover:text-violet-ink"
+                      href={`/singers/voice-type/${voiceTypeSlug(v)}`}
+                      prefetch={false}
+                    >
+                      {v.toLowerCase()}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            )}
+          </Card>
+
+          <Card>
+            <h2 className="text-xl">{`Questions about “${song.title}”`}</h2>
+            <div className="mt-4 space-y-5">
+              {faq.map(({ q, a }) => (
+                <div key={q}>
+                  <h3 className="text-base text-ink">{q}</h3>
+                  <p className="mt-1 max-w-prose text-sm text-mut">{a}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 text-sm text-mut">
+              To practice the skills a song like this asks for, try the{" "}
+              <Link className="text-violet-ink underline-offset-4 hover:underline" href="/warmups">
+                guided warmups
+              </Link>{" "}
+              or a{" "}
+              <Link className="text-violet-ink underline-offset-4 hover:underline" href="/songs">
+                public domain song with live pitch feedback
+              </Link>
+              .
+            </p>
+          </Card>
         </div>
 
         <div className="space-y-6">

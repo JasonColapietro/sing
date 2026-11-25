@@ -47,6 +47,8 @@ export function webPageJsonLd(page: {
   breadcrumbs?: readonly Crumb[];
   /** ISO date the page's content last changed, for a page that dates itself. */
   dateModified?: string;
+  /** Questions the page renders visibly, each under its own heading. */
+  faq?: readonly { q: string; a: string }[];
 }) {
   const url = `${SITE_URL}${page.path}`;
   return {
@@ -65,6 +67,21 @@ export function webPageJsonLd(page: {
         ...(page.dateModified ? { dateModified: page.dateModified } : {}),
         ...(page.breadcrumbs ? { breadcrumb: breadcrumbListJsonLd(page.breadcrumbs) } : {}),
       },
+      ...(page.faq && page.faq.length > 0
+        ? [
+            {
+              "@type": "FAQPage",
+              "@id": `${url}#faq`,
+              url,
+              isPartOf: { "@id": `${url}#webpage` },
+              mainEntity: page.faq.map(({ q, a }) => ({
+                "@type": "Question",
+                name: q,
+                acceptedAnswer: { "@type": "Answer", text: a },
+              })),
+            },
+          ]
+        : []),
     ],
   };
 }

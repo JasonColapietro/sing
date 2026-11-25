@@ -12,6 +12,7 @@ import {
   VOICE_LEARN_PATH,
   findModule,
   lowerFirst,
+  moduleDigest,
   moduleMinutes,
   moduleNeighbours,
 } from "@/lib/voice-lessons";
@@ -75,6 +76,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
   const { stage, module } = found;
   const { previous, next } = moduleNeighbours(module);
   const terms = moduleTerms(module.catalog.id);
+  const digest = moduleDigest(module);
   const stageHref = stage.href ?? VOICE_LEARN_PATH;
   const href = module.href ?? stageHref;
   // The same trail the CourseBreadcrumbs nav renders, and the same names the
@@ -151,6 +153,42 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
             )}
           </div>
         </Card>
+        {(digest.ideas.length > 0 || digest.readyWhen.length > 0) && (
+          <Card>
+            <div className="max-w-3xl">
+              {digest.ideas.length > 0 && (
+                <>
+                  <h2 className="text-xl">{`What ${module.catalog.name} teaches`}</h2>
+                  {digest.ideas.map((idea) => (
+                    <div key={idea.href} className="mt-3">
+                      <p className="text-mut">{idea.text}</p>
+                      <p className="mt-2 text-sm">
+                        <Link href={idea.href} className="text-violet-ink hover:underline">
+                          Read the full lesson: {idea.title}
+                        </Link>
+                      </p>
+                    </div>
+                  ))}
+                </>
+              )}
+              {digest.readyWhen.length > 0 && (
+                <>
+                  <h2 className={digest.ideas.length > 0 ? "mt-8 text-xl" : "text-xl"}>
+                    How you know you are ready to move on
+                  </h2>
+                  {digest.readyWhen.map((line) => (
+                    <p key={line} className="mt-3 text-mut">{line}</p>
+                  ))}
+                  <p className="mt-3 text-sm text-mut">
+                    This is the bar the module&apos;s self-check lesson sets. If
+                    you are not there yet, repeat the exercises on another day
+                    rather than pushing in one sitting.
+                  </p>
+                </>
+              )}
+            </div>
+          </Card>
+        )}
         <ModulePractice moduleId={module.catalog.id} />
         <nav aria-label="Modules" className="flex flex-wrap justify-between gap-3 text-sm">
           {previous?.href ? (
