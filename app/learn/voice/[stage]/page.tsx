@@ -137,7 +137,7 @@ export default async function StagePage({ params }: { params: Promise<Params> })
                         ) : (
                           <span className="inline-flex min-h-11 items-center text-mut">{lesson.catalog.title}</span>
                         )}
-                        <p className="-mt-2 mb-2 text-mut">{lesson.catalog.summary}</p>
+                        <p className="mb-2 text-mut">{lesson.catalog.summary}</p>
                       </div>
                     </li>
                   ))}
