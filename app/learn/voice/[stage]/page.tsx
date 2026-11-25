@@ -11,6 +11,8 @@ import {
   VOICE_LEARN_PATH,
   findStage,
   lowerFirst,
+  moduleDigest,
+  moduleMinutes,
   stageLessonCount,
   type CourseStage,
 } from "@/lib/voice-lessons";
@@ -127,13 +129,16 @@ export default async function StagePage({ params }: { params: Promise<Params> })
                       <span className="shrink-0 whitespace-nowrap font-mono text-xs text-dim">
                         {lesson.catalog.minutes} min
                       </span>
-                      {lesson.href ? (
-                        <Link href={lesson.href} className="inline-flex min-h-11 items-center text-violet-ink hover:underline">
-                          {lesson.catalog.title}
-                        </Link>
-                      ) : (
-                        <span className="inline-flex min-h-11 items-center text-mut">{lesson.catalog.title}</span>
-                      )}
+                      <div>
+                        {lesson.href ? (
+                          <Link href={lesson.href} className="inline-flex min-h-11 items-center text-violet-ink hover:underline">
+                            {lesson.catalog.title}
+                          </Link>
+                        ) : (
+                          <span className="inline-flex min-h-11 items-center text-mut">{lesson.catalog.title}</span>
+                        )}
+                        <p className="mb-2 text-mut">{lesson.catalog.summary}</p>
+                      </div>
                     </li>
                   ))}
                 </ol>
@@ -141,6 +146,35 @@ export default async function StagePage({ params }: { params: Promise<Params> })
             </Card>
           );
         })}
+        <Card>
+          <div className="max-w-3xl">
+            <h2 className="text-xl">{`How to work through ${catalog.name}`}</h2>
+            <p className="mt-3 text-mut">
+              {`${catalog.name} has ${stage.modules.length} modules and ${stageLessonCount(stage)} lessons, about ${stage.modules.reduce((n, m) => n + moduleMinutes(m), 0)} minutes of lesson time in all. `}
+              Take the modules in order. Each one opens with the idea, gives you
+              an exercise or a song phrase to run, and closes with a self-check
+              you judge by ear. Some self-checks ask for the same result on two
+              different days, so plan on more than one session, and stop for the
+              day at any strain.
+            </p>
+            {stage.modules.some((m) => moduleDigest(m).readyWhen.length > 0) && (
+              <>
+                <h3 className="mt-6 text-lg">
+                  {next?.href ? `Ready for Stage ${next.catalog.stage} when` : "Finished with the course when"}
+                </h3>
+                <ul className="mt-2 list-disc space-y-2 pl-5 text-sm text-mut">
+                  {stage.modules.flatMap((m) =>
+                    moduleDigest(m).readyWhen.map((line) => (
+                      <li key={`${m.catalog.id}-${line}`}>
+                        <span className="text-ink">{m.catalog.name}:</span> {line}
+                      </li>
+                    )),
+                  )}
+                </ul>
+              </>
+            )}
+          </div>
+        </Card>
         <nav aria-label="Stages" className="flex flex-wrap justify-between gap-3 text-sm">
           {previous?.href ? (
             <Link href={previous.href} className="inline-block py-0.5 text-violet-ink hover:underline">

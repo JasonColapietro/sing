@@ -240,3 +240,29 @@ export function moduleNeighbours(module: CourseModule): {
   const i = all.indexOf(module);
   return { previous: i > 0 ? all[i - 1] : undefined, next: all[i + 1] };
 }
+
+/**
+ * What a module page and its stage page say about the module in the lessons'
+ * own words: the concept lessons' "In short" paragraphs, and the checkpoint
+ * lessons' "Ready when" bar. Course-wide boilerplate (UNIVERSAL_LESSON_TEXT)
+ * is left out, so a module with no wording of its own contributes nothing
+ * rather than the shared default.
+ */
+export function moduleDigest(module: CourseModule): {
+  ideas: { title: string; href: string; text: string }[];
+  readyWhen: string[];
+} {
+  const bodies = module.lessons.flatMap((l) => (l.body && l.href ? [{ body: l.body, href: l.href }] : []));
+  const ideas = bodies
+    .filter(({ body }) => body.type === "concept" && body.explanation.trim())
+    .map(({ body, href }) => ({ title: body.title, href, text: body.explanation.trim() }));
+  const readyWhen = [
+    ...new Set(
+      bodies
+        .filter(({ body }) => body.type === "checkpoint")
+        .map(({ body }) => body.selfCheck.readyWhen.trim())
+        .filter((t) => t && !UNIVERSAL_LESSON_TEXT.has(t)),
+    ),
+  ];
+  return { ideas, readyWhen };
+}
