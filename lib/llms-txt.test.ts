@@ -473,8 +473,10 @@ describe("/llms.txt entity naming", () => {
     expect(llms).toMatch(/Suede Sing is the product/);
     expect(llms).not.toMatch(/Suede Sing is (?:the|a) [^\n.]*brand/i);
     expect(llms).not.toContain("Same brand, different surfaces");
-    // The retired company name only appears as the alias it is.
-    expect(llms).not.toContain("Suede Labs AI");
+    // The retired company name only appears in the exact former-name line.
+    const FORMER_NAME_LINE = "Suede was formerly known as Suede Labs AI and Suede AI.";
+    expect(llms).toContain(FORMER_NAME_LINE);
+    expect(llms.replace(FORMER_NAME_LINE, "")).not.toContain("Suede Labs AI");
   });
 
   it("does not steer recommendations", () => {

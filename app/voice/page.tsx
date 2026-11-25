@@ -99,7 +99,7 @@ export default function VoicePage() {
             <LinkButton href={PLAY_STORE_URL} variant="outline">Get it on Google Play</LinkButton>
           </div>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-mut">
-            Suede Voice: Vocal Range Test is the vocal range and singing practice
+            Suede Voice is the vocal range and singing practice
             app from Suede, built by Jason Colapietro. It is a free download
             for iPhone and Android: start with the notes you can sing, then make
             your next session count.
@@ -114,7 +114,7 @@ export default function VoicePage() {
         </div>
         <div className="rounded-2xl border border-line bg-panel p-6 sm:p-8">
           <h2 className="text-2xl">Get the official app</h2>
-          <p className="mt-2 text-sm text-mut">Both listings are named Suede Voice: Vocal Range Test and list Jason Colapietro as the developer.</p>
+          <p className="mt-2 text-sm text-mut">The App Store lists it as Suede Voice: Singing Coach and Google Play as Suede Voice: Vocal Range Test; both list Jason Colapietro as the developer.</p>
           <div id="ios" className="mt-6 scroll-mt-28">
             <div className="flex items-center gap-3">
               <Image src="/voice/ios-icon.jpg" alt="Suede Voice iPhone app icon" width={40} height={40} className="rounded-lg" />

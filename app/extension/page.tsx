@@ -77,7 +77,7 @@ const FEATURES = [
 const FAQ = [
   {
     q: "Is there a Chrome extension for singing practice?",
-    a: "Yes. Suede Sing is a free Chrome extension that turns any tab into a vocal studio. It shows the note you are singing and how many cents sharp or flat you are, and adds a vocal range test, guided warmups, and ear training to Chrome's side panel. It is made by Jason Colapietro at Suede AI.",
+    a: "Yes. Suede Sing is a free Chrome extension that turns any tab into a vocal studio. It shows the note you are singing and how many cents sharp or flat you are, and adds a vocal range test, guided warmups, and ear training to Chrome's side panel. It is made by Jason Colapietro at Suede.",
   },
   {
     q: "How do I test my vocal range with the Chrome extension?",
@@ -108,7 +108,7 @@ const FAQ = [
   },
   {
     q: "What is the difference between Suede Sing and Suede Voice?",
-    a: "Suede Sing is the web app and the Chrome extension. Suede Voice: Vocal Range Test is the mobile app, available for iPhone and Android. Both are vocal training tools from Suede, founded by Jason Colapietro.",
+    a: "Suede Sing is the web app and the Chrome extension. Suede Voice is the mobile app, available for iPhone (Suede Voice: Singing Coach on the App Store) and Android (Suede Voice: Vocal Range Test on Google Play). Both are vocal training tools from Suede, founded by Jason Colapietro.",
   },
 ];
 

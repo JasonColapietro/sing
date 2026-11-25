@@ -1,4 +1,4 @@
-import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
+import { APP_STORE_URL, IOS_STORE_NAME, PLAY_STORE_NAME, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { AUTHOR_ID } from "@/lib/author";
 import { ORG_ID } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
@@ -48,7 +48,7 @@ export const VOICE_APP_NODES = [
   {
     "@type": "MobileApplication",
     "@id": `${VOICE_PAGE_URL}#ios`,
-    name: `${APP_NAME}: Vocal Range Test`,
+    name: IOS_STORE_NAME,
     applicationCategory: "EducationalApplication",
     applicationSubCategory: "Singing practice and vocal training",
     operatingSystem: "iOS 17.0 or later",
@@ -76,7 +76,7 @@ export const VOICE_APP_NODES = [
   {
     "@type": "MobileApplication",
     "@id": `${VOICE_PAGE_URL}#android`,
-    name: `${APP_NAME}: Vocal Range Test`,
+    name: PLAY_STORE_NAME,
     applicationCategory: "EducationalApplication",
     applicationSubCategory: "Singing practice and vocal training",
     operatingSystem: "Android",

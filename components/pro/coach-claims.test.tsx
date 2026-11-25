@@ -104,6 +104,7 @@ const ALLOWED = [
   /adaptive coach plan/i,
   /online vocal coach/i, // the /pro head term, in the H1 and title
   /vocal-coach|Vocal Coach, Pitch Trainer/i, // the Chrome extension's store name
+  /Suede Voice: Singing Coach/, // the iPhone app's App Store name
   /coach report/i, // /progress's report, which free has too
   /coach-report/i,
 ];
