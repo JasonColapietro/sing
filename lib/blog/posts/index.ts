@@ -31,6 +31,16 @@ import { howToSingJazz } from "./how-to-sing-jazz";
 import { howToSingCountryMusic } from "./how-to-sing-country-music";
 import { howToSingMusicalTheater } from "./how-to-sing-musical-theater";
 import { howToSingGospel } from "./how-to-sing-gospel";
+import { singingExercisesForBeginners } from "./singing-exercises-for-beginners";
+import { dailySingingRoutine } from "./daily-singing-routine";
+import { howToStopSingingNasally } from "./how-to-stop-singing-nasally";
+import { howToSingInChestVoice } from "./how-to-sing-in-chest-voice";
+import { howToHoldANoteLonger } from "./how-to-hold-a-note-longer";
+import { voiceShakingWhenSinging } from "./voice-shaking-when-singing";
+import { howToSingPop } from "./how-to-sing-pop";
+import { howToSingRock } from "./how-to-sing-rock";
+import { howToSingRAndB } from "./how-to-sing-r-and-b";
+import { howToSingKaraoke } from "./how-to-sing-karaoke";
 
 /**
  * Every published post. Add the import and the entry here; the routes,
@@ -69,4 +79,14 @@ export const POSTS: readonly BlogPost[] = [
   howToSingCountryMusic,
   howToSingMusicalTheater,
   howToSingGospel,
+  singingExercisesForBeginners,
+  dailySingingRoutine,
+  howToStopSingingNasally,
+  howToSingInChestVoice,
+  howToHoldANoteLonger,
+  voiceShakingWhenSinging,
+  howToSingPop,
+  howToSingRock,
+  howToSingRAndB,
+  howToSingKaraoke,
 ];
